@@ -1,0 +1,14 @@
+f(x) = x + 1;
+
+g(a,b) = a + b;
+
+y = g(f(g(f(100),f(100))),f(100)); 
+
+addTree(t) = 
+  case t {
+    Tree(left,right) ->
+      (addTree(left)) + addTree(right);
+    Leaf(n) -> n
+  };
+
+main() = addTree(Tree(Leaf(y),Tree(Leaf(200),Leaf(300))))

@@ -1,0 +1,32 @@
+  
+act a(x,y) {
+  x -> y;
+  z -> true;
+  (a,b) -> false;
+  x ->
+    case x {
+      100 -> [1,2,[],4,5,6];
+      200 -> [ x | x <- [1,2,3]];
+      x   -> become a(100,200);
+      y   -> become a
+    }
+};
+
+x() = 
+  let x = y + one
+  in x * f();
+
+x=y2('a');
+
+f = fun() 
+  letrec 
+    x = new a();
+    y = Tree(Leaf(100),Empty)
+  in {
+    x + 1 * 1.5;
+    x := 100;
+    x <- (1,2,3);
+    x <- 1;
+    become a(x,y)
+  }
+
