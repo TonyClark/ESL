@@ -39,7 +39,7 @@ public class Case extends AST {
   }
 
   private AST combineOr(AST left, AST right) {
-    return new Fun("",new String[] {"$v","$fail"},new Apply(left,new Var("$v"),new Fun("",new String[] {},new Apply(right,new Var("$v"),new Var("$fail")))));
+    return new Fun("", new String[] { "$v", "$fail" }, new Apply(left, new Var("$v"), new Fun("", new String[] {}, new Apply(right, new Var("$v"), new Var("$fail")))));
   }
 
   private AST[] desugarArgs() {
@@ -51,20 +51,15 @@ public class Case extends AST {
   }
 
   public void FV(HashSet<String> vars) {
-    for (AST e : exps)
-      e.FV(vars);
-    for (BArm b : arms)
-      b.FV(vars);
+    desugar().FV(vars);
   }
 
   public void DV(HashSet<String> vars) {
-    DV(exps, vars);
-    for (BArm arm : arms)
-      arm.DV(vars);
+    desugar().DV(vars);
   }
 
   public int maxLocals() {
-    return Math.max(maxLocals(exps), maxLocals(arms));
+    return desugar().maxLocals();
   }
 
 }

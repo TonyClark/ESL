@@ -7,6 +7,7 @@ import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
 import instrs.Add;
+import instrs.Cons;
 import instrs.Eql;
 import instrs.Instr;
 import list.List;
@@ -42,6 +43,9 @@ public class BinExp extends AST {
         break;
       case "=":
         code.add(new Eql());
+        break;
+      case ":":
+        code.add(new Cons());
         break;
       default:
         throw new java.lang.Error("unknown operator " + op);

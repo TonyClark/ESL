@@ -18,5 +18,9 @@ public class FrameVar extends Local {
   public void update(Vector<Instr> code) {
     code.add(new SetFrame(getIndex()));
   }
+  
+  public String toString() {
+    return "DynamicVar(" + getName() + "," + getIndex() + ")";
+  }
 
 }

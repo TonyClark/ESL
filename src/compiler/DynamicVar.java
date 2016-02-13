@@ -22,5 +22,9 @@ public class DynamicVar extends Local {
   public void update(Vector<Instr> code) {
     code.add(new SetDynamic(getIndex()));
   }
+  
+  public String toString() {
+    return "DynamicVar(" + getName() + "," + getIndex() + ")";
+  }
 
 }

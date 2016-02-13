@@ -22,10 +22,13 @@ esl = {
   barm            -> lparen ps=patterns rparen arrow e=exp { BArm(ps,e) };
   barm            -> p=pattern arrow e=exp { BArm([p],e) };
   patterns        -> p=pattern ps=(comma pattern)* { p:ps };
-  pattern         -> pVar | pInt | pTerm;
+  pattern         -> s=simplePattern (colon p=pattern { PCons(s,p) } | {s});
+  simplePattern   -> pVar | pInt | pTerm | pList | lparen p=pattern rparen {p};
   pVar            -> n=name { PVar(n) };
   pInt            -> n=int { PInt(n) };
   pTerm           -> n=Name (lparen ps=patterns rparen { PTerm(n,ps) } | { PTerm(n,[]) });
+  pList           -> lsquare (rsquare { PNil() } | pListTail);
+  pListTail       -> p=pattern (rsquare { PCons(p,PNil()) } | comma ps=pListTail { PCons(p,ps) });
   params          -> n=name ns=(comma name)* { n:ns } | {[]};
   exp             -> e=simpleExp postexp^(e);
   postexp(e)      -> o=op r=exp { BinExp(e,o,r) } 
@@ -33,7 +36,7 @@ esl = {
                   |  leftArrow (lparen es=exps rparen { Send(e,es) } | v=exp { Send(e,[v]) })
                   |  {e};
   exps            -> e=exp es=(comma exp)* { e:es } | {[]};
-  op              -> whitespace ('+' | '-' | '*' | '/' | 'and' | 'or');
+  op              -> whitespace ('+' | '-' | '*' | '/' | 'and' | 'or' | ':');
   simpleExp       -> var | numExp | strExp | bool
                   |  n=name becomes e=exp { Update(n,e) }
                   |  whitespace 'new' n=name lparen ps=params rparen { New(n,ps) } 
@@ -76,6 +79,7 @@ esl = {
   dot         -> whitespace '.';
   bar         -> whitespace '|';
   becomes     -> whitespace ':=';
+  colon       -> whitespace ':';
   keyWord     -> key ! not([97,122] | [65,90]);
   key         -> 'EOF' | 'act' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become';
   name        -> whitespace not(keyWord) c=lowerChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
