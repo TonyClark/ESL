@@ -4,9 +4,7 @@ import list.List;
 
 public class Behaviour {
 
-  // The number of arguments to the behaviour...
-
-  int           arity;
+  String        name;
 
   // A behaviour acts link a closure. It closes in the dynamic chain...
 
@@ -16,8 +14,8 @@ public class Behaviour {
 
   CodeBox       code;
 
-  public Behaviour(int arity, List<Dynamic> dynamics, CodeBox codebox) {
-    this.arity = arity;
+  public Behaviour(String name, List<Dynamic> dynamics, CodeBox codebox) {
+    this.name = name;
     this.dynamics = dynamics;
     this.code = codebox;
   }
@@ -31,11 +29,11 @@ public class Behaviour {
   }
 
   public String toString() {
-    return "Behaviour(" + dynamics + "," + code + ")";
+    return "Behaviour(" + name + ")";
   }
 
-  public int getArity() {
-    return arity;
+  public String getName() {
+    return name;
   }
 
 }

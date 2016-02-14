@@ -5,20 +5,20 @@ import actors.CodeBox;
 
 public class Behaviour extends Instr {
 
-  int     arity;
+  String  name;
   CodeBox code;
 
-  public Behaviour(int arity, CodeBox code) {
-    this.arity = arity;
+  public Behaviour(String name, CodeBox code) {
+    this.name = name;
     this.code = code;
   }
 
   public void perform(Actor actor) {
-    actor.pushStack(new actors.Behaviour(arity, actor.getDynamics(), code));
+    actor.pushStack(new actors.Behaviour(name, actor.getDynamics(), code));
   }
 
   public String toString() {
-    return "Behaviour(" + arity + "," + code + ")";
+    return "Behaviour(" + code + ")";
   }
 
 }

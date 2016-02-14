@@ -5,11 +5,11 @@ import actors.Actor;
 public class True extends Instr {
 
   public void perform(Actor actor) {
-    actor.pushStack(false);
+    actor.pushStack(true);
   }
 
   public String toString() {
-    return "False";
+    return "True";
   }
 
 }

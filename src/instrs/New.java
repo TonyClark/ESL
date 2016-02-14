@@ -7,10 +7,7 @@ public class New extends Instr {
 
   public void perform(Actor actor) {
     Behaviour b = (Behaviour) actor.popStack();
-    Object[] state = new Object[b.getArity()];
-    for (int i = b.getArity() - 1; i >= 0; i--)
-      state[i] = actor.popStack();
-    actor.pushStack(new Actor(state, b));
+    actor.pushStack(new Actor(b));
   }
 
   public String toString() {

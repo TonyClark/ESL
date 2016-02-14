@@ -13,7 +13,7 @@ public class Dynamic {
   }
 
   public String toString() {
-    return value.toString();
+    return "??"; //value.toString();
   }
 
   public Object getValue() {

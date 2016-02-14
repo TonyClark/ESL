@@ -16,7 +16,7 @@ public class SetDynamic extends Instr {
   }
 
   public void perform(Actor actor) {
-    actor.setDynamic(index, actor.popStack());
+    actor.setDynamic(index, actor.tos());
   }
 
 }

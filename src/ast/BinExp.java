@@ -10,6 +10,7 @@ import instrs.Add;
 import instrs.Cons;
 import instrs.Eql;
 import instrs.Instr;
+import instrs.Sub;
 import list.List;
 
 @BoaConstructor(fields = { "left", "op", "right" })
@@ -40,6 +41,9 @@ public class BinExp extends AST {
     switch (op) {
       case "+":
         code.add(new Add());
+        break;
+      case "-":
+        code.add(new Sub());
         break;
       case "=":
         code.add(new Eql());

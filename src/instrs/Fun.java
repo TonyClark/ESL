@@ -19,6 +19,6 @@ public class Fun extends Instr {
   }
 
   public void perform(Actor actor) {
-    actor.pushStack(new actors.Fun(arity, actor.getDynamics(), code));
+    actor.pushStack(new actors.Closure(arity, actor.getDynamics(), code));
   }
 }

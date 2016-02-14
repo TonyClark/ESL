@@ -11,12 +11,12 @@ public class Apply extends Instr {
   }
 
   public String toString() {
-    return "@";
+    return "@(" + arity + ")";
   }
 
   public void perform(Actor actor) {
     actors.Fun fun = (actors.Fun) actor.popStack();
-    actor.closeFrame(fun.getCode().getLocals() - fun.getArity(), fun.getCode(), fun.getDynamics());
+    fun.apply(actor, arity);
   }
 
 }

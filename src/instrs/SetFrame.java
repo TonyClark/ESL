@@ -16,7 +16,7 @@ public class SetFrame extends Instr {
   }
 
   public void perform(Actor actor) {
-    Object value = actor.popStack();
+    Object value = actor.tos();
     actor.setFrameVar(index, value);
   }
 

@@ -10,61 +10,61 @@ import compiler.FrameVar;
 import exp.BoaConstructor;
 import instrs.Instr;
 import instrs.NewDynamic;
+import instrs.Return;
+import instrs.StartCall;
 import list.List;
 import list.Nil;
 
-@BoaConstructor(fields = { "name", "args", "arms" })
+@BoaConstructor(fields = { "name", "arms" })
 
 public class Act extends AST {
 
-  public String   name;
-  public String[] args;
-  public BArm[]   arms;
+  public String name;
+  public BArm[] arms;
 
   public Act() {
   }
 
   public String toString() {
-    return "Act(" + name + "," + Arrays.toString(args) + "," + Arrays.toString(arms) + ")";
+    return "Act(" + name + "," + Arrays.toString(arms) + ")";
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
 
     // Compilation of a behaviour produces a closure-like value that captures the current
-    // dynamics and waits to be transformed into an actor via 'new'. When invoked, the behaviour
-    // will expect the state-args to be the first locals in the stack frame (equivalent to function args).
-    // These will have to be moved to become dynamics if necessary on entry to the pattern matching...
+    // dynamics and waits to be transformed into an actor via 'new'.
 
     Vector<Instr> bodyCode = new Vector<Instr>();
     locals = new Nil<FrameVar>();
-    for (String arg : args) {
-      locals = locals.cons(new FrameVar(arg, locals.length()));
-    }
     HashSet<String> dv = new HashSet<String>();
-    for (BArm a : arms)
-      a.DV(dv);
-    for (String a : args)
-      if (dv.contains(a)) {
-        lookup(a, locals).compile(bodyCode);
-        dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(a, 0));
-        bodyCode.add(new NewDynamic());
-      }
-    // Message will be on the stack...
-    for (BArm a : arms) {
-      // code.add(new Dup());
-      a.compile(locals, dynamics, bodyCode);
-    }
-    code.add(new instrs.Behaviour(args.length, new CodeBox(maxLocals(), bodyCode)));
+    desugar().DV(dv);
+    // Message will be local 0 in the stack frame...
+    bodyCode.add(new instrs.FrameVar(0));
+    new Fun("", new String[] {}, new ast.Error(new Str("ran out of case arms"))).compile(locals, dynamics, bodyCode);
+    desugar().compile(locals, dynamics, bodyCode);
+    bodyCode.add(new instrs.Apply(2));
+    bodyCode.add(new Return());
+    code.add(new instrs.Behaviour(name, new CodeBox(1, bodyCode)));
+  }
 
+  public AST desugar() {
+    // The body of a behaviour is a function that expects to be supplied with the
+    // message value and a failure continuation...
+    return desugarArms(0);
+  }
+
+  private AST desugarArms(int i) {
+    if (i + 1 == arms.length)
+      return arms[i].desugar();
+    else return combineOr(arms[i].desugar(), desugarArms(i + 1));
+  }
+
+  private AST combineOr(AST left, AST right) {
+    return new Fun("", new String[] { "$v", "$fail" }, new Apply(left, new Var("$v"), new Fun("", new String[] {}, new Apply(right, new Var("$v"), new Var("$fail")))));
   }
 
   public void FV(HashSet<String> vars) {
-    HashSet<String> free = new HashSet<String>();
-    for (BArm b : arms)
-      b.FV(free);
-    for (String arg : args)
-      free.remove(arg);
-    vars.addAll(free);
+    desugar().FV(vars);
   }
 
   public int maxLocals() {

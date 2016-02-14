@@ -20,7 +20,7 @@ public class FrameVar extends Local {
   }
   
   public String toString() {
-    return "DynamicVar(" + getName() + "," + getIndex() + ")";
+    return "FrameVar(" + getName() + "," + getIndex() + ")";
   }
 
 }

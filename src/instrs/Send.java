@@ -15,7 +15,11 @@ public class Send extends Instr {
   }
 
   public void perform(Actor actor) {
+    // For now assume that all messages are single values...
     Actor target = (Actor) actor.popStack();
+    Object message = actor.popStack();
+    target.send(message);
+    actor.pushStack(target);
   }
 
 }

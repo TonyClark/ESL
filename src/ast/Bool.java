@@ -19,6 +19,10 @@ public class Bool extends AST {
   public Bool() {
   }
 
+  public Bool(boolean value) {
+    this.value = value;
+  }
+
   public String toString() {
     return "Bool(" + value + ")";
   }

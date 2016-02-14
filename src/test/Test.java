@@ -32,12 +32,12 @@ public class Test {
       bindings[i] = (Binding) list.values[i].getTarget();
     Letrec program = new Letrec(bindings, new Apply(new Var("main")));
     Vector<Instr> code = new Vector<Instr>();
-    program.compile(new Nil<FrameVar>(), new Nil<DynamicVar>(), code);
+    program.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code);
     code.add(new Return());
     CodeBox codebox = new CodeBox(program.maxLocals(), code);
-    Actor actor = new Actor(new Object[] {}, new Behaviour(0, new Nil<Dynamic>(), codebox));
+    Actor actor = new Actor(new Behaviour("", Actor.builtinEnv(), codebox));
     actor.initSystem();
-    actor.run();
+    actor.runESL(0,100);
     System.out.println(actor.popStack());
   }
 

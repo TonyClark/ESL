@@ -11,46 +11,38 @@ import exp.BoaConstructor;
 import instrs.Instr;
 import list.List;
 
-@BoaConstructor(fields = { "name", "args" })
+@BoaConstructor(fields = { "behaviour" })
 
 public class New extends AST {
 
-  public String name;
-  public AST[]  args;
+  public AST behaviour;
 
   public New() {
   }
 
-  public New(String name, AST... args) {
-    this.name = name;
-    this.args = args;
+  public New(AST behaviour) {
+    this.behaviour = behaviour;
   }
 
   public String toString() {
-    return "New(" + name + "," + Arrays.toString(args) + ")";
+    return "New(" + behaviour + ")";
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    for (AST a : args)
-      a.compile(locals, dynamics, code);
-    Local local = lookup(name, locals);
-    if (local == null) local = lookup(name, dynamics);
-    if (local == null) throw new java.lang.Error("cannot find a behaviour named " + name);
-    local.compile(code);
+    behaviour.compile(locals, dynamics, code);
     code.add(new instrs.New());
   }
 
   public void FV(HashSet<String> vars) {
-    for (AST a : args)
-      a.FV(vars);
+    behaviour.FV(vars);
   }
 
   public void DV(HashSet<String> vars) {
-    DV(args, vars);
+    behaviour.DV(vars);
   }
 
   public int maxLocals() {
-    return maxLocals(args);
+    return behaviour.maxLocals();
   }
 
 }

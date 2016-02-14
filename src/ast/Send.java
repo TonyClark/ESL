@@ -30,9 +30,9 @@ public class Send extends AST {
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    target.compile(locals, dynamics, code);
     for (AST arg : args)
       arg.compile(locals, dynamics, code);
+    target.compile(locals, dynamics, code);
     code.add(new instrs.Send(args.length));
   }
 
