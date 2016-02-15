@@ -5,17 +5,12 @@ import java.util.Vector;
 import actors.Actor;
 import actors.Behaviour;
 import actors.CodeBox;
-import actors.Dynamic;
-import ast.Apply;
-import ast.Binding;
-import ast.Letrec;
-import ast.Var;
-import compiler.DynamicVar;
+import ast.AST;
 import compiler.FrameVar;
 import instrs.Instr;
 import instrs.Return;
 import list.Nil;
-import values.List;
+import values.JavaObject;
 import xpl.Interpreter;
 
 public class Test {
@@ -26,19 +21,18 @@ public class Test {
     // code box. Create an instance of the behaviour called 'main' and supply the
     // Java command line arguments.
 
-    List list = (List) Interpreter.readFile("esl/esl.xpl", "esl", "esl/test.esl");
-    Binding[] bindings = new Binding[list.values.length];
-    for (int i = 0; i < list.values.length; i++)
-      bindings[i] = (Binding) list.values[i].getTarget();
-    Letrec program = new Letrec(bindings, new Apply(new Var("main")));
+    JavaObject o = (JavaObject) Interpreter.readFile("esl/esl.xpl", "esl", "esl/test.esl");
+    AST ast = (AST) o.getTarget();
+    System.out.println(ast);
     Vector<Instr> code = new Vector<Instr>();
-    program.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code);
+    ast.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code);
     code.add(new Return());
-    CodeBox codebox = new CodeBox(program.maxLocals(), code);
+    CodeBox codebox = new CodeBox(ast.maxLocals(), code);
     Actor actor = new Actor(new Behaviour("", Actor.builtinEnv(), codebox));
     actor.initSystem();
-    actor.runESL(0,100);
-    System.out.println(actor.popStack());
+    actor.kill();
+    actor.run(Integer.MAX_VALUE);
+    Actor.runESL(0, 10);
   }
 
 }

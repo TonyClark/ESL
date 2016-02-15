@@ -16,28 +16,21 @@ public class Error extends AST {
     this.message = message;
   }
 
-  @Override
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    // TODO Auto-generated method stub
-
+    message.compile(locals, dynamics, code);
+    code.add(new instrs.Error());
   }
 
-  @Override
   public void FV(HashSet<String> vars) {
-    // TODO Auto-generated method stub
-
+    message.FV(vars);
   }
 
-  @Override
   public void DV(HashSet<String> vars) {
-    // TODO Auto-generated method stub
-
+    message.DV(vars);
   }
 
-  @Override
   public int maxLocals() {
-    // TODO Auto-generated method stub
-    return 0;
+    return message.maxLocals();
   }
 
 }

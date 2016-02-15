@@ -11,6 +11,7 @@ import exp.BoaConstructor;
 import instrs.Instr;
 import instrs.NewDynamic;
 import instrs.Null;
+import instrs.Pop;
 import instrs.PopDynamic;
 import instrs.SetDynamic;
 import instrs.SetFrame;
@@ -63,9 +64,13 @@ public class Letrec extends AST {
     }
     for (Binding b : bindings) {
       b.value.compile(locals, dynamics, code);
-      if (isDynamic(b.name))
+      if (isDynamic(b.name)) {
         code.add(new SetDynamic(lookup(b.name, dynamics).getIndex()));
-      else code.add(new SetFrame(lookup(b.name, locals).getIndex()));
+        code.add(new Pop());
+      } else {
+        code.add(new SetFrame(lookup(b.name, locals).getIndex()));
+        code.add(new Pop());
+      }
     }
     exp.compile(locals, dynamics, code);
     // Remove the dynamics...
@@ -89,10 +94,12 @@ public class Letrec extends AST {
     // a closure...
     for (Binding b : bindings) {
       HashSet<String> fv = new HashSet<String>();
-      b.value.FV(fv);
+      b.value.DV(fv);
       if (fv.contains(name)) return true;
     }
-    return false;
+    HashSet<String> fv = new HashSet<String>();
+    exp.DV(fv);
+    return fv.contains(name);
   }
 
   public void FV(HashSet<String> vars) {

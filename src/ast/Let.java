@@ -9,6 +9,7 @@ import compiler.FrameVar;
 import exp.BoaConstructor;
 import instrs.Instr;
 import instrs.NewDynamic;
+import instrs.Pop;
 import instrs.PopDynamic;
 import instrs.SetFrame;
 import list.List;
@@ -44,6 +45,7 @@ public class Let extends AST {
         b.value.compile(locals, dynamics, code);
         locals = locals.cons(new FrameVar(b.name, locals.length()));
         code.add(new SetFrame(locals.length() - 1));
+        code.add(new Pop());
       }
     }
     exp.compile(locals, dynamics, code);

@@ -6,7 +6,7 @@ public class Term {
   String   name;
   Object[] values;
 
-  public Term(String name, Object[] values) {
+  public Term(String name, Object... values) {
     super();
     this.name = name;
     this.values = values;

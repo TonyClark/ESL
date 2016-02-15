@@ -35,7 +35,6 @@ public class Act extends AST {
     // dynamics and waits to be transformed into an actor via 'new'.
 
     Vector<Instr> bodyCode = new Vector<Instr>();
-    locals = new Nil<FrameVar>();
     HashSet<String> dv = new HashSet<String>();
     desugar().DV(dv);
     // Message will be local 0 in the stack frame...

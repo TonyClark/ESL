@@ -1,58 +1,17 @@
-f(x) = x + 10;
-
-g(a,b) = a + b;
 
 act a {
-  Up(20) -> {
-    print(Upper());
-    new a <- Down(20)
-  };
-  Down(0) -> {
-    print(Low());
-    new a <- Up(0)
-  };
-  Up(x) -> {
-    print(Up(x));
-    new a <- Up(x+1)
-  };
-  Down(x) -> {
-    print(Down(x));
-    new a <- Down(x-1)
+  fork() = {
+    let x = new a in x <- Count(10,x)
   }
-};
+  Time(t) -> fork();
+  Count(0,_) -> print(0);
+  Count(n,self) -> {
+    print(n);
+    self <- Count(n-1,self)
+  }
+}
 
-y = g(f(g(f(100),f(100))),f(100)); 
-
-addTree(t) = 
-  case t {
-    Tree(left,right) ->
-      (addTree(left)) + addTree(right);
-    Leaf(n) -> n
-  };
-  
-map(f,l) =
-  case l {
-    [a,'x',true] -> [3];
-    [a,'x',false] -> [4];
-    [a,'x',_] -> [print(5),print(6)];
-    h:t -> (f(h)):map(f,t);
-    [] -> []
-  };
-
-main1() = addTree(Tree(Leaf(y),Tree(Leaf(200),Leaf(300))));
-
-main2() = map(fun(x) [f(x)],[1,2,3,4,5,6,7,'x','l']);
-
-main() = {
-  new a <- Up(0);
-  new a <- Up(10)
-};
-
-main4() =
-  let x = 100
-  in letrec f(y) = { y := y + 1; g(); y + x};
-         g() = x := x + 1
-     in {
-       g();
-       f(10)
-     }
+Time(0) -> print('hooray');
+Time(t) -> {
+  new a
+}

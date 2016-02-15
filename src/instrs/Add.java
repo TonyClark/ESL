@@ -15,7 +15,7 @@ public class Add extends Instr {
       int i1 = (int) v1;
       int i2 = (int) v2;
       actor.pushStack(i1 + i2);
-    } else throw new Error("do not know how to add " + v1 + " and " + v2);
+    } else throw new java.lang.Error("do not know how to add " + v1 + " and " + v2);
   }
 
 }

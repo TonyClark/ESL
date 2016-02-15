@@ -15,41 +15,30 @@ import list.List;
 
 public class Become extends AST {
 
-  public String name;
-  public AST[]  values;
+  public AST behaviour;
 
   public Become() {
   }
 
   public String toString() {
-    return "Become(" + name + "," + Arrays.toString(values) + ")";
+    return "Become(" + behaviour + ")";
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    Local local = null;
-    local = lookup(name, locals);
-    if (local != null) local = lookup(name, dynamics);
-
-    if (local == null) throw new java.lang.Error("no type named " + name);
-
-    for (AST value : values)
-      value.compile(locals, dynamics, code);
-    local.compile(code);
-    code.addElement(new instrs.Become(values.length));
+    behaviour.compile(locals, dynamics, code);
+    code.add(new instrs.Become());
   }
 
   public void FV(HashSet<String> vars) {
-    for (AST value : values)
-      value.FV(vars);
+    behaviour.FV(vars);
   }
 
   public void DV(HashSet<String> vars) {
-    for (AST value : values)
-      value.DV(vars);
+    behaviour.DV(vars);
   }
 
   public int maxLocals() {
-    return maxLocals(values);
+    return behaviour.maxLocals();
   }
 
 }

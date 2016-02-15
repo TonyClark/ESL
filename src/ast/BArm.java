@@ -25,14 +25,7 @@ public class BArm {
   }
 
   public void FV(HashSet<String> vars) {
-    HashSet<String> free = new HashSet<String>();
-    exp.FV(free);
-    HashSet<String> bound = new HashSet<String>();
-    for (Pattern p : patterns) {
-      p.vars(bound);
-    }
-    free.removeAll(bound);
-    vars.addAll(free);
+    desugar().FV(vars);
   }
 
   public int maxLocals() {
@@ -48,14 +41,7 @@ public class BArm {
   }
 
   public void DV(HashSet<String> vars) {
-    HashSet<String> dynamic = new HashSet<String>();
-    exp.DV(dynamic);
-    HashSet<String> bound = new HashSet<String>();
-    for (Pattern p : patterns) {
-      p.vars(bound);
-      dynamic.removeAll(bound);
-    }
-    vars.addAll(dynamic);
+    desugar().DV(vars);
   }
 
   public AST desugar() {

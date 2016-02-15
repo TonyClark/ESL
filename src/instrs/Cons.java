@@ -14,7 +14,7 @@ public class Cons extends Instr {
     if (v1 instanceof list.List) {
       list.List<Object> l = (list.List)v1;
       actor.pushStack(((list.List) v1).cons(v2));
-    } else throw new Error("expecting a list for cons:" + v1);
+    } else throw new java.lang.Error("expecting a list for cons:" + v1);
   }
 
 }

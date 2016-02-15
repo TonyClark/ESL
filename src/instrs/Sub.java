@@ -15,7 +15,7 @@ public class Sub extends Instr {
       int i1 = (Integer) v1;
       int i2 = (Integer) v2;
       actor.pushStack(i1 - i2);
-    } else throw new Error("don't know how to subtract " + v2 + " from " + v1);
+    } else throw new java.lang.Error("don't know how to subtract " + v2 + " from " + v1);
   }
 
 }

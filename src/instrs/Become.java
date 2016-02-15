@@ -1,12 +1,16 @@
 package instrs;
 
+import actors.Actor;
+
 public class Become extends Instr {
 
-  int arity;
+  public String toString() {
+    return "Become";
+  }
 
-  public Become(int arity) {
-    super();
-    this.arity = arity;
+  public void perform(Actor actor) {
+    actors.Behaviour act = (actors.Behaviour) actor.tos();
+    actor.setBehaviour(act);
   }
 
 }

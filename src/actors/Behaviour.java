@@ -36,4 +36,8 @@ public class Behaviour {
     return name;
   }
 
+  public CodeBox getTimeHandlingCode() {
+    return code.getTimeHandlingCode();
+  }
+
 }

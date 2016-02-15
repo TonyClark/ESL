@@ -3,6 +3,7 @@ package actors;
 import java.util.Vector;
 
 import instrs.Instr;
+import instrs.PopFrame;
 
 public class CodeBox {
 
@@ -34,6 +35,13 @@ public class CodeBox {
 
   public Instr getInstr(int i) {
     return code.get(i);
+  }
+
+  public CodeBox getTimeHandlingCode() {
+    Vector<Instr> noReturn = (Vector<Instr>) code.clone();
+    noReturn.remove(noReturn.lastElement());
+    noReturn.add(noReturn.size(), new PopFrame());
+    return new CodeBox(locals, noReturn);
   }
 
 }

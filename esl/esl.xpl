@@ -4,7 +4,7 @@ import 'esl/ast.xpl'
 
 esl = { 
 
-  esl             -> bs=bindings EOF {bs};
+  esl             -> bs=bindings as=barms EOF { Send(New(Letrec(bs,Act('main',as))),[Term('Time',[Int(0)])]) };
   topLevelCommand -> whitespace d=eslCommand {d};
   eslCommand      -> x=tplvlSet ! {x} | x=tplvlExp ! {x} | x=tplvlQuit ! {x} | x=tplvlImport ! {x};
   tplvlSet        -> n=name ':=' e=exp ';' { TplvlSet(n,e) };
@@ -12,11 +12,11 @@ esl = {
   tplvlImport     -> 'import' ns=strings ';' {Import(ns)};
   tplvlExp        -> e=exp semi { e };
   
-  bindings        -> b=binding ! bs=(semi binding)* { b:bs };
+  bindings        -> b=binding ! bs=(semi binding)* { b:bs } | {[]};
   binding         -> valbind | funbind | actbind;
   valbind         -> n=name eql e=exp { Binding(n,e) };
   funbind         -> n=name lparen ps=params rparen eql e=exp { Binding(n,Fun(n,ps,e)) };
-  actbind         -> 'act' n=name ps=actargs lcurl bs=barms rcurl { Binding(n,Fun(n,ps,Act(n,bs))) };
+  actbind         -> 'act' n=name ps=actargs lcurl bs = bindings as=barms rcurl { Binding(n,Fun(n,ps,Letrec(bs,Act(n,as)))) };
   actargs         -> lparen ps=params rparen {ps} | {[]};
   barms           -> a=barm as=(semi barm)* { a:as };
   barm            -> lparen ps=patterns rparen arrow e=exp { BArm(ps,e) };
@@ -51,7 +51,7 @@ esl = {
                   |  whitespace lsquare (es=exps rsquare { List(es) } | rsquare { List([]) })
                   |  whitespace lsquare e=exp bar qs=quals rsquare { Cmp(e,qs) }
                   |  n=Name es=(lparen es=exps rparen {es} | {[]}) { Term(n,es) }
-                  |  whitespace 'become' n=name (lparen es=exps rparen { Become(n,es) } | { Become(n,[]) })
+                  |  whitespace 'become' e=exp { Become(e) }
                   |  lcurl e=exp es=(semi exp)* rcurl { Block(e:es) }
                   |  lparen e=exp rparen {e};
   var             -> n=name (becomes e=exp { Update(n,e) } | { Var(n) });
