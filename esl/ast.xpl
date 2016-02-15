@@ -1,4 +1,4 @@
-export Act,Apply,Become,Binding,BinExp,Block,BArm,Bool,BQual,Case,Cmp,Float,Fun,Int,Let,Letrec,List,New,Not,PBool,PCons,PInt,PNil,PStr,PTerm,PVar,PWild,Send,Str,Term,Update,Var
+export Act,Apply,Become,Binding,BinExp,Block,BArm,Bool,BQual,Case,Cmp,Float,Fun,Int,Let,Letrec,List,New,Not,PBool,PCons,PGuard,PInt,PNil,PStr,PTerm,PVar,PWild,Send,Str,Term,Update,Var
 
 
 Act                 = 'ast.Act'.java()
@@ -22,6 +22,7 @@ New                 = 'ast.New'.java()
 Not                 = 'ast.Not'.java()
 PBool               = 'ast.PBool'.java()
 PCons               = 'ast.PCons'.java()
+PGuard              = 'ast.PGuard'.java()
 PInt                = 'ast.PInt'.java()
 PNil                = 'ast.PNil'.java()
 PStr                = 'ast.PStr'.java()

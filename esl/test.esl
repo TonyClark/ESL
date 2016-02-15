@@ -11,7 +11,7 @@ act a {
   }
 }
 
-Time(0) -> print('hooray');
+Time(n ?(n=0)) -> print('hooray');
 Time(t) -> {
   new a
 }

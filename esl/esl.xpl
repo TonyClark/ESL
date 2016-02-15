@@ -22,7 +22,7 @@ esl = {
   barm            -> lparen ps=patterns rparen arrow e=exp { BArm(ps,e) };
   barm            -> p=pattern arrow e=exp { BArm([p],e) };
   patterns        -> p=pattern ps=(comma pattern)* { p:ps };
-  pattern         -> s=simplePattern (colon p=pattern { PCons(s,p) } | {s});
+  pattern         -> s=simplePattern (colon p=pattern { PCons(s,p) } | query e=exp { PGuard(e,s) } | {s});
   simplePattern   -> pVar | pInt | pTerm | pList | pStr | pBool | pWild | lparen p=pattern rparen {p};
   pVar            -> n=name { PVar(n) };
   pInt            -> n=int { PInt(n) };
@@ -39,7 +39,7 @@ esl = {
                   |  leftArrow v=exp { Send(e,[v]) }
                   |  {e};
   exps            -> e=exp es=(comma exp)* { e:es } | {[]};
-  op              -> whitespace ('+' | '-' | '*' | '/' | 'and' | 'or' | ':');
+  op              -> whitespace ('+' | '-' | '*' | '/' | 'and' | 'or' | ':' | '=');
   simpleExp       -> var | numExp | strExp | bool
                   |  n=name becomes e=exp { Update(n,e) }
                   |  whitespace 'new' n=name (lparen ps=params rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) })
@@ -84,6 +84,7 @@ esl = {
   becomes     -> whitespace ':=';
   colon       -> whitespace ':';
   underscore  -> whitespace '_';
+  query       -> whitespace '?';
   keyWord     -> key ! not([97,122] | [65,90]);
   key         -> 'EOF' | 'act' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become';
   name        -> whitespace not(keyWord) c=lowerChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
