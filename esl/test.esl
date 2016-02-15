@@ -1,17 +1,22 @@
 
 act a {
   fork() = {
-    let x = new a in x <- Count(10,x)
+    new a <- Count(1)
   }
   Time(t) -> fork();
-  Count(0,_) -> print(0);
-  Count(n,self) -> {
+  Count(0) -> print(0);
+  Count(n) -> {
     print(n);
-    self <- Count(n-1,self)
+    self <- Count(n-1)
   }
 }
 
-Time(n ?(n=0)) -> print('hooray');
+Time(n ?(n=0)) -> 
+  probably(50) {
+    print('hooray')
+  } else {
+    print('boo')
+  };
 Time(t) -> {
   new a
 }

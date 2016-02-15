@@ -51,17 +51,21 @@ public class Actor {
   public static List<DynamicVar> builtinDynamics() {
     // Those dynamics that will be available at run-time by default...
     DynamicVar print = new DynamicVar("print", 0);
+    DynamicVar probably = new DynamicVar("probably", 1);
     List<DynamicVar> env = new Nil<DynamicVar>();
     // Order is not important...
     env = env.cons(print);
+    env = env.cons(probably);
     return env;
   }
 
   public static List<Dynamic> builtinEnv() {
     // The run-time equivalent of builtinDynamics...
     Dynamic print = new Dynamic(new Builtin("print", Actor::print));
+    Dynamic probably = new Dynamic(new Builtin("probably", Actor::probably));
     List<Dynamic> env = new Nil<Dynamic>();
     // Order is important - must match indices used in builtinDynamics...
+    env = env.cons(probably);
     env = env.cons(print);
     return env;
   }
@@ -72,7 +76,19 @@ public class Actor {
       Object value = actor.getFrameVar(0);
       System.out.println(value);
       actor.returnValue(value);
-    } else throw new Error("function expects " + 1 + " arg but supplied with " + arity);
+    } else throw new Error("print expects " + 1 + " arg but supplied with " + arity);
+  }
+
+  public static void probably(Actor actor, int arity) {
+    if (arity == 3) {
+      actor.closeFrame(0, null, null);
+      Object v2 = actor.popStack();
+      Object v1 = actor.popStack();
+      int percent = (int) actor.popStack();
+      if (Math.random() * 100 < percent)
+        actor.returnValue(v1);
+      else actor.returnValue(v2);
+    } else throw new Error("probably expects " + 3 + " args but supplied with " + arity);
   }
 
   public static void runESL(int time0, int timeLimit) {
@@ -266,12 +282,12 @@ public class Actor {
       int i = getCodePtr();
       incCodePtr();
       Instr next = getCode().getInstr(i);
-      //System.out.println("NEXT = " + next);
-      //printStack();
+      // System.out.println("NEXT = " + next);
+      // printStack();
       next.perform(this);
       instrs--;
     }
-    if(complete()) {
+    if (complete()) {
       frame = -1;
       openFrame = -1;
       tos = 0;

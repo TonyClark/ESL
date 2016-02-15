@@ -40,7 +40,7 @@ esl = {
                   |  {e};
   exps            -> e=exp es=(comma exp)* { e:es } | {[]};
   op              -> whitespace ('+' | '-' | '*' | '/' | 'and' | 'or' | ':' | '=');
-  simpleExp       -> var | numExp | strExp | bool
+  simpleExp       -> var | numExp | strExp | bool | me | probably
                   |  n=name becomes e=exp { Update(n,e) }
                   |  whitespace 'new' n=name (lparen ps=params rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) })
                   |  whitespace 'not' e=exp { Not(e) } 
@@ -55,12 +55,14 @@ esl = {
                   |  lcurl e=exp es=(semi exp)* rcurl { Block(e:es) }
                   |  lparen e=exp rparen {e};
   var             -> n=name (becomes e=exp { Update(n,e) } | { Var(n) });
+  me              -> whitespace 'self' { Self() };
   numExp          -> n=int (dot m=int { Float(n,m) } | { Int(n) });
   strExp          -> s=string { Str(s) };
   bool            -> whitespace ('true' { Bool(true) } | 'false' { Bool(false) });
   caseValues      -> lparen es=exps rparen { es } | e=exp {[e]};
   quals           -> q=qual qs=(comma qual)* { q:qs };
   qual            -> p=pattern leftArrow e=exp { BQual(p,e) };
+  probably        -> whitespace 'probably' lparen p=exp rparen e1=exp whitespace 'else' e2=exp { Apply(Apply(Var('probably'),[p,Fun('prob1',[],e1),Fun('prob2',[],e2)]),[]) };
   
   
   whitespace  -> (32 ! | 10 ! | 13 ! | 9 ! | comment)* !;
@@ -86,7 +88,7 @@ esl = {
   underscore  -> whitespace '_';
   query       -> whitespace '?';
   keyWord     -> key ! not([97,122] | [65,90]);
-  key         -> 'EOF' | 'act' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become';
+  key         -> 'EOF' | 'act' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become' | 'self' | 'probably';
   name        -> whitespace not(keyWord) c=lowerChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
   Name        -> whitespace not(keyWord) c=upperChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
   int         -> whitespace i=[48,57]+ ! {'values.Int'(i)};
