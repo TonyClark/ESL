@@ -1,0 +1,14 @@
+// Demonstrates a simple actor that processes time clicks and exhibits stochastic behaviour
+// which is recorded...
+
+// Just do the following for the first 10 time clicks...
+
+Time(n ?n < 10) -> 
+  probably(50) {
+    record(self,One)
+  } else {
+    record(self,Two)
+  };
+  
+// Then ignore clicks...
+Time(t) -> {}

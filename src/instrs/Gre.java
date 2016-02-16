@@ -2,21 +2,21 @@ package instrs;
 
 import actors.Actor;
 
-public class Add extends Instr {
+public class Gre extends Instr {
 
   /**************************************************************************************
    *                                                                                    *
    *                           Machine Instruction                                      *
    *                           -------------------                                      *
    *                                                                                    *
-   *  Expectation: Two values on the stack.                                             *
+   *  Expectation: Two integers on the stack.                                           *
    *  Action: Pops the values.                                                          *
-   *  Result: Leaves the addition of the two values on the stack.                       *
+   *  Result: Leaves a boolean on the stack.                                            *
    *                                                                                    *
    * ************************************************************************************/
 
   public String toString() {
-    return "+";
+    return ">";
   }
 
   public void perform(Actor actor) {
@@ -25,10 +25,8 @@ public class Add extends Instr {
     if (v1 instanceof Integer && v2 instanceof Integer) {
       int i1 = (int) v1;
       int i2 = (int) v2;
-      actor.pushStack(i1 + i2);
-    } else if (v1 instanceof String || v2 instanceof String) {
-      actor.pushStack(v2.toString() + v1.toString());
-    } else throw new java.lang.Error("do not know how to add " + v1 + " and " + v2);
+      actor.pushStack(i2 > i1);
+    } else throw new java.lang.Error("do not know how to > " + v1 + " and " + v2);
   }
 
 }

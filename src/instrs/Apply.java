@@ -4,6 +4,17 @@ import actors.Actor;
 
 public class Apply extends Instr {
 
+  /**************************************************************************************
+   *                                                                                    *
+   *                           Machine Instruction                                      *
+   *                           -------------------                                      *
+   *                                                                                    *
+   *  Expectation: A function at the top of the stack above its args in reverse order.  *
+   *  Action: Pops the values.                                                          *
+   *  Result: Sets up a new stack frame to process the application.                     *
+   *                                                                                    *
+   * ************************************************************************************/
+
   int arity;
 
   public Apply(int arity) {

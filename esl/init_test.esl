@@ -1,0 +1,29 @@
+// e might want to wait in an actor behaviour handling time.
+// For example an actor may need to be initialized. This can be
+// done using a guard on the rules...
+
+act producer {
+
+  // Forward a message to b on each time click.
+  // This can only be done when b has been initialized.
+
+  b = null
+  
+  Time(t) ? b=null  -> {};
+  Init(b2)          -> { print(now + ': init'); b := b2 };
+  Time(t) ? b<>null -> b <- OK
+};
+
+act consumer {
+  Time(n) -> {};
+  OK      -> print(now + ': OK')
+};
+
+a = null;
+b = null
+  
+
+Time(0) -> a := new producer;
+Time(2) -> b := new consumer;
+Time(4) -> a <- Init(b);
+Time(n) -> {}

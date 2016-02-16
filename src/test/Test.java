@@ -21,9 +21,8 @@ public class Test {
     // code box. Create an instance of the behaviour called 'main' and supply the
     // Java command line arguments.
 
-    JavaObject o = (JavaObject) Interpreter.readFile("esl/esl.xpl", "esl", "esl/test.esl");
+    JavaObject o = (JavaObject) Interpreter.readFile("esl/esl.xpl", "esl", "esl/init_test.esl");
     AST ast = (AST) o.getTarget();
-    System.out.println(ast);
     Vector<Instr> code = new Vector<Instr>();
     ast.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code);
     code.add(new Return());
@@ -33,6 +32,7 @@ public class Test {
     actor.kill();
     actor.run(Integer.MAX_VALUE);
     Actor.runESL(0, 10);
+    System.out.println(Actor.getHistories());
   }
 
 }

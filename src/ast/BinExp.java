@@ -9,13 +9,19 @@ import exp.BoaConstructor;
 import instrs.Add;
 import instrs.Cons;
 import instrs.Eql;
+import instrs.Gre;
 import instrs.Instr;
+import instrs.Less;
+import instrs.NEql;
 import instrs.Sub;
 import list.List;
 
 @BoaConstructor(fields = { "left", "op", "right" })
 
 public class BinExp extends AST {
+
+  // Compilation of binary expressions. Generally push the values of the args on the stack
+  // and then perform a machine instruction defined by the operator...
 
   public AST    left;
   public String op;
@@ -48,8 +54,17 @@ public class BinExp extends AST {
       case "=":
         code.add(new Eql());
         break;
+      case ">":
+        code.add(new Gre());
+        break;
+      case "<":
+        code.add(new Less());
+        break;
       case ":":
         code.add(new Cons());
+        break;
+      case "<>":
+        code.add(new NEql());
         break;
       default:
         throw new java.lang.Error("unknown operator " + op);

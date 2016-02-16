@@ -16,7 +16,7 @@ esl = {
   binding         -> valbind | funbind | actbind;
   valbind         -> n=name eql e=exp { Binding(n,e) };
   funbind         -> n=name lparen ps=params rparen eql e=exp { Binding(n,Fun(n,ps,e)) };
-  actbind         -> 'act' n=name ps=actargs lcurl bs = bindings as=barms rcurl { Binding(n,Fun(n,ps,Letrec(bs,Act(n,as)))) };
+  actbind         -> whitespace 'act' n=name ps=actargs lcurl bs = bindings as=barms rcurl { Binding(n,Fun(n,ps,Letrec(bs,Act(n,as)))) };
   actargs         -> lparen ps=params rparen {ps} | {[]};
   barms           -> a=barm as=(semi barm)* { a:as };
   barm            -> lparen ps=patterns rparen arrow e=exp { BArm(ps,e) };
@@ -39,8 +39,8 @@ esl = {
                   |  leftArrow v=exp { Send(e,[v]) }
                   |  {e};
   exps            -> e=exp es=(comma exp)* { e:es } | {[]};
-  op              -> whitespace ('+' | '-' | '*' | '/' | 'and' | 'or' | ':' | '=');
-  simpleExp       -> var | numExp | strExp | bool | me | probably
+  op              -> whitespace ('+' | '-' | '*' | '/' | 'and' | 'or' | ':' | '<>' | '=' | '<' | '>');
+  simpleExp       -> var | numExp | strExp | bool | me | probably | now | nul
                   |  n=name becomes e=exp { Update(n,e) }
                   |  whitespace 'new' n=name (lparen ps=params rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) })
                   |  whitespace 'not' e=exp { Not(e) } 
@@ -52,10 +52,12 @@ esl = {
                   |  whitespace lsquare e=exp bar qs=quals rsquare { Cmp(e,qs) }
                   |  n=Name es=(lparen es=exps rparen {es} | {[]}) { Term(n,es) }
                   |  whitespace 'become' e=exp { Become(e) }
-                  |  lcurl e=exp es=(semi exp)* rcurl { Block(e:es) }
+                  |  lcurl (e=exp es=(semi exp)* rcurl { Block(e:es) } | rcurl { Block([]) })
                   |  lparen e=exp rparen {e};
   var             -> n=name (becomes e=exp { Update(n,e) } | { Var(n) });
   me              -> whitespace 'self' { Self() };
+  now             -> whitespace 'now' { Now() };
+  nul             -> whitespace 'null' { Null() };
   numExp          -> n=int (dot m=int { Float(n,m) } | { Int(n) });
   strExp          -> s=string { Str(s) };
   bool            -> whitespace ('true' { Bool(true) } | 'false' { Bool(false) });
@@ -88,7 +90,7 @@ esl = {
   underscore  -> whitespace '_';
   query       -> whitespace '?';
   keyWord     -> key ! not([97,122] | [65,90]);
-  key         -> 'EOF' | 'act' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become' | 'self' | 'probably';
+  key         -> 'EOF' | 'act' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become' | 'self' | 'probably' | 'now' | 'null';
   name        -> whitespace not(keyWord) c=lowerChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
   Name        -> whitespace not(keyWord) c=upperChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
   int         -> whitespace i=[48,57]+ ! {'values.Int'(i)};

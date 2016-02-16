@@ -8,12 +8,17 @@ import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
 import instrs.Instr;
+import instrs.Null;
 import instrs.Pop;
 import list.List;
 
 @BoaConstructor(fields = { "exps" })
 
 public class Block extends AST {
+  
+  // A block is just a sequence of expressions. They are performed in sequence and the block
+  // returns the value of the last expression. If there are no expressions in a block then the
+  // block returns null. An empty block is a useful no-op...
 
   public AST[] exps;
 
@@ -25,9 +30,13 @@ public class Block extends AST {
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    for (AST exp : exps) {
-      exp.compile(locals, dynamics, code);
-      if (exp != exps[exps.length - 1]) code.add(new Pop());
+    if (exps.length == 0)
+      code.add(new Null());
+    else {
+      for (AST exp : exps) {
+        exp.compile(locals, dynamics, code);
+        if (exp != exps[exps.length - 1]) code.add(new Pop());
+      }
     }
   }
 

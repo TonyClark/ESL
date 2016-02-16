@@ -36,15 +36,15 @@ map(f,l) =
     [] -> []
   };
 
-main1() = addTree(Tree(Leaf(y),Tree(Leaf(200),Leaf(300))));
+test1() = addTree(Tree(Leaf(y),Tree(Leaf(200),Leaf(300))));
 
-main2() = map(fun(x) [f(x)],[1,2,3,4,5,6,7,'x','l']);
+test2() = map(fun(x) [f(x)],[1,2,3,4,5,6,7,'x','l']);
 
-main() = {
+test3() = {
   new a <- Up(0)
 };
 
-main4() =
+test4() =
   let x = 100
   in letrec f(y) = { y := y + 1; g(); y + x};
          g() = x := x + 1
@@ -52,3 +52,12 @@ main4() =
        g();
        f(10)
      }
+     
+Time(0) -> {
+  print(test1());
+  print(test2());
+  print(test3());
+  print(test4())
+};
+
+Time(n) -> {}

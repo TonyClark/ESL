@@ -1,5 +1,6 @@
 package actors;
 
+import java.util.Hashtable;
 import java.util.Vector;
 
 import compiler.DynamicVar;
@@ -20,57 +21,84 @@ public class Actor {
   // control is handed over to another actor. Computation is thereby time
   // sliced between all current actors.
 
-  static final int     STACK_SIZE           = 1000;
+  static final int                  STACK_SIZE           = 1000;
 
   // The machine time slices computation between actors. For each slice
   // an actor can perform the following maximum number of instructions...
 
-  static final int     MAX_INSTRS           = 100;
+  static final int                  MAX_INSTRS           = 100;
 
   // Time is built-in to the machine. We need a measure of time per machine
   // instruction in order to know when to advance time...
 
-  static final int     INSTRS_PER_TIME_UNIT = 1000;
+  static final int                  INSTRS_PER_TIME_UNIT = 1000;
 
   // All the actors..
 
-  static Vector<Actor> ACTORS               = new Vector<Actor>();
+  static Vector<Actor>              ACTORS               = new Vector<Actor>();
+
+  static Hashtable<Object, History> HISTORIES            = new Hashtable<Object, History>();
 
   // Stack frame offsets...
 
-  static final int     PREV_FRAME           = 0;
-  static final int     PREV_OPEN_FRAME      = 1;
-  static final int     TOS                  = 2;
-  static final int     CODE                 = 3;
-  static final int     CODE_PTR             = 4;
-  static final int     DYNAMICS             = 5;
-  static final int     LOCAL0               = 6;
+  static final int                  PREV_FRAME           = 0;
+  static final int                  PREV_OPEN_FRAME      = 1;
+  static final int                  TOS                  = 2;
+  static final int                  CODE                 = 3;
+  static final int                  CODE_PTR             = 4;
+  static final int                  DYNAMICS             = 5;
+  static final int                  LOCAL0               = 6;
 
-  // The code that will be used to handle messages...
+  // Time is global and is maintained by the execution executive. It is measured
+  // in multiple of machine instructions...
+
+  static int                        time                 = 0;
+
+  public static int getTime() {
+    return time;
+  }
+
+  public static void setTime(int time) {
+    Actor.time = time;
+  }
+
+  public static Hashtable<Object, History> getHistories() {
+    return HISTORIES;
+  }
 
   public static List<DynamicVar> builtinDynamics() {
     // Those dynamics that will be available at run-time by default...
     DynamicVar print = new DynamicVar("print", 0);
     DynamicVar probably = new DynamicVar("probably", 1);
+    DynamicVar record = new DynamicVar("record", 2);
     List<DynamicVar> env = new Nil<DynamicVar>();
     // Order is not important...
     env = env.cons(print);
     env = env.cons(probably);
+    env = env.cons(record);
     return env;
   }
 
   public static List<Dynamic> builtinEnv() {
+
     // The run-time equivalent of builtinDynamics...
+
     Dynamic print = new Dynamic(new Builtin("print", Actor::print));
     Dynamic probably = new Dynamic(new Builtin("probably", Actor::probably));
+    Dynamic record = new Dynamic(new Builtin("record", Actor::record));
     List<Dynamic> env = new Nil<Dynamic>();
     // Order is important - must match indices used in builtinDynamics...
+    env = env.cons(record);
     env = env.cons(probably);
     env = env.cons(print);
     return env;
   }
 
   public static void print(Actor actor, int arity) {
+
+    // A method that implements the builtin for printing values.
+    // The function returns its argument...
+
     if (arity == 1) {
       actor.closeFrame(0, null, null);
       Object value = actor.getFrameVar(0);
@@ -80,6 +108,12 @@ public class Actor {
   }
 
   public static void probably(Actor actor, int arity) {
+
+    // A method that implements the builtin for stochastic behaviour. It is
+    // supplied with a %-age and two values. It will return the first value
+    // with a frequency defined by the %-age and the second value the rest
+    // of the time...
+
     if (arity == 3) {
       actor.closeFrame(0, null, null);
       Object v2 = actor.popStack();
@@ -91,6 +125,22 @@ public class Actor {
     } else throw new Error("probably expects " + 3 + " args but supplied with " + arity);
   }
 
+  public static void record(Actor actor, int arity) {
+
+    // Called to record a snapshot of the state of an actor.
+    // The time is inserted implicitly in the snapshot. Return
+    // the value...
+
+    if (arity == 2) {
+      actor.closeFrame(0, null, null);
+      Object value = actor.popStack();
+      Object key = actor.popStack();
+      if (!HISTORIES.containsKey(key)) HISTORIES.put(key, new History());
+      HISTORIES.get(key).add(time, value);
+      actor.returnValue(value);
+    } else throw new Error("record expects " + 2 + " args but supplied with " + arity);
+  }
+
   public static void runESL(int time0, int timeLimit) {
 
     // This is the entry point for running the ESL system. The idea is that
@@ -100,8 +150,9 @@ public class Actor {
     // queue. The system ensures that all actors are given a fair amount of
     // processing and that all eligible messages are eventually delivered.
 
-    int time = time0;
+    time = time0;
     int instrs = 0;
+    HISTORIES.clear();
     while (time < timeLimit) {
       // All new actors will be added to ACTORS which we protect from
       // side effect. All new actors will be ready for computation on
@@ -139,16 +190,53 @@ public class Actor {
     }
 
   }
+  
+  // It is useful to have a unique id that can be used to differentiate two different actors
+  // when they are printed out...
+
+  static int      idCounter = 0;
+
+  int             id        = idCounter++;
+
+  // The behaviour of this actor. The behaviour is essentially a code-box where the code
+  // expects a message to have been supplied. The code will then perform case-analysis on
+  // the message. The behaviour-code is re-entrant in the sense that messages may cause
+  // an interrupt in which case a recursive call with the interrupting message is performed
+  // before returning to the current execution point...
 
   Behaviour       behaviour;
 
+  // The stack contains stack-frames that correspond to function calls. Each stack frame
+  // is linked to the previous frame and is popped when the current function call returns.
+  // The type of elements on the stack is Object to allow for a variety of Java values
+  // to co-exist on the stack: casts will be required in many cases...
+
   Object[]        stack     = new Object[STACK_SIZE];
+
+  // The index to the next available stack location...
 
   int             tos       = 0;
 
+  // The current call-frame on the stack. The actor has completed a thread of control
+  // when the frame becomes -1. The current frame contains information amount how to
+  // return from the current call, the code to execute, the index into the code, and
+  // the variables that are available to the code. There are two types of variable:
+  // local and dynamic. A local variable has a life-time that is limited to the current
+  // frame. A dynamic variable has a life-time that may outlive the current frame
+  // because it is captured by a closure-like data value (such as a function). Both
+  // locals and dynamics can be modified by side-effect. It is important that when a
+  // dynamic variable is modified, all captured occurrences are also modified...
+
   int             frame     = -1;
 
+  // A function may call another function. To do so builds a new stack frame that will
+  // eventually be entered. The current open frame records the frame that is currently
+  // being built. Because function calls nest, the open frame must be recorded in a
+  // stack frame so that the value of openFrame can be restored on function return...
+
   int             openFrame = -1;
+
+  // The messages that have been sent to this actor.
 
   Vector<Message> messages  = new Vector<Message>();
 
@@ -345,7 +433,7 @@ public class Actor {
   }
 
   public String toString() {
-    return "Actor(" + behaviour.getName() + ")";
+    return "Actor(" + String.format("%04d",id) + "," + behaviour.getName() + ")";
   }
 
 }
