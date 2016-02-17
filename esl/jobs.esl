@@ -1,0 +1,77 @@
+act processor(jobs) {
+  -> print('start processor');
+  Time(_) -> 
+    for job in jobs do
+      probably(50) 
+        job <- Process 
+      else {}
+};
+
+act job {
+  effort = 1;
+  currentJob = effort
+  -> print('start job');
+  Time(_) -> {};
+  Process -> 
+    case currentJob {
+      1 -> {
+        record(self,Completed);
+        currentJob := effort
+      };
+      _ -> currentJob := currentJob - 1
+    }
+}
+
+-> 
+  for x in 1 .. 10 do { 
+    new processor([new job,new job,new job,new job])
+  };
+
+Time(_) -> {};
+
+Results(all) -> 
+  letrec
+    start = 1;
+    end = 10;
+    find(t,results) =
+      case results {
+        (Result(tt,Completed) ? (tt=t)) : _ -> [Completed];
+        _ : more -> find(t,more);
+        [] -> []
+      };
+    resultsAt(t) = fun(l) find(t,l);
+    map(f,l) =
+      case l {
+        h:t -> (f(h)):map(f,t);
+        [] -> []
+      };
+    getActorResults(a) =
+      case a {
+        Results(_,results) -> results;
+        _ -> []
+      };
+    flatten(lists) =
+      case lists {
+        h:t -> append(h,flatten(t));
+        [] -> []
+      };
+    append(l1,l2) =
+      case l1 {
+        h:t -> h:(append(t,l2));
+        [] -> l2
+      };
+    length(l) =
+      case l {
+        h:t -> 1 + length(t);
+        [] -> 0
+      };
+    csv(values) =
+      case values {
+        h:[] -> '';
+        h:t -> h+','+(csv(t))
+      }
+  in {
+    let completed = map(fun(n) length(flatten(map(resultsAt(n),map(getActorResults,all)))),start..end)
+    in print(csv('jobs processed':completed))
+  }
+      

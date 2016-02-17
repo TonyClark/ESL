@@ -10,14 +10,23 @@ public class Behaviour {
 
   List<Dynamic> dynamics;
 
+  // The index to jump to when an actor is created...
+
+  int           initIndex;
+
   // A behaviour handles messages via a code box...
 
   CodeBox       code;
 
-  public Behaviour(String name, List<Dynamic> dynamics, CodeBox codebox) {
+  public Behaviour(String name, List<Dynamic> dynamics, int initIndex, CodeBox codebox) {
     this.name = name;
     this.dynamics = dynamics;
+    this.initIndex = initIndex;
     this.code = codebox;
+  }
+
+  public int getInitIndex() {
+    return initIndex;
   }
 
   public List<Dynamic> getDynamics() {

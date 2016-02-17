@@ -13,6 +13,10 @@ public class PVar extends Pattern {
   public PVar() {
   }
 
+  public PVar(String name) {
+    this.name = name;
+  }
+
   public String toString() {
     return "PVar(" + name + ")";
   }

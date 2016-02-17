@@ -1,0 +1,35 @@
+random(percent,n) =
+  case n {
+    0 -> 0;
+    _ -> probably(percent) n else random(percent,n-1)
+  };
+  
+balls = [
+  Ball(White,White,random(10,9),random(10,9)),
+  Ball(White,White,random(10,9),random(10,9))
+];
+
+select(p,l,b) =
+  case l {
+    [] -> b;
+    h:t ->
+      case p(h) {
+        true -> h;
+        _ -> select(p,t,b)
+      }   
+  };
+  
+act painter {
+  x = random(10,9);
+  y = random(10,9);
+  getBall() = select(fun(b) case b { Ball(_,_,bx,by) ? (bx=x) and (by=y) -> true; _ -> false },balls,NoBall)
+  
+  Time(n) -> 
+    case getBall() {
+      NoBall -> move();
+      Ball(
+};
+
+painters = [new painter,new painter]
+  
+Time(n) -> {}

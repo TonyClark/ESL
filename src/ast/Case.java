@@ -20,6 +20,12 @@ public class Case extends AST {
   public Case() {
   }
 
+  public Case(AST[] exps, BArm[] arms) {
+    super();
+    this.exps = exps;
+    this.arms = arms;
+  }
+
   public String toString() {
     return "Case(" + Arrays.toString(exps) + "," + Arrays.toString(arms) + ")";
   }
@@ -46,7 +52,7 @@ public class Case extends AST {
     AST[] args = new AST[exps.length + 1];
     for (int i = 0; i < exps.length; i++)
       args[i] = exps[i];
-    args[exps.length] = new Fun("", new String[] {}, new ast.Error(new Str("ran out of case arms")));
+    args[exps.length] = new Fun("", new String[] {}, new ast.Error(new BinExp(new Str("ran out of case arms for: "), "+", new ast.List(exps))));
     return args;
   }
 

@@ -21,7 +21,7 @@ public class Actor {
   // control is handed over to another actor. Computation is thereby time
   // sliced between all current actors.
 
-  static final int                  STACK_SIZE           = 1000;
+  static final int                  STACK_SIZE           = 1000000;
 
   // The machine time slices computation between actors. For each slice
   // an actor can perform the following maximum number of instructions...
@@ -49,6 +49,8 @@ public class Actor {
   static final int                  DYNAMICS             = 5;
   static final int                  LOCAL0               = 6;
 
+  public static boolean             debug                = false;
+
   // Time is global and is maintained by the execution executive. It is measured
   // in multiple of machine instructions...
 
@@ -71,11 +73,13 @@ public class Actor {
     DynamicVar print = new DynamicVar("print", 0);
     DynamicVar probably = new DynamicVar("probably", 1);
     DynamicVar record = new DynamicVar("record", 2);
+    DynamicVar getResults = new DynamicVar("getResults", 3);
     List<DynamicVar> env = new Nil<DynamicVar>();
     // Order is not important...
     env = env.cons(print);
     env = env.cons(probably);
     env = env.cons(record);
+    env = env.cons(getResults);
     return env;
   }
 
@@ -86,12 +90,30 @@ public class Actor {
     Dynamic print = new Dynamic(new Builtin("print", Actor::print));
     Dynamic probably = new Dynamic(new Builtin("probably", Actor::probably));
     Dynamic record = new Dynamic(new Builtin("record", Actor::record));
+    Dynamic getResults = new Dynamic(new Builtin("getResults", Actor::getResults));
     List<Dynamic> env = new Nil<Dynamic>();
     // Order is important - must match indices used in builtinDynamics...
+    env = env.cons(getResults);
     env = env.cons(record);
     env = env.cons(probably);
     env = env.cons(print);
     return env;
+  }
+
+  public static Term getResults() {
+    List<Term> results = new Nil<Term>();
+    for (Object key : HISTORIES.keySet()) {
+      History history = HISTORIES.get(key);
+      results = results.cons(new Term("Results", key, history.asTerm()));
+    }
+    return new Term("Results", results);
+  }
+
+  public static void getResults(Actor actor, int arity) {
+    if (arity == 0) {
+      actor.closeFrame(0, null, null);
+      actor.returnValue(getResults());
+    } else throw new Error("getResults expects 0 args but supplied with " + arity);
   }
 
   public static void print(Actor actor, int arity) {
@@ -190,7 +212,7 @@ public class Actor {
     }
 
   }
-  
+
   // It is useful to have a unique id that can be used to differentiate two different actors
   // when they are printed out...
 
@@ -243,6 +265,9 @@ public class Actor {
   public Actor(Behaviour behaviour) {
     this.behaviour = behaviour;
     ACTORS.add(this);
+    openFrame(behaviour.getCode(), new Nil<Dynamic>());
+    closeFrame(behaviour.getCode().getLocals(), behaviour.getCode(), behaviour.getDynamics());
+    setCodePtr(behaviour.getInitIndex());
   }
 
   public void addDynamic(Object value) {
@@ -346,7 +371,7 @@ public class Actor {
   }
 
   public void printStack() {
-    if (tos >= 0) System.out.format("TOS[%08d] = %s%n", tos - 1, tos());
+    if (tos > 0) System.out.format("TOS[%08d] = %s%n", tos - 1, tos());
     System.out.println("OPEN FRAME = " + openFrame);
     int f = frame;
     while (f != -1) {
@@ -364,21 +389,32 @@ public class Actor {
     pushStack(value);
   }
 
-  public void run(int instrs) {
-    while (!complete() && instrs > 0) {
-      Vector<Instr> code = getCode().getCode();
-      int i = getCodePtr();
-      incCodePtr();
-      Instr next = getCode().getInstr(i);
-      // System.out.println("NEXT = " + next);
-      // printStack();
-      next.perform(this);
-      instrs--;
-    }
-    if (complete()) {
-      frame = -1;
-      openFrame = -1;
-      tos = 0;
+  public void reset() {
+    frame = -1;
+    openFrame = -1;
+    tos = 0;
+  }
+
+  public Object run(int instrs) {
+    try {
+      while (!complete() && instrs > 0) {
+        Vector<Instr> code = getCode().getCode();
+        int i = getCodePtr();
+        incCodePtr();
+        Instr next = getCode().getInstr(i);
+        if (debug) System.out.println("NEXT = " + next);
+        if (debug) printStack();
+        next.perform(this);
+        instrs--;
+      }
+      if (complete()) {
+        Object result = tos > 0 ? popStack() : null;
+        reset();
+        return result;
+      } else return null;
+    } catch (Exception e) {
+      printStack();
+      throw e;
     }
   }
 
@@ -390,11 +426,15 @@ public class Actor {
       // Ignore time for now....
       Message message = messages.firstElement();
       messages.remove(message);
-      openFrame(behaviour.getCode(), new Nil<Dynamic>());
-      closeFrame(behaviour.getCode().getLocals(), behaviour.getCode(), behaviour.getDynamics());
-      setFrameVar(0, message.getValue());
-      openFrame(null, getDynamics());
+      processMessage(message.getValue());
     }
+  }
+
+  public void processMessage(Object message) {
+    openFrame(behaviour.getCode(), new Nil<Dynamic>());
+    closeFrame(behaviour.getCode().getLocals(), behaviour.getCode(), behaviour.getDynamics());
+    setFrameVar(0, message);
+    openFrame(null, getDynamics());
   }
 
   public void send(Object message) {
@@ -433,7 +473,7 @@ public class Actor {
   }
 
   public String toString() {
-    return "Actor(" + String.format("%04d",id) + "," + behaviour.getName() + ")";
+    return "Actor(" + String.format("%04d", id) + "," + behaviour.getName() + ")";
   }
 
 }

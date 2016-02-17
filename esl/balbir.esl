@@ -1,0 +1,43 @@
+value = 10;
+
+add1() = value := value + 1;
+
+create(n) = 
+  case n {
+    0 -> {};
+    x -> {
+      new a; 
+      create(n-1)
+    }
+  };
+
+act a {
+
+  state = value
+  
+  Time(n) -> { 
+    state := state + 1;
+    //print(self + ' ' + state);
+    record(self,State(state))
+  }
+
+}
+
+Time(0) ->  {
+  print('b: ' + 0);
+  create(500)
+};
+  
+Time(n) ? n < 5 -> {
+  probably(50) add1() else {};
+  print( 'b: ' + value)
+};
+
+Time(n) -> {
+  self <- OK(value);
+  record(self,State(value))
+};
+
+OK(x) -> print(x);
+
+Results(results) -> print(results)

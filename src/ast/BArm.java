@@ -20,6 +20,12 @@ public class BArm {
   public BArm() {
   }
 
+  public BArm(Pattern[] patterns, AST exp) {
+    super();
+    this.patterns = patterns;
+    this.exp = exp;
+  }
+
   public String toString() {
     return "BArm(" + Arrays.toString(patterns) + "," + exp + ")";
   }

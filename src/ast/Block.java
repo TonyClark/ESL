@@ -15,14 +15,18 @@ import list.List;
 @BoaConstructor(fields = { "exps" })
 
 public class Block extends AST {
-  
+
   // A block is just a sequence of expressions. They are performed in sequence and the block
   // returns the value of the last expression. If there are no expressions in a block then the
   // block returns null. An empty block is a useful no-op...
 
-  public AST[] exps;
+  public AST[] exps = new AST[] {};
 
   public Block() {
+  }
+
+  public Block(AST... exps) {
+    this.exps = exps;
   }
 
   public String toString() {

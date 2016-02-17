@@ -1,7 +1,7 @@
 package actors;
 
 public class Snapshot {
-  
+
   int    time;
   Object value;
 
@@ -13,6 +13,10 @@ public class Snapshot {
 
   public String toString() {
     return value + "@" + time;
+  }
+
+  public Term asTerm() {
+    return new Term("Result", time, value);
   }
 
 }

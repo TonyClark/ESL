@@ -4,7 +4,7 @@ import 'esl/ast.xpl'
 
 esl = { 
 
-  esl             -> bs=bindings as=barms EOF { Send(New(Letrec(bs,Act('main',as))),[Term('Time',[Int(0)])]) };
+  esl             -> bs=bindings i=actinit as=barms EOF { New(Letrec(bs,Act('main',i,as))) };
   topLevelCommand -> whitespace d=eslCommand {d};
   eslCommand      -> x=tplvlSet ! {x} | x=tplvlExp ! {x} | x=tplvlQuit ! {x} | x=tplvlImport ! {x};
   tplvlSet        -> n=name ':=' e=exp ';' { TplvlSet(n,e) };
@@ -16,8 +16,9 @@ esl = {
   binding         -> valbind | funbind | actbind;
   valbind         -> n=name eql e=exp { Binding(n,e) };
   funbind         -> n=name lparen ps=params rparen eql e=exp { Binding(n,Fun(n,ps,e)) };
-  actbind         -> whitespace 'act' n=name ps=actargs lcurl bs = bindings as=barms rcurl { Binding(n,Fun(n,ps,Letrec(bs,Act(n,as)))) };
+  actbind         -> whitespace 'act' n=name ps=actargs lcurl bs = bindings i=actinit as=barms rcurl { Binding(n,Fun(n,ps,Letrec(bs,Act(n,i,as)))) };
   actargs         -> lparen ps=params rparen {ps} | {[]};
+  actinit         -> arrow e=exp semi {e} | { Null() };
   barms           -> a=barm as=(semi barm)* { a:as };
   barm            -> lparen ps=patterns rparen arrow e=exp { BArm(ps,e) };
   barm            -> p=pattern arrow e=exp { BArm([p],e) };
@@ -39,15 +40,16 @@ esl = {
                   |  leftArrow v=exp { Send(e,[v]) }
                   |  {e};
   exps            -> e=exp es=(comma exp)* { e:es } | {[]};
-  op              -> whitespace ('+' | '-' | '*' | '/' | 'and' | 'or' | ':' | '<>' | '=' | '<' | '>');
+  op              -> whitespace ('+' | '-' | '*' | '/' | 'and' | 'or' | ':' | '<>' | '=' | '<' | '>' | '..');
   simpleExp       -> var | numExp | strExp | bool | me | probably | now | nul
                   |  n=name becomes e=exp { Update(n,e) }
-                  |  whitespace 'new' n=name (lparen ps=params rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) })
+                  |  whitespace 'new' n=name (lparen ps=exps rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) })
                   |  whitespace 'not' e=exp { Not(e) } 
                   |  whitespace 'fun' lparen as=params rparen e=exp { Fun('',as,e) }
                   |  whitespace 'let' bs=bindings whitespace 'in' e=exp { Let(bs,e) }
                   |  whitespace 'letrec' bs=bindings whitespace 'in' e=exp { Letrec(bs,e) }
                   |  whitespace 'case' es=caseValues lcurl as=barms rcurl { Case(es,as) }
+                  |  whitespace 'for' n=name whitespace 'in' l=exp whitespace 'do' e=exp { For(n,l,e) }
                   |  whitespace lsquare (es=exps rsquare { List(es) } | rsquare { List([]) })
                   |  whitespace lsquare e=exp bar qs=quals rsquare { Cmp(e,qs) }
                   |  n=Name es=(lparen es=exps rparen {es} | {[]}) { Term(n,es) }
@@ -90,7 +92,7 @@ esl = {
   underscore  -> whitespace '_';
   query       -> whitespace '?';
   keyWord     -> key ! not([97,122] | [65,90]);
-  key         -> 'EOF' | 'act' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become' | 'self' | 'probably' | 'now' | 'null';
+  key         -> 'EOF' | 'act' | 'for' | 'do' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become' | 'self' | 'probably' | 'now' | 'null';
   name        -> whitespace not(keyWord) c=lowerChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
   Name        -> whitespace not(keyWord) c=upperChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
   int         -> whitespace i=[48,57]+ ! {'values.Int'(i)};

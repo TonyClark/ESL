@@ -18,12 +18,16 @@ public class List extends AST {
   public List() {
   }
 
+  public List(AST... elements) {
+    this.elements = elements;
+  }
+
   public String toString() {
     return "List(" + Arrays.toString(elements) + ")";
   }
 
   public void compile(list.List<FrameVar> locals, list.List<DynamicVar> dynamics, Vector<Instr> code) {
-    for(AST e : elements)
+    for (AST e : elements)
       e.compile(locals, dynamics, code);
     code.add(new instrs.List(elements.length));
   }

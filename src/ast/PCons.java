@@ -15,6 +15,12 @@ public class PCons extends Pattern {
   public PCons() {
   }
 
+  public PCons(Pattern head, Pattern tail) {
+    super();
+    this.head = head;
+    this.tail = tail;
+  }
+
   public String toString() {
     return "PCons(" + head + "," + tail + ")";
   }

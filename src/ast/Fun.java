@@ -58,7 +58,7 @@ public class Fun extends AST {
     }
     body.compile(locals, dynamics, bodyCode);
     bodyCode.add(new Return());
-    code.add(new instrs.Fun(args.length, new CodeBox(frame, bodyCode)));
+    code.add(new instrs.Fun(name, args.length, new CodeBox(frame, bodyCode)));
   }
 
   private int argIndex(String arg) {

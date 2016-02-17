@@ -7,6 +7,7 @@ import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
 import instrs.Add;
+import instrs.And;
 import instrs.Cons;
 import instrs.Eql;
 import instrs.Gre;
@@ -14,6 +15,7 @@ import instrs.Instr;
 import instrs.Less;
 import instrs.NEql;
 import instrs.Sub;
+import instrs.To;
 import list.List;
 
 @BoaConstructor(fields = { "left", "op", "right" })
@@ -65,6 +67,12 @@ public class BinExp extends AST {
         break;
       case "<>":
         code.add(new NEql());
+        break;
+      case "and":
+        code.add(new And());
+        break;
+      case "..":
+        code.add(new To());
         break;
       default:
         throw new java.lang.Error("unknown operator " + op);
