@@ -1,0 +1,9 @@
+Time(1) -> print('this is the start of time.');
+
+Time(20) -> {
+  print('this is the end of time.');
+  let results = stopAll()
+  in print(results)
+};
+
+Time(t) -> print('this is time ' + t)
