@@ -59,6 +59,9 @@ act painter(colour) {
   new painter(Green)
 };
 
-Time(_) -> {};
+Time(100) -> {
+  stopAll();
+  print(balls)
+};
 
-Results(_) -> print(balls)
+Time(_) -> {}

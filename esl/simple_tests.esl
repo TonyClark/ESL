@@ -53,11 +53,13 @@ test4() =
        f(10)
      }
      
-Time(0) -> {
+Time(1) -> {
   print(test1());
   print(test2());
   print(test3());
   print(test4())
 };
 
-Time(n) -> {}
+Time(100) ->  stopAll();
+
+Time(_) -> {}

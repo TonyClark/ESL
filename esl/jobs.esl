@@ -23,14 +23,13 @@ act job {
 }
 
 -> 
-  for x in 1 .. 500 do { 
+  for x in 1 .. 300 do { 
     new processor([new job,new job,new job,new job])
   };
 
-Time(_) -> {};
-
-Results(all) -> 
+Time(100) -> 
   letrec
+    results = getResults();
     start = 1;
     end = 10;
     resultsAt(t) = fun(l) find Result(tt,Completed) ? tt=t in l do [Completed] else [];
@@ -60,7 +59,13 @@ Results(all) ->
         h:t -> h+','+(csv(t))
       }
   in {
-    let completed = map(fun(n) length(flatten(map(resultsAt(n),map(getActorResults,all)))),start..end)
-    in print(csv('jobs processed':completed))
-  }
+    stopAll();
+    case results {
+      Results(all) ->
+        let completed = map(fun(n) length(flatten(map(resultsAt(n),map(getActorResults,all)))),start..end)
+        in print(csv('jobs processed':completed))
+    }
+  };
+  
+Time(_) -> {}
       

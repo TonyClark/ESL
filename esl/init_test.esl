@@ -23,7 +23,8 @@ a = null;
 b = null
   
 
-Time(0) -> a := new producer;
+Time(1) -> a := new producer;
 Time(2) -> b := new consumer;
 Time(4) -> a <- Init(b);
+Time(10) -> { stopAll() };
 Time(n) -> {}

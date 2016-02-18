@@ -10,5 +10,9 @@ Time(n ?n < 10) ->
     record(self,Two)
   };
   
-// Then ignore clicks...
-Time(t) -> {}
+// Run until 100 clicks...
+  
+Time(100) -> { stopAll(); print(getResults()) };
+  
+// Ignore all other clicks...
+Time(_) -> {}

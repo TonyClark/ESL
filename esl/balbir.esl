@@ -27,6 +27,11 @@ Time(0) ->  {
   print('b: ' + 0);
   create(500)
 };
+
+Time(10) -> {
+  stopAll();
+  print(getResults())
+};
   
 Time(n) ? n < 5 -> {
   probably(50) add1() else {};
@@ -38,6 +43,4 @@ Time(n) -> {
   record(self,State(value))
 };
 
-OK(x) -> print(x);
-
-Results(results) -> print(results)
+OK(x) -> print(x)

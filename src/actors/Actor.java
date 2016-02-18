@@ -56,6 +56,10 @@ public class Actor {
 
   static int                        time                 = 0;
 
+  // Set this to true when the simulation is to be stopped...
+
+  static boolean                    stop                 = false;
+
   public static int getTime() {
     return time;
   }
@@ -75,6 +79,7 @@ public class Actor {
     DynamicVar record = new DynamicVar("record", 2);
     DynamicVar getResults = new DynamicVar("getResults", 3);
     DynamicVar random = new DynamicVar("random", 4);
+    DynamicVar stopAll = new DynamicVar("stopAll", 5);
     List<DynamicVar> env = new Nil<DynamicVar>();
     // Order is not important...
     env = env.cons(print);
@@ -82,6 +87,7 @@ public class Actor {
     env = env.cons(record);
     env = env.cons(getResults);
     env = env.cons(random);
+    env = env.cons(stopAll);
     return env;
   }
 
@@ -94,8 +100,10 @@ public class Actor {
     Dynamic record = new Dynamic(new Builtin("record", Actor::record));
     Dynamic getResults = new Dynamic(new Builtin("getResults", Actor::getResults));
     Dynamic random = new Dynamic(new Builtin("random", Actor::random));
+    Dynamic stopAll = new Dynamic(new Builtin("stopAll", Actor::stopAll));
     List<Dynamic> env = new Nil<Dynamic>();
     // Order is important - must match indices used in builtinDynamics...
+    env = env.cons(stopAll);
     env = env.cons(random);
     env = env.cons(getResults);
     env = env.cons(record);
@@ -116,6 +124,14 @@ public class Actor {
   public static void getResults(Actor actor, int arity) {
     if (arity == 0) {
       actor.closeFrame(0, null, null);
+      actor.returnValue(getResults());
+    } else throw new Error("getResults expects 0 args but supplied with " + arity);
+  }
+
+  public static void stopAll(Actor actor, int arity) {
+    if (arity == 0) {
+      actor.closeFrame(0, null, null);
+      stop = true;
       actor.returnValue(getResults());
     } else throw new Error("getResults expects 0 args but supplied with " + arity);
   }
@@ -178,7 +194,7 @@ public class Actor {
     } else throw new Error("record expects " + 2 + " args but supplied with " + arity);
   }
 
-  public static void runESL(int time0, int timeLimit) {
+  public static void runESL(int time0) {
 
     // This is the entry point for running the ESL system. The idea is that
     // all actors are in the vector ACTORS in an arbitrary order. Each actor
@@ -190,7 +206,7 @@ public class Actor {
     time = time0;
     int instrs = 0;
     HISTORIES.clear();
-    while (time < timeLimit) {
+    while (!stop) {
       // All new actors will be added to ACTORS which we protect from
       // side effect. All new actors will be ready for computation on
       // the next computation run...
@@ -198,14 +214,14 @@ public class Actor {
       ACTORS = new Vector<Actor>();
       for (Actor actor : actors) {
         if (actor.complete()) actor.scheduleMessage(time);
-        actor.run(MAX_INSTRS);
+        if (!stop) actor.run(MAX_INSTRS);
       }
       instrs += MAX_INSTRS;
       // Merge the new actors from the previous round with the existing
       // actors...
       for (Actor actor : actors)
         ACTORS.add(actor);
-      if (instrs >= INSTRS_PER_TIME_UNIT) {
+      if (!stop && instrs >= INSTRS_PER_TIME_UNIT) {
         time++;
         instrs = 0;
         // When the time advances one unit, inform all the actors by
@@ -411,6 +427,11 @@ public class Actor {
   }
 
   public Object run(int instrs) {
+
+    // Run for the supplied number of instructions. If if the actor
+    // calls stop, then continue until it returns because this is
+    // the last actor that is active in the system...
+    
     try {
       while (!complete() && instrs > 0) {
         Vector<Instr> code = getCode().getCode();
@@ -420,6 +441,7 @@ public class Actor {
         if (debug) System.out.println("NEXT = " + next);
         if (debug) printStack();
         next.perform(this);
+        if (stop) instrs = Integer.MAX_VALUE;
         instrs--;
       }
       if (complete()) {

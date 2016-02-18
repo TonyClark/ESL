@@ -25,9 +25,9 @@ act a(b) {
 
 -> new a(null) <- SetB(new a(null));
 
-Time(_) -> {};
+Time(100) -> { stopAll() };
 
-Results(_) -> {}
+Time(_) -> {}
 
 
   

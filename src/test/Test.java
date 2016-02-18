@@ -5,7 +5,6 @@ import java.util.Vector;
 import actors.Actor;
 import actors.Behaviour;
 import actors.CodeBox;
-import actors.Term;
 import ast.AST;
 import compiler.FrameVar;
 import instrs.Instr;
@@ -22,7 +21,7 @@ public class Test {
     // code box. Create an instance of the behaviour called 'main' and supply the
     // Java command line arguments.
 
-    JavaObject o = (JavaObject) Interpreter.readFile("esl/esl.xpl", "esl", "esl/painters.esl");
+    JavaObject o = (JavaObject) Interpreter.readFile("esl/esl.xpl", "esl", "esl/stochastic_test.esl");
     AST ast = (AST) o.getTarget();
     Vector<Instr> code = new Vector<Instr>();
     ast.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code);
@@ -33,13 +32,7 @@ public class Test {
     actor.kill();
     // Running the initial file should produce the root system actor...
     Actor root = (Actor) actor.run(Integer.MAX_VALUE);
-    Actor.runESL(0, 50);
-    // The root actor processes the results of the simulation...
-    root.reset();
-    root.processMessage(Actor.getResults());
-    Actor.setTime(0);
-    // Actor.debug = true;
-    root.run(Integer.MAX_VALUE);
+    Actor.runESL(0);
     System.out.println("done.");
   }
 
