@@ -74,12 +74,14 @@ public class Actor {
     DynamicVar probably = new DynamicVar("probably", 1);
     DynamicVar record = new DynamicVar("record", 2);
     DynamicVar getResults = new DynamicVar("getResults", 3);
+    DynamicVar random = new DynamicVar("random", 4);
     List<DynamicVar> env = new Nil<DynamicVar>();
     // Order is not important...
     env = env.cons(print);
     env = env.cons(probably);
     env = env.cons(record);
     env = env.cons(getResults);
+    env = env.cons(random);
     return env;
   }
 
@@ -91,8 +93,10 @@ public class Actor {
     Dynamic probably = new Dynamic(new Builtin("probably", Actor::probably));
     Dynamic record = new Dynamic(new Builtin("record", Actor::record));
     Dynamic getResults = new Dynamic(new Builtin("getResults", Actor::getResults));
+    Dynamic random = new Dynamic(new Builtin("random", Actor::random));
     List<Dynamic> env = new Nil<Dynamic>();
     // Order is important - must match indices used in builtinDynamics...
+    env = env.cons(random);
     env = env.cons(getResults);
     env = env.cons(record);
     env = env.cons(probably);
@@ -114,6 +118,17 @@ public class Actor {
       actor.closeFrame(0, null, null);
       actor.returnValue(getResults());
     } else throw new Error("getResults expects 0 args but supplied with " + arity);
+  }
+
+  public static void random(Actor actor, int arity) {
+
+    // get a random number from 0 to n-1...
+
+    if (arity == 1) {
+      actor.closeFrame(0, null, null);
+      int n = (int) actor.getFrameVar(0);
+      actor.returnValue((int) (Math.random() * n));
+    } else throw new Error("random expects " + 1 + " arg but supplied with " + arity);
   }
 
   public static void print(Actor actor, int arity) {

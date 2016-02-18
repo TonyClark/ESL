@@ -14,6 +14,7 @@ import instrs.Gre;
 import instrs.Instr;
 import instrs.Less;
 import instrs.NEql;
+import instrs.Or;
 import instrs.Sub;
 import instrs.To;
 import list.List;
@@ -70,6 +71,9 @@ public class BinExp extends AST {
         break;
       case "and":
         code.add(new And());
+        break;
+      case "or":
+        code.add(new Or());
         break;
       case "..":
         code.add(new To());

@@ -1,35 +1,64 @@
-random(percent,n) =
-  case n {
-    0 -> 0;
-    _ -> probably(percent) n else random(percent,n-1)
-  };
-  
+width = 5;
+height = 5;
+
 balls = [
-  Ball(White,White,random(10,9),random(10,9)),
-  Ball(White,White,random(10,9),random(10,9))
+  Ball(White,White,random(width),random(height)),
+  Ball(White,White,random(width),random(height)),
+  Ball(White,White,random(width),random(height)),
+  Ball(White,White,random(width),random(height)),
+  Ball(White,White,random(width),random(height))
 ];
 
-select(p,l,b) =
+max(x,y) = if x > y then x else y;
+
+min(x,y) = if x < y then x else y;
+
+modify(value,minValue,maxValue) = max(min(value + (((random(3))+1)-2),maxValue),minValue);
+
+subst(n,o,l) =
   case l {
-    [] -> b;
-    h:t ->
-      case p(h) {
-        true -> h;
-        _ -> select(p,t,b)
-      }   
+    h:t ?(o=h) -> n:subst(n,o,t);
+    h:t        -> h:subst(n,o,t);
+    []         -> []
   };
   
-act painter {
-  x = random(10,9);
-  y = random(10,9);
-  getBall() = select(fun(b) case b { Ball(_,_,bx,by) ? (bx=x) and (by=y) -> true; _ -> false },balls,NoBall)
-  
-  Time(n) -> 
+act painter(colour) {
+  x = random(width);
+  y = random(height);
+  canPaint(b) = 
+    case b {
+      Ball(White,c,bx,by) -> (bx=x) and (by=y) and (c<>colour);
+      Ball(c,White,bx,by) -> (bx=x) and (by=y) and (c<>colour);
+      _ -> false
+    };
+  getBall() = 
+    find b ? canPaint(b) in balls do 
+      b 
+    else NoBall;
+  move() = {
+    x := modify(x,0,width);
+    y := modify(y,0,height)
+  }
+  Time(n) -> {
     case getBall() {
       NoBall -> move();
-      Ball(
+      b=Ball(White,c,x,y) -> {
+        balls := subst(Ball(colour,c,x,y),b,balls);
+        move()
+      };
+      b=Ball(c,White,x,y) -> {
+        balls := subst(Ball(c,colour,x,y),b,balls);
+        move()
+      }
+    }
+  }
+}
+  
+-> {
+  new painter(Red);
+  new painter(Green)
 };
 
-painters = [new painter,new painter]
-  
-Time(n) -> {}
+Time(_) -> {};
+
+Results(_) -> print(balls)

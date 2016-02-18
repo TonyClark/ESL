@@ -22,7 +22,7 @@ public class Test {
     // code box. Create an instance of the behaviour called 'main' and supply the
     // Java command line arguments.
 
-    JavaObject o = (JavaObject) Interpreter.readFile("esl/esl.xpl", "esl", "esl/shared_var.esl");
+    JavaObject o = (JavaObject) Interpreter.readFile("esl/esl.xpl", "esl", "esl/painters.esl");
     AST ast = (AST) o.getTarget();
     Vector<Instr> code = new Vector<Instr>();
     ast.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code);

@@ -25,7 +25,7 @@ esl = {
   patterns        -> p=pattern ps=(comma pattern)* { p:ps };
   pattern         -> s=simplePattern (colon p=pattern { PCons(s,p) } | query e=exp { PGuard(e,s) } | {s});
   simplePattern   -> pVar | pInt | pTerm | pList | pStr | pBool | pWild | pNull | lparen p=pattern rparen {p};
-  pVar            -> n=name { PVar(n) };
+  pVar            -> n=name (eql p=pattern { PBind(n,p) } | { PVar(n) });
   pInt            -> n=int { PInt(n) };
   pStr            -> s=string { PStr(s) };
   pBool           -> whitespace ('true' { PBool(true) } | 'false' { PBool(false) });
@@ -52,6 +52,7 @@ esl = {
                   |  whitespace 'case' es=caseValues lcurl as=barms rcurl { Case(es,as) }
                   |  whitespace 'for' n=name whitespace 'in' l=exp whitespace 'do' e=exp whitespace { For(n,l,e) }
                   |  whitespace 'find' p=pattern whitespace 'in' l=exp whitespace 'do' e=exp 'else' d=exp { Find(p,l,e,d) }
+                  |  whitespace 'if' t=exp whitespace 'then' c=exp whitespace 'else' a=exp { If(t,c,a) }
                   |  whitespace lsquare (es=exps rsquare { List(es) } | rsquare { List([]) })
                   |  whitespace lsquare e=exp bar qs=quals rsquare { Cmp(e,qs) }
                   |  n=Name es=(lparen es=exps rparen {es} | {[]}) { Term(n,es) }
