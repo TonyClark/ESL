@@ -33,7 +33,7 @@ public class Test {
     actor.kill();
     // Running the initial file should produce the root system actor...
     Actor root = (Actor) actor.run(Integer.MAX_VALUE);
-    Actor.runESL(0, 10);
+    Actor.runESL(0, 50);
     // The root actor processes the results of the simulation...
     root.reset();
     root.processMessage(Actor.getResults());

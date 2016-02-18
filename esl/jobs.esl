@@ -1,5 +1,5 @@
 act processor(jobs) {
-  -> print('start processor');
+  -> print('start processor ' + self);
   Time(_) -> 
     for job in jobs do
       probably(50) 
@@ -8,9 +8,9 @@ act processor(jobs) {
 };
 
 act job {
-  effort = 1;
+  effort = 3;
   currentJob = effort
-  -> print('start job');
+  -> print('start job ' + self);
   Time(_) -> {};
   Process -> 
     case currentJob {
@@ -23,7 +23,7 @@ act job {
 }
 
 -> 
-  for x in 1 .. 10 do { 
+  for x in 1 .. 500 do { 
     new processor([new job,new job,new job,new job])
   };
 

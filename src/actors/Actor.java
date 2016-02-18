@@ -21,7 +21,7 @@ public class Actor {
   // control is handed over to another actor. Computation is thereby time
   // sliced between all current actors.
 
-  static final int                  STACK_SIZE           = 1000000;
+  static final int                  STACK_SIZE           = 75000;
 
   // The machine time slices computation between actors. For each slice
   // an actor can perform the following maximum number of instructions...

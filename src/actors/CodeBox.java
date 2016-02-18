@@ -39,8 +39,11 @@ public class CodeBox {
 
   public CodeBox getTimeHandlingCode() {
     Vector<Instr> noReturn = (Vector<Instr>) code.clone();
-    noReturn.remove(noReturn.lastElement());
-    noReturn.add(noReturn.size(), new PopFrame());
+    for (int i = 0; i < noReturn.size(); i++) {
+      if (noReturn.elementAt(i) instanceof instrs.Return) {
+        noReturn.setElementAt(new PopFrame(), i);
+      }
+    }
     return new CodeBox(locals, noReturn);
   }
 
