@@ -49,7 +49,8 @@ esl = {
                   |  whitespace 'let' bs=bindings whitespace 'in' e=exp { Let(bs,e) }
                   |  whitespace 'letrec' bs=bindings whitespace 'in' e=exp { Letrec(bs,e) }
                   |  whitespace 'case' es=caseValues lcurl as=barms rcurl { Case(es,as) }
-                  |  whitespace 'for' n=name whitespace 'in' l=exp whitespace 'do' e=exp { For(n,l,e) }
+                  |  whitespace 'for' n=name whitespace 'in' l=exp whitespace 'do' e=exp whitespace { For(n,l,e) }
+                  |  whitespace 'find' p=pattern whitespace 'in' l=exp whitespace 'do' e=exp 'else' d=exp { Find(p,l,e,d) }
                   |  whitespace lsquare (es=exps rsquare { List(es) } | rsquare { List([]) })
                   |  whitespace lsquare e=exp bar qs=quals rsquare { Cmp(e,qs) }
                   |  n=Name es=(lparen es=exps rparen {es} | {[]}) { Term(n,es) }
@@ -92,7 +93,7 @@ esl = {
   underscore  -> whitespace '_';
   query       -> whitespace '?';
   keyWord     -> key ! not([97,122] | [65,90]);
-  key         -> 'EOF' | 'act' | 'for' | 'do' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become' | 'self' | 'probably' | 'now' | 'null';
+  key         -> 'EOF' | 'act' | 'for' | 'find' | 'do' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become' | 'self' | 'probably' | 'now' | 'null' | 'if' | 'then' | 'else';
   name        -> whitespace not(keyWord) c=lowerChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
   Name        -> whitespace not(keyWord) c=upperChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
   int         -> whitespace i=[48,57]+ ! {'values.Int'(i)};

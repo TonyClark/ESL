@@ -1,4 +1,4 @@
-export Act,Apply,Become,Binding,BinExp,Block,BArm,Bool,BQual,Case,Cmp,Float,Fun,For,Int,Let,Letrec,List,New,Not,Now,Null,PBool,PCons,PGuard,PInt,PNil,PStr,PTerm,PVar,PWild,Self,Send,Str,Term,Update,Var
+export Act,Apply,Become,Binding,BinExp,Block,BArm,Bool,BQual,Case,Cmp,Float,Fun,Find,For,Int,Let,Letrec,List,New,Not,Now,Null,PBool,PCons,PGuard,PInt,PNil,PStr,PTerm,PVar,PWild,Self,Send,Str,Term,Update,Var
 
 
 Act                 = 'ast.Act'.java()
@@ -12,6 +12,7 @@ Bool                = 'ast.Bool'.java()
 BQual               = 'ast.BQual'.java()
 Case                = 'ast.Case'.java()
 Cmp                 = 'ast.Cmp'.java()
+Find                = 'ast.Find'.java()
 Float               = 'ast.Float'.java()
 For                 = 'ast.For'.java()
 Fun                 = 'ast.Fun'.java()

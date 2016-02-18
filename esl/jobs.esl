@@ -33,13 +33,7 @@ Results(all) ->
   letrec
     start = 1;
     end = 10;
-    find(t,results) =
-      case results {
-        (Result(tt,Completed) ? (tt=t)) : _ -> [Completed];
-        _ : more -> find(t,more);
-        [] -> []
-      };
-    resultsAt(t) = fun(l) find(t,l);
+    resultsAt(t) = fun(l) find Result(tt,Completed) ? tt=t in l do [Completed] else [];
     map(f,l) =
       case l {
         h:t -> (f(h)):map(f,t);
@@ -52,13 +46,8 @@ Results(all) ->
       };
     flatten(lists) =
       case lists {
-        h:t -> append(h,flatten(t));
+        h:t -> h+flatten(t);
         [] -> []
-      };
-    append(l1,l2) =
-      case l1 {
-        h:t -> h:(append(t,l2));
-        [] -> l2
       };
     length(l) =
       case l {

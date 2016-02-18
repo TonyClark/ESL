@@ -28,6 +28,10 @@ public class Add extends Instr {
       actor.pushStack(i1 + i2);
     } else if (v1 instanceof String || v2 instanceof String) {
       actor.pushStack(v2.toString() + v1.toString());
+    } else if (v1 instanceof list.List || v2 instanceof list.List) {
+      list.List<Object> l1 = (list.List<Object>)v1;
+      list.List<Object> l2 = (list.List<Object>)v2;
+      actor.pushStack(l2.append(l1));
     } else throw new java.lang.Error("do not know how to add " + v1 + " and " + v2);
   }
 
