@@ -4,7 +4,7 @@ import 'esl/ast.xpl'
 
 esl = { 
 
-  esl             -> bs=bindings i=actinit as=barms EOF { New(Letrec(bs,Act('main',i,as))) };
+  esl             -> bs=bindings ! i=actinit as=barms EOF { New(Letrec(bs,Act('main',i,as))) };
   topLevelCommand -> whitespace d=eslCommand {d};
   eslCommand      -> x=tplvlSet ! {x} | x=tplvlExp ! {x} | x=tplvlQuit ! {x} | x=tplvlImport ! {x};
   tplvlSet        -> n=name ':=' e=exp ';' { TplvlSet(n,e) };
@@ -13,7 +13,7 @@ esl = {
   tplvlExp        -> e=exp semi { e };
   
   bindings        -> b=binding ! bs=(semi binding)* { b:bs } | {[]};
-  binding         -> valbind | funbind | actbind;
+  binding         -> b=(valbind | funbind | actbind) ! {b};
   valbind         -> n=name eql e=exp { Binding(n,e) };
   funbind         -> n=name lparen ps=params rparen eql e=exp { Binding(n,Fun(n,ps,e)) };
   actbind         -> whitespace 'act' n=name ps=actargs lcurl bs = bindings i=actinit as=barms rcurl { Binding(n,Fun(n,ps,Letrec(bs,Act(n,i,as)))) };
@@ -24,18 +24,19 @@ esl = {
   barm            -> p=pattern arrow e=exp { BArm([p],e) };
   patterns        -> p=pattern ps=(comma pattern)* { p:ps };
   pattern         -> s=simplePattern (colon p=pattern { PCons(s,p) } | query e=exp { PGuard(e,s) } | {s});
-  simplePattern   -> pVar | pInt | pTerm | pList | pStr | pBool | pWild | lparen p=pattern rparen {p};
+  simplePattern   -> pVar | pInt | pTerm | pList | pStr | pBool | pWild | pNull | lparen p=pattern rparen {p};
   pVar            -> n=name { PVar(n) };
   pInt            -> n=int { PInt(n) };
   pStr            -> s=string { PStr(s) };
   pBool           -> whitespace ('true' { PBool(true) } | 'false' { PBool(false) });
   pWild           -> underscore { PWild() };
+  pNull           -> whitespace 'null' { PNull() };
   pTerm           -> n=Name (lparen ps=patterns rparen { PTerm(n,ps) } | { PTerm(n,[]) });
   pList           -> lsquare (rsquare { PNil() } | pListTail);
   pListTail       -> p=pattern (rsquare { PCons(p,PNil()) } | comma ps=pListTail { PCons(p,ps) });
   params          -> n=name ns=(comma name)* { n:ns } | {[]};
   exp             -> e=simpleExp postexp^(e);
-  postexp(e)      -> o=op r=exp { BinExp(e,o,r) } 
+  postexp(e)      -> o=op ! r=exp { BinExp(e,o,r) } 
                   |  lparen es=exps rparen { Apply(e,es) } 
                   |  leftArrow v=exp { Send(e,[v]) }
                   |  {e};

@@ -1,0 +1,33 @@
+value = 0;
+
+act a(b) {
+  
+  SetB(value) -> {
+    case b {
+      null -> {
+        b := value;
+        b <- SetB(self);
+        b <- Do
+      };
+      _ -> {}
+    }
+  };
+  
+  Do -> {
+    print(self + ': ' + value);
+    value := value + 1;
+    b <- Do
+  };
+  
+  Time(_) -> {}
+  
+}
+
+-> new a(null) <- SetB(new a(null));
+
+Time(_) -> {};
+
+Results(_) -> {}
+
+
+  
