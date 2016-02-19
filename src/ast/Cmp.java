@@ -24,33 +24,35 @@ public class Cmp extends AST {
     return "Cmp(" + exp + "," + Arrays.toString(qualifiers) + ")";
   }
 
-  @Override
   public void compile(List<FrameVar> locals, List<DynamicVar> types, Vector<Instr> code) {
-    // TODO Auto-generated method stub
+    desugar().compile(locals, types, code);
+  }
 
+  public AST desugar() {
+    // A comprehension [e | p1 <- e1 ] produces: flatten(for p1 in e1 -> [e])
+    // A comprehension [e | p1 <- e1, p2 <- e2] produces: flatten(for p1 in e1 -> flatten(for p2 in e2 -> e)
+    // A comprehension [e | p1 <- e1, ?p] produces: flatten(for p1 in e1 -> flatten(if p then [[e]] else []))
+    return desugar(0);
+  }
+
+  private AST desugar(int i) {
+    if (i == qualifiers.length)
+      return new ast.List(exp);
+    else if (i + 1 == qualifiers.length)
+      return qualifiers[i].desugar(exp);
+    else return new Apply(new Var("flatten"), qualifiers[i].desugar(desugar(i + 1)));
   }
 
   public void FV(HashSet<String> vars) {
-    HashSet<String> bound = new HashSet<String>();
-    for (Qualifier q : qualifiers) {
-      HashSet<String> free = new HashSet<String>();
-      q.FV(free);
-      free.removeAll(bound);
-      vars.addAll(free);
-      q.vars(bound);
-    }
-    HashSet<String> free = new HashSet<String>();
-    exp.FV(free);
-    free.removeAll(bound);
-    vars.addAll(free);
+    desugar().FV(vars);
   }
 
   public void DV(HashSet<String> vars) {
-    throw new java.lang.Error("Cmp.DV not implemented.");
+    desugar().DV(vars);
   }
 
   public int maxLocals() {
-    throw new java.lang.Error("Cmp.maxLocals not implemented.");
+    return desugar().maxLocals();
   }
 
 }

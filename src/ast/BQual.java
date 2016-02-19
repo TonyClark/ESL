@@ -26,4 +26,8 @@ public class BQual extends Qualifier {
     pattern.vars(vars);
   }
 
+  public AST desugar(AST value) {
+    return new Map(pattern, exp, value);
+  }
+
 }

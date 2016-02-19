@@ -41,7 +41,7 @@ public class For extends AST {
 
   public AST desugar() {
     BArm arm3 = new BArm(new Pattern[] { new PNil() }, new Block());
-    BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t")) }, new Block(body, new Apply(new Var("$f"), new Var("$t"))));
+    BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t")) }, new Apply(new Var("$f"), new Var("$t")));
     BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t")) }, new Block(body, new Apply(new Var("$f"), new Var("$t"))));
     Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2, arm3 });
     Fun fun = new Fun("for", new String[] { "l" }, caseExp);

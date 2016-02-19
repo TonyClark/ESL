@@ -70,6 +70,7 @@ esl = {
   caseValues      -> lparen es=exps rparen { es } | e=exp {[e]};
   quals           -> q=qual qs=(comma qual)* { q:qs };
   qual            -> p=pattern leftArrow e=exp { BQual(p,e) };
+  qual            -> query e=exp { PQual(e) };
   probably        -> whitespace 'probably' lparen p=exp rparen e1=exp whitespace 'else' e2=exp { Apply(Apply(Var('probably'),[p,Fun('prob1',[],e1),Fun('prob2',[],e2)]),[]) };
   
   

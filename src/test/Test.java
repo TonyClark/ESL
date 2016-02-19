@@ -21,7 +21,7 @@ public class Test {
     // code box. Create an instance of the behaviour called 'main' and supply the
     // Java command line arguments.
 
-    JavaObject o = (JavaObject) Interpreter.readFile("esl/esl.xpl", "esl", "esl/jobs.esl");
+    JavaObject o = (JavaObject) Interpreter.readFile("esl/esl.xpl", "esl", "esl/cmp_test.esl");
     AST ast = (AST) o.getTarget();
     Vector<Instr> code = new Vector<Instr>();
     ast.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code);
