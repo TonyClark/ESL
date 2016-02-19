@@ -19,23 +19,23 @@ esl = {
   actbind         -> whitespace 'act' n=name ps=actargs lcurl bs = bindings i=actinit as=barms rcurl { Binding(n,Fun(n,ps,Letrec(bs,Act(n,i,as)))) };
   actargs         -> lparen ps=params rparen {ps} | {[]};
   actinit         -> arrow e=exp semi {e} | { Null() };
-  barms           -> a=barm as=(semi barm)* { a:as };
+  barms           -> a=barm ! as=(semi barm)* { a:as };
   barm            -> lparen ps=patterns rparen arrow e=exp { BArm(ps,e) };
-  barm            -> p=pattern arrow e=exp { BArm([p],e) };
+  barm            -> p=pattern arrow ! e=exp { BArm([p],e) };
   patterns        -> p=pattern ps=(comma pattern)* { p:ps };
-  pattern         -> s=simplePattern (colon p=pattern { PCons(s,p) } | query e=exp { PGuard(e,s) } | {s});
+  pattern         -> s=simplePattern ! (colon p=pattern { PCons(s,p) } | query e=exp { PGuard(e,s) } | {s});
   simplePattern   -> pVar | pInt | pTerm | pList | pStr | pBool | pWild | pNull | lparen p=pattern rparen {p};
   pVar            -> n=name (eql p=pattern { PBind(n,p) } | { PVar(n) });
   pInt            -> n=int { PInt(n) };
   pStr            -> s=string { PStr(s) };
-  pBool           -> whitespace ('true' { PBool(true) } | 'false' { PBool(false) });
+  pBool           -> whitespace ('true' ! { PBool(true) } | 'false' { PBool(false) });
   pWild           -> underscore { PWild() };
   pNull           -> whitespace 'null' { PNull() };
   pTerm           -> n=Name (lparen ps=patterns rparen { PTerm(n,ps) } | { PTerm(n,[]) });
   pList           -> lsquare (rsquare { PNil() } | pListTail);
   pListTail       -> p=pattern (rsquare { PCons(p,PNil()) } | comma ps=pListTail { PCons(p,ps) });
   params          -> n=name ns=(comma name)* { n:ns } | {[]};
-  exp             -> e=simpleExp postexp^(e);
+  exp             -> e=simpleExp ! postexp^(e);
   postexp(e)      -> o=op ! r=exp { BinExp(e,o,r) } 
                   |  lparen es=exps rparen { Apply(e,es) } 
                   |  leftArrow v=exp { Send(e,[v]) }
@@ -44,15 +44,16 @@ esl = {
   op              -> whitespace ('+' | '-' | '*' | '/' | 'and' | 'or' | ':' | '<>' | '=' | '<' | '>' | '..');
   simpleExp       -> var | numExp | strExp | bool | me | probably | now | nul
                   |  n=name becomes e=exp { Update(n,e) }
-                  |  whitespace 'new' n=name (lparen ps=exps rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) })
-                  |  whitespace 'not' e=exp { Not(e) } 
-                  |  whitespace 'fun' lparen as=params rparen e=exp { Fun('',as,e) }
-                  |  whitespace 'let' bs=bindings whitespace 'in' e=exp { Let(bs,e) }
-                  |  whitespace 'letrec' bs=bindings whitespace 'in' e=exp { Letrec(bs,e) }
-                  |  whitespace 'case' es=caseValues lcurl as=barms rcurl { Case(es,as) }
-                  |  whitespace 'for' n=name whitespace 'in' l=exp whitespace 'do' e=exp whitespace { For(n,l,e) }
-                  |  whitespace 'find' p=pattern whitespace 'in' l=exp whitespace 'do' e=exp 'else' d=exp { Find(p,l,e,d) }
-                  |  whitespace 'if' t=exp whitespace 'then' c=exp whitespace 'else' a=exp { If(t,c,a) }
+                  |  whitespace 'new'    ! n=name (lparen ps=exps rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) })
+                  |  whitespace 'not'    ! e=exp { Not(e) } 
+                  |  whitespace 'fun'    ! lparen as=params rparen e=exp { Fun('',as,e) }
+                  |  whitespace 'let'    ! bs=bindings whitespace 'in' e=exp { Let(bs,e) }
+                  |  whitespace 'letrec' ! bs=bindings whitespace 'in' e=exp { Letrec(bs,e) }
+                  |  whitespace 'case'   ! es=caseValues lcurl as=barms rcurl { Case(es,as) }
+                  |  whitespace 'for'      p=pattern whitespace 'in' l=exp whitespace 'do' e=exp whitespace { For(p,l,e) }
+                  |  whitespace 'for'    ! p=pattern whitespace 'in' l=exp arrow e=exp whitespace { Map(p,l,e) }
+                  |  whitespace 'find'   ! p=pattern whitespace 'in' l=exp whitespace 'do' e=exp 'else' d=exp { Find(p,l,e,d) }
+                  |  whitespace 'if'     ! t=exp whitespace 'then' c=exp whitespace 'else' a=exp { If(t,c,a) }
                   |  whitespace lsquare (es=exps rsquare { List(es) } | rsquare { List([]) })
                   |  whitespace lsquare e=exp bar qs=quals rsquare { Cmp(e,qs) }
                   |  n=Name es=(lparen es=exps rparen {es} | {[]}) { Term(n,es) }

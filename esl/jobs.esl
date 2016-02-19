@@ -62,7 +62,7 @@ Time(100) ->
     stopAll();
     case results {
       Results(all) ->
-        let completed = map(fun(n) length(flatten(map(resultsAt(n),map(getActorResults,all)))),start..end)
+        let completed = for n in start..end -> length(flatten(map(resultsAt(n),map(getActorResults,all))))
         in print(csv('jobs processed':completed))
     }
   };

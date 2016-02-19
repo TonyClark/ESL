@@ -13,7 +13,7 @@ import instrs.Instr;
 
 public class List extends AST {
 
-  public AST[] elements;
+  public AST[] elements = new AST[] {};
 
   public List() {
   }
