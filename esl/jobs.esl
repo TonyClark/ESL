@@ -32,12 +32,7 @@ Time(100) ->
     results = getResults();
     start = 1;
     end = 10;
-    resultsAt(t) = fun(l) find Result(tt,Completed) ? tt=t in l do [Completed] else [];
-    map(f,l) =
-      case l {
-        h:t -> (f(h)):map(f,t);
-        [] -> []
-      };
+    resultsAt(t,l) = find Result(tt,Completed) ? tt=t in l do [Completed] else [];
     getActorResults(a) =
       case a {
         Results(_,results) -> results;
@@ -62,7 +57,11 @@ Time(100) ->
     stopAll();
     case results {
       Results(all) ->
-        let completed = for n in start..end -> length(flatten(map(resultsAt(n),map(getActorResults,all))))
+        let completed = for n in start..end -> {
+                          length(flatten(for r in all -> {
+                                           resultsAt(n,getActorResults(r))
+                                         }))
+                        }
         in print(csv('jobs processed':completed))
     }
   };
