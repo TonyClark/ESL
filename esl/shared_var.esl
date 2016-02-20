@@ -1,3 +1,5 @@
+export main;
+
 value = 0;
 
 act a(b) {
@@ -21,13 +23,17 @@ act a(b) {
   
   Time(_) -> {}
   
+};
+
+act main {
+
+  -> new a(null) <- SetB(new a(null));
+
+  Time(100) -> { stopAll() };
+
+  Time(_) -> {}
+
 }
-
--> new a(null) <- SetB(new a(null));
-
-Time(100) -> { stopAll() };
-
-Time(_) -> {}
 
 
   

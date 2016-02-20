@@ -1,3 +1,5 @@
+export main;
+
 act processor(jobs) {
   -> print('start processor ' + self);
   Time(_) -> 
@@ -20,51 +22,55 @@ act job {
       };
       _ -> currentJob := currentJob - 1
     }
-}
+};
 
--> 
-  for x in 1 .. 300 do { 
-    new processor([new job,new job,new job,new job])
-  };
+act main {
 
-Time(100) -> 
-  letrec
-    results = getResults();
-    start = 1;
-    end = 10;
-    resultsAt(t,l) = find Result(tt,Completed) ? tt=t in l do [Completed] else [];
-    getActorResults(a) =
-      case a {
-        Results(_,results) -> results;
-        _ -> []
-      };
-    flatten(lists) =
-      case lists {
-        h:t -> h+flatten(t);
-        [] -> []
-      };
-    length(l) =
-      case l {
-        h:t -> 1 + length(t);
-        [] -> 0
-      };
-    csv(values) =
-      case values {
-        h:[] -> '';
-        h:t -> h+','+(csv(t))
+  -> 
+    for x in 1 .. 300 do { 
+      new processor([new job,new job,new job,new job])
+    };
+
+  Time(100) -> 
+    letrec
+      results = getResults();
+      start = 1;
+      end = 10;
+      resultsAt(t,l) = find Result(tt,Completed) ? tt=t in l do [Completed] else [];
+      getActorResults(a) =
+        case a {
+          Results(_,results) -> results;
+          _ -> []
+        };
+      flatten(lists) =
+        case lists {
+          h:t -> h+flatten(t);
+          [] -> []
+        };
+      length(l) =
+        case l {
+          h:t -> 1 + length(t);
+          [] -> 0
+        };
+      csv(values) =
+        case values {
+          h:[] -> '';
+          h:t -> h+','+(csv(t))
+        } 
+    in {
+      stopAll();
+      case results {
+        Results(all) ->
+          let completed = for n in start..end -> {
+                            length(flatten(for r in all -> {
+                                             resultsAt(n,getActorResults(r))
+                                           }))
+                          }
+          in print(csv('jobs processed':completed))
       }
-  in {
-    stopAll();
-    case results {
-      Results(all) ->
-        let completed = for n in start..end -> {
-                          length(flatten(for r in all -> {
-                                           resultsAt(n,getActorResults(r))
-                                         }))
-                        }
-        in print(csv('jobs processed':completed))
-    }
-  };
+    };
   
-Time(_) -> {}
+  Time(_) -> {}
+
+}
       

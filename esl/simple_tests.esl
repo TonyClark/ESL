@@ -1,3 +1,7 @@
+export main;
+
+act main {
+
 f(x) = x + 10;
 
 g(a,b) = a + b;
@@ -63,3 +67,5 @@ Time(1) -> {
 Time(100) ->  stopAll();
 
 Time(_) -> {}
+
+}

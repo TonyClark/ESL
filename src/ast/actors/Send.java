@@ -52,4 +52,8 @@ public class Send extends AST {
     return Math.max(target.maxLocals(), maxLocals(args));
   }
 
+  public AST subst(AST ast, String name) {
+    return new Send(target.subst(ast, name), subst(args, ast, name));
+  }
+
 }

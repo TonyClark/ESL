@@ -59,4 +59,8 @@ public class Block extends AST {
     return maxLocals(exps);
   }
 
+  public AST subst(AST ast, String name) {
+    return new Block(subst(exps, ast, name));
+  }
+
 }

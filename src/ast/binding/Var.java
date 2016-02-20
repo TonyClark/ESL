@@ -45,4 +45,11 @@ public class Var extends AST {
     return 0;
   }
 
+  public AST subst(AST ast, String name) {
+    System.out.println("Var " + ast + " " + name);
+    if (this.name.equals(name))
+      return ast;
+    else return this;
+  }
+
 }

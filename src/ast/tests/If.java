@@ -43,7 +43,7 @@ public class If extends AST {
     Skip jmp2 = new Skip(0);
     code.add(jmp2);
     jmp1.setCount(code.size() - length);
-    length = code.size()-1;
+    length = code.size() - 1;
     alt.compile(locals, dynamics, code);
     jmp2.setCount(code.size() - length);
   }
@@ -61,7 +61,11 @@ public class If extends AST {
   }
 
   public int maxLocals() {
-    return Math.max(test.maxLocals(),Math.max(conseq.maxLocals(), alt.maxLocals()));
+    return Math.max(test.maxLocals(), Math.max(conseq.maxLocals(), alt.maxLocals()));
+  }
+
+  public AST subst(AST ast, String name) {
+    return new If(test.subst(ast, name), conseq.subst(ast, name), alt.subst(ast, name));
   }
 
 }

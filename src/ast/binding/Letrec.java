@@ -137,9 +137,30 @@ public class Letrec extends AST {
     // This does not remove those bindings that will be implemented as
     // dynamic variables, however it is fail safe...
     int maxLocals = exp.maxLocals() + bindings.length;
+    int valueLocals = 0;
     for (Binding b : bindings)
-      maxLocals = Math.max(maxLocals, b.value.maxLocals());
-    return maxLocals;
+      valueLocals = Math.max(valueLocals, b.value.maxLocals());
+    return maxLocals + valueLocals;
+  }
+
+  public AST subst(AST ast, String name) {
+    System.out.println("subst " + ast + " " + name);
+    return new Letrec(substBindings(ast, name), binds(name) ? exp : exp.subst(ast, name));
+  }
+
+  private boolean binds(String name) {
+    for (Binding b : bindings) {
+      if (b.getName().equals(name)) return true;
+    }
+    return false;
+  }
+
+  private Binding[] substBindings(AST ast, String name) {
+    Binding[] bs = new Binding[bindings.length];
+    for (int i = 0; i < bindings.length; i++) {
+      bs[i] = new Binding(bindings[i].getName(), binds(name) ? bindings[i].getValue() : bindings[i].getValue().subst(ast, name));
+    }
+    return bs;
   }
 
 }

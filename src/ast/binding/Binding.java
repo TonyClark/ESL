@@ -23,4 +23,12 @@ public class Binding {
     return "Binding(" + name + "," + value + ")";
   }
 
+  public String getName() {
+    return name;
+  }
+
+  public AST getValue() {
+    return value;
+  }
+
 }

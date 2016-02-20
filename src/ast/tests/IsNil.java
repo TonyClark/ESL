@@ -10,6 +10,7 @@ import instrs.Instr;
 import list.List;
 
 public class IsNil extends AST {
+  
   AST value;
 
   public IsNil(AST value) {
@@ -31,6 +32,10 @@ public class IsNil extends AST {
 
   public int maxLocals() {
     return value.maxLocals();
+  }
+
+  public AST subst(AST ast, String name) {
+    return new IsNil(value.subst(ast, name));
   }
 
 }

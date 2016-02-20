@@ -46,4 +46,8 @@ public class List extends AST {
     return maxLocals(elements);
   }
 
+  public AST subst(AST ast, String name) {
+    return new List(subst(elements, ast, name));
+  }
+
 }

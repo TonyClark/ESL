@@ -55,4 +55,8 @@ public class Apply extends AST {
       arg.DV(vars);
   }
 
+  public AST subst(AST ast, String name) {
+    return new Apply(op.subst(ast, name), subst(args, ast, name));
+  }
+
 }

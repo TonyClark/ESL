@@ -1,3 +1,5 @@
+export main;
+
 width = 5;
 height = 5;
 
@@ -52,16 +54,20 @@ act painter(colour) {
       }
     }
   }
-}
+};
+
+act main {
   
--> {
-  new painter(Red);
-  new painter(Green)
-};
+  -> {
+    new painter(Red);
+    new painter(Green)
+  };
 
-Time(100) -> {
-  stopAll();
-  print(balls)
-};
+  Time(100) -> {
+    stopAll();
+    print(balls)
+  };
 
-Time(_) -> {}
+  Time(_) -> {}
+
+}

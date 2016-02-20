@@ -34,4 +34,8 @@ public class IsNull extends AST {
     return value.maxLocals();
   }
 
+  public AST subst(AST ast, String name) {
+    return new IsNull(value.subst(ast, name));
+  }
+
 }

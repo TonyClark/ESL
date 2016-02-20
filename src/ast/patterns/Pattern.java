@@ -10,4 +10,10 @@ public abstract class Pattern {
 
   public abstract AST desugar(AST value, AST success, AST fail);
 
+  public boolean binds(String name) {
+    HashSet<String> vars = new HashSet<String>();
+    vars(vars);
+    return vars.contains(name);
+  }
+
 }

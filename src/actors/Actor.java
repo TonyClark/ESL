@@ -292,6 +292,11 @@ public class Actor {
   // The messages that have been sent to this actor.
 
   Vector<Message> messages  = new Vector<Message>();
+  
+  public Actor() {
+    // Should only be called when the actor is to be constructed specially
+    // for example the initialization actor.
+  }
 
   public Actor(Behaviour behaviour) {
     this.behaviour = behaviour;
@@ -311,6 +316,7 @@ public class Actor {
     setCodePtr(0);
     setDynamics(dynamics);
     tos = tos + locals;
+    openFrame = -1;
   }
 
   private boolean complete() {
@@ -352,12 +358,12 @@ public class Actor {
     setCodePtr(getCodePtr() + count);
   }
 
-  public void initSystem() {
+  public void initSystem(CodeBox code) {
     // This is called once on the first actor in the system...
     frame = -1;
     openFrame = -1;
-    openFrame(behaviour.getCode(), new Nil<Dynamic>());
-    closeFrame(behaviour.getCode().getLocals(), behaviour.getCode(), behaviour.getDynamics());
+    openFrame(code, new Nil<Dynamic>());
+    closeFrame(code.getLocals(), code, builtinEnv());
   }
 
   public void kill() {
@@ -388,20 +394,31 @@ public class Actor {
   public void printFrame(int f) {
     System.out.println(hashCode() + "------------------------------------");
     for (int i = ((CodeBox) stack[f + CODE]).getLocals() - 1; i >= 0; i--)
-      System.out.format("[%08d] %s LOC%d%n", f + LOCAL0 + i, stack[f + LOCAL0 + i], i);
+      System.out.format("[%08d] LOC%-8d     %s %n", f + LOCAL0 + i, i, stack[f + LOCAL0 + i]);
     CodeBox c = (CodeBox) stack[f + CODE];
     Vector<Instr> instrs = c.getCode();
     int codePtr = (int) stack[f + CODE_PTR];
     java.util.List<Instr> rest = instrs.subList(codePtr, instrs.size());
-    System.out.format("[%08d] %s DYNAMICS%n", f + DYNAMICS, stack[f + DYNAMICS]);
-    System.out.format("[%08d] %08d CODE_PTR%n", f + CODE_PTR, stack[f + CODE_PTR]);
-    System.out.format("[%08d] %s CODE%n", f + CODE, rest);
-    System.out.format("[%08d] %08d TOS%n", f + TOS, stack[f + TOS]);
-    System.out.format("[%08d] %08d PREV OPEN FRAME%n", f + PREV_OPEN_FRAME, stack[f + PREV_OPEN_FRAME]);
-    System.out.format("[%08d] %08d PREV FRAME%n", f + PREV_FRAME, stack[f + PREV_FRAME]);
+    System.out.format("[%08d] DYNAMICS        %s %n", f + DYNAMICS, stack[f + DYNAMICS]);
+    System.out.format("[%08d] CODE_PTR        %08d %n", f + CODE_PTR, stack[f + CODE_PTR]);
+    System.out.format("[%08d] CODE            %s %n", f + CODE, rest);
+    System.out.format("[%08d] TOS             %08d %n", f + TOS, stack[f + TOS]);
+    System.out.format("[%08d] PREV OPEN FRAME %08d %n", f + PREV_OPEN_FRAME, stack[f + PREV_OPEN_FRAME]);
+    System.out.format("[%08d] PREV FRAME      %08d %n", f + PREV_FRAME, stack[f + PREV_FRAME]);
+    System.out.println(hashCode() + "------------------------------------");
   }
 
   public void printStack() {
+    if(openFrame > -1) {
+      System.out.println("OPEN FRAME ----> ");
+      System.out.format("[%08d] DYNAMICS        %s %n", openFrame + DYNAMICS, stack[openFrame + DYNAMICS]);
+      System.out.format("[%08d] CODE_PTR        %08d %n", openFrame + CODE_PTR, stack[openFrame + CODE_PTR]);
+      System.out.format("[%08d] CODE            %s %n", openFrame + CODE, stack[openFrame + CODE]);
+      System.out.format("[%08d] TOS             %08d %n", openFrame+ TOS, stack[openFrame + TOS]);
+      System.out.format("[%08d] PREV OPEN FRAME %08d %n", openFrame+ PREV_OPEN_FRAME, stack[openFrame + PREV_OPEN_FRAME]);
+      System.out.format("[%08d] PREV FRAME      %08d %n", openFrame + PREV_FRAME, stack[openFrame + PREV_FRAME]);
+      System.out.println("<------ OPEN FRAME");
+    }
     if (tos > 0) System.out.format("TOS[%08d] = %s%n", tos - 1, tos());
     System.out.println("OPEN FRAME = " + openFrame);
     int f = frame;
@@ -409,6 +426,7 @@ public class Actor {
       printFrame(f);
       f = (int) stack[f + PREV_FRAME];
     }
+    System.out.println("\n\n");
   }
 
   public void pushStack(Object o) {
@@ -431,7 +449,7 @@ public class Actor {
     // Run for the supplied number of instructions. If if the actor
     // calls stop, then continue until it returns because this is
     // the last actor that is active in the system...
-    
+
     try {
       while (!complete() && instrs > 0) {
         Vector<Instr> code = getCode().getCode();
@@ -439,7 +457,7 @@ public class Actor {
         incCodePtr();
         Instr next = getCode().getInstr(i);
         if (debug) System.out.println("NEXT = " + next);
-        if (debug) printStack();
+       // if (debug) printStack();
         next.perform(this);
         if (stop) instrs = Integer.MAX_VALUE;
         instrs--;
@@ -450,6 +468,7 @@ public class Actor {
         return result;
       } else return null;
     } catch (Exception e) {
+      e.printStackTrace();
       printStack();
       throw e;
     }

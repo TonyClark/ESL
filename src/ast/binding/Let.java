@@ -89,4 +89,22 @@ public class Let extends AST {
     return maxLocals;
   }
 
+  public AST subst(AST ast, String name) {
+    return new Let(substBindings(ast, name), binds(name) ? exp : exp.subst(ast, name));
+  }
+
+  private boolean binds(String name) {
+    for (Binding b : bindings) {
+      if (b.getName().equals(name)) return true;
+    }
+    return false;
+  }
+
+  private Binding[] substBindings(AST ast, String name) {
+    Binding[] bs = new Binding[bindings.length];
+    for (int i = 0; i < bindings.length; i++)
+      bs[i] = new Binding(bindings[i].getName(), bindings[i].getValue().subst(ast, name));
+    return bs;
+  }
+
 }

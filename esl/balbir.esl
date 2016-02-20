@@ -1,46 +1,52 @@
-value = 10;
+export main;
 
-add1() = value := value + 1;
+act main {
 
-create(n) = 
-  case n {
-    0 -> {};
-    x -> {
-      new a; 
-      create(n-1)
-    }
-  };
+  value = 10;
 
-act a {
+  add1() = value := value + 1;
 
-  state = value
+  create(n) = 
+    case n {
+      0 -> {};
+      x -> {
+        new a; 
+        create(n-1)
+      }
+    };
+
+  act a {
+
+    state = value
   
-  Time(n) -> { 
-    state := state + 1;
-    //print(self + ' ' + state);
-    record(self,State(state))
+    Time(n) -> { 
+      state := state + 1;
+      //print(self + ' ' + state);
+      record(self,State(state))
+    }
+
   }
 
-}
+  Time(0) ->  {
+    print('b: ' + 0);
+    create(500)
+  };
 
-Time(0) ->  {
-  print('b: ' + 0);
-  create(500)
-};
-
-Time(10) -> {
-  stopAll();
-  print(getResults())
-};
+  Time(10) -> {
+    stopAll();
+    print(getResults())
+  };
   
-Time(n) ? n < 5 -> {
-  probably(50) add1() else {};
-  print( 'b: ' + value)
-};
+  Time(n) ? n < 5 -> {
+    probably(50) add1() else {};
+    print( 'b: ' + value)
+  };
 
-Time(n) -> {
-  self <- OK(value);
-  record(self,State(value))
-};
+  Time(n) -> {
+    self <- OK(value);
+    record(self,State(value))
+  };
 
-OK(x) -> print(x)
+  OK(x) -> print(x)
+
+}

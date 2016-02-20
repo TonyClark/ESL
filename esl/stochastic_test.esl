@@ -3,16 +3,19 @@
 
 // Just do the following for the first 10 time clicks...
 
-Time(n ?n < 10) -> 
-  probably(50) {
-    record(self,One)
-  } else {
-    record(self,Two)
-  };
+export main;
+
+act main {
+
+  Time(n ?n < 10) -> 
+    probably(50) {
+      record(self,One)
+    } else {
+      record(self,Two)
+    };
   
-// Run until 100 clicks...
+  Time(100) -> { stopAll(); print(getResults()) };
   
-Time(100) -> { stopAll(); print(getResults()) };
-  
-// Ignore all other clicks...
-Time(_) -> {}
+  Time(_) -> {}
+
+}

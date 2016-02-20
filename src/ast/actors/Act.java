@@ -1,6 +1,7 @@
 package ast.actors;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 
@@ -11,6 +12,7 @@ import ast.control.Error;
 import ast.data.Apply;
 import ast.data.Fun;
 import ast.data.Str;
+import ast.modules.Module;
 import ast.tests.BArm;
 import compiler.DynamicVar;
 import compiler.FrameVar;
@@ -29,6 +31,13 @@ public class Act extends AST {
   public BArm[] arms;
 
   public Act() {
+  }
+
+  public Act(String name, AST init, BArm[] arms) {
+    super();
+    this.name = name;
+    this.init = init;
+    this.arms = arms;
   }
 
   public String toString() {
@@ -83,6 +92,18 @@ public class Act extends AST {
   public void DV(HashSet<String> vars) {
     // Which free vars will need to be dynamic?
     FV(vars);
+  }
+
+  public AST subst(AST ast, String name) {
+    return new Act(this.name, init.subst(ast, name), substArms(ast, name));
+  }
+
+  private BArm[] substArms(AST ast, String name) {
+    BArm[] as = new BArm[arms.length];
+    for (int i = 0; i < as.length; i++) {
+      as[i] = arms[i].subst(ast, name);
+    }
+    return as;
   }
 
 }

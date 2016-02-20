@@ -43,4 +43,8 @@ public class IsTerm extends AST {
     return "IsTerm(" + value + "," + name + "," + arity + ")";
   }
 
+  public AST subst(AST ast, String name) {
+    return new IsTerm(value.subst(ast, name), name, arity);
+  }
+
 }

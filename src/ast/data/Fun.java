@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.binding.Binding;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
@@ -82,6 +83,19 @@ public class Fun extends AST {
 
   public int maxLocals() {
     return 0;
+  }
+
+  private boolean binds(String name) {
+    for (String arg : args) {
+      if (arg.equals(name)) return true;
+    }
+    return false;
+  }
+
+  public AST subst(AST ast, String name) {
+    if (binds(name))
+      return this;
+    else return new Fun(this.name, args, body.subst(ast, name));
   }
 
 }

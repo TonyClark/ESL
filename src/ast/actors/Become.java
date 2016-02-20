@@ -21,6 +21,11 @@ public class Become extends AST {
   public Become() {
   }
 
+  public Become(AST behaviour) {
+    super();
+    this.behaviour = behaviour;
+  }
+
   public String toString() {
     return "Become(" + behaviour + ")";
   }
@@ -40,6 +45,10 @@ public class Become extends AST {
 
   public int maxLocals() {
     return behaviour.maxLocals();
+  }
+
+  public AST subst(AST ast, String name) {
+    return new Become(behaviour.subst(ast, name));
   }
 
 }

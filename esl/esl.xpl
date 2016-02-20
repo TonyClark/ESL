@@ -4,6 +4,10 @@ import 'esl/ast.xpl'
 
 esl = { 
 
+  file(name)      -> es=exports is=imports bs=bindings EOF { Module(name,es,is,bs) };
+  exports         -> whitespace 'export' ! ns=names semi {ns} | { [] };
+  imports         -> whitespace 'import' ! i=imp is=(comma imp)* semi {i:is} |  { [] };
+  imp             -> name | string;
   esl             -> bs=bindings ! i=actinit as=barms EOF { New(Letrec(bs,Act('main',i,as))) };
   topLevelCommand -> whitespace d=eslCommand {d};
   eslCommand      -> x=tplvlSet ! {x} | x=tplvlExp ! {x} | x=tplvlQuit ! {x} | x=tplvlImport ! {x};
@@ -97,8 +101,9 @@ esl = {
   underscore  -> whitespace '_';
   query       -> whitespace '?';
   keyWord     -> key ! not([97,122] | [65,90]);
-  key         -> 'EOF' | 'act' | 'for' | 'find' | 'do' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become' | 'self' | 'probably' | 'now' | 'null' | 'if' | 'then' | 'else';
+  key         -> 'EOF' | 'act' | 'export' | 'import' | 'for' | 'find' | 'do' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become' | 'self' | 'probably' | 'now' | 'null' | 'if' | 'then' | 'else';
   name        -> whitespace not(keyWord) c=lowerChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
+  names       -> n=name ns=(comma name)* { n:ns } | {[]};
   Name        -> whitespace not(keyWord) c=upperChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
   int         -> whitespace i=[48,57]+ ! {'values.Int'(i)};
   string      -> '\'' cs=(not(39) stringChar)* 39 ! {'values.Str'(cs)};

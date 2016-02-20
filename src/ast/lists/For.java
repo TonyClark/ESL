@@ -74,4 +74,8 @@ public class For extends AST {
     return desugar().maxLocals();
   }
 
+  public AST subst(AST ast, String name) {
+    return desugar().subst(ast, name);
+  }
+
 }

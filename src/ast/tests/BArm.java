@@ -72,4 +72,21 @@ public class BArm {
     return args;
   }
 
+  public BArm subst(AST ast, String name) {
+
+    // NB does not subst into the expressions embedded in patterns.
+    // It should do that...
+
+    System.out.println("barm " + binds(name));
+    if (binds(name))
+      return this;
+    else return new BArm(patterns, exp.subst(ast, name));
+  }
+
+  private boolean binds(String name) {
+    for (Pattern p : patterns)
+      if (p.binds(name)) return true;
+    return false;
+  }
+
 }

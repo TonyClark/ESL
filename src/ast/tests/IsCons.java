@@ -34,4 +34,8 @@ public class IsCons extends AST {
     return value.maxLocals();
   }
 
+  public AST subst(AST ast, String name) {
+    return new IsCons(value.subst(ast, name));
+  }
+
 }

@@ -2,6 +2,8 @@
 // For example an actor may need to be initialized. This can be
 // done using a guard on the rules...
 
+export main;
+
 act producer {
 
   // Forward a message to b on each time click.
@@ -19,12 +21,15 @@ act consumer {
   OK      -> print(now + ': OK')
 };
 
-a = null;
-b = null
-  
+act main {
 
-Time(1) -> a := new producer;
-Time(2) -> b := new consumer;
-Time(4) -> a <- Init(b);
-Time(10) -> { stopAll() };
-Time(n) -> {}
+  a = null;
+  b = null
+
+  Time(1) -> a := new producer;
+  Time(2) -> b := new consumer;
+  Time(4) -> a <- Init(b);
+  Time(10) -> { stopAll() };
+  Time(n) -> {}
+
+}

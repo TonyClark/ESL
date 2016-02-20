@@ -16,13 +16,16 @@ import list.List;
 public class Term extends AST {
 
   public String name;
+
   public AST[]  values;
 
   public Term() {
   }
 
-  public String toString() {
-    return "Term(" + name + "," + Arrays.toString(values) + ")";
+  public Term(String name, AST[] values) {
+    super();
+    this.name = name;
+    this.values = values;
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
@@ -31,17 +34,25 @@ public class Term extends AST {
     code.add(new instrs.Term(name, values.length));
   }
 
+  public void DV(HashSet<String> vars) {
+    DV(values, vars);
+  }
+
   public void FV(HashSet<String> vars) {
     for (AST v : values)
       v.FV(vars);
   }
 
-  public void DV(HashSet<String> vars) {
-    DV(values, vars);
-  }
-
   public int maxLocals() {
     return maxLocals(values);
+  }
+
+  public AST subst(AST ast, String name) {
+    return new Term(this.name, subst(values, ast, name));
+  }
+
+  public String toString() {
+    return "Term(" + name + "," + Arrays.toString(values) + ")";
   }
 
 }

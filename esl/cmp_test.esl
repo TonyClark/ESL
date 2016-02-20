@@ -1,10 +1,15 @@
+export main;
 
-    flatten(lists) =
-      case lists {
-        h:t -> h+flatten(t);
-        [] -> []
-      }
+act main {
+
+  flatten(lists) =
+    case lists {
+      h:t -> h+flatten(t);
+      [] -> []
+    }
       
--> print([Pair(x,y) | x <- 0..2,?x>1,y <- 0..2,?x=y]);
+  -> print([Pair(x,y) | x <- 0..2,?x>1,y <- 0..2,?x=y]);
+  
+  Time(_) -> { stopAll() }
 
-Time(_) -> { stopAll() }
+}

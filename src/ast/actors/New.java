@@ -46,4 +46,8 @@ public class New extends AST {
     return behaviour.maxLocals();
   }
 
+  public AST subst(AST ast, String name) {
+    return new New(behaviour.subst(ast, name));
+  }
+
 }

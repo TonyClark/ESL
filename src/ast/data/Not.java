@@ -19,8 +19,9 @@ public class Not extends AST {
   public Not() {
   }
 
-  public String toString() {
-    return "Not(" + exp + ")";
+  public Not(AST exp) {
+    super();
+    this.exp = exp;
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
@@ -28,16 +29,24 @@ public class Not extends AST {
     code.add(new instrs.Not());
   }
 
-  public void FV(HashSet<String> vars) {
-    exp.FV(vars);
-  }
-
   public void DV(HashSet<String> vars) {
     exp.DV(vars);
   }
 
+  public void FV(HashSet<String> vars) {
+    exp.FV(vars);
+  }
+
   public int maxLocals() {
     return exp.maxLocals();
+  }
+
+  public AST subst(AST ast, String name) {
+    return new Not(exp.subst(ast, name));
+  }
+
+  public String toString() {
+    return "Not(" + exp + ")";
   }
 
 }

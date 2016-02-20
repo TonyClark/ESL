@@ -1,0 +1,11 @@
+export main;
+
+import 'esl/module2';
+
+act main {
+
+  Time(10) -> { print(f()); stopAll() };
+  
+  Time(t) -> print(t)
+  
+}

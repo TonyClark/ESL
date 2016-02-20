@@ -98,4 +98,8 @@ public class BinExp extends AST {
     return Math.max(left.maxLocals(), right.maxLocals());
   }
 
+  public AST subst(AST ast, String name) {
+    return new BinExp(left.subst(ast, name), op, right.subst(ast, name));
+  }
+
 }

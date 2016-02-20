@@ -34,4 +34,8 @@ public class Error extends AST {
     return message.maxLocals();
   }
 
+  public AST subst(AST ast, String name) {
+    return new Error(message.subst(ast, name));
+  }
+
 }

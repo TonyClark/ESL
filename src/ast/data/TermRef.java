@@ -37,4 +37,8 @@ public class TermRef extends AST {
     return term.maxLocals();
   }
 
+  public AST subst(AST ast, String name) {
+    return new TermRef(term.subst(ast, name), index);
+  }
+
 }

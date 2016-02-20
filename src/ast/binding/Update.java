@@ -20,8 +20,10 @@ public class Update extends AST {
   public Update() {
   }
 
-  public String toString() {
-    return "Update(" + name + "," + value + ")";
+  public Update(String name, AST value) {
+    super();
+    this.name = name;
+    this.value = value;
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
@@ -33,16 +35,24 @@ public class Update extends AST {
     else throw new java.lang.Error("cannot update " + name);
   }
 
-  public void FV(HashSet<String> vars) {
-    value.FV(vars);
-  }
-
   public void DV(HashSet<String> vars) {
     value.DV(vars);
   }
 
+  public void FV(HashSet<String> vars) {
+    value.FV(vars);
+  }
+
   public int maxLocals() {
     return value.maxLocals();
+  }
+
+  public AST subst(AST ast, String name) {
+    return new Update(name,value.subst(ast, name));
+  }
+
+  public String toString() {
+    return "Update(" + name + "," + value + ")";
   }
 
 }

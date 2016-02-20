@@ -34,4 +34,8 @@ public class Head extends AST {
     return value.maxLocals();
   }
 
+  public AST subst(AST ast, String name) {
+    return new Head(value.subst(ast, name));
+  }
+
 }

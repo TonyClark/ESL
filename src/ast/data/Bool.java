@@ -44,4 +44,8 @@ public class Bool extends AST {
     return 0;
   }
 
+  public AST subst(AST ast, String name) {
+    return this;
+  }
+
 }

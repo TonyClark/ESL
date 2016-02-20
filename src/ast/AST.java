@@ -1,10 +1,13 @@
 package ast;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 
+import ast.binding.Var;
+import ast.data.Ref;
+import ast.modules.Module;
 import ast.tests.BArm;
-import compiler.BehaviourIndex;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import compiler.Local;
@@ -53,6 +56,25 @@ public abstract class AST {
     else if (locals.getHead().getName().equals(name))
       return locals.getHead();
     else return lookup(name, locals.getTail());
+  }
+
+  public AST substExportedValues(Collection<Module> modules) {
+    AST ast = this;
+    for (Module module : modules) {
+      for (String exported : module.getExports()) {
+        ast = ast.subst(new Ref(new Var(module.getName()), exported), exported);
+      }
+    }
+    return ast;
+  }
+
+  public abstract AST subst(AST ast, String name);
+
+  public AST[] subst(AST[] a, AST ast, String name) {
+    AST[] b = new AST[a.length];
+    for (int i = 0; i < a.length; i++)
+      b[i] = a[i].subst(ast, name);
+    return b;
   }
 
 }

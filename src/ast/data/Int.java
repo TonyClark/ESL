@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Vector;
 
 import ast.AST;
+import ast.binding.Binding;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
@@ -39,6 +40,10 @@ public class Int extends AST {
 
   public int maxLocals() {
     return 0;
+  }
+
+  public AST subst(AST ast, String name) {
+    return this;
   }
 
 }
