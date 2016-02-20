@@ -3,6 +3,7 @@ package ast;
 import java.util.HashSet;
 import java.util.Vector;
 
+import ast.tests.BArm;
 import compiler.BehaviourIndex;
 import compiler.DynamicVar;
 import compiler.FrameVar;
