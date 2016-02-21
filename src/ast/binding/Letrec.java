@@ -144,7 +144,6 @@ public class Letrec extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    System.out.println("subst " + ast + " " + name);
     return new Letrec(substBindings(ast, name), binds(name) ? exp : exp.subst(ast, name));
   }
 

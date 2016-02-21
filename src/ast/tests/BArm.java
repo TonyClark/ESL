@@ -77,7 +77,6 @@ public class BArm {
     // NB does not subst into the expressions embedded in patterns.
     // It should do that...
 
-    System.out.println("barm " + binds(name));
     if (binds(name))
       return this;
     else return new BArm(patterns, exp.subst(ast, name));

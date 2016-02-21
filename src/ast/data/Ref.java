@@ -38,7 +38,6 @@ public class Ref extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    System.out.println("subst " + ast + " " + name);
     return new Ref(record.subst(ast, name), this.name);
   }
 

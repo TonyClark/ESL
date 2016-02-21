@@ -64,6 +64,13 @@ public class Actor {
     return time;
   }
 
+  public static void resetESL() {
+    time = 0;
+    stop = false;
+    ACTORS.clear();
+    HISTORIES.clear();
+  }
+
   public static void setTime(int time) {
     Actor.time = time;
   }
@@ -292,7 +299,7 @@ public class Actor {
   // The messages that have been sent to this actor.
 
   Vector<Message> messages  = new Vector<Message>();
-  
+
   public Actor() {
     // Should only be called when the actor is to be constructed specially
     // for example the initialization actor.
@@ -409,13 +416,13 @@ public class Actor {
   }
 
   public void printStack() {
-    if(openFrame > -1) {
+    if (openFrame > -1) {
       System.out.println("OPEN FRAME ----> ");
       System.out.format("[%08d] DYNAMICS        %s %n", openFrame + DYNAMICS, stack[openFrame + DYNAMICS]);
       System.out.format("[%08d] CODE_PTR        %08d %n", openFrame + CODE_PTR, stack[openFrame + CODE_PTR]);
       System.out.format("[%08d] CODE            %s %n", openFrame + CODE, stack[openFrame + CODE]);
-      System.out.format("[%08d] TOS             %08d %n", openFrame+ TOS, stack[openFrame + TOS]);
-      System.out.format("[%08d] PREV OPEN FRAME %08d %n", openFrame+ PREV_OPEN_FRAME, stack[openFrame + PREV_OPEN_FRAME]);
+      System.out.format("[%08d] TOS             %08d %n", openFrame + TOS, stack[openFrame + TOS]);
+      System.out.format("[%08d] PREV OPEN FRAME %08d %n", openFrame + PREV_OPEN_FRAME, stack[openFrame + PREV_OPEN_FRAME]);
       System.out.format("[%08d] PREV FRAME      %08d %n", openFrame + PREV_FRAME, stack[openFrame + PREV_FRAME]);
       System.out.println("<------ OPEN FRAME");
     }
@@ -457,7 +464,7 @@ public class Actor {
         incCodePtr();
         Instr next = getCode().getInstr(i);
         if (debug) System.out.println("NEXT = " + next);
-       // if (debug) printStack();
+        // if (debug) printStack();
         next.perform(this);
         if (stop) instrs = Integer.MAX_VALUE;
         instrs--;
@@ -475,15 +482,38 @@ public class Actor {
   }
 
   public void scheduleMessage(int currentTime) {
+    
     // The actor should be at rest. Select a message that is requested to be handled
     // at or before the current time. If one exists then initialize the actor-machine
     // so that the message is handled...
+    
     if (!messages.isEmpty()) {
       // Ignore time for now....
-      Message message = messages.firstElement();
-      messages.remove(message);
-      processMessage(message.getValue());
+      Message message = findMessage(messages, currentTime);
+      if (message != null) {
+        messages.remove(message);
+        processMessage(message.getValue());
+      }
     }
+  }
+
+  private Message findMessage(Vector<Message> messages, int time) {
+    // Find the message at the earliest time at or before the supplied
+    // time. If no explicitly timed message exists then return the
+    // oldest message with time '0'...
+    int earliest = time;
+    Message message = null;
+    for (Message m : messages) {
+      if (m.getTime() > 0 && m.getTime() <= earliest) message = m;
+    }
+    if (message != null)
+      return message;
+    else {
+      for (Message m : messages) {
+        if (m.getTime() == 0) return m;
+      }
+    }
+    return null;
   }
 
   public void processMessage(Object message) {
@@ -493,8 +523,8 @@ public class Actor {
     openFrame(null, getDynamics());
   }
 
-  public void send(Object message) {
-    messages.add(new Message(message));
+  public void send(Object message, int time) {
+    messages.add(new Message(message, time));
   }
 
   public void setBehaviour(Behaviour behaviour) {

@@ -29,18 +29,18 @@ public class Test {
     run("simple_tests");
     run("stochastic_test");
     run("time");
+    run("message_at");
   }
   
   public static void run(String name) {
+    Actor.resetESL();
     Module module = Module.importModule("esl/" + name);
     module.resolve();
     AST record = new New(new Apply(new Ref(module.desugar(), "main")));
-    System.out.println(record);
     Vector<Instr> code = new Vector<Instr>();
     record.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code);
     code.add(new Return());
     CodeBox codebox = new CodeBox(record.maxLocals(), code);
-    System.out.println(record.maxLocals());
     Actor actor = new Actor();
     actor.initSystem(codebox);
     actor.kill();

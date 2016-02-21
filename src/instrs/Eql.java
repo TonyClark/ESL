@@ -7,7 +7,6 @@ public class Eql extends Instr {
   public void perform(Actor actor) {
     Object v1 = actor.popStack();
     Object v2 = actor.popStack();
-    // System.out.println(v1 + "=" + v2);
     if (v1 == null)
       actor.pushStack(v2 == null);
     else if (v2 == null)

@@ -42,8 +42,9 @@ esl = {
   exp             -> e=simpleExp ! postexp^(e);
   postexp(e)      -> o=op ! r=exp { BinExp(e,o,r) } 
                   |  lparen es=exps rparen { Apply(e,es) } 
-                  |  leftArrow v=exp { Send(e,[v]) }
+                  |  leftArrow v=exp postsend^(e,[v]) 
                   |  {e};
+  postsend(a,m)   -> at t=exp { Send(a,m,t) } | { Send(a,m,Int(0)) };
   exps            -> e=exp es=(comma exp)* { e:es } | {[]};
   op              -> whitespace ('+' | '-' | '*' | '/' | 'and' | 'or' | ':' | '<>' | '=' | '<' | '>' | '..');
   simpleExp       -> var | numExp | strExp | bool | me | probably | now | nul
@@ -100,6 +101,7 @@ esl = {
   colon       -> whitespace ':';
   underscore  -> whitespace '_';
   query       -> whitespace '?';
+  at          -> whitespace '@';
   keyWord     -> key ! not([97,122] | [65,90]);
   key         -> 'EOF' | 'act' | 'export' | 'import' | 'for' | 'find' | 'do' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become' | 'self' | 'probably' | 'now' | 'null' | 'if' | 'then' | 'else';
   name        -> whitespace not(keyWord) c=lowerChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};

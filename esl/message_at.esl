@@ -1,0 +1,20 @@
+export main;
+
+act main {
+
+  -> {
+    self <- M@2;
+    self <- M@4;
+    self <- M@6;
+    self <- M@8
+  };
+  
+  Time(10) -> stopAll();
+  
+  Time(t) -> {
+    print('time: ' + t)
+  };
+  
+  M -> print('M@' + now)
+
+}
