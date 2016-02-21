@@ -60,24 +60,7 @@ public class Actor {
 
   static boolean                    stop                 = false;
 
-  public static int getTime() {
-    return time;
-  }
-
-  public static void resetESL() {
-    time = 0;
-    stop = false;
-    ACTORS.clear();
-    HISTORIES.clear();
-  }
-
-  public static void setTime(int time) {
-    Actor.time = time;
-  }
-
-  public static Hashtable<Object, History> getHistories() {
-    return HISTORIES;
-  }
+  static int                        idCounter            = 0;
 
   public static List<DynamicVar> builtinDynamics() {
     // Those dynamics that will be available at run-time by default...
@@ -119,6 +102,10 @@ public class Actor {
     return env;
   }
 
+  public static Hashtable<Object, History> getHistories() {
+    return HISTORIES;
+  }
+
   public static Term getResults() {
     List<Term> results = new Nil<Term>();
     for (Object key : HISTORIES.keySet()) {
@@ -135,23 +122,8 @@ public class Actor {
     } else throw new Error("getResults expects 0 args but supplied with " + arity);
   }
 
-  public static void stopAll(Actor actor, int arity) {
-    if (arity == 0) {
-      actor.closeFrame(0, null, null);
-      stop = true;
-      actor.returnValue(getResults());
-    } else throw new Error("getResults expects 0 args but supplied with " + arity);
-  }
-
-  public static void random(Actor actor, int arity) {
-
-    // get a random number from 0 to n-1...
-
-    if (arity == 1) {
-      actor.closeFrame(0, null, null);
-      int n = (int) actor.getFrameVar(0);
-      actor.returnValue((int) (Math.random() * n));
-    } else throw new Error("random expects " + 1 + " arg but supplied with " + arity);
+  public static int getTime() {
+    return time;
   }
 
   public static void print(Actor actor, int arity) {
@@ -185,6 +157,17 @@ public class Actor {
     } else throw new Error("probably expects " + 3 + " args but supplied with " + arity);
   }
 
+  public static void random(Actor actor, int arity) {
+
+    // get a random number from 0 to n-1...
+
+    if (arity == 1) {
+      actor.closeFrame(0, null, null);
+      int n = (int) actor.getFrameVar(0);
+      actor.returnValue((int) (Math.random() * n));
+    } else throw new Error("random expects " + 1 + " arg but supplied with " + arity);
+  }
+
   public static void record(Actor actor, int arity) {
 
     // Called to record a snapshot of the state of an actor.
@@ -199,6 +182,13 @@ public class Actor {
       HISTORIES.get(key).add(time, value);
       actor.returnValue(value);
     } else throw new Error("record expects " + 2 + " args but supplied with " + arity);
+  }
+
+  public static void resetESL() {
+    time = 0;
+    stop = false;
+    ACTORS.clear();
+    HISTORIES.clear();
   }
 
   public static void runESL(int time0) {
@@ -251,12 +241,29 @@ public class Actor {
 
   }
 
+  public static void setTime(int time) {
+    Actor.time = time;
+  }
+
+  public static int totalInstructions() {
+    int instructions = 0;
+    for (Actor a : ACTORS)
+      instructions = instructions + a.getInstructions();
+    return instructions;
+  }
+
   // It is useful to have a unique id that can be used to differentiate two different actors
   // when they are printed out...
 
-  static int      idCounter = 0;
+  public static void stopAll(Actor actor, int arity) {
+    if (arity == 0) {
+      actor.closeFrame(0, null, null);
+      stop = true;
+      actor.returnValue(getResults());
+    } else throw new Error("getResults expects 0 args but supplied with " + arity);
+  }
 
-  int             id        = idCounter++;
+  int             id           = idCounter++;
 
   // The behaviour of this actor. The behaviour is essentially a code-box where the code
   // expects a message to have been supplied. The code will then perform case-analysis on
@@ -271,11 +278,11 @@ public class Actor {
   // The type of elements on the stack is Object to allow for a variety of Java values
   // to co-exist on the stack: casts will be required in many cases...
 
-  Object[]        stack     = new Object[STACK_SIZE];
+  Object[]        stack        = new Object[STACK_SIZE];
 
   // The index to the next available stack location...
 
-  int             tos       = 0;
+  int             tos          = 0;
 
   // The current call-frame on the stack. The actor has completed a thread of control
   // when the frame becomes -1. The current frame contains information amount how to
@@ -287,18 +294,22 @@ public class Actor {
   // locals and dynamics can be modified by side-effect. It is important that when a
   // dynamic variable is modified, all captured occurrences are also modified...
 
-  int             frame     = -1;
+  int             frame        = -1;
 
   // A function may call another function. To do so builds a new stack frame that will
   // eventually be entered. The current open frame records the frame that is currently
   // being built. Because function calls nest, the open frame must be recorded in a
   // stack frame so that the value of openFrame can be restored on function return...
 
-  int             openFrame = -1;
+  int             openFrame    = -1;
 
   // The messages that have been sent to this actor.
 
-  Vector<Message> messages  = new Vector<Message>();
+  Vector<Message> messages     = new Vector<Message>();
+
+  // The number of instructions that have been executed since the actor was created...
+
+  int             instructions = 0;
 
   public Actor() {
     // Should only be called when the actor is to be constructed specially
@@ -330,8 +341,31 @@ public class Actor {
     return frame == -1;
   }
 
+  private Message findMessage(Vector<Message> messages, int time) {
+    // Find the message at the earliest time at or before the supplied
+    // time. If no explicitly timed message exists then return the
+    // oldest message with time '0'...
+    int earliest = time;
+    Message message = null;
+    for (Message m : messages) {
+      if (m.getTime() > 0 && m.getTime() <= earliest) message = m;
+    }
+    if (message != null)
+      return message;
+    else {
+      for (Message m : messages) {
+        if (m.getTime() == 0) return m;
+      }
+    }
+    return null;
+  }
+
   public Behaviour getBehaviour() {
     return behaviour;
+  }
+
+  public int getInstructions() {
+    return instructions;
   }
 
   public CodeBox getCode() {
@@ -436,19 +470,26 @@ public class Actor {
     System.out.println("\n\n");
   }
 
-  public void pushStack(Object o) {
-    stack[tos++] = o;
+  public void processMessage(Object message) {
+    openFrame(behaviour.getCode(), new Nil<Dynamic>());
+    closeFrame(behaviour.getCode().getLocals(), behaviour.getCode(), behaviour.getDynamics());
+    setFrameVar(0, message);
+    openFrame(null, getDynamics());
   }
 
-  public void returnValue(Object value) {
-    popFrame();
-    pushStack(value);
+  public void pushStack(Object o) {
+    stack[tos++] = o;
   }
 
   public void reset() {
     frame = -1;
     openFrame = -1;
     tos = 0;
+  }
+
+  public void returnValue(Object value) {
+    popFrame();
+    pushStack(value);
   }
 
   public Object run(int instrs) {
@@ -463,6 +504,7 @@ public class Actor {
         int i = getCodePtr();
         incCodePtr();
         Instr next = getCode().getInstr(i);
+        instructions++;
         if (debug) System.out.println("NEXT = " + next);
         // if (debug) printStack();
         next.perform(this);
@@ -482,11 +524,11 @@ public class Actor {
   }
 
   public void scheduleMessage(int currentTime) {
-    
+
     // The actor should be at rest. Select a message that is requested to be handled
     // at or before the current time. If one exists then initialize the actor-machine
     // so that the message is handled...
-    
+
     if (!messages.isEmpty()) {
       // Ignore time for now....
       Message message = findMessage(messages, currentTime);
@@ -495,32 +537,6 @@ public class Actor {
         processMessage(message.getValue());
       }
     }
-  }
-
-  private Message findMessage(Vector<Message> messages, int time) {
-    // Find the message at the earliest time at or before the supplied
-    // time. If no explicitly timed message exists then return the
-    // oldest message with time '0'...
-    int earliest = time;
-    Message message = null;
-    for (Message m : messages) {
-      if (m.getTime() > 0 && m.getTime() <= earliest) message = m;
-    }
-    if (message != null)
-      return message;
-    else {
-      for (Message m : messages) {
-        if (m.getTime() == 0) return m;
-      }
-    }
-    return null;
-  }
-
-  public void processMessage(Object message) {
-    openFrame(behaviour.getCode(), new Nil<Dynamic>());
-    closeFrame(behaviour.getCode().getLocals(), behaviour.getCode(), behaviour.getDynamics());
-    setFrameVar(0, message);
-    openFrame(null, getDynamics());
   }
 
   public void send(Object message, int time) {

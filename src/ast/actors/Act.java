@@ -1,18 +1,15 @@
 package ast.actors;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 
 import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
-import ast.control.Error;
 import ast.data.Apply;
 import ast.data.Fun;
 import ast.data.Str;
-import ast.modules.Module;
 import ast.tests.BArm;
 import compiler.DynamicVar;
 import compiler.FrameVar;
@@ -21,6 +18,7 @@ import instrs.Instr;
 import instrs.PopFrame;
 import instrs.Return;
 import list.List;
+import list.Nil;
 
 @BoaConstructor(fields = { "name", "init", "arms" })
 
@@ -53,6 +51,7 @@ public class Act extends AST {
     HashSet<String> dv = new HashSet<String>();
     desugar().DV(dv);
     // Message will be local 0 in the stack frame...
+    locals = new Nil<FrameVar>().cons(new FrameVar("$message", 0));
     bodyCode.add(new instrs.FrameVar(0));
     new Fun("", new String[] {}, new ast.control.Error(new Str("ran out of behaviour arms."))).compile(locals, dynamics, bodyCode);
     desugar().compile(locals, dynamics, bodyCode);
@@ -61,7 +60,8 @@ public class Act extends AST {
     int initIndex = bodyCode.size();
     init.compile(locals, dynamics, bodyCode);
     bodyCode.add(new PopFrame());
-    code.add(new instrs.Behaviour(name, initIndex, new CodeBox(1, bodyCode)));
+    // Set the locals + 1 since the message is the first local...
+    code.add(new instrs.Behaviour(name, initIndex, new CodeBox(maxLocals() + 1, bodyCode)));
   }
 
   public AST desugar() {
@@ -86,7 +86,7 @@ public class Act extends AST {
   }
 
   public int maxLocals() {
-    return init.maxLocals();
+    return init.maxLocals() + desugar().maxLocals();
   }
 
   public void DV(HashSet<String> vars) {

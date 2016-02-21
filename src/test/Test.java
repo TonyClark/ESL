@@ -19,7 +19,7 @@ public class Test {
 
   public static void main(String[] args) {
     
-    run("balbir");
+    /*run("balbir");
     run("cmp_test");
     run("init_test");
     run("jobs");
@@ -29,7 +29,8 @@ public class Test {
     run("simple_tests");
     run("stochastic_test");
     run("time");
-    run("message_at");
+    run("message_at");*/
+    run("feedback");
   }
   
   public static void run(String name) {
@@ -42,12 +43,14 @@ public class Test {
     code.add(new Return());
     CodeBox codebox = new CodeBox(record.maxLocals(), code);
     Actor actor = new Actor();
+    long time0 = System.currentTimeMillis();
     actor.initSystem(codebox);
     actor.kill();
     // Running the initial file should produce the root system actor...
     actor.run(Integer.MAX_VALUE);
     Actor.runESL(0);
-    System.out.println("done.");
+    long time = System.currentTimeMillis() - time0;
+    System.out.format("[ Completed %d instructions in %d ms ]",Actor.totalInstructions(),time);
   }
 
 }

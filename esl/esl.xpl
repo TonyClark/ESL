@@ -80,7 +80,7 @@ esl = {
   
   
   whitespace  -> (32 ! | 10 ! | 13 ! | 9 ! | comment)* !;
-  comment     -> '//' ([32,126] !)* ! | '/*' (not('*/') .)* '*/';
+  comment     -> '//' (not(10 | 13 | 9) .)* . | '/*' (not('*/') .)* '*/';
   lcurl       -> whitespace '{';
   rcurl       -> whitespace '}';
   lsquare     -> whitespace '[';

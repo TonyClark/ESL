@@ -1,0 +1,45 @@
+export main;
+
+act main {
+
+  act system(goal) {
+  
+    // Inputs events are processed and produce outputs that are measured by the goals
+    // The goals determine whether the aim of the system have been reached and cause 
+    // the system to stop. Otherwise the goals produce further inputs that are processed
+    // at a time in the future...
+    
+    state = 0
+    
+    In -> {
+      // The state is modified...
+      probably(50) state := state + 1 else {};
+      // Now check whether the goal has been achieved...
+      case goal(state,now) {
+        Achieved -> {
+          print('Completed at time ' + now);
+          stopAll()
+        };
+        // Otherwise goal produces future input events...
+        Inputs(ins) -> {
+          for At(message,t) in ins do {
+            // Send the message at some future time t...
+            self <- message@t
+          }
+        }
+      }
+    };
+      
+    Time(_) -> {}
+            
+  };
+  
+  // The following is an example of a goal. The
+  
+  goal(state,time) = if state = 10 then Achieved else Inputs([At(In,time+random(100))]) 
+  
+  -> new system(goal) <- In;
+  
+  Time(_) -> {}
+
+}

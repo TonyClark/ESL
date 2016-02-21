@@ -20,7 +20,7 @@ public class Behaviour extends Instr {
   }
 
   public String toString() {
-    return "Behaviour(" + code + ")";
+    return "Behaviour(" + name + "," + code + ")";
   }
 
 }

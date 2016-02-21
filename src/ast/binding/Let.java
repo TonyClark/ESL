@@ -84,9 +84,10 @@ public class Let extends AST {
     // This does not remove those bindings that will be implemented as
     // dynamic variables, however it is fail safe...
     int maxLocals = exp.maxLocals() + bindings.length;
+    int valueLocals = 0;
     for (Binding b : bindings)
-      maxLocals = Math.max(maxLocals, b.value.maxLocals());
-    return maxLocals;
+      valueLocals = Math.max(valueLocals, b.value.maxLocals());
+    return maxLocals + valueLocals;
   }
 
   public AST subst(AST ast, String name) {
