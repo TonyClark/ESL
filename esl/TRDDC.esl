@@ -1,0 +1,59 @@
+export main;
+
+state:int = 0;
+
+help(message:String):void = print(message);
+
+id(x:T,f:(T)->R):R = f(x)
+
+id(true)
+id(10)
+
+Act A(int) {
+  Time(int):void
+}
+
+act a:A(statea) {
+  value:B = null;
+  Act B {
+    GetX : int;
+    SetX(int):void;
+    Time(int):void
+  };
+  act b:B {
+    x:int = 0 
+    GetX(cont) -> cont(x);
+    SetX(value) -> x := value; 
+    Time(_) -> {
+      x := x + 1;
+      record(self,B(x,statea));
+      print(self + ' ' + statea);
+      statea := statea + 1 
+    }
+  }
+  Time(10) -> {
+    print(state + ' ' + statea);
+    print(getResults());
+    stopAll()
+  };
+  Time(n) -> {
+    if value = null then { value := new b; value <- SetX(100) } else {};
+    help(self + ': ' + n);
+    value <- GetX(fun(x) print('got ' + x));
+    statea := statea + 1
+  }
+};
+
+act main {
+  -> {
+    help('I am being created');
+    help('off I go');
+    new a(random(10))
+  };
+  Time(n) -> {
+    help(self + ': ' + n);
+    probably(20 + 30) 
+      state := state + 1
+    else {}
+  }
+}

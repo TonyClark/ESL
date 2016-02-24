@@ -10,4 +10,8 @@ public class Tail extends Instr {
     actor.pushStack(c.getTail());
   }
 
+  public String toString() {
+    return "Tail";
+  }
+
 }

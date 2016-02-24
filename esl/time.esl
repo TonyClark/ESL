@@ -11,5 +11,4 @@ act main {
   };
 
   Time(t) -> print('this is time ' + t)
-
 }

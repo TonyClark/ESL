@@ -1,0 +1,20 @@
+export main;
+
+Act Main {
+  // A Main actor just processes time.
+  Time(int):Object
+}
+
+act main:Main {
+
+  Time(1) -> print('this is the start of time.');
+
+  Time(20) -> {
+    print('this is the end of time.');
+    self <- Time(true);
+    let results:[Result(Object)] = stopAll()
+    in print(results)
+  };
+
+  Time(t:int) -> print('this is time ' + t)
+}

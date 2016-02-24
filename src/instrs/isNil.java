@@ -10,4 +10,8 @@ public class isNil extends Instr {
     else actor.pushStack(false);
   }
 
+  public String toString() {
+    return "IsNil";
+  }
+
 }

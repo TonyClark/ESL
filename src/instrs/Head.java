@@ -10,4 +10,8 @@ public class Head extends Instr {
     actor.pushStack(c.getHead());
   }
 
+  public String toString() {
+    return "Head";
+  }
+
 }

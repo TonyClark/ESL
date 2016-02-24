@@ -63,7 +63,7 @@ act main {
     new painter(Green)
   };
 
-  Time(100) -> {
+  Time(300) -> {
     stopAll();
     print(balls)
   };

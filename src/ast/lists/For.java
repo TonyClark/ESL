@@ -1,10 +1,8 @@
 package ast.lists;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Vector;
 
-import actors.CodeBox;
 import ast.AST;
 import ast.binding.Binding;
 import ast.binding.Letrec;
@@ -22,11 +20,17 @@ import ast.tests.Case;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
+import instrs.Goto;
 import instrs.Instr;
 import instrs.NewDynamic;
-import instrs.Return;
+import instrs.Null;
+import instrs.Pop;
+import instrs.PopDynamic;
+import instrs.SetDynamic;
+import instrs.SetFrame;
+import instrs.SkipTrue;
+import instrs.isNil;
 import list.List;
-import list.Nil;
 
 @BoaConstructor(fields = { "pattern", "list", "body" })
 
@@ -50,7 +54,9 @@ public class For extends AST {
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    desugar().compile(locals, dynamics, code);
+    if (pattern instanceof PVar)
+      compileSimple(locals, dynamics, code);
+    else desugar().compile(locals, dynamics, code);
   }
 
   public AST desugar() {
@@ -62,20 +68,145 @@ public class For extends AST {
     return new Letrec(new Binding[] { new Binding("$f", fun) }, new Apply(new Var("$f"), list));
   }
 
+  private void compileSimple(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+    PVar pvar = (PVar) pattern;
+    HashSet<String> DV = new HashSet<String>();
+    DV(DV);
+    boolean isdynamic = DV.contains(pvar.name);
+    if (isdynamic)
+      compileSimpleDynamic(locals, dynamics, code);
+    else compileSimpleLocal(locals, dynamics, code);
+  }
+
+  private void compileSimpleDynamic(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+    // [| list |]
+    // SETFRAME n
+    // POP
+    // NULL
+    // NEWDYNAMIC
+    // LOOP: FRAMEVAR n
+    // ISNIL
+    // SKIPTRUE END
+    // FRAMEVAR n
+    // HEAD
+    // SETDYNAMIC 0
+    // FRAMEVAR n
+    // TAIL
+    // SETFRAME n
+    // POP
+    // [| body |]
+    // POP
+    // GOTO LOOP
+    // END: POPDYNAMIC
+    // NULL
+
+    PVar pvar = (PVar) pattern;
+    list.compile(locals, dynamics, code);
+    locals = locals.cons(new FrameVar("$l", locals.length()));
+    dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(pvar.name, 0));
+    code.add(new SetFrame(locals.length() - 1));
+    code.add(new Null());
+    code.add(new NewDynamic());
+    int loop = code.size();
+    code.add(new instrs.FrameVar(locals.length() - 1));
+    code.add(new isNil());
+    SkipTrue skiptrue = new SkipTrue(0);
+    code.add(skiptrue);
+    int addr = code.size();
+    code.add(new instrs.FrameVar(locals.length() - 1));
+    code.add(new instrs.Head());
+    code.add(new SetDynamic(0));
+    code.add(new instrs.FrameVar(locals.length() - 1));
+    code.add(new instrs.Tail());
+    code.add(new SetFrame(locals.length() - 1));
+    code.add(new Pop());
+    body.compile(locals, dynamics, code);
+    code.add(new Pop());
+    code.add(new Goto(loop));
+    code.add(new PopDynamic());
+    skiptrue.setCount(code.size() - addr);
+    code.add(new Null());
+  }
+
+  public void compileSimpleLocal(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+
+    // [| list |]
+    // SETFRAME n
+    // POP
+    // LOOP: FRAMEVAR n
+    // ISNIL
+    // SKPTRUE END
+    // FRAMEVAR n
+    // HEAD
+    // SETFRAME n + 1
+    // POP
+    // FRAMEVAR n
+    // TAIL
+    // SETFRAME n
+    // POP
+    // [| body |]
+    // POP
+    // GOTO LOOP
+    // END: NULL
+
+    PVar pvar = (PVar) pattern;
+    list.compile(locals, dynamics, code);
+    locals = locals.cons(new FrameVar("$l", locals.length()));
+    locals = locals.cons(new FrameVar(pvar.name, locals.length()));
+    code.add(new SetFrame(locals.length() - 2));
+    int loop = code.size();
+    code.add(new instrs.FrameVar(locals.length() - 2));
+    code.add(new isNil());
+    SkipTrue skiptrue = new SkipTrue(0);
+    code.add(skiptrue);
+    int addr = code.size();
+    code.add(new instrs.FrameVar(locals.length() - 2));
+    code.add(new instrs.Head());
+    code.add(new SetFrame(locals.length() - 1));
+    code.add(new Pop());
+    code.add(new instrs.FrameVar(locals.length() - 2));
+    code.add(new instrs.Tail());
+    code.add(new SetFrame(locals.length() - 2));
+    code.add(new Pop());
+    body.compile(locals, dynamics, code);
+    code.add(new Pop());
+    code.add(new Goto(loop));
+    code.add(new Null());
+    skiptrue.setCount(code.size() - addr);
+
+  }
+
   public void FV(HashSet<String> vars) {
-    desugar().FV(vars);
+    if (pattern instanceof PVar) {
+      PVar pvar = (PVar) pattern;
+      HashSet<String> FV = new HashSet<String>();
+      body.FV(FV);
+      FV.remove(pvar.name);
+      vars.addAll(FV);
+      list.FV(vars);
+    } else desugar().FV(vars);
   }
 
   public void DV(HashSet<String> vars) {
-    desugar().FV(vars);
+    if (pattern instanceof PVar) {
+      body.DV(vars);
+      list.DV(vars);
+    } else desugar().FV(vars);
   }
 
   public int maxLocals() {
-    return desugar().maxLocals();
+    if (pattern instanceof PVar) {
+      return Math.max(list.maxLocals(), body.maxLocals() + 2);
+    } else return desugar().maxLocals();
   }
 
   public AST subst(AST ast, String name) {
-    return desugar().subst(ast, name);
+    if (pattern instanceof PVar) {
+      PVar pvar = (PVar) pattern;
+      if (name.equals(pvar.name))
+        return this;
+      else return new For(pattern, list.subst(ast, name), body.subst(ast, name));
+    } else return desugar().subst(ast, name);
   }
 
 }
