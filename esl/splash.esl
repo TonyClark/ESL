@@ -1,0 +1,118 @@
+export main;
+
+flatten(lists) =
+ case lists {
+   h:t -> h+flatten(t);
+   [] -> []
+};
+
+min(x,y) =
+  if x < y then x else y;
+
+act noticeboard {
+  facts = []
+  RegisterFact(fact) -> facts := fact:facts;
+  GetFacts(cont)     -> cont(facts);
+  Remove(fact,cont)  -> find fact in facts do { facts := facts - fact; cont() } else {};
+  Time(_)            -> {}
+};
+
+act opportunity(customer) {
+  count = 0;
+  vendor = null
+  Time(_) -> 
+    if count > 0 
+    then count := count - 1
+    else 
+      if (count = 0) and (vendor <> null)
+      then { vendor <- Finish }
+      else {};
+  Start(v) -> {
+    vendor := v;
+    count := 4
+  }
+};
+
+act customer(nb) {
+  Time(_) -> 
+    probably(10) 
+      nb <- RegisterFact(Opportunity(new opportunity(self)))
+    else {}
+};
+
+act vendor(lever,nb) {
+
+  opportunity = null;
+
+  missed = 0;
+  
+  goal(facts) = 
+    find Opportunity(_) in facts do 
+      opportunity <> null 
+    else true;
+  handler(facts,v) =
+    if goal(facts)
+    then print(v + ' on target.')
+    else {
+      print(v + ' not on target.');
+      missed := missed + 1;
+      adapter(facts)
+    };
+  action(facts,v) =
+    if opportunity = null
+    then
+      find f=Opportunity(o) in facts do {
+        probably(lever)
+          nb <- Remove(f,fun() { opportunity := o; o <- Start(v) })
+        else {}
+      } else {}
+    else {};
+  
+  adapter(facts) = {
+    //lever := min(100,lever+25)
+  }
+    
+  Finish -> {
+    opportunity := null
+  };
+  
+  Missed ->
+    print(self + ' missed ' + missed);
+  
+  Time(_) -> 
+    let v = self
+    in nb <- GetFacts(fun(facts) { action(facts,v); handler(facts,v) })
+};
+
+act main {
+
+  vendors = []
+  
+  Time(49) ->
+    for v in vendors do
+      v <- Missed;
+
+  Time(50) -> {
+    stopAll()
+  };
+  
+  Time(1) -> {
+    let nb = new noticeboard
+    in {
+      new customer(nb);
+      new customer(nb);
+      new customer(nb);
+      new customer(nb);
+      new customer(nb);
+      new customer(nb);
+      vendors := [
+        new vendor(20,nb),
+        new vendor(30,nb),
+        new vendor(40,nb) 
+      ]
+    }
+  };
+  
+  Time(_) -> {}
+
+}

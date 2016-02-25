@@ -82,14 +82,6 @@ public class Letrec extends AST {
     }
   }
 
-  private int localIndex(String name, List<Local> locals) {
-    if (locals.isNil())
-      throw new java.lang.Error("cannot find local named " + name);
-    else if (locals.getHead().getName().equals(name))
-      return locals.getHead().getIndex();
-    else return localIndex(name, locals.getTail());
-  }
-
   private boolean isDynamic(String name) {
     // A name is dynamic in the binding values if it is captured by
     // a closure...

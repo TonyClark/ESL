@@ -9,40 +9,55 @@ import compiler.FrameVar;
 import instrs.Instr;
 import list.List;
 
+import java.util.HashSet;
+import java.util.Vector;
+
+import ast.AST;
+import compiler.DynamicVar;
+import compiler.FrameVar;
+import compiler.Local;
+import exp.BoaConstructor;
+import instrs.Instr;
+import list.List;
+
+@BoaConstructor(fields = { "namespace", "name" })
 public class Ref extends AST {
 
-  AST    record;
-  String name;
+  public AST    namespace;
+  public String name;
 
-  public Ref(AST record, String name) {
+  public Ref() {
+  }
+
+  public Ref(AST namespace, String name) {
     super();
-    this.record = record;
+    this.namespace = namespace;
     this.name = name;
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    record.compile(locals, dynamics, code);
+    namespace.compile(locals, dynamics, code);
     code.add(new instrs.Ref(name));
   }
 
   public void FV(HashSet<String> vars) {
-    record.FV(vars);
+    namespace.FV(vars);
   }
 
   public void DV(HashSet<String> vars) {
-    record.DV(vars);
+    namespace.DV(vars);
   }
 
   public int maxLocals() {
-    return record.maxLocals();
+    return namespace.maxLocals();
   }
 
   public AST subst(AST ast, String name) {
-    return new Ref(record.subst(ast, name), this.name);
+    return new Ref(namespace.subst(ast, name), this.name);
   }
 
   public String toString() {
-    return "Ref(" + record + "," + name + ")";
+    return "Ref(" + namespace + "," + name + ")";
   }
 
 }

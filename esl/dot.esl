@@ -1,0 +1,21 @@
+export main;
+
+act point(x,y) {
+  export getx,gety,add,toString;
+  getx() = x;
+  gety() = y;
+  add(p) = new point(p.getx() + x,p.gety() + y);
+  toString() = '(' + x + ',' + y + ')'
+  Time(_) -> {}
+};
+
+act main {
+
+  -> 
+  let p1 = new point(1,2);
+      p2 = new point(2,3)
+  in print(p1.add(p2).toString());
+  
+  Time(1) -> stopAll()
+
+}

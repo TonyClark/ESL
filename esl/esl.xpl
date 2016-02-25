@@ -20,7 +20,7 @@ esl = {
   binding         -> b=(valbind | funbind | actbind) ! {b};
   valbind         -> n=name eql e=exp { Binding(n,e) };
   funbind         -> n=name lparen ps=params rparen eql e=exp { Binding(n,Fun(n,ps,e)) };
-  actbind         -> whitespace 'act' n=name ps=actargs lcurl bs = bindings i=actinit as=barms rcurl { Binding(n,Fun(n,ps,Letrec(bs,Act(n,i,as)))) };
+  actbind         -> whitespace 'act' n=name ps=actargs lcurl es=exports bs = bindings i=actinit as=barms rcurl { Binding(n,Fun(n,ps,Act(n,es,bs,i,as))) };
   actargs         -> lparen ps=params rparen {ps} | {[]};
   actinit         -> arrow e=exp semi {e} | { Null() };
   barms           -> a=barm ! as=(semi barm)* { a:as };
@@ -41,8 +41,9 @@ esl = {
   params          -> n=name ns=(comma name)* { n:ns } | {[]};
   exp             -> e=simpleExp ! postexp^(e);
   postexp(e)      -> o=op ! r=exp { BinExp(e,o,r) } 
-                  |  lparen es=exps rparen { Apply(e,es) } 
+                  |  lparen es=exps rparen exp={ Apply(e,es) } postexp^(exp)
                   |  leftArrow v=exp postsend^(e,[v]) 
+                  |  dot n=name ref={ Ref(e,n) } postexp^(ref)
                   |  {e};
   postsend(a,m)   -> at t=exp { Send(a,m,t) } | { Send(a,m,Int(0)) };
   exps            -> e=exp es=(comma exp)* { e:es } | {[]};

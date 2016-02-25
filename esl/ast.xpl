@@ -1,4 +1,4 @@
-export Act,Apply,Become,Binding,BinExp,Block,BArm,Bool,BQual,Case,Cmp,Float,Fun,Find,For,If,Int,Let,Letrec,List,Map,Module,New,Not,Now,Null,PBind,PBool,PCons,PGuard,PInt,PNil,PNull,PStr,PQual,PTerm,PVar,PWild,Self,Send,Str,Term,Update,Var
+export Act,Apply,Become,Binding,BinExp,Block,BArm,Bool,BQual,Case,Cmp,Float,Fun,Find,For,If,Int,Let,Letrec,List,Map,Module,New,Not,Now,Null,PBind,PBool,PCons,PGuard,PInt,PNil,PNull,PStr,PQual,PTerm,PVar,PWild,Ref,Self,Send,Str,Term,Update,Var
 
 
 Act                 = 'ast.actors.Act'.java()
@@ -39,6 +39,7 @@ PStr                = 'ast.patterns.PStr'.java()
 PTerm               = 'ast.patterns.PTerm'.java()
 PVar                = 'ast.patterns.PVar'.java()
 PWild               = 'ast.patterns.PWild'.java()
+Ref                 = 'ast.data.Ref'.java()
 Self                = 'ast.actors.Self'.java()
 Send                = 'ast.actors.Send'.java()
 Str                 = 'ast.data.Str'.java()

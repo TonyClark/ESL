@@ -93,4 +93,12 @@ public abstract class List<Element> {
     return a;
   }
 
+  public List<Element> remove(Element e) {
+    if (isNil())
+      return this;
+    else if (getHead().equals(e))
+      return getTail().remove(e);
+    else return getTail().remove(e).cons(getHead());
+  }
+
 }

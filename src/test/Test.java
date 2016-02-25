@@ -33,6 +33,8 @@ public class Test {
     run("feedback");
     //run("TRDDC");
     run("big");
+    run("splash");
+    run("dot");
   }
 
   public static void run(String name) {

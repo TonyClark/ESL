@@ -578,4 +578,16 @@ public class Actor {
     return "Actor(" + String.format("%04d", id) + "," + behaviour.getName() + ")";
   }
 
+  public boolean hasExport(String name) {
+    return behaviour.hasExport(name);
+  }
+
+  public Object ref(String name) {
+    return behaviour.ref(name);
+  }
+
+  public String[] getExports() {
+    return behaviour.getExports();
+  }
+
 }
