@@ -101,12 +101,14 @@ public class Act extends AST {
   }
 
   private void orderExports(List<DynamicVar> dynamics) {
-    String[] newExports = new String[exports.length];
+    String[] newExports = new String[bindings.length];
     for (String export : exports) {
-      DynamicVar dynamic = lookup(export, dynamics);
-      if (dynamic == null)
-        throw new java.lang.Error("cannot find dyanamic " + export);
-      else newExports[dynamic.getIndex()] = export;
+      if (export != null) {
+        DynamicVar dynamic = lookup(export, dynamics);
+        if (dynamic == null)
+          throw new java.lang.Error("cannot find dyanamic " + export);
+        else newExports[dynamic.getIndex()] = export;
+      }
     }
     exports = newExports;
   }

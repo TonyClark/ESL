@@ -62,7 +62,7 @@ public class Behaviour {
 
   public boolean hasExport(String name) {
     for (String n : exports)
-      if (n.equals(name)) return true;
+      if (n != null && n.equals(name)) return true;
     return false;
   }
 
