@@ -61,7 +61,7 @@ act opportunity(customer,colour,availability) {
   b=Bid(colour,vendor) -> bids := b:bids;                       // Add a new bid.
   Time(_) ? (availability = 0) and (bids <> []) -> {            // Check whether to award opportunity.
     let won = false in
-    for Bid(c,v) in bids do 
+    for Bid(c,v) in shuffle(bids) do 
       if won
       then v <- Failed                                          // Cannot award twice.
       else  
@@ -185,5 +185,4 @@ act main {
   };
   Time(_) -> {}
 }
-      
   

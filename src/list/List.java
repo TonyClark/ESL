@@ -1,6 +1,8 @@
 package list;
 
 import java.lang.reflect.Array;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 
 public abstract class List<Element> {
@@ -99,6 +101,31 @@ public abstract class List<Element> {
     else if (getHead().equals(e))
       return getTail().remove(e);
     else return getTail().remove(e).cons(getHead());
+  }
+
+  public List<Element> shuffle() {
+    // Return a randomly generated list...
+    Element[] a = asArray();
+    shuffle(a);
+    return asList(a);
+  }
+
+  public static <Element> void shuffle(Element[] a) {
+    Random rnd = ThreadLocalRandom.current();
+    for (int i = 0; i < a.length * 2; i++) {
+      int m = rnd.nextInt(a.length);
+      int n = rnd.nextInt(a.length);
+      Element e = a[m];
+      a[m] = a[n];
+      a[n] = e;
+    }
+  }
+
+  public static <Element> List<Element> asList(Element[] a) {
+    List<Element> l = new Nil<Element>();
+    for (int i = a.length - 1; i >= 0; i--)
+      l = l.cons(a[i]);
+    return l;
   }
 
 }

@@ -19,22 +19,22 @@ public class Test {
 
   public static void main(String[] args) {
 
-    run("balbir");
-    run("cmp_test");
-    run("init_test");
-    run("jobs");
-    run("module1");
-    run("painters");
-    run("shared_var");
-    run("simple_tests");
-    run("stochastic_test");
-    run("time");
-    run("message_at");
-    run("feedback");
-    //run("TRDDC");
-    run("big");
-    run("splash");
-    run("dot");
+    // run("balbir");
+    // run("cmp_test");
+    // run("init_test");
+    // run("jobs");
+    // run("module1");
+    // run("painters");
+    // run("shared_var");
+    // run("simple_tests");
+    // run("stochastic_test");
+    // run("time");
+    // run("message_at");
+    // run("feedback");
+    // run("TRDDC");
+    // run("big");
+    // run("splash");
+    // run("dot");
     run("customer");
   }
 
@@ -47,7 +47,7 @@ public class Test {
     record.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code);
     code.add(new Return());
     CodeBox codebox = new CodeBox(record.maxLocals(), code);
-    //System.out.println(codebox);
+    // System.out.println(codebox);
     Actor actor = new Actor();
     long time0 = System.currentTimeMillis();
     actor.initSystem(codebox);

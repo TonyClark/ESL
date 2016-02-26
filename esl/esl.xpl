@@ -80,8 +80,7 @@ esl = {
   probably        -> whitespace 'probably' lparen p=exp rparen e1=exp whitespace 'else' e2=exp { Apply(Apply(Var('probably'),[p,Fun('prob1',[],e1),Fun('prob2',[],e2)]),[]) };
   
   
-  whitespace  -> (32 ! | 10 ! | 13 ! | 9 ! | comment)* !;
-  comment     -> '//' (not(10 | 13 | 9) .)* . | '/*' (not('*/') .)* '*/';
+  whitespace  -> SKIPWHITE('//','/*','*/');
   lcurl       -> whitespace '{';
   rcurl       -> whitespace '}';
   lsquare     -> whitespace '[';

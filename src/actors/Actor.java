@@ -71,6 +71,7 @@ public class Actor {
     DynamicVar getResults = new DynamicVar("getResults", 3);
     DynamicVar random = new DynamicVar("random", 4);
     DynamicVar stopAll = new DynamicVar("stopAll", 5);
+    DynamicVar shuffle = new DynamicVar("shuffle", 6);
     List<DynamicVar> env = new Nil<DynamicVar>();
     // Order is not important...
     env = env.cons(print);
@@ -79,6 +80,7 @@ public class Actor {
     env = env.cons(getResults);
     env = env.cons(random);
     env = env.cons(stopAll);
+    env = env.cons(shuffle);
     return env;
   }
 
@@ -92,8 +94,10 @@ public class Actor {
     Dynamic getResults = new Dynamic(new Builtin("getResults", Actor::getResults));
     Dynamic random = new Dynamic(new Builtin("random", Actor::random));
     Dynamic stopAll = new Dynamic(new Builtin("stopAll", Actor::stopAll));
+    Dynamic shuffle = new Dynamic(new Builtin("shuffle", Actor::shuffle));
     List<Dynamic> env = new Nil<Dynamic>();
     // Order is important - must match indices used in builtinDynamics...
+    env = env.cons(shuffle);
     env = env.cons(stopAll);
     env = env.cons(random);
     env = env.cons(getResults);
@@ -254,9 +258,6 @@ public class Actor {
     return instructions;
   }
 
-  // It is useful to have a unique id that can be used to differentiate two different actors
-  // when they are printed out...
-
   public static void stopAll(Actor actor, int arity) {
     if (arity == 0) {
       actor.closeFrame(0, null, null);
@@ -264,6 +265,17 @@ public class Actor {
       actor.returnValue(getResults());
     } else throw new Error("getResults expects 0 args but supplied with " + arity);
   }
+
+  public static void shuffle(Actor actor, int arity) {
+    if (arity == 1) {
+      actor.closeFrame(0, null, null);
+      List<Object> l = (List) actor.getFrameVar(0);
+      actor.returnValue(l.shuffle());
+    } else throw new Error("shuffle expects 1 arg but supplied with " + arity);
+  }
+
+  // It is useful to have a unique id that can be used to differentiate two different actors
+  // when they are printed out...
 
   int             id           = idCounter++;
 
