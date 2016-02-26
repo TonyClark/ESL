@@ -4,10 +4,9 @@ import actors.Actor;
 
 public class Not extends Instr {
 
-  @Override
   public void perform(Actor actor) {
-    // TODO Auto-generated method stub
-
+    boolean b = (boolean)actor.popStack();
+    actor.pushStack(!b);
   }
 
 }

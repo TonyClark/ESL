@@ -1,5 +1,6 @@
 package actors;
 
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -21,7 +22,7 @@ public class Actor {
   // control is handed over to another actor. Computation is thereby time
   // sliced between all current actors.
 
-  static final int                  STACK_SIZE           = 100000;
+  static final int                  STACK_SIZE           = 500000;
 
   // The machine time slices computation between actors. For each slice
   // an actor can perform the following maximum number of instructions...
@@ -216,6 +217,7 @@ public class Actor {
       instrs += MAX_INSTRS;
       // Merge the new actors from the previous round with the existing
       // actors...
+      Collections.shuffle(actors);
       for (Actor actor : actors)
         ACTORS.add(actor);
       if (!stop && instrs >= INSTRS_PER_TIME_UNIT) {

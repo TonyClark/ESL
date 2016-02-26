@@ -41,4 +41,8 @@ public class TermRef extends AST {
     return new TermRef(term.subst(ast, name), index);
   }
 
+  public String toString() {
+    return "TermRef(" + term + "," + index + ")";
+  }
+
 }

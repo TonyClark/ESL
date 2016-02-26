@@ -1,0 +1,26 @@
+export remove,length,flatten,count;
+
+remove(v,l) =
+  case l {
+    h:t ?(h=v) -> remove(v,t);
+    h:t        -> h:remove(v,t);
+    []         -> []
+  };
+  
+length(l) =
+  case l {
+    _:t -> 1 + length(t);
+    [] -> 0
+  };
+      
+flatten(lists) =
+  case lists {
+    h:t -> h+flatten(t);
+    [] -> []
+  };
+        
+count(x,l) =
+  case l {
+    h:t -> if h = x then 1+count(x,t) else count(x,t);
+    []  -> 0
+  }

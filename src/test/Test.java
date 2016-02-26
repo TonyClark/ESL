@@ -35,6 +35,7 @@ public class Test {
     run("big");
     run("splash");
     run("dot");
+    run("customer");
   }
 
   public static void run(String name) {

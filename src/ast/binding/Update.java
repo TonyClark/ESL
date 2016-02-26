@@ -32,7 +32,7 @@ public class Update extends AST {
       lookup(name, locals).update(code);
     else if (lookup(name, dynamics) != null)
       lookup(name, dynamics).update(code);
-    else throw new java.lang.Error("cannot update " + name);
+    else throw new java.lang.Error("cannot update " + name + " in " + locals + " and " + dynamics);
   }
 
   public void DV(HashSet<String> vars) {
@@ -48,7 +48,7 @@ public class Update extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Update(name,value.subst(ast, name));
+    return new Update(this.name,value.subst(ast, name));
   }
 
   public String toString() {

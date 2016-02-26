@@ -9,7 +9,7 @@ act x {
 
 act main {
 
-  -> for n in 0..5000 do {
+  -> for n in 0..100 do {
        new x
      };
   Time(100) -> { print(var); stopAll() };

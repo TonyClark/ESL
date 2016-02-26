@@ -1,0 +1,189 @@
+export main;
+
+// List utilities...
+
+remove(v,l) =
+  case l {
+    h:t ?(h=v) -> remove(v,t);
+    h:t        -> h:remove(v,t);
+    []         -> []
+  };
+  
+length(l) =
+  case l {
+    _:t -> 1 + length(t);
+    [] -> 0
+  };
+      
+flatten(lists) =
+  case lists {
+    h:t -> h+flatten(t);
+    [] -> []
+  };
+        
+count(x,l) =
+  case l {
+    h:t -> if h = x then 1+count(x,t) else count(x,t);
+    []  -> 0
+  };
+
+act customer(pcred,frequency,availability) {
+
+  // A customer produces opportunities at a given frequency.
+  // Each opportunity is either Red or Green and there is
+  // a pcred %-age chance of it being Red. The opportunity
+  // is available for a given number of time clicks.
+   
+  export history,getReds,getGreens;
+  
+  next = 0;                                                     // Controls the frequency.
+  history = [];                                                 // A list of opportunity colours.
+  getReds() = count(Red,history);                               // Calculate the number of Reds.
+  getGreens() = count(Green,history);                           // Calculate the number of Greens.
+  offer() =                                                     // Create a new opportunity.
+    probably(pcred) 
+      nb <- Offer(new opportunity(self,Red,availability))       // pcred chance of Red...
+    else  nb <- Offer(new opportunity(self,Green,availability)) // otherwise Green.
+  Time(_) ? next=frequency -> { next := 0; offer() };           // If frequency reached then offer.
+  Time(_) -> next := next + 1;                                  // Move towards next offering.
+  Done(colour) -> history := colour:history                     // Record a completed opportunity.
+};
+
+act opportunity(customer,colour,availability) {
+
+  // An opportunity keeps track of the bids by vendors and
+  // will inform the winning vendor. For a vendor to win 
+  // they must bid the same colour as the opportunity. If
+  // multiple vendors bid the same colour then one is chosen
+  // at random.
+  
+  bids = []                                                     // Record the bids.
+  b=Bid(colour,vendor) -> bids := b:bids;                       // Add a new bid.
+  Time(_) ? (availability = 0) and (bids <> []) -> {            // Check whether to award opportunity.
+    let won = false in
+    for Bid(c,v) in bids do 
+      if won
+      then v <- Failed                                          // Cannot award twice.
+      else  
+        if c = colour
+        then { v <- Award; won := true }                        // Award a colour-match.
+        else v <- Failed;                                       // Everyone else fails.
+    bids := [];                                                 // Once awarded, reset.
+    nb <- Remove(self);                                         // Remove from notice-board.
+    customer <- Done(colour)                                    // Inform the customer.
+  };
+  Time(_) ? (availability = 0) -> {                             // No bids made.
+    nb <- Remove(self);                                         // Reset everything.
+    customer <- Done(colour);
+    availability := availability - 1                            // Causes opportunity to become inactive.
+  };
+  Time(_) -> availability := availability - 1                   // Causes opportunity to become inactive.
+};
+
+act noticeboard {
+
+  // A notice-board is just a global variable that is shared 
+  // between multiple actors. In this case we record the
+  // current opportunities.
+  
+  export opportunities;
+  opportunities = []
+  Time(_) -> {};
+  Offer(o) -> opportunities := o:opportunities;
+  Remove(o) -> opportunities := remove(o,opportunities)
+};
+
+nb = new noticeboard;                                          // A global notice-board.
+
+act vendorGoal(colour,vendor,customer) {
+
+  // A vendor goal monitors a vendor. We have just one customer
+  // so the goal can access the history of the customer in case
+  // it is useful. The goal also encodes the adaptor for its
+  // vendor: if the goal is not satisfied then the adaptor changes
+  // the behaviour by sending the vendor a message.
+  
+  Time(_) -> 
+    case vendor.history {
+      Fail:Fail:Fail:_ ->                                      // The goal fails when 3 opportunities are missed.
+        case colour {
+        
+          // Monitor the external history of the customer 
+          // and check which colours are more frequent. If
+          // this is different to the vendor's current colour
+          // then adapt the vendor to the new colour.
+          
+          Red -> {                                            
+            if customer.getGreens() > customer.getReds()       
+            then {
+              colour := Green;
+              vendor <- Change(Green)
+            } else {}
+          };
+          Green -> {
+            if customer.getReds() > customer.getGreens()
+            then {
+              colour := Red;
+              vendor <- Change(Red)
+            } else {}
+          }
+        };
+      _ -> {}
+    }
+};
+
+act vendor(colour) {
+  
+  // A vendor has a colour that controls the bids for
+  // opportunities. When an opportunity is available via the
+  // notice-board, the vendor will have to guess what the
+  // colour of the opportunity is.
+  
+  export history;                                                 
+  history = [];
+  bidding = false
+  Time(_) ? (nb.opportunities <> []) and (bidding = false) -> {
+    case nb.opportunities {
+      o:_ -> {
+        o <- Bid(colour,self);
+        bidding := true
+      }
+    }
+  };
+  Award -> {
+    history := Succ:history;
+    bidding := false
+  };
+  Failed -> {
+    history := Fail:history;
+    bidding := false
+  };
+  Change(c) -> { 
+    if c <> colour
+    then { 
+      colour := c;
+      history := Changed:history
+    } else {}
+  };
+  Time(_) -> {}
+};
+
+act main {
+  c = new customer(5,4,4);
+  v1 = new vendor(Red);
+  v2 = new vendor(Green);
+  v3 = new vendor(Red);
+  vs = [v1,v2,v3];
+  gs = [new vendorGoal(Red,v1,c),new vendorGoal(Green,v2,c),new vendorGoal(Red,v3,c)]
+  Time(900) -> {
+    stopAll();
+    for v in vs do {
+      print('Vendor: ' + v + ' success=' + count(Succ,v.history) + ' fail=' + count(Fail,v.history));
+      print(v.history)
+    };
+    print(c.history)
+  };
+  Time(_) -> {}
+}
+      
+  
