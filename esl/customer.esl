@@ -1,5 +1,8 @@
 export main;
 
+import 'esl/lists';
+
+/*
 // List utilities...
 
 remove(v,l) =
@@ -25,7 +28,7 @@ count(x,l) =
   case l {
     h:t -> if h = x then 1+count(x,t) else count(x,t);
     []  -> 0
-  };
+  };*/
 
 act customer(pcred,frequency,availability) {
 
@@ -144,17 +147,17 @@ act vendor(colour) {
   bidding = false
   Time(_) ? (nb.opportunities <> []) and (bidding = false) -> {
     case nb.opportunities {
-      o:_ -> {
+      o:_ -> { 
         o <- Bid(colour,self);
         bidding := true
       }
     }
   };
-  Award -> {
+  Award -> { 
     history := Succ:history;
     bidding := false
   };
-  Failed -> {
+  Failed -> { 
     history := Fail:history;
     bidding := false
   };

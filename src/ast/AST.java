@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Vector;
 
 import ast.binding.Var;
+import ast.data.Apply;
 import ast.data.Ref;
 import ast.modules.Module;
 import ast.tests.BArm;
@@ -75,6 +76,10 @@ public abstract class AST {
     for (int i = 0; i < a.length; i++)
       b[i] = a[i].subst(ast, name);
     return b;
+  }
+
+  public AST printExp(AST value) {
+    return new Apply(new Var("print"), value);
   }
 
 }

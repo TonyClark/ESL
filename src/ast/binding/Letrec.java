@@ -136,7 +136,8 @@ public class Letrec extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Letrec(substBindings(ast, name), binds(name) ? exp : exp.subst(ast, name));
+    AST letrec = new Letrec(substBindings(ast, name), binds(name) ? exp : exp.subst(ast, name));
+    return letrec;
   }
 
   private boolean binds(String name) {
