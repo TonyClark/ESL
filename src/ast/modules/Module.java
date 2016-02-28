@@ -92,7 +92,7 @@ public class Module {
   private Binding[] getBindings() {
     Binding[] bindings = new Binding[defs.length];
     for (int i = 0; i < defs.length; i++)
-      bindings[i] = new Binding(defs[i].name, defs[i].value.substExportedValues(imported.values()));
+      bindings[i] = defs[i].substExportedValues(imported.values());
     return bindings;
   }
 

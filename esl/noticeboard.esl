@@ -1,0 +1,16 @@
+export noticeboard;
+
+import 'esl/lists';
+
+act noticeboard {
+
+  // A notice-board is just a global variable that is shared 
+  // between multiple actors. In this case we record the
+  // current opportunities.
+  
+  export data;
+  data = []
+  Time(_) -> {};
+  Add(d) -> data := d:data;
+  Remove(d) -> data := remove(d,data)
+}  

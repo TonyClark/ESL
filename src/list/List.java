@@ -128,4 +128,17 @@ public abstract class List<Element> {
     return l;
   }
 
+  public List<List<Element>> product(List<Element> l2) {
+    List<Element> l1 = this;
+    List<List<Element>> product = new Nil<List<Element>>();
+    while (!l1.isNil()) {
+      while (!l2.isNil()) {
+        product = product.cons(new Nil<Element>().cons(l2.getHead()).cons(l1.getHead()));
+        l2 = l2.getTail();
+      }
+      l1 = l1.getTail();
+    }
+    return product;
+  }
+
 }

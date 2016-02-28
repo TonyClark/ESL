@@ -19,7 +19,7 @@ esl = {
   bindings        -> b=binding ! bs=(semi binding)* { b:bs } | {[]};
   binding         -> b=(valbind | funbind | actbind) ! {b};
   valbind         -> n=name eql e=exp { Binding(n,e) };
-  funbind         -> n=name lparen ps=params rparen eql e=exp { Binding(n,Fun(n,ps,e)) };
+  funbind         -> n=name lparen ps=funargs rparen eql e=exp g=guard { FunBind(n,ps,e,g) };
   actbind         -> whitespace 'act' n=name ps=actargs lcurl es=exports bs = bindings i=actinit as=barms rcurl { Binding(n,Fun(n,ps,Act(n,es,bs,i,as))) };
   actargs         -> lparen ps=params rparen {ps} | {[]};
   actinit         -> arrow e=exp semi {e} | { Null() };
@@ -39,6 +39,8 @@ esl = {
   pList           -> lsquare (rsquare { PNil() } | pListTail);
   pListTail       -> p=pattern (rsquare { PCons(p,PNil()) } | comma ps=pListTail { PCons(p,ps) });
   params          -> n=name ns=(comma name)* { n:ns } | {[]};
+  guard           -> 'when' exp | { Bool(true) };
+  funargs         -> patterns | {[]};
   exp             -> e=simpleExp ! postexp^(e);
   postexp(e)      -> o=op ! r=exp { BinExp(e,o,r) } 
                   |  lparen es=exps rparen exp={ Apply(e,es) } postexp^(exp)
@@ -60,6 +62,10 @@ esl = {
                   |  whitespace 'for'    ! p=pattern whitespace 'in' l=exp arrow e=exp whitespace { Map(p,l,e) }
                   |  whitespace 'find'   ! p=pattern whitespace 'in' l=exp whitespace 'do' e=exp 'else' d=exp { Find(p,l,e,d) }
                   |  whitespace 'if'     ! t=exp whitespace 'then' c=exp whitespace 'else' a=exp { If(t,c,a) }
+                  |  whitespace 'try'    ! e=exp whitespace 'catch' lcurl as=barms rcurl { Try(e,as) }
+                  |  whitespace 'throw'  ! e=exp { Throw(e) }
+                  |  whitespace 'bag'      lcurl es=exps rcurl { Bag(es) }
+                  |  whitespace 'bag'      lcurl es=exps bar e=exp rcurl { BinExp(Bag(es),'+',e) }
                   |  whitespace lsquare (es=exps rsquare { List(es) } | rsquare { List([]) })
                   |  whitespace lsquare e=exp bar qs=quals rsquare { Cmp(e,qs) }
                   |  n=Name es=(lparen es=exps rparen {es} | {[]}) { Term(n,es) }
@@ -103,7 +109,7 @@ esl = {
   query       -> whitespace '?';
   at          -> whitespace '@';
   keyWord     -> key ! not([97,122] | [65,90]);
-  key         -> 'EOF' | 'act' | 'export' | 'import' | 'for' | 'find' | 'do' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become' | 'self' | 'probably' | 'now' | 'null' | 'if' | 'then' | 'else';
+  key         -> 'EOF' | 'act' | 'export' | 'import' | 'for' | 'find' | 'do' | 'not' | 'fun' | 'letrec' | 'let' | 'in' | 'new' | 'true' | 'false' | 'case' | 'become' | 'self' | 'probably' | 'now' | 'null' | 'if' | 'then' | 'else' | 'when' | 'try' | 'catch' | 'throw' | 'bag';
   name        -> whitespace not(keyWord) c=lowerChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};
   names       -> n=name ns=(comma name)* { n:ns } | {[]};
   Name        -> whitespace not(keyWord) c=upperChar chars=(alphaChar | numChar)*  whitespace ! {'values.Str'(c:chars)};

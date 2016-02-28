@@ -1,8 +1,9 @@
-export Act,Apply,Become,Binding,BinExp,Block,BArm,Bool,BQual,Case,Cmp,Float,Fun,Find,For,If,Int,Let,Letrec,List,Map,Module,New,Not,Now,Null,PBind,PBool,PCons,PGuard,PInt,PNil,PNull,PStr,PQual,PTerm,PVar,PWild,Ref,Self,Send,Str,Term,Update,Var
+export Act,Apply,Bag,Become,Binding,BinExp,Block,BArm,Bool,BQual,Case,Cmp,Float,Fun,FunBind,Find,For,If,Int,Let,Letrec,List,Map,Module,New,Not,Now,Null,PBind,PBool,PCons,PGuard,PInt,PNil,PNull,PStr,PQual,PTerm,PVar,PWild,Ref,Self,Send,Str,Term,Throw,Try,Update,Var
 
 
 Act                 = 'ast.actors.Act'.java()
 Apply               = 'ast.data.Apply'.java()
+Bag                 = 'ast.lists.Bag'.java()
 BArm                = 'ast.tests.BArm'.java()
 Become              = 'ast.actors.Become'.java()
 Binding             = 'ast.binding.Binding'.java()
@@ -16,6 +17,7 @@ Find                = 'ast.lists.Find'.java()
 Float               = 'ast.data.Float'.java()
 For                 = 'ast.lists.For'.java()
 Fun                 = 'ast.data.Fun'.java()
+FunBind             = 'ast.binding.FunBind'.java()
 If                  = 'ast.tests.If'.java()
 Int                 = 'ast.data.Int'.java()
 Let                 = 'ast.binding.Let'.java()
@@ -44,6 +46,8 @@ Self                = 'ast.actors.Self'.java()
 Send                = 'ast.actors.Send'.java()
 Str                 = 'ast.data.Str'.java()
 Term                = 'ast.data.Term'.java()
+Throw               = 'ast.control.Throw'.java()
+Try                 = 'ast.control.Try'.java()
 Update              = 'ast.binding.Update'.java()
 Var                 = 'ast.binding.Var'.java()
 

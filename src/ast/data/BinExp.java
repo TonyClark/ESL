@@ -10,10 +10,12 @@ import exp.BoaConstructor;
 import instrs.Add;
 import instrs.And;
 import instrs.Cons;
+import instrs.Div;
 import instrs.Eql;
 import instrs.Gre;
 import instrs.Instr;
 import instrs.Less;
+import instrs.Mul;
 import instrs.NEql;
 import instrs.Or;
 import instrs.Sub;
@@ -54,6 +56,12 @@ public class BinExp extends AST {
         break;
       case "-":
         code.add(new Sub());
+        break;
+      case "*":
+        code.add(new Mul());
+        break;
+      case "/":
+        code.add(new Div());
         break;
       case "=":
         code.add(new Eql());

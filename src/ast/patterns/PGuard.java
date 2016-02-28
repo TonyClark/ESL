@@ -18,6 +18,11 @@ public class PGuard extends Pattern {
   public PGuard() {
   }
 
+  public PGuard(Pattern pattern, AST guard) {
+    this.pattern = pattern;
+    this.guard = guard;
+  }
+
   public String toString() {
     return "PGuard(" + guard + "," + pattern + ")";
   }

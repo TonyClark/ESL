@@ -35,6 +35,9 @@ public class Let extends AST {
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+
+    bindings = Binding.mergeBindings(bindings);
+
     HashSet<String> DV = new HashSet<String>();
     exp.DV(DV);
     for (Binding b : bindings) {
@@ -63,7 +66,7 @@ public class Let extends AST {
     HashSet<String> bound = new HashSet<String>();
     exp.FV(free);
     for (Binding b : bindings) {
-      b.value.FV(vars);
+      b.FV(vars);
       bound.add(b.name);
     }
     free.removeAll(bound);
@@ -72,7 +75,7 @@ public class Let extends AST {
 
   public void DV(HashSet<String> vars) {
     for (Binding b : bindings)
-      b.value.DV(vars);
+      b.DV(vars);
     HashSet<String> dv = new HashSet<String>();
     exp.DV(dv);
     for (Binding b : bindings)
@@ -104,7 +107,7 @@ public class Let extends AST {
   private Binding[] substBindings(AST ast, String name) {
     Binding[] bs = new Binding[bindings.length];
     for (int i = 0; i < bindings.length; i++)
-      bs[i] = new Binding(bindings[i].getName(), bindings[i].getValue().subst(ast, name));
+      bs[i] = bindings[i].subst(ast, name);
     return bs;
   }
 

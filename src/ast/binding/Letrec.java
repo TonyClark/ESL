@@ -54,6 +54,8 @@ public class Letrec extends AST {
     // else code.add(SetLocal(frameIndex(x,locals))
     // same for y
 
+    bindings = Binding.mergeBindings(bindings);
+
     for (Binding b : bindings) {
       if (isDynamic(b.name)) {
         dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(b.name, 0));
@@ -102,7 +104,7 @@ public class Letrec extends AST {
     }
     for (Binding b : bindings) {
       HashSet<String> free = new HashSet<String>();
-      b.value.FV(free);
+      b.FV(free);
       free.removeAll(bound);
       vars.addAll(free);
     }
@@ -118,7 +120,7 @@ public class Letrec extends AST {
       bound.add(b.name);
     for (Binding b : bindings) {
       HashSet<String> dv = new HashSet<String>();
-      b.value.DV(dv);
+      b.DV(dv);
       dv.removeAll(bound);
       vars.addAll(dv);
     }
@@ -150,7 +152,7 @@ public class Letrec extends AST {
   private Binding[] substBindings(AST ast, String name) {
     Binding[] bs = new Binding[bindings.length];
     for (int i = 0; i < bindings.length; i++) {
-      bs[i] = new Binding(bindings[i].getName(), binds(name) ? bindings[i].getValue() : bindings[i].getValue().subst(ast, name));
+      bs[i] = binds(name) ? bindings[i] : bindings[i].subst(ast, name);
     }
     return bs;
   }

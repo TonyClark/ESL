@@ -52,7 +52,18 @@ public class Case extends AST {
   }
 
   private AST combineOr(AST left, AST right) {
-    return new Fun("", new String[] { "$v", "$fail" }, new Apply(left, new Var("$v"), new Fun("", new String[] {}, new Apply(right, new Var("$v"), new Var("$fail")))));
+    String[] args = new String[exps.length + 1];
+    AST[] vals1 = new AST[exps.length + 1];
+    AST[] vals2 = new AST[exps.length + 1];
+    for (int i = 0; i < exps.length; i++) {
+      args[i] = "$" + i;
+      vals1[i] = new Var("$" + i);
+      vals2[i] = new Var("$" + i);
+    }
+    args[exps.length] = "$fail";
+    vals2[exps.length] = new Var("$fail");
+    vals1[exps.length] = new Fun("", new String[] {}, new Apply(right, vals2));
+    return new Fun("", args, new Apply(left, vals1));
   }
 
   private AST[] desugarArgs() {

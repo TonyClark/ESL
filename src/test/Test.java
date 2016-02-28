@@ -35,7 +35,10 @@ public class Test {
     // run("big");
     // run("splash");
     // run("dot");
-    run("customer");
+    // run("customer");
+    // run("overload");
+    // run("try");
+    run("bag");
   }
 
   public static void run(String name) {
@@ -47,6 +50,7 @@ public class Test {
     record.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code);
     code.add(new Return());
     CodeBox codebox = new CodeBox(record.maxLocals(), code);
+    // Actor.debug = true;
     // System.out.println(codebox);
     Actor actor = new Actor();
     long time0 = System.currentTimeMillis();

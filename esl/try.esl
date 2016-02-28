@@ -1,0 +1,13 @@
+export main;
+
+act main {
+
+  action(0) = print('OK');
+  action(5) = throw 'a value';
+  action(n) = action(n-1)
+
+  Time(100) -> stopAll();
+  
+  Time(_) -> try action(10) catch { value -> print('caught: ' + value) }
+
+}

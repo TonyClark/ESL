@@ -1,0 +1,38 @@
+export main;
+
+act main {
+
+  b1 = bag{1,2,3};
+  b2 = bag{2,3,4};
+  
+  add(x,b) = bag{ x | b }
+  /*
+  contains(bag{ y | b },x) = true when x = y;
+  contains(_,_)            = false;
+  count(x,bag{})           = 0;
+  count(x,bag{y | b)       = 1 + count(x,b) when x = y;
+  count(x,bag{y | b)       = count(x,b)     when x <> y;
+  add(b1,b2)               = b1 + b2
+  
+  */
+  
+  -> {
+    print(b1);
+    print(b1);
+    print(b2);
+    print(b2);
+    print(add(1,b2));
+    print(b1 + b2);
+    print(b1 + b2)
+    /*
+    print(contains(b1,1));
+    print(contains(b2,1));
+    print(contains(add(1,b2),1));
+    print(count(1,add(1,add(1,b2)))) 
+    */
+  };
+
+  Time(100) -> { stopAll() };
+  Time(n) -> { }
+
+}

@@ -60,6 +60,8 @@ public class Act extends AST {
     // compile a behaviour as though it were constructed in the context of a letrec, but force
     // the bindings to be dynamic...
 
+    bindings = Binding.mergeBindings(bindings);
+
     for (Binding b : bindings) {
       dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(b.name, 0));
       code.add(new Null());
@@ -136,7 +138,7 @@ public class Act extends AST {
     }
     for (Binding b : bindings) {
       HashSet<String> free = new HashSet<String>();
-      b.value.FV(free);
+      b.FV(free);
       free.removeAll(bound);
       vars.addAll(free);
     }
@@ -179,7 +181,7 @@ public class Act extends AST {
   private Binding[] substBindings(AST ast, String name) {
     Binding[] bs = new Binding[bindings.length];
     for (int i = 0; i < bindings.length; i++)
-      bs[i] = new Binding(bindings[i].getName(), bindings[i].getValue().subst(ast, name));
+      bs[i] = bindings[i].subst(ast, name);
     return bs;
   }
 

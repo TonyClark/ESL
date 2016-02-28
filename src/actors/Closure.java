@@ -35,7 +35,7 @@ public class Closure implements Fun {
 
   public void apply(Actor actor, int arity) {
     if (arity == getArity())
-      actor.closeFrame(getCode().getLocals() - getArity(), getCode(), getDynamics());
+      actor.closeFrame(getCode().getLocals() - getArity(), getCode(), getDynamics(), null);
     else throw new Error("function " + name + " expects " + getArity() + " but supplied with " + arity);
   }
 }

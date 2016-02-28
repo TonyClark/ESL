@@ -48,7 +48,8 @@ public class Actor {
   static final int                  CODE                 = 3;
   static final int                  CODE_PTR             = 4;
   static final int                  DYNAMICS             = 5;
-  static final int                  LOCAL0               = 6;
+  static final int                  CATCHER              = 6;
+  static final int                  LOCAL0               = 7;
 
   public static boolean             debug                = false;
 
@@ -122,7 +123,7 @@ public class Actor {
 
   public static void getResults(Actor actor, int arity) {
     if (arity == 0) {
-      actor.closeFrame(0, null, null);
+      actor.closeFrame(0, null, null, null);
       actor.returnValue(getResults());
     } else throw new Error("getResults expects 0 args but supplied with " + arity);
   }
@@ -137,7 +138,7 @@ public class Actor {
     // The function returns its argument...
 
     if (arity == 1) {
-      actor.closeFrame(0, null, null);
+      actor.closeFrame(0, null, null, null);
       Object value = actor.getFrameVar(0);
       System.out.println(value);
       actor.returnValue(value);
@@ -152,7 +153,7 @@ public class Actor {
     // of the time...
 
     if (arity == 3) {
-      actor.closeFrame(0, null, null);
+      actor.closeFrame(0, null, null, null);
       Object v2 = actor.popStack();
       Object v1 = actor.popStack();
       int percent = (int) actor.popStack();
@@ -167,7 +168,7 @@ public class Actor {
     // get a random number from 0 to n-1...
 
     if (arity == 1) {
-      actor.closeFrame(0, null, null);
+      actor.closeFrame(0, null, null, null);
       int n = (int) actor.getFrameVar(0);
       actor.returnValue((int) (Math.random() * n));
     } else throw new Error("random expects " + 1 + " arg but supplied with " + arity);
@@ -180,7 +181,7 @@ public class Actor {
     // the value...
 
     if (arity == 2) {
-      actor.closeFrame(0, null, null);
+      actor.closeFrame(0, null, null, null);
       Object value = actor.popStack();
       Object key = actor.popStack();
       if (!HISTORIES.containsKey(key)) HISTORIES.put(key, new History());
@@ -238,7 +239,7 @@ public class Actor {
           // Remember: the code in the body of an actor needs to run in a stack frame
           // and will close a stack frame that it thinks is currently open...
           a.openFrame(code, new Nil<Dynamic>());
-          a.closeFrame(b.getCode().getLocals(), code, b.getDynamics());
+          a.closeFrame(b.getCode().getLocals(), code, b.getDynamics(), null);
           a.setFrameVar(0, new Term("Time", time));
           a.openFrame(null, a.getDynamics());
         }
@@ -260,7 +261,7 @@ public class Actor {
 
   public static void stopAll(Actor actor, int arity) {
     if (arity == 0) {
-      actor.closeFrame(0, null, null);
+      actor.closeFrame(0, null, null, null);
       stop = true;
       actor.returnValue(getResults());
     } else throw new Error("getResults expects 0 args but supplied with " + arity);
@@ -268,7 +269,7 @@ public class Actor {
 
   public static void shuffle(Actor actor, int arity) {
     if (arity == 1) {
-      actor.closeFrame(0, null, null);
+      actor.closeFrame(0, null, null, null);
       List<Object> l = (List) actor.getFrameVar(0);
       actor.returnValue(l.shuffle());
     } else throw new Error("shuffle expects 1 arg but supplied with " + arity);
@@ -334,7 +335,7 @@ public class Actor {
     this.behaviour = behaviour;
     ACTORS.add(this);
     openFrame(behaviour.getCode(), new Nil<Dynamic>());
-    closeFrame(behaviour.getCode().getLocals(), behaviour.getCode(), behaviour.getDynamics());
+    closeFrame(behaviour.getCode().getLocals(), behaviour.getCode(), behaviour.getDynamics(), null);
     setCodePtr(behaviour.getInitIndex());
   }
 
@@ -342,11 +343,12 @@ public class Actor {
     setDynamics(getDynamics().cons(new Dynamic(value)));
   }
 
-  public void closeFrame(int locals, CodeBox code, List<Dynamic> dynamics) {
+  public void closeFrame(int locals, CodeBox code, List<Dynamic> dynamics, Closure catcher) {
     frame = openFrame;
     setCode(code);
     setCodePtr(0);
     setDynamics(dynamics);
+    setCatcher(catcher);
     tos = tos + locals;
     openFrame = -1;
   }
@@ -386,6 +388,10 @@ public class Actor {
     return (CodeBox) stack[frame + CODE];
   }
 
+  public Closure getCatcher() {
+    return (Closure) stack[frame + CATCHER];
+  }
+
   public int getCodePtr() {
     return (int) stack[frame + CODE_PTR];
   }
@@ -418,7 +424,7 @@ public class Actor {
     frame = -1;
     openFrame = -1;
     openFrame(code, new Nil<Dynamic>());
-    closeFrame(code.getLocals(), code, builtinEnv());
+    closeFrame(code.getLocals(), code, builtinEnv(), null);
   }
 
   public void kill() {
@@ -433,7 +439,8 @@ public class Actor {
     pushStack(code);
     pushStack(0);
     pushStack(dynamics);
-    openFrame = tos - 6;
+    pushStack(null);
+    openFrame = tos - LOCAL0;
   }
 
   public void popFrame() {
@@ -486,7 +493,7 @@ public class Actor {
 
   public void processMessage(Object message) {
     openFrame(behaviour.getCode(), new Nil<Dynamic>());
-    closeFrame(behaviour.getCode().getLocals(), behaviour.getCode(), behaviour.getDynamics());
+    closeFrame(behaviour.getCode().getLocals(), behaviour.getCode(), behaviour.getDynamics(), null);
     setFrameVar(0, message);
     openFrame(null, getDynamics());
   }
@@ -565,6 +572,10 @@ public class Actor {
     stack[frame + CODE] = code;
   }
 
+  private void setCatcher(Closure catcher) {
+    stack[frame + CATCHER] = catcher;
+  }
+
   public void setCodePtr(int i) {
     stack[frame + CODE_PTR] = i;
   }
@@ -602,6 +613,20 @@ public class Actor {
 
   public String[] getExports() {
     return behaviour.getExports();
+  }
+
+  public void throwValue(Object value) {
+    while (getCatcher() == null && frame != -1)
+      popFrame();
+    if (frame == -1)
+      throw new java.lang.Error("no try for corresponding throw: " + value);
+    else {
+      Closure c = getCatcher();
+      popFrame();
+      openFrame(null, null);
+      pushStack(value);
+      c.apply(this, 1);
+    }
   }
 
 }
