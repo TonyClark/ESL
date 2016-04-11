@@ -27,12 +27,12 @@ public class Actor {
   // The machine time slices computation between actors. For each slice
   // an actor can perform the following maximum number of instructions...
 
-  static final int                  MAX_INSTRS           = 10000;
+  static final int                  MAX_INSTRS           = 200;
 
   // Time is built-in to the machine. We need a measure of time per machine
   // instruction in order to know when to advance time...
 
-  static final int                  INSTRS_PER_TIME_UNIT = 100000;
+  static final int                  INSTRS_PER_TIME_UNIT = 500;
 
   // The maximum number of values in a case expression...
 

@@ -1,0 +1,26 @@
+\frametitle{Simulation Runs}
+\begin{lstlisting}
+Run 1:
+[../xpl/src/xpl/xpl.xpl 1070 ms,161]
+[esl/esl.xpl 610 ms,75]
+[esl/ast.xpl 14 ms,336]
+[esl/feedback.esl 48 ms,187]
+Completed at time 1158
+[ Completed 57433 instructions in 31 ms ]
+
+Run2:
+[../xpl/src/xpl/xpl.xpl 1069 ms,161]
+[esl/esl.xpl 659 ms,75]
+[esl/ast.xpl 17 ms,336]
+[esl/feedback.esl 50 ms,187]
+Completed at time 806
+[ Completed 40345 instructions in 23 ms ]
+
+Run3:
+[../xpl/src/xpl/xpl.xpl 1022 ms,161]
+[esl/esl.xpl 634 ms,75]
+[esl/ast.xpl 14 ms,336]
+[esl/feedback.esl 50 ms,187]
+Completed at time 647
+[ Completed 31734 instructions in 21 ms ]
+\end{lstlisting}

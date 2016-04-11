@@ -31,9 +31,9 @@ esl = {
   pVar            -> n=name (eql p=pattern { PBind(n,p) } | { PVar(n) });
   pInt            -> n=int { PInt(n) };
   pStr            -> s=string { PStr(s) };
-  pBool           -> whitespace ('true' ! { PBool(true) } | 'false' { PBool(false) });
+  pBool           ->  ('true' ! { PBool(true) } | 'false' { PBool(false) });
   pWild           -> underscore { PWild() };
-  pNull           -> whitespace 'null' { PNull() };
+  pNull           ->  'null' { PNull() };
   pTerm           -> n=Name (lparen ps=patterns rparen { PTerm(n,ps) } | { PTerm(n,[]) });
   pList           -> lsquare (rsquare { PNil() } | pListTail);
   pListTail       -> p=pattern (rsquare { PCons(p,PNil()) } | comma ps=pListTail { PCons(p,ps) });
@@ -56,43 +56,44 @@ esl = {
                   |  {e};
   postsend(a,m)   -> at t=exp { Send(a,m,t) } | { Send(a,m,Int(0)) };
   exps            -> e=exp es=(comma exp)* { e:es } | {[]};
-  op              -> whitespace ('+' | '-' | '*' | '/' | 'and' | 'or' | ':' | '<>' | '=' | '<' | '>' | '..');
+  op              -> whitespace ('+' | '-' | '*' | '/' | 'andalso' | 'and' | 'orelse' | 'or' |':' | '<>' | '=' | '<' | '>' | '..');
   simpleExp       -> var | numExp | strExp | bool | me | probably | now | nul
                   |  n=name becomes e=exp { Update(n,e) }
-                  |  whitespace 'new'    ! n=name (lparen ps=exps rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) })
-                  |  whitespace 'not'    ! e=exp { Not(e) } 
-                  |  whitespace 'fun'    ! lparen as=params rparen e=exp { Fun('',as,e) }
-                  |  whitespace 'let'    ! bs=bindings whitespace 'in' e=exp { Let(bs,e) }
-                  |  whitespace 'letrec' ! bs=bindings whitespace 'in' e=exp { Letrec(bs,e) }
-                  |  whitespace 'case'   ! es=caseValues lcurl as=barms rcurl { Case(es,as) }
-                  |  whitespace 'for'      p=pattern whitespace 'in' l=exp whitespace 'do' e=exp whitespace { For(p,l,e) }
-                  |  whitespace 'for'    ! p=pattern whitespace 'in' l=exp arrow e=exp whitespace { Map(p,l,e) }
-                  |  whitespace 'find'   ! p=pattern whitespace 'in' l=exp whitespace 'do' e=exp 'else' d=exp { Find(p,l,e,d) }
-                  |  whitespace 'if'     ! t=exp whitespace 'then' c=exp whitespace 'else' a=exp { If(t,c,a) }
-                  |  whitespace 'try'    ! e=exp whitespace 'catch' lcurl as=barms rcurl { Try(e,as) }
-                  |  whitespace 'throw'  ! e=exp { Throw(e) }
-                  |  whitespace 'bag'      lcurl es=exps rcurl { Bag(es) }
-                  |  whitespace 'bag'      lcurl es=exps bar e=exp rcurl { BinExp(Bag(es),'+',e) }
-                  |  whitespace 'set'      lcurl es=exps rcurl { Set(es) }
-                  |  whitespace 'set'      lcurl es=exps bar e=exp rcurl { BinExp(Set(es),'+',e) }
-                  |  whitespace lsquare (es=exps rsquare { List(es) } | rsquare { List([]) })
-                  |  whitespace lsquare e=exp bar qs=quals rsquare { Cmp(e,qs) }
+                  |  'new'     n=name (lparen ps=exps rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) })
+                  |  'new'     s=string (lparen ps=exps rparen { NewJava(s,ps) } | { NewJava(s,[]) })
+                  |  'not'    ! e=exp { Not(e) } 
+                  |  'fun'    ! lparen as=params rparen e=exp { Fun('',as,e) }
+                  |  'let'    ! bs=bindings  'in' e=exp { Let(bs,e) }
+                  |  'letrec' ! bs=bindings  'in' e=exp { Letrec(bs,e) }
+                  |  'case'   ! es=caseValues lcurl as=barms rcurl { Case(es,as) }
+                  |  'for'      p=pattern  'in' l=exp whitespace 'do' e=exp whitespace { For(p,l,e) }
+                  |  'for'    ! p=pattern  'in' l=exp arrow e=exp whitespace { Map(p,l,e) }
+                  |  'find'   ! p=pattern  'in' l=exp whitespace 'do' e=exp 'else' d=exp { Find(p,l,e,d) }
+                  |  'if'     ! t=exp  'then' c=exp whitespace 'else' a=exp { If(t,c,a) }
+                  |  'try'    ! e=exp  'catch' lcurl as=barms rcurl { Try(e,as) }
+                  |  'throw'  ! e=exp { Throw(e) }
+                  |  'bag'      lcurl es=exps rcurl { Bag(es) }
+                  |  'bag'      lcurl es=exps bar e=exp rcurl { BinExp(Bag(es),'+',e) }
+                  |  'set'      lcurl es=exps rcurl { Set(es) }
+                  |  'set'      lcurl es=exps bar e=exp rcurl { BinExp(Set(es),'+',e) }
+                  |  lsquare (es=exps rsquare { List(es) } | rsquare { List([]) })
+                  |  lsquare e=exp bar qs=quals rsquare { Cmp(e,qs) }
                   |  n=Name es=(lparen es=exps rparen {es} | {[]}) { Term(n,es) }
                   |  whitespace 'become' n=name (lparen ps=exps rparen { Become(Apply(Var(n),ps)) } | { Become(Apply(Var(n),[])) })
                   |  lcurl (e=exp es=(semi exp)* rcurl { Block(e:es) } | rcurl { Block([]) })
                   |  lparen e=exp rparen {e};
   var             -> n=name (becomes e=exp { Update(n,e) } | { Var(n) });
-  me              -> whitespace 'self' { Self() };
-  now             -> whitespace 'now' { Now() };
-  nul             -> whitespace 'null' { Null() };
+  me              -> 'self' { Self() };
+  now             -> 'now' { Now() };
+  nul             -> 'null' { Null() };
   numExp          -> n=int (dot m=int { Float(n,m) } | { Int(n) });
   strExp          -> s=string { Str(s) };
-  bool            -> whitespace ('true' { Bool(true) } | 'false' { Bool(false) });
+  bool            ->  ('true' { Bool(true) } | 'false' { Bool(false) });
   caseValues      -> e=exps {e};
   quals           -> q=qual qs=(comma qual)* { q:qs };
   qual            -> p=pattern leftArrow e=exp { BQual(p,e) };
   qual            -> query e=exp { PQual(e) };
-  probably        -> whitespace 'probably' lparen p=exp rparen e1=exp whitespace 'else' e2=exp { Apply(Apply(Var('probably'),[p,Fun('prob1',[],e1),Fun('prob2',[],e2)]),[]) };
+  probably        -> 'probably' lparen p=exp rparen e1=exp whitespace 'else' e2=exp { Apply(Apply(Var('probably'),[p,Fun('prob1',[],e1),Fun('prob2',[],e2)]),[]) };
   
   
   whitespace  -> SKIPWHITE('//','/*','*/');

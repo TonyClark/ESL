@@ -1,4 +1,4 @@
-export Act,Apply,Bag,Become,Binding,BinExp,Block,BArm,Bool,BQual,Case,Cmp,Float,Fun,FunBind,Find,For,If,Int,Let,Letrec,List,Map,Module,New,Not,Now,Null,PAdd,PEmptyBag,PEmptySet,PBagCons,PBind,PBool,PCons,PInt,PNil,PNull,POr,PStr,PSetCons,PQual,PTerm,PVar,PWild,Ref,Self,Send,Set,Str,Term,Throw,Try,Update,Var
+export Act,Apply,Bag,Become,Binding,BinExp,Block,BArm,Bool,BQual,Case,Cmp,Float,Fun,FunBind,Find,For,If,Int,Let,Letrec,List,Map,Module,New,NewJava,Not,Now,Null,PAdd,PEmptyBag,PEmptySet,PBagCons,PBind,PBool,PCons,PInt,PNil,PNull,POr,PStr,PSetCons,PQual,PTerm,PVar,PWild,Ref,Self,Send,Set,Str,Term,Throw,Try,Update,Var
 
 
 Act                 = 'ast.actors.Act'.java()
@@ -26,6 +26,7 @@ List                = 'ast.lists.List'.java()
 Map                 = 'ast.lists.Map'.java()
 Module              = 'ast.modules.Module'.java()
 New                 = 'ast.actors.New'.java()
+NewJava             = 'ast.actors.NewJava'.java()
 Not                 = 'ast.data.Not'.java()
 Now                 = 'ast.control.Now'.java()
 Null                = 'ast.data.Null'.java()

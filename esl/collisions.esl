@@ -1,0 +1,90 @@
+export main;
+
+min(x,y) = if x < y then x else y;
+max(x,y) = if x > y then x else y;
+
+act simulator {
+
+  export gui, balls;
+
+  gui = null;
+  
+  balls = []
+  
+  SetGUI(g) -> gui := g;
+  
+  Start -> balls := [ new ball(i,self) | i <- 0..(gui.size - 1)];
+  
+  Stop -> for ball in balls do kill(ball);
+  
+  Time(_) -> {}
+  
+};
+
+act ball(id,simulator) {
+
+  export x,y;
+  
+  x = random(simulator.gui.width);
+  y = random(simulator.gui.height);
+  dx = random(2) - 1;
+  dy = random(2) - 1;
+  
+  checkDeltas() = 
+    if (dx = 0) and (dy = 0)
+    then { 
+      dx := (random(2) - 1)*2;
+      dy := (random(2) - 1)*2;
+      checkDeltas()
+    } else {};
+  
+  hitWalls() =
+    if (x + dx + simulator.gui.ballSize) > simulator.gui.width
+    then dx := 0 - dx
+    else if (x + dx) < 0
+    then dx := 0 - dx
+    else if (y + dy + simulator.gui.ballSize) > simulator.gui.height
+    then dy := 0 - dy
+    else if (y + dy) < 0
+    then dy := 0 - dy
+    else {};
+    
+  overlaps(x1,y1,x2,y2) = (((x1 > x2) andalso (x1 < (x2 + simulator.gui.ballSize))) andalso ((y1 > y2) andalso (y1 < (y2 + simulator.gui.ballSize)))) orelse
+                          (((x2 > x1) andalso (x2 < (x1 + simulator.gui.ballSize))) andalso ((y2 > y1) andalso (y2 < (y1 + simulator.gui.ballSize))));
+  
+  hitBalls() =
+    for b in simulator.balls do {
+      if b <> self
+      then {
+         if overlaps(b.x,b.y,x,y)
+         then {
+           dx := 0 - dx;
+           dy := 0 - dy 
+         } else {}
+      } else {}
+    }
+    
+  -> checkDeltas();
+
+  Time(_)  -> {
+    hitWalls();
+    hitBalls();
+    x := max(0,min(x + dx,simulator.gui.width));
+    y := max(0,min(y + dy,simulator.gui.height));
+    simulator.gui <- Draw(id,x,y)
+  }
+  
+};
+
+act main {
+
+  // Demonstrates how ESL can communicate with Java. The class test.CollisionGUI implements a simple
+  // GUI via Java SWT. The Java agents communicate with ESL via messages in the usual way. When the GUI
+  // appears, click on Start to run the simulation and then Stop to stop it. You can change the parameters
+  // via the text input fields and then re-run the simulation.
+
+  -> new 'test.CollisionGUI'(new simulator);
+     
+   Time(_) -> {}
+
+}

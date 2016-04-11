@@ -1,0 +1,88 @@
+export main;
+
+import 'esl/lists';
+
+test1(x) =
+  case x {
+    10 -> print('test1 10');
+    11 -> print('test1 11');
+    12 -> print('test1 12');
+    _ -> print('test1 failed')
+  }; 
+  
+test2(l) = 
+  case l {
+    h:t -> h + test2(t);
+    [] -> 0
+  };
+  
+test3(x,y) = 
+  case x,y {
+    0,0 -> print('0,0');
+    0,1 -> case y,x { 0,0 -> print('nested 0,0'); 1,0 -> print('nested 1,0') };
+    1,0 -> print('1,0');
+    1,1 -> print('1,1')
+  };
+  
+test4(t) =
+  case t {
+    X(a,b) -> fun(c) print(a + b + c);
+    Y(a,b,null) -> fun(d) print(a+b+d);
+    Y(a,b,'one') -> fun(d) print(a+b+1+d);
+    Y(a,b,c) -> fun(d) print(a+b+c+d);
+    _ -> fun(e) print('no term')
+  };
+
+test5(x) =
+  case x {
+    (1 or 2 or 3 or 4):_ -> print('test5 OK');
+    _ -> print('test5 fail')
+  };
+  
+test6(1) = print('test6: 1');
+test6(2) = print('test6: 2');
+test6(_) = print('test6: rest');
+
+test7(x) =
+  let f(1) = print('test7: 1');
+      f(2) = print('test7: 2');
+      f(_) = print('test7: rest')
+  in f(x);
+  
+test8(l) = find X(x) in l do print('test8 ' + x) else print('test8 failed');
+
+test9(b) =
+  case b {
+    bag{ x | bag{ y | b }} when (x > 10) and y > 10 -> print('test9: ' + x + ' ' + y + ' ' + b);
+    _ -> print('test9 failed')
+  };
+ 
+test10(l) =
+  case l {
+    l1 + l2 + l3 when (length(l2) = 3) and (length(l3) = 3) -> {
+      print('test10: ' + l1 + ' ' + l2 + ' ' + l3);
+      test10(l1)
+    };
+    _ -> print('test10 failed')
+  };
+
+act main {
+  -> {
+    test1(12);
+    print(test2(1..1000));
+    test3(0,1);
+    let f = test4(Y(1,2,null)) in f(4);
+    test5([3,2,3]);
+    test6(3);
+    test7(2);
+    test8([A(1),B(1,2,3),X(4),Y(9)]);
+    test9(bag{10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,20,30});
+    test10(0..30);
+    test10(bag{1,2,3,4,5,6,7,8,9,10,11,12});
+    test10(set{1,2,3,1,2,3,4,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18});
+    stopAll()
+  }; 
+  
+  Time(n) -> print('time: ' + n)
+
+}

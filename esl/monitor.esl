@@ -1,0 +1,120 @@
+export main;
+
+import 'esl/lists';
+
+// This file contains an implementation of a history monitor based on temporal logic.
+// The language for expressing conditions over histories is:
+//
+// p,q ::= nothing         always satisfied.
+//     | action(A)         always satisfied and performs A.
+//     | always(p)         satisfied when the history h is x:y:z:... and when p is satisfied by h, y:..., z:... etc.
+//     | rec n. p[n]       satisfied when q=p[q/n] and when q is satisfied.
+//     | n                 a name bound in a surrounding scope.
+//     | p;q               satisfied when p and q are satisfied.
+//     | p+q               satisfied when p or q are satisfied.
+//     | N(p)              satisfied when the history is _:h and p is satisfied for h.
+//     | is(c)             satisfied when c(x) and the history is x:h.
+//
+// Note that the conventional approach to achieving a language such as that above is to
+// encode it as an operational language in functions with continuations. The encoding below
+// provides a novel alternative encoding in terms of actors.
+
+act nothing {
+  Monitor(a,c,s,f) -> 
+    if s = self
+    then {}
+    else s <- Monitor(a,c,self,f);
+  Time(_) -> {}
+};
+
+idle = new nothing;
+act action(command) {
+  Monitor(a,c,s,f) -> {
+    command();
+    s <- Monitor(a,c,idle,f)
+  };
+  Time(_) -> {}
+};
+
+always(p) = new rec(fun(q) new both(p,new next(always(q))));
+
+act rec(g) {
+  Monitor(a,c,s,f) -> (g(new rec(g))) <- Monitor(a,c,s,f);
+  Time(_) -> {}
+};
+
+act both(p,q) {
+  Monitor(a,c,s,f) -> 
+    if s = idle
+    then { p <- Monitor(a,c,q,f) }
+    else { p <- Monitor(a,c,new both(q,s),f) } ;
+  Time(_) -> {}
+};
+
+act alt(p,q) {
+  Monitor(a,c,s,f) -> p <- Monitor(a,c,s,fun() q <- Monitor(a,c,s,f));
+  Time(_) -> {}
+};
+
+act next(p) {
+  Monitor(a,c,s,f) -> p <- Monitor(a,c+1,s,f);
+  Time(_) -> {}
+};
+
+act is(pred) {
+  Monitor(a,c,s,f) -> become activeIs(pred,a,c,s,f);
+  Time(_) -> {}
+};
+
+act activeIs(pred,actor,cc,succ,fail) {
+  Monitor(_,_,_,_) -> {};
+  Time(_) ->
+    if length(actor.history) > cc
+    then { 
+      become is(pred);
+      if pred(nth(actor.history,cc))
+      then succ <- Monitor(actor,cc,idle,fail)
+      else fail()
+    }
+    else {}
+};
+
+act debug(message) {
+  Monitor(a,c,s,f) -> {
+    print(message + ': ' + c + ' ' + a.history);
+    s <- Monitor(a,c,idle,f)
+  };
+  Time(_) -> {}
+};
+
+isF(F) = true;
+isF(_) = false;
+
+isAnything(_) = true;
+
+act a {
+  export history;
+  frequency = 10;
+  c = 0;
+  history = []
+  Time(_) -> {
+    c := c + 1;
+    if c = frequency
+    then {
+      c := 0;
+      history := history + [F,F,T,F]
+    } else {}
+  }
+};
+
+act main {
+
+  -> { let p = always(new alt(new both(new is(isF),new both(new next(new is(isF)),new both(new next(new is(isF)),new action(fun() print('OK'))))),new is(isAnything)))
+       in p <- Monitor(new a,0,idle,fun() idle)
+     };
+
+  Time(100) -> stopAll();
+
+  Time(_) -> {}
+
+}

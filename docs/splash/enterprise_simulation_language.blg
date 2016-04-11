@@ -1,0 +1,60 @@
+This is BibTeX, Version 0.99d (TeX Live 2015)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: enterprise_simulation_language.aux
+The style file: plainnat.bst
+Illegal, another \bibstyle command---line 78 of file enterprise_simulation_language.aux
+ : \bibstyle
+ :          {abbrvnat}
+I'm skipping whatever remains of this command
+Database file #1: bib.bib
+Repeated entry---line 119 of file bib.bib
+ : @article{mintzberg1976structure
+ :                                ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 208 of file bib.bib
+ : @article{vernadat2002ueml
+ :                          ,
+I'm skipping whatever remains of this entry
+Warning--empty journal in beese2015conceptualization
+You've used 27 entries,
+            2773 wiz_defined-function locations,
+            749 strings with 9981 characters,
+and the built_in function-call counts, 13162 in all, are:
+= -- 1190
+> -- 733
+< -- 24
++ -- 249
+- -- 222
+* -- 991
+:= -- 1977
+add.period$ -- 90
+call.type$ -- 27
+change.case$ -- 149
+chr.to.int$ -- 27
+cite$ -- 55
+duplicate$ -- 645
+empty$ -- 1099
+format.name$ -- 265
+if$ -- 2831
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 28
+newline$ -- 145
+num.names$ -- 109
+pop$ -- 335
+preamble$ -- 1
+purify$ -- 125
+quote$ -- 0
+skip$ -- 500
+stack$ -- 0
+substring$ -- 468
+swap$ -- 103
+text.length$ -- 9
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 282
+warning$ -- 1
+while$ -- 121
+width$ -- 0
+write$ -- 359
+(There were 3 error messages)

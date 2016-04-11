@@ -1,0 +1,31 @@
+export main;
+
+act a1 {
+  -> print('a1');
+  Time(_) -> {
+    print('changing to a2');
+    become a2
+  }
+};
+
+act a2 {
+  -> print('a2');
+  Time(_) -> {
+    print('changing to a3');
+    become a3
+  }
+};
+
+act a3 {
+  -> print('a3');
+  Time(_) -> stopAll()
+};
+  
+
+act main {
+  
+  -> new a1;
+
+  Time(n) -> { }
+
+}

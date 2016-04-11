@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Vector;
 
 import ast.AST;
+import ast.tests.If;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
@@ -60,6 +61,10 @@ public class BinExp extends AST {
       compileAdd1(locals, dynamics, code);
     else if (isNotNil())
       compileNotNil(locals, dynamics, code);
+    else if (op.equals("andalso"))
+      new If(left, right, new Bool(false)).compile(locals, dynamics, code, isLast);
+    else if (op.equals("orelse"))
+      new If(left, new Bool(true), right).compile(locals, dynamics, code, isLast);
     else {
       left.compile(locals, dynamics, code, false);
       right.compile(locals, dynamics, code, false);

@@ -1,0 +1,185 @@
+\begin{thebibliography}{27}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Barjis(2008)]{barjis2008enterprise}
+Joseph Barjis.
+\newblock Enterprise, organization, modeling, simulation: putting pieces
+  together.
+\newblock \emph{Proceeding of EOMAS}, 2008.
+
+\bibitem[Barjis and Verbraeck(2010)]{barjis2010relevance}
+Joseph Barjis and Alexander Verbraeck.
+\newblock The relevance of modeling and simulation in enterprise and
+  organizational study.
+\newblock In \emph{Enterprise and Organizational Modeling and Simulation},
+  pages 15--26. Springer, 2010.
+
+\bibitem[Beese et~al.(2015)Beese, Haki, and Aier]{beese2015conceptualization}
+Jannis Beese, Kazem Haki, and Stephan Aier.
+\newblock On the conceptualization of information systems as socio-technical
+  phenomena in simulation-based research.
+\newblock 2015.
+
+\bibitem[Bernus et~al.(2013)Bernus, Mertins, and Schmidt]{bernus2013handbook}
+Peter Bernus, Kai Mertins, and G{\"u}nter~J Schmidt.
+\newblock \emph{Handbook on architectures of information systems}.
+\newblock Springer Science \& Business Media, 2013.
+
+\bibitem[Camarinha-Matos and Afsarmanesh(2001)]{camarinha2001virtual}
+Luis~M Camarinha-Matos and Hamideh Afsarmanesh.
+\newblock Virtual enterprise modeling and support infrastructures: applying
+  multi-agent system approaches.
+\newblock In \emph{Multi-agent systems and applications}, pages 335--364.
+  Springer, 2001.
+
+\bibitem[Camus et~al.(2015)Camus, Bourjot, and Chevrier]{camus2015combining}
+Benjamin Camus, Christine Bourjot, and Vincent Chevrier.
+\newblock Combining devs with multi-agent concepts to design and simulate
+  multi-models of complex systems (wip).
+\newblock In \emph{Proceedings of the Symposium on Theory of Modeling \&
+  Simulation: DEVS Integrative M\&S Symposium}, pages 85--90. Society for
+  Computer Simulation International, 2015.
+
+\bibitem[Chen et~al.(2008)Chen, Doumeingts, and
+  Vernadat]{chen2008architectures}
+David Chen, Guy Doumeingts, and Fran{\c{c}}ois Vernadat.
+\newblock Architectures for enterprise integration and interoperability: Past,
+  present and future.
+\newblock \emph{Computers in industry}, 59\penalty0 (7):\penalty0 647--659,
+  2008.
+
+\bibitem[Cyert et~al.(1963)Cyert, March, et~al.]{cyert1963behavioral}
+Richard~M Cyert, James~G March, et~al.
+\newblock A behavioral theory of the firm.
+\newblock \emph{Englewood Cliffs, NJ}, 2, 1963.
+
+\bibitem[Doumeingts et~al.(1993)Doumeingts, Chen, Vallespir, Fenie, and
+  Marcotte]{doumeingts1993gim}
+Guy Doumeingts, David Chen, Bruno Vallespir, P~Fenie, and Fran{\c{c}}ois
+  Marcotte.
+\newblock Gim (grai integrated methodology) and its evolutions-a methodology to
+  design and specify advanced manufacturing systems.
+\newblock In \emph{Proceedings of the JSPE/IFIP TC5/WG5. 3 workshop on the
+  design of information infrastructure systems for manufacturing}, pages
+  101--120. North-Holland Publishing Co., 1993.
+
+\bibitem[Fox(1993)]{fox1993issues}
+Mark~S Fox.
+\newblock Issues in enterprise modelling.
+\newblock In \emph{Systems, Man and Cybernetics, 1993.'Systems Engineering in
+  the Service of Humans', Conference Proceedings., International Conference
+  on}, pages 86--92. IEEE, 1993.
+
+\bibitem[Gill and Qureshi(2015)]{gill2015adaptive}
+Asif~Qumer Gill and Muhammad~Atif Qureshi.
+\newblock Adaptive enterprise architecture modelling.
+\newblock \emph{Journal of Software}, 10\penalty0 (5):\penalty0 628--638, 2015.
+
+\bibitem[Hewitt(2010)]{hewitt2010actor}
+Carl Hewitt.
+\newblock Actor model of computation: scalable robust information systems.
+\newblock \emph{arXiv preprint arXiv:1008.1459}, 2010.
+
+\bibitem[Iacob et~al.(2003)]{iacobstate}
+M~Iacob et~al.
+\newblock State of the art in architecture support, archimate deliverable d3.
+  1. enschede, the netherlands: Telematica instituut, 2003.
+
+\bibitem[Krogstie(2008)]{krogstie2008using}
+John Krogstie.
+\newblock Using eeml for combined goal and process oriented modeling: A case
+  study.
+\newblock In \emph{Proceedings of EMMSAD}, page 113, 2008.
+
+\bibitem[Lee et~al.(2015)Lee, Filatova, Ligmann-Zielinska, Hassani-Mahmooei,
+  Stonedahl, Lorscheid, Voinov, Polhill, Sun, and Parker]{lee2015complexities}
+Ju-Sung Lee, Tatiana Filatova, Arika Ligmann-Zielinska, Behrooz
+  Hassani-Mahmooei, Forrest Stonedahl, Iris Lorscheid, Alexey Voinov, J~Gary
+  Polhill, Zhanli Sun, and Dawn~C Parker.
+\newblock The complexities of agent-based modeling output analysis.
+\newblock \emph{Journal of Artificial Societies and Social Simulation},
+  18\penalty0 (4):\penalty0 4, 2015.
+
+\bibitem[Meadows and Wright(2008)]{meadows2008thinking}
+Donella~H Meadows and Diana Wright.
+\newblock \emph{Thinking in systems: A primer}.
+\newblock chelsea green publishing, 2008.
+
+\bibitem[Mintzberg et~al.(1976)Mintzberg, Raisinghani, and
+  Theoret]{mintzberg1976structure}
+Henry Mintzberg, Duru Raisinghani, and Andre Theoret.
+\newblock The structure of" unstructured" decision processes.
+\newblock \emph{Administrative science quarterly}, pages 246--275, 1976.
+
+\bibitem[Opdahl and Berio(2007)]{opdahl2007roadmap}
+Andreas~L Opdahl and Giuseppe Berio.
+\newblock A roadmap for ueml.
+\newblock In \emph{Enterprise Interoperability}, pages 169--178. Springer,
+  2007.
+
+\bibitem[Reinhartz{-}Berger et~al.(2013)Reinhartz{-}Berger, Sturm, Clark,
+  Cohen, and Bettin]{DBLP:books/daglib/0032299}
+Iris Reinhartz{-}Berger, Arnon Sturm, Tony Clark, Sholom Cohen, and Jorn
+  Bettin, editors.
+\newblock \emph{Domain Engineering, Product Lines, Languages, and Conceptual
+  Models}.
+\newblock Springer, 2013.
+\newblock ISBN 978-3-642-36653-6.
+\newblock \doi{10.1007/978-3-642-36654-3}.
+\newblock URL \url{http://dx.doi.org/10.1007/978-3-642-36654-3}.
+
+\bibitem[Ricci et~al.(2015)Ricci, Agha, Bordini, and Marron]{ricci2015special}
+Alessandro Ricci, Gul Agha, Rafael~H Bordini, and Assaf Marron.
+\newblock Special issue on programming based on actors, agents and
+  decentralized control.
+\newblock \emph{Science of Computer Programming}, 98:\penalty0 117--119, 2015.
+
+\bibitem[Tan et~al.(2013)Tan, Xu, Yang, Xu, and Jiang]{tan2013framework}
+Wenan Tan, Wei Xu, Fujun Yang, Lida Xu, and Chuanqun Jiang.
+\newblock A framework for service enterprise workflow simulation with
+  multi-agents cooperation.
+\newblock \emph{Enterprise Information Systems}, 7\penalty0 (4):\penalty0
+  523--542, 2013.
+
+\bibitem[Vernadat(2002)]{vernadat2002ueml}
+Fran{\c{c}}ois Vernadat.
+\newblock Ueml: towards a unified enterprise modelling language.
+\newblock \emph{International Journal of Production Research}, 40\penalty0
+  (17):\penalty0 4309--4321, 2002.
+
+\bibitem[Weinhardt and Vancouver(2012)]{weinhardt2012computational}
+Justin~M Weinhardt and Jeffrey~B Vancouver.
+\newblock Computational models and organizational psychology: Opportunities
+  abound.
+\newblock \emph{Organizational Psychology Review}, 2\penalty0 (4):\penalty0
+  267--292, 2012.
+
+\bibitem[White et~al.(2004)]{white2004business}
+Stephen~A White et~al.
+\newblock Business process modeling notation.
+\newblock \emph{Specification, BPMI. org}, 2004.
+
+\bibitem[Yasutake and Watanabe(2015)]{yasutake2015actario}
+Shohei Yasutake and Takuo Watanabe.
+\newblock Actario: A framework for reasoning about actor systems.
+\newblock In \emph{Workshop on Programming based on Actors, Agents, and
+  Decentralized Control (AGERE}, 2015.
+
+\bibitem[Yu et~al.(2006)Yu, Strohmaier, and Deng]{yu2006exploring}
+Eric Yu, Markus Strohmaier, and Xiaoxue Deng.
+\newblock Exploring intentional modeling and analysis for enterprise
+  architecture.
+\newblock In \emph{Enterprise Distributed Object Computing Conference
+  Workshops, 2006. EDOCW'06. 10th IEEE International}, pages 32--32. IEEE,
+  2006.
+
+\bibitem[Zachman(1987)]{zachman1987framework}
+John~A Zachman.
+\newblock A framework for information systems architecture.
+\newblock \emph{IBM systems journal}, 26\penalty0 (3):\penalty0 276--292, 1987.
+
+\end{thebibliography}

@@ -1,0 +1,75 @@
+export main;
+
+
+test1() =
+  case 10 {
+    10 -> print('test1 OK');
+    _ -> print('test1 failed')
+  }; 
+
+test2() =
+  case 11 {
+    10 -> print('test2 failed');
+    _ -> print('test2 OK')
+  };
+
+test3() =
+  case [1,2,3] {
+    [1,2,3] -> print('test3 OK');
+    _ -> print('test3 failed')
+  };
+
+test4() =
+  case [1,2,3] {
+    1:2:_ -> print('test4 OK');
+    _ -> print('test4 failed')
+  };
+
+test5() =
+  case [X,X] + [X,B,C] {
+    X:X:X:_ -> print('test5 OK');
+    _ -> print('test5 failed')
+  };
+  
+test6() =
+  case F(1,2,3) {
+    F(1,x,y) -> print('test6 success if 5 = ' + (x + y));
+    _ -> print('test6 failed')
+  };
+  
+test7() =
+  case F(1,2) {
+    F(x,y) when x > y -> print('test 7 failed 1');
+    F(x,y) when y > x -> print('test 7 succeeded');
+    _ -> print('test 7 failed 2')
+  };
+  
+/*test8() =
+  case bag{ 1,2,3 } {
+    bag{x | y} -> print('test8 success: ' + x);
+    _ -> print('test8 failed.')
+  };
+*/
+
+act main {
+
+
+
+  -> {
+    test1();
+    test2();
+    test3();
+    test4();
+    test5();
+    test6();
+    test7()
+    //test8()
+  }; 
+
+  Time(100) -> stopAll();
+  
+  Time(99) when { print('checking guard.'); true } -> { print('guard checked') };
+  
+  Time(_) -> {}
+
+}

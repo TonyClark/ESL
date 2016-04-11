@@ -37,13 +37,14 @@ public class Test {
     // run("big");
     // run("splash");
     // run("dot");
-    run("customer");
+     run("customer");
     // run("overload");
     // run("try");
     // run("bag");
-    run("newcase");
+     run("newcase");
     // run("become");
     // run("tail_call");
+    run("collisions");
   }
 
   public static void run(String name) {

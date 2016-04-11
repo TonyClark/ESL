@@ -1,0 +1,16 @@
+export main;
+
+f(x) = x;
+
+g(x) = print(f(x));
+
+act main {
+
+  -> {
+    print(g(100));
+    stopAll()
+  };
+  
+  Time(_) -> {}
+
+}
