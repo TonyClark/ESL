@@ -4,7 +4,10 @@ import java.util.HashSet;
 import java.util.Vector;
 
 import ast.AST;
+import ast.binding.Var;
 import ast.data.Apply;
+import ast.data.Fun;
+import ast.refs.Ref;
 import ast.tests.If;
 import ast.tests.IsNil;
 import compiler.DynamicVar;
@@ -17,11 +20,14 @@ public class PNil extends Pattern {
   public void vars(HashSet<String> vars) {
   }
 
-  public AST desugar(AST value, AST success, AST fail) {
-    return new If(new IsNil(value), success, new Apply(fail));
+  public void bound(Vector<String> vars) {
   }
 
   public String toString() {
     return "PNil()";
+  }
+
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, Vector<Instr> code) {
+    code.add(new instrs.patterns.isNil(ref));
   }
 }

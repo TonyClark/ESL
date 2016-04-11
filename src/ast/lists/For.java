@@ -9,6 +9,7 @@ import ast.binding.Letrec;
 import ast.binding.Var;
 import ast.control.Block;
 import ast.data.Apply;
+import ast.data.Bool;
 import ast.data.Fun;
 import ast.patterns.PCons;
 import ast.patterns.PNil;
@@ -20,16 +21,16 @@ import ast.tests.Case;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Goto;
 import instrs.Instr;
-import instrs.NewDynamic;
-import instrs.Null;
-import instrs.Pop;
-import instrs.PopDynamic;
-import instrs.SetDynamic;
-import instrs.SetFrame;
-import instrs.SkipTrue;
-import instrs.isNil;
+import instrs.data.Null;
+import instrs.data.Pop;
+import instrs.jumps.Goto;
+import instrs.jumps.SkipTrue;
+import instrs.tests.isNil;
+import instrs.vars.NewDynamic;
+import instrs.vars.PopDynamic;
+import instrs.vars.SetDynamic;
+import instrs.vars.SetFrame;
 import list.List;
 
 @BoaConstructor(fields = { "pattern", "list", "body" })
@@ -53,16 +54,16 @@ public class For extends AST {
     return "For(" + pattern + "," + list + "," + body + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
     if (pattern instanceof PVar)
       compileSimple(locals, dynamics, code);
-    else desugar().compile(locals, dynamics, code);
+    else desugar().compile(locals, dynamics, code, isLast);
   }
 
   public AST desugar() {
-    BArm arm3 = new BArm(new Pattern[] { new PNil() }, new Block());
-    BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t")) }, new Apply(new Var("$f"), new Var("$t")));
-    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t")) }, new Block(body, new Apply(new Var("$f"), new Var("$t"))));
+    BArm arm3 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, new Block());
+    BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t")) }, Bool.TRUE, new Apply(new Var("$f"), new Var("$t")));
+    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t")) }, Bool.TRUE, new Block(body, new Apply(new Var("$f"), new Var("$t"))));
     Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2, arm3 });
     Fun fun = new Fun("for", new String[] { "l" }, caseExp);
     return new Letrec(new Binding[] { new Binding("$f", fun) }, new Apply(new Var("$f"), list));
@@ -101,26 +102,26 @@ public class For extends AST {
     // NULL
 
     PVar pvar = (PVar) pattern;
-    list.compile(locals, dynamics, code);
+    list.compile(locals, dynamics, code, false);
     locals = locals.cons(new FrameVar("$l", locals.length()));
     dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(pvar.name, 0));
     code.add(new SetFrame(locals.length() - 1));
     code.add(new Null());
     code.add(new NewDynamic());
     int loop = code.size();
-    code.add(new instrs.FrameVar(locals.length() - 1));
+    code.add(new instrs.vars.FrameVar(locals.length() - 1));
     code.add(new isNil());
     SkipTrue skiptrue = new SkipTrue(0);
     code.add(skiptrue);
     int addr = code.size();
-    code.add(new instrs.FrameVar(locals.length() - 1));
-    code.add(new instrs.Head());
+    code.add(new instrs.vars.FrameVar(locals.length() - 1));
+    code.add(new instrs.ops.Head());
     code.add(new SetDynamic(0));
-    code.add(new instrs.FrameVar(locals.length() - 1));
-    code.add(new instrs.Tail());
+    code.add(new instrs.vars.FrameVar(locals.length() - 1));
+    code.add(new instrs.ops.Tail());
     code.add(new SetFrame(locals.length() - 1));
     code.add(new Pop());
-    body.compile(locals, dynamics, code);
+    body.compile(locals, dynamics, code, false);
     code.add(new Pop());
     code.add(new Goto(loop));
     code.add(new PopDynamic());
@@ -150,25 +151,25 @@ public class For extends AST {
     // END: NULL
 
     PVar pvar = (PVar) pattern;
-    list.compile(locals, dynamics, code);
+    list.compile(locals, dynamics, code, false);
     locals = locals.cons(new FrameVar("$l", locals.length()));
     locals = locals.cons(new FrameVar(pvar.name, locals.length()));
     code.add(new SetFrame(locals.length() - 2));
     int loop = code.size();
-    code.add(new instrs.FrameVar(locals.length() - 2));
+    code.add(new instrs.vars.FrameVar(locals.length() - 2));
     code.add(new isNil());
     SkipTrue skiptrue = new SkipTrue(0);
     code.add(skiptrue);
     int addr = code.size();
-    code.add(new instrs.FrameVar(locals.length() - 2));
-    code.add(new instrs.Head());
+    code.add(new instrs.vars.FrameVar(locals.length() - 2));
+    code.add(new instrs.ops.Head());
     code.add(new SetFrame(locals.length() - 1));
     code.add(new Pop());
-    code.add(new instrs.FrameVar(locals.length() - 2));
-    code.add(new instrs.Tail());
+    code.add(new instrs.vars.FrameVar(locals.length() - 2));
+    code.add(new instrs.ops.Tail());
     code.add(new SetFrame(locals.length() - 2));
     code.add(new Pop());
-    body.compile(locals, dynamics, code);
+    body.compile(locals, dynamics, code, false);
     code.add(new Pop());
     code.add(new Goto(loop));
     code.add(new Null());

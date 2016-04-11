@@ -20,8 +20,8 @@ public class Now extends AST {
     return "Now";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    code.add(new instrs.Now());
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    code.add(new instrs.vars.Now());
   }
 
   public void FV(HashSet<String> vars) {

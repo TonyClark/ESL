@@ -17,9 +17,9 @@ public class Tail extends AST {
     this.value = value;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    value.compile(locals, dynamics, code);
-    code.add(new instrs.Tail());
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    value.compile(locals, dynamics, code, false);
+    code.add(new instrs.ops.Tail());
   }
 
   public void FV(HashSet<String> vars) {
@@ -36,6 +36,10 @@ public class Tail extends AST {
 
   public AST subst(AST ast, String name) {
     return new Tail(value.subst(ast, name));
+  }
+
+  public String toString() {
+    return "Tail(" + value + ")";
   }
 
 }

@@ -10,16 +10,16 @@ import instrs.Instr;
 import list.List;
 
 public class IsNil extends AST {
-  
+
   AST value;
 
   public IsNil(AST value) {
     this.value = value;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    value.compile(locals, dynamics, code);
-    code.add(new instrs.isNil());
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    value.compile(locals, dynamics, code, false);
+    code.add(new instrs.tests.isNil());
   }
 
   public void FV(HashSet<String> vars) {

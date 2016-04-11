@@ -24,9 +24,9 @@ public class Not extends AST {
     this.exp = exp;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    exp.compile(locals, dynamics, code);
-    code.add(new instrs.Not());
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    exp.compile(locals, dynamics, code, false);
+    code.add(new instrs.ops.Not());
   }
 
   public void DV(HashSet<String> vars) {

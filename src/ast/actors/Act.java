@@ -7,23 +7,19 @@ import java.util.Vector;
 import actors.CodeBox;
 import ast.AST;
 import ast.binding.Binding;
-import ast.binding.Var;
-import ast.data.Apply;
-import ast.data.Fun;
-import ast.data.Str;
 import ast.tests.BArm;
+import ast.tests.Case;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
 import instrs.Instr;
-import instrs.NewDynamic;
-import instrs.Null;
-import instrs.Pop;
-import instrs.PopDynamic;
-import instrs.PopFrame;
-import instrs.Return;
-import instrs.SetDynamic;
-import instrs.SetFrame;
+import instrs.apply.PopFrame;
+import instrs.apply.Return;
+import instrs.data.Null;
+import instrs.data.Pop;
+import instrs.vars.NewDynamic;
+import instrs.vars.PopDynamic;
+import instrs.vars.SetDynamic;
 import list.List;
 import list.Nil;
 
@@ -53,7 +49,7 @@ public class Act extends AST {
     return "Act(" + name + "," + exports + "," + init + "," + Arrays.toString(arms) + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
 
     // An act definition returns a behaviour. The bindings in the behaviour must be constructed
     // as recursive bindings *and* be dynamic variables so that '.' can find them. Therefore,
@@ -68,7 +64,7 @@ public class Act extends AST {
       code.add(new NewDynamic());
     }
     for (Binding b : bindings) {
-      b.value.compile(locals, dynamics, code);
+      b.value.compile(locals, dynamics, code, false);
       code.add(new SetDynamic(lookup(b.name, dynamics).getIndex()));
       code.add(new Pop());
     }
@@ -86,24 +82,22 @@ public class Act extends AST {
     // dynamics and waits to be transformed into an actor via 'new'.
 
     Vector<Instr> bodyCode = new Vector<Instr>();
-    HashSet<String> dv = new HashSet<String>();
-    desugar().DV(dv);
     // Message will be local 0 in the stack frame...
-    locals = new Nil<FrameVar>().cons(new FrameVar("$message", 0));
-    bodyCode.add(new instrs.FrameVar(0));
-    new Fun("", new String[] {}, new ast.control.Error(new Str("ran out of behaviour arms."))).compile(locals, dynamics, bodyCode);
-    desugar().compile(locals, dynamics, bodyCode);
-    bodyCode.add(new instrs.Apply(2));
+    locals = new Nil<FrameVar>().cons(new FrameVar("$0", 0));
+    bodyCode.add(new instrs.vars.FrameVar(0));
+    Case handlers = new Case(new AST[] {}, arms);
+    bodyCode.add(new instrs.patterns.SetPatternValues(1));
+    handlers.compileArms(locals, dynamics, bodyCode, true);
     bodyCode.add(new Return());
     int initIndex = bodyCode.size();
-    init.compile(locals, dynamics, bodyCode);
+    init.compile(locals, dynamics, bodyCode, false);
     bodyCode.add(new PopFrame());
     // Set the locals + 1 since the message is the first local...
-    code.add(new instrs.Behaviour(name, exports, initIndex, new CodeBox(maxLocals() + 1, bodyCode)));
+    code.add(new instrs.data.Behaviour(name, exports, initIndex, new CodeBox(maxLocals() + 1, bodyCode)));
   }
 
   private void orderExports(List<DynamicVar> dynamics) {
-    String[] newExports = new String[bindings.length];
+    String[] newExports = new String[dynamics.length()];
     for (String export : exports) {
       if (export != null) {
         DynamicVar dynamic = lookup(export, dynamics);
@@ -113,22 +107,6 @@ public class Act extends AST {
       }
     }
     exports = newExports;
-  }
-
-  public AST desugar() {
-    // The body of a behaviour is a function that expects to be supplied with the
-    // message value and a failure continuation...
-    return desugarArms(0);
-  }
-
-  private AST desugarArms(int i) {
-    if (i + 1 == arms.length)
-      return arms[i].desugar();
-    else return combineOr(arms[i].desugar(), desugarArms(i + 1));
-  }
-
-  private AST combineOr(AST left, AST right) {
-    return new Fun("", new String[] { "$v", "$fail" }, new Apply(left, new Var("$v"), new Fun("", new String[] {}, new Apply(right, new Var("$v"), new Var("$fail")))));
   }
 
   public void FV(HashSet<String> vars) {
@@ -143,16 +121,21 @@ public class Act extends AST {
       vars.addAll(free);
     }
     HashSet<String> free = new HashSet<String>();
-    desugar().FV(vars);
+    for(BArm arm : arms)
+      arm.FV(vars);
     init.FV(vars);
     free.removeAll(bound);
     vars.addAll(free);
   }
 
   public int maxLocals() {
+    
     // This does not remove those bindings that will be implemented as
     // dynamic variables, however it is fail safe...
-    int maxLocals = init.maxLocals() + desugar().maxLocals() + bindings.length;
+    
+    int maxLocals = init.maxLocals() + bindings.length;
+    for(BArm arm : arms)
+      maxLocals+= arm.maxLocals();
     int valueLocals = 0;
     for (Binding b : bindings)
       valueLocals = Math.max(valueLocals, b.value.maxLocals());

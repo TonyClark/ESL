@@ -17,7 +17,7 @@ import list.List;
 
 public abstract class AST {
 
-  public abstract void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code);
+  public abstract void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast);
 
   // Populate the supplied set with the names of the free variables...
 

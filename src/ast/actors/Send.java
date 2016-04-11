@@ -32,12 +32,12 @@ public class Send extends AST {
     return "Send(" + target + "," + Arrays.toString(args) + "," + time + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
     for (AST arg : args)
-      arg.compile(locals, dynamics, code);
-    time.compile(locals, dynamics, code);
-    target.compile(locals, dynamics, code);
-    code.add(new instrs.Send(args.length));
+      arg.compile(locals, dynamics, code, false);
+    time.compile(locals, dynamics, code, false);
+    target.compile(locals, dynamics, code, false);
+    code.add(new instrs.data.Send(args.length));
   }
 
   public void FV(HashSet<String> vars) {
@@ -54,7 +54,7 @@ public class Send extends AST {
   }
 
   public int maxLocals() {
-    return Math.max(time.maxLocals(),Math.max(target.maxLocals(), maxLocals(args)));
+    return Math.max(time.maxLocals(), Math.max(target.maxLocals(), maxLocals(args)));
   }
 
   public AST subst(AST ast, String name) {

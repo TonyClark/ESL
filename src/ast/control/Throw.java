@@ -1,14 +1,9 @@
 package ast.control;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Vector;
 
 import ast.AST;
-import ast.binding.Var;
-import ast.data.Fun;
-import ast.tests.BArm;
-import ast.tests.Case;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
@@ -32,10 +27,10 @@ public class Throw extends AST {
     return "Throw(" + value + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
 
-    value.compile(locals, dynamics, code);
-    code.add(new instrs.Throw());
+    value.compile(locals, dynamics, code, false);
+    code.add(new instrs.control.Throw());
   }
 
   public void FV(HashSet<String> vars) {

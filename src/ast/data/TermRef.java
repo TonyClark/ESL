@@ -20,9 +20,9 @@ public class TermRef extends AST {
     this.index = index;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    term.compile(locals, dynamics, code);
-    code.add(new instrs.TermRef(index));
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    term.compile(locals, dynamics, code, false);
+    code.add(new instrs.ops.TermRef(index));
   }
 
   public void FV(HashSet<String> vars) {

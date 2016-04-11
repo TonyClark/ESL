@@ -28,10 +28,10 @@ public class Term extends AST {
     this.values = values;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
     for (AST value : values)
-      value.compile(locals, dynamics, code);
-    code.add(new instrs.Term(name, values.length));
+      value.compile(locals, dynamics, code, false);
+    code.add(new instrs.data.Term(name, values.length));
   }
 
   public void DV(HashSet<String> vars) {

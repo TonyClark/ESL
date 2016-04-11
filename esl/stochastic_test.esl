@@ -7,7 +7,7 @@ export main;
 
 act main {
 
-  Time(n ?n < 10) -> 
+  Time(n)  when n < 10-> 
     probably(50) {
       record(self,One)
     } else {

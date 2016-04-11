@@ -5,13 +5,17 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import ast.AST;
+import ast.data.BinExp;
+import ast.data.Bool;
 import ast.data.Fun;
 import ast.data.Str;
+import ast.lists.List;
 import ast.modules.Module;
 import ast.patterns.PVar;
 import ast.patterns.PWild;
 import ast.patterns.Pattern;
 import ast.tests.BArm;
+import ast.tests.If;
 import ast.tests.Case;
 import exp.BoaConstructor;
 
@@ -50,13 +54,13 @@ public class FunBind extends Binding {
       vs[i] = new Var("$" + i);
       ws[i] = new PWild();
     }
-    BArm a1 = new BArm(args, value);
-    BArm a2 = new BArm(ws, new ast.control.Error(new Str("ran out of case arms in " + name)));
+    BArm a1 = new BArm(args, guard, value);
+    BArm a2 = new BArm(ws, Bool.TRUE, new ast.control.Error(new BinExp(new Str("ran out of case arms in " + name), "+", new List(vs))));
     return new Binding(name, new Fun(name, s, new Case(vs, new BArm[] { a1, a2 })));
   }
 
   private Binding desugarSimple() {
-    return new Binding(name, new Fun(name, simpleArgs(), value));
+    return new Binding(name, new Fun(name, simpleArgs(), new If(guard, value, new ast.control.Error(new Str("guard failed for " + name)))));
   }
 
   private String[] simpleArgs() {
@@ -87,7 +91,7 @@ public class FunBind extends Binding {
 
   public void FV(HashSet<String> vars) {
     HashSet<String> bound = new HashSet<String>();
-    for(Pattern p : args)
+    for (Pattern p : args)
       p.vars(bound);
     value.FV(vars);
     guard.FV(vars);

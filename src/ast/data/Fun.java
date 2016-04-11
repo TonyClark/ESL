@@ -11,8 +11,9 @@ import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
 import instrs.Instr;
-import instrs.NewDynamic;
-import instrs.Return;
+import instrs.apply.ApplyFun;
+import instrs.apply.Return;
+import instrs.vars.NewDynamic;
 import list.List;
 import list.Nil;
 
@@ -37,30 +38,44 @@ public class Fun extends AST {
     return "Fun(" + name + "," + Arrays.toString(args) + "," + body + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compileBody(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> bodyCode, boolean isLast) {
 
     // A function compiles by capturing the current dynamic variable environment.
     // Although the arguments are passed on the stack and therefore becomes part
     // of the current stack frame, those formal arguments that are references as
     // dynamics must be transferred immediately on entering the function...
 
-    int frame = body.maxLocals() + args.length;
     HashSet<String> dv = new HashSet<String>();
     body.DV(dv);
     locals = new Nil<FrameVar>();
-    Vector<Instr> bodyCode = new Vector<Instr>();
     int index = 0;
     for (String arg : args) {
       if (dv.contains(arg)) {
-        bodyCode.add(new instrs.FrameVar(argIndex(arg)));
+        bodyCode.add(new instrs.vars.FrameVar(argIndex(arg)));
         bodyCode.add(new NewDynamic());
         dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(arg, 0));
       } else locals = locals.cons(new FrameVar(arg, index));
       index++;
     }
-    body.compile(locals, dynamics, bodyCode);
+    body.compile(locals, dynamics, bodyCode, true);
     bodyCode.add(new Return());
-    code.add(new instrs.Fun(name, args.length, new CodeBox(frame, bodyCode)));
+  }
+
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    int frame = body.maxLocals() + args.length;
+    Vector<Instr> bodyCode = new Vector<Instr>();
+    compileBody(locals, dynamics, bodyCode, isLast);
+    code.add(new instrs.data.Fun(name, args.length, new CodeBox(frame, bodyCode)));
+  }
+
+  public void compileApply(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+
+    // Called when the function is created in order to immediately apply...
+
+    int frame = body.maxLocals() + args.length;
+    Vector<Instr> bodyCode = new Vector<Instr>();
+    compileBody(locals, dynamics, bodyCode, isLast);
+    code.add(new ApplyFun(name, args.length, new CodeBox(frame, bodyCode)));
   }
 
   private int argIndex(String arg) {

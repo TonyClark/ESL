@@ -7,14 +7,17 @@ import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.False;
 import instrs.Instr;
-import instrs.True;
+import instrs.data.False;
+import instrs.data.True;
 import list.List;
 
 @BoaConstructor(fields = { "value" })
 public class Bool extends AST {
 
+  public static final AST TRUE = new Bool(true);
+  public static final AST FALSE = new Bool(false);
+  
   public boolean value;
 
   public Bool() {
@@ -28,7 +31,7 @@ public class Bool extends AST {
     return "Bool(" + value + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
     if (value)
       code.add(new True());
     else code.add(new False());

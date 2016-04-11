@@ -1,8 +1,8 @@
-export remove,length,flatten,count;
+export remove,length,flatten,count,hasPrefix,nth;
 
 remove(v,l) =
   case l {
-    h:t ?(h=v) -> remove(v,t);
+    h:t when (h=v) -> remove(v,t);
     h:t        -> h:remove(v,t);
     []         -> []
   };
@@ -10,7 +10,11 @@ remove(v,l) =
 length(l) =
   case l {
     _:t -> 1 + length(t);
-    [] -> 0
+    [] -> 0;
+    bag{x|b} -> 1 + length(b);
+    bag{} -> 0;
+    set{x|s} -> 1 + length(s);
+    set{} -> 0
   };
       
 flatten(lists) =
@@ -23,4 +27,17 @@ count(x,l) =
   case l {
     h:t -> if h = x then 1+count(x,t) else count(x,t);
     []  -> 0
+  };
+  
+hasPrefix(list,prefix) =
+  case list,prefix {
+    _,[] -> true;
+    x:list,y:prefix when x=y -> hasPrefix(list,prefix);
+    _,_ -> false
+  };
+  
+nth(l,n) =
+  case l {
+    h:t -> if n = 0 then h else nth(t,n-1);
+    []  -> print('cannot find nth element: ' + n)
   }

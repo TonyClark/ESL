@@ -77,7 +77,7 @@ act vendor(lever,nb) {
   };
   
   Missed ->
-    print(self + ' missed ' + missed);
+    print(' missed ' + missed);
   
   Time(_) -> 
     let v = self
@@ -88,11 +88,13 @@ act main {
 
   vendors = []
   
-  Time(49) ->
-    for v in vendors do
-      v <- Missed;
+  Time(49)  -> {
+    for v in vendors do {
+      v <- Missed
+    }
+  };
 
-  Time(50) -> {
+  Time(t) when t > 50 -> {
     stopAll()
   };
   

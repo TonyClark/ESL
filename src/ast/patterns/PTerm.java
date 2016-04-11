@@ -2,13 +2,22 @@ package ast.patterns;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Vector;
 
 import ast.AST;
+import ast.binding.Var;
 import ast.data.Apply;
+import ast.data.Fun;
 import ast.data.TermRef;
+import ast.refs.Ref;
+import ast.tests.BArm;
 import ast.tests.If;
 import ast.tests.IsTerm;
+import compiler.DynamicVar;
+import compiler.FrameVar;
 import exp.BoaConstructor;
+import instrs.Instr;
+import list.List;
 
 @BoaConstructor(fields = { "name", "patterns" })
 
@@ -20,6 +29,14 @@ public class PTerm extends Pattern {
   public PTerm() {
   }
 
+  public String getName() {
+    return name;
+  }
+
+  public Pattern[] getPatterns() {
+    return patterns;
+  }
+
   public String toString() {
     return "PTerm(" + name + "," + Arrays.toString(patterns) + ")";
   }
@@ -29,16 +46,15 @@ public class PTerm extends Pattern {
       p.vars(vars);
   }
 
-  public AST desugar(AST value, AST success, AST fail) {
-    return new If(new IsTerm(value, name, patterns.length), desugarPatterns(0, value, success, fail), new Apply(fail));
+  public void bound(Vector<String> vars) {
+    for (Pattern p : patterns)
+      p.bound(vars);
   }
 
-  private AST desugarPatterns(int i, AST value, AST success, AST fail) {
-    if (i == patterns.length)
-      return success;
-    else {
-      return patterns[i].desugar(new TermRef(value, i), desugarPatterns(i + 1, value, success, fail), fail);
-    }
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, Vector<Instr> code) {
+    code.add(new instrs.patterns.isTerm(ref, name, patterns.length));
+    for (int i = 0; i < patterns.length; i++)
+      patterns[i].compile(locals, dynamics, new ast.refs.TermRef(ref, i), code);
   }
 
 }

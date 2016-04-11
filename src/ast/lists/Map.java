@@ -9,6 +9,7 @@ import ast.binding.Letrec;
 import ast.binding.Var;
 import ast.data.Apply;
 import ast.data.BinExp;
+import ast.data.Bool;
 import ast.data.Fun;
 import ast.patterns.PCons;
 import ast.patterns.PNil;
@@ -43,13 +44,13 @@ public class Map extends AST {
     return "Map(" + pattern + "," + list + "," + body + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    desugar().compile(locals, dynamics, code);
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    desugar().compile(locals, dynamics, code, isLast);
   }
 
   public AST desugar() {
-    BArm arm2 = new BArm(new Pattern[] { new PNil() }, new ast.lists.List());
-    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t")) }, new BinExp(body, ":", new Apply(new Var("$f"), new Var("$t"))));
+    BArm arm2 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, new ast.lists.List());
+    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t")) }, Bool.TRUE, new BinExp(body, ":", new Apply(new Var("$f"), new Var("$t"))));
     Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2 });
     Fun fun = new Fun("map", new String[] { "l" }, caseExp);
     return new Letrec(new Binding[] { new Binding("$f", fun) }, new Apply(new Var("$f"), list));

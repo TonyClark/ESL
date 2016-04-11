@@ -10,12 +10,12 @@ import compiler.FrameVar;
 import compiler.Local;
 import exp.BoaConstructor;
 import instrs.Instr;
-import instrs.NewDynamic;
-import instrs.Null;
-import instrs.Pop;
-import instrs.PopDynamic;
-import instrs.SetDynamic;
-import instrs.SetFrame;
+import instrs.data.Null;
+import instrs.data.Pop;
+import instrs.vars.NewDynamic;
+import instrs.vars.PopDynamic;
+import instrs.vars.SetDynamic;
+import instrs.vars.SetFrame;
 import list.List;
 
 @BoaConstructor(fields = { "bindings", "exp" })
@@ -37,7 +37,7 @@ public class Letrec extends AST {
     return "Letrec(" + Arrays.toString(bindings) + "," + exp + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
 
     // Compile letrec x = e1; y = e2 in e to the following:
     // if isDynamic(x)
@@ -66,7 +66,7 @@ public class Letrec extends AST {
       }
     }
     for (Binding b : bindings) {
-      b.value.compile(locals, dynamics, code);
+      b.value.compile(locals, dynamics, code, false);
       if (isDynamic(b.name)) {
         code.add(new SetDynamic(lookup(b.name, dynamics).getIndex()));
         code.add(new Pop());
@@ -75,7 +75,7 @@ public class Letrec extends AST {
         code.add(new Pop());
       }
     }
-    exp.compile(locals, dynamics, code);
+    exp.compile(locals, dynamics, code, isLast);
     // Remove the dynamics...
     for (Binding b : bindings) {
       if (isDynamic(b.name)) {

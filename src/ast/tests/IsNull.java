@@ -17,9 +17,9 @@ public class IsNull extends AST {
     this.value = value;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    value.compile(locals, dynamics, code);
-    code.add(new instrs.IsNull());
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    value.compile(locals, dynamics, code, false);
+    code.add(new instrs.tests.IsNull());
   }
 
   public void FV(HashSet<String> vars) {

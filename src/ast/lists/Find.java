@@ -1,15 +1,14 @@
 package ast.lists;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Vector;
 
-import actors.CodeBox;
 import ast.AST;
 import ast.binding.Binding;
 import ast.binding.Letrec;
 import ast.binding.Var;
 import ast.data.Apply;
+import ast.data.Bool;
 import ast.data.Fun;
 import ast.patterns.PCons;
 import ast.patterns.PNil;
@@ -22,10 +21,7 @@ import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
 import instrs.Instr;
-import instrs.NewDynamic;
-import instrs.Return;
 import list.List;
-import list.Nil;
 
 @BoaConstructor(fields = { "pattern", "list", "body", "defaultValue" })
 
@@ -50,14 +46,14 @@ public class Find extends AST {
     return "Find(" + pattern + "," + list + "," + body + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    desugar().compile(locals, dynamics, code);
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    desugar().compile(locals, dynamics, code, isLast);
   }
 
   public AST desugar() {
-    BArm arm3 = new BArm(new Pattern[] { new PNil() }, defaultValue);
-    BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t")) }, new Apply(new Var("$find"), new Var("$t")));
-    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PWild()) }, body);
+    BArm arm3 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, defaultValue);
+    BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t")) }, Bool.TRUE, new Apply(new Var("$find"), new Var("$t")));
+    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PWild()) }, Bool.TRUE, body);
     Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2, arm3 });
     Fun fun = new Fun("find", new String[] { "l" }, caseExp);
     return new Letrec(new Binding[] { new Binding("$find", fun) }, new Apply(new Var("$find"), list));

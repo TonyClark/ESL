@@ -1,15 +1,22 @@
 package ast.patterns;
 
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Vector;
 
 import ast.AST;
+import ast.binding.Var;
 import ast.data.Apply;
+import ast.data.Fun;
 import ast.lists.Head;
 import ast.lists.Tail;
+import ast.refs.Ref;
 import ast.tests.If;
 import ast.tests.IsCons;
+import compiler.DynamicVar;
+import compiler.FrameVar;
 import exp.BoaConstructor;
+import instrs.Instr;
+import list.List;
 
 @BoaConstructor(fields = { "head", "tail" })
 
@@ -36,12 +43,15 @@ public class PCons extends Pattern {
     tail.vars(vars);
   }
 
-  public AST desugar(AST value, AST success, AST fail) {
-    return new If(new IsCons(value), desugarPatterns(0, value, success, fail), new Apply(fail));
+  public void bound(Vector<String> vars) {
+    head.bound(vars);
+    tail.bound(vars);
   }
 
-  private AST desugarPatterns(int i, AST value, AST success, AST fail) {
-    return head.desugar(new Head(value), tail.desugar(new Tail(value), success, fail), fail);
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, Vector<Instr> code) {
+    code.add(new instrs.patterns.isCons(ref));
+    head.compile(locals, dynamics, new ast.refs.Head(ref), code);
+    tail.compile(locals, dynamics, new ast.refs.Tail(ref), code);
   }
 
 }

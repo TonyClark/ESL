@@ -20,8 +20,8 @@ public class Null extends AST {
     return "Null";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    code.add(new instrs.Null());
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    code.add(new instrs.data.Null());
   }
 
   public void FV(HashSet<String> vars) {

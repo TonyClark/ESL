@@ -2,6 +2,7 @@ package compiler;
 
 import java.util.Vector;
 
+import ast.refs.Ref;
 import instrs.Instr;
 
 public abstract class Local {
@@ -26,5 +27,15 @@ public abstract class Local {
   public abstract void compile(Vector<Instr> code);
 
   public abstract void update(Vector<Instr> code);
+
+  public abstract void sub1(Vector<Instr> code);
+
+  public abstract void apply(int arity, Vector<Instr> code, boolean isLast);
+
+  public abstract void isCons(Vector<Instr> code);
+
+  public abstract void isTerm(String name, int arity, Vector<Instr> code);
+
+  public abstract void bind(Ref ref, Vector<Instr> code);
 
 }

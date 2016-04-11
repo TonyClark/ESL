@@ -9,10 +9,10 @@ import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
 import instrs.Instr;
-import instrs.NewDynamic;
-import instrs.Pop;
-import instrs.PopDynamic;
-import instrs.SetFrame;
+import instrs.data.Pop;
+import instrs.vars.NewDynamic;
+import instrs.vars.PopDynamic;
+import instrs.vars.SetFrame;
 import list.List;
 
 @BoaConstructor(fields = { "bindings", "exp" })
@@ -34,25 +34,26 @@ public class Let extends AST {
     return "Let(" + Arrays.toString(bindings) + "," + exp + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
 
     bindings = Binding.mergeBindings(bindings);
 
     HashSet<String> DV = new HashSet<String>();
     exp.DV(DV);
+
     for (Binding b : bindings) {
       if (DV.contains(b.name)) {
-        b.value.compile(locals, dynamics, code);
+        b.value.compile(locals, dynamics, code, false);
         dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(b.name, 0));
         code.add(new NewDynamic());
       } else {
-        b.value.compile(locals, dynamics, code);
+        b.value.compile(locals, dynamics, code, false);
         locals = locals.cons(new FrameVar(b.name, locals.length()));
         code.add(new SetFrame(locals.length() - 1));
         code.add(new Pop());
       }
     }
-    exp.compile(locals, dynamics, code);
+    exp.compile(locals, dynamics, code, isLast);
     // Remove the dynamics...
     for (Binding b : bindings) {
       if (DV.contains(b.name)) {

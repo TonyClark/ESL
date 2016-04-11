@@ -31,6 +31,12 @@ public abstract class List<Element> {
     else return getTail().take(elements - 1).cons(getHead());
   }
 
+  public List<Element> drop(int elements) {
+    if (elements == 0)
+      return this;
+    else return getTail().drop(elements - 1);
+  }
+
   public List<Element[]> split() {
     return split(new Nil<Element>());
   }

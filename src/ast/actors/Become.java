@@ -1,18 +1,16 @@
 package ast.actors;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Vector;
 
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
-import compiler.Local;
 import exp.BoaConstructor;
 import instrs.Instr;
 import list.List;
 
-@BoaConstructor(fields = { "name", "values" })
+@BoaConstructor(fields = { "behaviour" })
 
 public class Become extends AST {
 
@@ -30,9 +28,9 @@ public class Become extends AST {
     return "Become(" + behaviour + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    behaviour.compile(locals, dynamics, code);
-    code.add(new instrs.Become());
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    behaviour.compile(locals, dynamics, code, false);
+    code.add(new instrs.data.Become());
   }
 
   public void FV(HashSet<String> vars) {

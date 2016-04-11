@@ -29,9 +29,9 @@ public class New extends AST {
     return "New(" + behaviour + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    behaviour.compile(locals, dynamics, code);
-    code.add(new instrs.New());
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    behaviour.compile(locals, dynamics, code, false);
+    code.add(new instrs.data.New());
   }
 
   public void FV(HashSet<String> vars) {

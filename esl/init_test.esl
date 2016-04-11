@@ -11,9 +11,9 @@ act producer {
 
   b = null
   
-  Time(t) ? b=null  -> {};
-  Init(b2)          -> { print(now + ': init'); b := b2 };
-  Time(t) ? b<>null -> b <- OK
+  Time(t) when b=null  -> {};
+  Init(b2)             -> { print(now + ': init'); b := b2 };
+  Time(t) when b<>null -> b <- OK
 };
 
 act consumer {

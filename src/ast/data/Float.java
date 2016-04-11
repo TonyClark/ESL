@@ -24,7 +24,7 @@ public class Float extends AST {
   }
 
   @Override
-  public void compile(List<FrameVar> locals, List<DynamicVar> types, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> types, Vector<Instr> code, boolean isLast) {
     // TODO Auto-generated method stub
 
   }

@@ -28,8 +28,8 @@ public class Int extends AST {
     return "Int(" + value + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    code.add(new instrs.Int(value));
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    code.add(new instrs.data.Int(value));
   }
 
   public void FV(HashSet<String> vars) {

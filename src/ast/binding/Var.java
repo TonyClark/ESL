@@ -26,7 +26,7 @@ public class Var extends AST {
     return "Var(" + name + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
     if (lookup(name, locals) != null)
       lookup(name, locals).compile(code);
     else if (lookup(name, dynamics) != null)

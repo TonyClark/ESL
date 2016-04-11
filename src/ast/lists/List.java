@@ -27,10 +27,10 @@ public class List extends AST {
     return "List(" + Arrays.toString(elements) + ")";
   }
 
-  public void compile(list.List<FrameVar> locals, list.List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(list.List<FrameVar> locals, list.List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
     for (AST e : elements)
-      e.compile(locals, dynamics, code);
-    code.add(new instrs.List(elements.length));
+      e.compile(locals, dynamics, code, false);
+    code.add(new instrs.data.List(elements.length));
   }
 
   public void FV(HashSet<String> vars) {

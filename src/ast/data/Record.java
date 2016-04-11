@@ -31,12 +31,12 @@ public class Record extends AST {
     return "Record(" + Arrays.toString(bindings) + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
     for (Binding b : bindings) {
-      b.value.compile(locals, dynamics, code);
-      code.add(new instrs.Field(b.name));
+      b.value.compile(locals, dynamics, code, false);
+      code.add(new instrs.data.Field(b.name));
     }
-    code.add(new instrs.Record(bindings.length));
+    code.add(new instrs.data.Record(bindings.length));
   }
 
   public void FV(HashSet<String> vars) {

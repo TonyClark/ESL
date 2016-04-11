@@ -1,20 +1,19 @@
 package ast.binding;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 
 import ast.AST;
+import ast.data.Bool;
 import ast.data.Fun;
 import ast.data.Str;
 import ast.modules.Module;
-import ast.patterns.PGuard;
 import ast.patterns.PWild;
 import ast.patterns.Pattern;
 import ast.tests.BArm;
-import ast.tests.Case;
 import ast.tests.If;
+import ast.tests.Case;
 import exp.BoaConstructor;
 
 @BoaConstructor(fields = { "name", "value" })
@@ -30,6 +29,7 @@ public class Binding {
     }
     return arity;
   }
+
   private static Binding[] desugar(Binding[] bindings) {
     // Any funbindings should be desugared to simple value bindings...
     Binding[] bs = new Binding[bindings.length];
@@ -120,12 +120,11 @@ public class Binding {
       BArm[] arms = new BArm[fs.size() + 1];
       for (int definition = 0; definition < fs.size(); definition++) {
         Pattern[] patterns = new Pattern[arity];
-        for (int arg = 0; arg < arity - 1; arg++)
+        for (int arg = 0; arg < arity; arg++)
           patterns[arg] = fs.get(definition).args[arg];
-        patterns[arity - 1] = new PGuard(fs.get(definition).args[arity - 1], fs.get(definition).guard);
-        arms[definition] = new BArm(patterns, fs.get(definition).value);
+        arms[definition] = new BArm(patterns, fs.get(definition).guard, fs.get(definition).value);
       }
-      arms[fs.size()] = new BArm(dummies, new ast.control.Error(new Str("ran out of options for " + name)));
+      arms[fs.size()] = new BArm(dummies, Bool.TRUE, new ast.control.Error(new Str("ran out of options for " + name)));
       return new Fun(name, args, new Case(vars, arms));
     }
   }

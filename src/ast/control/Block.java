@@ -9,8 +9,8 @@ import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
 import instrs.Instr;
-import instrs.Null;
-import instrs.Pop;
+import instrs.data.Null;
+import instrs.data.Pop;
 import list.List;
 
 @BoaConstructor(fields = { "exps" })
@@ -34,13 +34,15 @@ public class Block extends AST {
     return "Block(" + Arrays.toString(exps) + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
     if (exps.length == 0)
       code.add(new Null());
     else {
       for (AST exp : exps) {
-        exp.compile(locals, dynamics, code);
-        if (exp != exps[exps.length - 1]) code.add(new Pop());
+        if (exp != exps[exps.length - 1]) {
+          exp.compile(locals, dynamics, code, false);
+          code.add(new Pop());
+        } else exp.compile(locals, dynamics, code, isLast);
       }
     }
   }

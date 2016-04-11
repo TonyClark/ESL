@@ -35,9 +35,9 @@ public class Ref extends AST {
     this.name = name;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    namespace.compile(locals, dynamics, code);
-    code.add(new instrs.Ref(name));
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    namespace.compile(locals, dynamics, code, false);
+    code.add(new instrs.ops.Ref(name));
   }
 
   public void FV(HashSet<String> vars) {

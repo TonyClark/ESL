@@ -19,7 +19,7 @@ modify(value,minValue,maxValue) = max(min(value + (((random(3))+1)-2),maxValue),
 
 subst(n,o,l) =
   case l {
-    h:t ?(o=h) -> n:subst(n,o,t);
+    h:t  when(o=h) -> n:subst(n,o,t);
     h:t        -> h:subst(n,o,t);
     []         -> []
   };

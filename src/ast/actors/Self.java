@@ -20,8 +20,8 @@ public class Self extends AST {
     return "Self";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    code.add(new instrs.Self());
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    code.add(new instrs.vars.Self());
   }
 
   public void FV(HashSet<String> vars) {

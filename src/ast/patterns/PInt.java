@@ -1,13 +1,21 @@
 package ast.patterns;
 
 import java.util.HashSet;
+import java.util.Vector;
 
 import ast.AST;
+import ast.binding.Var;
 import ast.data.Apply;
 import ast.data.BinExp;
+import ast.data.Fun;
 import ast.data.Int;
+import ast.refs.Ref;
 import ast.tests.If;
+import compiler.DynamicVar;
+import compiler.FrameVar;
 import exp.BoaConstructor;
+import instrs.Instr;
+import list.List;
 
 @BoaConstructor(fields = { "value" })
 
@@ -25,8 +33,11 @@ public class PInt extends Pattern {
   public void vars(HashSet<String> vars) {
   }
 
-  public AST desugar(AST value, AST success, AST fail) {
-    return new If(new BinExp(value, "=", new Int(this.value)), success, new Apply(fail));
+  public void bound(Vector<String> vars) {
+  }
+
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, Vector<Instr> code) {
+    code.add(new instrs.patterns.isInt(ref, value));
   }
 
 }

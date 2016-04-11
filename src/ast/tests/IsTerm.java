@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Vector;
 
 import ast.AST;
+import ast.binding.Var;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import instrs.Instr;
@@ -22,9 +23,39 @@ public class IsTerm extends AST {
     this.arity = arity;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    value.compile(locals, dynamics, code);
-    code.add(new instrs.IsTerm(name, arity));
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    if (isLocal(locals))
+      compileLocalIsTerm(locals, dynamics, code);
+    else if (isDynamic(dynamics))
+      compileDynamicIsTerm(locals, dynamics, code);
+    else {
+      value.compile(locals, dynamics, code, false);
+      code.add(new instrs.tests.IsTerm(name, arity));
+    }
+  }
+
+  private void compileLocalIsTerm(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+    Var v = (Var) value;
+    lookup(v.name, locals).isTerm(name, arity, code);
+  }
+
+  private void compileDynamicIsTerm(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+    Var v = (Var) value;
+    lookup(v.name, dynamics).isTerm(name, arity, code);
+  }
+
+  private boolean isLocal(List<FrameVar> locals) {
+    if (value instanceof Var) {
+      Var v = (Var) value;
+      return lookup(v.name, locals) != null;
+    } else return false;
+  }
+
+  private boolean isDynamic(List<DynamicVar> dynamics) {
+    if (value instanceof Var) {
+      Var v = (Var) value;
+      return lookup(v.name, dynamics) != null;
+    } else return false;
   }
 
   public void FV(HashSet<String> vars) {

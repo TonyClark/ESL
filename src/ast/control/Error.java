@@ -17,9 +17,9 @@ public class Error extends AST {
     this.message = message;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
-    message.compile(locals, dynamics, code);
-    code.add(new instrs.Error());
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+    message.compile(locals, dynamics, code, false);
+    code.add(new instrs.control.Error());
   }
 
   public void FV(HashSet<String> vars) {
@@ -36,6 +36,10 @@ public class Error extends AST {
 
   public AST subst(AST ast, String name) {
     return new Error(message.subst(ast, name));
+  }
+
+  public String toString() {
+    return "Error(" + message + ")";
   }
 
 }

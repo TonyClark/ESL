@@ -10,8 +10,8 @@ act main {
   contains(bag{ y | b },x) = true when x = y;
   contains(_,_)            = false;
   count(x,bag{})           = 0;
-  count(x,bag{y | b)       = 1 + count(x,b) when x = y;
-  count(x,bag{y | b)       = count(x,b)     when x <> y;
+  count(x,bag{y | b})      = 1 + count(x,b) when x = y;
+  count(x,bag{y | b})      = count(x,b)     when x <> y;
   add(b1,b2)               = b1 + b2
   
   */

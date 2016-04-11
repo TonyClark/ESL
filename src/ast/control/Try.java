@@ -34,7 +34,7 @@ public class Try extends AST {
     return "Try(" + body + "," + Arrays.toString(arms) + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
 
     // try e catch p1 -> e1; ...
     // is implemented as a closure in a new frame for the scope of e.
@@ -44,9 +44,9 @@ public class Try extends AST {
     // most recent catch closure whose stack frame is popped and the
     // catch closure is called.
 
-    desugarCatch().compile(locals, dynamics, code);
-    desugarBody().compile(locals, dynamics, code);
-    code.add(new instrs.Try());
+    desugarCatch().compile(locals, dynamics, code, false);
+    desugarBody().compile(locals, dynamics, code, false);
+    code.add(new instrs.control.Try());
   }
 
   public AST desugarBody() {

@@ -27,8 +27,8 @@ public class Cmp extends AST {
     return "Cmp(" + exp + "," + Arrays.toString(qualifiers) + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> types, Vector<Instr> code) {
-    desugar().compile(locals, types, code);
+  public void compile(List<FrameVar> locals, List<DynamicVar> types, Vector<Instr> code, boolean isLast) {
+    desugar().compile(locals, types, code, isLast);
   }
 
   public AST desugar() {

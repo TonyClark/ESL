@@ -32,12 +32,12 @@ act main {
     create(500)
   };
 
-  Time(10) -> {
+  Time(x) when x > 10 -> {
     stopAll();
     print(getResults())
   };
   
-  Time(n) ? n < 5 -> {
+  Time(n) when n < 5 -> {
     probably(50) add1() else {};
     print( 'b: ' + value)
   };

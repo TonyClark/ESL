@@ -12,7 +12,7 @@ import ast.data.Ref;
 import ast.modules.Module;
 import compiler.FrameVar;
 import instrs.Instr;
-import instrs.Return;
+import instrs.apply.Return;
 import list.Nil;
 
 public class Test {
@@ -20,6 +20,8 @@ public class Test {
   public static void main(String[] args) {
 
     // run("balbir");
+    // run("patterns");
+    // run("monitor");
     // run("cmp_test");
     // run("init_test");
     // run("jobs");
@@ -35,10 +37,13 @@ public class Test {
     // run("big");
     // run("splash");
     // run("dot");
-    // run("customer");
+    run("customer");
     // run("overload");
     // run("try");
-    run("bag");
+    // run("bag");
+    run("newcase");
+    // run("become");
+    // run("tail_call");
   }
 
   public static void run(String name) {
@@ -47,7 +52,7 @@ public class Test {
     module.resolve();
     AST record = new New(new Apply(new Ref(module.desugar(), "main")));
     Vector<Instr> code = new Vector<Instr>();
-    record.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code);
+    record.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code, true);
     code.add(new Return());
     CodeBox codebox = new CodeBox(record.maxLocals(), code);
     // Actor.debug = true;
@@ -60,7 +65,7 @@ public class Test {
     actor.run(Integer.MAX_VALUE);
     Actor.runESL(0);
     long time = System.currentTimeMillis() - time0;
-    System.out.format("[ Completed %d instructions in %d ms ]", Actor.totalInstructions(), time);
+    System.out.format("[ Completed %d instructions over %d actors in %d ms ]", Actor.totalInstructions(), Actor.ALL_ACTORS, time);
   }
 
 }
