@@ -1,10 +1,11 @@
 package test;
 
+import java.util.Hashtable;
 import java.util.Vector;
 
 import actors.Actor;
-import actors.Behaviour;
 import actors.CodeBox;
+import actors.Key;
 import ast.AST;
 import ast.actors.New;
 import ast.data.Apply;
@@ -37,11 +38,11 @@ public class Test {
     // run("big");
     // run("splash");
     // run("dot");
-     run("customer");
+    // run("customer");
     // run("overload");
     // run("try");
     // run("bag");
-     run("newcase");
+    // run("newcase");
     // run("become");
     // run("tail_call");
     run("collisions");
@@ -51,13 +52,13 @@ public class Test {
     Actor.resetESL();
     Module module = Module.importModule("esl/" + name);
     module.resolve();
-    AST record = new New(new Apply(new Ref(module.desugar(), "main")));
+    AST record = new New(new Apply(new Ref(module.desugar(), Key.getKey("main"))));
     Vector<Instr> code = new Vector<Instr>();
     record.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), code, true);
     code.add(new Return());
     CodeBox codebox = new CodeBox(record.maxLocals(), code);
+    codebox.write("asm/" + name + ".asm");
     // Actor.debug = true;
-    // System.out.println(codebox);
     Actor actor = new Actor();
     long time0 = System.currentTimeMillis();
     actor.initSystem(codebox);

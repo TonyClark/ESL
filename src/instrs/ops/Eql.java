@@ -18,7 +18,7 @@ public class Eql extends Instr {
   }
 
   public String toString() {
-    return "=";
+    return "Eql";
   }
 
 }

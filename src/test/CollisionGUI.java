@@ -21,20 +21,26 @@ import javax.swing.event.DocumentListener;
 
 import actors.Actor;
 import actors.JavaActor;
+import actors.Key;
 import actors.Term;
 
 public class CollisionGUI implements JavaActor {
 
-  int     ballSize      = 5;
-  Actor   simulator;
-  int     numberOfBalls = 75;
-  Canvas  display       = new Canvas() {
-                          public void paint(Graphics g) {
-                            super.paint(g);
-                            CollisionGUI.this.repaint(g);
-                          }
-                        };
-  Point[] points        = new Point[0];
+  static Key sizeKey       = Key.getKey("size");
+  static Key widthKey      = Key.getKey("width");
+  static Key heightKey     = Key.getKey("height");
+  static Key ballSizeKey   = Key.getKey("ballSize");
+
+  int        ballSize      = 5;
+  Actor      simulator;
+  int        numberOfBalls = 75;
+  Canvas     display       = new Canvas() {
+                             public void paint(Graphics g) {
+                               super.paint(g);
+                               CollisionGUI.this.repaint(g);
+                             }
+                           };
+  Point[]    points        = new Point[0];
 
   public CollisionGUI(Actor simulator) {
     try {
@@ -98,7 +104,7 @@ public class CollisionGUI implements JavaActor {
           } else if (isInt(size.getText())) {
             if (Integer.parseInt(size.getText()) <= 0) {
               JOptionPane.showMessageDialog(null, "Error: Please enter number bigger than 0", "Error Massage", JOptionPane.ERROR_MESSAGE);
-            } else ballSize = Integer.parseInt(size .getText());
+            } else ballSize = Integer.parseInt(size.getText());
           } else JOptionPane.showMessageDialog(null, "Error: Please enter number bigger than 0", "Error Massage", JOptionPane.ERROR_MESSAGE);
         }
       });
@@ -155,20 +161,20 @@ public class CollisionGUI implements JavaActor {
     return "GUI(" + simulator + ")";
   }
 
-  public boolean hasExport(String name) {
-    return name.equals("size") || name.equals("width") || name.equals("height") || name.equals("ballSize");
+  public boolean hasExport(Key name) {
+    return name == sizeKey || name == widthKey || name == heightKey || name == ballSizeKey;
   }
 
-  public Object ref(String name) {
-    if (name.equals("size")) return numberOfBalls;
-    if (name.equals("width")) return display.getWidth();
-    if (name.equals("height")) return display.getHeight();
-    if (name.equals("ballSize")) return ballSize;
+  public Object ref(Key name) {
+    if (name == sizeKey) return numberOfBalls;
+    if (name == widthKey) return display.getWidth();
+    if (name == heightKey) return display.getHeight();
+    if (name == ballSizeKey) return ballSize;
     throw new Error("no export named " + name);
   }
 
-  public String[] getExports() {
-    return new String[] { "size", "width", "height", "ballSize" };
+  public Key[] getExports() {
+    return new Key[] { sizeKey, widthKey, heightKey, ballSizeKey };
   }
 
   public void send(Object message, int time) {

@@ -1,5 +1,9 @@
 package actors;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import instrs.Instr;
@@ -50,6 +54,35 @@ public class CodeBox {
       timeHandlingCode = new CodeBox(locals, noReturn);
     }
     return timeHandlingCode;
+  }
+
+  public void pprint(String name, PrintStream out) {
+    out.printf("CodeBox(%s,%s)%n", name, locals);
+    for (int i = 0; i < code.size(); i++) {
+      code.get(i).pprint(i, out);
+    }
+  }
+
+  public void collect(String name, Hashtable<String, CodeBox> boxes) {
+    if (boxes.containsKey(name))
+      throw new Error("code box table already contains an element for " + name);
+    else {
+      boxes.put(name, this);
+      for (Instr i : code)
+        i.collect(boxes);
+    }
+  }
+
+  public void write(String file) {
+    Hashtable<String, CodeBox> boxes = new Hashtable<String, CodeBox>();
+    collect(file, boxes);
+    try {
+      PrintStream fout = new PrintStream(file);
+      for (String n : boxes.keySet())
+        boxes.get(n).pprint(n, fout);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
 }

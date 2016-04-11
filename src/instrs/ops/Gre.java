@@ -17,7 +17,7 @@ public class Gre extends Instr {
    * ************************************************************************************/
 
   public String toString() {
-    return ">";
+    return "Gre";
   }
 
   public void perform(Actor actor) {

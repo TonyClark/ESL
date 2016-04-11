@@ -6,7 +6,6 @@ import java.util.Vector;
 
 import actors.CodeBox;
 import ast.AST;
-import ast.binding.Binding;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
@@ -21,6 +20,8 @@ import list.Nil;
 
 public class Fun extends AST {
 
+  static int      funCount = 0;
+
   public String   name;
   public String[] args;
   public AST      body;
@@ -32,6 +33,10 @@ public class Fun extends AST {
     this.name = name;
     this.args = args;
     this.body = body;
+  }
+
+  public static String newName() {
+    return "fun" + (funCount++);
   }
 
   public String toString() {

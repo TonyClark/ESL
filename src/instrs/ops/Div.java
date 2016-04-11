@@ -15,4 +15,8 @@ public class Div extends Instr {
     } else throw new java.lang.Error("do not know how to divide " + v2 + " and " + v1);
   }
 
+  public String toString() {
+    return "Div";
+  }
+
 }

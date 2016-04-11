@@ -17,7 +17,7 @@ public class Less extends Instr {
    * ************************************************************************************/
 
   public String toString() {
-    return "<";
+    return "Less";
   }
 
   public void perform(Actor actor) {

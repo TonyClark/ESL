@@ -37,6 +37,8 @@ import list.List;
 
 public class For extends AST {
 
+  static int     forCount = 0;
+
   public Pattern pattern;
   public AST     list;
   public AST     body;
@@ -65,8 +67,12 @@ public class For extends AST {
     BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t")) }, Bool.TRUE, new Apply(new Var("$f"), new Var("$t")));
     BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t")) }, Bool.TRUE, new Block(body, new Apply(new Var("$f"), new Var("$t"))));
     Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2, arm3 });
-    Fun fun = new Fun("for", new String[] { "l" }, caseExp);
+    Fun fun = new Fun(forName(), new String[] { "l" }, caseExp);
     return new Letrec(new Binding[] { new Binding("$f", fun) }, new Apply(new Var("$f"), list));
+  }
+
+  private String forName() {
+    return "for" + (forCount++);
   }
 
   private void compileSimple(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {

@@ -15,4 +15,8 @@ public class SetElement extends Ref {
     return a.setElement(id);
   }
 
+  public String toString() {
+    return "SetElement(" + id + ")";
+  }
+
 }

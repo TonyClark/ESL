@@ -2,11 +2,11 @@ package actors;
 
 public interface JavaActor {
 
-  public boolean hasExport(String name);
+  public boolean hasExport(Key name);
 
-  public Object ref(String name);
+  public Object ref(Key name);
 
-  public String[] getExports();
+  public Key[] getExports();
 
   public void send(Object message, int time);
 

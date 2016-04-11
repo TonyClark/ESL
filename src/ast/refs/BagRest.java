@@ -15,4 +15,8 @@ public class BagRest extends Ref {
     return a.bagRest(id);
   }
 
+  public String toString() {
+    return "BagRest(" + id + ")";
+  }
+
 }

@@ -10,4 +10,8 @@ public class Not extends Instr {
     actor.pushStack(!b);
   }
 
+  public String toString() {
+    return "Not";
+  }
+
 }

@@ -7,9 +7,6 @@ import java.util.Vector;
 import ast.AST;
 import ast.binding.Binding;
 import ast.binding.Let;
-import ast.binding.Var;
-import ast.data.Apply;
-import ast.data.Fun;
 import ast.lists.Head;
 import ast.lists.Tail;
 import ast.patterns.PTerm;
@@ -23,15 +20,6 @@ import list.List;
 @BoaConstructor(fields = { "patterns", "guard", "exp" })
 
 public class BArm {
-
-  public static AST And(AST m1, AST m2) {
-    AST s = new Fun("and", new String[] { "$vals", "$fail" }, new Apply(m2, new Var("$vals"), new Var("$succ"), new Var("$fail")));
-    return new Fun("and", new String[] { "$vals", "$succ", "$fail" }, new Apply(m1, new Var("$vals"), s, new Var("$fail")));
-  }
-
-  public static AST defaultMatcher() {
-    return new Fun("default-matcher", new String[] { "$vals", "$succ", "$fail" }, new Apply(new Var("$succ"), new Var("$vals"), new Var("$fail")));
-  }
 
   public Pattern[] patterns;
 

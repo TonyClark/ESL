@@ -22,4 +22,8 @@ public class isStr extends Instr {
     } else actor.fail();
   }
 
+  public String toString() {
+    return "IsStr(" + ref + "," + value + ")";
+  }
+
 }

@@ -17,7 +17,7 @@ public class Or extends Instr {
    * ************************************************************************************/
 
   public String toString() {
-    return "AND";
+    return "Or";
   }
 
   public void perform(Actor actor) {

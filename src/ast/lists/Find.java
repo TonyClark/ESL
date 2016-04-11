@@ -27,6 +27,8 @@ import list.List;
 
 public class Find extends AST {
 
+  static int     findCount = 0;
+
   public Pattern pattern;
   public AST     list;
   public AST     body;
@@ -55,8 +57,12 @@ public class Find extends AST {
     BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t")) }, Bool.TRUE, new Apply(new Var("$find"), new Var("$t")));
     BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PWild()) }, Bool.TRUE, body);
     Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2, arm3 });
-    Fun fun = new Fun("find", new String[] { "l" }, caseExp);
+    Fun fun = new Fun(findName(), new String[] { "l" }, caseExp);
     return new Letrec(new Binding[] { new Binding("$find", fun) }, new Apply(new Var("$find"), list));
+  }
+
+  private String findName() {
+    return "find" + (findCount++);
   }
 
   public void FV(HashSet<String> vars) {

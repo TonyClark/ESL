@@ -21,4 +21,8 @@ public class CaseError extends Instr {
     throw new Error("case error");
   }
 
+  public String toString() {
+    return "CaseError";
+  }
+
 }

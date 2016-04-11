@@ -4,14 +4,15 @@ import java.util.Arrays;
 
 import actors.Actor;
 import actors.JavaActor;
+import actors.Key;
 import actors.Record;
 import instrs.Instr;
 
 public class Ref extends Instr {
 
-  public String name;
+  public Key name;
 
-  public Ref(String name) {
+  public Ref(Key name) {
     super();
     this.name = name;
   }
@@ -29,7 +30,7 @@ public class Ref extends Instr {
   }
 
   private void performJavaRef(Actor actor, JavaActor namespace) {
-    if(namespace.hasExport(name))
+    if (namespace.hasExport(name))
       actor.pushStack(namespace.ref(name));
     else throw new java.lang.Error("actor " + namespace + " does not have field " + name + " in " + Arrays.toString(namespace.getExports()));
 
@@ -39,7 +40,6 @@ public class Ref extends Instr {
     if (namespace.hasExport(name))
       actor.pushStack(namespace.ref(name));
     else throw new java.lang.Error("actor " + namespace + " does not have field " + name + " in " + Arrays.toString(namespace.getExports()));
-
   }
 
   private void performRecordRef(Actor actor, Record record) {

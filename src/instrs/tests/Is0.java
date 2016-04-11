@@ -6,7 +6,10 @@ import instrs.Instr;
 public class Is0 extends Instr {
 
   public void perform(Actor actor) {
-    actor.pushStack((int)actor.popStack() == 0);
+    actor.pushStack((int) actor.popStack() == 0);
   }
 
+  public String toString() {
+    return "Is0";
+  }
 }

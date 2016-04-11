@@ -18,7 +18,7 @@ public class NEql extends Instr {
   }
 
   public String toString() {
-    return "<>";
+    return "NEql";
   }
 
 }

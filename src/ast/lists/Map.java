@@ -27,6 +27,8 @@ import list.List;
 
 public class Map extends AST {
 
+  static int     mapCount = 0;
+
   public Pattern pattern;
   public AST     list;
   public AST     body;
@@ -52,8 +54,12 @@ public class Map extends AST {
     BArm arm2 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, new ast.lists.List());
     BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t")) }, Bool.TRUE, new BinExp(body, ":", new Apply(new Var("$f"), new Var("$t"))));
     Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2 });
-    Fun fun = new Fun("map", new String[] { "l" }, caseExp);
+    Fun fun = new Fun(mapName(), new String[] { "l" }, caseExp);
     return new Letrec(new Binding[] { new Binding("$f", fun) }, new Apply(new Var("$f"), list));
+  }
+
+  private String mapName() {
+    return "map" + (mapCount++);
   }
 
   public void FV(HashSet<String> vars) {

@@ -2,16 +2,16 @@ package actors;
 
 public class Field {
 
-  String name;
+  Key    name;
   Object value;
 
-  public Field(String name, Object value) {
+  public Field(Key name, Object value) {
     super();
     this.name = name;
     this.value = value;
   }
 
-  public String getName() {
+  public Key getName() {
     return name;
   }
 

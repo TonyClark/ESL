@@ -6,7 +6,7 @@ import instrs.Instr;
 public class Cons extends Instr {
 
   public String toString() {
-    return ":";
+    return "Cons";
   }
 
   public void perform(Actor actor) {

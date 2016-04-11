@@ -52,7 +52,7 @@ esl = {
   postexp(e)      -> o=op ! r=exp { BinExp(e,o,r) } 
                   |  lparen es=exps rparen exp={ Apply(e,es) } postexp^(exp)
                   |  leftArrow v=exp postsend^(e,[v]) 
-                  |  dot n=name ref={ Ref(e,n) } postexp^(ref)
+                  |  dot n=name ref={ Ref(e,Key.getKey(n)) } postexp^(ref)
                   |  {e};
   postsend(a,m)   -> at t=exp { Send(a,m,t) } | { Send(a,m,Int(0)) };
   exps            -> e=exp es=(comma exp)* { e:es } | {[]};
@@ -62,7 +62,7 @@ esl = {
                   |  'new'     n=name (lparen ps=exps rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) })
                   |  'new'     s=string (lparen ps=exps rparen { NewJava(s,ps) } | { NewJava(s,[]) })
                   |  'not'    ! e=exp { Not(e) } 
-                  |  'fun'    ! lparen as=params rparen e=exp { Fun('',as,e) }
+                  |  'fun'    ! lparen as=params rparen e=exp { Fun(Fun.newName(),as,e) }
                   |  'let'    ! bs=bindings  'in' e=exp { Let(bs,e) }
                   |  'letrec' ! bs=bindings  'in' e=exp { Letrec(bs,e) }
                   |  'case'   ! es=caseValues lcurl as=barms rcurl { Case(es,as) }

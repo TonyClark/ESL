@@ -10,7 +10,7 @@ public class Behaviour {
 
   // Behaviours export names that are available via the dynamics...
 
-  String[]      exports;
+  Key[]         exports;
 
   // A behaviour acts link a closure. It closes in the dynamic chain...
 
@@ -24,7 +24,7 @@ public class Behaviour {
 
   CodeBox       code;
 
-  public Behaviour(String name, String[] exports, List<Dynamic> dynamics, int initIndex, CodeBox codebox) {
+  public Behaviour(String name, Key[] exports, List<Dynamic> dynamics, int initIndex, CodeBox codebox) {
     this.name = name;
     this.exports = exports;
     this.dynamics = dynamics;
@@ -56,17 +56,17 @@ public class Behaviour {
     return code.getTimeHandlingCode();
   }
 
-  public String[] getExports() {
+  public Key[] getExports() {
     return exports;
   }
 
-  public boolean hasExport(String name) {
-    for (String n : exports)
-      if (n != null && n.equals(name)) return true;
+  public boolean hasExport(Key name) {
+    for (Key n : exports)
+      if (n != null && n == name) return true;
     return false;
   }
 
-  public Object ref(String name) {
+  public Object ref(Key name) {
     return getDynamic(exportIndex(name));
   }
 
@@ -74,9 +74,9 @@ public class Behaviour {
     return dynamics.nth(i).getValue();
   }
 
-  private int exportIndex(String name) {
+  private int exportIndex(Key name) {
     for (int i = 0; i < exports.length; i++)
-      if (name.equals(exports[i])) return i;
+      if (name == exports[i]) return i;
     return -1;
   }
 

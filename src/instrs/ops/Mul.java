@@ -19,4 +19,8 @@ public class Mul extends Instr {
     } else throw new java.lang.Error("do not know how to multiply " + v1 + " and " + v2);
   }
 
+  public String toString() {
+    return "Mul";
+  }
+
 }

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.Key;
 import ast.binding.Var;
 import ast.data.Apply;
 import ast.data.Ref;
@@ -62,11 +63,18 @@ public abstract class AST {
   public AST substExportedValues(Collection<Module> modules) {
     AST ast = this;
     for (Module module : modules) {
-      for (String exported : module.getExports()) {
-        ast = ast.subst(new Ref(new Var(module.getName()), exported), exported);
+      for (Key exported : toKeys(module.getExports())) {
+        ast = ast.subst(new Ref(new Var(module.getName()), exported), exported.getString());
       }
     }
     return ast;
+  }
+
+  private Key[] toKeys(String[] strings) {
+    Key[] keys = new Key[strings.length];
+    for (int i = 0; i < strings.length; i++)
+      keys[i] = Key.getKey(strings[i]);
+    return keys;
   }
 
   public abstract AST subst(AST ast, String name);

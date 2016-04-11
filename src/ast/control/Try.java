@@ -19,8 +19,11 @@ import list.List;
 
 public class Try extends AST {
 
+  static int    tryCount   = 0;
+  static int    catchCount = 0;
+
   public AST    body;
-  public BArm[] arms = new BArm[] {};
+  public BArm[] arms       = new BArm[] {};
 
   public Try() {
   }
@@ -50,11 +53,19 @@ public class Try extends AST {
   }
 
   public AST desugarBody() {
-    return new Fun("try-body", new String[] {}, body);
+    return new Fun(tryBodyName(), new String[] {}, body);
+  }
+
+  private String tryBodyName() {
+    return "try-body" + (tryCount++);
   }
 
   public AST desugarCatch() {
-    return new Fun("catch", new String[] { "$1" }, new Case(new AST[] { new Var("$1") }, arms));
+    return new Fun(catchName(), new String[] { "$1" }, new Case(new AST[] { new Var("$1") }, arms));
+  }
+
+  private String catchName() {
+    return "catch" + (catchCount++);
   }
 
   public void FV(HashSet<String> vars) {

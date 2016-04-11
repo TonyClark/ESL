@@ -17,4 +17,8 @@ public class isNull extends Instr {
     if (ref.ref(actor) != null) actor.fail();
   }
 
+  public String toString() {
+    return "IsNull";
+  }
+
 }

@@ -11,15 +11,15 @@ public class Record {
     this.fields = fields;
   }
 
-  public boolean hasField(String name) {
+  public boolean hasField(Key name) {
     for (Field field : fields)
-      if (field.getName().equals(name)) return true;
+      if (field.getName() == name) return true;
     return false;
   }
 
-  public Field getField(String name) {
+  public Field getField(Key name) {
     for (Field field : fields)
-      if (field.getName().equals(name)) return field;
+      if (field.getName() == name) return field;
     return null;
   }
 

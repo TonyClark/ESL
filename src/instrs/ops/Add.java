@@ -11,7 +11,7 @@ public class Add extends Instr {
    ************************************************************************************/
 
   public String toString() {
-    return "+";
+    return "Add";
   }
 
   public void perform(Actor actor) {

@@ -1,13 +1,14 @@
 package instrs.data;
 
 import actors.Actor;
+import actors.Key;
 import instrs.Instr;
 
 public class Field extends Instr {
 
-  String name;
+  Key name;
 
-  public Field(String name) {
+  public Field(Key name) {
     super();
     this.name = name;
   }

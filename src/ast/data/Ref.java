@@ -3,19 +3,10 @@ package ast.data;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.Key;
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
-import instrs.Instr;
-import list.List;
-
-import java.util.HashSet;
-import java.util.Vector;
-
-import ast.AST;
-import compiler.DynamicVar;
-import compiler.FrameVar;
-import compiler.Local;
 import exp.BoaConstructor;
 import instrs.Instr;
 import list.List;
@@ -23,13 +14,13 @@ import list.List;
 @BoaConstructor(fields = { "namespace", "name" })
 public class Ref extends AST {
 
-  public AST    namespace;
-  public String name;
+  public AST namespace;
+  public Key name;
 
   public Ref() {
   }
 
-  public Ref(AST namespace, String name) {
+  public Ref(AST namespace, Key name) {
     super();
     this.namespace = namespace;
     this.name = name;

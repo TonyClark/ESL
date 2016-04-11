@@ -1,17 +1,21 @@
 package instrs.data;
 
+import java.util.Arrays;
+import java.util.Hashtable;
+
 import actors.Actor;
 import actors.CodeBox;
+import actors.Key;
 import instrs.Instr;
 
 public class Behaviour extends Instr {
 
-  String   name;
-  String[] exports;
-  int      initIndex;
-  CodeBox  code;
+  String  name;
+  Key[]   exports;
+  int     initIndex;
+  CodeBox code;
 
-  public Behaviour(String name, String[] exports, int initIndex, CodeBox code) {
+  public Behaviour(String name, Key[] exports, int initIndex, CodeBox code) {
     this.name = name;
     this.exports = exports;
     this.initIndex = initIndex;
@@ -23,7 +27,11 @@ public class Behaviour extends Instr {
   }
 
   public String toString() {
-    return "Behaviour(" + name + "," + code + ")";
+    return "Behaviour(" + name + "," + Arrays.toString(exports) + "," + initIndex + ")";
+  }
+
+  public void collect(Hashtable<String, CodeBox> boxes) {
+    code.collect("behaviour-" + name, boxes);
   }
 
 }

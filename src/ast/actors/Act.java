@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Vector;
 
 import actors.CodeBox;
+import actors.Key;
 import ast.AST;
 import ast.binding.Binding;
 import ast.tests.BArm;
@@ -70,6 +71,7 @@ public class Act extends AST {
     }
     orderExports(dynamics);
     compileBehaviour(locals, dynamics, code);
+
     // Remove the dynamics...
     for (Binding b : bindings) {
       code.add(new PopDynamic());
@@ -93,7 +95,14 @@ public class Act extends AST {
     init.compile(locals, dynamics, bodyCode, false);
     bodyCode.add(new PopFrame());
     // Set the locals + 1 since the message is the first local...
-    code.add(new instrs.data.Behaviour(name, exports, initIndex, new CodeBox(maxLocals() + 1, bodyCode)));
+    code.add(new instrs.data.Behaviour(name, toKeys(exports), initIndex, new CodeBox(maxLocals() + 1, bodyCode)));
+  }
+
+  private Key[] toKeys(String[] exports) {
+    Key[] keys = new Key[exports.length];
+    for (int i = 0; i < exports.length; i++)
+      if (exports[i] != null) keys[i] = Key.getKey(exports[i]);
+    return keys;
   }
 
   private void orderExports(List<DynamicVar> dynamics) {
@@ -121,7 +130,7 @@ public class Act extends AST {
       vars.addAll(free);
     }
     HashSet<String> free = new HashSet<String>();
-    for(BArm arm : arms)
+    for (BArm arm : arms)
       arm.FV(vars);
     init.FV(vars);
     free.removeAll(bound);
@@ -129,13 +138,13 @@ public class Act extends AST {
   }
 
   public int maxLocals() {
-    
+
     // This does not remove those bindings that will be implemented as
     // dynamic variables, however it is fail safe...
-    
+
     int maxLocals = init.maxLocals() + bindings.length;
-    for(BArm arm : arms)
-      maxLocals+= arm.maxLocals();
+    for (BArm arm : arms)
+      maxLocals += arm.maxLocals();
     int valueLocals = 0;
     for (Binding b : bindings)
       valueLocals = Math.max(valueLocals, b.value.maxLocals());

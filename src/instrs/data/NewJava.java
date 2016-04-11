@@ -49,4 +49,8 @@ public class NewJava extends Instr {
     }
   }
 
+  public String toString() {
+    return "NewJava(" + className + "," + arity + ")";
+  }
+
 }

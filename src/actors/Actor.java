@@ -701,7 +701,7 @@ public class Actor {
     return (List<Dynamic>) stack[frame + DYNAMICS];
   }
 
-  public String[] getExports() {
+  public Key[] getExports() {
     return behaviour.getExports();
   }
 
@@ -729,7 +729,7 @@ public class Actor {
     return (int) stack[frame + TOFS];
   }
 
-  public boolean hasExport(String name) {
+  public boolean hasExport(Key name) {
     return behaviour.hasExport(name);
   }
 
@@ -877,7 +877,7 @@ public class Actor {
     } else return false;
   }
 
-  public Object ref(String name) {
+  public Object ref(Key name) {
     return behaviour.ref(name);
   }
 
@@ -1046,7 +1046,7 @@ public class Actor {
   }
 
   public Object setRest(int id) {
-    
+
     // Find the fail frame with type SET and with SET_ID id...
 
     int f = currentFail;

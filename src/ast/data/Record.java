@@ -1,10 +1,10 @@
 package ast.data;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.Key;
 import ast.AST;
 import ast.binding.Binding;
 import compiler.DynamicVar;
@@ -34,7 +34,7 @@ public class Record extends AST {
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
     for (Binding b : bindings) {
       b.value.compile(locals, dynamics, code, false);
-      code.add(new instrs.data.Field(b.name));
+      code.add(new instrs.data.Field(Key.getKey(b.name)));
     }
     code.add(new instrs.data.Record(bindings.length));
   }

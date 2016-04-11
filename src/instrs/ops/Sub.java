@@ -6,7 +6,7 @@ import instrs.Instr;
 public class Sub extends Instr {
 
   public String toString() {
-    return "-";
+    return "Sub";
   }
 
   public void perform(Actor actor) {
