@@ -21,7 +21,7 @@ public class Key {
     // Use getKey to map from a string to a key. The same key must be
     // returned when supplied with strings that are the same with respect
     // to String.equals()...
-    
+
     if (keys.containsKey(k))
       return keys.get(k);
     else {
@@ -33,6 +33,10 @@ public class Key {
 
   public String getString() {
     return string;
+  }
+
+  public String toString() {
+    return "Key(" + string + ")";
   }
 
 }
