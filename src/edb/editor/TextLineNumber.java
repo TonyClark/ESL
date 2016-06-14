@@ -51,6 +51,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
   private int                          currentLine  = -1;
   private boolean                      updateFont;
   private int                          borderGap;
+  private int                          start        = 1;
 
   // Keep history information to reduce the number of times the component
   // needs to be repainted
@@ -70,12 +71,13 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
 
   private Image                        breakImg     = null;
 
-  public TextLineNumber(JTextComponent component, Font font) {
-    this(component, 4, font);
+  public TextLineNumber(JTextComponent component, Font font, int start) {
+    this(component, 4, font, start);
   }
 
-  public TextLineNumber(JTextComponent component, int minimumDisplayDigits, Font font) {
+  public TextLineNumber(JTextComponent component, int minimumDisplayDigits, Font font, int start) {
     this.component = component;
+    this.start = start;
     setFont(font);
     setBorderGap(5);
     setCurrentLineForeground(Color.RED);
@@ -213,7 +215,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
     Element line = root.getElement(index);
 
     if (line.getStartOffset() == rowStartOffset)
-      return String.valueOf(index + 1);
+      return String.valueOf(index + start);
     else return "";
   }
 

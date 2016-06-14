@@ -14,7 +14,7 @@ public class Assembler extends JTextPane {
 
   static Font    font  = new Font("Courier", Font.PLAIN, 10);
 
-  TextLineNumber lines = new TextLineNumber(this, font);
+  TextLineNumber lines = new TextLineNumber(this, font, 0);
   CodeBox        code  = null;
 
   public Assembler() {

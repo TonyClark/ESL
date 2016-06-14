@@ -66,7 +66,7 @@ public class FileEditor extends JTextPane implements MouseListener, KeyListener,
   Action                   fontUpAction      = new FontAction(this, 2);
   Action                   fontDownAction    = new FontAction(this, -2);
   boolean                  dirty             = false;
-  TextLineNumber           lines             = new TextLineNumber(this, font);
+  TextLineNumber           lines             = new TextLineNumber(this, font, 1);
   ParseError               error             = null;
   int                      errorX            = 0;
   int                      errorY            = 0;

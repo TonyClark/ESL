@@ -1,0 +1,7 @@
+package edb;
+
+public enum EDBState {
+
+  IDLE, LOADING, LOADED, INITIALISING, INITIALISED, STEPPING, RUNNING
+
+}

@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import actors.Actor;
 import actors.ActorState;
+import instrs.Instr;
 
 public class Machine {
 
@@ -20,20 +21,30 @@ public class Machine {
   int           instrs     = 0;                  // The number of instructions performed in current time tick.
   int           runSteps   = 0;                  // The number of instructions for current actor.
   boolean       stop       = false;              // Stops the machine. Can restart providing !Actor.isStop().
+  String        path;                            // The path to the most recently loaded module.
 
   public Machine(EDB edb, Actor start) {
     this.edb = edb;
     this.start = start;
+    path = start.getBehaviour().getPath();
     // For testing...
     Actor.MAX_INSTRS = 10;
     Actor.INSTRS_PER_TIME_UNIT = 10;
   }
 
+  public String getPath() {
+    return path;
+  }
+
+  public Actor getStart() {
+    return start;
+  }
+
   private void advanceTime() {
-    
-    // The global time is advanced causing actors to receive Time(t+1) 
+
+    // The global time is advanced causing actors to receive Time(t+1)
     // messages next time they process scheduleMessage() ...
-    
+
     Actor.setTime(Actor.getTime() + 1);
   }
 
@@ -77,9 +88,8 @@ public class Machine {
 
   public void display(Actor a) {
     if (!a.complete()) {
-      int line = a.getLine();
-      int codePtr = a.getCodePtr();
-      edb.openActor(a, line, codePtr);
+      Instr instr = a.nextInstr();
+      edb.openActor(a, instr.getLine(), a.getCodePtr());
     }
   }
 
@@ -174,10 +184,10 @@ public class Machine {
   }
 
   public void stop() {
-    
+
     // This should be called when the underlying VM stops (causing Actor.isStop() to be true)
     // or when this machine wants to temporarily stop.
-    
+
     stop = true;
   }
 

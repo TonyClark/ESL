@@ -42,6 +42,7 @@ public class ActorStack extends JPanel implements TableModel, MouseListener {
   static int       BUTTON_SIZE = 10;
 
   JTable           table       = new JTable(this);
+  TOS              tos         = new TOS();
   Vector<Variable> variables   = new Vector<Variable>();
   Stack<Integer>   frameStack  = new Stack<Integer>();
   Actor            actor       = null;
@@ -61,6 +62,7 @@ public class ActorStack extends JPanel implements TableModel, MouseListener {
     setLayout(new BorderLayout());
     addToolBar();
     add(new JScrollPane(table), BorderLayout.CENTER);
+    add(tos, BorderLayout.SOUTH);
   }
 
   public void addTableModelListener(TableModelListener l) {
@@ -202,6 +204,7 @@ public class ActorStack extends JPanel implements TableModel, MouseListener {
     frame = actor.getFrame();
     frameStack.clear();
     showFrame();
+    if (!actor.stackEmpty()) tos.showValue(actor.tos());
   }
 
   private void showFrame() {

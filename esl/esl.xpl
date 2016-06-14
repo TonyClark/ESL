@@ -26,7 +26,7 @@ esl = {
   barms           -> a=barm ! as=(semi barm)* { a:as };
   barm            -> p=patterns g=(guard | { Bool(true) }) arrow ! e=exp { BArm(p,g,e) };
   patterns        -> p=pattern ps=(comma pattern)* { p:ps };
-  pattern         -> s=[[simplePattern]] ! (colon p=pattern { PCons(s,p) } | 'or' p=pattern { POr(s,p) } | '+' p=pattern { PAdd(s,p) } | {s});
+  pattern         -> whitespace s=[[simplePattern]] ! (colon p=pattern { PCons(s,p) } | 'or' p=pattern { POr(s,p) } | '+' p=pattern { PAdd(s,p) } | {s});
   simplePattern   -> pVar | pInt | pTerm | pList | pStr | pBool | pWild | pNull | pBag | pSet | lparen p=pattern rparen {p};
   pVar            -> n=name (eql p=pattern { PBind(n,p) } | { PVar(n) });
   pInt            -> n=int { PInt(n) };

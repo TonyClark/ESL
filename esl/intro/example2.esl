@@ -1,0 +1,12 @@
+export main;
+
+import 'esl/intro/example3.esl';
+
+act main {
+  a = new other
+  Time(t) -> {
+    stopAll()
+  }
+}
+
+

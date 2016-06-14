@@ -56,7 +56,7 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
   static int    X           = 10;
   static int    Y           = 10;
   static int    BUTTON_SIZE = 30;
-  static String NAME        = "ESL";
+  static String NAME        = "EDB";
 
   public static void main(String[] args) {
     EDB gui = new EDB(args[0]);
@@ -87,14 +87,8 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     Actor.setTimeListener(this);
     Actor.setMessageListener(this);
     Actor.setInstrListener(this);
-    setTitle(NAME);
+    showTitle(EDBState.IDLE);
     splash();
-  }
-
-  private void splash() {
-    String intro = "esl/intro/help.html";
-    File file = new File(intro);
-    if (file.exists()) openFile(intro);
   }
 
   public JPanel actorsPanel() {
@@ -110,14 +104,8 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     if (getActor() == actor) state.addMessage(message);
   }
 
-  public ImageIcon getImage(String file, int width, int height) {
-    Image img = new ImageIcon(file).getImage();
-    Image newImg = img.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
-    return new ImageIcon(newImg);
-  }
-
   public void addToolBar() {
-    JToolBar toolBar = new JToolBar("ESL Commands");
+    JToolBar toolBar = new JToolBar("EDB Commands");
     JButton stop = new JButton(getImage("icons/stop.png", BUTTON_SIZE, BUTTON_SIZE));
     stop.setToolTipText("stop");
     stop.addActionListener(new ActionListener() {
@@ -210,30 +198,6 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     add(toolBar, BorderLayout.PAGE_START);
   }
 
-  public void zoom_in() {
-    if (console == focus) console.resizeFont(2);
-    if (focus instanceof FileEditor) {
-      FileEditor editor = (FileEditor) focus;
-      editor.resizeFont(2);
-    }
-    if (focus instanceof FileTree) {
-      FileTree tree = (FileTree) focus;
-      tree.resizeFont(2);
-    }
-  }
-
-  public void zoom_out() {
-    if (console == focus) console.resizeFont(-2);
-    if (focus instanceof FileEditor) {
-      FileEditor editor = (FileEditor) focus;
-      editor.resizeFont(-2);
-    }
-    if (focus instanceof FileTree) {
-      FileTree tree = (FileTree) focus;
-      tree.resizeFont(-2);
-    }
-  }
-
   public JPanel assemblerPanel() {
     JScrollPane scrollPane = new JScrollPane(assembler);
     JPanel consolePanel = new JPanel();
@@ -249,7 +213,10 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
   }
 
   public void complete() {
-    if (machine != null) machine.complete();
+    if (machine != null && !machine.stop) {
+      showTitle(EDBState.RUNNING, machine.getPath());
+      machine.complete();
+    }
   }
 
   public JPanel consolePanel() {
@@ -269,6 +236,15 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     fileEditors.dirty(path);
   }
 
+  public void error(String message, String title) {
+    int dialogButton = JOptionPane.ERROR_MESSAGE;
+    JOptionPane.showConfirmDialog(null, message, title, dialogButton);
+  }
+
+  public void fileDeleted(String path) {
+    fileEditors.fileDeleted(path);
+  }
+
   public JPanel fileTree(String root) {
     FileTree fileTree = new FileTree(root);
     fileTree.setGui(this);
@@ -284,8 +260,18 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     return actor;
   }
 
+  public ImageIcon getImage(String file, int width, int height) {
+    Image img = new ImageIcon(file).getImage();
+    Image newImg = img.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+    return new ImageIcon(newImg);
+  }
+
   public void init() {
-    if (machine != null) machine.init();
+    if (machine != null && !machine.stop) {
+      showTitle(EDBState.INITIALISING, machine.getPath());
+      machine.init();
+      showTitle(EDBState.INITIALISED, machine.getPath());
+    }
   }
 
   public void initGUI(String root) {
@@ -322,6 +308,42 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     return fileEditors.isBreakpoint(actor, instr.getLine());
   }
 
+  public boolean isDirty(String path) {
+    return fileEditors.isDirty(path);
+  }
+
+  public void load(String path) {
+    actors.reset();
+    showTitle(EDBState.LOADING, path);
+    new Thread(new Runnable() {
+      public void run() {
+        Actor.resetESL();
+        try {
+          Module module = Module.importModule(path);
+          module.resolve();
+          AST record = new New(new Apply(new Ref(module.desugar(), Key.getKey("main"))));
+          CodeBox codebox = new CodeBox(path, record.maxLocals());
+          record.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), codebox, true);
+          codebox.add(new Return(-1), new Nil<FrameVar>(), new Nil<DynamicVar>());
+          Actor actor = new Actor(new Behaviour("init", new Key[0], new Nil<Dynamic>(), 0, codebox));
+          actor.initSystem(codebox);
+          actor.kill();
+          // Running the initial file should produce the root system actor...
+          openActor(actor);
+          machine = new Machine(EDB.this, actor);
+          machine.display(actor);
+          showTitle(EDBState.LOADED, path);
+        } catch (FileNotFoundException fnf) {
+          error(fnf.getMessage(), "Import Problem");
+        } catch (Exception error) {
+          error(error.getMessage(), "Error");
+        } catch (Error error) {
+          error(error.getMessage(), "Error");
+        }
+      }
+    }).start();
+  }
+
   public void newActor(Actor actor) {
     actors.add(actor);
   }
@@ -341,7 +363,7 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     setActor(actor);
     stack.showStack(actor);
     if (line != -1) fileEditors.selectLine(line);
-    if (codePtr != -1) assembler.selectLine(codePtr);
+    assembler.selectLine(codePtr);
     state.clearVariables();
     if (!actor.complete()) {
       int i = 0;
@@ -362,11 +384,20 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     fileEditors.openFile(path, this);
   }
 
-  public void perform(Actor actor, Instr instr) {
-    if (isBreakpoint(actor, instr)) {
+  public void perform(Actor actor) {
+    Instr instr = actor.nextInstr();
+    if (instr != null && isBreakpoint(actor, instr)) {
       stop();
       openActor(actor, instr.getLine(), actor.getCodePtr());
     }
+  }
+
+  public JPanel propertiesPanel() {
+    JPanel propertiesPanel = new JPanel();
+    propertiesPanel.setLayout(new BorderLayout());
+    propertiesPanel.add(properties);
+    propertiesPanel.setBorder(BorderFactory.createTitledBorder("Properties"));
+    return propertiesPanel;
   }
 
   private void readESL() {
@@ -378,82 +409,8 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     System.setOut(new PrintStream(new ConsoleOutputStream(console)));
   }
 
-  public void load(String path) {
-    actors.reset();
-    setTitle(NAME + " [ACTIVE]");
-    new Thread(new Runnable() {
-      public void run() {
-        Actor.resetESL();
-        try {
-          Module module = Module.importModule(path);
-          module.resolve();
-          AST record = new New(new Apply(new Ref(module.desugar(), Key.getKey("main"))));
-          CodeBox codebox = new CodeBox(path, record.maxLocals());
-          record.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), codebox, true);
-          codebox.add(new Return(-1), new Nil<FrameVar>(), new Nil<DynamicVar>());
-          Actor actor = new Actor(new Behaviour("init", new Key[0], new Nil<Dynamic>(), 0, codebox));
-          actor.initSystem(codebox);
-          actor.kill();
-          // Running the initial file should produce the root system actor...
-          openActor(actor);
-          machine = new Machine(EDB.this, actor);
-          machine.display(actor);
-          System.out.println("Loaded " + path + ". Use run buttons to execute code.");
-        } catch (FileNotFoundException fnf) {
-          error(fnf.getMessage(), "Import Problem");
-        } catch (Exception error) {
-          error(error.getMessage(), "Error");
-        } catch (Error error) {
-          error(error.getMessage(), "Error");
-        }
-      }
-    }).start();
-  }
-
-  public void error(String message, String title) {
-    int dialogButton = JOptionPane.ERROR_MESSAGE;
-    JOptionPane.showConfirmDialog(null, message, title, dialogButton);
-  }
-
   public void setActor(Actor actor) {
     this.actor = actor;
-  }
-
-  public JPanel statePanel() {
-    JPanel statePanel = new JPanel();
-    statePanel.setLayout(new BorderLayout());
-    statePanel.add(state);
-    statePanel.setBorder(BorderFactory.createTitledBorder("State"));
-    return statePanel;
-  }
-
-  public JPanel propertiesPanel() {
-    JPanel propertiesPanel = new JPanel();
-    propertiesPanel.setLayout(new BorderLayout());
-    propertiesPanel.add(properties);
-    propertiesPanel.setBorder(BorderFactory.createTitledBorder("Properties"));
-    return propertiesPanel;
-  }
-
-  public JPanel stackPanel() {
-    JPanel stackPanel = new JPanel();
-    stackPanel.setLayout(new BorderLayout());
-    stackPanel.add(stack);
-    stackPanel.setBorder(BorderFactory.createTitledBorder("Stack"));
-    return stackPanel;
-  }
-
-  public void step() {
-    if (machine != null) machine.step();
-  }
-
-  public void stop() {
-    setTitle(NAME + " [STOPPED]");
-    if (machine != null) machine.stop();
-  }
-
-  public void timeChanged(int time) {
-    state.setTime(time);
   }
 
   public void setFocus(Component component) {
@@ -465,12 +422,94 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     properties.showProperties(value);
   }
 
-  public boolean isDirty(String path) {
-    return fileEditors.isDirty(path);
+  public void showTitle(EDBState state, Object... args) {
+    switch (state) {
+      case IDLE:
+        setTitle(NAME);
+        break;
+      case LOADING:
+        setTitle(NAME + " [ Loading " + args[0] + " ]");
+        break;
+      case LOADED:
+        setTitle(NAME + " [ Loaded " + args[0] + ", ready to initialise. ]");
+        break;
+      case INITIALISING:
+        setTitle(NAME + " [ Initialising " + args[0] + " ]");
+        break;
+      case INITIALISED:
+        setTitle(NAME + " [ Initialised " + args[0] + ", ready to run. ]");
+        break;
+      case STEPPING:
+        setTitle(NAME + " [ Stepping " + args[0] + " ]");
+        break;
+      case RUNNING:
+        setTitle(NAME + " [ Running " + args[0] + " ]");
+        break;
+      default:
+        setTitle(NAME);
+    }
   }
 
-  public void fileDeleted(String path) {
-    fileEditors.fileDeleted(path);
+  private void splash() {
+    String intro = "esl/intro/help.html";
+    File file = new File(intro);
+    if (file.exists()) openFile(intro);
+  }
+
+  public JPanel stackPanel() {
+    JPanel stackPanel = new JPanel();
+    stackPanel.setLayout(new BorderLayout());
+    stackPanel.add(stack);
+    stackPanel.setBorder(BorderFactory.createTitledBorder("Stack"));
+    return stackPanel;
+  }
+
+  public JPanel statePanel() {
+    JPanel statePanel = new JPanel();
+    statePanel.setLayout(new BorderLayout());
+    statePanel.add(state);
+    statePanel.setBorder(BorderFactory.createTitledBorder("State"));
+    return statePanel;
+  }
+
+  public void step() {
+    if (machine != null && !machine.stop) {
+      showTitle(EDBState.STEPPING, machine.getPath());
+      machine.step();
+    }
+  }
+
+  public void stop() {
+    showTitle(EDBState.IDLE);
+    if (machine != null) machine.stop();
+  }
+
+  public void timeChanged(int time) {
+    state.setTime(time);
+  }
+
+  public void zoom_in() {
+    if (console == focus) console.resizeFont(2);
+    if (focus instanceof FileEditor) {
+      FileEditor editor = (FileEditor) focus;
+      editor.resizeFont(2);
+    }
+    if (focus instanceof FileTree) {
+      FileTree tree = (FileTree) focus;
+      tree.resizeFont(2);
+    }
+  }
+
+  public void zoom_out() {
+    if (console == focus) console.resizeFont(-2);
+    if (focus instanceof FileEditor) {
+      FileEditor editor = (FileEditor) focus;
+      editor.resizeFont(-2);
+    }
+    if (focus instanceof FileTree) {
+      FileTree tree = (FileTree) focus;
+      tree.resizeFont(-2);
+    }
   }
 
 }

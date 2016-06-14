@@ -814,10 +814,6 @@ public class Actor {
     return frame;
   }
 
-  public int getPrevFrame(int frame) {
-    return (int) stack[frame + PREV_FRAME];
-  }
-
   public Vector<Object> getFrame(int framePtr) {
     Vector<Object> frame = new Vector<Object>();
     frame.add(stack[framePtr + PREV_FRAME]);
@@ -868,6 +864,10 @@ public class Actor {
 
   public Object[] getPatternValues() {
     return patternValues;
+  }
+
+  public int getPrevFrame(int frame) {
+    return (int) stack[frame + PREV_FRAME];
   }
 
   public ActorState getState() {
@@ -948,6 +948,16 @@ public class Actor {
       if (!recentlyHandledTime()) return true;
     }
     return false;
+  }
+
+  public Instr nextInstr() {
+    if (complete())
+      return null;
+    else {
+      CodeBox code = getCode();
+      int codePtr = getCodePtr();
+      return code.getInstr(codePtr);
+    }
   }
 
   public void openFrame(CodeBox code, List<Dynamic> dynamics) {
@@ -1104,8 +1114,8 @@ public class Actor {
         Instr next = getCode().getInstr(i);
         instructions++;
         line = next.getLine();
-        instrListener.perform(this, next);
         next.perform(this);
+        instrListener.perform(this);
         if (stop) instrs = Integer.MIN_VALUE;
         instrs--;
       }
@@ -1231,6 +1241,10 @@ public class Actor {
 
   public void setTOFS(int sp) {
     stack[frame + TOFS] = sp;
+  }
+
+  public boolean stackEmpty() {
+    return tos == 0;
   }
 
   public void throwValue(Object value) {
