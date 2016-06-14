@@ -5,8 +5,12 @@ import instrs.Instr;
 
 public class Sub extends Instr {
 
+  public Sub(int line) {
+    super(line);
+  }
+
   public String toString() {
-    return "Sub";
+    return pprint("SUB");
   }
 
   public void perform(Actor actor) {

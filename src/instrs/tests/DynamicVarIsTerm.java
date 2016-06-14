@@ -10,8 +10,8 @@ public class DynamicVarIsTerm extends Instr {
 
   int    index;
 
-  public DynamicVarIsTerm(String name, int arity, int index) {
-    super();
+  public DynamicVarIsTerm(int line, String name, int arity, int index) {
+    super(line);
     this.name = name;
     this.arity = arity;
     this.index = index;
@@ -28,7 +28,7 @@ public class DynamicVarIsTerm extends Instr {
   }
 
   public String toString() {
-    return "DynamicVarIsTerm(" + name + "," + arity + "," + index + ")";
+    return pprint("DYNAMICVARISTERM", name, arity, index);
   }
 
 }

@@ -7,8 +7,8 @@ public class SkipTrue extends Instr {
 
   int count;
 
-  public SkipTrue(int count) {
-    super();
+  public SkipTrue(int line, int count) {
+    super(line);
     this.count = count;
   }
 
@@ -26,7 +26,7 @@ public class SkipTrue extends Instr {
   }
 
   public String toString() {
-    return "SkipTrue(" + count + ")";
+    return pprint("SKIPTRUE",count);
   }
 
 }

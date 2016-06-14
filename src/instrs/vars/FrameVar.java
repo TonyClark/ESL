@@ -7,12 +7,13 @@ public class FrameVar extends Instr {
 
   int index;
 
-  public FrameVar(int index) {
+  public FrameVar(int line, int index) {
+    super(line);
     this.index = index;
   }
 
   public String toString() {
-    return "FrameVar(" + index + ")";
+    return pprint("FRAMEVAR", index);
   }
 
   public void perform(Actor actor) {

@@ -5,8 +5,12 @@ import instrs.Instr;
 
 public class Become extends Instr {
 
+  public Become(int line) {
+    super(line);
+  }
+
   public String toString() {
-    return "Become";
+   return pprint("BECOME");
   }
 
   public void perform(Actor actor) {

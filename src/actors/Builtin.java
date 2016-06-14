@@ -27,4 +27,20 @@ public class Builtin implements Fun {
     return "Builtin(" + name + ")";
   }
 
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public BiConsumer<Actor, Integer> getHandler() {
+    return handler;
+  }
+
+  public void setHandler(BiConsumer<Actor, Integer> handler) {
+    this.handler = handler;
+  }
+
 }

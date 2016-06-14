@@ -7,7 +7,8 @@ public class IsBool extends Instr {
 
   boolean value;
 
-  public IsBool(boolean value) {
+  public IsBool(int line, boolean value) {
+    super(line);
     this.value = value;
   }
 
@@ -16,7 +17,7 @@ public class IsBool extends Instr {
   }
 
   public String toString() {
-    return "IsBool(" + value + ")";
+    return pprint("ISBOOL",value);
   }
 
 }

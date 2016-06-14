@@ -9,8 +9,8 @@ public class IsEmptyBag extends Instr {
 
   Ref ref;
 
-  public IsEmptyBag(Ref ref) {
-    super();
+  public IsEmptyBag(int line, Ref ref) {
+    super(line);
     this.ref = ref;
   }
 
@@ -23,7 +23,7 @@ public class IsEmptyBag extends Instr {
   }
 
   public String toString() {
-    return "IsEmptyBag";
+    return pprint("ISEMPTYBAG",ref);
   }
 
 }

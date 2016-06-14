@@ -30,6 +30,8 @@ public class CollisionGUI implements JavaActor {
   static Key widthKey      = Key.getKey("width");
   static Key heightKey     = Key.getKey("height");
   static Key ballSizeKey   = Key.getKey("ballSize");
+  static Key SetGUI        = Key.getKey("SetGUI");
+  static Key Draw          = Key.getKey("Draw");
 
   int        ballSize      = 5;
   Actor      simulator;
@@ -45,7 +47,7 @@ public class CollisionGUI implements JavaActor {
   public CollisionGUI(Actor simulator) {
     try {
       this.simulator = simulator;
-      simulator.send(new Term("SetGUI", this), Actor.getTime());
+      simulator.send(new Term(SetGUI, this), Actor.getTime());
       JFrame frame = new JFrame();
       JPanel controls = new JPanel();
       controls.setLayout(new BoxLayout(controls, BoxLayout.PAGE_AXIS));
@@ -117,12 +119,12 @@ public class CollisionGUI implements JavaActor {
           points = new Point[numberOfBalls];
           for (int i = 0; i < numberOfBalls; i++)
             points[i] = new Point(0, 0);
-          simulator.send(new Term("Start"), simulator.getTime());
+          simulator.send(new Term(Key.getKey("Start")), simulator.getTime());
         }
       });
       stop.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          simulator.send(new Term("Stop"), simulator.getTime());
+          simulator.send(new Term(Key.getKey("Stop")), simulator.getTime());
         }
       });
       controls.add(start);
@@ -215,7 +217,7 @@ public class CollisionGUI implements JavaActor {
   private boolean isDraw(Object message) {
     if (message instanceof Term) {
       Term t = (Term) message;
-      return t.getName().equals("Draw") && t.getValues().length == 3;
+      return t.getName() == Draw && t.getValues().length == 3;
     }
     return false;
   }

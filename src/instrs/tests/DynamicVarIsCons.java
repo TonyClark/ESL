@@ -7,8 +7,8 @@ public class DynamicVarIsCons extends Instr {
 
   int index;
 
-  public DynamicVarIsCons(int index) {
-    super();
+  public DynamicVarIsCons(int line, int index) {
+    super(line);
     this.index = index;
   }
 
@@ -17,7 +17,7 @@ public class DynamicVarIsCons extends Instr {
   }
 
   public String toString() {
-    return "DynamicVarIsCons(" + index + ")";
+    return pprint("DYNAMICVARISCONS",index);
   }
 
 }

@@ -24,7 +24,17 @@ public class Record {
   }
 
   public String toString() {
-    return "Record(" + Arrays.toString(fields) + ")";
+    String s = "{";
+    for (int i = 0; i < fields.length; i++) {
+      Field f = fields[i];
+      s = s + f.getName().getString() + "=" + f.getValue();
+      if (i + 1 < fields.length) s = s + ";";
+    }
+    return s + "}";
+  }
+
+  public Field[] getFields() {
+    return fields;
   }
 
 }

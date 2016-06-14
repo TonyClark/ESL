@@ -18,12 +18,13 @@ public class Apply extends Instr {
 
   int arity;
 
-  public Apply(int arity) {
+  public Apply(int line,int arity) {
+    super(line);
     this.arity = arity;
   }
 
   public String toString() {
-    return "@(" + arity + ")";
+    return pprint("APPLY",arity);
   }
 
   public void perform(Actor actor) {

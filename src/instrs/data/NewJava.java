@@ -12,8 +12,8 @@ public class NewJava extends Instr {
   String className;
   int    arity;
 
-  public NewJava(String className, int arity) {
-    super();
+  public NewJava(int line, String className, int arity) {
+    super(line);
     this.className = className;
     this.arity = arity;
   }
@@ -50,7 +50,7 @@ public class NewJava extends Instr {
   }
 
   public String toString() {
-    return "NewJava(" + className + "," + arity + ")";
+   return pprint("NEWJAVA",className);
   }
 
 }

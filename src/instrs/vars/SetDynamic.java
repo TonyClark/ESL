@@ -7,13 +7,13 @@ public class SetDynamic extends Instr {
 
   int index;
 
-  public SetDynamic(int index) {
-    super();
+  public SetDynamic(int line, int index) {
+    super(line);
     this.index = index;
   }
 
   public String toString() {
-    return "SetDynamic(" + index + ")";
+   return pprint("SETDYNAMIC",index);
   }
 
   public void perform(Actor actor) {

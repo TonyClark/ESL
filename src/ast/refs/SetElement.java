@@ -16,7 +16,7 @@ public class SetElement extends Ref {
   }
 
   public String toString() {
-    return "SetElement(" + id + ")";
+    return id + ".choose()";
   }
 
 }

@@ -1,0 +1,41 @@
+export main;
+ 
+import 'esl/lists.esl';
+
+act test () {
+  Time(1,2,3) -> {}
+};
+
+act main {
+  M(emma) -> self <- N(emma,emma+1);
+  N(x,y) when (x + 1) = y -> {
+    print('caught x + 1 = y'); 
+    stopAll()
+  };
+  N(a,b) -> {
+    print('Done: ' + a + ' ' + b);
+    stopAll()
+  };
+  Time(_) ->
+    let x = length([1,2,3,4,5]);  
+        y = length([1,2,3]) 
+    in self <- M(x)
+};
+
+x = 10 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

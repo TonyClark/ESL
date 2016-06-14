@@ -16,8 +16,13 @@ public class And extends Instr {
    *                                                                                    *
    * ************************************************************************************/
 
+
+  public And(int line) {
+    super(line);
+  }
+  
   public String toString() {
-    return "And";
+    return pprint("AND");
   }
 
   public void perform(Actor actor) {

@@ -2,13 +2,12 @@ package ast.binding;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import instrs.data.Pop;
 import instrs.vars.NewDynamic;
 import instrs.vars.PopDynamic;
@@ -34,7 +33,7 @@ public class Let extends AST {
     return "Let(" + Arrays.toString(bindings) + "," + exp + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
 
     bindings = Binding.mergeBindings(bindings);
 
@@ -44,20 +43,21 @@ public class Let extends AST {
     for (Binding b : bindings) {
       if (DV.contains(b.name)) {
         b.value.compile(locals, dynamics, code, false);
+        code.add(new NewDynamic(getLine()), locals, dynamics);
         dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(b.name, 0));
-        code.add(new NewDynamic());
       } else {
         b.value.compile(locals, dynamics, code, false);
         locals = locals.cons(new FrameVar(b.name, locals.length()));
-        code.add(new SetFrame(locals.length() - 1));
-        code.add(new Pop());
+        code.add(new SetFrame(getLine(),locals.length() - 1), locals, dynamics);
+        code.add(new Pop(getLine()), locals, dynamics);
       }
     }
     exp.compile(locals, dynamics, code, isLast);
     // Remove the dynamics...
     for (Binding b : bindings) {
       if (DV.contains(b.name)) {
-        code.add(new PopDynamic());
+        code.add(new PopDynamic(getLine()), locals, dynamics);
+        dynamics = dynamics.getTail();
       }
     }
   }
@@ -110,6 +110,12 @@ public class Let extends AST {
     for (int i = 0; i < bindings.length; i++)
       bs[i] = bindings[i].subst(ast, name);
     return bs;
+  }
+
+  public void setPath(String path) {
+    for(Binding b : bindings)
+      b.setPath(path);
+    exp.setPath(path);
   }
 
 }

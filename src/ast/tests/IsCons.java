@@ -1,13 +1,12 @@
 package ast.tests;
 
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
 import compiler.DynamicVar;
 import compiler.FrameVar;
-import instrs.Instr;
 import list.List;
 
 public class IsCons extends AST {
@@ -18,14 +17,14 @@ public class IsCons extends AST {
     this.value = value;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     if (isLocal(locals))
       compileLocalIsCons(locals, dynamics, code);
     else if (isDynamic(dynamics))
       compileDynamicIsCons(locals, dynamics, code);
     else {
       value.compile(locals, dynamics, code, false);
-      code.add(new instrs.tests.IsCons());
+      code.add(new instrs.tests.IsCons(getLine()), locals, dynamics);
     }
   }
 
@@ -36,14 +35,14 @@ public class IsCons extends AST {
     } else return false;
   }
 
-  private void compileLocalIsCons(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  private void compileLocalIsCons(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     Var v = (Var) value;
-    lookup(v.name, locals).isCons(code);
+    lookup(v.name, locals).isCons(getLine(), code, locals, dynamics);
   }
 
-  private void compileDynamicIsCons(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  private void compileDynamicIsCons(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     Var v = (Var) value;
-    lookup(v.name, dynamics).isCons(code);
+    lookup(v.name, dynamics).isCons(getLine(), code, locals, dynamics);
   }
 
   private boolean isLocal(List<FrameVar> locals) {
@@ -71,6 +70,10 @@ public class IsCons extends AST {
 
   public String toString() {
     return "IsCons(" + value + ")";
+  }
+
+  public void setPath(String path) {
+    value.setPath(path);
   }
 
 }

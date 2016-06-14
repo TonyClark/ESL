@@ -15,7 +15,8 @@ public class Behaviour extends Instr {
   int     initIndex;
   CodeBox code;
 
-  public Behaviour(String name, Key[] exports, int initIndex, CodeBox code) {
+  public Behaviour(int line,  String name, Key[] exports, int initIndex, CodeBox code) {
+    super(line);
     this.name = name;
     this.exports = exports;
     this.initIndex = initIndex;
@@ -27,7 +28,7 @@ public class Behaviour extends Instr {
   }
 
   public String toString() {
-    return "Behaviour(" + name + "," + Arrays.toString(exports) + "," + initIndex + ")";
+   return pprint("BEHAVIOUR",name);
   }
 
   public void collect(Hashtable<String, CodeBox> boxes) {

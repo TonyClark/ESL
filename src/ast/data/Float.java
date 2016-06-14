@@ -1,13 +1,12 @@
 package ast.data;
 
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "n", "m" })
@@ -23,10 +22,8 @@ public class Float extends AST {
     return "Float(" + n + "." + m + ")";
   }
 
-  @Override
-  public void compile(List<FrameVar> locals, List<DynamicVar> types, Vector<Instr> code, boolean isLast) {
-    // TODO Auto-generated method stub
-
+  public void compile(List<FrameVar> locals, List<DynamicVar> types, CodeBox code, boolean isLast) {
+    throw new Error("Float.compile is not implemented.");
   }
 
   public void FV(HashSet<String> vars) {
@@ -41,6 +38,9 @@ public class Float extends AST {
 
   public AST subst(AST ast, String name) {
     return this;
+  }
+
+  public void setPath(String path) {
   }
 
 }

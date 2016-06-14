@@ -7,8 +7,8 @@ public class SkipFalse extends Instr {
 
   int count;
 
-  public SkipFalse(int count) {
-    super();
+  public SkipFalse(int line, int count) {
+    super(line);
     this.count = count;
   }
 
@@ -26,7 +26,8 @@ public class SkipFalse extends Instr {
   }
 
   public String toString() {
-    return "SkipFalse(" + count + ")";
+    return pprint("SKIPFALSE",count);
   }
+
 
 }

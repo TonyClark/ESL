@@ -8,8 +8,8 @@ public class Try extends Instr {
   int     offset;
   boolean isFirst;
 
-  public Try(int offset, boolean isFirst) {
-    super();
+  public Try(int line, int offset, boolean isFirst) {
+    super(line);
     this.offset = offset;
     this.isFirst = isFirst;
   }
@@ -28,7 +28,7 @@ public class Try extends Instr {
   }
 
   public String toString() {
-    return "Try(" + offset + "," + isFirst + ")";
+    return pprint("TRY",offset,isFirst);
   }
 
 }

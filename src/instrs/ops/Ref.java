@@ -12,8 +12,8 @@ public class Ref extends Instr {
 
   public Key name;
 
-  public Ref(Key name) {
-    super();
+  public Ref(int line,Key name) {
+    super(line);
     this.name = name;
   }
 
@@ -49,7 +49,7 @@ public class Ref extends Instr {
   }
 
   public String toString() {
-    return "Ref(" + name + ")";
+    return pprint("REF",name.getString());
   }
 
 }

@@ -2,15 +2,14 @@ package ast.cmp;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
 import ast.data.Apply;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "exp", "qualifiers" })
@@ -27,7 +26,7 @@ public class Cmp extends AST {
     return "Cmp(" + exp + "," + Arrays.toString(qualifiers) + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> types, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> types, CodeBox code, boolean isLast) {
     desugar().compile(locals, types, code, isLast);
   }
 
@@ -60,6 +59,12 @@ public class Cmp extends AST {
 
   public AST subst(AST ast, String name) {
     return desugar().subst(ast, name);
+  }
+
+  public void setPath(String path) {
+    for(Qualifier q : qualifiers)
+      q.setPath(path);
+    exp.setPath(path);
   }
 
 }

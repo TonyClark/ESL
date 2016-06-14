@@ -3,6 +3,7 @@ package ast.data;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.tests.If;
 import compiler.DynamicVar;
@@ -17,6 +18,7 @@ import instrs.ops.Div;
 import instrs.ops.Eql;
 import instrs.ops.Gre;
 import instrs.ops.Less;
+import instrs.ops.Mod;
 import instrs.ops.Mul;
 import instrs.ops.NEql;
 import instrs.ops.Or;
@@ -52,7 +54,7 @@ public class BinExp extends AST {
     return "BinExp(" + left + "," + op + "," + right + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     if (isEql0())
       compileEql0(locals, dynamics, code);
     else if (isEqlBool())
@@ -70,40 +72,43 @@ public class BinExp extends AST {
       right.compile(locals, dynamics, code, false);
       switch (op) {
         case "+":
-          code.add(new Add());
+          code.add(new Add(getLine()), locals, dynamics);
           break;
         case "-":
-          code.add(new Sub());
+          code.add(new Sub(getLine()), locals, dynamics);
           break;
         case "*":
-          code.add(new Mul());
+          code.add(new Mul(getLine()), locals, dynamics);
           break;
         case "/":
-          code.add(new Div());
+          code.add(new Div(getLine()), locals, dynamics);
           break;
         case "=":
-          code.add(new Eql());
+          code.add(new Eql(getLine()), locals, dynamics);
           break;
         case ">":
-          code.add(new Gre());
+          code.add(new Gre(getLine()),locals, dynamics);
           break;
         case "<":
-          code.add(new Less());
+          code.add(new Less(getLine()), locals, dynamics);
           break;
         case ":":
-          code.add(new Cons());
+          code.add(new Cons(getLine()), locals, dynamics);
           break;
         case "<>":
-          code.add(new NEql());
+          code.add(new NEql(getLine()), locals, dynamics);
           break;
         case "and":
-          code.add(new And());
+          code.add(new And(getLine()), locals, dynamics);
           break;
         case "or":
-          code.add(new Or());
+          code.add(new Or(getLine()), locals, dynamics);
           break;
         case "..":
-          code.add(new To());
+          code.add(new To(getLine()),locals, dynamics);
+          break;
+        case "%":
+          code.add(new Mod(getLine()), locals, dynamics);
           break;
         default:
           throw new java.lang.Error("unknown operator " + op);
@@ -111,13 +116,13 @@ public class BinExp extends AST {
     }
   }
 
-  private void compileAdd1(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  private void compileAdd1(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     if (left instanceof Int && ((Int) left).value == 1) {
       right.compile(locals, dynamics, code, false);
-      code.add(new Add1());
+      code.add(new Add1(getLine()), locals, dynamics);
     } else {
       left.compile(locals, dynamics, code, false);
-      code.add(new Add1());
+      code.add(new Add1(getLine()), locals, dynamics);
     }
   }
 
@@ -133,20 +138,20 @@ public class BinExp extends AST {
     } else return false;
   }
 
-  private void compileNotNil(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  private void compileNotNil(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     left.compile(locals, dynamics, code, false);
-    code.add(new NotNil());
+    code.add(new NotNil(getLine()), locals, dynamics);
   }
 
-  private void compileEql0(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  private void compileEql0(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     left.compile(locals, dynamics, code, false);
-    code.add(new Is0());
+    code.add(new Is0(getLine()), locals, dynamics);
   }
 
-  private void compileEqlBool(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  private void compileEqlBool(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     left.compile(locals, dynamics, code, false);
     Bool b = (Bool) right;
-    code.add(new IsBool(b.value));
+    code.add(new IsBool(getLine(),b.value), locals, dynamics);
   }
 
   private boolean isEql0() {
@@ -185,6 +190,11 @@ public class BinExp extends AST {
 
   public AST subst(AST ast, String name) {
     return new BinExp(left.subst(ast, name), op, right.subst(ast, name));
+  }
+
+  public void setPath(String path) {
+    left.setPath(path);
+    right.setPath(path);
   }
 
 }

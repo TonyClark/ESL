@@ -232,7 +232,11 @@ createCleverGoal(col,v,c) = new vendorGoal(col,v,c);
 mkGoals = [ Goal('none',createNoGoal), Goal('stupid',createStupidGoal), Goal('clever',createCleverGoal) ];
 
 act main {
-  -> new simulation2(10,300,10,1,[], [ X(me,them) | me <- mkGoals, them <- mkGoals ]);
+  -> {
+    setMaxInstructions(100);
+    setInstructionsPerTimeUnit(10000);
+    new simulation2(1000,300,10,5,[], [ X(me,them) | me <- mkGoals, them <- mkGoals ])
+  };
   Time(_) -> {}
 }
   

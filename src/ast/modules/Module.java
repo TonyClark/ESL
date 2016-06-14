@@ -1,5 +1,7 @@
 package ast.modules;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Hashtable;
 
@@ -20,15 +22,23 @@ public class Module {
   // other modules. Dependencies between modules can be circular, so a global table of
   // modules is maintained...
 
-  static Hashtable<String, Module> MODULES  = new Hashtable<String, Module>();
+  static Hashtable<String, Module> MODULES    = new Hashtable<String, Module>();
 
+  String                           path;
+  long                             createTime = System.currentTimeMillis();
   public String                    name;
   public String[]                  imports;
   public String[]                  exports;
   public Binding[]                 defs;
-  public Hashtable<String, Module> imported = new Hashtable<String, Module>();
+  public Hashtable<String, Module> imported   = new Hashtable<String, Module>();
 
-  public Module resolve() {
+  public void setPath(String path) {
+    this.path = path;
+    for (Binding b : defs)
+      b.setPath(path);
+  }
+
+  public Module resolve() throws FileNotFoundException {
     // Recursively load the modules...
     for (String name : imports) {
       imported.put(name, importModule(name));
@@ -36,23 +46,33 @@ public class Module {
     return this;
   }
 
-  public static Module importModule(String name) {
+  public static Module importModule(String path) throws FileNotFoundException {
     // Import the module and resolve it. If it is already loaded
     // then just return it...
-    if (MODULES.containsKey(name))
-      return MODULES.get(name);
+    if (MODULES.containsKey(path) && !MODULES.get(path).isOutOfDate())
+      return MODULES.get(path);
     else {
       // Create a shell so that it will not be recursively loaded...
-      Module shell = new Module();
-      MODULES.put(name, shell);
-      JavaObject o = (JavaObject) Interpreter.readFile("esl/esl.xpl", "esl", name + ".esl", "file", new exp.Str(name));
-      Module module = (Module) o.getTarget();
-      shell.name = module.name;
-      shell.imports = module.imports;
-      shell.exports = module.exports;
-      shell.defs = module.defs;
-      return shell.resolve();
+      if (new File(path).exists()) {
+        Module shell = new Module();
+        MODULES.put(path, shell);
+        JavaObject o = (JavaObject) Interpreter.readFile("esl/esl.xpl", "esl", path, "file", new exp.Str(path));
+        Module module = (Module) o.getTarget();
+        shell.name = module.name;
+        shell.imports = module.imports;
+        shell.exports = module.exports;
+        shell.defs = module.defs;
+        shell.setPath(path);
+        return shell.resolve();
+      } else throw new FileNotFoundException("cannot import " + path);
     }
+  }
+
+  private boolean isOutOfDate() {
+    // Returns true when the file containing the source of the module has been
+    // modified since the last loading...
+    File file = new File(path);
+    return file.lastModified() > createTime;
   }
 
   public AST desugar() {
@@ -79,13 +99,13 @@ public class Module {
   }
 
   private Binding asBinding() {
-    return new Binding(name, new Letrec(getBindings(), getExportedRecord()));
+    return new Binding(path, name, new Letrec(getBindings(), getExportedRecord()));
   }
 
   private AST getExportedRecord() {
     Binding[] fields = new Binding[exports.length];
     for (int i = 0; i < fields.length; i++)
-      fields[i] = new Binding(exports[i], new Var(exports[i]));
+      fields[i] = new Binding(path, exports[i], new Var(exports[i]));
     return new Record(fields);
   }
 

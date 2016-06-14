@@ -1,14 +1,13 @@
 package compiler;
 
-import java.util.Vector;
-
+import actors.CodeBox;
 import ast.refs.Ref;
-import instrs.Instr;
 import instrs.apply.ApplyDynamicVar;
 import instrs.tests.DynamicVarIsCons;
 import instrs.tests.DynamicVarIsTerm;
 import instrs.vars.SetDynamic;
 import instrs.vars.SubDynamic;
+import list.List;
 
 public class DynamicVar extends Local {
 
@@ -20,36 +19,36 @@ public class DynamicVar extends Local {
     return new DynamicVar(var.name, var.getIndex() + 1);
   }
 
-  public void compile(Vector<Instr> code) {
-    code.add(new instrs.vars.Dynamic(getIndex()));
+  public void compile(int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics) {
+    code.add(new instrs.vars.Dynamic(line, getIndex()), locals, dynamics);
   }
 
-  public void update(Vector<Instr> code) {
-    code.add(new SetDynamic(getIndex()));
+  public void update(int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics) {
+    code.add(new SetDynamic(line, getIndex()), locals, dynamics);
   }
 
   public String toString() {
     return "DynamicVar(" + getName() + "," + getIndex() + ")";
   }
 
-  public void sub1(Vector<Instr> code) {
-    code.add(new SubDynamic(getIndex(), 1));
+  public void sub1(int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics) {
+    code.add(new SubDynamic(line, getIndex(), 1), locals, dynamics);
   }
 
-  public void apply(int arity, Vector<Instr> code, boolean isLast) {
-    code.add(new ApplyDynamicVar(getIndex(), arity));
+  public void apply(int arity, int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics, boolean isLast) {
+    code.add(new ApplyDynamicVar(line, getIndex(), arity), locals, dynamics);
   }
 
-  public void isCons(Vector<Instr> code) {
-    code.add(new DynamicVarIsCons(getIndex()));
+  public void isCons(int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics) {
+    code.add(new DynamicVarIsCons(line, getIndex()), locals, dynamics);
   }
 
-  public void isTerm(String name, int arity, Vector<Instr> code) {
-    code.add(new DynamicVarIsTerm(name, arity, getIndex()));
+  public void isTerm(String name, int arity, int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics) {
+    code.add(new DynamicVarIsTerm(line, name, arity, getIndex()), locals, dynamics);
   }
 
-  public void bind(Ref ref, Vector<Instr> code) {
-    code.add(new instrs.patterns.SetDynamic(ref, getIndex()));
+  public void bind(Ref ref, int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics) {
+    code.add(new instrs.patterns.SetDynamic(line, ref, getIndex()), locals, dynamics);
   }
 
 }

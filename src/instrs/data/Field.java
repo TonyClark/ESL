@@ -8,8 +8,8 @@ public class Field extends Instr {
 
   Key name;
 
-  public Field(Key name) {
-    super();
+  public Field(int line, Key name) {
+    super(line);
     this.name = name;
   }
 
@@ -18,7 +18,7 @@ public class Field extends Instr {
   }
 
   public String toString() {
-    return "Field(" + name + ")";
+   return pprint("FIELD",name.getString());
   }
 
 }

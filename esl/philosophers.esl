@@ -1,0 +1,88 @@
+export main;
+
+import 'esl/lists.esl';
+
+act table(numberOfChopsticks) {
+  chopsticks = [ true | _ <- 0..(numberOfChopsticks-1) ]
+  Grab(Left,n,cont) ->
+    if nth(chopsticks,n)
+    then {
+      chopsticks := take(chopsticks,n) + [false] + drop(chopsticks,n+1);
+      print('Grab left ' + n + ' ' + chopsticks);
+      cont(true)
+    }
+    else cont(false);
+  Grab(Right,n,cont) ->
+    if n = length(chopsticks)-1
+    then 
+      if nth(chopsticks,0)
+      then {
+        chopsticks := [false] + drop(chopsticks,1);
+        print('Grab right ' + n + ' ' + chopsticks);
+        cont(true)
+      } else cont(false)
+    else 
+      if nth(chopsticks,n+1)
+      then {
+        chopsticks := take(chopsticks,n+1) + [false] + drop(chopsticks,n+2);
+        print('Grab right ' + n + ' ' + chopsticks);
+        cont(true)
+      } else cont(false);
+  Free(Left,n) -> {
+    chopsticks := take(chopsticks,n) + [true] + drop(chopsticks,n+1);
+    print('Free left ' + n + ' ' + chopsticks)
+  };
+  Free(Right,n) -> {
+    if n = length(chopsticks)-1
+    then chopsticks := [true] + drop(chopsticks,1)
+    else chopsticks := take(chopsticks,n+1) + [true] + drop(chopsticks,n+2);
+    print('Free right ' + n + ' ' + chopsticks)
+  };
+  Time(_) -> {};
+  m -> print(m)
+};
+
+act phil(table,n) {
+  hungry = 0;
+  trying = false
+  Try -> 
+    let me = self
+    in table <- Grab(Left,n,fun(ok) 
+         if ok 
+         then table <- Grab(Right,n,fun(ok) 
+                if ok 
+                then me <- Eat 
+                else {
+                  table <- Free(Left,n);
+                  trying := false
+                })
+         else trying := false);
+  Eat -> {
+    print(self + ' eats');
+    table <- Free(Left,n);
+    table <- Free(Right,n);
+    trying := false;
+    hungry := 100
+  };
+  Time(_) when not(trying) and hungry = 0 -> {
+    trying := true;
+    self <- Try
+  };
+  Time(_) when hungry > 0 -> hungry := hungry - 1;
+  Time(_) -> {}
+};
+
+act main {
+  
+  -> 
+    let t = new table(4)
+    in {
+      new phil(t,0);
+      new phil(t,1);
+      new phil(t,2)
+    };
+
+  Time(_) -> {}
+
+}
+

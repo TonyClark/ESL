@@ -3,6 +3,7 @@ package ast.patterns;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
 import ast.data.Apply;
@@ -12,7 +13,6 @@ import ast.tests.If;
 import ast.tests.IsNil;
 import compiler.DynamicVar;
 import compiler.FrameVar;
-import instrs.Instr;
 import list.List;
 
 public class PNil extends Pattern {
@@ -27,7 +27,7 @@ public class PNil extends Pattern {
     return "PNil()";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, Vector<Instr> code) {
-    code.add(new instrs.patterns.isNil(ref));
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, CodeBox code) {
+    code.add(new instrs.patterns.isNil(getLine(),ref), locals, dynamics);
   }
 }

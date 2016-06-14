@@ -17,7 +17,7 @@ public class Head extends Ref {
   }
 
   public String toString() {
-    return "Head(" + ref + ")";
+    return ref + ".head()";
   }
 
 }

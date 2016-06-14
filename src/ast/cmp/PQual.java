@@ -33,4 +33,8 @@ public class PQual extends Qualifier {
     return new Apply(new Var("flatten"), new If(exp, new List(new List(value)), new List()));
   }
 
+  public void setPath(String path) {
+    exp.setPath(path);
+  }
+
 }

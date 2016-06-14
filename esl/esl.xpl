@@ -4,7 +4,7 @@ import 'esl/ast.xpl'
 
 esl = { 
 
-  file(name)      -> es=exports is=imports bs=bindings EOF { Module(name,es,is,bs) };
+  file(name)      -> es=exports is=imports bs=bindings whitespace EOF { Module(name,es,is,bs) };
   exports         -> whitespace 'export' ! ns=names semi {ns} | { [] };
   imports         -> whitespace 'import' ! i=imp is=(comma imp)* semi {i:is} |  { [] };
   imp             -> name | string;
@@ -17,16 +17,16 @@ esl = {
   tplvlExp        -> e=exp semi { e };
   
   bindings        -> b=binding ! bs=(semi binding)* { b:bs } | {[]};
-  binding         -> b=(valbind | funbind | actbind) ! {b};
+  binding         -> whitespace b=(valbind | funbind | actbind) ! {b};
   valbind         -> n=name eql e=exp { Binding(n,e) };
   funbind         -> n=name lparen ps=funargs rparen eql e=exp g=guard { FunBind(n,ps,e,g) };
-  actbind         -> whitespace 'act' n=name ps=actargs lcurl es=exports bs = bindings i=actinit as=barms rcurl { Binding(n,Fun(n,ps,Act(n,es,bs,i,as))) };
+  actbind         -> [[ 'act' n=name ps=actargs lcurl es=exports bs = bindings i=actinit as=barms rcurl  { Binding(n,Fun(n,ps,Act(n,es,bs,i,as))) } ]];
   actargs         -> lparen ps=params rparen {ps} | {[]};
   actinit         -> arrow e=exp semi {e} | { Null() };
   barms           -> a=barm ! as=(semi barm)* { a:as };
   barm            -> p=patterns g=(guard | { Bool(true) }) arrow ! e=exp { BArm(p,g,e) };
   patterns        -> p=pattern ps=(comma pattern)* { p:ps };
-  pattern         -> s=simplePattern ! (colon p=pattern { PCons(s,p) } | 'or' p=pattern { POr(s,p) } | '+' p=pattern { PAdd(s,p) } | {s});
+  pattern         -> s=[[simplePattern]] ! (colon p=pattern { PCons(s,p) } | 'or' p=pattern { POr(s,p) } | '+' p=pattern { PAdd(s,p) } | {s});
   simplePattern   -> pVar | pInt | pTerm | pList | pStr | pBool | pWild | pNull | pBag | pSet | lparen p=pattern rparen {p};
   pVar            -> n=name (eql p=pattern { PBind(n,p) } | { PVar(n) });
   pInt            -> n=int { PInt(n) };
@@ -49,51 +49,51 @@ esl = {
   guard           -> 'when' exp | { Bool(true) };
   funargs         -> patterns | {[]};
   exp             -> e=simpleExp ! postexp^(e);
-  postexp(e)      -> o=op ! r=exp { BinExp(e,o,r) } 
-                  |  lparen es=exps rparen exp={ Apply(e,es) } postexp^(exp)
+  postexp(e)      -> [[ o=op ! r=exp { BinExp(e,o,r) } ]]
+                  |  [[ lparen es=exps rparen exp={ Apply(e,es) } ]] postexp^(exp)
                   |  leftArrow v=exp postsend^(e,[v]) 
-                  |  dot n=name ref={ Ref(e,Key.getKey(n)) } postexp^(ref)
+                  |  [[ dot n=name ref={ Ref(e,Key.getKey(n)) } ]] postexp^(ref)
                   |  {e};
-  postsend(a,m)   -> at t=exp { Send(a,m,t) } | { Send(a,m,Int(0)) };
+  postsend(a,m)   -> [[ at t=exp { Send(a,m,t) } | { Send(a,m,Int(0)) } ]];
   exps            -> e=exp es=(comma exp)* { e:es } | {[]};
-  op              -> whitespace ('+' | '-' | '*' | '/' | 'andalso' | 'and' | 'orelse' | 'or' |':' | '<>' | '=' | '<' | '>' | '..');
+  op              -> whitespace ('+' | '-' | '*' | '/' | 'andalso' | 'and' | 'orelse' | 'or' |':' | '<>' | '=' | '<' | '>' | '..' | '%');
   simpleExp       -> var | numExp | strExp | bool | me | probably | now | nul
                   |  n=name becomes e=exp { Update(n,e) }
-                  |  'new'     n=name (lparen ps=exps rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) })
-                  |  'new'     s=string (lparen ps=exps rparen { NewJava(s,ps) } | { NewJava(s,[]) })
-                  |  'not'    ! e=exp { Not(e) } 
-                  |  'fun'    ! lparen as=params rparen e=exp { Fun(Fun.newName(),as,e) }
-                  |  'let'    ! bs=bindings  'in' e=exp { Let(bs,e) }
-                  |  'letrec' ! bs=bindings  'in' e=exp { Letrec(bs,e) }
-                  |  'case'   ! es=caseValues lcurl as=barms rcurl { Case(es,as) }
-                  |  'for'      p=pattern  'in' l=exp whitespace 'do' e=exp whitespace { For(p,l,e) }
-                  |  'for'    ! p=pattern  'in' l=exp arrow e=exp whitespace { Map(p,l,e) }
-                  |  'find'   ! p=pattern  'in' l=exp whitespace 'do' e=exp 'else' d=exp { Find(p,l,e,d) }
-                  |  'if'     ! t=exp  'then' c=exp whitespace 'else' a=exp { If(t,c,a) }
-                  |  'try'    ! e=exp  'catch' lcurl as=barms rcurl { Try(e,as) }
-                  |  'throw'  ! e=exp { Throw(e) }
-                  |  'bag'      lcurl es=exps rcurl { Bag(es) }
-                  |  'bag'      lcurl es=exps bar e=exp rcurl { BinExp(Bag(es),'+',e) }
-                  |  'set'      lcurl es=exps rcurl { Set(es) }
-                  |  'set'      lcurl es=exps bar e=exp rcurl { BinExp(Set(es),'+',e) }
-                  |  lsquare (es=exps rsquare { List(es) } | rsquare { List([]) })
-                  |  lsquare e=exp bar qs=quals rsquare { Cmp(e,qs) }
-                  |  n=Name es=(lparen es=exps rparen {es} | {[]}) { Term(n,es) }
-                  |  whitespace 'become' n=name (lparen ps=exps rparen { Become(Apply(Var(n),ps)) } | { Become(Apply(Var(n),[])) })
-                  |  lcurl (e=exp es=(semi exp)* rcurl { Block(e:es) } | rcurl { Block([]) })
+                  |  [[ 'new'     n=name (lparen ps=exps rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) }) ]]
+                  |  [[ 'new'     s=string (lparen ps=exps rparen { NewJava(s,ps) } | { NewJava(s,[]) }) ]]
+                  |  [[ 'not'    ! e=exp { Not(e) } ]]
+                  |  [[ 'fun'    ! lparen as=params rparen e=exp { Fun(Fun.newName(),as,e) } ]]
+                  |  [[ 'let'    ! bs=bindings  'in' e=exp { Let(bs,e) } ]]
+                  |  [[ 'letrec' ! bs=bindings  'in' e=exp { Letrec(bs,e) } ]]
+                  |  [[ 'case'   ! es=caseValues lcurl as=barms rcurl { Case(es,as) } ]]
+                  |  [[ 'for'      p=pattern  'in' l=exp whitespace 'do' e=exp whitespace { For(p,l,e) } ]]
+                  |  [[ 'for'    ! p=pattern  'in' l=exp arrow e=exp whitespace { Map(p,l,e) } ]]
+                  |  [[ 'find'   ! p=pattern  'in' l=exp whitespace 'do' e=exp 'else' d=exp { Find(p,l,e,d) } ]]
+                  |  [[ 'if'     ! t=exp  'then' c=exp whitespace 'else' a=exp { If(t,c,a) } ]]
+                  |  [[ 'try'    ! e=exp  'catch' lcurl as=barms rcurl { Try(e,as) } ]]
+                  |  [[ 'throw'  ! e=exp { Throw(e) } ]]
+                  |  [[ 'bag'      lcurl es=exps rcurl { Bag(es) } ]]
+                  |  [[ 'bag'      lcurl es=exps bar e=exp rcurl { BinExp(Bag(es),'+',e) } ]]
+                  |  [[ 'set'      lcurl es=exps rcurl { Set(es) } ]]
+                  |  [[ 'set'      lcurl es=exps bar e=exp rcurl { BinExp(Set(es),'+',e) } ]]
+                  |  [[ lsquare (es=exps rsquare { List(es) } | rsquare { List([]) }) ]]
+                  |  [[ lsquare e=exp bar qs=quals rsquare { Cmp(e,qs) } ]]
+                  |  [[ n=Name es=(lparen es=exps rparen {es} | {[]}) { Term(n,es) } ]]
+                  |  [[ 'become' n=name (lparen ps=exps rparen { Become(Apply(Var(n),ps)) } | { Become(Apply(Var(n),[])) }) ]]
+                  |  [[ lcurl (e=exp es=(semi exp)* rcurl { Block(e:es) } | rcurl { Block([]) }) ]]
                   |  lparen e=exp rparen {e};
-  var             -> n=name (becomes e=exp { Update(n,e) } | { Var(n) });
-  me              -> 'self' { Self() };
-  now             -> 'now' { Now() };
-  nul             -> 'null' { Null() };
-  numExp          -> n=int (dot m=int { Float(n,m) } | { Int(n) });
-  strExp          -> s=string { Str(s) };
-  bool            ->  ('true' { Bool(true) } | 'false' { Bool(false) });
+  var             -> [[ n=name (becomes e=exp { Update(n,e) } | { Var(n) }) ]];
+  me              -> [[ 'self' { Self() } ]];
+  now             -> [[ 'now' { Now() } ]];
+  nul             -> [[ 'null' { Null() } ]];
+  numExp          -> [[ n=int (dot m=int { Float(n,m) } | { Int(n) }) ]];
+  strExp          -> [[ s=string { Str(s) } ]];
+  bool            -> [[ ('true' { Bool(true) } | 'false' { Bool(false) }) ]];
   caseValues      -> e=exps {e};
   quals           -> q=qual qs=(comma qual)* { q:qs };
   qual            -> p=pattern leftArrow e=exp { BQual(p,e) };
   qual            -> query e=exp { PQual(e) };
-  probably        -> 'probably' lparen p=exp rparen e1=exp whitespace 'else' e2=exp { Apply(Apply(Var('probably'),[p,Fun('prob1',[],e1),Fun('prob2',[],e2)]),[]) };
+  probably        -> [[ 'probably' lparen p=exp rparen e1=exp whitespace 'else' e2=exp { Apply(Apply(Var('probably'),[p,Fun(Fun.newName(),[],e1),Fun(Fun.newName(),[],e2)]),[]) } ]];
   
   
   whitespace  -> SKIPWHITE('//','/*','*/');

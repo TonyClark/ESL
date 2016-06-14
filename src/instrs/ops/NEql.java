@@ -5,6 +5,10 @@ import instrs.Instr;
 
 public class NEql extends Instr {
 
+  public NEql(int line) {
+    super(line);
+  }
+
   public void perform(Actor actor) {
     Object v1 = actor.popStack();
     Object v2 = actor.popStack();
@@ -18,7 +22,7 @@ public class NEql extends Instr {
   }
 
   public String toString() {
-    return "NEql";
+    return pprint("NEQL");
   }
 
 }

@@ -8,8 +8,8 @@ public class CaseError extends Instr {
 
   Case caseExp;
 
-  public CaseError(Case caseExp) {
-    super();
+  public CaseError(int line, Case caseExp) {
+    super(line);
     this.caseExp = caseExp;
   }
 
@@ -22,7 +22,7 @@ public class CaseError extends Instr {
   }
 
   public String toString() {
-    return "CaseError";
+    return pprint("CASEERROR");
   }
 
 }

@@ -7,8 +7,8 @@ public class FrameVarIsCons extends Instr {
 
   int index;
 
-  public FrameVarIsCons(int index) {
-    super();
+  public FrameVarIsCons(int line, int index) {
+    super(line);
     this.index = index;
   }
 
@@ -17,7 +17,7 @@ public class FrameVarIsCons extends Instr {
   }
 
   public String toString() {
-    return "FrameVarIsCons(" + index + ")";
+    return pprint("FRAMEVARISCONS",index);
   }
 
 }

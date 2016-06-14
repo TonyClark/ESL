@@ -16,7 +16,7 @@ public class PatternValue extends Ref {
   }
 
   public String toString() {
-    return "PatternValue(" + index + ")";
+    return "[" + index + "]";
   }
 
 }

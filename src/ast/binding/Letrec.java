@@ -2,14 +2,13 @@ package ast.binding;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import compiler.Local;
 import exp.BoaConstructor;
-import instrs.Instr;
 import instrs.data.Null;
 import instrs.data.Pop;
 import instrs.vars.NewDynamic;
@@ -37,7 +36,7 @@ public class Letrec extends AST {
     return "Letrec(" + Arrays.toString(bindings) + "," + exp + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
 
     // Compile letrec x = e1; y = e2 in e to the following:
     // if isDynamic(x)
@@ -58,9 +57,9 @@ public class Letrec extends AST {
 
     for (Binding b : bindings) {
       if (isDynamic(b.name)) {
+        code.add(new Null(getLine()), locals, dynamics);
+        code.add(new NewDynamic(getLine()), locals, dynamics);
         dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(b.name, 0));
-        code.add(new Null());
-        code.add(new NewDynamic());
       } else {
         locals = locals.cons(new FrameVar(b.name, locals.length()));
       }
@@ -68,18 +67,19 @@ public class Letrec extends AST {
     for (Binding b : bindings) {
       b.value.compile(locals, dynamics, code, false);
       if (isDynamic(b.name)) {
-        code.add(new SetDynamic(lookup(b.name, dynamics).getIndex()));
-        code.add(new Pop());
+        code.add(new SetDynamic(getLine(),lookup(b.name, dynamics).getIndex()), locals, dynamics);
+        code.add(new Pop(getLine()), locals, dynamics);
       } else {
-        code.add(new SetFrame(lookup(b.name, locals).getIndex()));
-        code.add(new Pop());
+        code.add(new SetFrame(getLine(),lookup(b.name, locals).getIndex()), locals, dynamics);
+        code.add(new Pop(getLine()), locals, dynamics);
       }
     }
     exp.compile(locals, dynamics, code, isLast);
     // Remove the dynamics...
     for (Binding b : bindings) {
       if (isDynamic(b.name)) {
-        code.add(new PopDynamic());
+        code.add(new PopDynamic(getLine()), locals, dynamics);
+        dynamics = dynamics.getTail();
       }
     }
   }
@@ -155,6 +155,12 @@ public class Letrec extends AST {
       bs[i] = binds(name) ? bindings[i] : bindings[i].subst(ast, name);
     }
     return bs;
+  }
+
+  public void setPath(String path) {
+    for(Binding b : bindings)
+      b.setPath(path);
+    exp.setPath(path);
   }
 
 }

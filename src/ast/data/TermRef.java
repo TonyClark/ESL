@@ -1,12 +1,11 @@
 package ast.data;
 
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
-import instrs.Instr;
 import list.List;
 
 public class TermRef extends AST {
@@ -20,9 +19,9 @@ public class TermRef extends AST {
     this.index = index;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     term.compile(locals, dynamics, code, false);
-    code.add(new instrs.ops.TermRef(index));
+    code.add(new instrs.ops.TermRef(getLine(),index), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -43,6 +42,10 @@ public class TermRef extends AST {
 
   public String toString() {
     return "TermRef(" + term + "," + index + ")";
+  }
+
+  public void setPath(String path) {
+    term.setPath(path);
   }
 
 }

@@ -12,4 +12,6 @@ public abstract class Qualifier {
 
   public abstract AST desugar(AST value);
 
+  public abstract void setPath(String path);
+
 }

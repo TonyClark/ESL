@@ -68,11 +68,14 @@ public class Binding {
 
   private static Binding mergeBinding(Binding[] bindings, String name) {
     Vector<FunBind> fs = new Vector<FunBind>();
-    for (Binding b : bindings)
+    String path = "";
+    for (Binding b : bindings) {
+      path = b.path;
       if (b.getName().equals(name)) if (b instanceof FunBind)
         fs.add((FunBind) b);
       else throw new java.lang.Error("duplicate bindings must be functions: " + name);
-    return new Binding(name, mergeFunctions(name, fs));
+    }
+    return new Binding(path, name, mergeFunctions(name, fs));
   }
 
   public static Binding[] mergeBindings(Binding[] bindings) {
@@ -130,14 +133,15 @@ public class Binding {
   }
 
   public String name;
-
+  public String path;
   public AST    value;
 
   public Binding() {
   }
 
-  public Binding(String name, AST value) {
+  public Binding(String path, String name, AST value) {
     super();
+    this.path = path;
     this.name = name;
     this.value = value;
   }
@@ -163,15 +167,20 @@ public class Binding {
   }
 
   public Binding subst(AST ast, String name) {
-    return new Binding(this.name, value.subst(ast, name));
+    return new Binding(path, this.name, value.subst(ast, name));
   }
 
   public Binding substExportedValues(Collection<Module> values) {
-    return new Binding(name, value.substExportedValues(values));
+    return new Binding(path, name, value.substExportedValues(values));
   }
 
   public String toString() {
     return "Binding(" + name + "," + value + ")";
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+    value.setPath(path);
   }
 
 }

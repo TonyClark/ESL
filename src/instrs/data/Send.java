@@ -8,13 +8,15 @@ public class Send extends Instr {
 
   int arity;
 
-  public Send(int arity) {
+  public Send(int line, int arity) {
+    super(line);
     this.arity = arity;
   }
 
   public String toString() {
-    return "Send(" + arity + ")";
+   return pprint("SEND",arity);
   }
+
 
   public void perform(Actor actor) {
 

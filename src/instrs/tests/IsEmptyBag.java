@@ -5,6 +5,10 @@ import instrs.Instr;
 
 public class IsEmptyBag extends Instr {
 
+  public IsEmptyBag(int line) {
+    super(line);
+  }
+
   public void perform(Actor actor) {
     Object o = actor.popStack();
     if (o instanceof actors.Bag) {
@@ -14,7 +18,7 @@ public class IsEmptyBag extends Instr {
   }
 
   public String toString() {
-    return "IsEmptyBag";
+    return pprint("ISEMPTYBAG");
   }
 
 }

@@ -5,13 +5,17 @@ import instrs.Instr;
 
 public class Add extends Instr {
 
+  public Add(int line) {
+    super(line);
+  }
+
   /**************************************************************************************
    * * Machine Instruction * ------------------- * * Expectation: Two values on the stack. * Action: Pops the values. * Result: Leaves the addition of the two values on the stack.
    * * *
    ************************************************************************************/
 
   public String toString() {
-    return "Add";
+    return pprint("ADD");
   }
 
   public void perform(Actor actor) {

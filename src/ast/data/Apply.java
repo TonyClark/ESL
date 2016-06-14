@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
 import compiler.DynamicVar;
@@ -32,7 +33,7 @@ public class Apply extends AST {
     return "Apply(" + op + "," + Arrays.toString(args) + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     if (isApplyLocal(locals))
       compileApplyLocal(locals, dynamics, code, isLast);
     else if (isApplyDynamic(dynamics))
@@ -40,16 +41,16 @@ public class Apply extends AST {
     else if (isApplyFun())
       compileApplyFun(locals, dynamics, code, isLast);
     else {
-      code.add(new StartCall());
+      code.add(new StartCall(getLine()), locals, dynamics);
       for (AST arg : args)
         arg.compile(locals, dynamics, code, false);
       op.compile(locals, dynamics, code, false);
-      code.add(new instrs.apply.Apply(args.length));
+      code.add(new instrs.apply.Apply(getLine(), args.length), locals, dynamics);
     }
   }
 
-  private void compileApplyFun(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
-    code.add(new StartCall());
+  private void compileApplyFun(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+    code.add(new StartCall(getLine()), locals, dynamics);
     for (AST arg : args)
       arg.compile(locals, dynamics, code, false);
     Fun fun = (Fun) op;
@@ -60,20 +61,20 @@ public class Apply extends AST {
     return op instanceof Fun;
   }
 
-  private void compileApplyLocal(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
-    code.add(new StartCall());
+  private void compileApplyLocal(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+    code.add(new StartCall(getLine()), locals, dynamics);
     for (AST arg : args)
       arg.compile(locals, dynamics, code, false);
     Var v = (Var) op;
-    lookup(v.name, locals).apply(args.length, code, isLast);
+    lookup(v.name, locals).apply(args.length, getLine(), code, locals, dynamics, isLast);
   }
 
-  private void compileApplyDynamic(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
-    code.add(new StartCall());
+  private void compileApplyDynamic(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+    code.add(new StartCall(getLine()), locals, dynamics);
     for (AST arg : args)
       arg.compile(locals, dynamics, code, false);
     Var v = (Var) op;
-    lookup(v.name, dynamics).apply(args.length, code, isLast);
+    lookup(v.name, dynamics).apply(args.length, getLine(), code, locals, dynamics, isLast);
   }
 
   private boolean isApplyDynamic(List<DynamicVar> dynamics) {
@@ -112,6 +113,12 @@ public class Apply extends AST {
 
   public AST subst(AST ast, String name) {
     return new Apply(op.subst(ast, name), subst(args, ast, name));
+  }
+
+  public void setPath(String path) {
+    op.setPath(path);
+    for (AST arg : args)
+      arg.setPath(path);
   }
 
 }

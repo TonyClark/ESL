@@ -1,8 +1,8 @@
 package ast.lists;
 
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.binding.Binding;
 import ast.binding.Letrec;
@@ -20,7 +20,6 @@ import ast.tests.Case;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "pattern", "list", "body" })
@@ -29,6 +28,7 @@ public class Map extends AST {
 
   static int     mapCount = 0;
 
+  String         path;
   public Pattern pattern;
   public AST     list;
   public AST     body;
@@ -36,7 +36,8 @@ public class Map extends AST {
   public Map() {
   }
 
-  public Map(Pattern pattern, AST list, AST body) {
+  public Map(String path, Pattern pattern, AST list, AST body) {
+    this.path = path;
     this.pattern = pattern;
     this.list = list;
     this.body = body;
@@ -46,7 +47,7 @@ public class Map extends AST {
     return "Map(" + pattern + "," + list + "," + body + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     desugar().compile(locals, dynamics, code, isLast);
   }
 
@@ -54,8 +55,8 @@ public class Map extends AST {
     BArm arm2 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, new ast.lists.List());
     BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t")) }, Bool.TRUE, new BinExp(body, ":", new Apply(new Var("$f"), new Var("$t"))));
     Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2 });
-    Fun fun = new Fun(mapName(), new String[] { "l" }, caseExp);
-    return new Letrec(new Binding[] { new Binding("$f", fun) }, new Apply(new Var("$f"), list));
+    Fun fun = new Fun(path, mapName(), new String[] { "l" }, caseExp);
+    return new Letrec(new Binding[] { new Binding(path, "$f", fun) }, new Apply(new Var("$f"), list));
   }
 
   private String mapName() {
@@ -76,6 +77,12 @@ public class Map extends AST {
 
   public AST subst(AST ast, String name) {
     return desugar().subst(ast, name);
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+    list.setPath(path);
+    body.setPath(path);
   }
 
 }

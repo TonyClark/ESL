@@ -1,4 +1,4 @@
-export remove,length,flatten,count,hasPrefix,nth;
+export remove,length,flatten,count,hasPrefix,nth,take,drop;
 
 remove(v,l) =
   case l {
@@ -40,4 +40,22 @@ nth(l,n) =
   case l {
     h:t -> if n = 0 then h else nth(t,n-1);
     []  -> print('cannot find nth element: ' + n)
-  }
+  };
+  
+take(l,n) = 
+  if n = 0
+  then []
+  else 
+    case l {
+      h:t -> h:(take(t,n-1));
+      [] -> throw ('cannot take element ' + n)
+    };
+  
+drop(l,n) = 
+  if n = 0
+  then l
+  else 
+    case l {
+      h:t -> drop(t,n-1);
+      [] -> throw ('cannot drop element ' + n)
+    }

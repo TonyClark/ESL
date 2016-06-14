@@ -17,7 +17,7 @@ public class Tail extends Ref {
   }
 
   public String toString() {
-    return "Tail(" + ref + ")";
+    return ref + ".tail()";
   }
 
 }

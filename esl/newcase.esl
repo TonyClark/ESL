@@ -1,6 +1,6 @@
 export main;
 
-import 'esl/lists';
+import 'esl/lists.esl';
 
 test1(x) =
   case x {

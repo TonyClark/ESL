@@ -13,15 +13,15 @@ public class Fun extends Instr {
   int     arity;
   CodeBox code;
 
-  public Fun(String name, int arity, CodeBox codeBox) {
-    super();
+  public Fun(int line, String name, int arity, CodeBox codeBox) {
+    super(line);
     this.name = name;
     this.arity = arity;
     this.code = codeBox;
   }
 
   public String toString() {
-    return "Fun(" + name + "," + arity + "," + code + ")";
+   return pprint("FUN",name);
   }
 
   public void perform(Actor actor) {

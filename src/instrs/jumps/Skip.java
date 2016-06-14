@@ -7,7 +7,8 @@ public class Skip extends Instr {
 
   int count;
 
-  public Skip(int count) {
+  public Skip(int line, int count) {
+    super(line);
     this.count = count;
   }
 
@@ -25,7 +26,8 @@ public class Skip extends Instr {
   }
 
   public String toString() {
-    return "Skip(" + count + ")";
+    return pprint("SKIP",count);
   }
+
 
 }

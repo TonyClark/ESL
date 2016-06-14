@@ -16,7 +16,7 @@ public class Snapshot {
   }
 
   public Term asTerm() {
-    return new Term("Result", time, value);
+    return new Term(Key.getKey("Result"), time, value);
   }
 
 }

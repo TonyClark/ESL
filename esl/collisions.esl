@@ -17,7 +17,7 @@ act simulator {
   
   Stop -> for ball in balls do kill(ball);
   
-  Time(_) -> {}
+  Time(_) -> { }
   
 };
 
@@ -30,12 +30,12 @@ act ball(id,simulator) {
   dx = random(2) - 1;
   dy = random(2) - 1;
   
-  checkDeltas() = 
+  checkDeltas(n) = 
     if (dx = 0) and (dy = 0)
     then { 
-      dx := (random(2) - 1)*2;
-      dy := (random(2) - 1)*2;
-      checkDeltas()
+      dx := (random(2) - 1)*n;
+      dy := (random(2) - 1)*n;
+      checkDeltas(n+1)
     } else {};
   
   hitWalls() =
@@ -64,7 +64,7 @@ act ball(id,simulator) {
       } else {}
     }
     
-  -> checkDeltas();
+  -> checkDeltas(2);
 
   Time(_)  -> {
     hitWalls();
@@ -83,7 +83,11 @@ act main {
   // appears, click on Start to run the simulation and then Stop to stop it. You can change the parameters
   // via the text input fields and then re-run the simulation.
 
-  -> new 'test.CollisionGUI'(new simulator);
+  -> {
+    setMaxInstructions(10000);
+    setInstructionsPerTimeUnit(5000);
+    new 'test.CollisionGUI'(new simulator)
+  };
      
    Time(_) -> {}
 

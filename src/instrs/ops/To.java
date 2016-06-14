@@ -6,6 +6,10 @@ import list.Nil;
 
 public class To extends Instr {
 
+  public To(int line) {
+    super(line);
+  }
+
   public void perform(Actor actor) {
     Object v1 = actor.popStack();
     Object v2 = actor.popStack();
@@ -20,7 +24,7 @@ public class To extends Instr {
   }
 
   public String toString() {
-    return "To";
+    return pprint("TO");
   }
 
 }

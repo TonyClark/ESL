@@ -1,14 +1,16 @@
 package instrs.data;
 
 import actors.Actor;
+import actors.Key;
 import instrs.Instr;
 
 public class Term extends Instr {
 
-  String name;
-  int    arity;
+  Key name;
+  int arity;
 
-  public Term(String name, int arity) {
+  public Term(int line, Key name, int arity) {
+    super(line);
     this.name = name;
     this.arity = arity;
   }
@@ -21,7 +23,8 @@ public class Term extends Instr {
   }
 
   public String toString() {
-    return "Term(" + name + "," + arity + ")";
+   return pprint("TERM",name.getString(),arity);
   }
+
 
 }

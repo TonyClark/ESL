@@ -11,14 +11,14 @@ public class TryAdd extends Instr {
   int id;
   Ref ref;
 
-  public TryAdd(int id, Ref ref) {
-    super();
+  public TryAdd(int line, int id, Ref ref) {
+    super(line);
     this.id = id;
     this.ref = ref;
   }
 
   public String toString() {
-    return "TryAdd(" + id + "," + ref + ")";
+    return pprint("TRYADD",id,ref);
   }
 
   public void perform(Actor actor) {

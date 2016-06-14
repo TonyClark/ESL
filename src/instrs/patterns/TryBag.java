@@ -10,14 +10,14 @@ public class TryBag extends Instr {
   int id;
   Ref ref;
 
-  public TryBag(int id, Ref ref) {
-    super();
+  public TryBag(int line, int id, Ref ref) {
+    super(line);
     this.id = id;
     this.ref = ref;
   }
 
   public String toString() {
-    return "TryBag(" + id + "," + ref + ")";
+    return pprint("TRYBAG",id,ref);
   }
 
   public void perform(Actor actor) {

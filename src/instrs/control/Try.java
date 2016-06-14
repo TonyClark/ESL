@@ -6,8 +6,12 @@ import instrs.Instr;
 
 public class Try extends Instr {
 
+  public Try(int line) {
+    super(line);
+  }
+
   public String toString() {
-    return "Try";
+    return pprint("TRY");
   }
 
   public void perform(Actor actor) {

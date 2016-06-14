@@ -3,6 +3,7 @@ package ast.patterns;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
 import ast.data.Apply;
@@ -10,7 +11,6 @@ import ast.data.Fun;
 import ast.refs.Ref;
 import compiler.DynamicVar;
 import compiler.FrameVar;
-import instrs.Instr;
 import list.List;
 
 public class PWild extends Pattern {
@@ -25,6 +25,6 @@ public class PWild extends Pattern {
     return "PWild()";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, CodeBox code) {
   }
 }

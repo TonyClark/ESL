@@ -5,8 +5,12 @@ import instrs.Instr;
 
 public class IsCons extends Instr {
 
+  public IsCons(int line) {
+    super(line);
+  }
+
   public String toString() {
-    return "IsCons";
+    return pprint("ISCONS");
   }
 
   public void perform(Actor actor) {

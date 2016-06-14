@@ -31,7 +31,11 @@ public class BQual extends Qualifier {
   }
 
   public AST desugar(AST value) {
-    return new Map(pattern, exp, value);
+    return new Map("", pattern, exp, value);
+  }
+
+  public void setPath(String path) {
+    exp.setPath(path);
   }
 
 }

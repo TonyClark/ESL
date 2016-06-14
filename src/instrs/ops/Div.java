@@ -5,6 +5,10 @@ import instrs.Instr;
 
 public class Div extends Instr {
 
+  public Div(int line) {
+    super(line);
+  }
+
   public void perform(Actor actor) {
     Object v1 = actor.popStack();
     Object v2 = actor.popStack();
@@ -16,7 +20,7 @@ public class Div extends Instr {
   }
 
   public String toString() {
-    return "Div";
+    return pprint("DIV");
   }
 
 }

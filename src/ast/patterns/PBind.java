@@ -3,6 +3,7 @@ package ast.patterns;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.binding.Binding;
 import ast.binding.Let;
@@ -13,7 +14,6 @@ import ast.refs.Ref;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "name", "pattern" })
@@ -46,11 +46,11 @@ public class PBind extends Pattern {
     vars.add(name);
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, CodeBox code) {
     if (AST.lookup(name, locals) != null) {
-      AST.lookup(name, locals).bind(ref, code);
+      AST.lookup(name, locals).bind(ref, getLine(), code, locals, dynamics);
     } else if (AST.lookup(name, dynamics) != null) {
-      AST.lookup(name, dynamics).bind(ref, code);
+      AST.lookup(name, dynamics).bind(ref, getLine(), code, locals, dynamics);
     }
     pattern.compile(locals, dynamics, ref, code);
   }

@@ -3,6 +3,7 @@ package ast.patterns;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
 import ast.data.Apply;
@@ -15,7 +16,6 @@ import ast.tests.IsCons;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "head", "tail" })
@@ -48,8 +48,8 @@ public class PCons extends Pattern {
     tail.bound(vars);
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, Vector<Instr> code) {
-    code.add(new instrs.patterns.isCons(ref));
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, CodeBox code) {
+    code.add(new instrs.patterns.isCons(getLine(),ref), locals, dynamics);
     head.compile(locals, dynamics, new ast.refs.Head(ref), code);
     tail.compile(locals, dynamics, new ast.refs.Tail(ref), code);
   }

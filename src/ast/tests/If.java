@@ -1,14 +1,13 @@
 package ast.tests;
 
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.data.Bool;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import instrs.jumps.Skip;
 import instrs.jumps.SkipFalse;
 import list.List;
@@ -35,7 +34,7 @@ public class If extends AST {
     return "If(" + test + "," + conseq + "," + alt + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     if (test instanceof Bool) {
       Bool b = (Bool) test;
       if (b.value)
@@ -43,16 +42,16 @@ public class If extends AST {
       else alt.compile(locals, dynamics, code, isLast);
     } else {
       test.compile(locals, dynamics, code, false);
-      int length = code.size();
-      SkipFalse jmp1 = new SkipFalse(0);
-      code.add(jmp1);
+      int length = code.getCode().size();
+      SkipFalse jmp1 = new SkipFalse(getLine(),0);
+      code.add(jmp1, locals, dynamics);
       conseq.compile(locals, dynamics, code, isLast);
-      Skip jmp2 = new Skip(0);
-      code.add(jmp2);
-      jmp1.setCount(code.size() - length);
-      length = code.size() - 1;
+      Skip jmp2 = new Skip(getLine(),0);
+      code.add(jmp2, locals, dynamics);
+      jmp1.setCount(code.getCode().size() - length);
+      length = code.getCode().size() - 1;
       alt.compile(locals, dynamics, code, isLast);
-      jmp2.setCount(code.size() - length);
+      jmp2.setCount(code.getCode().size() - length);
     }
   }
 
@@ -74,6 +73,12 @@ public class If extends AST {
 
   public AST subst(AST ast, String name) {
     return new If(test.subst(ast, name), conseq.subst(ast, name), alt.subst(ast, name));
+  }
+
+  public void setPath(String path) {
+    test.setPath(path);
+    conseq.setPath(path);
+    alt.setPath(path);
   }
 
 }

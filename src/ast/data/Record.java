@@ -2,15 +2,14 @@ package ast.data;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import actors.Key;
 import ast.AST;
 import ast.binding.Binding;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "bindings" })
@@ -31,12 +30,12 @@ public class Record extends AST {
     return "Record(" + Arrays.toString(bindings) + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     for (Binding b : bindings) {
       b.value.compile(locals, dynamics, code, false);
-      code.add(new instrs.data.Field(Key.getKey(b.name)));
+      code.add(new instrs.data.Field(getLine(),Key.getKey(b.name)), locals, dynamics);
     }
-    code.add(new instrs.data.Record(bindings.length));
+    code.add(new instrs.data.Record(getLine(),bindings.length), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -63,8 +62,13 @@ public class Record extends AST {
   private Binding[] substBindings(AST ast, String name) {
     Binding[] bs = new Binding[bindings.length];
     for (int i = 0; i < bindings.length; i++)
-      bs[i] = new Binding(bindings[i].getName(), bindings[i].getValue().subst(ast, name));
+      bs[i] = new Binding("", bindings[i].getName(), bindings[i].getValue().subst(ast, name));
     return bs;
+  }
+
+  public void setPath(String path) {
+    for (Binding b : bindings)
+      b.setPath(path);
   }
 
 }

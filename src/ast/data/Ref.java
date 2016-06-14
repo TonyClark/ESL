@@ -1,14 +1,13 @@
 package ast.data;
 
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import actors.Key;
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "namespace", "name" })
@@ -26,9 +25,9 @@ public class Ref extends AST {
     this.name = name;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     namespace.compile(locals, dynamics, code, false);
-    code.add(new instrs.ops.Ref(name));
+    code.add(new instrs.ops.Ref(getLine(),name), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -49,6 +48,10 @@ public class Ref extends AST {
 
   public String toString() {
     return "Ref(" + namespace + "," + name + ")";
+  }
+
+  public void setPath(String path) {
+    namespace.setPath(path);
   }
 
 }

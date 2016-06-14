@@ -8,8 +8,8 @@ public class isCons extends Instr {
 
   Ref ref;
 
-  public isCons(Ref ref) {
-    super();
+  public isCons(int line, Ref ref) {
+    super(line);
     this.ref = ref;
   }
 
@@ -18,7 +18,7 @@ public class isCons extends Instr {
   }
 
   public String toString() {
-    return "IsCons(" + ref + ")";
+    return pprint("ISCONS",ref);
   }
 
 }

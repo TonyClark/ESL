@@ -7,8 +7,12 @@ public class PopFrame extends Instr {
 
   // Used to pop the current call frame and ignore the result...
 
+  public PopFrame(int line) {
+    super(line);
+  }
+
   public String toString() {
-    return "PopFrame";
+    return pprint("POPFRAME");
   }
 
   public void perform(Actor actor) {

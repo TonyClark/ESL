@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.CodeBox;
+import actors.Key;
 import ast.AST;
 import ast.binding.Var;
 import ast.data.Apply;
@@ -16,7 +18,6 @@ import ast.tests.IsTerm;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "name", "patterns" })
@@ -51,8 +52,8 @@ public class PTerm extends Pattern {
       p.bound(vars);
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, Vector<Instr> code) {
-    code.add(new instrs.patterns.isTerm(ref, name, patterns.length));
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, CodeBox code) {
+    code.add(new instrs.patterns.isTerm(getLine(), ref, Key.getKey(name), patterns.length), locals, dynamics);
     for (int i = 0; i < patterns.length; i++)
       patterns[i].compile(locals, dynamics, new ast.refs.TermRef(ref, i), code);
   }

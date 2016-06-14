@@ -3,6 +3,7 @@ package ast.tests;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
 import compiler.DynamicVar;
@@ -23,25 +24,25 @@ public class IsTerm extends AST {
     this.arity = arity;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     if (isLocal(locals))
       compileLocalIsTerm(locals, dynamics, code);
     else if (isDynamic(dynamics))
       compileDynamicIsTerm(locals, dynamics, code);
     else {
       value.compile(locals, dynamics, code, false);
-      code.add(new instrs.tests.IsTerm(name, arity));
+      code.add(new instrs.tests.IsTerm(getLine(), name, arity), locals, dynamics);
     }
   }
 
-  private void compileLocalIsTerm(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  private void compileLocalIsTerm(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     Var v = (Var) value;
-    lookup(v.name, locals).isTerm(name, arity, code);
+    lookup(v.name, locals).isTerm(name, arity, getLine(), code, locals, dynamics);
   }
 
-  private void compileDynamicIsTerm(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  private void compileDynamicIsTerm(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     Var v = (Var) value;
-    lookup(v.name, dynamics).isTerm(name, arity, code);
+    lookup(v.name, dynamics).isTerm(name, arity, getLine(), code, locals, dynamics);
   }
 
   private boolean isLocal(List<FrameVar> locals) {
@@ -76,6 +77,10 @@ public class IsTerm extends AST {
 
   public AST subst(AST ast, String name) {
     return new IsTerm(value.subst(ast, name), this.name, arity);
+  }
+
+  public void setPath(String path) {
+    value.setPath(path);
   }
 
 }

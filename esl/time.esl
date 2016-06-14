@@ -4,11 +4,11 @@ act main {
 
   Time(1) -> print('this is the start of time.');
 
-  Time(20) -> {
+  Time(t) when t > 20 -> {
     print('this is the end of time.');
-    let results = stopAll()
-    in print(results)
+    stopAll()
   };
 
   Time(t) -> print('this is time ' + t)
 }
+

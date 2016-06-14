@@ -1,14 +1,12 @@
 package ast.data;
 
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
-import ast.binding.Binding;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "value" })
@@ -25,11 +23,11 @@ public class Int extends AST {
   }
 
   public String toString() {
-    return "Int(" + value + ")";
+    return "Int(" + getLine() + "," + value + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
-    code.add(new instrs.data.Int(value));
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+    code.add(new instrs.data.Int(getLine(),value), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -44,6 +42,9 @@ public class Int extends AST {
 
   public AST subst(AST ast, String name) {
     return this;
+  }
+
+  public void setPath(String path) {
   }
 
 }

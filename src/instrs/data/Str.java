@@ -7,7 +7,8 @@ public class Str extends Instr {
 
   String value;
 
-  public Str(String value) {
+  public Str(int line, String value) {
+    super(line);
     this.value = value;
   }
 
@@ -16,7 +17,8 @@ public class Str extends Instr {
   }
 
   public String toString() {
-    return "Str(" + value + ")";
+   return pprint("STR",value);
   }
+
 
 }

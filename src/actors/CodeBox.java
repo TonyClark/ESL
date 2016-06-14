@@ -1,15 +1,20 @@
 package actors;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import compiler.DynamicVar;
+import compiler.FrameVar;
 import instrs.Instr;
-import instrs.apply.PopFrame;
+import list.List;
 
 public class CodeBox {
+
+  // Source code lives in this file...
+
+  String        path;
 
   // The maximum locals (including any arguments and state variables) relating to this code...
 
@@ -17,12 +22,21 @@ public class CodeBox {
 
   // The instructions that are to be performed...
 
-  Vector<Instr> code;
+  Vector<Instr> code = new Vector<Instr>();
 
-  public CodeBox(int locals, Vector<Instr> code) {
+  // The names of variables in scope are maintained in a table...
+
+  VarTable      vars = new VarTable();
+
+  public CodeBox(String path, int locals) {
     super();
+    this.path = path;
     this.locals = locals;
-    this.code = code;
+  }
+
+  public void add(Instr instr, List<FrameVar> locals, List<DynamicVar> dynamics) {
+    code.add(instr);
+    vars.add(locals, dynamics);
   }
 
   public int getLocals() {
@@ -34,26 +48,11 @@ public class CodeBox {
   }
 
   public String toString() {
-    return "CodeBox(" + locals + "," + code + ")";
+    return "CodeBox(" + locals + ")";
   }
 
   public Instr getInstr(int i) {
     return code.get(i);
-  }
-
-  CodeBox timeHandlingCode = null;
-
-  public CodeBox getTimeHandlingCode() {
-    if (timeHandlingCode == null) {
-      Vector<Instr> noReturn = (Vector<Instr>) code.clone();
-      for (int i = 0; i < noReturn.size(); i++) {
-        if (noReturn.elementAt(i) instanceof instrs.apply.Return) {
-          noReturn.setElementAt(new PopFrame(), i);
-        }
-      }
-      timeHandlingCode = new CodeBox(locals, noReturn);
-    }
-    return timeHandlingCode;
   }
 
   public void pprint(String name, PrintStream out) {
@@ -83,6 +82,34 @@ public class CodeBox {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+  }
+
+  public String[] getLocalNames(int codePtr) {
+    return vars.getLocalNames(codePtr);
+  }
+
+  public int indexOf(Instr instr) {
+    return code.indexOf(instr);
+  }
+
+  public List<FrameVar> getLocalsAt(int index) {
+    return vars.getLocalsAt(index);
+  }
+
+  public List<DynamicVar> getDynamicsAt(int index) {
+    return vars.getDynamicsAt(index);
+  }
+
+  public String[] getDynamicNames(int codePtr) {
+    return vars.getDynamicNames(codePtr);
   }
 
 }

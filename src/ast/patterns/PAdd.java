@@ -3,12 +3,12 @@ package ast.patterns;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.refs.Ref;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "left", "right" })
@@ -39,9 +39,9 @@ public class PAdd extends Pattern {
     right.bound(vars);
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, Vector<Instr> code) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, CodeBox code) {
     int id = addId++;
-    code.add(new instrs.patterns.TryAdd(id, ref));
+    code.add(new instrs.patterns.TryAdd(getLine(), id, ref), locals, dynamics);
     left.compile(locals, dynamics, new ast.refs.Left(id), code);
     right.compile(locals, dynamics, new ast.refs.Right(id), code);
   }

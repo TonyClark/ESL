@@ -8,13 +8,14 @@ public class ApplyDynamicVar extends Instr {
   int index;
   int arity;
 
-  public ApplyDynamicVar(int index, int arity) {
+  public ApplyDynamicVar(int line, int index, int arity) {
+    super(line);
     this.index = index;
     this.arity = arity;
   }
 
   public String toString() {
-    return "@DynamicVar(" + index + "," + arity + ")";
+    return pprint("APPDYNAMIC",index,arity);
   }
 
   public void perform(Actor actor) {

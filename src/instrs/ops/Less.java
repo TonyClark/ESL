@@ -16,8 +16,12 @@ public class Less extends Instr {
    *                                                                                    *
    * ************************************************************************************/
 
+  public Less(int line) {
+    super(line);
+  }
+
   public String toString() {
-    return "Less";
+    return pprint("LESS");
   }
 
   public void perform(Actor actor) {

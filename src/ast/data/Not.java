@@ -1,13 +1,12 @@
 package ast.data;
 
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "exp" })
@@ -24,9 +23,9 @@ public class Not extends AST {
     this.exp = exp;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     exp.compile(locals, dynamics, code, false);
-    code.add(new instrs.ops.Not());
+    code.add(new instrs.ops.Not(getLine()), locals, dynamics);
   }
 
   public void DV(HashSet<String> vars) {
@@ -47,6 +46,10 @@ public class Not extends AST {
 
   public String toString() {
     return "Not(" + exp + ")";
+  }
+
+  public void setPath(String path) {
+    exp.setPath(path);
   }
 
 }

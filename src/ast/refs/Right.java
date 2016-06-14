@@ -16,7 +16,7 @@ public class Right extends Ref {
   }
 
   public String toString() {
-    return "Right(" + id + ")";
+    return id + "right()";
   }
 
 }

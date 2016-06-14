@@ -5,8 +5,12 @@ import instrs.Instr;
 
 public class Self extends Instr {
 
+  public Self(int line) {
+    super(line);
+  }
+
   public String toString() {
-    return "Self";
+   return pprint("SELF");
   }
 
   public void perform(Actor actor) {

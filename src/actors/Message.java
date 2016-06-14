@@ -15,7 +15,7 @@ public class Message {
   }
 
   public String toString() {
-    return "Message(" + value + "," + time + ")";
+    return String.format("[%03d] %s", time, value);
   }
 
   public Object getValue() {

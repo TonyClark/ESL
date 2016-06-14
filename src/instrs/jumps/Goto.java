@@ -7,8 +7,8 @@ public class Goto extends Instr {
 
   int address;
 
-  public Goto(int address) {
-    super();
+  public Goto(int line, int address) {
+    super(line);
     this.address = address;
   }
 
@@ -25,7 +25,7 @@ public class Goto extends Instr {
   }
 
   public String toString() {
-    return "Goto(" + address + ")";
+    return pprint("GOTO",address);
   }
 
 }

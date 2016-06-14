@@ -16,8 +16,13 @@ public class Gre extends Instr {
    *                                                                                    *
    * ************************************************************************************/
 
+
+  public Gre(int line) {
+    super(line);
+  }
+
   public String toString() {
-    return "Gre";
+    return pprint("GRE");
   }
 
   public void perform(Actor actor) {

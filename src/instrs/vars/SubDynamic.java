@@ -8,7 +8,8 @@ public class SubDynamic extends Instr {
   int index;
   int value;
 
-  public SubDynamic(int index, int value) {
+  public SubDynamic(int line, int index, int value) {
+    super(line);
     this.index = index;
     this.value = value;
   }
@@ -17,4 +18,8 @@ public class SubDynamic extends Instr {
     actor.setDynamic(index, (int)actor.getDynamic(index) - 1);
   }
 
+
+  public String toString() {
+   return pprint("SUBDYNAMIC",index);
+  }
 }

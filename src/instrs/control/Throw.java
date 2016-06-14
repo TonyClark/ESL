@@ -5,8 +5,12 @@ import instrs.Instr;
 
 public class Throw extends Instr {
 
+  public Throw(int line) {
+    super(line);
+  }
+
   public String toString() {
-    return "Throw";
+    return pprint("THROW");
   }
 
   public void perform(Actor actor) {

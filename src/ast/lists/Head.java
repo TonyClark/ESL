@@ -1,12 +1,11 @@
 package ast.lists;
 
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
-import instrs.Instr;
 import list.List;
 
 public class Head extends AST {
@@ -17,9 +16,9 @@ public class Head extends AST {
     this.value = value;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     value.compile(locals, dynamics, code, false);
-    code.add(new instrs.ops.Head());
+    code.add(new instrs.ops.Head(getLine()), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -40,6 +39,10 @@ public class Head extends AST {
 
   public String toString() {
     return "Head(" + value + ")";
+  }
+
+  public void setPath(String path) {
+    value.setPath(path);
   }
 
 }

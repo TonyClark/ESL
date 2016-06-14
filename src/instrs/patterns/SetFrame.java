@@ -9,7 +9,8 @@ public class SetFrame extends Instr {
   Ref ref;
   int index;
 
-  public SetFrame(Ref ref, int index) {
+  public SetFrame(int line, Ref ref, int index) {
+    super(line);
     this.ref = ref;
     this.index = index;
   }
@@ -19,7 +20,7 @@ public class SetFrame extends Instr {
   }
 
   public String toString() {
-    return "SetFrame(" + ref + "," + index + ")";
+    return pprint("SETFRAME",index,ref);
   }
 
 }

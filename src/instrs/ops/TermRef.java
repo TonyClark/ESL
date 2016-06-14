@@ -7,8 +7,8 @@ public class TermRef extends Instr {
 
   int index;
 
-  public TermRef(int index) {
-    super();
+  public TermRef(int line, int index) {
+    super(line);
     this.index = index;
   }
 
@@ -18,6 +18,6 @@ public class TermRef extends Instr {
   }
 
   public String toString() {
-    return "TermRef(" + index + ")";
+    return pprint("TERMREF",index);
   }
 }

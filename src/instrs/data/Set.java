@@ -8,13 +8,15 @@ public class Set extends Instr {
 
   int length;
 
-  public Set(int length) {
+  public Set(int line, int length) {
+    super(line);
     this.length = length;
   }
 
   public String toString() {
-    return "Set(" + length + ")";
+   return pprint("SET",length);
   }
+
 
   public void perform(Actor actor) {
     actors.Set b = new actors.Set();

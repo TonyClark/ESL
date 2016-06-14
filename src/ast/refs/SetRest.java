@@ -16,7 +16,7 @@ public class SetRest extends Ref {
   }
 
   public String toString() {
-    return "SetRest(" + id + ")";
+    return id + ".rest()";
   }
 
 }

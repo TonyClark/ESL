@@ -8,13 +8,14 @@ public class ApplyFrameVar extends Instr {
   int index;
   int arity;
 
-  public ApplyFrameVar(int index, int arity) {
+  public ApplyFrameVar(int line, int index, int arity) {
+    super(line);
     this.index = index;
     this.arity = arity;
   }
 
   public String toString() {
-    return "@FrameVar(" + index + "," + arity + ")";
+    return pprint("APPLYFRAME",index,arity);
   }
 
   public void perform(Actor actor) {

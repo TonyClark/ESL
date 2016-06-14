@@ -16,7 +16,7 @@ public class BagElement extends Ref {
   }
 
   public String toString() {
-    return "BagElement(" + id + ")";
+    return id + ".choose()";
   }
 
 }

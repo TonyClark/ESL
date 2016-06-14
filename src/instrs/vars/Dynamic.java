@@ -7,7 +7,8 @@ public class Dynamic extends Instr {
 
   int index;
 
-  public Dynamic(int index) {
+  public Dynamic(int line, int index) {
+    super(line);
     this.index = index;
   }
 
@@ -16,7 +17,7 @@ public class Dynamic extends Instr {
   }
 
   public String toString() {
-    return "Dynamic(" + index + ")";
+    return pprint("DYNAMIC",index);
   }
 
 }

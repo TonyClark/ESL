@@ -8,8 +8,8 @@ public class isNull extends Instr {
 
   Ref ref;
 
-  public isNull(Ref ref) {
-    super();
+  public isNull(int line, Ref ref) {
+    super(line);
     this.ref = ref;
   }
 
@@ -18,7 +18,7 @@ public class isNull extends Instr {
   }
 
   public String toString() {
-    return "IsNull";
+    return pprint("ISNULL",ref);
   }
 
 }

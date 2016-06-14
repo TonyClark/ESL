@@ -1,6 +1,6 @@
 export main;
 
-import 'esl/lists';
+import 'esl/lists.esl';
 
 // This file contains an implementation of a history monitor based on temporal logic.
 // The language for expressing conditions over histories is:
@@ -118,3 +118,4 @@ act main {
   Time(_) -> {}
 
 }
+

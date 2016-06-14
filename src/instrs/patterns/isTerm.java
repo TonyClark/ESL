@@ -1,18 +1,19 @@
 package instrs.patterns;
 
 import actors.Actor;
+import actors.Key;
 import actors.Term;
 import ast.refs.Ref;
 import instrs.Instr;
 
 public class isTerm extends Instr {
 
-  Ref    ref;
-  String name;
-  int    arity;
+  Ref ref;
+  Key name;
+  int arity;
 
-  public isTerm(Ref ref, String name, int arity) {
-    super();
+  public isTerm(int line, Ref ref, Key name, int arity) {
+    super(line);
     this.ref = ref;
     this.name = name;
     this.arity = arity;
@@ -22,12 +23,12 @@ public class isTerm extends Instr {
     Object o = ref.ref(actor);
     if (o instanceof Term) {
       Term t = (Term) o;
-      if (!t.getName().equals(name) || t.getValues().length != arity) actor.fail();
+      if (t.getName() != name || t.getValues().length != arity) actor.fail();
     } else actor.fail();
   }
 
   public String toString() {
-    return "IsTerm(" + ref + "," + name + "," + arity + ")";
+    return pprint("ISTERM",name.getString(),arity,ref);
   }
 
 }

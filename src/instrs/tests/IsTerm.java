@@ -8,8 +8,8 @@ public class IsTerm extends Instr {
   String name;
   int    arity;
 
-  public IsTerm(String name, int arity) {
-    super();
+  public IsTerm(int line, String name, int arity) {
+    super(line);
     this.name = name;
     this.arity = arity;
   }
@@ -25,7 +25,7 @@ public class IsTerm extends Instr {
   }
 
   public String toString() {
-    return "IsTerm(" + name + "," + arity + ")";
+    return pprint("ISTERM",name,arity);
   }
 
 }

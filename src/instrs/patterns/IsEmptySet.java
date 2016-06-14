@@ -9,8 +9,8 @@ public class IsEmptySet extends Instr {
 
   Ref ref;
 
-  public IsEmptySet(Ref ref) {
-    super();
+  public IsEmptySet(int line, Ref ref) {
+    super(line);
     this.ref = ref;
   }
 
@@ -23,7 +23,7 @@ public class IsEmptySet extends Instr {
   }
 
   public String toString() {
-    return "IsEmptySet(" + ref + ")";
+    return pprint("ISEMPTYSET",ref);
   }
 
 }

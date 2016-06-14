@@ -1,18 +1,17 @@
 package actors;
 
-import java.util.Arrays;
-
 public class Term {
-  String   name;
+  
+  Key   name;
   Object[] values;
 
-  public Term(String name, Object... values) {
+  public Term(Key name, Object... values) {
     super();
     this.name = name;
     this.values = values;
   }
 
-  public String getName() {
+  public Key getName() {
     return name;
   }
 
@@ -21,13 +20,13 @@ public class Term {
   }
 
   public String toString() {
-    return name + ((values.length == 0) ? "" : "(" + separate(",", values) + ")");
+    return name.getString() + ((values.length == 0) ? "" : "(" + separate(",", values) + ")");
   }
 
   public boolean equals(Object other) {
     if (other instanceof Term) {
       Term t = (Term) other;
-      if (t.getName().equals(name) && t.getValues().length == values.length) {
+      if (t.getName() == name && t.getValues().length == values.length) {
         for (int i = 0; i < values.length; i++) {
           if (!values[i].equals(t.getValues()[i])) return false;
         }

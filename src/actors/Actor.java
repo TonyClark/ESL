@@ -27,12 +27,12 @@ public class Actor {
   // The machine time slices computation between actors. For each slice
   // an actor can perform the following maximum number of instructions...
 
-  static final int                  MAX_INSTRS           = 200;
+  public static int                 MAX_INSTRS           = 200;
 
   // Time is built-in to the machine. We need a measure of time per machine
   // instruction in order to know when to advance time...
 
-  static final int                  INSTRS_PER_TIME_UNIT = 500;
+  public static int                 INSTRS_PER_TIME_UNIT = 500;
 
   // The maximum number of values in a case expression...
 
@@ -52,6 +52,14 @@ public class Actor {
 
   static Hashtable<Object, History> HISTORIES            = new Hashtable<Object, History>();
 
+  // When a new actor is created it is supplied to the newActorListener...
+
+  static NewActorListener           newActorListener     = NewActorListener.NOOP;
+  static StopListener               stopListener         = StopListener.NOOP;
+  static TimeListener               timeListener         = TimeListener.NOOP;
+  static MessageListener            messageListener      = MessageListener.NOOP;
+  static InstrListener              instrListener        = InstrListener.NOOP;
+
   // Stack frame offsets...
 
   static final int                  PREV_FRAME           = 0;                               // Function calls push and pop stack frames via this link.
@@ -66,27 +74,29 @@ public class Actor {
   static final int                  LOCAL0               = 9;                               // The start of the locals. The number of locals is in CODE.
 
   public static boolean             debug                = false;
+  static int                        time                 = 0;
+
+  static boolean                    stop                 = false;
 
   // Time is global and is maintained by the execution executive. It is measured
   // in multiple of machine instructions...
 
-  static int                        time                 = 0;
+  static int                        idCounter            = 0;
 
   // Set this to true when the simulation is to be stopped...
 
-  static boolean                    stop                 = false;
-
-  static int                        idCounter            = 0;
+  final static int                  FAIL_PREV            = 0;
+  final static int                  FAIL_TYPE            = 1;
 
   // Offsets that relate to fail stack frames...
 
-  final static int                  FAIL_PREV            = 0;
-  final static int                  FAIL_TYPE            = 1;
   final static int                  FAIL_CODE            = 2;
   final static int                  FAIL_TOS             = 3;
   final static int                  FAIL_COLLECTION      = 4;
   final static int                  FAIL_ID              = 5;
   final static int                  FAIL_INDEX           = 6;
+
+  final static Key                  Time                 = Key.getKey("Time");
 
   public static List<DynamicVar> builtinDynamics() {
 
@@ -101,6 +111,8 @@ public class Actor {
     DynamicVar shuffle = new DynamicVar("shuffle", 6);
     DynamicVar kill = new DynamicVar("kill", 7);
     DynamicVar resetTime = new DynamicVar("resetTime", 8);
+    DynamicVar setMaxInstructions = new DynamicVar("setMaxInstructions", 9);
+    DynamicVar setInstructionsPerTimeUnit = new DynamicVar("setInstructionsPerTimeUnit", 10);
     List<DynamicVar> env = new Nil<DynamicVar>();
 
     // Order is not important...
@@ -114,6 +126,8 @@ public class Actor {
     env = env.cons(shuffle);
     env = env.cons(kill);
     env = env.cons(resetTime);
+    env = env.cons(setMaxInstructions);
+    env = env.cons(setInstructionsPerTimeUnit);
     return env;
   }
 
@@ -130,8 +144,14 @@ public class Actor {
     Dynamic shuffle = new Dynamic(new Builtin("shuffle", Actor::shuffle));
     Dynamic kill = new Dynamic(new Builtin("kill", Actor::kill));
     Dynamic resetTime = new Dynamic(new Builtin("resetTime", Actor::resetTime));
+    Dynamic setMaxInstructions = new Dynamic(new Builtin("setMaxInstructions", Actor::setMaxInstructions));
+    Dynamic setInstructionsPerTimeUnit = new Dynamic(new Builtin("setInstructionsPerTimeUnit", Actor::setInstructionsPerTimeUnit));
     List<Dynamic> env = new Nil<Dynamic>();
+
     // Order is important - must match indices used in builtinDynamics...
+
+    env = env.cons(setInstructionsPerTimeUnit);
+    env = env.cons(setMaxInstructions);
     env = env.cons(resetTime);
     env = env.cons(kill);
     env = env.cons(shuffle);
@@ -144,17 +164,33 @@ public class Actor {
     return env;
   }
 
+  public static Vector<Actor> getACTORS() {
+    return ACTORS;
+  }
+
   public static Hashtable<Object, History> getHistories() {
     return HISTORIES;
+  }
+
+  public static InstrListener getInstrListener() {
+    return instrListener;
+  }
+
+  public static MessageListener getMessageListener() {
+    return messageListener;
+  }
+
+  public static NewActorListener getNewActorListener() {
+    return newActorListener;
   }
 
   public static Term getResults() {
     List<Term> results = new Nil<Term>();
     for (Object key : HISTORIES.keySet()) {
       History history = HISTORIES.get(key);
-      results = results.cons(new Term("Results", key, history.asTerm()));
+      results = results.cons(new Term(Key.getKey("Results"), key, history.asTerm()));
     }
-    return new Term("Results", results);
+    return new Term(Key.getKey("Results"), results);
   }
 
   public static void getResults(Actor actor, int arity) {
@@ -164,8 +200,20 @@ public class Actor {
     } else throw new Error("getResults expects 0 args but supplied with " + arity);
   }
 
+  public static StopListener getStopListener() {
+    return stopListener;
+  }
+
   public static int getTime() {
     return time;
+  }
+
+  public static TimeListener getTimeListener() {
+    return timeListener;
+  }
+
+  public static boolean isStop() {
+    return stop;
   }
 
   public static void kill(Actor actor, int arity) {
@@ -246,14 +294,10 @@ public class Actor {
     if (arity == 1) {
       actor.closeFrame(0, null, null, null);
       int t = (int) actor.getFrameVar(0);
-      resetTime(t);
+      setTime(t);
       actor.localTime = t;
       actor.returnValue(t);
     } else throw new Error("shuffle expects 1 arg but supplied with " + arity);
-  }
-
-  private static void resetTime(int t) {
-    time = t;
   }
 
   public static void runESL(int time0) {
@@ -265,9 +309,10 @@ public class Actor {
     // queue. The system ensures that all actors are given a fair amount of
     // processing and that all eligible messages are eventually delivered.
 
-    time = time0;
+    setTime(time0);
     int instrs = 0;
     HISTORIES.clear();
+    Vector<Actor> actors = new Vector<Actor>();
 
     while (!stop) {
 
@@ -277,8 +322,10 @@ public class Actor {
       // side effect. All new actors will be ready for computation on
       // the next computation run...
 
-      Vector<Actor> actors = ACTORS;
-      ACTORS = new Vector<Actor>();
+      actors.clear();
+      Vector<Actor> tmp = ACTORS;
+      ACTORS = actors;
+      actors = tmp;
 
       for (Actor actor : actors) {
 
@@ -304,6 +351,7 @@ public class Actor {
       // actors...
 
       Collections.shuffle(actors);
+
       for (Actor actor : actors) {
 
         // At this point an actor may have died. If we do not add it to
@@ -313,29 +361,41 @@ public class Actor {
         if (actor.getState() != ActorState.DEAD) ACTORS.add(actor);
       }
 
-      if (!stop && instrs >= INSTRS_PER_TIME_UNIT) {
-        time++;
+      if (!stop && (instrs >= INSTRS_PER_TIME_UNIT)) {
+        setTime(getTime() + 1);
         instrs = 0;
       }
     }
 
   }
 
-  // Each actor has a unique id...
+  public static void setACTORS(Vector<Actor> aCTORS) {
+    ACTORS = aCTORS;
+  }
 
-  public static void setTime(int time) {
-    Actor.time = time;
+  public static void setInstrListener(InstrListener instrListener) {
+    Actor.instrListener = instrListener;
+  }
+
+  public static void setInstructionsPerTimeUnit(Actor actor, int arity) {
+    if (arity == 1) {
+      actor.closeFrame(0, null, null, null);
+      int instructionsPerTimeUnit = (int) actor.getFrameVar(0);
+      INSTRS_PER_TIME_UNIT = instructionsPerTimeUnit;
+      actor.returnValue(instructionsPerTimeUnit);
+    } else throw new Error("shuffle expects 1 arg but supplied with " + arity);
   }
 
   // The behaviour of this actor. The behaviour is essentially a code-box where the code
   // expects a message to have been supplied. The code will then perform case-analysis on
   // the message...
 
-  public static void shuffle(Actor actor, int arity) {
+  public static void setMaxInstructions(Actor actor, int arity) {
     if (arity == 1) {
       actor.closeFrame(0, null, null, null);
-      List<Object> l = (List) actor.getFrameVar(0);
-      actor.returnValue(l.shuffle());
+      int maxInstructions = (int) actor.getFrameVar(0);
+      MAX_INSTRS = maxInstructions;
+      actor.returnValue(maxInstructions);
     } else throw new Error("shuffle expects 1 arg but supplied with " + arity);
   }
 
@@ -344,21 +404,18 @@ public class Actor {
   // The type of elements on the stack is Object to allow for a variety of Java values
   // to co-exist on the stack: casts will be required in many cases...
 
-  public static void stopAll(Actor actor, int arity) {
-    if (arity == 0) {
-      actor.closeFrame(0, null, null, null);
-      stop = true;
-      actor.returnValue(getResults());
-    } else throw new Error("getResults expects 0 args but supplied with " + arity);
+  public static void setMessageListener(MessageListener messageListener) {
+    Actor.messageListener = messageListener;
+  }
+
+  public static void setNewActorListener(NewActorListener newActorListener) {
+    Actor.newActorListener = newActorListener;
   }
 
   // The index to the next available stack location...
 
-  public static int totalInstructions() {
-    int instructions = 0;
-    for (Actor a : ACTORS)
-      instructions = instructions + a.getInstructions();
-    return instructions;
+  public static void setStop(boolean stop) {
+    Actor.stop = stop;
   }
 
   // The current call-frame on the stack. The actor has completed a thread of control
@@ -371,54 +428,95 @@ public class Actor {
   // locals and dynamics can be modified by side-effect. It is important that when a
   // dynamic variable is modified, all captured occurrences are also modified...
 
-  int             id            = idCounter++;
+  public static void setStopListener(StopListener stopListener) {
+    Actor.stopListener = stopListener;
+  }
 
   // A function may call another function. To do so builds a new stack frame that will
   // eventually be entered. The current open frame records the frame that is currently
   // being built. Because function calls nest, the open frame must be recorded in a
   // stack frame so that the value of openFrame can be restored on function return...
 
-  Behaviour       behaviour;
+  public static void setTime(int time) {
+    Actor.time = time;
+    timeListener.timeChanged(time);
+  }
 
   // Messages are queued when they are sent to an actor...
 
-  Object[]        stack         = new Object[STACK_SIZE];
+  public static void setTimeListener(TimeListener timeListener) {
+    Actor.timeListener = timeListener;
+  }
+
+  public static void shuffle(Actor actor, int arity) {
+    if (arity == 1) {
+      actor.closeFrame(0, null, null, null);
+      List<Object> l = (List) actor.getFrameVar(0);
+      actor.returnValue(l.shuffle());
+    } else throw new Error("shuffle expects 1 arg but supplied with " + arity);
+  }
+
+  public static void stop() {
+    stop = true;
+    stopListener.stop();
+  }
+
+  public static void stopAll(Actor actor, int arity) {
+    if (arity == 0) {
+      actor.closeFrame(0, null, null, null);
+      stop();
+      actor.returnValue(getResults());
+    } else throw new Error("getResults expects 0 args but supplied with " + arity);
+  }
+
+  public static int totalInstructions() {
+    int instructions = 0;
+    for (Actor a : ACTORS)
+      instructions = instructions + a.getInstructions();
+    return instructions;
+  }
 
   // Record the most recently handled message. This is used to ensure that Time(t)
   // messages do not starve the actor of non-time related messages...
 
-  int             tos           = 0;
+  int             id            = idCounter++;
 
   // The number of instructions that has been handled by the actor in the current time
   // frame. This is used to determine whether the actor must wait until the next time
   // unit before continuing...
 
-  int             frame         = -1;
+  Behaviour       behaviour;
 
   // The actor maintains a local time that is set when it handles a Time(t) message.
   // When a thread completes, the current global time and the current local time are
   // compared. If they are out of sync and the most recent message is not a time message
   // then the local time is adjusted and a Time(t) message is sent to the actor...
 
-  int             openFrame     = -1;
+  Object[]        stack         = new Object[STACK_SIZE];
 
   // An actor may be in one of a collection of states...
 
-  Vector<Message> messages      = new Vector<Message>();
+  int             tos           = 0;
 
   // The value that is being processed during pattern matching.
 
-  Object          recentMessage = null;
+  int             frame         = -1;
 
   // The fail stack contains fail frames used by the pattern matcher...
 
-  int             instructions  = 0;
+  int             openFrame     = -1;
 
   // The current fail frame...
 
-  int             localTime     = 0;
+  Vector<Message> messages      = new Vector<Message>();
 
   // The top of the fail stack...
+
+  Object          recentMessage = null;
+
+  int             instructions  = 0;
+
+  int             localTime     = 0;
 
   ActorState      state         = ActorState.ALIVE;
 
@@ -429,6 +527,8 @@ public class Actor {
   int             currentFail   = -1;
 
   int             tofs          = 0;
+
+  int             line;
 
   public Actor() {
     // Should only be called when the actor is to be constructed specially
@@ -442,6 +542,7 @@ public class Actor {
     openFrame(behaviour.getCode(), new Nil<Dynamic>());
     closeFrame(behaviour.getCode().getLocals(), behaviour.getCode(), behaviour.getDynamics(), null);
     setCodePtr(behaviour.getInitIndex());
+    newActorListener.newActor(this);
   }
 
   public void addDynamic(Object value) {
@@ -494,7 +595,7 @@ public class Actor {
     openFrame = -1;
   }
 
-  private boolean complete() {
+  public boolean complete() {
     return frame == -1;
   }
 
@@ -505,10 +606,10 @@ public class Actor {
     // so that the message is handled...
 
     if (!messages.isEmpty()) {
-      // Ignore time for now....
       Message message = findMessage(messages, time);
       if (message != null) {
         messages.remove(message);
+        messageListener.deleteMessage(this, message);
         recentMessage = message.getValue();
         processMessage(message.getValue());
       }
@@ -593,6 +694,8 @@ public class Actor {
     return (int) failStack[currentFail + FAIL_ID];
   }
 
+  // The number of instructions that have been executed since the actor was created...
+
   public int failIndex() {
     // If the fail frame is a bag frame then ...
     return (int) failStack[currentFail + FAIL_INDEX];
@@ -602,8 +705,6 @@ public class Actor {
     // If the fail frame is a bag frame then ...
     return (List<Object>) failStack[currentFail + FAIL_COLLECTION];
   }
-
-  // The number of instructions that have been executed since the actor was created...
 
   public int failPrev() {
     // The first element of a fail frame is always a previous frame index...
@@ -709,12 +810,60 @@ public class Actor {
     return (int) stack[frame + FAIL];
   }
 
+  public int getFrame() {
+    return frame;
+  }
+
+  public int getPrevFrame(int frame) {
+    return (int) stack[frame + PREV_FRAME];
+  }
+
+  public Vector<Object> getFrame(int framePtr) {
+    Vector<Object> frame = new Vector<Object>();
+    frame.add(stack[framePtr + PREV_FRAME]);
+    frame.add(stack[framePtr + PREV_OPEN_FRAME]);
+    frame.add(stack[framePtr + TOS]);
+    frame.add(stack[framePtr + CODE]);
+    frame.add(stack[framePtr + CODE_PTR]);
+    frame.add(stack[framePtr + DYNAMICS]);
+    frame.add(stack[framePtr + CATCHER]);
+    frame.add(stack[framePtr + TOFS]);
+    frame.add(stack[framePtr + FAIL]);
+    CodeBox codeBox = (CodeBox) stack[framePtr + CODE];
+    int locals = codeBox.getLocals();
+    for (int i = 0; i < locals; i++)
+      frame.add(stack[framePtr + LOCAL0 + i]);
+    return frame;
+  }
+
+  public Vector<String> getFrameNames(int framePtr) {
+    Vector<String> names = new Vector<String>();
+    names.add("PREV_FRAME");
+    names.add("PREV_OPEN_FRAME");
+    names.add("TOS");
+    names.add("CODE");
+    names.add("CODE_PTR");
+    names.add("DYNAMICS");
+    names.add("CATCHER");
+    names.add("TOFS");
+    names.add("FAIL");
+    CodeBox codeBox = (CodeBox) stack[framePtr + CODE];
+    int locals = codeBox.getLocals();
+    for (int i = 0; i < locals; i++)
+      names.add("LOCAL" + i);
+    return names;
+  }
+
   public Object getFrameVar(int index) {
     return stack[frame + LOCAL0 + index];
   }
 
   public int getInstructions() {
     return instructions;
+  }
+
+  public int getLine() {
+    return line;
   }
 
   public Object[] getPatternValues() {
@@ -789,6 +938,16 @@ public class Actor {
       currentFail = failPrev();
     }
     throw new Error("cannot find collection with id " + id);
+  }
+
+  public boolean messageScheduled() {
+    // A message is scheduled if there is a message on the
+    // queue or when the current time will cause a message...
+    if (findMessage(messages, time) != null) return true;
+    if (time > localTime) {
+      if (!recentlyHandledTime()) return true;
+    }
+    return false;
   }
 
   public void openFrame(CodeBox code, List<Dynamic> dynamics) {
@@ -873,7 +1032,7 @@ public class Actor {
   private boolean recentlyHandledTime() {
     if (recentMessage instanceof Term) {
       Term term = (Term) recentMessage;
-      return term.getName().equals("Time") && term.getValues().length == 1;
+      return term.getName() == Time && term.getValues().length == 1;
     } else return false;
   }
 
@@ -933,7 +1092,7 @@ public class Actor {
 
   public Object run(int instrs) {
 
-    // Run for the supplied number of instructions. If if the actor
+    // Run for the supplied number of instructions. If the actor
     // calls stop, then continue until it returns because this is
     // the last actor that is active in the system...
 
@@ -944,10 +1103,10 @@ public class Actor {
         incCodePtr();
         Instr next = getCode().getInstr(i);
         instructions++;
-        if (debug) System.out.println("NEXT = " + next);
-        // if (debug) printStack();
+        line = next.getLine();
+        instrListener.perform(this, next);
         next.perform(this);
-        if (stop) instrs = Integer.MAX_VALUE;
+        if (stop) instrs = Integer.MIN_VALUE;
         instrs--;
       }
       if (complete()) {
@@ -974,7 +1133,7 @@ public class Actor {
       if (recentlyHandledTime() && !messages.isEmpty())
         deliverMessage();
       else {
-        Term term = new Term("Time", time);
+        Term term = new Term(Time, time);
         recentMessage = term;
         processMessage(term);
       }
@@ -982,7 +1141,9 @@ public class Actor {
   }
 
   public void send(Object message, int time) {
-    messages.add(new Message(message, time));
+    Message m = new Message(message, time);
+    messages.add(m);
+    messageListener.addMessage(this, m);
   }
 
   public void setBehaviour(Behaviour behaviour) {

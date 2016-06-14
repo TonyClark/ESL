@@ -2,16 +2,24 @@ CodeBox(behaviour-main,1)
     0 FrameVar(0)
     1 SetPatternValues(1)
     2 Try(3,true)
-    3 IsTerm(PatternValue(0),Time,1)
+    3 IsTerm(PatternValue(0),Key(Time),1)
     4 Null
     5 Skip(2)
     6 CaseError
     7 Return
     8 StartCall
-    9 @DynamicVar(1,0)
-   10 New
-   11 NewJava(test.CollisionGUI,1)
-   12 PopFrame
+    9 Int(10000)
+   10 @DynamicVar(13,1)
+   11 Pop
+   12 StartCall
+   13 Int(5000)
+   14 @DynamicVar(14,1)
+   15 Pop
+   16 StartCall
+   17 @DynamicVar(1,0)
+   18 New
+   19 NewJava(test.CollisionGUI,1)
+   20 PopFrame
 CodeBox(lambda-max,2)
     0 FrameVar(0)
     1 FrameVar(1)
@@ -46,7 +54,7 @@ CodeBox(lambda-map11,3)
    21 Return
 CodeBox(lambda-hitBalls,2)
     0 Dynamic(8)
-    1 Ref(actors.Key@67424e82)
+    1 Ref(Key(balls))
     2 SetFrame(0)
     3 FrameVar(0)
     4 IsNil
@@ -65,9 +73,9 @@ CodeBox(lambda-hitBalls,2)
    17 SkipFalse(22)
    18 StartCall
    19 FrameVar(1)
-   20 Ref(actors.Key@42110406)
+   20 Ref(Key(x))
    21 FrameVar(1)
-   22 Ref(actors.Key@531d72ca)
+   22 Ref(Key(y))
    23 Dynamic(7)
    24 Dynamic(6)
    25 @DynamicVar(1,4)
@@ -93,13 +101,13 @@ CodeBox(lambda-hitWalls,0)
     0 Dynamic(7)
     1 Dynamic(5)
     2 Dynamic(8)
-    3 Ref(actors.Key@22d8cfe0)
-    4 Ref(actors.Key@579bb367)
+    3 Ref(Key(gui))
+    4 Ref(Key(ballSize))
     5 Add
     6 Add
     7 Dynamic(8)
-    8 Ref(actors.Key@22d8cfe0)
-    9 Ref(actors.Key@1de0aca6)
+    8 Ref(Key(gui))
+    9 Ref(Key(width))
    10 Gre
    11 SkipFalse(6)
    12 Int(0)
@@ -121,13 +129,13 @@ CodeBox(lambda-hitWalls,0)
    28 Dynamic(6)
    29 Dynamic(4)
    30 Dynamic(8)
-   31 Ref(actors.Key@22d8cfe0)
-   32 Ref(actors.Key@579bb367)
+   31 Ref(Key(gui))
+   32 Ref(Key(ballSize))
    33 Add
    34 Add
    35 Dynamic(8)
-   36 Ref(actors.Key@22d8cfe0)
-   37 Ref(actors.Key@255316f2)
+   36 Ref(Key(gui))
+   37 Ref(Key(height))
    38 Gre
    39 SkipFalse(6)
    40 Int(0)
@@ -171,15 +179,15 @@ CodeBox(lambda-ball,12)
    19 NewDynamic()
    20 StartCall
    21 Dynamic(8)
-   22 Ref(actors.Key@22d8cfe0)
-   23 Ref(actors.Key@1de0aca6)
+   22 Ref(Key(gui))
+   23 Ref(Key(width))
    24 @DynamicVar(18,1)
    25 SetDynamic(7)
    26 Pop
    27 StartCall
    28 Dynamic(8)
-   29 Ref(actors.Key@22d8cfe0)
-   30 Ref(actors.Key@255316f2)
+   29 Ref(Key(gui))
+   30 Ref(Key(height))
    31 @DynamicVar(18,1)
    32 SetDynamic(6)
    33 Pop
@@ -197,7 +205,7 @@ CodeBox(lambda-ball,12)
    45 Sub
    46 SetDynamic(4)
    47 Pop
-   48 Fun(checkDeltas,0)
+   48 Fun(checkDeltas,1)
    49 SetDynamic(3)
    50 Pop
    51 Fun(hitWalls,0)
@@ -209,7 +217,7 @@ CodeBox(lambda-ball,12)
    57 Fun(hitBalls,0)
    58 SetDynamic(0)
    59 Pop
-   60 Behaviour(ball,[null, null, null, null, null, null, actors.Key@531d72ca, actors.Key@42110406, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],47)
+   60 Behaviour(ball,[null, null, null, null, null, null, Key(y), Key(x), null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],47)
    61 PopDynamic
    62 PopDynamic
    63 PopDynamic
@@ -230,24 +238,24 @@ CodeBox(lambda-simulator,3)
     7 List(0)
     8 SetDynamic(0)
     9 Pop
-   10 Behaviour(simulator,[actors.Key@67424e82, actors.Key@22d8cfe0, null, null, null, null, null, null, null, null, null, null, null, null, null],54)
+   10 Behaviour(simulator,[Key(balls), Key(gui), null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],54)
    11 PopDynamic
    12 PopDynamic
    13 Return
 CodeBox(lambda-main,0)
-    0 Behaviour(main,[null, null, null, null, null, null, null, null, null, null, null, null, null],8)
+    0 Behaviour(main,[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],8)
     1 Return
 CodeBox(behaviour-simulator,4)
     0 FrameVar(0)
     1 SetPatternValues(1)
     2 Try(5,true)
-    3 IsTerm(PatternValue(0),SetGUI,1)
+    3 IsTerm(PatternValue(0),Key(SetGUI),1)
     4 SetFrame(TermRef(PatternValue(0),0),1)
     5 FrameVar(1)
     6 SetDynamic(1)
     7 Skip(46)
     8 Try(17,false)
-    9 IsTerm(PatternValue(0),Start,0)
+    9 IsTerm(PatternValue(0),Key(Start),0)
    10 Null
    11 NewDynamic()
    12 Fun(map11,1)
@@ -256,7 +264,7 @@ CodeBox(behaviour-simulator,4)
    15 StartCall
    16 Int(0)
    17 Dynamic(2)
-   18 Ref(actors.Key@41906a77)
+   18 Ref(Key(size))
    19 Int(1)
    20 Sub
    21 To
@@ -265,7 +273,7 @@ CodeBox(behaviour-simulator,4)
    24 SetDynamic(0)
    25 Skip(28)
    26 Try(21,false)
-   27 IsTerm(PatternValue(0),Stop,0)
+   27 IsTerm(PatternValue(0),Key(Stop),0)
    28 Dynamic(0)
    29 SetFrame(1)
    30 FrameVar(1)
@@ -287,7 +295,7 @@ CodeBox(behaviour-simulator,4)
    46 Null
    47 Skip(6)
    48 Try(3,false)
-   49 IsTerm(PatternValue(0),Time,1)
+   49 IsTerm(PatternValue(0),Key(Time),1)
    50 Null
    51 Skip(2)
    52 CaseError
@@ -302,8 +310,8 @@ CodeBox(lambda-overlaps,4)
     4 FrameVar(0)
     5 FrameVar(2)
     6 Dynamic(8)
-    7 Ref(actors.Key@22d8cfe0)
-    8 Ref(actors.Key@579bb367)
+    7 Ref(Key(gui))
+    8 Ref(Key(ballSize))
     9 Add
    10 Less
    11 Skip(2)
@@ -316,8 +324,8 @@ CodeBox(lambda-overlaps,4)
    18 FrameVar(1)
    19 FrameVar(3)
    20 Dynamic(8)
-   21 Ref(actors.Key@22d8cfe0)
-   22 Ref(actors.Key@579bb367)
+   21 Ref(Key(gui))
+   22 Ref(Key(ballSize))
    23 Add
    24 Less
    25 Skip(2)
@@ -334,8 +342,8 @@ CodeBox(lambda-overlaps,4)
    36 FrameVar(2)
    37 FrameVar(0)
    38 Dynamic(8)
-   39 Ref(actors.Key@22d8cfe0)
-   40 Ref(actors.Key@579bb367)
+   39 Ref(Key(gui))
+   40 Ref(Key(ballSize))
    41 Add
    42 Less
    43 Skip(2)
@@ -348,8 +356,8 @@ CodeBox(lambda-overlaps,4)
    50 FrameVar(3)
    51 FrameVar(1)
    52 Dynamic(8)
-   53 Ref(actors.Key@22d8cfe0)
-   54 Ref(actors.Key@579bb367)
+   53 Ref(Key(gui))
+   54 Ref(Key(ballSize))
    55 Add
    56 Less
    57 Skip(2)
@@ -366,19 +374,19 @@ CodeBox(lambda-min,2)
     5 Skip(2)
     6 FrameVar(1)
     7 Return
-CodeBox(lambda-checkDeltas,0)
+CodeBox(lambda-checkDeltas,1)
     0 Dynamic(5)
     1 Is0
     2 Dynamic(4)
     3 Is0
     4 And
-    5 SkipFalse(22)
+    5 SkipFalse(24)
     6 StartCall
     7 Int(2)
     8 @DynamicVar(18,1)
     9 Int(1)
    10 Sub
-   11 Int(2)
+   11 FrameVar(0)
    12 Mul
    13 SetDynamic(5)
    14 Pop
@@ -387,20 +395,22 @@ CodeBox(lambda-checkDeltas,0)
    17 @DynamicVar(18,1)
    18 Int(1)
    19 Sub
-   20 Int(2)
+   20 FrameVar(0)
    21 Mul
    22 SetDynamic(4)
    23 Pop
    24 StartCall
-   25 @DynamicVar(3,0)
-   26 Skip(2)
-   27 Null
-   28 Return
+   25 FrameVar(0)
+   26 Add1
+   27 @DynamicVar(3,1)
+   28 Skip(2)
+   29 Null
+   30 Return
 CodeBox(behaviour-ball,9)
     0 FrameVar(0)
     1 SetPatternValues(1)
     2 Try(42,true)
-    3 IsTerm(PatternValue(0),Time,1)
+    3 IsTerm(PatternValue(0),Key(Time),1)
     4 StartCall
     5 @DynamicVar(2,0)
     6 Pop
@@ -414,8 +424,8 @@ CodeBox(behaviour-ball,9)
    14 Dynamic(5)
    15 Add
    16 Dynamic(8)
-   17 Ref(actors.Key@22d8cfe0)
-   18 Ref(actors.Key@1de0aca6)
+   17 Ref(Key(gui))
+   18 Ref(Key(width))
    19 @DynamicVar(13,2)
    20 @DynamicVar(12,2)
    21 SetDynamic(7)
@@ -427,8 +437,8 @@ CodeBox(behaviour-ball,9)
    27 Dynamic(4)
    28 Add
    29 Dynamic(8)
-   30 Ref(actors.Key@22d8cfe0)
-   31 Ref(actors.Key@255316f2)
+   30 Ref(Key(gui))
+   31 Ref(Key(height))
    32 @DynamicVar(13,2)
    33 @DynamicVar(12,2)
    34 SetDynamic(6)
@@ -439,14 +449,15 @@ CodeBox(behaviour-ball,9)
    39 Term(Draw,3)
    40 Int(0)
    41 Dynamic(8)
-   42 Ref(actors.Key@22d8cfe0)
+   42 Ref(Key(gui))
    43 Send(1)
    44 Skip(2)
    45 CaseError
    46 Return
    47 StartCall
-   48 @DynamicVar(3,0)
-   49 PopFrame
+   48 Int(2)
+   49 @DynamicVar(3,1)
+   50 PopFrame
 CodeBox(asm/collisions.asm,6)
     0 StartCall
     1 Null
@@ -473,7 +484,7 @@ CodeBox(asm/collisions.asm,6)
    22 SetFrame(1)
    23 Pop
    24 FrameVar(1)
-   25 Field(actors.Key@4b9af9a9)
+   25 Field(Key(main))
    26 Record(1)
    27 PopDynamic
    28 PopDynamic
@@ -482,7 +493,7 @@ CodeBox(asm/collisions.asm,6)
    31 SetFrame(0)
    32 Pop
    33 FrameVar(0)
-   34 Ref(actors.Key@4b9af9a9)
+   34 Ref(Key(main))
    35 @(0)
    36 New
    37 Return

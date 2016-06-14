@@ -4,17 +4,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
-import ast.binding.Binding;
-import ast.binding.Let;
-import ast.lists.Head;
-import ast.lists.Tail;
 import ast.patterns.PTerm;
 import ast.patterns.Pattern;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "patterns", "guard", "exp" })
@@ -45,19 +41,13 @@ public class BArm {
     return args;
   }
 
-  private AST bind(int i, Vector<String> vars, AST vals, AST exp) {
-    if (i == vars.size())
-      return exp;
-    else return new Let(new Binding[] { new Binding(vars.get(i), new Head(vals)) }, bind(i + 1, vars, new Tail(vals), exp));
-  }
-
   private boolean binds(String name) {
     for (Pattern p : patterns)
       if (p.binds(name)) return true;
     return false;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> instrs, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox instrs, boolean isLast) {
 
     // Compile each of the patterns...
 
@@ -67,10 +57,10 @@ public class BArm {
     exp.compile(locals, dynamics, instrs, isLast);
   }
 
-  private void compileGuard(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> instrs) {
+  private void compileGuard(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox instrs) {
     if (!isTrivialGuard()) {
       guard.compile(locals, dynamics, instrs, false);
-      instrs.add(new instrs.patterns.FailFalse());
+      instrs.add(new instrs.patterns.FailFalse(guard.getLine()), locals, dynamics);
     }
   }
 
@@ -151,6 +141,11 @@ public class BArm {
 
   public String toString() {
     return "BArm(" + Arrays.toString(patterns) + "," + exp + ")";
+  }
+
+  public void setPath(String path) {
+    guard.setPath(path);
+    exp.setPath(path);
   }
 
 }

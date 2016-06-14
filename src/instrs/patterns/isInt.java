@@ -9,8 +9,8 @@ public class isInt extends Instr {
   Ref ref;
   int value;
 
-  public isInt(Ref ref, int value) {
-    super();
+  public isInt(int line, Ref ref, int value) {
+    super(line);
     this.ref = ref;
     this.value = value;
   }
@@ -23,7 +23,7 @@ public class isInt extends Instr {
   }
 
   public String toString() {
-    return "IsInt(" + ref + "," + value + ")";
+    return pprint("ISINT",ref,value);
   }
 
 }

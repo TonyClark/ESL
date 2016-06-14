@@ -10,8 +10,8 @@ public class FrameVarIsTerm extends Instr {
 
   int    index;
 
-  public FrameVarIsTerm(String name, int arity, int index) {
-    super();
+  public FrameVarIsTerm(int line, String name, int arity, int index) {
+    super(line);
     this.name = name;
     this.arity = arity;
     this.index = index;
@@ -28,7 +28,7 @@ public class FrameVarIsTerm extends Instr {
   }
 
   public String toString() {
-    return "FrameVarIsTerm(" + name + "," + arity + "," + index + ")";
+    return pprint("FRAMEVARISTERM",name,arity,index);
   }
 
 }

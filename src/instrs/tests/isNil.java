@@ -5,6 +5,10 @@ import instrs.Instr;
 
 public class isNil extends Instr {
 
+  public isNil(int line) {
+    super(line);
+  }
+
   public void perform(Actor actor) {
     if (actor.popStack() instanceof list.Nil)
       actor.pushStack(true);
@@ -12,7 +16,7 @@ public class isNil extends Instr {
   }
 
   public String toString() {
-    return "IsNil";
+    return pprint("ISNIL");
   }
 
 }

@@ -29,8 +29,8 @@ public class FunBind extends Binding {
   public FunBind() {
   }
 
-  public FunBind(String name, Pattern[] args, AST value, AST guard) {
-    super(name, value);
+  public FunBind(String path, String name, Pattern[] args, AST value, AST guard) {
+    super(path, name, value);
     this.args = args;
     this.guard = guard;
   }
@@ -56,11 +56,11 @@ public class FunBind extends Binding {
     }
     BArm a1 = new BArm(args, guard, value);
     BArm a2 = new BArm(ws, Bool.TRUE, new ast.control.Error(new BinExp(new Str("ran out of case arms in " + name), "+", new List(vs))));
-    return new Binding(name, new Fun(name, s, new Case(vs, new BArm[] { a1, a2 })));
+    return new Binding(path, name, new Fun(path, name, s, new Case(vs, new BArm[] { a1, a2 })));
   }
 
   private Binding desugarSimple() {
-    return new Binding(name, new Fun(name, simpleArgs(), new If(guard, value, new ast.control.Error(new Str("guard failed for " + name)))));
+    return new Binding(path, name, new Fun(path, name, simpleArgs(), new If(guard, value, new ast.control.Error(new Str("guard failed for " + name)))));
   }
 
   private String[] simpleArgs() {
@@ -82,11 +82,11 @@ public class FunBind extends Binding {
       p.vars(bound);
     if (bound.contains(name))
       return this;
-    else return new FunBind(this.name, args, value.subst(ast, name), guard.subst(ast, name));
+    else return new FunBind(path, this.name, args, value.subst(ast, name), guard.subst(ast, name));
   }
 
   public Binding substExportedValues(Collection<Module> values) {
-    return new FunBind(name, args, value.substExportedValues(values), guard.substExportedValues(values));
+    return new FunBind(path, name, args, value.substExportedValues(values), guard.substExportedValues(values));
   }
 
   public void FV(HashSet<String> vars) {

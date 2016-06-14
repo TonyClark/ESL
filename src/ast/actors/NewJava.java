@@ -2,14 +2,13 @@ package ast.actors;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import compiler.Local;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "className", "args" })
@@ -31,10 +30,10 @@ public class NewJava extends AST {
     return "NewJava(" + className + "," + Arrays.toString(args) + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     for (AST arg : args)
       arg.compile(locals, dynamics, code, false);
-    code.add(new instrs.data.NewJava(className, args.length));
+    code.add(new instrs.data.NewJava(getLine(),className, args.length),locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -56,6 +55,11 @@ public class NewJava extends AST {
 
   public AST subst(AST ast, String name) {
     return new NewJava(className, subst(args, ast, name));
+  }
+
+  public void setPath(String path) {
+    for(AST arg : args)
+      arg.setPath(path);
   }
 
 }

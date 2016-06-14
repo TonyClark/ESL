@@ -18,7 +18,7 @@ public class Closure implements Fun {
   }
 
   public String toString() {
-    return "Clo(" + name + "," + arity + "," + dynamics + "," + code + ")";
+    return "<" + name + "/" + arity + ">";
   }
 
   public int getArity() {
@@ -31,6 +31,10 @@ public class Closure implements Fun {
 
   public CodeBox getCode() {
     return code;
+  }
+
+  public String getName() {
+    return name;
   }
 
   public void apply(Actor actor, int arity) {

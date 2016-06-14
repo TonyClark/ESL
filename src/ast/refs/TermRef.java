@@ -20,7 +20,7 @@ public class TermRef extends Ref {
   }
 
   public String toString() {
-    return "TermRef(" + ref + "," + index + ")";
+    return ref + ".ref(" + index + ")";
   }
 
 }

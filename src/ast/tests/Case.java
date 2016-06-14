@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.patterns.Pattern;
 import compiler.DynamicVar;
@@ -37,24 +38,24 @@ public class Case extends AST {
     return "Case(" + Arrays.toString(exps) + "," + Arrays.toString(arms) + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
 
     // The exps are evaluated to produce the pattern values that are maintained in registers...
 
     for (AST exp : exps)
       exp.compile(locals, dynamics, code, false);
-    code.add(new instrs.patterns.SetPatternValues(exps.length));
+    code.add(new instrs.patterns.SetPatternValues(getLine(),exps.length), locals, dynamics);
 
     compileArms(locals, dynamics, code, isLast);
   }
 
-  public void compileArms(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compileArms(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
 
     // DEFINE THE dynamic vars up front ... then remove them at the end...
 
     // Compile each arm independently...
 
-    Vector<Vector<Instr>> armCode = new Vector<Vector<Instr>>();
+    Vector<CodeBox> armCode = new Vector<CodeBox>();
     Vector<HashSet<String>> armBV = new Vector<HashSet<String>>();
     Vector<HashSet<String>> armDV = new Vector<HashSet<String>>();
 
@@ -82,7 +83,7 @@ public class Case extends AST {
       List<FrameVar> armLocals = locals;
       List<DynamicVar> armDynamics = dynamics;
 
-      Vector<Instr> instrs = new Vector<Instr>();
+      CodeBox instrs = new CodeBox("",0);
 
       // We have just failed to here so remove the dynamic variables from the
       // previous arm...
@@ -90,21 +91,23 @@ public class Case extends AST {
       if (i > 0) {
         for (String v : armBV.get(i - 1)) {
           if (armDV.get(i - 1).contains(v)) {
-            instrs.add(new PopDynamic());
+            instrs.add(new PopDynamic(getLine()), locals, dynamics);
+            dynamics = dynamics.getTail();
           }
         }
       }
       for (String v : BV) {
         if (DV.contains(v)) {
           armDynamics = armDynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(v, 0));
-          instrs.add(new Null());
-          instrs.add(new NewDynamic());
+          instrs.add(new Null(getLine()), locals, dynamics);
+          instrs.add(new NewDynamic(getLine()), locals, dynamics);
         } else armLocals = armLocals.cons(new FrameVar(v, armLocals.length()));
       }
       arm.compile(armLocals, armDynamics, instrs, isLast && i == arms.length - 1);
       for (String v : BV) {
         if (DV.contains(v)) {
-          instrs.add(new PopDynamic());
+          instrs.add(new PopDynamic(getLine()), locals, dynamics);
+          dynamics = dynamics.getTail();
         }
       }
       armCode.add(instrs);
@@ -113,36 +116,37 @@ public class Case extends AST {
     // Now insert the TRY...SKIP instructions between the arms...
 
     for (int i = 0; i < armCode.size(); i++) {
-      int length = code.size();
-      instrs.patterns.Try tryArm = new instrs.patterns.Try(0, i == 0);
-      code.add(tryArm);
-      int base = code.size();
-      for (Instr instr : armCode.get(i)) {
+      int length = code.getCode().size();
+      instrs.patterns.Try tryArm = new instrs.patterns.Try(getLine(),0, i == 0);
+      code.add(tryArm, locals, dynamics);
+      int base = code.getCode().size();
+      CodeBox armCodeBox = armCode.get(i);
+      for (Instr instr : armCodeBox.getCode()) {
         if (instr instanceof Goto) {
           Goto g = (Goto) instr;
           g.setAddress(g.getAddress() + base);
         }
-        code.add(instr);
+        code.add(instr, armCodeBox.getLocalsAt(armCodeBox.indexOf(instr)), armCodeBox.getDynamicsAt(armCodeBox.indexOf(instr)));
       }
       // Jump over the rest of the case arms and the end error message...
       int distance = distance(armCode, i + 1) + 2;
-      Skip jmp = new Skip(distance);
-      code.add(jmp);
-      int offset = code.size() - length;
+      Skip jmp = new Skip(getLine(),distance);
+      code.add(jmp, locals, dynamics);
+      int offset = code.getCode().size() - length;
       tryArm.setOffset(offset - 1);
     }
 
     // Add in the error at the end of the case...
 
-    code.add(new instrs.patterns.CaseError(this));
+    code.add(new instrs.patterns.CaseError(getLine(),this), locals, dynamics);
   }
 
-  private int distance(Vector<Vector<Instr>> armCode, int start) {
+  private int distance(Vector<CodeBox> armCode, int start) {
     // Calculates the length of the code between i and the end. Careful to
     // add in the TRY and SKIP instructions...
     int distance = 0;
     for (int i = start; i < armCode.size(); i++)
-      distance = distance + armCode.get(i).size() + 2;
+      distance = distance + armCode.get(i).getCode().size() + 2;
     return distance;
   }
 
@@ -178,6 +182,13 @@ public class Case extends AST {
     for (int i = 0; i < arms.length; i++)
       as[i] = arms[i].subst(ast, name);
     return as;
+  }
+
+  public void setPath(String path) {
+    for (AST exp : exps)
+      exp.setPath(path);
+    for(BArm arm : arms)
+      arm.setPath(path);
   }
 
 }

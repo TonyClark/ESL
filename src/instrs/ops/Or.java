@@ -16,8 +16,12 @@ public class Or extends Instr {
    *                                                                                    *
    * ************************************************************************************/
 
+  public Or(int line) {
+    super(line);
+  }
+
   public String toString() {
-    return "Or";
+    return pprint("OR");
   }
 
   public void perform(Actor actor) {

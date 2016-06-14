@@ -6,13 +6,17 @@ import list.Cons;
 
 public class Head extends Instr {
 
+  public Head(int line) {
+    super(line);
+  }
+
   public void perform(Actor actor) {
     Cons<Object> c = (Cons) actor.popStack();
     actor.pushStack(c.getHead());
   }
 
   public String toString() {
-    return "Head";
+    return pprint("HEAD");
   }
 
 }

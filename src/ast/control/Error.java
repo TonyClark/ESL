@@ -1,12 +1,11 @@
 package ast.control;
 
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
-import instrs.Instr;
 import list.List;
 
 public class Error extends AST {
@@ -17,9 +16,9 @@ public class Error extends AST {
     this.message = message;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     message.compile(locals, dynamics, code, false);
-    code.add(new instrs.control.Error());
+    code.add(new instrs.control.Error(getLine()), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -40,6 +39,10 @@ public class Error extends AST {
 
   public String toString() {
     return "Error(" + message + ")";
+  }
+
+  public void setPath(String path) {
+    message.setPath(path);
   }
 
 }

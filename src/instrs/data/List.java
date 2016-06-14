@@ -8,12 +8,13 @@ public class List extends Instr {
 
   int length;
 
-  public List(int length) {
+  public List(int line, int length) {
+    super(line);
     this.length = length;
   }
 
   public String toString() {
-    return "List(" + length + ")";
+   return pprint("LIST",length);
   }
 
   public void perform(Actor actor) {

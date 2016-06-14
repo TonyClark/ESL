@@ -5,12 +5,16 @@ import instrs.Instr;
 
 public class Add1 extends Instr {
 
+  public Add1(int line) {
+    super(line);
+  }
+
   public void perform(Actor actor) {
     actor.pushStack((int)actor.popStack()+1);
   }
 
   public String toString() {
-    return "Add1";
+    return pprint("ADD1");
   }
 
 }

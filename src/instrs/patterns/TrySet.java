@@ -10,14 +10,14 @@ public class TrySet extends Instr {
   int id;
   Ref ref;
 
-  public TrySet(int id, Ref ref) {
-    super();
+  public TrySet(int line, int id, Ref ref) {
+    super(line);
     this.id = id;
     this.ref = ref;
   }
 
   public String toString() {
-    return "TrySet(" + id + "," + ref + ")";
+    return pprint("TRYSET",id,ref);
   }
 
   public void perform(Actor actor) {

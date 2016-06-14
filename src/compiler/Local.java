@@ -1,9 +1,8 @@
 package compiler;
 
-import java.util.Vector;
-
+import actors.CodeBox;
 import ast.refs.Ref;
-import instrs.Instr;
+import list.List;
 
 public abstract class Local {
 
@@ -24,18 +23,18 @@ public abstract class Local {
     return index;
   }
 
-  public abstract void compile(Vector<Instr> code);
+  public abstract void compile(int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics);
 
-  public abstract void update(Vector<Instr> code);
+  public abstract void update(int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics);
 
-  public abstract void sub1(Vector<Instr> code);
+  public abstract void sub1(int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics);
 
-  public abstract void apply(int arity, Vector<Instr> code, boolean isLast);
+  public abstract void apply(int arity, int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics, boolean isLast);
 
-  public abstract void isCons(Vector<Instr> code);
+  public abstract void isCons(int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics);
 
-  public abstract void isTerm(String name, int arity, Vector<Instr> code);
+  public abstract void isTerm(String name, int arity, int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics);
 
-  public abstract void bind(Ref ref, Vector<Instr> code);
+  public abstract void bind(Ref ref, int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics);
 
 }

@@ -7,8 +7,8 @@ public class SetPatternValues extends Instr {
 
   int length;
 
-  public SetPatternValues(int length) {
-    super();
+  public SetPatternValues(int line, int length) {
+    super(line);
     this.length = length;
   }
 
@@ -18,7 +18,7 @@ public class SetPatternValues extends Instr {
   }
 
   public String toString() {
-    return "SetPatternValues(" + length + ")";
+    return pprint("SETPATVALS",length);
   }
 
 }

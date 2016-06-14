@@ -8,8 +8,8 @@ public class isTrue extends Instr {
 
   Ref ref;
 
-  public isTrue(Ref ref) {
-    super();
+  public isTrue(int line, Ref ref) {
+    super(line);
     this.ref = ref;
   }
 
@@ -18,6 +18,10 @@ public class isTrue extends Instr {
     if (o instanceof Boolean) {
       if (o.equals(Boolean.FALSE)) actor.fail();
     } else actor.fail();
+  }
+
+  public String toString() {
+    return pprint("ISTRUE",ref);
   }
 
 }

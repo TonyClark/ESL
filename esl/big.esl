@@ -4,7 +4,7 @@ var = 0;
 
 act x {
   -> for n in 0..1000 do var := var + 1;
-  Time(_) ->{}
+  Time(_) -> var := var + 1
 };
 
 act main {
@@ -12,7 +12,7 @@ act main {
   -> for n in 0..100 do {
        new x
      };
-  Time(100) -> { print(var); stopAll() };
+  Time(n) when n > 1000 -> { print(var); stopAll() };
   Time(n) -> { }
 
 }

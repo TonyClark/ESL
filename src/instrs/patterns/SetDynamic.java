@@ -9,7 +9,8 @@ public class SetDynamic extends Instr {
   Ref ref;
   int index;
 
-  public SetDynamic(Ref ref, int index) {
+  public SetDynamic(int line, Ref ref, int index) {
+    super(line);
     this.ref = ref;
     this.index = index;
   }
@@ -19,7 +20,7 @@ public class SetDynamic extends Instr {
   }
 
   public String toString() {
-    return "SetDynamic(" + ref + "," + index + ")";
+    return pprint("SETDYNAMIC",ref,index);
   }
 
 }

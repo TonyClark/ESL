@@ -22,6 +22,7 @@ public class Fun extends AST {
 
   static int      funCount = 0;
 
+  public String   path;
   public String   name;
   public String[] args;
   public AST      body;
@@ -35,15 +36,22 @@ public class Fun extends AST {
     this.body = body;
   }
 
+  public Fun(String path, String name, String[] args, AST body) {
+    this.path = path;
+    this.name = name;
+    this.args = args;
+    this.body = body;
+  }
+
   public static String newName() {
     return "fun" + (funCount++);
   }
 
   public String toString() {
-    return "Fun(" + name + "," + Arrays.toString(args) + "," + body + ")";
+    return "Fun(" + getLine() + "," + name + "," + Arrays.toString(args) + "," + body + ")";
   }
 
-  public void compileBody(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> bodyCode, boolean isLast) {
+  public void compileBody(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox bodyCode, boolean isLast) {
 
     // A function compiles by capturing the current dynamic variable environment.
     // Although the arguments are passed on the stack and therefore becomes part
@@ -56,31 +64,31 @@ public class Fun extends AST {
     int index = 0;
     for (String arg : args) {
       if (dv.contains(arg)) {
-        bodyCode.add(new instrs.vars.FrameVar(argIndex(arg)));
-        bodyCode.add(new NewDynamic());
+        bodyCode.add(new instrs.vars.FrameVar(getLine(), argIndex(arg)), locals, dynamics);
+        bodyCode.add(new NewDynamic(getLine()), locals, dynamics);
         dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(arg, 0));
       } else locals = locals.cons(new FrameVar(arg, index));
       index++;
     }
     body.compile(locals, dynamics, bodyCode, true);
-    bodyCode.add(new Return());
+    bodyCode.add(new Return(getLine()), locals, dynamics);
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     int frame = body.maxLocals() + args.length;
-    Vector<Instr> bodyCode = new Vector<Instr>();
+    CodeBox bodyCode = new CodeBox(path, frame);
     compileBody(locals, dynamics, bodyCode, isLast);
-    code.add(new instrs.data.Fun(name, args.length, new CodeBox(frame, bodyCode)));
+    code.add(new instrs.data.Fun(getLine(), name, args.length, bodyCode), locals, dynamics);
   }
 
-  public void compileApply(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compileApply(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
 
     // Called when the function is created in order to immediately apply...
 
     int frame = body.maxLocals() + args.length;
-    Vector<Instr> bodyCode = new Vector<Instr>();
+    CodeBox bodyCode = new CodeBox(path, frame);
     compileBody(locals, dynamics, bodyCode, isLast);
-    code.add(new ApplyFun(name, args.length, new CodeBox(frame, bodyCode)));
+    code.add(new ApplyFun(getLine(), name, args.length, bodyCode), locals, dynamics);
   }
 
   private int argIndex(String arg) {
@@ -115,7 +123,12 @@ public class Fun extends AST {
   public AST subst(AST ast, String name) {
     if (binds(name))
       return this;
-    else return new Fun(this.name, args, body.subst(ast, name));
+    else return new Fun(path, this.name, args, body.subst(ast, name));
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+    body.setPath(path);
   }
 
 }

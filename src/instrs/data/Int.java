@@ -7,12 +7,13 @@ public class Int extends Instr {
 
   int value;
 
-  public Int(int value) {
+  public Int(int line, int value) {
+    super(line);
     this.value = value;
   }
 
   public String toString() {
-    return "Int(" + value + ")";
+   return pprint("INT",value);
   }
 
   public void perform(Actor actor) {

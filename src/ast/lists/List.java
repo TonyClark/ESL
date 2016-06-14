@@ -2,13 +2,12 @@ package ast.lists;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 
 @BoaConstructor(fields = { "elements" })
 
@@ -27,10 +26,10 @@ public class List extends AST {
     return "List(" + Arrays.toString(elements) + ")";
   }
 
-  public void compile(list.List<FrameVar> locals, list.List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(list.List<FrameVar> locals, list.List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     for (AST e : elements)
       e.compile(locals, dynamics, code, false);
-    code.add(new instrs.data.List(elements.length));
+    code.add(new instrs.data.List(getLine(),elements.length), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -48,6 +47,11 @@ public class List extends AST {
 
   public AST subst(AST ast, String name) {
     return new List(subst(elements, ast, name));
+  }
+
+  public void setPath(String path) {
+    for(AST element : elements)
+      element.setPath(path);
   }
 
 }

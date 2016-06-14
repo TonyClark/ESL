@@ -3,6 +3,7 @@ package ast.binding;
 import java.util.HashSet;
 import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import ast.data.BinExp;
 import ast.data.Int;
@@ -28,24 +29,24 @@ public class Update extends AST {
     this.value = value;
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     if (isSub1())
       compileSub1(locals, dynamics, code);
     else {
-      value.compile(locals, dynamics, code,false);
+      value.compile(locals, dynamics, code, false);
       if (lookup(name, locals) != null)
-        lookup(name, locals).update(code);
+        lookup(name, locals).update(getLine(), code, locals, dynamics);
       else if (lookup(name, dynamics) != null)
-        lookup(name, dynamics).update(code);
+        lookup(name, dynamics).update(getLine(), code, locals, dynamics);
       else throw new java.lang.Error("cannot update " + name + " in " + locals + " and " + dynamics);
     }
   }
 
-  private void compileSub1(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  private void compileSub1(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     if (lookup(name, locals) != null)
-      lookup(name, locals).sub1(code);
+      lookup(name, locals).sub1(getLine(), code, locals, dynamics);
     else if (lookup(name, dynamics) != null)
-      lookup(name, dynamics).sub1(code);
+      lookup(name, dynamics).sub1(getLine(), code, locals, dynamics);
     else throw new java.lang.Error("cannot subtract 1 from " + name + " in " + locals + " and " + dynamics);
   }
 
@@ -84,6 +85,10 @@ public class Update extends AST {
 
   public String toString() {
     return "Update(" + name + "," + value + ")";
+  }
+
+  public void setPath(String path) {
+    value.setPath(path);
   }
 
 }

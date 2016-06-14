@@ -28,6 +28,7 @@ import list.Nil;
 
 public class Act extends AST {
 
+  String           path;
   public String    name;
   public String[]  exports;
   public Binding[] bindings;
@@ -37,8 +38,9 @@ public class Act extends AST {
   public Act() {
   }
 
-  public Act(String name, String[] exports, Binding[] bindings, AST init, BArm[] arms) {
-    super();
+  public Act(int line, String path, String name, String[] exports, Binding[] bindings, AST init, BArm[] arms) {
+    setLine(line);
+    this.path = path;
     this.name = name;
     this.exports = exports;
     this.bindings = bindings;
@@ -47,10 +49,10 @@ public class Act extends AST {
   }
 
   public String toString() {
-    return "Act(" + name + "," + exports + "," + init + "," + Arrays.toString(arms) + ")";
+    return "Act(" + getLine() + "," + name + "," + Arrays.toString(exports) + "," + init + "," + Arrays.toString(arms) + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
 
     // An act definition returns a behaviour. The bindings in the behaviour must be constructed
     // as recursive bindings *and* be dynamic variables so that '.' can find them. Therefore,
@@ -60,42 +62,43 @@ public class Act extends AST {
     bindings = Binding.mergeBindings(bindings);
 
     for (Binding b : bindings) {
+      code.add(new Null(getLine()), locals, dynamics);
+      code.add(new NewDynamic(getLine()), locals, dynamics);
       dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(b.name, 0));
-      code.add(new Null());
-      code.add(new NewDynamic());
     }
     for (Binding b : bindings) {
       b.value.compile(locals, dynamics, code, false);
-      code.add(new SetDynamic(lookup(b.name, dynamics).getIndex()));
-      code.add(new Pop());
+      code.add(new SetDynamic(b.value.getLine(), lookup(b.name, dynamics).getIndex()), locals, dynamics);
+      code.add(new Pop(b.value.getLine()), locals, dynamics);
     }
     orderExports(dynamics);
     compileBehaviour(locals, dynamics, code);
 
     // Remove the dynamics...
     for (Binding b : bindings) {
-      code.add(new PopDynamic());
+      code.add(new PopDynamic(getLine()), locals, dynamics);
+      dynamics = dynamics.getTail();
     }
   }
 
-  public void compileBehaviour(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code) {
+  public void compileBehaviour(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
 
     // Compilation of a behaviour produces a closure-like value that captures the current
     // dynamics and waits to be transformed into an actor via 'new'.
 
-    Vector<Instr> bodyCode = new Vector<Instr>();
+    CodeBox bodyCode = new CodeBox(path, maxLocals() + 1);
     // Message will be local 0 in the stack frame...
     locals = new Nil<FrameVar>().cons(new FrameVar("$0", 0));
-    bodyCode.add(new instrs.vars.FrameVar(0));
+    bodyCode.add(new instrs.vars.FrameVar(getLine(), 0), locals, dynamics);
     Case handlers = new Case(new AST[] {}, arms);
-    bodyCode.add(new instrs.patterns.SetPatternValues(1));
+    bodyCode.add(new instrs.patterns.SetPatternValues(getLine(), 1), locals, dynamics);
     handlers.compileArms(locals, dynamics, bodyCode, true);
-    bodyCode.add(new Return());
-    int initIndex = bodyCode.size();
+    bodyCode.add(new Return(getLine()), locals, dynamics);
+    int initIndex = bodyCode.getCode().size();
     init.compile(locals, dynamics, bodyCode, false);
-    bodyCode.add(new PopFrame());
+    bodyCode.add(new PopFrame(getLine()), locals, dynamics);
     // Set the locals + 1 since the message is the first local...
-    code.add(new instrs.data.Behaviour(name, toKeys(exports), initIndex, new CodeBox(maxLocals() + 1, bodyCode)));
+    code.add(new instrs.data.Behaviour(getLine(), name, toKeys(exports), initIndex, bodyCode), locals, dynamics);
   }
 
   private Key[] toKeys(String[] exports) {
@@ -159,7 +162,7 @@ public class Act extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Act(this.name, exports, substBindings(ast, name), init.subst(ast, name), substArms(ast, name));
+    return new Act(getLine(), path, this.name, exports, substBindings(ast, name), init.subst(ast, name), substArms(ast, name));
   }
 
   private BArm[] substArms(AST ast, String name) {
@@ -175,6 +178,15 @@ public class Act extends AST {
     for (int i = 0; i < bindings.length; i++)
       bs[i] = bindings[i].subst(ast, name);
     return bs;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+    for (Binding b : bindings)
+      b.setPath(path);
+    init.setPath(path);
+    for (BArm b : arms)
+      b.setPath(path);
   }
 
 }

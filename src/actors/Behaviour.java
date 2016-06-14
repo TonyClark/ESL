@@ -52,10 +52,6 @@ public class Behaviour {
     return name;
   }
 
-  public CodeBox getTimeHandlingCode() {
-    return code.getTimeHandlingCode();
-  }
-
   public Key[] getExports() {
     return exports;
   }
@@ -78,6 +74,10 @@ public class Behaviour {
     for (int i = 0; i < exports.length; i++)
       if (name == exports[i]) return i;
     return -1;
+  }
+
+  public String getPath() {
+    return code.getPath();
   }
 
 }

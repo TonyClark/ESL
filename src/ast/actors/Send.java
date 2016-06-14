@@ -2,13 +2,12 @@ package ast.actors;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Vector;
 
+import actors.CodeBox;
 import ast.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "target", "args", "time" })
@@ -32,12 +31,12 @@ public class Send extends AST {
     return "Send(" + target + "," + Arrays.toString(args) + "," + time + ")";
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Vector<Instr> code, boolean isLast) {
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     for (AST arg : args)
       arg.compile(locals, dynamics, code, false);
     time.compile(locals, dynamics, code, false);
     target.compile(locals, dynamics, code, false);
-    code.add(new instrs.data.Send(args.length));
+    code.add(new instrs.data.Send(getLine(),args.length),locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -59,6 +58,13 @@ public class Send extends AST {
 
   public AST subst(AST ast, String name) {
     return new Send(target.subst(ast, name), subst(args, ast, name), time.subst(ast, name));
+  }
+
+  public void setPath(String path) {
+    for(AST arg : args)
+      arg.setPath(path);
+    target.setPath(path);
+    time.setPath(path);
   }
 
 }

@@ -7,8 +7,8 @@ public class Record extends Instr {
 
   int length;
 
-  public Record(int length) {
-    super();
+  public Record(int line, int length) {
+    super(line);
     this.length = length;
   }
 
@@ -20,7 +20,7 @@ public class Record extends Instr {
   }
 
   public String toString() {
-    return "Record(" + length + ")";
+   return pprint("RECORD",length);
   }
 
 }
