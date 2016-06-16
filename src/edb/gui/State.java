@@ -1,4 +1,4 @@
-package edb;
+package edb.gui;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -9,7 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import actors.Message;
-import edb.variables.Variables;
+import edb.gui.variables.Variables;
+import edb.tool.EDB;
 
 public class State extends JPanel {
 

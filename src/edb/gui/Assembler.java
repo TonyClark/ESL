@@ -1,4 +1,4 @@
-package edb;
+package edb.gui;
 
 import java.awt.Font;
 import java.util.Vector;
@@ -28,8 +28,8 @@ public class Assembler extends JTextPane {
       Vector<Instr> instrs = code.getCode();
       String asm = "";
       for (Instr i : instrs)
-        // asm = asm + i + "(" + i.getLine() + ")" + "\n";
-        asm = asm + i + "\n";
+        asm = asm + i + "(" + i.getLine() + ")" + "\n";
+        //asm = asm + i + "\n";
       setText(asm);
       setCaretPosition(0);
     }

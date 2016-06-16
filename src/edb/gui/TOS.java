@@ -1,4 +1,4 @@
-package edb;
+package edb.gui;
 
 import java.awt.BorderLayout;
 

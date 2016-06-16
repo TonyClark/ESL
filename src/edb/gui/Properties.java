@@ -1,4 +1,4 @@
-package edb;
+package edb.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,7 +33,8 @@ import actors.Dynamic;
 import actors.Field;
 import actors.Key;
 import actors.Record;
-import edb.variables.Variable;
+import edb.gui.variables.Variable;
+import edb.tool.EDB;
 import list.List;
 
 public class Properties extends JPanel implements TableModel, MouseListener {

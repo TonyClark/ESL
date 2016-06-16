@@ -1,4 +1,4 @@
-package edb.variables;
+package edb.gui.variables;
 
 public class Variable {
   

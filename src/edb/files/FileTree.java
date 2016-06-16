@@ -33,7 +33,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import edb.EDB;
+import edb.tool.EDB;
 
 public class FileTree extends JTree implements MouseListener, FocusListener {
 

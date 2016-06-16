@@ -1,4 +1,4 @@
-package edb;
+package edb.gui;
 
 import java.awt.Font;
 import java.awt.event.MouseEvent;
@@ -9,6 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JList;
 
 import actors.Actor;
+import edb.tool.EDB;
 
 public class Actors extends JList<Actor> implements MouseListener {
 

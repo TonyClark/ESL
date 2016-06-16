@@ -18,9 +18,9 @@ import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
 
-import edb.EDB;
 import edb.actions.FontAction;
 import edb.actions.ResizeFont;
+import edb.tool.EDB;
 
 public class Console extends JTextPane implements MouseListener, ResizeFont, FocusListener {
 

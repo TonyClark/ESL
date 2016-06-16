@@ -1,4 +1,4 @@
-package edb;
+package edb.tool;
 
 public enum EDBState {
 

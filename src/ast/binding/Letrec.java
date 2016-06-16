@@ -27,7 +27,8 @@ public class Letrec extends AST {
   public Letrec() {
   }
 
-  public Letrec(Binding[] bindings, AST exp) {
+  public Letrec(int line, Binding[] bindings, AST exp) {
+    setLine(line);
     this.bindings = bindings;
     this.exp = exp;
   }
@@ -67,10 +68,10 @@ public class Letrec extends AST {
     for (Binding b : bindings) {
       b.value.compile(locals, dynamics, code, false);
       if (isDynamic(b.name)) {
-        code.add(new SetDynamic(getLine(),lookup(b.name, dynamics).getIndex()), locals, dynamics);
+        code.add(new SetDynamic(getLine(), lookup(b.name, dynamics).getIndex()), locals, dynamics);
         code.add(new Pop(getLine()), locals, dynamics);
       } else {
-        code.add(new SetFrame(getLine(),lookup(b.name, locals).getIndex()), locals, dynamics);
+        code.add(new SetFrame(getLine(), lookup(b.name, locals).getIndex()), locals, dynamics);
         code.add(new Pop(getLine()), locals, dynamics);
       }
     }
@@ -138,7 +139,7 @@ public class Letrec extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    AST letrec = new Letrec(substBindings(ast, name), binds(name) ? exp : exp.subst(ast, name));
+    AST letrec = new Letrec(getLine(), substBindings(ast, name), binds(name) ? exp : exp.subst(ast, name));
     return letrec;
   }
 
@@ -158,7 +159,7 @@ public class Letrec extends AST {
   }
 
   public void setPath(String path) {
-    for(Binding b : bindings)
+    for (Binding b : bindings)
       b.setPath(path);
     exp.setPath(path);
   }

@@ -36,12 +36,12 @@ import javax.swing.undo.UndoManager;
 
 import context.ParseError;
 import context.StringSource;
-import edb.EDB;
 import edb.actions.FontAction;
 import edb.actions.RedoAction;
 import edb.actions.ResizeFont;
 import edb.actions.SaveAction;
 import edb.actions.UndoAction;
+import edb.tool.EDB;
 import exp.Exp;
 import grammar.Grammar;
 import xpl.Interpreter;

@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.swing.JScrollPane;
 
 import actors.Actor;
-import edb.EDB;
+import edb.tool.EDB;
 
 public class FileEditors extends EditorTabbedPane {
 

@@ -59,7 +59,7 @@ public class Find extends AST {
     BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PWild()) }, Bool.TRUE, body);
     Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2, arm3 });
     Fun fun = new Fun(path, findName(), new String[] { "l" }, caseExp);
-    return new Letrec(new Binding[] { new Binding(path, "$find", fun) }, new Apply(new Var("$find"), list));
+    return new Letrec(getLine(),new Binding[] { new Binding(path, "$find", fun) }, new Apply(new Var("$find"), list));
   }
 
   private String findName() {

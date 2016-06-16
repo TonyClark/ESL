@@ -7,7 +7,7 @@ import javax.swing.JEditorPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import edb.EDB;
+import edb.tool.EDB;
 
 public class HTMLViewer extends JEditorPane implements HyperlinkListener {
 

@@ -1,4 +1,4 @@
-package edb;
+package edb.tool;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -44,6 +44,11 @@ import edb.console.ConsoleOutputStream;
 import edb.editor.FileEditor;
 import edb.editor.FileEditors;
 import edb.files.FileTree;
+import edb.gui.ActorStack;
+import edb.gui.Actors;
+import edb.gui.Assembler;
+import edb.gui.Properties;
+import edb.gui.State;
 import instrs.Instr;
 import instrs.apply.Return;
 import list.Nil;
@@ -114,10 +119,10 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
       }
     });
     JButton step = new JButton(getImage("icons/step.png", BUTTON_SIZE, BUTTON_SIZE));
-    step.setToolTipText("step");
+    step.setToolTipText("step over");
     step.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        step();
+        stepOver();
       }
     });
     JButton run = new JButton(getImage("icons/run.png", BUTTON_SIZE, BUTTON_SIZE));
@@ -472,10 +477,10 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     return statePanel;
   }
 
-  public void step() {
+  public void stepOver() {
     if (machine != null && !machine.stop) {
       showTitle(EDBState.STEPPING, machine.getPath());
-      machine.step();
+      machine.stepOver();
     }
   }
 

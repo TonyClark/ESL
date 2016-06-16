@@ -1,4 +1,4 @@
-package edb.variables;
+package edb.gui.variables;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,8 +13,8 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
-import edb.EDB;
-import edb.State;
+import edb.gui.State;
+import edb.tool.EDB;
 
 public class Variables extends JPanel implements TableModel, MouseListener {
 

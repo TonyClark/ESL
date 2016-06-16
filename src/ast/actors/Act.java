@@ -91,6 +91,7 @@ public class Act extends AST {
     locals = new Nil<FrameVar>().cons(new FrameVar("$0", 0));
     bodyCode.add(new instrs.vars.FrameVar(getLine(), 0), locals, dynamics);
     Case handlers = new Case(new AST[] {}, arms);
+    handlers.setLine(getFirstHandlerLine());
     bodyCode.add(new instrs.patterns.SetPatternValues(getLine(), 1), locals, dynamics);
     handlers.compileArms(locals, dynamics, bodyCode, true);
     bodyCode.add(new Return(getLine()), locals, dynamics);
@@ -99,6 +100,12 @@ public class Act extends AST {
     bodyCode.add(new PopFrame(getLine()), locals, dynamics);
     // Set the locals + 1 since the message is the first local...
     code.add(new instrs.data.Behaviour(getLine(), name, toKeys(exports), initIndex, bodyCode), locals, dynamics);
+  }
+
+  private int getFirstHandlerLine() {
+    if (arms.length == 0)
+      return -1;
+    else return arms[0].patterns[0].getLine();
   }
 
   private Key[] toKeys(String[] exports) {

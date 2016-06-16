@@ -1,4 +1,4 @@
-package edb;
+package edb.tool;
 
 import java.util.Collections;
 import java.util.Vector;
@@ -30,14 +30,6 @@ public class Machine {
     // For testing...
     Actor.MAX_INSTRS = 10;
     Actor.INSTRS_PER_TIME_UNIT = 10;
-  }
-
-  public String getPath() {
-    return path;
-  }
-
-  public Actor getStart() {
-    return start;
   }
 
   private void advanceTime() {
@@ -82,7 +74,7 @@ public class Machine {
 
   private void completeAll() {
     while (!stop) {
-      stepNextActor();
+      stepOverNextActor();
     }
   }
 
@@ -91,6 +83,27 @@ public class Machine {
       Instr instr = a.nextInstr();
       edb.openActor(a, instr.getLine(), a.getCodePtr());
     }
+  }
+
+  private int getCurrentLine(Actor a) {
+    // Get the line number of the actor...
+    Instr instr = a.nextInstr();
+    if (instr == null)
+      return -1;
+    else return instr.getLine();
+  }
+
+  private int getCurrentStackFrame(Actor a) {
+    // Get the stack frame for the actor...
+    return a.getFrame();
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public Actor getStart() {
+    return start;
   }
 
   public void init() {
@@ -138,25 +151,45 @@ public class Machine {
     resetActors();
   }
 
-  public void step() {
+  public void stepOver() {
+    // Step over the current line...
     if (!Actor.isStop()) {
-      if (start != null)
-        stepMain();
-      else stepNextActor();
+      if (start != null) {
+        stepOverMain();
+      } else stepOverNextActor();
     }
   }
 
-  public void stepMain() {
+  public void stepOverMain() {
+
     // This is the start actor that must be run before
-    // all the actors start to time-slice...
-    start.run(1);
+    // all the actors start to time-slice. Get the current
+    // line and the current stack frame and continually step
+    // until the line is increased with respect to the
+    // stack frame or when the starting actor completes...
+
+    stepOver(start);
     if (start.complete()) {
       start = null;
       initAll();
     } else display(start);
   }
 
-  private void stepNextActor() {
+  public int stepOver(Actor a) {
+
+    // Keep moving until we hit the next line...
+
+    int line = getCurrentLine(a);
+    int stackFrame = getCurrentStackFrame(a);
+    int instrs = 0;
+    while (!a.complete() && (getCurrentStackFrame(a) > stackFrame || getCurrentLine(a) <= line)) {
+      a.run(1);
+      instrs++;
+    }
+    return instrs;
+  }
+
+  private void stepOverNextActor() {
     while (nothingScheduled()) {
       instrs = Actor.INSTRS_PER_TIME_UNIT;
       resetStepper();
@@ -165,11 +198,11 @@ public class Machine {
     }
     if (actorIndex >= actors.size()) {
       resetStepper();
-      step();
-    } else if (runSteps == Actor.MAX_INSTRS) {
+      stepOver();
+    } else if (runSteps >= Actor.MAX_INSTRS) {
       actorIndex++;
       runSteps = 0;
-      step();
+      stepOver();
     } else {
       Actor a = actors.get(actorIndex);
       if (runSteps == 0) {
@@ -177,8 +210,7 @@ public class Machine {
           a.scheduleMessage();
         }
       }
-      a.run(1);
-      runSteps++;
+      runSteps += stepOver(a);
       display(a);
     }
   }

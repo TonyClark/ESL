@@ -70,7 +70,7 @@ public class For extends AST {
     BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t")) }, Bool.TRUE, new Block(body, new Apply(new Var("$f"), new Var("$t"))));
     Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2, arm3 });
     Fun fun = new Fun(path, forName(), new String[] { "l" }, caseExp);
-    return new Letrec(new Binding[] { new Binding(path, "$f", fun) }, new Apply(new Var("$f"), list));
+    return new Letrec(getLine(),new Binding[] { new Binding(path, "$f", fun) }, new Apply(new Var("$f"), list));
   }
 
   private String forName() {

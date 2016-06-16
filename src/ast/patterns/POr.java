@@ -55,7 +55,7 @@ public class POr extends Pattern {
     Skip skip2 = new Skip(getLine(), 0);
     code.add(skip2, locals, dynamics);
     int l3 = code.getCode().size();
-    code.add(new instrs.patterns.Fail(-1), locals, dynamics);
+    code.add(new instrs.patterns.Fail(getLine()), locals, dynamics);
     int l4 = code.getCode().size();
     choice.setOffset((l2 - l1) - 1);
     skip1.setCount((l4 - l2) + 1);
