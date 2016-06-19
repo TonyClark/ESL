@@ -5,12 +5,15 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.binding.Dec;
 import ast.binding.Var;
 import ast.data.Fun;
 import ast.tests.BArm;
 import ast.tests.Case;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import list.List;
 
@@ -54,7 +57,7 @@ public class Try extends AST {
   }
 
   public AST desugarBody() {
-    return new Fun(path, tryBodyName(), new String[] {}, body);
+    return new Fun(path, tryBodyName(), new Dec[] {}, ast.types.Void.VOID, body);
   }
 
   private String tryBodyName() {
@@ -62,7 +65,7 @@ public class Try extends AST {
   }
 
   public AST desugarCatch() {
-    return new Fun(path, catchName(), new String[] { "$1" }, new Case(new AST[] { new Var("$1") }, arms));
+    return new Fun(path, catchName(), new Dec[] { new Dec(path, "$1", ast.types.Void.VOID) }, ast.types.Void.VOID, new Case(new AST[] { new Var("$1") }, arms));
   }
 
   private String catchName() {
@@ -99,6 +102,11 @@ public class Try extends AST {
     body.setPath(path);
     for (BArm arm : arms)
       arm.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    // Need to check that the arms are OK...
+   return body.type(env);
   }
 
 }

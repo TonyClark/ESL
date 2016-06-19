@@ -1,0 +1,46 @@
+export main;
+
+x:Int = 1;
+y:Str = 'plap';
+z:Bool = true;
+
+type X = Int;
+
+f:(Int)->Int = fun(x:Int):Int x+1;
+
+type Main = Act { Time(Void) -> Void };
+
+act main:Main {
+  a = 1;
+  b = 2;
+
+  c = 3
+
+  Time(_) -> {
+    let g:[Int] = [1,
+                   2,
+                   3,4,5];
+        h:Int = 2;
+
+        i:Int = 3
+
+    in stopAll()
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

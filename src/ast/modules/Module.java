@@ -86,7 +86,7 @@ public class Module {
     // ...
     // in M
     Binding[] bindings = allBindings();
-    return new Letrec(1,bindings, new Var(name));
+    return new Letrec(1, bindings, new Var(name));
   }
 
   private static Binding[] allBindings() {
@@ -99,13 +99,13 @@ public class Module {
   }
 
   private Binding asBinding() {
-    return new Binding(path, name, new Letrec(1,getBindings(), getExportedRecord()));
+    return new Binding(path, name, new ast.types.Void(), new Letrec(1, getBindings(), getExportedRecord()));
   }
 
   private AST getExportedRecord() {
     Binding[] fields = new Binding[exports.length];
     for (int i = 0; i < fields.length; i++)
-      fields[i] = new Binding(path, exports[i], new Var(exports[i]));
+      fields[i] = new Binding(path, exports[i], new ast.types.Void(), new Var(exports[i]));
     return new Record(fields);
   }
 

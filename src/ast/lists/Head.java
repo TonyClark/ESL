@@ -4,8 +4,11 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Type;
+import ast.types.TypeError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import list.List;
 
 public class Head extends AST {
@@ -43,6 +46,14 @@ public class Head extends AST {
 
   public void setPath(String path) {
     value.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    Type type = value.type(env);
+    if (type instanceof ast.types.List) {
+      ast.types.List list = (ast.types.List) type;
+      return list.getType();
+    } else throw new TypeError(this, "expecting a list type " + type);
   }
 
 }

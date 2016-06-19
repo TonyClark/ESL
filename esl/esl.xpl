@@ -17,10 +17,11 @@ esl = {
   tplvlExp        -> e=exp semi { e };
   
   bindings        -> b=binding ! bs=(semi binding)* { b:bs } | {[]};
-  binding         -> whitespace b=(valbind | funbind | actbind) ! {b};
-  valbind         -> n=name eql e=exp { Binding(n,e) };
-  funbind         -> n=name lparen ps=funargs rparen eql e=exp g=guard { FunBind(n,ps,e,g) };
-  actbind         -> [[ 'act' n=name ps=actargs lcurl es=exports bs = bindings i=actinit as=barms rcurl  { Binding(n,Fun(n,ps,Act(n,es,bs,i,as))) } ]];
+  binding         -> whitespace b=(valbind | funbind | actbind | typebind) ! {b};
+  valbind         -> n=name t=optType eql e=exp { Binding(n,t,e) };
+  funbind         -> n=name lparen ps=funargs rparen t=optType eql e=exp g=guard { FunBind(n,ps,t,e,g) };
+  actbind         -> [[ 'act' n=name t=optType ps=actargs lcurl es=exports bs = bindings i=actinit as=barms rcurl  { Binding(n,FunType([],t),Fun(n,ps,t,Act(n,es,bs,i,as))) } ]];
+  typebind        -> [[ 'type' n=Name eql t=type { Binding(n,VoidType(),t) } ]];
   actargs         -> lparen ps=params rparen {ps} | {[]};
   actinit         -> arrow e=exp semi {e} | { Null() };
   barms           -> a=barm ! as=(semi barm)* { a:as };
@@ -28,7 +29,7 @@ esl = {
   patterns        -> p=pattern ps=(comma pattern)* { p:ps };
   pattern         -> whitespace s=[[simplePattern]] ! (colon p=pattern { PCons(s,p) } | 'or' p=pattern { POr(s,p) } | '+' p=pattern { PAdd(s,p) } | {s});
   simplePattern   -> pVar | pInt | pTerm | pList | pStr | pBool | pWild | pNull | pBag | pSet | lparen p=pattern rparen {p};
-  pVar            -> n=name (eql p=pattern { PBind(n,p) } | { PVar(n) });
+  pVar            -> n=name t=optType (eql p=pattern { PBind(n,t,p) } | { PVar(n,t) });
   pInt            -> n=int { PInt(n) };
   pStr            -> s=string { PStr(s) };
   pBool           ->  ('true' ! { PBool(true) } | 'false' { PBool(false) });
@@ -45,7 +46,8 @@ esl = {
   pSetTail(p)     -> rcurl { PSetCons(p,PEmptySet()) };
   pSetTail(p)     -> comma ps=pSetTail { PSetCons(p,ps) };
   pSetTail(p)     -> bar b=pattern rcurl { PSetCons(p,b) };
-  params          -> n=name ns=(comma name)* { n:ns } | {[]};
+  params          -> n=dec ns=(comma dec)* { n:ns } | {[]};
+  dec             -> n=name t=optType { Dec(n,t) };
   guard           -> 'when' exp | { Bool(true) };
   funargs         -> patterns | {[]};
   exp             -> e=simpleExp ! postexp^(e);
@@ -62,7 +64,7 @@ esl = {
                   |  [[ 'new'     n=name (lparen ps=exps rparen { New(Apply(Var(n),ps)) } | { New(Apply(Var(n),[])) }) ]]
                   |  [[ 'new'     s=string (lparen ps=exps rparen { NewJava(s,ps) } | { NewJava(s,[]) }) ]]
                   |  [[ 'not'    ! e=exp { Not(e) } ]]
-                  |  [[ 'fun'    ! lparen as=params rparen e=exp { Fun(Fun.newName(),as,e) } ]]
+                  |  [[ 'fun'    ! lparen as=params rparen t=optType e=exp { Fun(Fun.newName(),as,t,e) } ]]
                   |  [[ 'let'    ! bs=bindings  'in' e=exp { Let(bs,e) } ]]
                   |  [[ 'letrec' ! bs=bindings  'in' e=exp { Letrec(bs,e) } ]]
                   |  [[ 'case'   ! es=caseValues lcurl as=barms rcurl { Case(es,as) } ]]
@@ -93,8 +95,27 @@ esl = {
   quals           -> q=qual qs=(comma qual)* { q:qs };
   qual            -> p=pattern leftArrow e=exp { BQual(p,e) };
   qual            -> query e=exp { PQual(e) };
-  probably        -> [[ 'probably' lparen p=exp rparen e1=exp whitespace 'else' e2=exp { Apply(Apply(Var('probably'),[p,Fun(Fun.newName(),[],e1),Fun(Fun.newName(),[],e2)]),[]) } ]];
+  probably        -> [[ 'probably' lparen p=exp rparen e1=exp whitespace 'else' e2=exp { Apply(Apply(Var('probably'),[p,Fun(Fun.newName(),[],VoidType(),e1),Fun(Fun.newName(),VoidType(),[],e2)]),[]) } ]];
   
+  type        -> [[ 'Int' { IntType() } ]]
+              |  [[ 'Bool' { BoolType() } ]]
+              |  [[ 'Str' { StrType() } ]]
+              |  [[ 'Null' { NullType() } ]]
+              |  [[ 'Void' { VoidType() } ]]
+              |  [[ lsquare t=type rsquare { ListType(t) } ]]
+              |  [[ lparen ts=types rparen arrow t=type { FunType(ts,t) } ]]
+              |  [[ 'Bag' lcurl t=type rcurl { BagType(t) } ]]
+              |  [[ 'Set' lcurl t=type rcurl { SetType(t) } ]]
+              |  [[ 'Act' lcurl ns=handlerTypes rcurl { ActType(ns) } ]]
+              |  [[ n=Name lparen ts = types rparen { TermType(n,ts) } ]] 
+              |  [[ n=Name { TypeVar(n) } ]];
+              
+              
+  optType     -> colon type | { VoidType() };
+  types       -> t=type ts=(comma type)* { t:ts } | {[]};
+  handlerTypes -> m=handlerType ms=(semi handlerType)* { m:ms };
+  handlerType -> [[ m=types arrow t=type { HandlerType(m,t) } ]]
+              |  [[ whitespace n=Name arrow t=type { HandlerType(TermType(n,[]),t) } ]];
   
   whitespace  -> SKIPWHITE('//','/*','*/');
   lcurl       -> whitespace '{';

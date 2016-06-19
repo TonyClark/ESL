@@ -7,8 +7,10 @@ import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
 import ast.data.Apply;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import list.List;
 
@@ -62,9 +64,16 @@ public class Cmp extends AST {
   }
 
   public void setPath(String path) {
-    for(Qualifier q : qualifiers)
+    for (Qualifier q : qualifiers)
       q.setPath(path);
     exp.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    for (Qualifier q : qualifiers) {
+      env = q.bind(env);
+    }
+    return new ast.types.List(exp.type(env));
   }
 
 }

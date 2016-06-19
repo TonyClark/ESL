@@ -15,23 +15,26 @@ import ast.patterns.PVar;
 import ast.patterns.PWild;
 import ast.patterns.Pattern;
 import ast.tests.BArm;
-import ast.tests.If;
 import ast.tests.Case;
+import ast.tests.If;
+import ast.types.Type;
 import exp.BoaConstructor;
 
-@BoaConstructor(fields = { "name", "args", "value", "guard" })
+@BoaConstructor(fields = { "name", "args", "type", "value", "guard" })
 
 public class FunBind extends Binding {
 
   public Pattern[] args;
   public AST       guard;
+  public Type      type;
 
   public FunBind() {
   }
 
-  public FunBind(String path, String name, Pattern[] args, AST value, AST guard) {
-    super(path, name, value);
+  public FunBind(String path, String name, Pattern[] args, Type type, AST value, AST guard) {
+    super(path, name, new ast.types.Void(), value);
     this.args = args;
+    this.type = type;
     this.guard = guard;
   }
 
@@ -46,27 +49,27 @@ public class FunBind extends Binding {
   }
 
   private Binding desugarPattern() {
-    String[] s = new String[args.length];
+    Dec[] s = new Dec[args.length];
     AST[] vs = new AST[args.length];
     Pattern[] ws = new Pattern[args.length];
     for (int i = 0; i < args.length; i++) {
-      s[i] = "$" + i;
+      s[i] = new Dec(path, "$" + i, new ast.types.Void());
       vs[i] = new Var("$" + i);
       ws[i] = new PWild();
     }
     BArm a1 = new BArm(args, guard, value);
     BArm a2 = new BArm(ws, Bool.TRUE, new ast.control.Error(new BinExp(new Str("ran out of case arms in " + name), "+", new List(vs))));
-    return new Binding(path, name, new Fun(path, name, s, new Case(vs, new BArm[] { a1, a2 })));
+    return new Binding(path, name, new ast.types.Void(), new Fun(path, name, s, type, new Case(vs, new BArm[] { a1, a2 })));
   }
 
   private Binding desugarSimple() {
-    return new Binding(path, name, new Fun(path, name, simpleArgs(), new If(guard, value, new ast.control.Error(new Str("guard failed for " + name)))));
+    return new Binding(path, name, new ast.types.Void(), new Fun(path, name, simpleArgs(), type, new If(guard, value, new ast.control.Error(new Str("guard failed for " + name)))));
   }
 
-  private String[] simpleArgs() {
-    String[] s = new String[args.length];
+  private Dec[] simpleArgs() {
+    Dec[] s = new Dec[args.length];
     for (int i = 0; i < args.length; i++)
-      s[i] = ((PVar) args[i]).name;
+      s[i] = new Dec(path, ((PVar) args[i]).name, new ast.types.Void());
     return s;
   }
 
@@ -82,11 +85,11 @@ public class FunBind extends Binding {
       p.vars(bound);
     if (bound.contains(name))
       return this;
-    else return new FunBind(path, this.name, args, value.subst(ast, name), guard.subst(ast, name));
+    else return new FunBind(path, this.name, args, type, value.subst(ast, name), guard.subst(ast, name));
   }
 
   public Binding substExportedValues(Collection<Module> values) {
-    return new FunBind(path, name, args, value.substExportedValues(values), guard.substExportedValues(values));
+    return new FunBind(path, name, args, type, value.substExportedValues(values), guard.substExportedValues(values));
   }
 
   public void FV(HashSet<String> vars) {

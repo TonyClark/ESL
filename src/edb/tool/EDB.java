@@ -37,6 +37,7 @@ import ast.actors.New;
 import ast.data.Apply;
 import ast.data.Ref;
 import ast.modules.Module;
+import ast.types.TypeError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import edb.console.Console;
@@ -49,6 +50,7 @@ import edb.gui.Actors;
 import edb.gui.Assembler;
 import edb.gui.Properties;
 import edb.gui.State;
+import env.Empty;
 import instrs.Instr;
 import instrs.apply.Return;
 import list.Nil;
@@ -327,6 +329,11 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
           Module module = Module.importModule(path);
           module.resolve();
           AST record = new New(new Apply(new Ref(module.desugar(), Key.getKey("main"))));
+          // try {
+          // System.out.println(record + "\n is of type\n" + record.type(new env.Empty<String, ast.types.Type>()));
+          // } catch(TypeError e) {
+          // e.printStackTrace(System.out);
+          // }
           CodeBox codebox = new CodeBox(path, record.maxLocals());
           record.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), codebox, true);
           codebox.add(new Return(-1), new Nil<FrameVar>(), new Nil<DynamicVar>());

@@ -4,8 +4,10 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import instrs.data.False;
 import instrs.data.True;
@@ -14,10 +16,10 @@ import list.List;
 @BoaConstructor(fields = { "value" })
 public class Bool extends AST {
 
-  public static final AST TRUE = new Bool(true);
+  public static final AST TRUE  = new Bool(true);
   public static final AST FALSE = new Bool(false);
-  
-  public boolean value;
+
+  public boolean          value;
 
   public Bool() {
   }
@@ -51,6 +53,10 @@ public class Bool extends AST {
   }
 
   public void setPath(String path) {
+  }
+
+  public Type type(Env<String, Type> env) {
+    return ast.types.Bool.BOOL;
   }
 
 }

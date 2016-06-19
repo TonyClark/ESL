@@ -5,8 +5,11 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Type;
+import ast.types.TypeMatchError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import instrs.data.Pop;
 import instrs.vars.NewDynamic;
@@ -48,7 +51,7 @@ public class Let extends AST {
       } else {
         b.value.compile(locals, dynamics, code, false);
         locals = locals.cons(new FrameVar(b.name, locals.length()));
-        code.add(new SetFrame(getLine(),locals.length() - 1), locals, dynamics);
+        code.add(new SetFrame(getLine(), locals.length() - 1), locals, dynamics);
         code.add(new Pop(getLine()), locals, dynamics);
       }
     }
@@ -113,9 +116,22 @@ public class Let extends AST {
   }
 
   public void setPath(String path) {
-    for(Binding b : bindings)
+    for (Binding b : bindings)
       b.setPath(path);
     exp.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    Env<String, Type> bodyEnv = env;
+    for (Binding b : bindings) {
+      Type bType = b.getType();
+      Type vType = b.getValue().type(env);
+      Type type = bType.bind(vType);
+      if (type != null)
+        bodyEnv = bodyEnv.bind(b.getName(), type);
+      else throw new TypeMatchError(this, bType, vType);
+    }
+    return exp.type(bodyEnv);
   }
 
 }

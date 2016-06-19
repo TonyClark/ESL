@@ -4,8 +4,11 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Type;
+import ast.types.TypeError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import list.List;
 
@@ -49,6 +52,11 @@ public class Throw extends AST {
 
   public void setPath(String path) {
     value.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    value.type(env);
+    return ast.types.Void.VOID;
   }
 
 }

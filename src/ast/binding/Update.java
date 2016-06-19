@@ -1,16 +1,18 @@
 package ast.binding;
 
 import java.util.HashSet;
-import java.util.Vector;
 
 import actors.CodeBox;
 import ast.AST;
 import ast.data.BinExp;
 import ast.data.Int;
+import ast.types.Type;
+import ast.types.TypeError;
+import ast.types.TypeMatchError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
-import instrs.Instr;
 import list.List;
 
 @BoaConstructor(fields = { "name", "value" })
@@ -89,6 +91,17 @@ public class Update extends AST {
 
   public void setPath(String path) {
     value.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    Type valueType = value.type(env);
+    if (env.binds(name)) {
+      Type varType = env.lookup(name);
+      Type type = varType.bind(valueType);
+      if (type != null)
+        return type;
+      else throw new TypeMatchError(this, valueType, varType);
+    } throw new TypeError(this,"unbound variable " + name);
   }
 
 }

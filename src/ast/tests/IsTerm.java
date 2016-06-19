@@ -6,8 +6,10 @@ import java.util.Vector;
 import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import instrs.Instr;
 import list.List;
 
@@ -81,6 +83,11 @@ public class IsTerm extends AST {
 
   public void setPath(String path) {
     value.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    value.type(env);
+    return ast.types.Bool.BOOL;
   }
 
 }

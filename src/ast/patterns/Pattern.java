@@ -7,8 +7,10 @@ import actors.CodeBox;
 import ast.AST;
 import ast.data.BinExp;
 import ast.refs.Ref;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import list.List;
 import values.Located;
 
@@ -39,5 +41,9 @@ public abstract class Pattern implements Located {
   public void setLine(int line) {
     this.line = line;
   }
+
+  public abstract Type type(Env<String, Type> env);
+
+  public abstract Env<String, Type> bind(Env<String, Type> env, Type type);
 
 }

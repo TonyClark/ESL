@@ -1,15 +1,16 @@
 package ast.data;
 
 import java.util.HashSet;
-import java.util.Vector;
 
 import actors.CodeBox;
 import ast.AST;
 import ast.tests.If;
+import ast.types.Type;
+import ast.types.TypeError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
-import instrs.Instr;
 import instrs.ops.Add;
 import instrs.ops.Add1;
 import instrs.ops.And;
@@ -87,7 +88,7 @@ public class BinExp extends AST {
           code.add(new Eql(getLine()), locals, dynamics);
           break;
         case ">":
-          code.add(new Gre(getLine()),locals, dynamics);
+          code.add(new Gre(getLine()), locals, dynamics);
           break;
         case "<":
           code.add(new Less(getLine()), locals, dynamics);
@@ -105,7 +106,7 @@ public class BinExp extends AST {
           code.add(new Or(getLine()), locals, dynamics);
           break;
         case "..":
-          code.add(new To(getLine()),locals, dynamics);
+          code.add(new To(getLine()), locals, dynamics);
           break;
         case "%":
           code.add(new Mod(getLine()), locals, dynamics);
@@ -151,7 +152,7 @@ public class BinExp extends AST {
   private void compileEqlBool(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     left.compile(locals, dynamics, code, false);
     Bool b = (Bool) right;
-    code.add(new IsBool(getLine(),b.value), locals, dynamics);
+    code.add(new IsBool(getLine(), b.value), locals, dynamics);
   }
 
   private boolean isEql0() {
@@ -195,6 +196,18 @@ public class BinExp extends AST {
   public void setPath(String path) {
     left.setPath(path);
     right.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    Type t1 = left.type(env);
+    Type t2 = right.type(env);
+    if (op.equals("+")) {
+      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+        return ast.types.Int.INT;
+      else if (t1 instanceof ast.types.Str || t2 instanceof ast.types.Str)
+        return ast.types.Str.STR;
+      else throw new TypeError(this, "+ expects two integers: " + t1 + " and " + t2);
+    } else throw new TypeError(this, "unknown operator " + op);
   }
 
 }

@@ -2,7 +2,6 @@ package ast.actors;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Vector;
 
 import actors.CodeBox;
 import actors.Key;
@@ -10,10 +9,12 @@ import ast.AST;
 import ast.binding.Binding;
 import ast.tests.BArm;
 import ast.tests.Case;
+import ast.types.HandlerType;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
-import instrs.Instr;
 import instrs.apply.PopFrame;
 import instrs.apply.Return;
 import instrs.data.Null;
@@ -194,6 +195,14 @@ public class Act extends AST {
     init.setPath(path);
     for (BArm b : arms)
       b.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    HandlerType[] handlers = new HandlerType[arms.length];
+    for (int i = 0; i < arms.length; i++) {
+      handlers[i] = arms[i].type(env);
+    }
+    return new ast.types.Act(handlers);
   }
 
 }

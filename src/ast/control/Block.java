@@ -5,8 +5,10 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import instrs.data.Null;
 import instrs.data.Pop;
@@ -65,8 +67,15 @@ public class Block extends AST {
   }
 
   public void setPath(String path) {
-    for(AST exp : exps)
+    for (AST exp : exps)
       exp.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    Type type = ast.types.Null.NULL;
+    for (AST exp : exps)
+      type = exp.type(env);
+    return type;
   }
 
 }

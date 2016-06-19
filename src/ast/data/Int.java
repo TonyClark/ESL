@@ -4,8 +4,10 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import list.List;
 
@@ -27,7 +29,7 @@ public class Int extends AST {
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new instrs.data.Int(getLine(),value), locals, dynamics);
+    code.add(new instrs.data.Int(getLine(), value), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -45,6 +47,10 @@ public class Int extends AST {
   }
 
   public void setPath(String path) {
+  }
+
+  public Type type(Env<String, Type> env) {
+    return ast.types.Int.INT;
   }
 
 }

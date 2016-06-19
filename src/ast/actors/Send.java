@@ -5,8 +5,11 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Type;
+import ast.types.TypeError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import list.List;
 
@@ -36,7 +39,7 @@ public class Send extends AST {
       arg.compile(locals, dynamics, code, false);
     time.compile(locals, dynamics, code, false);
     target.compile(locals, dynamics, code, false);
-    code.add(new instrs.data.Send(getLine(),args.length),locals, dynamics);
+    code.add(new instrs.data.Send(getLine(), args.length), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -61,10 +64,25 @@ public class Send extends AST {
   }
 
   public void setPath(String path) {
-    for(AST arg : args)
+    for (AST arg : args)
       arg.setPath(path);
     target.setPath(path);
     time.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    Type type = target.type(env);
+    if (type instanceof ast.types.Act) {
+      ast.types.Act act = (ast.types.Act) type;
+      Type[] types = new Type[args.length];
+      for (int i = 0; i < args.length; i++) {
+        types[i] = args[i].type(env);
+      }
+      Type resultType = act.getType(types);
+      if (resultType != null)
+        return resultType;
+      else throw new TypeError(this, "cannot sent a message of type " + Arrays.toString(types) + " to an actor of type " + act);
+    } else throw new TypeError(this, "expecting an actor type but found " + type);
   }
 
 }

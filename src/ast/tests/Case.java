@@ -7,8 +7,11 @@ import java.util.Vector;
 import actors.CodeBox;
 import ast.AST;
 import ast.patterns.Pattern;
+import ast.types.HandlerType;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import instrs.Instr;
 import instrs.data.Null;
@@ -44,7 +47,7 @@ public class Case extends AST {
 
     for (AST exp : exps)
       exp.compile(locals, dynamics, code, false);
-    code.add(new instrs.patterns.SetPatternValues(getLine(),exps.length), locals, dynamics);
+    code.add(new instrs.patterns.SetPatternValues(getLine(), exps.length), locals, dynamics);
 
     compileArms(locals, dynamics, code, isLast);
   }
@@ -83,7 +86,7 @@ public class Case extends AST {
       List<FrameVar> armLocals = locals;
       List<DynamicVar> armDynamics = dynamics;
 
-      CodeBox instrs = new CodeBox("",0);
+      CodeBox instrs = new CodeBox("", 0);
 
       // We have just failed to here so remove the dynamic variables from the
       // previous arm...
@@ -117,7 +120,7 @@ public class Case extends AST {
 
     for (int i = 0; i < armCode.size(); i++) {
       int length = code.getCode().size();
-      instrs.patterns.Try tryArm = new instrs.patterns.Try(getLine(),0, i == 0);
+      instrs.patterns.Try tryArm = new instrs.patterns.Try(getLine(), 0, i == 0);
       code.add(tryArm, locals, dynamics);
       int base = code.getCode().size();
       CodeBox armCodeBox = armCode.get(i);
@@ -130,7 +133,7 @@ public class Case extends AST {
       }
       // Jump over the rest of the case arms and the end error message...
       int distance = distance(armCode, i + 1) + 2;
-      Skip jmp = new Skip(getLine(),distance);
+      Skip jmp = new Skip(getLine(), distance);
       code.add(jmp, locals, dynamics);
       int offset = code.getCode().size() - length;
       tryArm.setOffset(offset - 1);
@@ -138,7 +141,7 @@ public class Case extends AST {
 
     // Add in the error at the end of the case...
 
-    code.add(new instrs.patterns.CaseError(getLine(),this), locals, dynamics);
+    code.add(new instrs.patterns.CaseError(getLine(), this), locals, dynamics);
   }
 
   private int distance(Vector<CodeBox> armCode, int start) {
@@ -187,8 +190,23 @@ public class Case extends AST {
   public void setPath(String path) {
     for (AST exp : exps)
       exp.setPath(path);
-    for(BArm arm : arms)
+    for (BArm arm : arms)
       arm.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    // Need to check that the arms are all consistent.
+    // Can also check that the type of the exps match at least one handler type...
+    Type[] types = new Type[exps.length];
+    for (int i = 0; i < types.length; i++) {
+      types[i] = exps[i].type(env);
+    }
+    Type t = ast.types.Void.VOID;
+    for (BArm arm : arms) {
+      HandlerType h = arm.type(env);
+      t = h.getResult();
+    }
+    return t;
   }
 
 }

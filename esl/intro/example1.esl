@@ -8,14 +8,16 @@ export main;
 
 // A file consists of a series of top-level definitions. This
 // file contains a single definition for main...
+
+type Main = Act { Time(Bool) -> Void };
   
-act main {
+act main:Main {
 
   // The body of a behaviour contains rules that match messages.
   // Messages are sent to an actor. The system sends Time(n)
   // messages at regular intervals.
 
-  Time(t) -> {
+  Time(t:Int) -> {
 
     // When an actor with the main behaviour processes a Time(n)
     // message, it prints a message and stops the system...
@@ -33,6 +35,9 @@ act main {
 // (4) The main actor will appear in the list of actors.
 // (5) Send regular Time(t) messages by pressing the run button (top left).
 // (6) The message will appear in the console.
+
+
+
 
 
 

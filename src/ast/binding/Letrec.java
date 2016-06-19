@@ -5,9 +5,12 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Box;
+import ast.types.Type;
+import ast.types.TypeMatchError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
-import compiler.Local;
+import env.Env;
 import exp.BoaConstructor;
 import instrs.data.Null;
 import instrs.data.Pop;
@@ -162,6 +165,53 @@ public class Letrec extends AST {
     for (Binding b : bindings)
       b.setPath(path);
     exp.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    for (Binding b : valueBindings()) {
+      env = env.bind(b.getName(), new Box());
+    }
+    for (Binding b : typeBindings()) {
+      env = env.bind(b.getName(), (Type) b.getValue());
+    }
+    for (Binding b : valueBindings()) {
+      Box box = (Box) env.lookup(b.getName());
+      System.out.println("BINDING " + b.getName() + ":" + b.getType() + "=" + b.getValue());
+      Type bType = b.getType().eval(env);
+      System.out.println(b.getType() + " eval to " + bType);
+      Type vType = b.getValue().type(env).eval(env);
+      System.out.println("vType = " + vType);
+      Type type = bType.bind(vType);
+      if (type != null)
+        box.setType(type);
+      else throw new TypeMatchError(this, vType, bType);
+
+    }
+    return exp.type(env);
+  }
+
+  public Binding[] valueBindings() {
+    // Just return those bindings that define values (e.g. not types)...
+    int vb = 0;
+    for (Binding b : bindings)
+      if (b.isValueBinding()) vb++;
+    Binding[] valueBindings = new Binding[vb];
+    int i = 0;
+    for (Binding b : bindings)
+      if (b.isValueBinding()) valueBindings[i++] = b;
+    return valueBindings;
+  }
+
+  public Binding[] typeBindings() {
+    // Just return those bindings that define types...
+    int tb = 0;
+    for (Binding b : bindings)
+      if (b.isTypeBinding()) tb++;
+    Binding[] typeBindings = new Binding[tb];
+    int i = 0;
+    for (Binding b : bindings)
+      if (b.isTypeBinding()) typeBindings[i++] = b;
+    return typeBindings;
   }
 
 }

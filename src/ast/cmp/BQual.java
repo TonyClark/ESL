@@ -1,11 +1,13 @@
 package ast.cmp;
 
 import java.util.HashSet;
-import java.util.Vector;
 
 import ast.AST;
 import ast.lists.Map;
 import ast.patterns.Pattern;
+import ast.types.Type;
+import ast.types.TypeError;
+import env.Env;
 import exp.BoaConstructor;
 
 @BoaConstructor(fields = { "pattern", "exp" })
@@ -36,6 +38,14 @@ public class BQual extends Qualifier {
 
   public void setPath(String path) {
     exp.setPath(path);
+  }
+
+  public Env<String, Type> bind(Env<String, Type> env) {
+    Type type = exp.type(env);
+    if (type instanceof ast.types.List) {
+      ast.types.List list = (ast.types.List) type;
+      return pattern.bind(env, list.getType());
+    } else throw new TypeError(exp, "expecting a list type " + type);
   }
 
 }

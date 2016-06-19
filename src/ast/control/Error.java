@@ -4,8 +4,11 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Type;
+import ast.types.TypeError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import list.List;
 
 public class Error extends AST {
@@ -43,6 +46,14 @@ public class Error extends AST {
 
   public void setPath(String path) {
     message.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    Type type = message.type(env);
+    if (type.equals(ast.types.Str.STR))
+      return ast.types.Void.VOID;
+    else throw new TypeError(this, "error messages should be strings");
+
   }
 
 }

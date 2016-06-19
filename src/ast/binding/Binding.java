@@ -12,13 +12,14 @@ import ast.modules.Module;
 import ast.patterns.PWild;
 import ast.patterns.Pattern;
 import ast.tests.BArm;
-import ast.tests.If;
 import ast.tests.Case;
+import ast.tests.If;
+import ast.types.Type;
 import exp.BoaConstructor;
 
-@BoaConstructor(fields = { "name", "value" })
+@BoaConstructor(fields = { "name", "type", "value" })
 
-public class Binding {
+public class Binding extends Dec {
 
   private static int checkSameArity(String name, Vector<FunBind> fs) {
     int arity = -1;
@@ -57,7 +58,7 @@ public class Binding {
     // The pattern of merge is different for 0-arity functions. All but the
     // last must have guards and they use nested if-expressions...
 
-    return new Fun(name, new String[] {}, merge0ArityFunctions(name, fs, 0));
+    return new Fun(name, new Dec[] {}, ast.types.Void.VOID, merge0ArityFunctions(name, fs, 0));
   }
 
   private static AST merge0ArityFunctions(String name, Vector<FunBind> fs, int i) {
@@ -69,13 +70,15 @@ public class Binding {
   private static Binding mergeBinding(Binding[] bindings, String name) {
     Vector<FunBind> fs = new Vector<FunBind>();
     String path = "";
+    Type type = new ast.types.Void();
     for (Binding b : bindings) {
       path = b.path;
+      type = b.type;
       if (b.getName().equals(name)) if (b instanceof FunBind)
         fs.add((FunBind) b);
       else throw new java.lang.Error("duplicate bindings must be functions: " + name);
     }
-    return new Binding(path, name, mergeFunctions(name, fs));
+    return new Binding(path, name, type, mergeFunctions(name, fs));
   }
 
   public static Binding[] mergeBindings(Binding[] bindings) {
@@ -112,11 +115,11 @@ public class Binding {
     if (arity == 0)
       return merge0ArityFunctions(name, fs);
     else {
-      String[] args = new String[arity];
+      Dec[] args = new Dec[arity];
       Pattern[] dummies = new Pattern[arity];
       AST[] vars = new AST[arity];
       for (int i = 0; i < arity; i++) {
-        args[i] = "$" + i;
+        args[i] = new Dec(fs.get(i).getPath(), "$" + i, ast.types.Void.VOID);
         dummies[i] = new PWild();
         vars[i] = new Var("$" + i);
       }
@@ -128,21 +131,17 @@ public class Binding {
         arms[definition] = new BArm(patterns, fs.get(definition).guard, fs.get(definition).value);
       }
       arms[fs.size()] = new BArm(dummies, Bool.TRUE, new ast.control.Error(new Str("ran out of options for " + name)));
-      return new Fun(name, args, new Case(vars, arms));
+      return new Fun(name, args, ast.types.Void.VOID, new Case(vars, arms));
     }
   }
 
-  public String name;
-  public String path;
-  public AST    value;
+  public AST value;
 
   public Binding() {
   }
 
-  public Binding(String path, String name, AST value) {
-    super();
-    this.path = path;
-    this.name = name;
+  public Binding(String path, String name, Type type, AST value) {
+    super(path, name, type);
     this.value = value;
   }
 
@@ -166,12 +165,32 @@ public class Binding {
     return value;
   }
 
+  public Type getType() {
+    return type;
+  }
+
+  public void setType(Type type) {
+    this.type = type;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setValue(AST value) {
+    this.value = value;
+  }
+
   public Binding subst(AST ast, String name) {
-    return new Binding(path, this.name, value.subst(ast, name));
+    return new Binding(path, this.name, type, value.subst(ast, name));
   }
 
   public Binding substExportedValues(Collection<Module> values) {
-    return new Binding(path, name, value.substExportedValues(values));
+    return new Binding(path, name, type, value.substExportedValues(values));
   }
 
   public String toString() {
@@ -181,6 +200,14 @@ public class Binding {
   public void setPath(String path) {
     this.path = path;
     value.setPath(path);
+  }
+
+  public boolean isValueBinding() {
+    return !(value instanceof Type);
+  }
+
+  public boolean isTypeBinding() {
+    return value instanceof Type;
   }
 
 }

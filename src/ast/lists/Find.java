@@ -5,6 +5,7 @@ import java.util.HashSet;
 import actors.CodeBox;
 import ast.AST;
 import ast.binding.Binding;
+import ast.binding.Dec;
 import ast.binding.Letrec;
 import ast.binding.Var;
 import ast.data.Apply;
@@ -17,8 +18,10 @@ import ast.patterns.PWild;
 import ast.patterns.Pattern;
 import ast.tests.BArm;
 import ast.tests.Case;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import list.List;
 
@@ -55,11 +58,11 @@ public class Find extends AST {
 
   public AST desugar() {
     BArm arm3 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, defaultValue);
-    BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t")) }, Bool.TRUE, new Apply(new Var("$find"), new Var("$t")));
+    BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new Apply(new Var("$find"), new Var("$t")));
     BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PWild()) }, Bool.TRUE, body);
     Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2, arm3 });
-    Fun fun = new Fun(path, findName(), new String[] { "l" }, caseExp);
-    return new Letrec(getLine(),new Binding[] { new Binding(path, "$find", fun) }, new Apply(new Var("$find"), list));
+    Fun fun = new Fun(path, findName(), new Dec[] { new Dec(path, "l", ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp);
+    return new Letrec(getLine(), new Binding[] { new Binding(path, "$find", new ast.types.Void(), fun) }, new Apply(new Var("$find"), list));
   }
 
   private String findName() {
@@ -87,6 +90,11 @@ public class Find extends AST {
     list.setPath(path);
     body.setPath(path);
     defaultValue.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    // Need to check the other features of find...
+    return body.type(env);
   }
 
 }

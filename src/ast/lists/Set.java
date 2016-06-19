@@ -5,8 +5,11 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Type;
+import ast.types.TypeError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 
 @BoaConstructor(fields = { "elements" })
@@ -52,6 +55,18 @@ public class Set extends AST {
   public void setPath(String path) {
     for(AST element : elements)
       element.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    if (elements.length == 0)
+      return ast.types.Set.NIL;
+    else {
+      Type type = elements[0].type(env);
+      for (int i = 1; i < elements.length; i++) {
+        if (!type.equals(elements[i].type(env))) { throw new TypeError(this, "incompatible bag element types."); }
+      }
+      return new ast.types.Bag(type);
+    }
   }
 
 }

@@ -10,9 +10,11 @@ import ast.data.Apply;
 import ast.data.Ref;
 import ast.modules.Module;
 import ast.tests.BArm;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import compiler.Local;
+import env.Env;
 import list.List;
 import values.Located;
 
@@ -74,6 +76,8 @@ public abstract class AST implements Located {
     line = l;
   }
 
+  public abstract void setPath(String path);
+
   public abstract AST subst(AST ast, String name);
 
   public AST[] subst(AST[] a, AST ast, String name) {
@@ -99,7 +103,7 @@ public abstract class AST implements Located {
       keys[i] = Key.getKey(strings[i]);
     return keys;
   }
-
-  public abstract void setPath(String path);
+  
+  public abstract Type type(Env<String,Type> env);
 
 }

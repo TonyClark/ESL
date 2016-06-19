@@ -5,6 +5,7 @@ import java.util.HashSet;
 import actors.CodeBox;
 import ast.AST;
 import ast.binding.Binding;
+import ast.binding.Dec;
 import ast.binding.Letrec;
 import ast.binding.Var;
 import ast.data.Apply;
@@ -17,8 +18,10 @@ import ast.patterns.PVar;
 import ast.patterns.Pattern;
 import ast.tests.BArm;
 import ast.tests.Case;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import list.List;
 
@@ -53,10 +56,10 @@ public class Map extends AST {
 
   public AST desugar() {
     BArm arm2 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, new ast.lists.List());
-    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t")) }, Bool.TRUE, new BinExp(body, ":", new Apply(new Var("$f"), new Var("$t"))));
+    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new BinExp(body, ":", new Apply(new Var("$f"), new Var("$t"))));
     Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2 });
-    Fun fun = new Fun(path, mapName(), new String[] { "l" }, caseExp);
-    return new Letrec(getLine(),new Binding[] { new Binding(path, "$f", fun) }, new Apply(new Var("$f"), list));
+    Fun fun = new Fun(path, mapName(), new Dec[] { new Dec(path, "l", ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp);
+    return new Letrec(getLine(), new Binding[] { new Binding(path, "$f", new ast.types.Void(), fun) }, new Apply(new Var("$f"), list));
   }
 
   private String mapName() {
@@ -83,6 +86,11 @@ public class Map extends AST {
     this.path = path;
     list.setPath(path);
     body.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    Type type = body.type(env);
+    return new ast.types.List(type);
   }
 
 }

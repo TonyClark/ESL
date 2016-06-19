@@ -8,8 +8,11 @@ import actors.CodeBox;
 import ast.AST;
 import ast.patterns.PTerm;
 import ast.patterns.Pattern;
+import ast.types.HandlerType;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import list.List;
 
@@ -146,6 +149,15 @@ public class BArm {
   public void setPath(String path) {
     guard.setPath(path);
     exp.setPath(path);
+  }
+
+  public HandlerType type(Env<String, Type> env) {
+    Type[] types = new Type[patterns.length];
+    for (int i = 0; i < patterns.length; i++)
+      types[i] = patterns[i].type(env);
+    Type guardType = guard.type(env);
+    Type type = exp.type(env);
+    return new HandlerType(types, type);
   }
 
 }

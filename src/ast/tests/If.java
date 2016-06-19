@@ -5,8 +5,12 @@ import java.util.HashSet;
 import actors.CodeBox;
 import ast.AST;
 import ast.data.Bool;
+import ast.types.Type;
+import ast.types.TypeError;
+import ast.types.TypeMatchError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import instrs.jumps.Skip;
 import instrs.jumps.SkipFalse;
@@ -43,10 +47,10 @@ public class If extends AST {
     } else {
       test.compile(locals, dynamics, code, false);
       int length = code.getCode().size();
-      SkipFalse jmp1 = new SkipFalse(getLine(),0);
+      SkipFalse jmp1 = new SkipFalse(getLine(), 0);
       code.add(jmp1, locals, dynamics);
       conseq.compile(locals, dynamics, code, isLast);
-      Skip jmp2 = new Skip(getLine(),0);
+      Skip jmp2 = new Skip(getLine(), 0);
       code.add(jmp2, locals, dynamics);
       jmp1.setCount(code.getCode().size() - length);
       length = code.getCode().size() - 1;
@@ -79,6 +83,17 @@ public class If extends AST {
     test.setPath(path);
     conseq.setPath(path);
     alt.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    Type testType = test.type(env);
+    if (testType instanceof ast.types.Bool) {
+      Type conseqType = conseq.type(env);
+      Type altType = alt.type(env);
+      if (conseqType.equals(altType))
+        return altType;
+      else throw new TypeMatchError(this, conseqType, altType);
+    } else throw new TypeError(this, "expecting Bool, but found " + testType);
   }
 
 }

@@ -2,44 +2,45 @@ package ast.data;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Vector;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.binding.Dec;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
-import instrs.Instr;
 import instrs.apply.ApplyFun;
 import instrs.apply.Return;
 import instrs.vars.NewDynamic;
 import list.List;
 import list.Nil;
 
-@BoaConstructor(fields = { "name", "args", "body" })
+@BoaConstructor(fields = { "name", "args", "type", "body" })
 
 public class Fun extends AST {
 
-  static int      funCount = 0;
+  static int    funCount = 0;
 
-  public String   path;
-  public String   name;
-  public String[] args;
-  public AST      body;
+  public String path;
+  public String name;
+  public Dec[]  args;
+  public Type   type;
+  public AST    body;
 
   public Fun() {
   }
 
-  public Fun(String name, String[] args, AST body) {
-    this.name = name;
-    this.args = args;
-    this.body = body;
+  public Fun(String name, Dec[] args, Type type, AST body) {
+    this("", name, args, type, body);
   }
 
-  public Fun(String path, String name, String[] args, AST body) {
+  public Fun(String path, String name, Dec[] args, Type type, AST body) {
     this.path = path;
     this.name = name;
     this.args = args;
+    this.type = type;
     this.body = body;
   }
 
@@ -62,12 +63,12 @@ public class Fun extends AST {
     body.DV(dv);
     locals = new Nil<FrameVar>();
     int index = 0;
-    for (String arg : args) {
+    for (Dec arg : args) {
       if (dv.contains(arg)) {
-        bodyCode.add(new instrs.vars.FrameVar(getLine(), argIndex(arg)), locals, dynamics);
+        bodyCode.add(new instrs.vars.FrameVar(getLine(), argIndex(arg.getName())), locals, dynamics);
         bodyCode.add(new NewDynamic(getLine()), locals, dynamics);
-        dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(arg, 0));
-      } else locals = locals.cons(new FrameVar(arg, index));
+        dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(arg.getName(), 0));
+      } else locals = locals.cons(new FrameVar(arg.getName(), index));
       index++;
     }
     body.compile(locals, dynamics, bodyCode, true);
@@ -100,8 +101,8 @@ public class Fun extends AST {
   public void FV(HashSet<String> vars) {
     HashSet<String> free = new HashSet<String>();
     body.FV(free);
-    for (String arg : args)
-      free.remove(arg);
+    for (Dec arg : args)
+      free.remove(arg.getName());
     vars.addAll(free);
   }
 
@@ -114,8 +115,8 @@ public class Fun extends AST {
   }
 
   private boolean binds(String name) {
-    for (String arg : args) {
-      if (arg.equals(name)) return true;
+    for (Dec arg : args) {
+      if (arg.getName().equals(name)) return true;
     }
     return false;
   }
@@ -123,7 +124,7 @@ public class Fun extends AST {
   public AST subst(AST ast, String name) {
     if (binds(name))
       return this;
-    else return new Fun(path, this.name, args, body.subst(ast, name));
+    else return new Fun(path, this.name, args, type, body.subst(ast, name));
   }
 
   public void setPath(String path) {
@@ -131,4 +132,14 @@ public class Fun extends AST {
     body.setPath(path);
   }
 
+  public Type type(Env<String, Type> env) {
+    return new ast.types.Fun(getDomain(), type);
+  }
+
+  private Type[] getDomain() {
+    Type[] domain = new Type[args.length];
+    for(int i = 0;i < domain.length;i++)
+      domain[i] = args[i].getType();
+    return domain;
+  }
 }

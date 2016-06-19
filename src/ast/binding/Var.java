@@ -4,8 +4,11 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Type;
+import ast.types.TypeError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import list.List;
 
@@ -52,6 +55,12 @@ public class Var extends AST {
   }
 
   public void setPath(String path) {
+  }
+
+  public Type type(Env<String, Type> env) {
+    if (env.binds(name))
+      return env.lookup(name);
+    else throw new TypeError(this, "unbound variable " + name);
   }
 
 }

@@ -5,9 +5,11 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import compiler.Local;
+import env.Env;
 import exp.BoaConstructor;
 import list.List;
 
@@ -51,6 +53,11 @@ public class New extends AST {
 
   public void setPath(String path) {
     behaviour.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    System.out.println("NEW " + behaviour.type(env));
+    return behaviour.type(env);
   }
 
 }

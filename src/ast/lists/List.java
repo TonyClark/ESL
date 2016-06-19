@@ -5,8 +5,11 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.types.Type;
+import ast.types.TypeError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 
 @BoaConstructor(fields = { "elements" })
@@ -29,7 +32,7 @@ public class List extends AST {
   public void compile(list.List<FrameVar> locals, list.List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     for (AST e : elements)
       e.compile(locals, dynamics, code, false);
-    code.add(new instrs.data.List(getLine(),elements.length), locals, dynamics);
+    code.add(new instrs.data.List(getLine(), elements.length), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -50,8 +53,20 @@ public class List extends AST {
   }
 
   public void setPath(String path) {
-    for(AST element : elements)
+    for (AST element : elements)
       element.setPath(path);
+  }
+
+  public Type type(Env<String, Type> env) {
+    if (elements.length == 0)
+      return ast.types.List.NIL;
+    else {
+      Type type = elements[0].type(env);
+      for (int i = 1; i < elements.length; i++) {
+        if (!type.equals(elements[i].type(env))) { throw new TypeError(this, "incompatible list element types."); }
+      }
+      return new ast.types.List(type);
+    }
   }
 
 }

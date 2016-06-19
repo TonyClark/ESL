@@ -4,10 +4,12 @@ import java.util.HashSet;
 import java.util.Vector;
 
 import actors.CodeBox;
-import ast.AST;
 import ast.refs.Ref;
+import ast.types.Type;
+import ast.types.TypePatternError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import instrs.jumps.Skip;
 import instrs.patterns.Try;
@@ -60,6 +62,25 @@ public class POr extends Pattern {
     choice.setOffset((l2 - l1) - 1);
     skip1.setCount((l4 - l2) + 1);
     skip2.setCount((l4 - l3) + 1);
+  }
+
+  public Type type(Env<String, Type> env) {
+    Type t1 = alt1.type(env);
+    Type t2 = alt2.type(env);
+    if (t1.bind(t2) == null && t2.bind(t2) == null)
+      throw new TypePatternError(this, "incompatible types " + t1 + " " + t2);
+    else {
+      if (t1.bind(t2) != null)
+        return t1;
+      else return t2;
+    }
+
+  }
+
+  @Override
+  public Env<String, Type> bind(Env<String, Type> env, Type type) {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

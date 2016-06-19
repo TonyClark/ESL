@@ -5,28 +5,27 @@ import java.util.Vector;
 
 import actors.CodeBox;
 import ast.AST;
-import ast.binding.Binding;
-import ast.binding.Let;
-import ast.binding.Var;
-import ast.data.Apply;
-import ast.data.Fun;
 import ast.refs.Ref;
+import ast.types.Type;
+import ast.types.TypePatternError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import env.Env;
 import exp.BoaConstructor;
 import list.List;
 
-@BoaConstructor(fields = { "name", "pattern" })
+@BoaConstructor(fields = { "name", "type", "pattern" })
 
 public class PBind extends Pattern {
 
   public String  name;
+  public Type    type;
   public Pattern pattern;
 
   public PBind() {
   }
 
-  public PBind(String name, Pattern pattern) {
+  public PBind(String name, Type type, Pattern pattern) {
     super();
     this.name = name;
     this.pattern = pattern;
@@ -53,6 +52,17 @@ public class PBind extends Pattern {
       AST.lookup(name, dynamics).bind(ref, getLine(), code, locals, dynamics);
     }
     pattern.compile(locals, dynamics, ref, code);
+  }
+
+  public Type type(Env<String, Type> env) {
+    Type t = pattern.type(env);
+    if (type.bind(t) != null)
+      return type;
+    else throw new TypePatternError(this, "declaration does not match pattern type " + t);
+  }
+
+  public Env<String, Type> bind(Env<String, Type> env, Type type) {
+    return env.bind(name, type);
   }
 
 }
