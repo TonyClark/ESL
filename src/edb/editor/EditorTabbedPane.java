@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -14,18 +13,17 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.plaf.basic.BasicButtonUI;
-import javax.swing.plaf.metal.MetalIconFactory;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-/**
- * @author 6dc
- *
- *         A class which creates a JTabbedPane and auto sets a close button when you add a tab
- */
-public class EditorTabbedPane extends JTabbedPane {
+public class EditorTabbedPane extends JTabbedPane implements ChangeListener {
+
+  static final Color NO_ERROR_COLOUR = Color.BLACK;
+  static final Color ERROR_COLOUR    = Color.RED;
 
   public EditorTabbedPane() {
     super(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+    addChangeListener(this);
   }
 
   /* Override Addtab in order to add the close Button everytime */
@@ -96,6 +94,7 @@ public class EditorTabbedPane extends JTabbedPane {
       button.setContentAreaFilled(false);
       button.addMouseListener(new CloseListener(tab));
       button.setRolloverEnabled(true);
+      setBackground(NO_ERROR_COLOUR);
       add(button);
     }
 
@@ -107,6 +106,12 @@ public class EditorTabbedPane extends JTabbedPane {
 
     public void dirty() {
       jLabel.setText("*" + jLabel.getText());
+    }
+
+    public void hasError(boolean error) {
+      if (error)
+        jLabel.setForeground(ERROR_COLOUR);
+      else jLabel.setForeground(NO_ERROR_COLOUR);
     }
   }
 
@@ -124,7 +129,11 @@ public class EditorTabbedPane extends JTabbedPane {
         JTabbedPane tabbedPane = (JTabbedPane) clickedButton.getParent().getParent().getParent();
         int index = tabbedPane.getSelectedIndex();
         Component component = getComponentAt(index);
-        if (component instanceof FileEditor) {
+        if (component instanceof TabbedActor) {
+          TabbedActor closable = (TabbedActor) component;
+          tabbedPane.remove(tab);
+          closable.close();
+        } else if (component instanceof FileEditor) {
           FileEditor editor = (FileEditor) component;
           if (!editor.isDirty()) tabbedPane.remove(tab);
         } else tabbedPane.remove(tab);
@@ -141,6 +150,24 @@ public class EditorTabbedPane extends JTabbedPane {
     }
 
     public void mouseExited(MouseEvent e) {
+    }
+  }
+
+  public void stateChanged(ChangeEvent changeEvent) {
+    JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+    int index = sourceTabbedPane.getSelectedIndex();
+    for (int i = 0; i < getTabCount(); i++) {
+      if (i != index) {
+        Component component = getComponentAt(i);
+        if (component instanceof TabbedActor) {
+          TabbedActor tabbedActor = (TabbedActor) component;
+          tabbedActor.deselect();
+        }
+      }
+    }
+    if (getSelectedComponent() instanceof TabbedActor) {
+      TabbedActor tabbedActor = (TabbedActor) getSelectedComponent();
+      tabbedActor.select();
     }
   }
 }

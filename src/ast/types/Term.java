@@ -1,5 +1,7 @@
 package ast.types;
 
+import java.util.Arrays;
+
 import env.Env;
 import exp.BoaConstructor;
 
@@ -12,7 +14,8 @@ public class Term extends Type {
   public Term() {
   }
 
-  public Term(String name, Type[] types) {
+  public Term(int lineStart, int lineEnd, String name, Type[] types) {
+    super(lineStart, lineEnd);
     this.name = name;
     this.types = types;
   }
@@ -33,11 +36,12 @@ public class Term extends Type {
     this.types = types;
   }
 
-  public Type eval(Env<String, Type> env) {
-    Type[] ts = new Type[types.length];
-    for (int i = 0; i < ts.length; i++)
-      ts[i] = types[i].eval(env);
-    return new Term(name, ts);
+  public String toString() {
+    return name + "(" + separateWith(types, ",") + ")";
+  }
+
+  public Type substType(Type type, String name) {
+    return new Term(getLineStart(), getLineEnd(), this.name, Type.substTypes(types, type, name));
   }
 
 }

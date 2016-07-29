@@ -29,13 +29,13 @@ public class Bool extends AST {
   }
 
   public String toString() {
-    return "Bool(" + value + ")";
+    return Boolean.toString(value);
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     if (value)
-      code.add(new True(getLine()), locals, dynamics);
-    else code.add(new False(getLine()), locals, dynamics);
+      code.add(new True(getLineStart()), locals, dynamics);
+    else code.add(new False(getLineStart()), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -56,7 +56,12 @@ public class Bool extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    return ast.types.Bool.BOOL;
+    setType(ast.types.Bool.BOOL);
+    return getType();
+  }
+
+  public String getLabel() {
+    return value + "";
   }
 
 }

@@ -19,11 +19,11 @@ public class Self extends AST {
   }
 
   public String toString() {
-    return "Self(" + getLine() + ")";
+    return "Self(" + getLineStart() + ")";
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new instrs.vars.Self(getLine()), locals, dynamics);
+    code.add(new instrs.vars.Self(getLineStart()), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -44,9 +44,14 @@ public class Self extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    if (env.binds("self"))
-      return env.lookup("self");
-    else throw new TypeError(this, "cannot find the type of self.");
+    if (env.binds("self")) {
+      setType(env.lookup("self"));
+      return getType();
+    } else throw new TypeError(getLineStart(), getLineEnd(), "cannot find the type of self.");
+  }
+
+  public String getLabel() {
+    return "self :: " + getType();
   }
 
 }

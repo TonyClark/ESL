@@ -15,7 +15,7 @@ public class Float extends Type {
     return "Float";
   }
 
-  public Type eval(Env<String, Type> env) {
+  public Type substType(Type type, String name) {
     return this;
   }
 

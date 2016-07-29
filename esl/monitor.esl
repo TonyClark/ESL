@@ -19,103 +19,172 @@ import 'esl/lists.esl';
 // encode it as an operational language in functions with continuations. The encoding below
 // provides a novel alternative encoding in terms of actors.
 
-act nothing {
-  Monitor(a,c,s,f) -> 
-    if s = self
-    then {}
-    else s <- Monitor(a,c,self,f);
-  Time(_) -> {}
-};
+// An actor with behaviour Traced[T] produces a history of elements of type T.
+// Monitors will regularly inspect the history...
 
-idle = new nothing;
-act action(command) {
-  Monitor(a,c,s,f) -> {
-    command();
-    s <- Monitor(a,c,idle,f)
+type Traced[T] = Act { export history::[T]; Time(Int) };
+
+// A monitor is supplied with a traced actor and will regularly inspect its history.
+// The type Monitor is paremtetric ith respect to the type T of the history elements.
+// The message Check(a,c,s,f) is sent to a monitor to start monitoring the traced
+// actor a. The integer c is the index into the history of a that defines the current
+// position of the next element to consume. Once the monitor is satisfied with the
+// history, it will send the monitor m a Check message. If the monitor is not satisfied
+// it invokes f()...
+
+type Monitor[T] = rec M. Act { Check(Traced[T],Int,M,()->Void); Time(Int) };
+
+// A word on FOLD and UNFOLD...
+// A recursive type (such as Monitor[T] above) has a form T[rec X.T/X] which
+// substitutes rec X.T for X in T. If A = rec X.T then:
+//
+// (a) unfold[A]e::T[rec X.T/X] when e::A
+// (b) fold[A]e::A when e::T[A/X]
+//
+// Insertion of fold and unfold is required because recursive types have the
+// two forms such as A and T[A/X]. Currently these must be inserted manually. It should
+// be possible to automatically insert these at some later stage.
+
+// The nothing monitor does nothing...
+
+nothing[T]()::Monitor[T] = 
+  fold[Monitor[T]] act {
+    Check(a::Traced[T],c::Int,s::Monitor[T],f::()->Void) ->
+      if s = self
+      then {}
+      else (unfold[Monitor[T]]s) <- Check(a,c,fold[Monitor[T]]self,f);
+    Time(n::Int) -> {}
   };
-  Time(_) -> {}
-};
 
-always(p) = new rec(fun(q) new both(p,new next(always(q))));
+// Create a constant called idle that does nothing...
 
-act rec(g) {
-  Monitor(a,c,s,f) -> (g(new rec(g))) <- Monitor(a,c,s,f);
-  Time(_) -> {}
-};
+idle[T]::Monitor[T] = new (nothing[T])();
 
-act both(p,q) {
-  Monitor(a,c,s,f) -> 
-    if s = idle
-    then { p <- Monitor(a,c,q,f) }
-    else { p <- Monitor(a,c,new both(q,s),f) } ;
-  Time(_) -> {}
-};
+// An action is a monitor that performs a command each time is checks the traced actor.
+// The command does not return anything of interest. Once the action is performed, it
+// passes control onto the monitor s...
 
-act alt(p,q) {
-  Monitor(a,c,s,f) -> p <- Monitor(a,c,s,fun() q <- Monitor(a,c,s,f));
-  Time(_) -> {}
-};
-
-act next(p) {
-  Monitor(a,c,s,f) -> p <- Monitor(a,c+1,s,f);
-  Time(_) -> {}
-};
-
-act is(pred) {
-  Monitor(a,c,s,f) -> become activeIs(pred,a,c,s,f);
-  Time(_) -> {}
-};
-
-act activeIs(pred,actor,cc,succ,fail) {
-  Monitor(_,_,_,_) -> {};
-  Time(_) ->
-    if length(actor.history) > cc
-    then { 
-      become is(pred);
-      if pred(nth(actor.history,cc))
-      then succ <- Monitor(actor,cc,idle,fail)
-      else fail()
-    }
-    else {}
-};
-
-act debug(message) {
-  Monitor(a,c,s,f) -> {
-    print(message + ': ' + c + ' ' + a.history);
-    s <- Monitor(a,c,idle,f)
+action[T](command::()->Void)::Monitor[T] =
+  fold[Monitor[T]] act {
+    Check(a::Traced[T],c::Int,s::Monitor[T],f::()->Void) -> {
+      command();
+      (unfold[Monitor[T]]s) <- Check(a,c,idle[T],f)
+    };
+    Time(n::Int) -> {}
   };
-  Time(_) -> {}
+
+// An always monitor is supplied with an actor p. For always(p) to be satisfied, it must be 
+// satsified by the the traced actor's history at positions c, c+1, c+2, c+3, ...
+// Note that always(p) = both(p,next(always(p))).
+
+always[T](p::Monitor[T])::Monitor[T] = new (rec[T])(fun(q::Monitor[T])::Monitor[T] new (both[T])(p,new (next[T])(always[T](q))));
+
+rec[T](g::(Monitor[T]) -> Monitor[T])::Monitor[T] =
+  fold[Monitor[T]] act {
+    Check(a::Traced[T],c::Int,s::Monitor[T],f::()->Void) -> (unfold[Monitor[T]](g(new (rec[T])(g)))) <- Check(a,c,s,f);
+    Time(n::Int) -> {}
+  };
+
+// A both(p,q) monitor is satisfied when both p and q are satisfied at the same index c.
+// Note that both(idle,p) = both(p,idle) = p...
+
+both[T](p::Monitor[T],q::Monitor[T])::Monitor[T] = 
+  fold[Monitor[T]] act {
+    Check(a::Traced[T],c::Int,s::Monitor[T],f::()->Void) -> 
+      if s = idle
+      then { (unfold[Monitor[T]]p) <- Check(a,c,q,f) }
+      else { (unfold[Monitor[T]]p) <- Check(a,c,new (both[T])(q,s),f) } ;
+    Time(n::Int) -> {}
+  };
+
+// A alt(p,q) monitor is satisfied at index c when p is satisfied at index c or when q
+// is satisfied at index q...
+
+alt[T](p::Monitor[T],q::Monitor[T])::Monitor[T] =
+  fold[Monitor[T]] act {
+    Check(a::Traced[T],c::Int,s::Monitor[T],f::()->Void) -> 
+      (unfold[Monitor[T]]p) <- Check(a,c,s,fun()::Void (unfold[Monitor[T]]q) <- Check(a,c,s,f));
+    Time(n::Int) -> {}
 };
 
-isF(F) = true;
-isF(_) = false;
+next[T](p::Monitor[T])::Monitor[T] =
+  fold[Monitor[T]] act {
+    Check(a::Traced[T],c::Int,s::Monitor[T],f::()->Void) -> (unfold[Monitor[T]]p) <- Check(a,c+1,s,f);
+    Time(n::Int) -> {}
+  };
 
-isAnything(_) = true;
+is[T](pred::(T)->Bool)::Monitor[T] =
+  fold[Monitor[T]] act {
+    Check(a::Traced[T],c::Int,s::Monitor[T],f::()->Void) -> 
+      become (activeIs[T])(pred,a,c,s,f);
+    Time(n::Int) -> {}
+};
 
-act a {
+activeIs[T](pred::(T)->Bool,actor::Traced[T],cc::Int,succ::Monitor[T],fail::()->Void)::Monitor[T] =
+  fold[Monitor[T]] act {
+    Check(a::Traced[T],c::Int,s::Monitor[T],f::()->Void) -> {};
+    Time(n::Int) ->
+      if length[T](actor.history) > cc
+      then { 
+        become (is[T])(pred);
+        if pred(nth[T](actor.history,cc))
+        then (unfold[Monitor[T]]succ) <- Check(actor,cc,idle[T],fail)
+        else fail()
+      }
+      else {}
+  };
+
+debug[T](message::Str)::Monitor[T] =
+  fold[Monitor[T]] act {
+    Check(a::Traced[T],c::Int,s::Monitor[T],f::()->Void) -> {
+      print[Str](message + ': ' + c + ' ' + a.history);
+      (unfold[Monitor[T]]s) <- Check(a,c,idle[T],f)
+    };
+    Time(n::Int) -> {}
+  };
+
+//type TrueOrFalse = union{T(Int), F(Int)};
+//cnstr T = TrueOrFalse.T;
+//cnstr F = TrueOrFalse.F;
+
+isF(0)::Bool = true;
+isF(1)::Bool = false;
+
+isAnything(n::Int)::Bool = true;
+
+act a::Traced[Int] {
   export history;
-  frequency = 10;
-  c = 0;
-  history = []
-  Time(_) -> {
+  frequency::Int = 3;
+  c::Int = 0;
+  history::[Int] = [][Int]
+  Time(t::Int) -> {
     c := c + 1;
     if c = frequency
     then {
       c := 0;
-      history := history + [F,F,T,F]
+      //history := history + [F,F,T,F]
+      history := history + [probably(50):Int 0 else 1]
     } else {}
   }
 };
 
-act main {
+type Main = Act { Time(Int) };
 
-  -> { let p = always(new alt(new both(new is(isF),new both(new next(new is(isF)),new both(new next(new is(isF)),new action(fun() print('OK'))))),new is(isAnything)))
-       in p <- Monitor(new a,0,idle,fun() idle)
+act main::Main {
+
+  -> { let p::Monitor[Int] = always[Int](new (alt[Int])(new (both[Int])(new (is[Int])(isF),new (both[Int])(new (next[Int])(new (is[Int])(isF)),new (both[Int])(new (next[Int])(new (is[Int])(isF)),new (action[Int])(fun()::Void print[Str]('OK'))))),new (is[Int])(isAnything)))
+       in (unfold[Monitor[Int]]p) <- Check(new a,0,idle[T],fun()::Void {})
      };
 
-  Time(100) -> stopAll();
+  Time(1000) -> stopAll();
 
-  Time(_) -> {}
+  Time(n::Int) -> {}
 
 }
+
+
+
+
+
+
 

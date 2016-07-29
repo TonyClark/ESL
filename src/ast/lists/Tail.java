@@ -21,7 +21,7 @@ public class Tail extends AST {
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     value.compile(locals, dynamics, code, false);
-    code.add(new instrs.ops.Tail(getLine()), locals, dynamics);
+    code.add(new instrs.ops.Tail(getLineStart()), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -51,8 +51,13 @@ public class Tail extends AST {
   public Type type(Env<String, Type> env) {
     Type type = value.type(env);
     if (type instanceof ast.types.List) {
-      return type;
-    } else throw new TypeError(this, "expecting a list type " + type);
+      setType(type);
+      return getType();
+    } else throw new TypeError(getLineStart(), getLineEnd(), "expecting a list type " + type);
+  }
+
+  public String getLabel() {
+    return "tail :: " + getType();
   }
 
 }

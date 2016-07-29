@@ -21,7 +21,8 @@ public class List extends AST {
   public List() {
   }
 
-  public List(AST... elements) {
+  public List(int lineStart, int lineEnd, AST... elements) {
+    super(lineStart, lineEnd);
     this.elements = elements;
   }
 
@@ -32,7 +33,7 @@ public class List extends AST {
   public void compile(list.List<FrameVar> locals, list.List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     for (AST e : elements)
       e.compile(locals, dynamics, code, false);
-    code.add(new instrs.data.List(getLine(), elements.length), locals, dynamics);
+    code.add(new instrs.data.List(getLineStart(), elements.length), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -49,7 +50,7 @@ public class List extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new List(subst(elements, ast, name));
+    return new List(getLineStart(), getLineEnd(), subst(elements, ast, name));
   }
 
   public void setPath(String path) {
@@ -58,15 +59,22 @@ public class List extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    if (elements.length == 0)
-      return ast.types.List.NIL;
-    else {
+    if (elements.length == 0) {
+      setType(ast.types.List.NIL);
+      return getType();
+    } else {
       Type type = elements[0].type(env);
       for (int i = 1; i < elements.length; i++) {
-        if (!type.equals(elements[i].type(env))) { throw new TypeError(this, "incompatible list element types."); }
+        Type eType = elements[i].type(env);
+        if (!Type.equals(type, eType, env)) throw new TypeError(elements[i].getLineStart(), elements[i].getLineEnd(), "incompatible list element types: " + type + " and " + elements[i].type(env));
       }
-      return new ast.types.List(type);
+      setType(new ast.types.List(getLineStart(), getLineEnd(), type));
+      return getType();
     }
+  }
+
+  public String getLabel() {
+    return "list :: " + getType();
   }
 
 }

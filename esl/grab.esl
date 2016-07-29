@@ -1,0 +1,45 @@
+export main;
+
+resource1::Int = 0;
+resource2::Int = 0;
+
+type Grabber = Act{ Time(Int) };
+
+act g::Grabber {
+
+  Time(n::Int) -> {
+    grab(resource1,resource2) {
+      resource1 := resource1 + 1;
+      for i::Int in 0..random(50) do { };
+      resource2 := resource2 + 1 
+    }
+  }
+};
+
+act main::Act{Time(Int)} {
+
+  -> {
+    new g;
+    new g
+   };
+
+  Time(10000) -> {
+    print[Int](resource1);
+    print[Int](resource2);
+    stopAll()
+  };
+
+  Time(n::Int) -> {}
+}
+
+
+
+
+
+
+
+
+
+
+
+

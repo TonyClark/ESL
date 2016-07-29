@@ -3,6 +3,7 @@ package actors;
 public class Dynamic {
 
   Object value;
+  Actor  owner = null;
 
   public Dynamic(Object value) {
     this.value = value;
@@ -18,5 +19,13 @@ public class Dynamic {
 
   public Object getValue() {
     return value;
+  }
+
+  public Actor getOwner() {
+    return owner;
+  }
+
+  public void setOwner(Actor owner) {
+    this.owner = owner;
   }
 }

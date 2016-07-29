@@ -16,15 +16,15 @@ public class TermRef extends AST {
   AST term;
   int index;
 
-  public TermRef(AST term, int index) {
-    super();
+  public TermRef(int lineStart, int lineEnd, AST term, int index) {
+    super(lineStart, lineEnd);
     this.term = term;
     this.index = index;
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     term.compile(locals, dynamics, code, false);
-    code.add(new instrs.ops.TermRef(getLine(), index), locals, dynamics);
+    code.add(new instrs.ops.TermRef(getLineStart(), index), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -40,7 +40,7 @@ public class TermRef extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new TermRef(term.subst(ast, name), index);
+    return new TermRef(getLineStart(), getLineEnd(), term.subst(ast, name), index);
   }
 
   public String toString() {
@@ -56,9 +56,14 @@ public class TermRef extends AST {
     if (type instanceof ast.types.Term) {
       ast.types.Term tt = (ast.types.Term) type;
       if (tt.getTypes().length > index) {
-        return tt.getTypes()[index];
-      } else throw new TypeError(this, "does not have element " + index);
-    } else throw new TypeError(this, "expecting a term, but value is of type " + type);
+        setType(tt.getTypes()[index]);
+        return getType();
+      } else throw new TypeError(getLineStart(), getLineEnd(), "does not have element " + index);
+    } else throw new TypeError(getLineStart(), getLineEnd(), "expecting a term, but value is of type " + type);
+  }
+
+  public String getLabel() {
+    return "termref " + index + " :: " + getType();
   }
 
 }

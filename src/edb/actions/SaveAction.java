@@ -23,6 +23,5 @@ public class SaveAction extends AbstractAction {
         fileEditor.save();
       }
     }).start();
-
   }
 }

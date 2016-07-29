@@ -1,61 +1,122 @@
 export remove,length,flatten,count,hasPrefix,nth,take,drop;
 
-remove(v,l) =
+remove[T](v::T,l::[T])::[T] =
   case l {
-    h:t when (h=v) -> remove(v,t);
-    h:t        -> h:remove(v,t);
-    []         -> []
+    h::T;
+    t::[T];
+    h:t when (h=v) -> remove[T](v,t);
+    h:t        -> h:remove[T](v,t);
+    []         -> [][T]
   };
-  
-length(l) =
+
+length[T](l::[T])::Int =
   case l {
-    _:t -> 1 + length(t);
-    [] -> 0;
-    bag{x|b} -> 1 + length(b);
-    bag{} -> 0;
-    set{x|s} -> 1 + length(s);
-    set{} -> 0
+    h::T;
+    t::[T];
+    x::T;
+    b::Bag{T};
+    s::Set{T};
+    h:t -> 1 + length[T](t);
+    [] -> 0
+  };
+
+bagLength[T](b::Bag{T})::Int =
+  case b {
+    h::T;
+    t::Bag{T};
+    bag{h|t} -> 1 + bagLength[T](t);
+    bag{}[T] -> 0
+  };
+
+setLength[T](s::Set{T})::Int =
+  case s {
+    h::T;
+    t::Set{T};
+    set{h|t} -> 1 + setLength[T](t);
+    set{}[T] -> 0
   };
       
-flatten(lists) =
+flatten[T](lists::[[T]])::[T] =
   case lists {
-    h:t -> h+flatten(t);
-    [] -> []
+    h::[T];
+    t::[[T]];
+    h:t -> h+flatten[T](t);
+    [][[T]] -> [][T]
   };
         
-count(x,l) =
+count[T](x::T,l::[T])::Int =
   case l {
-    h:t -> if h = x then 1+count(x,t) else count(x,t);
+    h::T;
+    t::[T];
+    h:t -> if h = x then 1+count[T](x,t) else count[T](x,t);
     []  -> 0
   };
   
-hasPrefix(list,prefix) =
+hasPrefix[T](list::[T],prefix::[T])::Bool =
   case list,prefix {
-    _,[] -> true;
-    x:list,y:prefix when x=y -> hasPrefix(list,prefix);
-    _,_ -> false
+    x::T;
+    y::T;
+    l1::[T];
+    l2::[T];
+    l1,[][T] -> true;
+    x:list,y:prefix when x=y -> hasPrefix[T](list,prefix);
+    l1,l2 -> false
   };
   
-nth(l,n) =
+nth[T](l::[T],n::Int)::T =
   case l {
-    h:t -> if n = 0 then h else nth(t,n-1);
-    []  -> print('cannot find nth element: ' + n)
+    h::T;
+    t::[T];
+    h:t    -> if n = 0 then h else nth[T](t,n-1);
+    [][T]  -> throw[T]('cannot take nth element.')
   };
   
-take(l,n) = 
+take[T](l::[T],n::Int)::[T] = 
   if n = 0
-  then []
+  then [][T]
   else 
     case l {
-      h:t -> h:(take(t,n-1));
-      [] -> throw ('cannot take element ' + n)
+      h::T;
+      t::[T];
+      h:t -> h:(take[T](t,n-1));
+      [][T] -> throw[[T]]('cannot take element ' + n)
     };
   
-drop(l,n) = 
+drop[T](l::[T],n::Int)::[T] = 
   if n = 0
   then l
   else 
     case l {
-      h:t -> drop(t,n-1);
-      [] -> throw ('cannot drop element ' + n)
+      h::T;
+      t::[T];
+      h:t -> drop[T](t,n-1);
+      [] -> throw[[T]]('cannot drop element ' + n)
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

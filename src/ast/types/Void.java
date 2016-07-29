@@ -15,11 +15,7 @@ public class Void extends Type {
     return "Void";
   }
 
-  public boolean equals(Object other) {
-    return other instanceof Void;
-  }
-
-  public Type eval(Env<String, Type> env) {
+  public Type substType(Type type, String name) {
     return this;
   }
 

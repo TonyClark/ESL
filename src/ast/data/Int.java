@@ -25,11 +25,11 @@ public class Int extends AST {
   }
 
   public String toString() {
-    return "Int(" + getLine() + "," + value + ")";
+    return Integer.toString(value);
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new instrs.data.Int(getLine(), value), locals, dynamics);
+    code.add(new instrs.data.Int(getLineStart(), value), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -50,7 +50,12 @@ public class Int extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    return ast.types.Int.INT;
+    setType(ast.types.Int.INT);
+    return getType();
+  }
+
+  public String getLabel() {
+    return  value + "";
   }
 
 }

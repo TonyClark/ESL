@@ -2,10 +2,12 @@ package ast.patterns;
 
 import java.util.HashSet;
 import java.util.Vector;
+import java.util.function.BiConsumer;
 
 import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
+import ast.binding.declarations.DeclaringLocation;
 import ast.data.Apply;
 import ast.data.Fun;
 import ast.refs.Ref;
@@ -22,7 +24,7 @@ public class PEmptyBag extends Pattern {
   }
 
   public AST desugar(AST value, AST success, AST fail) {
-    return new If(new ast.tests.IsEmptyBag(value), success, new Apply(fail));
+    return new If(getLineStart(), getLineEnd(), new ast.tests.IsEmptyBag(value), success, new Apply(getLineStart(), getLineEnd(), fail));
   }
 
   public String toString() {
@@ -33,16 +35,29 @@ public class PEmptyBag extends Pattern {
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, CodeBox code) {
-    code.add(new instrs.patterns.IsEmptyBag(getLine(),ref),locals, dynamics);
+    code.add(new instrs.patterns.IsEmptyBag(getLineStart(),ref),locals, dynamics);
   }
 
-  public Type type(Env<String, Type> env) {
-    return ast.types.Bag.NIL;
+  public void type(Env<String, Type> env, BiConsumer<Env<String, Type>, Type> cont) {
+    setType( ast.types.Bag.NIL);
+    cont.accept(env, ast.types.Bag.NIL);
   }
 
   public Env<String, Type> bind(Env<String, Type> env, Type type) {
     if (type instanceof ast.types.Bag)
       return env;
     else return null;
+  }
+
+  public Type getDeclaredType() {
+    return ast.types.Bag.NIL;
+  }
+
+  public void processDeclarations(Env<String, Type> env) {
+    
+  }
+
+  public DeclaringLocation[] getContainedDecs() {
+    return new DeclaringLocation[] {};
   }
 }

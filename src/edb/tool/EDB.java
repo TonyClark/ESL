@@ -19,25 +19,22 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
 import actors.Actor;
 import actors.Behaviour;
 import actors.CodeBox;
 import actors.Dynamic;
-import actors.InstrListener;
+import actors.JavaActor;
 import actors.Key;
 import actors.Message;
-import actors.MessageListener;
-import actors.NewActorListener;
-import actors.StopListener;
-import actors.TimeListener;
 import ast.AST;
 import ast.actors.New;
 import ast.data.Apply;
 import ast.data.Ref;
 import ast.modules.Module;
-import ast.types.TypeError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import edb.console.Console;
@@ -50,13 +47,18 @@ import edb.gui.Actors;
 import edb.gui.Assembler;
 import edb.gui.Properties;
 import edb.gui.State;
-import env.Empty;
 import instrs.Instr;
 import instrs.apply.Return;
 import list.Nil;
+import listeners.InstrListener;
+import listeners.MessageListener;
+import listeners.NewActorListener;
+import listeners.ScheduleListener;
+import listeners.StopListener;
+import listeners.TimeListener;
 import xpl.Interpreter;
 
-public class EDB extends JFrame implements NewActorListener, StopListener, TimeListener, MessageListener, InstrListener {
+public class EDB extends JFrame implements NewActorListener, StopListener, TimeListener, MessageListener, InstrListener, ScheduleListener {
 
   static int    WIDTH       = 1500;
   static int    HEIGHT      = 800;
@@ -74,6 +76,7 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     gui.readESL();
   }
 
+  FileTree    fileTree    = null;
   FileEditors fileEditors = new FileEditors();
   Assembler   assembler   = new Assembler();
   State       state       = new State(this);
@@ -82,11 +85,13 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
   Properties  properties  = new Properties(this);
   ActorStack  stack       = new ActorStack(this);
   Actor       actor       = null;
+  EDBState    toolState   = EDBState.IDLE;
   Component   focus       = null;
-  Machine     machine;
+  Thread      VM          = null;
 
   public EDB(String root) {
     redirectIO();
+    setLookAndFeel();
     initGUI(root);
     addToolBar();
     Actor.setNewActorListener(this);
@@ -94,8 +99,43 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     Actor.setTimeListener(this);
     Actor.setMessageListener(this);
     Actor.setInstrListener(this);
+    Actor.setScheduleListener(this);
     showTitle(EDBState.IDLE);
     splash();
+  }
+
+  private void action_init() {
+    if (toolState == EDBState.LOADED) {
+      // Start a thread...
+      toolState = EDBState.INITIALISING;
+      showTitle(toolState, actor.getBehaviour().getPath());
+      VM = new Thread() {
+        public void run() {
+          actor.run(Integer.MAX_VALUE);
+        }
+      };
+      VM.start();
+    }
+  }
+
+  private void action_run() {
+    if (toolState == EDBState.INITIALISED) {
+
+      // Run to completion...
+
+      toolState = EDBState.RUNNING;
+      showTitle(toolState, actor.getBehaviour().getPath());
+      VM = new Thread() {
+        public void run() {
+          Actor.runESL(0);
+        }
+      };
+      VM.start();
+    }
+  }
+
+  private void action_step() {
+    System.out.println("STEP not implemented.");
   }
 
   public JPanel actorsPanel() {
@@ -121,44 +161,24 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
       }
     });
     JButton step = new JButton(getImage("icons/step.png", BUTTON_SIZE, BUTTON_SIZE));
-    step.setToolTipText("step over");
+    step.setToolTipText("step");
     step.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        stepOver();
+        action_step();
       }
     });
     JButton run = new JButton(getImage("icons/run.png", BUTTON_SIZE, BUTTON_SIZE));
     run.setToolTipText("run");
     run.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        new Thread(new Runnable() {
-          public void run() {
-            try {
-              complete();
-            } catch (Exception e) {
-              error(e.getMessage(), "Run Error");
-            } catch (Error e) {
-              error(e.getMessage(), "Run Error");
-            }
-          }
-        }).start();
+        action_run();
       }
     });
     JButton init = new JButton(getImage("icons/init.png", BUTTON_SIZE, BUTTON_SIZE));
     init.setToolTipText("init");
     init.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        new Thread(new Runnable() {
-          public void run() {
-            try {
-              init();
-            } catch (Exception e) {
-              error(e.getMessage(), "Init Error");
-            } catch (Error e) {
-              error(e.getMessage(), "Init Error");
-            }
-          }
-        }).start();
+        action_init();
       }
     });
     JButton zoom_in = new JButton(getImage("icons/zoom_in.png", BUTTON_SIZE, BUTTON_SIZE));
@@ -219,13 +239,6 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     fileEditors.clean(path);
   }
 
-  public void complete() {
-    if (machine != null && !machine.stop) {
-      showTitle(EDBState.RUNNING, machine.getPath());
-      machine.complete();
-    }
-  }
-
   public JPanel consolePanel() {
     JScrollPane scrollPane = new JScrollPane(console);
     JPanel consolePanel = new JPanel();
@@ -239,13 +252,45 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     if (getActor() == actor) state.deleteMessage(message);
   }
 
+  public void deschedule(Actor actor) {
+
+    // An actor has stopped running. This might be because its time-slice
+    // is up, or because it has completed...
+
+    if (actor == this.actor) {
+
+      // If this is the main actor then we have completed initialisation...
+
+      try {
+        toolState = EDBState.INITIALISED;
+        showTitle(toolState, actor.getBehaviour().getPath());
+
+        // This will be called by the VM thread. That must now wait
+        // until the user starts the main execution...
+
+        synchronized (VM) {
+          VM.wait();
+        }
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
   public void dirtyFile(String path) {
     fileEditors.dirty(path);
   }
 
+  public void displayTree(Module module) {
+
+    // Called after the module has been successfully type checked.
+
+    fileTree.displayTree(module);
+  }
+
   public void error(String message, String title) {
     int dialogButton = JOptionPane.ERROR_MESSAGE;
-    JOptionPane.showConfirmDialog(null, message, title, dialogButton);
+    JOptionPane.showMessageDialog(null, message, title, dialogButton);
   }
 
   public void fileDeleted(String path) {
@@ -253,7 +298,7 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
   }
 
   public JPanel fileTree(String root) {
-    FileTree fileTree = new FileTree(root);
+    fileTree = new FileTree(root);
     fileTree.setGui(this);
     JScrollPane scrollPane = new JScrollPane(fileTree);
     JPanel consolePanel = new JPanel();
@@ -271,14 +316,6 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     Image img = new ImageIcon(file).getImage();
     Image newImg = img.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
     return new ImageIcon(newImg);
-  }
-
-  public void init() {
-    if (machine != null && !machine.stop) {
-      showTitle(EDBState.INITIALISING, machine.getPath());
-      machine.init();
-      showTitle(EDBState.INITIALISED, machine.getPath());
-    }
   }
 
   public void initGUI(String root) {
@@ -312,7 +349,7 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
   }
 
   private boolean isBreakpoint(Actor actor, Instr instr) {
-    return fileEditors.isBreakpoint(actor, instr.getLine());
+    return fileEditors.isBreakpoint(actor, instr.getLineStart());
   }
 
   public boolean isDirty(String path) {
@@ -328,28 +365,25 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
         try {
           Module module = Module.importModule(path);
           module.resolve();
-          AST record = new New(new Apply(new Ref(module.desugar(), Key.getKey("main"))));
-          // try {
-          // System.out.println(record + "\n is of type\n" + record.type(new env.Empty<String, ast.types.Type>()));
-          // } catch(TypeError e) {
-          // e.printStackTrace(System.out);
-          // }
+          AST record = new New(0, 0, new Apply(0, 0, new Ref(0, 0, module.desugar(), Key.getKey("main"))));
+          // AST.printTree(record, System.out, 0);
           CodeBox codebox = new CodeBox(path, record.maxLocals());
           record.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), codebox, true);
           codebox.add(new Return(-1), new Nil<FrameVar>(), new Nil<DynamicVar>());
-          Actor actor = new Actor(new Behaviour("init", new Key[0], new Nil<Dynamic>(), 0, codebox));
+          actor = new Actor(new Behaviour("init", new Key[0], new Nil<Dynamic>(), 0, codebox));
           actor.initSystem(codebox);
           actor.kill();
           // Running the initial file should produce the root system actor...
           openActor(actor);
-          machine = new Machine(EDB.this, actor);
-          machine.display(actor);
+          toolState = EDBState.LOADED;
           showTitle(EDBState.LOADED, path);
         } catch (FileNotFoundException fnf) {
           error(fnf.getMessage(), "Import Problem");
         } catch (Exception error) {
+          error.printStackTrace(System.err);
           error(error.getMessage(), "Error");
         } catch (Error error) {
+          error.printStackTrace(System.err);
           error(error.getMessage(), "Error");
         }
       }
@@ -360,6 +394,10 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     actors.add(actor);
   }
 
+  public void newActor(JavaActor actor) {
+    if (actor instanceof JPanel) fileEditors.openPanel((JPanel) actor);
+  }
+
   public void openActor(Actor actor) {
     openFile(actor.getBehaviour().getPath());
     setActor(actor);
@@ -368,13 +406,13 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     stack.showStack(actor);
   }
 
-  public void openActor(Actor actor, int line, int codePtr) {
+  public void openActor(Actor actor, int textPos, int codePtr) {
     CodeBox code = actor.getCode();
     openFile(code.getPath());
     openAsm(actor);
     setActor(actor);
     stack.showStack(actor);
-    if (line != -1) fileEditors.selectLine(line);
+    if (textPos != -1) fileEditors.selectLine(textPos);
     assembler.selectLine(codePtr);
     state.clearVariables();
     if (!actor.complete()) {
@@ -400,7 +438,7 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     Instr instr = actor.nextInstr();
     if (instr != null && isBreakpoint(actor, instr)) {
       stop();
-      openActor(actor, instr.getLine(), actor.getCodePtr());
+      openActor(actor, instr.getLineStart(), actor.getCodePtr());
     }
   }
 
@@ -421,12 +459,29 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     System.setOut(new PrintStream(new ConsoleOutputStream(console)));
   }
 
+  public void schedule(Actor actor) {
+  }
+
   public void setActor(Actor actor) {
     this.actor = actor;
   }
 
   public void setFocus(Component component) {
     focus = component;
+  }
+
+  public void setLookAndFeel() {
+    try {
+      UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (InstantiationException e) {
+      e.printStackTrace();
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+    } catch (UnsupportedLookAndFeelException e) {
+      e.printStackTrace();
+    }
   }
 
   public void showProperties(Object value) {
@@ -484,16 +539,8 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     return statePanel;
   }
 
-  public void stepOver() {
-    if (machine != null && !machine.stop) {
-      showTitle(EDBState.STEPPING, machine.getPath());
-      machine.stepOver();
-    }
-  }
-
   public void stop() {
     showTitle(EDBState.IDLE);
-    if (machine != null) machine.stop();
   }
 
   public void timeChanged(int time) {
@@ -522,6 +569,10 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
       FileTree tree = (FileTree) focus;
       tree.resizeFont(-2);
     }
+  }
+
+  public void fileHasError(String path, boolean isError) {
+    fileEditors.hasError(path, isError);
   }
 
 }

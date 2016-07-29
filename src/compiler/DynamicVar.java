@@ -23,6 +23,10 @@ public class DynamicVar extends Local {
     code.add(new instrs.vars.Dynamic(line, getIndex()), locals, dynamics);
   }
 
+  public void compilePush(int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics) {
+    code.add(new instrs.vars.PushDynamic(line, getIndex()), locals, dynamics);
+  }
+
   public void update(int line, CodeBox code, List<FrameVar> locals, List<DynamicVar> dynamics) {
     code.add(new SetDynamic(line, getIndex()), locals, dynamics);
   }

@@ -41,10 +41,10 @@ public class Cmp extends AST {
 
   private AST desugar(int i) {
     if (i == qualifiers.length)
-      return new ast.lists.List(exp);
+      return new ast.lists.List(getLineStart(), getLineEnd(), exp);
     else if (i + 1 == qualifiers.length)
       return qualifiers[i].desugar(exp);
-    else return new Apply(new Var("flatten"), qualifiers[i].desugar(desugar(i + 1)));
+    else return new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "flatten", null), qualifiers[i].desugar(desugar(i + 1)));
   }
 
   public void FV(HashSet<String> vars) {
@@ -73,7 +73,11 @@ public class Cmp extends AST {
     for (Qualifier q : qualifiers) {
       env = q.bind(env);
     }
-    return new ast.types.List(exp.type(env));
+    return new ast.types.List(getLineStart(), getLineEnd(), exp.type(env));
+  }
+
+  public String getLabel() {
+    return "cmp :: " + getType();
   }
 
 }

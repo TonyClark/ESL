@@ -20,6 +20,10 @@ public class BQual extends Qualifier {
   public BQual() {
   }
 
+  public BQual(int lineStart, int lineEnd) {
+    super(lineStart, lineEnd);
+  }
+
   public String toString() {
     return "BQual(" + pattern + "," + exp + ")";
   }
@@ -33,7 +37,7 @@ public class BQual extends Qualifier {
   }
 
   public AST desugar(AST value) {
-    return new Map("", pattern, exp, value);
+    return new Map(getLineStart(), getLineEnd(), "", pattern, exp, value);
   }
 
   public void setPath(String path) {
@@ -45,7 +49,7 @@ public class BQual extends Qualifier {
     if (type instanceof ast.types.List) {
       ast.types.List list = (ast.types.List) type;
       return pattern.bind(env, list.getType());
-    } else throw new TypeError(exp, "expecting a list type " + type);
+    } else throw new TypeError(exp.getLineStart(), exp.getLineEnd(), "expecting a list type " + type);
   }
 
 }

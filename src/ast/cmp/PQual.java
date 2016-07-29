@@ -33,7 +33,7 @@ public class PQual extends Qualifier {
   }
 
   public AST desugar(AST value) {
-    return new Apply(new Var("flatten"), new If(exp, new List(new List(value)), new List()));
+    return new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "flatten", null), new If(getLineStart(), getLineEnd(), exp, new List(getLineStart(), getLineEnd(), new List(getLineStart(), getLineEnd(), value)), new List(getLineStart(), getLineEnd())));
   }
 
   public void setPath(String path) {
@@ -44,7 +44,7 @@ public class PQual extends Qualifier {
     Type type = exp.type(env);
     if (type instanceof ast.types.Bool)
       return env;
-    else throw new TypeError(exp, "predicate qualifier expects a boolean valued expression " + type);
+    else throw new TypeError(exp.getLineStart(), exp.getLineEnd(), "predicate qualifier expects a boolean valued expression " + type);
   }
 
 }

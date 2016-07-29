@@ -5,9 +5,9 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
-import ast.types.Box;
+import ast.binding.declarations.DecContainer;
+import ast.binding.declarations.DeclaringLocation;
 import ast.types.Type;
-import ast.types.TypeMatchError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import env.Env;
@@ -22,7 +22,7 @@ import list.List;
 
 @BoaConstructor(fields = { "bindings", "exp" })
 
-public class Letrec extends AST {
+public class Letrec extends AST implements DecContainer {
 
   public Binding[] bindings;
   public AST       exp;
@@ -30,14 +30,17 @@ public class Letrec extends AST {
   public Letrec() {
   }
 
-  public Letrec(int line, Binding[] bindings, AST exp) {
-    setLine(line);
+  public Letrec(int lineStart, int lineEnd, Binding[] bindings, AST exp) {
+    super(lineStart, lineEnd);
     this.bindings = bindings;
     this.exp = exp;
   }
 
-  public String toString() {
-    return "Letrec(" + Arrays.toString(bindings) + "," + exp + ")";
+  private boolean binds(String name) {
+    for (Binding b : bindings) {
+      if (b.getName().equals(name)) return true;
+    }
+    return false;
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
@@ -59,54 +62,54 @@ public class Letrec extends AST {
 
     bindings = Binding.mergeBindings(bindings);
 
-    for (Binding b : bindings) {
+    for (Binding b : Binding.valueBindings(bindings)) {
       if (isDynamic(b.name)) {
-        code.add(new Null(getLine()), locals, dynamics);
-        code.add(new NewDynamic(getLine()), locals, dynamics);
+        code.add(new Null(getLineStart()), locals, dynamics);
+        code.add(new NewDynamic(getLineStart()), locals, dynamics);
         dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(b.name, 0));
       } else {
         locals = locals.cons(new FrameVar(b.name, locals.length()));
       }
     }
-    for (Binding b : bindings) {
-      b.value.compile(locals, dynamics, code, false);
+    for (Binding b : Binding.valueBindings(bindings)) {
+      b.getValue().compile(locals, dynamics, code, false);
       if (isDynamic(b.name)) {
-        code.add(new SetDynamic(getLine(), lookup(b.name, dynamics).getIndex()), locals, dynamics);
-        code.add(new Pop(getLine()), locals, dynamics);
+        code.add(new SetDynamic(getLineStart(), lookup(b.name, dynamics).getIndex()), locals, dynamics);
+        code.add(new Pop(getLineStart()), locals, dynamics);
       } else {
-        code.add(new SetFrame(getLine(), lookup(b.name, locals).getIndex()), locals, dynamics);
-        code.add(new Pop(getLine()), locals, dynamics);
+        code.add(new SetFrame(getLineStart(), lookup(b.name, locals).getIndex()), locals, dynamics);
+        code.add(new Pop(getLineStart()), locals, dynamics);
       }
     }
     exp.compile(locals, dynamics, code, isLast);
     // Remove the dynamics...
-    for (Binding b : bindings) {
+    for (Binding b : Binding.valueBindings(bindings)) {
       if (isDynamic(b.name)) {
-        code.add(new PopDynamic(getLine()), locals, dynamics);
+        code.add(new PopDynamic(getLineStart()), locals, dynamics);
         dynamics = dynamics.getTail();
       }
     }
   }
 
-  private boolean isDynamic(String name) {
-    // A name is dynamic in the binding values if it is captured by
-    // a closure...
-    for (Binding b : bindings) {
-      HashSet<String> fv = new HashSet<String>();
-      b.value.DV(fv);
-      if (fv.contains(name)) return true;
+  public void DV(HashSet<String> vars) {
+    HashSet<String> bound = new HashSet<String>();
+    for (Binding b : Binding.valueBindings(bindings))
+      bound.add(b.name);
+    for (Binding b : Binding.valueBindings(bindings)) {
+      HashSet<String> dv = new HashSet<String>();
+      b.DV(dv);
+      dv.removeAll(bound);
+      vars.addAll(dv);
     }
-    HashSet<String> fv = new HashSet<String>();
-    exp.DV(fv);
-    return fv.contains(name);
+    exp.DV(vars);
   }
 
   public void FV(HashSet<String> vars) {
     HashSet<String> bound = new HashSet<String>();
-    for (Binding b : bindings) {
+    for (Binding b : Binding.valueBindings(bindings)) {
       bound.add(b.name);
     }
-    for (Binding b : bindings) {
+    for (Binding b : Binding.valueBindings(bindings)) {
       HashSet<String> free = new HashSet<String>();
       b.FV(free);
       free.removeAll(bound);
@@ -118,39 +121,42 @@ public class Letrec extends AST {
     vars.addAll(free);
   }
 
-  public void DV(HashSet<String> vars) {
-    HashSet<String> bound = new HashSet<String>();
-    for (Binding b : bindings)
-      bound.add(b.name);
-    for (Binding b : bindings) {
-      HashSet<String> dv = new HashSet<String>();
-      b.DV(dv);
-      dv.removeAll(bound);
-      vars.addAll(dv);
+  public String getLabel() {
+    return "letrec :: " + getType();
+  }
+
+  private boolean isDynamic(String name) {
+    // A name is dynamic in the binding values if it is captured by
+    // a closure...
+    for (Binding b : Binding.valueBindings(bindings)) {
+      HashSet<String> fv = new HashSet<String>();
+      b.value.DV(fv);
+      if (fv.contains(name)) return true;
     }
-    exp.DV(vars);
+    HashSet<String> fv = new HashSet<String>();
+    exp.DV(fv);
+    return fv.contains(name);
   }
 
   public int maxLocals() {
     // This does not remove those bindings that will be implemented as
     // dynamic variables, however it is fail safe...
-    int maxLocals = exp.maxLocals() + bindings.length;
+    int maxLocals = exp.maxLocals() + Binding.valueBindings(bindings).length;
     int valueLocals = 0;
-    for (Binding b : bindings)
-      valueLocals = Math.max(valueLocals, b.value.maxLocals());
+    for (Binding b : Binding.valueBindings(bindings))
+      valueLocals = Math.max(valueLocals, b.getValue().maxLocals());
     return maxLocals + valueLocals;
   }
 
-  public AST subst(AST ast, String name) {
-    AST letrec = new Letrec(getLine(), substBindings(ast, name), binds(name) ? exp : exp.subst(ast, name));
-    return letrec;
+  public void setPath(String path) {
+    for (Binding b : bindings)
+      b.setPath(path);
+    exp.setPath(path);
   }
 
-  private boolean binds(String name) {
-    for (Binding b : bindings) {
-      if (b.getName().equals(name)) return true;
-    }
-    return false;
+  public AST subst(AST ast, String name) {
+    AST letrec = new Letrec(getLineStart(), getLineEnd(), substBindings(ast, name), binds(name) ? exp : exp.subst(ast, name));
+    return letrec;
   }
 
   private Binding[] substBindings(AST ast, String name) {
@@ -161,57 +167,17 @@ public class Letrec extends AST {
     return bs;
   }
 
-  public void setPath(String path) {
-    for (Binding b : bindings)
-      b.setPath(path);
-    exp.setPath(path);
+  public String toString() {
+    return "Letrec(" + Arrays.toString(bindings) + "," + exp + ")";
   }
 
   public Type type(Env<String, Type> env) {
-    for (Binding b : valueBindings()) {
-      env = env.bind(b.getName(), new Box());
-    }
-    for (Binding b : typeBindings()) {
-      env = env.bind(b.getName(), (Type) b.getValue());
-    }
-    for (Binding b : valueBindings()) {
-      Box box = (Box) env.lookup(b.getName());
-      System.out.println("BINDING " + b.getName() + ":" + b.getType() + "=" + b.getValue());
-      Type bType = b.getType().eval(env);
-      System.out.println(b.getType() + " eval to " + bType);
-      Type vType = b.getValue().type(env).eval(env);
-      System.out.println("vType = " + vType);
-      Type type = bType.bind(vType);
-      if (type != null)
-        box.setType(type);
-      else throw new TypeMatchError(this, vType, bType);
-
-    }
-    return exp.type(env);
+    setType(exp.type(Binding.typeBindingsRec(bindings, env)));
+    return getType();
   }
 
-  public Binding[] valueBindings() {
-    // Just return those bindings that define values (e.g. not types)...
-    int vb = 0;
-    for (Binding b : bindings)
-      if (b.isValueBinding()) vb++;
-    Binding[] valueBindings = new Binding[vb];
-    int i = 0;
-    for (Binding b : bindings)
-      if (b.isValueBinding()) valueBindings[i++] = b;
-    return valueBindings;
-  }
-
-  public Binding[] typeBindings() {
-    // Just return those bindings that define types...
-    int tb = 0;
-    for (Binding b : bindings)
-      if (b.isTypeBinding()) tb++;
-    Binding[] typeBindings = new Binding[tb];
-    int i = 0;
-    for (Binding b : bindings)
-      if (b.isTypeBinding()) typeBindings[i++] = b;
-    return typeBindings;
+  public DeclaringLocation[] getContainedDecs() {
+    return bindings;
   }
 
 }

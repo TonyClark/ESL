@@ -2,10 +2,12 @@ package ast.patterns;
 
 import java.util.HashSet;
 import java.util.Vector;
+import java.util.function.BiConsumer;
 
 import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
+import ast.binding.declarations.DeclaringLocation;
 import ast.data.Apply;
 import ast.data.Fun;
 import ast.refs.Ref;
@@ -26,16 +28,29 @@ public class PNull extends Pattern {
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, CodeBox code) {
-    code.add(new instrs.patterns.isNull(getLine(),ref),locals, dynamics);
+    code.add(new instrs.patterns.isNull(getLineStart(), ref), locals, dynamics);
   }
 
-  public Type type(Env<String, Type> env) {
-    return ast.types.Null.NULL;
+  public void type(Env<String, Type> env, BiConsumer<Env<String, Type>, Type> cont) {
+    setType( ast.types.Null.NULL);
+    cont.accept(env, ast.types.Null.NULL);
   }
 
   public Env<String, Type> bind(Env<String, Type> env, Type type) {
     if (type instanceof ast.types.Null)
       return env;
     else return null;
+  }
+
+  public Type getDeclaredType() {
+    return ast.types.Null.NULL;
+  }
+
+  public void processDeclarations(Env<String, Type> env) {
+    
+  }
+
+  public DeclaringLocation[] getContainedDecs() {
+    return new DeclaringLocation[] {};
   }
 }

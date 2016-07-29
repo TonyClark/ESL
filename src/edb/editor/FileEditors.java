@@ -1,12 +1,15 @@
 package edb.editor;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import actors.Actor;
+import ast.modules.Module;
 import edb.tool.EDB;
 
 public class FileEditors extends EditorTabbedPane {
@@ -20,7 +23,7 @@ public class FileEditors extends EditorTabbedPane {
   public void fileDeleted(String path) {
     int i = indexOfTab(path);
     if (i != -1) this.remove(i);
-    
+
   }
 
   private FileEditor getSelectedFileEditor() {
@@ -58,7 +61,9 @@ public class FileEditors extends EditorTabbedPane {
     JScrollPane scroller = new JScrollPane(editor);
     scroller.setRowHeaderView(editor.getLines());
     addTab(path, scroller);
-    editor.parseText();
+    Module module = editor.parseText();
+    if (module != null) editor.typeCheckText(module);
+    if (module != null) gui.displayTree(module);
   }
 
   private void loadFile(String path, EDB gui) {
@@ -101,6 +106,50 @@ public class FileEditors extends EditorTabbedPane {
   public void selectLine(int line) {
     FileEditor editor = getSelectedFileEditor();
     if (editor != null) editor.selectLine(line);
+  }
+
+  public void hasError(String path, boolean isError) {
+    int i = indexOfTab(path);
+    if (i != -1) {
+      CloseButtonTab tab = (CloseButtonTab) getTabComponentAt(i);
+      tab.hasError(isError);
+    }
+  }
+
+  public void openPanel(JPanel panel) {
+    String label = "Panel(" + panel.hashCode() + ")";
+    int i = indexOfTab(label);
+    if (i == -1) createPanel(label, panel);
+    i = indexOfTab(label);
+    setSelectedIndex(i);
+  }
+
+  private void createPanel(String label, JPanel panel) {
+    ClosablePanel parent = new ClosablePanel(panel) {
+      public void close() {
+        if (panel instanceof TabbedActor) {
+          TabbedActor closable = (TabbedActor) panel;
+          closable.close();
+        }
+      }
+
+      public void select() {
+        if (panel instanceof TabbedActor) {
+          TabbedActor closable = (TabbedActor) panel;
+          closable.select();
+        }
+      }
+
+      public void deselect() {
+        if (panel instanceof TabbedActor) {
+          TabbedActor closable = (TabbedActor) panel;
+          closable.deselect();
+        }
+      }
+    };
+    parent.setLayout(new BorderLayout());
+    parent.add(panel);
+    addTab(label, parent);
   }
 
 }

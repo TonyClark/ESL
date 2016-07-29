@@ -19,7 +19,7 @@ public class Str extends Type {
     return other instanceof Str;
   }
 
-  public Type eval(Env<String, Type> env) {
+  public Type substType(Type type, String name) {
     return this;
   }
 

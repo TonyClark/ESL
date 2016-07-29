@@ -25,8 +25,8 @@ public class Update extends AST {
   public Update() {
   }
 
-  public Update(String name, AST value) {
-    super();
+  public Update(int lineStart, int lineEnd, String name, AST value) {
+    super(lineStart, lineEnd);
     this.name = name;
     this.value = value;
   }
@@ -37,18 +37,18 @@ public class Update extends AST {
     else {
       value.compile(locals, dynamics, code, false);
       if (lookup(name, locals) != null)
-        lookup(name, locals).update(getLine(), code, locals, dynamics);
+        lookup(name, locals).update(getLineStart(), code, locals, dynamics);
       else if (lookup(name, dynamics) != null)
-        lookup(name, dynamics).update(getLine(), code, locals, dynamics);
+        lookup(name, dynamics).update(getLineStart(), code, locals, dynamics);
       else throw new java.lang.Error("cannot update " + name + " in " + locals + " and " + dynamics);
     }
   }
 
   private void compileSub1(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     if (lookup(name, locals) != null)
-      lookup(name, locals).sub1(getLine(), code, locals, dynamics);
+      lookup(name, locals).sub1(getLineStart(), code, locals, dynamics);
     else if (lookup(name, dynamics) != null)
-      lookup(name, dynamics).sub1(getLine(), code, locals, dynamics);
+      lookup(name, dynamics).sub1(getLineStart(), code, locals, dynamics);
     else throw new java.lang.Error("cannot subtract 1 from " + name + " in " + locals + " and " + dynamics);
   }
 
@@ -82,7 +82,7 @@ public class Update extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Update(this.name, value.subst(ast, name));
+    return new Update(getLineStart(), getLineEnd(), this.name, value.subst(ast, name));
   }
 
   public String toString() {
@@ -97,11 +97,16 @@ public class Update extends AST {
     Type valueType = value.type(env);
     if (env.binds(name)) {
       Type varType = env.lookup(name);
-      Type type = varType.bind(valueType);
-      if (type != null)
-        return type;
-      else throw new TypeMatchError(this, valueType, varType);
-    } throw new TypeError(this,"unbound variable " + name);
+      if (Type.equals(varType, valueType, env)) {
+        setType(varType);
+        return getType();
+      } else throw new TypeMatchError(value.getLineStart(), value.getLineEnd(), valueType, varType);
+    }
+    throw new TypeError(getLineStart(), getLineEnd(), "unbound variable " + name);
+  }
+
+  public String getLabel() {
+    return ":= " + name + " :: " + getType();
   }
 
 }

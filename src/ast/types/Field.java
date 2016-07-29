@@ -10,12 +10,15 @@ public class Field implements Located {
 
   public String name;
   public Type   type;
-  int           line;
+  int           lineStart = -1;
+  int           lineEnd = -1;
 
   public Field() {
   }
 
-  public Field(String name, Type type) {
+  public Field(int lineStart, int lineEnd, String name, Type type) {
+    setLineStart(lineStart);
+    setLineEnd(lineEnd);
     this.name = name;
     this.type = type;
   }
@@ -36,20 +39,32 @@ public class Field implements Located {
     this.type = type;
   }
 
-  public int getLine() {
-    return line;
+  public int getLineStart() {
+    return lineStart;
   }
 
-  public void setLine(int line) {
-    this.line = line;
+  public void setLineStart(int lineStart) {
+    this.lineStart = lineStart;
+  }
+
+  public int getLineEnd() {
+    return lineEnd;
+  }
+
+  public void setLineEnd(int lineEnd) {
+    this.lineEnd = lineEnd;
   }
 
   public String toString() {
     return name + ":" + type;
   }
 
-  public Field eval(Env<String, Type> env) {
-    return new Field(name,type.eval(env));
+  public Field substType(Type t, String n) {
+    return new Field(getLineStart(), getLineEnd(), name, type.substType(t, n));
+  }
+
+  public boolean equals(Field field, Env<String, Type> env) {
+    return name.equals(field.getName()) && Type.equals(type, field.getType(), env);
   }
 
 }

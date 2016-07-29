@@ -2,87 +2,87 @@ export main;
 
 import 'esl/lists.esl';
 
-act table(numberOfChopsticks) {
-  chopsticks = [ true | _ <- 0..(numberOfChopsticks-1) ]
-  Grab(Left,n,cont) ->
-    if nth(chopsticks,n)
-    then {
-      chopsticks := take(chopsticks,n) + [false] + drop(chopsticks,n+1);
-      print('Grab left ' + n + ' ' + chopsticks);
-      cont(true)
-    }
-    else cont(false);
-  Grab(Right,n,cont) ->
-    if n = length(chopsticks)-1
-    then 
-      if nth(chopsticks,0)
-      then {
-        chopsticks := [false] + drop(chopsticks,1);
-        print('Grab right ' + n + ' ' + chopsticks);
-        cont(true)
-      } else cont(false)
-    else 
-      if nth(chopsticks,n+1)
-      then {
-        chopsticks := take(chopsticks,n+1) + [false] + drop(chopsticks,n+2);
-        print('Grab right ' + n + ' ' + chopsticks);
-        cont(true)
-      } else cont(false);
-  Free(Left,n) -> {
-    chopsticks := take(chopsticks,n) + [true] + drop(chopsticks,n+1);
-    print('Free left ' + n + ' ' + chopsticks)
-  };
-  Free(Right,n) -> {
-    if n = length(chopsticks)-1
-    then chopsticks := [true] + drop(chopsticks,1)
-    else chopsticks := take(chopsticks,n+1) + [true] + drop(chopsticks,n+2);
-    print('Free right ' + n + ' ' + chopsticks)
-  };
-  Time(_) -> {};
-  m -> print(m)
-};
+type Main = Act { Time(Int) };
 
-act phil(table,n) {
-  hungry = 0;
-  trying = false
-  Try -> 
-    let me = self
-    in table <- Grab(Left,n,fun(ok) 
-         if ok 
-         then table <- Grab(Right,n,fun(ok) 
-                if ok 
-                then me <- Eat 
-                else {
-                  table <- Free(Left,n);
-                  trying := false
-                })
-         else trying := false);
-  Eat -> {
-    print(self + ' eats');
-    table <- Free(Left,n);
-    table <- Free(Right,n);
-    trying := false;
-    hungry := 100
-  };
-  Time(_) when not(trying) and hungry = 0 -> {
-    trying := true;
-    self <- Try
-  };
-  Time(_) when hungry > 0 -> hungry := hungry - 1;
-  Time(_) -> {}
-};
+type Chopstick = Act { export id::Int;active::Bool; Time(Int) };
 
-act main {
+type Philosopher = Act { export eating::Bool; Time(Int) };
+
+eats::Int = 0;
+
+act philosopher1(i::Int,left::Chopstick,right::Chopstick)::Philosopher {
+
+  // This version of a philosopher should work OK. The amount of eating is non-deterministic
+  // because of the random delay, however, there should be no starvation because the grab-clause
+  // means that chopsticks are grabbed together...
   
-  -> 
-    let t = new table(4)
-    in {
-      new phil(t,0);
-      new phil(t,1);
-      new phil(t,2)
-    };
+  export eating;
+  eating::Bool = false
+  Time(n::Int) -> {
+  grab(left.active,right.active) {
+    print[Str](self + ' eats using ' + left.id + ' and ' + right.id);
+    eats := eats + 1;
+    eating := true;
+    for x::Int in 0..random(1000) do {};
+    eating := false
+  }  
+ }
+};
 
-  Time(_) -> {}
+act philosopher2(i::Int,left::Chopstick,right::Chopstick)::Philosopher {
+
+  // This version of a philosopher may lead to deadlockbecause each of the chopsticks are
+  // grabbed independently (and there is a delay in between)...
+  
+  export eating;
+  eating::Bool = false
+  Time(n::Int) -> {
+    grab(left.active) {
+      for x::Int in 0..100 do {};
+      grab(right.active) {
+        print[Str](self + ' eats using ' + left.id + ' and ' + right.id);
+        eats := eats + 1;
+        eating := true;
+        for x::Int in 0..random(1000) do {};
+        eating := false
+      }    
+    }
+  }
+};
+
+act chopstick(i::Int)::Chopstick {
+  export id,active;
+  id::Int = i;
+  active::Bool = false
+  Time(n::Int) -> {}
+};
+
+max::Int = 4;
+
+chopsticks::[Chopstick] = [ new chopstick(i) | i::Int <- 0..(max) ];
+
+// The first version should be OK...
+
+philosophers::[Philosopher] = [ new philosopher1(i,nth[Chopstick](chopsticks,i),nth[Chopstick](chopsticks,(i+1)%max)) | i::Int <- 0..max ];
+
+// Comment out the above and uncomment the below to get a deadlock version...
+
+// philosophers::[Philosopher] = [ new philosopher2(i,nth[Chopstick](chopsticks,i),nth[Chopstick](chopsticks,(i+1)%max)) | i::Int <- 0..max ];
+
+act main::Main {
+
+  Time(1000) -> { print[Str]('Total eating = ' + eats); stopAll() };
+  Time(n::Int) -> {}
 
 }
+
+
+
+
+
+
+
+
+
+
 

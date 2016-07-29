@@ -1,39 +1,58 @@
 export main;
 
-act main {
+type Main = Act { Time(Int); Time(Bool) };
 
-  b1 = bag{1,2,3};
-  b2 = bag{2,3,4};
+act main::Main {
+
+  b1::Bag{Int} = bag{1,2,3};
+  b2::Bag{Int} = bag{2,3,4};
   
-  add(x,b) = bag{ x | b }
-  /*
-  contains(bag{ y | b },x) = true when x = y;
-  contains(_,_)            = false;
-  count(x,bag{})           = 0;
-  count(x,bag{y | b})      = 1 + count(x,b) when x = y;
-  count(x,bag{y | b})      = count(x,b)     when x <> y;
-  add(b1,b2)               = b1 + b2
+  add(x::Int,b::Bag{Int})::Bag{Int} = bag{ x | b };
   
-  */
+  contains(bag{ y::Int | b::Bag{Int} },x::Int)::Bool = true when x = y;
+  contains(b::Bag{Int},n::Int)::Bool                 = false;
+  count(x::Int,bag{}[Int])::Int                      = 0;
+  count(x::Int,bag{y::Int | b::Bag{Int}})::Int       = 1 + count(x,b) when x = y;
+  count(x::Int,bag{y::Int | b::Bag{Int}})::Int       = count(x,b)     when x <> y
   
   -> {
-    print(b1);
-    print(b1);
-    print(b2);
-    print(b2);
-    print(add(1,b2));
-    print(b1 + b2);
-    print(b1 + b2)
-    /*
-    print(contains(b1,1));
-    print(contains(b2,1));
-    print(contains(add(1,b2),1));
-    print(count(1,add(1,add(1,b2)))) 
-    */
+    print[Str]('A Bag');
+    print[Bag{Int}](bag{1});
+    print[Bag{Int}](b1);
+    print[Bag{Int}](b1);
+    print[Bag{Int}](b2);
+    print[Bag{Int}](b2);
+    print[Bag{Int}](add(1,b2));
+    print[Bag{Int}](b1 + b2);
+    print[Bag{Int}](b1 + b2);
+    print[Bool](contains(b1,1));
+    print[Bool](contains(b2,1));
+    print[Bool](contains(add(1,b2),1));
+    print[Int](count(1,add(1,add(1,b2)))) 
   };
 
   Time(100) -> { stopAll() };
-  Time(n) -> { }
+  Time(n::Bool) -> { }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

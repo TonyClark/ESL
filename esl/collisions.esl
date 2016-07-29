@@ -1,36 +1,46 @@
 export main;
 
-min(x,y) = if x < y then x else y;
-max(x,y) = if x > y then x else y;
+min(x::Int,y::Int)::Int = if x < y then x else y;
+max(x::Int,y::Int)::Int = if x > y then x else y;
 
-act simulator {
+type GUI = Act{ export size::Int; width::Int; height::Int; ballSize::Int; Time(Int); Draw(Int,Int,Int) };
+
+type Ball = Act { export x::Int; y::Int; Time(Int) };
+
+type Simulator = Act { export gui::GUI; balls::[Ball]; SetGUI(GUI); Start(); Stop(); Time(Int); Close() };
+
+type Main = Act { Time(Int) };
+
+act simulator::Simulator {
 
   export gui, balls;
 
-  gui = null;
+  gui::GUI = null;
   
-  balls = []
+  balls::[Ball] = [][Ball]
   
-  SetGUI(g) -> gui := g;
+  SetGUI(g::GUI) -> gui := g;
   
-  Start -> balls := [ new ball(i,self) | i <- 0..(gui.size - 1)];
+  Start -> balls := [ new ball(i,self) | i::Int <- 0..(gui.size - 1)];
   
-  Stop -> for ball in balls do kill(ball);
+  Stop -> for ball::Ball in balls do kill[Ball](ball);
+
+  Close -> stopAll();
   
-  Time(_) -> { }
+  Time(t::Int) -> { }
   
 };
 
-act ball(id,simulator) {
+act ball(id::Int,simulator::Simulator)::Ball {
 
   export x,y;
   
-  x = random(simulator.gui.width);
-  y = random(simulator.gui.height);
-  dx = random(2) - 1;
-  dy = random(2) - 1;
+  x::Int = random(simulator.gui.width);
+  y::Int = random(simulator.gui.height);
+  dx::Int = random(2) - 1;
+  dy::Int = random(2) - 1;
   
-  checkDeltas(n) = 
+  checkDeltas(n::Int)::Void = 
     if (dx = 0) and (dy = 0)
     then { 
       dx := (random(2) - 1)*n;
@@ -38,7 +48,7 @@ act ball(id,simulator) {
       checkDeltas(n+1)
     } else {};
   
-  hitWalls() =
+  hitWalls()::Void = {
     if (x + dx + simulator.gui.ballSize) > simulator.gui.width
     then dx := 0 - dx
     else if (x + dx) < 0
@@ -48,12 +58,14 @@ act ball(id,simulator) {
     else if (y + dy) < 0
     then dy := 0 - dy
     else {};
+    {}
+  };
     
-  overlaps(x1,y1,x2,y2) = (((x1 > x2) andalso (x1 < (x2 + simulator.gui.ballSize))) andalso ((y1 > y2) andalso (y1 < (y2 + simulator.gui.ballSize)))) orelse
+  overlaps(x1::Int,y1::Int,x2::Int,y2::Int)::Bool = (((x1 > x2) andalso (x1 < (x2 + simulator.gui.ballSize))) andalso ((y1 > y2) andalso (y1 < (y2 + simulator.gui.ballSize)))) orelse
                           (((x2 > x1) andalso (x2 < (x1 + simulator.gui.ballSize))) andalso ((y2 > y1) andalso (y2 < (y1 + simulator.gui.ballSize))));
   
-  hitBalls() =
-    for b in simulator.balls do {
+  hitBalls()::Void =
+    for b::Ball in simulator.balls do {
       if b <> self
       then {
          if overlaps(b.x,b.y,x,y)
@@ -66,7 +78,7 @@ act ball(id,simulator) {
     
   -> checkDeltas(2);
 
-  Time(_)  -> {
+  Time(n::Int)  -> {
     hitWalls();
     hitBalls();
     x := max(0,min(x + dx,simulator.gui.width));
@@ -76,7 +88,7 @@ act ball(id,simulator) {
   
 };
 
-act main {
+act main::Main {
 
   // Demonstrates how ESL can communicate with Java. The class test.CollisionGUI implements a simple
   // GUI via Java SWT. The Java agents communicate with ESL via messages in the usual way. When the GUI
@@ -86,9 +98,24 @@ act main {
   -> {
     setMaxInstructions(10000);
     setInstructionsPerTimeUnit(5000);
-    new 'test.CollisionGUI'(new simulator)
+    new 'test.CollisionFrame'[GUI](new simulator)
   };
      
-   Time(_) -> {}
+   Time(n::Int) -> {}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

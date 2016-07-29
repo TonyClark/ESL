@@ -33,18 +33,18 @@ public class IsTerm extends AST {
       compileDynamicIsTerm(locals, dynamics, code);
     else {
       value.compile(locals, dynamics, code, false);
-      code.add(new instrs.tests.IsTerm(getLine(), name, arity), locals, dynamics);
+      code.add(new instrs.tests.IsTerm(getLineStart(), name, arity), locals, dynamics);
     }
   }
 
   private void compileLocalIsTerm(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     Var v = (Var) value;
-    lookup(v.name, locals).isTerm(name, arity, getLine(), code, locals, dynamics);
+    lookup(v.name, locals).isTerm(name, arity, getLineStart(), code, locals, dynamics);
   }
 
   private void compileDynamicIsTerm(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     Var v = (Var) value;
-    lookup(v.name, dynamics).isTerm(name, arity, getLine(), code, locals, dynamics);
+    lookup(v.name, dynamics).isTerm(name, arity, getLineStart(), code, locals, dynamics);
   }
 
   private boolean isLocal(List<FrameVar> locals) {
@@ -88,6 +88,10 @@ public class IsTerm extends AST {
   public Type type(Env<String, Type> env) {
     value.type(env);
     return ast.types.Bool.BOOL;
+  }
+
+  public String getLabel() {
+    return "IsTerm " + name + " " + arity + " :: " + getType();
   }
 
 }

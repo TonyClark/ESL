@@ -7,7 +7,7 @@ import compiler.FrameVar;
 import list.List;
 
 public class VarTable {
-  
+
   // Build up a list of the variables in scope for each instruction. Note
   // that this is inefficient since there is currently an entry for each
   // instruction in the parent code box. Better to consolidate the information
@@ -35,8 +35,15 @@ public class VarTable {
   public String[] getDynamicNames(int codePtr) {
     List<DynamicVar> vars = dynamics.get(codePtr);
     String[] names = new String[vars.length()];
+    // For some reason we are missing some dynamics. Find the smallest index...
+    int minIndex = Integer.MAX_VALUE;
+    List<DynamicVar> vs = vars;
+    while (!vs.isNil()) {
+      if (vs.getHead().getIndex() < minIndex) minIndex = vs.getHead().getIndex();
+      vs = vs.getTail();
+    }
     while (!vars.isNil()) {
-      names[vars.getHead().getIndex()] = vars.getHead().getName();
+      names[vars.getHead().getIndex() - minIndex] = vars.getHead().getName();
       vars = vars.getTail();
     }
     return names;

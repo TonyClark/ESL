@@ -20,7 +20,7 @@ public class IsNull extends AST {
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     value.compile(locals, dynamics, code, false);
-    code.add(new instrs.tests.IsNull(getLine()), locals, dynamics);
+    code.add(new instrs.tests.IsNull(getLineStart()), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -46,6 +46,10 @@ public class IsNull extends AST {
   public Type type(Env<String, Type> env) {
     value.type(env);
     return ast.types.Bool.BOOL;
+  }
+
+  public String getLabel() {
+    return "IsNull :: " + getType();
   }
 
 }

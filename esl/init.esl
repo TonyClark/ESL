@@ -1,32 +1,85 @@
 export main;
 
-x:Int = 1;
-y:Str = 'plap';
-z:Bool = true;
+x::Int = 2;
+y::Str = 'plap';
+z::Bool = true;
+
+zeroTo10::[Int] = 0..10;
 
 type X = Int;
 
-f:(Int)->Int = fun(x:Int):Int x+1;
+f::(X)->Int = fun(x::Int)::Int x+1;
 
-type Main = Act { Time(Void) -> Void };
+caseTest::(T(Int)) -> G(Bool) =
+ fun(x::T(Int))::G(Bool)
+  case x {
+    T(10) -> G(true);
+    T(11) -> G(false);
+    T(1)  -> G(true); 
+    K(true) -> G(true);
+    _ -> G(false)
+  };
 
-act main:Main {
-  a = 1;
-  b = 2;
+a::Int = f(f(x));
 
-  c = 3
+type Main = Act { Time(Int) };
 
-  Time(_) -> {
-    let g:[Int] = [1,
-                   2,
+act main::Main {
+  a::Int = 1;
+  b::Int = 2;
+  c::(Int)->Bool = fun(x::Int)::Bool true
+ 
+  Time(n::Int) -> {
+    let g::[Int] = [f(f(0)),
+                   1,
                    3,4,5];
-        h:Int = 2;
+        h::Int = 2;
 
-        i:Int = 3
+        i::Bool = c(x) 
 
-    in stopAll()
+    in { 
+      i := if x > 1 then true else false or true; 
+      stopAll()
+    }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

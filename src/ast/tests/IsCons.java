@@ -26,7 +26,7 @@ public class IsCons extends AST {
       compileDynamicIsCons(locals, dynamics, code);
     else {
       value.compile(locals, dynamics, code, false);
-      code.add(new instrs.tests.IsCons(getLine()), locals, dynamics);
+      code.add(new instrs.tests.IsCons(getLineStart()), locals, dynamics);
     }
   }
 
@@ -39,12 +39,12 @@ public class IsCons extends AST {
 
   private void compileLocalIsCons(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     Var v = (Var) value;
-    lookup(v.name, locals).isCons(getLine(), code, locals, dynamics);
+    lookup(v.name, locals).isCons(getLineStart(), code, locals, dynamics);
   }
 
   private void compileDynamicIsCons(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     Var v = (Var) value;
-    lookup(v.name, dynamics).isCons(getLine(), code, locals, dynamics);
+    lookup(v.name, dynamics).isCons(getLineStart(), code, locals, dynamics);
   }
 
   private boolean isLocal(List<FrameVar> locals) {
@@ -81,6 +81,10 @@ public class IsCons extends AST {
   public Type type(Env<String, Type> env) {
     value.type(env);
     return ast.types.Bool.BOOL;
+  }
+
+  public String getLabel() {
+    return "iscons :: " + getType();
   }
 
 }

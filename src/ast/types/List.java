@@ -6,14 +6,15 @@ import exp.BoaConstructor;
 @BoaConstructor(fields = { "type" })
 public class List extends Type {
 
-  public static final Type NIL = new Forall("T", new List(new Var("T")));
-  
+  public static final Type NIL = new Forall(0, 0, new String[] { "T" }, new List(0, 0, new Var(0,0,"T",null)));
+
   public Type              type;
 
   public List() {
   }
 
-  public List(Type type) {
+  public List(int lineStart, int lineEnd, Type type) {
+    super(lineStart, lineEnd);
     this.type = type;
   }
 
@@ -25,8 +26,12 @@ public class List extends Type {
     this.type = type;
   }
 
-  public Type eval(Env<String, Type> env) {
-    return new List(type.eval(env));
+  public String toString() {
+    return "[" + type + "]";
+  }
+
+  public Type substType(Type t, String name) {
+    return new List(getLineStart(), getLineEnd(), type.substType(t, name));
   }
 
 }

@@ -1,13 +1,24 @@
 package actors;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import ast.types.Forall;
+import ast.types.Type;
 import compiler.DynamicVar;
+import env.Empty;
+import env.Env;
 import instrs.Instr;
 import list.List;
 import list.Nil;
+import listeners.InstrListener;
+import listeners.MessageListener;
+import listeners.NewActorListener;
+import listeners.ScheduleListener;
+import listeners.StopListener;
+import listeners.TimeListener;
 
 public class Actor {
 
@@ -59,6 +70,7 @@ public class Actor {
   static TimeListener               timeListener         = TimeListener.NOOP;
   static MessageListener            messageListener      = MessageListener.NOOP;
   static InstrListener              instrListener        = InstrListener.NOOP;
+  static ScheduleListener           scheduleListener     = ScheduleListener.NOOP;
 
   // Stack frame offsets...
 
@@ -164,6 +176,23 @@ public class Actor {
     return env;
   }
 
+  public static Env<String, Type> builtinTypes() {
+    Type Void = ast.types.Void.VOID;
+    Type Int = ast.types.Int.INT;
+    Type T = new ast.types.Var(0, 0, "T", null);
+    Type[] none = new Type[] {};
+    Type fun0_to_T = new ast.types.Fun(0, 0, none, T);
+    Env<String, Type> env = new Empty<String, Type>();
+    env = env.bind("print", new Forall(0, 0, new String[] { "T" }, new ast.types.Fun(0, 0, new Type[] { T }, Void)));
+    env = env.bind("stopAll", new ast.types.Fun(0, 0, new Type[0], Void));
+    env = env.bind("probably", new Forall(0, 0, new String[] { "T" }, new ast.types.Fun(0, 0, new Type[] { Int, fun0_to_T, fun0_to_T }, fun0_to_T)));
+    env = env.bind("kill", new Forall(0, 0, new String[] { "T" }, new ast.types.Fun(0, 0, new Type[] { T }, Void)));
+    env = env.bind("random", new ast.types.Fun(0, 0, new Type[] { Int }, Int));
+    env = env.bind("setMaxInstructions", new ast.types.Fun(0, 0, new Type[] { Int }, Void));
+    env = env.bind("setInstructionsPerTimeUnit", new ast.types.Fun(0, 0, new Type[] { Int }, Void));
+    return env;
+  }
+
   public static Vector<Actor> getACTORS() {
     return ACTORS;
   }
@@ -198,6 +227,10 @@ public class Actor {
       actor.closeFrame(0, null, null, null);
       actor.returnValue(getResults());
     } else throw new Error("getResults expects 0 args but supplied with " + arity);
+  }
+
+  public static ScheduleListener getScheduleListener() {
+    return scheduleListener;
   }
 
   public static StopListener getStopListener() {
@@ -337,7 +370,7 @@ public class Actor {
           actor.scheduleMessage();
         }
 
-        if (!stop && actor.getState() != ActorState.DEAD) {
+        if (!stop && actor.getState() != ActorState.DEAD && actor.getState() != ActorState.BLOCKED) {
 
           // If the actor is still alive then run it for a time slice...
 
@@ -386,10 +419,6 @@ public class Actor {
     } else throw new Error("shuffle expects 1 arg but supplied with " + arity);
   }
 
-  // The behaviour of this actor. The behaviour is essentially a code-box where the code
-  // expects a message to have been supplied. The code will then perform case-analysis on
-  // the message...
-
   public static void setMaxInstructions(Actor actor, int arity) {
     if (arity == 1) {
       actor.closeFrame(0, null, null, null);
@@ -399,17 +428,25 @@ public class Actor {
     } else throw new Error("shuffle expects 1 arg but supplied with " + arity);
   }
 
-  // The stack contains stack-frames that correspond to function calls. Each stack frame
-  // is linked to the previous frame and is popped when the current function call returns.
-  // The type of elements on the stack is Object to allow for a variety of Java values
-  // to co-exist on the stack: casts will be required in many cases...
+  // The behaviour of this actor. The behaviour is essentially a code-box where the code
+  // expects a message to have been supplied. The code will then perform case-analysis on
+  // the message...
 
   public static void setMessageListener(MessageListener messageListener) {
     Actor.messageListener = messageListener;
   }
 
+  // The stack contains stack-frames that correspond to function calls. Each stack frame
+  // is linked to the previous frame and is popped when the current function call returns.
+  // The type of elements on the stack is Object to allow for a variety of Java values
+  // to co-exist on the stack: casts will be required in many cases...
+
   public static void setNewActorListener(NewActorListener newActorListener) {
     Actor.newActorListener = newActorListener;
+  }
+
+  public static void setScheduleListener(ScheduleListener scheduleListener) {
+    Actor.scheduleListener = scheduleListener;
   }
 
   // The index to the next available stack location...
@@ -583,6 +620,28 @@ public class Actor {
     throw new Error("cannot find bag with id " + id);
   }
 
+  public boolean canGrab(int n) {
+
+    // Try to grab the top n dynamics from the top of the stack...
+
+    for (int i = 0; i < n; i++)
+      if (!canGrab(peek(i))) return false;
+    return true;
+
+  }
+
+  private boolean canGrab(Object object) {
+
+    // An actor can grab a dynamic when it is already the owner or when the
+    // dynamic is not currently owned by anyone...
+
+    Dynamic dynamic = (Dynamic) object;
+    if (dynamic.getOwner() == null || dynamic.getOwner() == this) {
+      dynamic.setOwner(this);
+      return true;
+    } else return false;
+  }
+
   public void closeFrame(int locals, CodeBox code, List<Dynamic> dynamics, Closure catcher) {
     frame = openFrame;
     setCode(code);
@@ -689,12 +748,12 @@ public class Actor {
     return (int) failStack[currentFail + FAIL_CODE];
   }
 
+  // The number of instructions that have been executed since the actor was created...
+
   public int failId() {
     // If the fail frame is a frame then ...
     return (int) failStack[currentFail + FAIL_ID];
   }
-
-  // The number of instructions that have been executed since the actor was created...
 
   public int failIndex() {
     // If the fail frame is a bag frame then ...
@@ -886,6 +945,10 @@ public class Actor {
     setCodePtr(getCodePtr() + 1);
   }
 
+  public void decCodePtr() {
+    setCodePtr(getCodePtr() - 1);
+  }
+
   public void incCodePtr(int count) {
     setCodePtr(getCodePtr() + count);
   }
@@ -972,6 +1035,14 @@ public class Actor {
     pushStack(tofs);
     pushStack(currentFail);
     openFrame = tos - LOCAL0;
+  }
+
+  public Object peek() {
+    return peek(0);
+  }
+
+  public Object peek(int i) {
+    return stack[tos - (i + 1)];
   }
 
   public void popFrame() {
@@ -1106,19 +1177,25 @@ public class Actor {
     // calls stop, then continue until it returns because this is
     // the last actor that is active in the system...
 
+    scheduleListener.schedule(this);
+
     try {
+
       while (!complete() && instrs > 0) {
         Vector<Instr> code = getCode().getCode();
         int i = getCodePtr();
         incCodePtr();
         Instr next = getCode().getInstr(i);
         instructions++;
-        line = next.getLine();
+        line = next.getLineStart();
         next.perform(this);
         instrListener.perform(this);
-        if (stop) instrs = Integer.MIN_VALUE;
+        if (stop || state == ActorState.BLOCKED) instrs = 0;
         instrs--;
       }
+
+      scheduleListener.deschedule(this);
+
       if (complete()) {
         Object result = tos > 0 ? popStack() : null;
         reset();
@@ -1357,6 +1434,45 @@ public class Actor {
     pushFailStack(id);
     pushFailStack(0);
     currentFail = tos;
+  }
+
+  static Vector<Actor> BLOCKED = new Vector<Actor>();
+
+  public void grabBlocked() {
+    decCodePtr();
+    state = ActorState.BLOCKED;
+    BLOCKED.add(this);
+  }
+
+  public static void notifyAllActors() {
+
+    // Some resources have been freed up. We should be more efficient, but if
+    // all blocked actors are unblocked, then they will try to grab the resources
+    // they need and re-block if necessary...
+
+    for (Actor a : BLOCKED) {
+      a.setState(ActorState.ALIVE);
+    }
+    BLOCKED.clear();
+
+  }
+
+  public void pushDynamic(int index) {
+
+    // Push the dynamic variable (not its value) onto the stack...
+
+    Dynamic dynamic = getDynamics().nth(index);
+    pushStack(dynamic);
+  }
+
+  public Dynamic dynamicRef(Key name) {
+
+    // Not as efficient as we might like...
+
+    if (getBehaviour().hasExport(name))
+      return getBehaviour().dynamicRef(name);
+    else throw new Error("cannot find exported name " + name);
+
   }
 
 }

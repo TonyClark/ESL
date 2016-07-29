@@ -6,7 +6,9 @@ import java.util.HashSet;
 import actors.CodeBox;
 import ast.AST;
 import ast.binding.Dec;
+import ast.types.Forall;
 import ast.types.Type;
+import ast.types.TypeMatchError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import env.Env;
@@ -17,39 +19,63 @@ import instrs.vars.NewDynamic;
 import list.List;
 import list.Nil;
 
-@BoaConstructor(fields = { "name", "args", "type", "body" })
+@BoaConstructor(fields = { "name", "args", "declaredType", "body" })
 
 public class Fun extends AST {
 
-  static int    funCount = 0;
-
-  public String path;
-  public String name;
-  public Dec[]  args;
-  public Type   type;
-  public AST    body;
-
-  public Fun() {
-  }
-
-  public Fun(String name, Dec[] args, Type type, AST body) {
-    this("", name, args, type, body);
-  }
-
-  public Fun(String path, String name, Dec[] args, Type type, AST body) {
-    this.path = path;
-    this.name = name;
-    this.args = args;
-    this.type = type;
-    this.body = body;
-  }
+  static int funCount = 0;
 
   public static String newName() {
     return "fun" + (funCount++);
   }
 
-  public String toString() {
-    return "Fun(" + getLine() + "," + name + "," + Arrays.toString(args) + "," + body + ")";
+  public String path;
+  public String name;
+  public Dec[]  args;
+  public Type   declaredType;
+
+  public AST    body;
+
+  public Fun() {
+  }
+
+  public Fun(int lineStart, int lineEnd, String path, String name, Dec[] args, Type declaredType, AST body) {
+    super(lineStart, lineEnd);
+    this.path = path;
+    this.name = name;
+    this.args = args;
+    this.declaredType = declaredType;
+    this.body = body;
+  }
+
+  private int argIndex(String arg) {
+    for (int i = 0; i < args.length; i++)
+      if (args[i].getName().equals(arg)) return i;
+    throw new java.lang.Error("cannot find arg " + arg);
+  }
+
+  private boolean binds(String name) {
+    for (Dec arg : args) {
+      if (arg.getName().equals(name)) return true;
+    }
+    return false;
+  }
+
+  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+    int frame = body.maxLocals() + args.length;
+    CodeBox bodyCode = new CodeBox(path, frame);
+    compileBody(locals, dynamics, bodyCode, isLast);
+    code.add(new instrs.data.Fun(getLineStart(), name, args.length, bodyCode), locals, dynamics);
+  }
+
+  public void compileApply(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+
+    // Called when the function is created in order to immediately apply...
+
+    int frame = body.maxLocals() + args.length;
+    CodeBox bodyCode = new CodeBox(path, frame);
+    compileBody(locals, dynamics, bodyCode, isLast);
+    code.add(new ApplyFun(getLineStart(), name, args.length, bodyCode), locals, dynamics);
   }
 
   public void compileBody(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox bodyCode, boolean isLast) {
@@ -64,38 +90,19 @@ public class Fun extends AST {
     locals = new Nil<FrameVar>();
     int index = 0;
     for (Dec arg : args) {
-      if (dv.contains(arg)) {
-        bodyCode.add(new instrs.vars.FrameVar(getLine(), argIndex(arg.getName())), locals, dynamics);
-        bodyCode.add(new NewDynamic(getLine()), locals, dynamics);
+      if (dv.contains(arg.getName())) {
+        bodyCode.add(new instrs.vars.FrameVar(getLineStart(), argIndex(arg.getName())), locals, dynamics);
+        bodyCode.add(new NewDynamic(getLineStart()), locals, dynamics);
         dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(arg.getName(), 0));
       } else locals = locals.cons(new FrameVar(arg.getName(), index));
       index++;
     }
     body.compile(locals, dynamics, bodyCode, true);
-    bodyCode.add(new Return(getLine()), locals, dynamics);
+    bodyCode.add(new Return(getLineStart()), locals, dynamics);
   }
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    int frame = body.maxLocals() + args.length;
-    CodeBox bodyCode = new CodeBox(path, frame);
-    compileBody(locals, dynamics, bodyCode, isLast);
-    code.add(new instrs.data.Fun(getLine(), name, args.length, bodyCode), locals, dynamics);
-  }
-
-  public void compileApply(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-
-    // Called when the function is created in order to immediately apply...
-
-    int frame = body.maxLocals() + args.length;
-    CodeBox bodyCode = new CodeBox(path, frame);
-    compileBody(locals, dynamics, bodyCode, isLast);
-    code.add(new ApplyFun(getLine(), name, args.length, bodyCode), locals, dynamics);
-  }
-
-  private int argIndex(String arg) {
-    for (int i = 0; i < args.length; i++)
-      if (args[i].equals(arg)) return i;
-    throw new java.lang.Error("cannot find arg " + arg);
+  public void DV(HashSet<String> vars) {
+    FV(vars);
   }
 
   public void FV(HashSet<String> vars) {
@@ -106,25 +113,16 @@ public class Fun extends AST {
     vars.addAll(free);
   }
 
-  public void DV(HashSet<String> vars) {
-    FV(vars);
+  public Type getDeclaredType() {
+    return declaredType;
+  }
+
+  public String getLabel() {
+    return "fun :: " + getType().toString();
   }
 
   public int maxLocals() {
     return 0;
-  }
-
-  private boolean binds(String name) {
-    for (Dec arg : args) {
-      if (arg.getName().equals(name)) return true;
-    }
-    return false;
-  }
-
-  public AST subst(AST ast, String name) {
-    if (binds(name))
-      return this;
-    else return new Fun(path, this.name, args, type, body.subst(ast, name));
   }
 
   public void setPath(String path) {
@@ -132,14 +130,30 @@ public class Fun extends AST {
     body.setPath(path);
   }
 
-  public Type type(Env<String, Type> env) {
-    return new ast.types.Fun(getDomain(), type);
+  public AST subst(AST ast, String name) {
+    if (binds(name))
+      return this;
+    else return new Fun(getLineStart(), getLineEnd(), path, this.name, args, declaredType, body.subst(ast, name));
   }
 
-  private Type[] getDomain() {
+  public String toString() {
+    return "Fun(" + getLineStart() + "," + name + "," + Arrays.toString(args) + "," + body + ")";
+  }
+
+  public Type type(Env<String, Type> env) {
     Type[] domain = new Type[args.length];
-    for(int i = 0;i < domain.length;i++)
-      domain[i] = args[i].getType();
-    return domain;
+    for (int i = 0; i < args.length; i++) {
+      Type argType = args[i].getDeclaredType();
+      env = env.bind(args[i].getName(), argType);
+      domain[i] = argType;
+    }
+    Type dType = declaredType;
+    Type bType = new ast.types.Fun(declaredType.getLineStart(), declaredType.getLineEnd(), domain, body.type(env));
+    if (Type.equals(dType, bType, env)) {
+      setType(bType);
+      return getType();
+    } else {
+      throw new TypeMatchError(getLineStart(), getLineEnd(), bType, dType);
+    }
   }
 }

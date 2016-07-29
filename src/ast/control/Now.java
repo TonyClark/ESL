@@ -22,7 +22,7 @@ public class Now extends AST {
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new instrs.vars.Now(getLine()), locals, dynamics);
+    code.add(new instrs.vars.Now(getLineStart()), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -43,7 +43,12 @@ public class Now extends AST {
   }
 
   public Type type(Env<String, Type> env) {
+    setType(ast.types.Int.INT);
     return ast.types.Int.INT;
+  }
+
+  public String getLabel() {
+    return "now :: " + getType();
   }
 
 }

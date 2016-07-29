@@ -2,10 +2,12 @@ package ast.patterns;
 
 import java.util.HashSet;
 import java.util.Vector;
+import java.util.function.BiConsumer;
 
 import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
+import ast.binding.declarations.DeclaringLocation;
 import ast.data.Apply;
 import ast.data.BinExp;
 import ast.data.Bool;
@@ -40,8 +42,8 @@ public class PBool extends Pattern {
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, CodeBox code) {
     if (value)
-      code.add(new instrs.patterns.isTrue(getLine(), ref), locals, dynamics);
-    else code.add(new instrs.patterns.IsFalse(getLine(), ref), locals, dynamics);
+      code.add(new instrs.patterns.isTrue(getLineStart(), ref), locals, dynamics);
+    else code.add(new instrs.patterns.IsFalse(getLineStart(), ref), locals, dynamics);
   }
 
   public Env<String, Type> bind(Env<String, Type> env, Type type) {
@@ -50,8 +52,21 @@ public class PBool extends Pattern {
     else return null;
   }
 
-  public Type type(Env<String, Type> env) {
+  public void type(Env<String, Type> env, BiConsumer<Env<String, Type>, Type> cont) {
+    setType(ast.types.Bool.BOOL);
+    cont.accept(env, ast.types.Bool.BOOL);
+  }
+
+  public Type getDeclaredType() {
     return ast.types.Bool.BOOL;
+  }
+
+  public void processDeclarations(Env<String, Type> env) {
+
+  }
+
+  public DeclaringLocation[] getContainedDecs() {
+    return new DeclaringLocation[] {};
   }
 
 }

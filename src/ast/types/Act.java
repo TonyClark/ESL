@@ -1,54 +1,97 @@
 package ast.types;
 
+import java.util.Arrays;
+
+import ast.binding.Dec;
 import env.Env;
 import exp.BoaConstructor;
 
-@BoaConstructor(fields = { "handlers" })
+@BoaConstructor(fields = { "decs", "handlers" })
 
 public class Act extends Type {
 
-  public HandlerType[] handlers;
+  public Dec[]         decs;
+  public MessageType[] handlers;
 
   public Act() {
   }
 
-  public Act(HandlerType[] handlers) {
+  public Act(int lineStart, int lineEnd, Dec[] decs, MessageType[] handlers) {
+    super(lineStart, lineEnd);
+    this.decs = decs;
     this.handlers = handlers;
   }
 
-  public HandlerType[] getHandlers() {
+  public MessageType[] getHandlers() {
     return handlers;
   }
 
-  public void setHandlers(HandlerType[] handlers) {
-    this.handlers = handlers;
-  }
-
-  public Type getType(Type[] types) {
-    // Find the return type od the handler with the supplied types.
-    // Return null if no handler exists...
-    for (HandlerType handler : handlers) {
-      if (handler.canHandle(types)) return handler.getResult();
+  public Type getType(String name) {
+    for (Dec d : decs) {
+      if (d.getName().equals(name)) return d.getDeclaredType();
     }
     return null;
   }
 
-  public Type eval(Env<String, Type> env) {
-    HandlerType[] hs = new HandlerType[handlers.length];
-    for (int i = 0; i < hs.length; i++)
-      hs[i] = handlers[i].eval(env);
-    return new Act(hs);
+  public boolean hasField(String name) {
+    for (Dec d : decs) {
+      if (d.getName().equals(name)) return true;
+    }
+    return false;
   }
 
-  public boolean equals(Object other) {
-    if (other instanceof Act) {
-      Act act = (Act) other;
-      if (act.getHandlers().length == handlers.length) {
-        for (int i = 0; i < handlers.length; i++)
-          if (!act.getHandlers()[i].equals(handlers[i])) return false;
+  public void setHandlers(MessageType[] handlers) {
+    this.handlers = handlers;
+  }
+
+  private Dec[] substDecs(Type type, String name) {
+    Dec[] ds = new Dec[decs.length];
+    for (int i = 0; i < decs.length; i++)
+      ds[i] = decs[i].substType(type, name);
+    return ds;
+  }
+
+  private MessageType[] substHandlers(Type type, String name) {
+    MessageType[] ts = new MessageType[handlers.length];
+    for (int i = 0; i < handlers.length; i++) {
+      ts[i] = handlers[i].substType(type, name);
+    }
+    return ts;
+  }
+
+  public Type substType(Type type, String name) {
+    return new Act(getLineStart(), getLineEnd(), substDecs(type, name), substHandlers(type, name));
+  }
+
+  public String toString() {
+    String exports = decs.length == 0 ? "" : "export " + separateWith(decs, "; ") + "; ";
+    String s = "Act { " + exports + separateWith(handlers, "; ") + " }";
+    return s;
+  }
+
+  public boolean containsAllHandlers(Act a, Env<String, Type> env) {
+    for (int i = 0; i < a.getHandlers().length; i++) {
+      MessageType hi = a.getHandlers()[i];
+      boolean found = false;
+      for (int j = 0; j < handlers.length && !found; j++) {
+        MessageType hj = handlers[j];
+        if (hi.equals(hj, env)) found = true;
       }
-      return true;
-    } else return super.equals(other);
+      if (!found) return false;
+    }
+    return true;
+  }
+
+  public boolean canSend(Type[] types, Env<String, Type> env) {
+    for (MessageType handler : handlers) {
+      if (handler.getTypes().length == types.length) {
+        boolean handlerMatches = true;
+        for (int i = 0; i < types.length; i++)
+          if (!Type.equals(handler.getTypes()[i], types[i], env)) handlerMatches = false;
+        if (handlerMatches) return true;
+      }
+    }
+    return false;
   }
 
 }

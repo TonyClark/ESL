@@ -21,7 +21,7 @@ public class Test {
 
     // run("balbir");
     // run("patterns");
-    // run("monitor");
+     run("monitor");
     // run("cmp_test");
     // run("init_test");
     // run("jobs");
@@ -34,7 +34,7 @@ public class Test {
     // run("message_at");
     // run("feedback");
     // run("TRDDC");
-    run("big");
+    // run("big");
     // run("splash");
     // run("dot");
     // run("customer");
@@ -53,7 +53,7 @@ public class Test {
       Actor.resetESL();
       Module module = Module.importModule("esl/" + name + ".esl");
       module.resolve();
-      AST record = new New(new Apply(new Ref(module.desugar(), Key.getKey("main"))));
+      AST record = new New(0, 0, new Apply(0, 0, new Ref(0, 0, module.desugar(), Key.getKey("main"))));
       CodeBox codebox = new CodeBox(name, record.maxLocals());
       record.compile(new Nil<FrameVar>(), Actor.builtinDynamics(), codebox, true);
       codebox.add(new Return(-1), new Nil<FrameVar>(), new Nil<DynamicVar>());

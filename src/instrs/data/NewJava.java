@@ -30,6 +30,7 @@ public class NewJava extends Instr {
               args[i] = actor.popStack();
             JavaActor javaActor = (actors.JavaActor) cnstr.newInstance(args);
             actor.pushStack(javaActor);
+            Actor.getNewActorListener().newActor(javaActor);
             return;
           }
         }

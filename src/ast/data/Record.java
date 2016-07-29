@@ -23,8 +23,8 @@ public class Record extends AST {
   public Record() {
   }
 
-  public Record(Binding[] bindings) {
-    super();
+  public Record(int lineStart, int lineEnd, Binding[] bindings) {
+    super(lineStart, lineEnd);
     this.bindings = bindings;
   }
 
@@ -35,9 +35,9 @@ public class Record extends AST {
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     for (Binding b : bindings) {
       b.value.compile(locals, dynamics, code, false);
-      code.add(new instrs.data.Field(getLine(), Key.getKey(b.name)), locals, dynamics);
+      code.add(new instrs.data.Field(getLineStart(), Key.getKey(b.name)), locals, dynamics);
     }
-    code.add(new instrs.data.Record(getLine(), bindings.length), locals, dynamics);
+    code.add(new instrs.data.Record(getLineStart(), bindings.length), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -58,13 +58,13 @@ public class Record extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Record(substBindings(ast, name));
+    return new Record(getLineStart(), getLineEnd(), substBindings(ast, name));
   }
 
   private Binding[] substBindings(AST ast, String name) {
     Binding[] bs = new Binding[bindings.length];
     for (int i = 0; i < bindings.length; i++)
-      bs[i] = new Binding("", bindings[i].getName(), bindings[i].getType(), bindings[i].getValue().subst(ast, name));
+      bs[i] = new Binding(getLineStart(), getLineEnd(), "", bindings[i].getName(), bindings[i].getType(), bindings[i].getValue().subst(ast, name));
     return bs;
   }
 
@@ -76,8 +76,13 @@ public class Record extends AST {
   public Type type(Env<String, Type> env) {
     ast.types.Field[] fields = new ast.types.Field[bindings.length];
     for (int i = 0; i < fields.length; i++)
-      fields[i] = new ast.types.Field(bindings[i].getName(), bindings[i].getValue().type(env));
-    return new ast.types.Record(fields);
+      fields[i] = new ast.types.Field(bindings[i].getLineStart(), bindings[i].getLineEnd(), bindings[i].getName(), bindings[i].getValue().type(env));
+    setType(new ast.types.Record(getLineStart(), getLineEnd(), fields));
+    return getType();
+  }
+
+  public String getLabel() {
+    return "record :: " + getType();
   }
 
 }

@@ -6,9 +6,13 @@ import java.util.Vector;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.binding.Dec;
 import ast.patterns.Pattern;
 import ast.types.HandlerType;
+import ast.types.Term;
 import ast.types.Type;
+import ast.types.TypeError;
+import ast.types.TypeMatchError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import env.Env;
@@ -21,18 +25,20 @@ import instrs.vars.NewDynamic;
 import instrs.vars.PopDynamic;
 import list.List;
 
-@BoaConstructor(fields = { "exps", "arms" })
+@BoaConstructor(fields = { "decs", "exps", "arms" })
 
 public class Case extends AST {
 
+  public Dec[]  decs;
   public AST[]  exps;
   public BArm[] arms;
 
   public Case() {
   }
 
-  public Case(AST[] exps, BArm[] arms) {
+  public Case(Dec[] decs, AST[] exps, BArm[] arms) {
     super();
+    this.decs = decs;
     this.exps = exps;
     this.arms = arms;
   }
@@ -47,14 +53,14 @@ public class Case extends AST {
 
     for (AST exp : exps)
       exp.compile(locals, dynamics, code, false);
-    code.add(new instrs.patterns.SetPatternValues(getLine(), exps.length), locals, dynamics);
+    code.add(new instrs.patterns.SetPatternValues(getLineStart(), exps.length), locals, dynamics);
 
     compileArms(locals, dynamics, code, isLast);
   }
 
   public void compileArms(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
 
-    // DEFINE THE dynamic vars up front ... then remove them at the end...
+    // Define the dynamic vars up front ... then remove them at the end...
 
     // Compile each arm independently...
 
@@ -64,7 +70,7 @@ public class Case extends AST {
 
     for (BArm arm : arms) {
 
-      // Work out which variables bound by patterns should be local and which should be dyanamic...
+      // Work out which variables bound by patterns should be local and which should be dynamic...
 
       HashSet<String> DV = new HashSet<String>();
       HashSet<String> BV = new HashSet<String>();
@@ -94,7 +100,7 @@ public class Case extends AST {
       if (i > 0) {
         for (String v : armBV.get(i - 1)) {
           if (armDV.get(i - 1).contains(v)) {
-            instrs.add(new PopDynamic(getLine()), locals, dynamics);
+            instrs.add(new PopDynamic(getLineStart()), locals, dynamics);
             dynamics = dynamics.getTail();
           }
         }
@@ -102,14 +108,14 @@ public class Case extends AST {
       for (String v : BV) {
         if (DV.contains(v)) {
           armDynamics = armDynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(v, 0));
-          instrs.add(new Null(getLine()), locals, dynamics);
-          instrs.add(new NewDynamic(getLine()), locals, dynamics);
+          instrs.add(new Null(getLineStart()), locals, dynamics);
+          instrs.add(new NewDynamic(getLineStart()), locals, dynamics);
         } else armLocals = armLocals.cons(new FrameVar(v, armLocals.length()));
       }
       arm.compile(armLocals, armDynamics, instrs, isLast && i == arms.length - 1);
       for (String v : BV) {
         if (DV.contains(v)) {
-          instrs.add(new PopDynamic(getLine()), locals, dynamics);
+          instrs.add(new PopDynamic(getLineStart()), locals, dynamics);
           dynamics = dynamics.getTail();
         }
       }
@@ -120,7 +126,7 @@ public class Case extends AST {
 
     for (int i = 0; i < armCode.size(); i++) {
       int length = code.getCode().size();
-      instrs.patterns.Try tryArm = new instrs.patterns.Try(getLine(), 0, i == 0);
+      instrs.patterns.Try tryArm = new instrs.patterns.Try(getLineStart(), 0, i == 0);
       code.add(tryArm, locals, dynamics);
       int base = code.getCode().size();
       CodeBox armCodeBox = armCode.get(i);
@@ -133,7 +139,7 @@ public class Case extends AST {
       }
       // Jump over the rest of the case arms and the end error message...
       int distance = distance(armCode, i + 1) + 2;
-      Skip jmp = new Skip(getLine(), distance);
+      Skip jmp = new Skip(getLineStart(), distance);
       code.add(jmp, locals, dynamics);
       int offset = code.getCode().size() - length;
       tryArm.setOffset(offset - 1);
@@ -141,7 +147,7 @@ public class Case extends AST {
 
     // Add in the error at the end of the case...
 
-    code.add(new instrs.patterns.CaseError(getLine(), this), locals, dynamics);
+    code.add(new instrs.patterns.CaseError(getLineStart(), this), locals, dynamics);
   }
 
   private int distance(Vector<CodeBox> armCode, int start) {
@@ -177,7 +183,7 @@ public class Case extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Case(subst(exps, ast, name), subst(arms, ast, name));
+    return new Case(decs, subst(exps, ast, name), subst(arms, ast, name));
   }
 
   private BArm[] subst(BArm[] arms, AST ast, String name) {
@@ -195,18 +201,58 @@ public class Case extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    // Need to check that the arms are all consistent.
-    // Can also check that the type of the exps match at least one handler type...
-    Type[] types = new Type[exps.length];
-    for (int i = 0; i < types.length; i++) {
-      types[i] = exps[i].type(env);
+
+    // The case expression may include declarations that
+    // type the bound variables in patterns. The pattern
+    // variables are updated...
+
+    processDeclarations(env);
+
+    // Get the types of the supplied values...
+
+    Type[] suppliedTypes = new Type[exps.length];
+    Type[] expectedTypes = new Type[exps.length];
+
+    for (int i = 0; i < exps.length; i++) {
+      suppliedTypes[i] = exps[i].type(env);
+      expectedTypes[i] = ast.types.Void.VOID;
     }
-    Type t = ast.types.Void.VOID;
+
+    // The return type. Any void return types are ignored...
+
+    Type resultType = null;
+
     for (BArm arm : arms) {
-      HandlerType h = arm.type(env);
-      t = h.getResult();
+      int lineStart = arm.patterns[0].getLineStart();
+      int lineEnd = arm.patterns[0].getLineEnd();
+      if (arm.patterns.length == exps.length) {
+        HandlerType handlerType = arm.type(env);
+        for (int i = 0; i < exps.length; i++) {
+          if (!Term.equals(handlerType.getTypes()[i], suppliedTypes[i], env)) {
+            throw new TypeMatchError(lineStart, lineEnd, suppliedTypes[i], handlerType.getTypes()[i]);
+          }
+        }
+        if (resultType == null)
+          resultType = handlerType.getResult();
+        else if (!Type.equals(resultType, handlerType.getResult(), env)) throw new TypeError(lineStart, lineEnd, "incompatible case arm return types " + resultType + " and " + handlerType.getResult());
+      } else throw new TypeError(lineStart, lineEnd, "incorrect number of arm patterns.");
     }
-    return t;
+
+    return resultType;
+
+  }
+
+  private void processDeclarations(Env<String, Type> env) {
+    // The declarations type the pattern variables...
+    for (Dec dec : decs)
+      env = env.bind(dec.getName(), dec.getDeclaredType());
+    for (BArm arm : arms) {
+      arm.processDeclarations(env);
+    }
+  }
+
+  public String getLabel() {
+    return "case :: " + getType();
   }
 
 }

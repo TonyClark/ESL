@@ -70,7 +70,11 @@ public class Behaviour {
     return dynamics.nth(i).getValue();
   }
 
-  private int exportIndex(Key name) {
+  private Dynamic refDynamic(int i) {
+    return dynamics.nth(i);
+  }
+
+  public int exportIndex(Key name) {
     for (int i = 0; i < exports.length; i++)
       if (name == exports[i]) return i;
     return -1;
@@ -78,6 +82,10 @@ public class Behaviour {
 
   public String getPath() {
     return code.getPath();
+  }
+
+  public Dynamic dynamicRef(Key key) {
+    return refDynamic(exportIndex(key));
   }
 
 }

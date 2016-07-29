@@ -2,13 +2,14 @@ export main;
 
 act main {
 
-  Time(1) -> print('this is the start of time.');
+  Time(1) -> print[Str]('this is the start of time.');
 
-  Time(t) when t > 20 -> {
-    print('this is the end of time.');
+  Time(t::Int) when t > 20 -> {
+    print[Str]('this is the end of time.');
     stopAll()
   };
 
-  Time(t) -> print('this is time ' + t)
+  Time(t) -> print[Str]('this is time ' + t)
 }
+
 

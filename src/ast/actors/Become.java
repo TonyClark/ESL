@@ -10,6 +10,7 @@ import compiler.FrameVar;
 import env.Env;
 import exp.BoaConstructor;
 import list.List;
+import values.Located;
 
 @BoaConstructor(fields = { "behaviour" })
 
@@ -20,8 +21,8 @@ public class Become extends AST {
   public Become() {
   }
 
-  public Become(AST behaviour) {
-    super();
+  public Become(int lineStart, int lineEnd, AST behaviour) {
+    super(lineStart, lineEnd);
     this.behaviour = behaviour;
   }
 
@@ -31,7 +32,7 @@ public class Become extends AST {
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     behaviour.compile(locals, dynamics, code, false);
-    code.add(new instrs.data.Become(getLine()), locals, dynamics);
+    code.add(new instrs.data.Become(getLineStart()), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -47,7 +48,7 @@ public class Become extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Become(behaviour.subst(ast, name));
+    return new Become(getLineStart(), getLineEnd(), behaviour.subst(ast, name));
   }
 
   public void setPath(String path) {
@@ -55,7 +56,12 @@ public class Become extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    return behaviour.type(env);
+    setType(behaviour.type(env));
+    return getType();
+  }
+
+  public String getLabel() {
+    return "become :: " + getType();
   }
 
 }

@@ -46,7 +46,12 @@ public class Float extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    return ast.types.Float.FLOAT;
+    setType(ast.types.Float.FLOAT);
+    return getType();
+  }
+
+  public String getLabel() {
+    return "float :: " + getType();
   }
 
 }

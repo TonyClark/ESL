@@ -44,8 +44,8 @@ public class BinExp extends AST {
   public BinExp() {
   }
 
-  public BinExp(AST left, String op, AST right) {
-    super();
+  public BinExp(int lineStart, int lineEnd, AST left, String op, AST right) {
+    super(lineStart, lineEnd);
     this.left = left;
     this.op = op;
     this.right = right;
@@ -65,51 +65,51 @@ public class BinExp extends AST {
     else if (isNotNil())
       compileNotNil(locals, dynamics, code);
     else if (op.equals("andalso"))
-      new If(left, right, new Bool(false)).compile(locals, dynamics, code, isLast);
+      new If(getLineStart(), getLineEnd(), left, right, new Bool(false)).compile(locals, dynamics, code, isLast);
     else if (op.equals("orelse"))
-      new If(left, new Bool(true), right).compile(locals, dynamics, code, isLast);
+      new If(getLineStart(), getLineEnd(), left, new Bool(true), right).compile(locals, dynamics, code, isLast);
     else {
       left.compile(locals, dynamics, code, false);
       right.compile(locals, dynamics, code, false);
       switch (op) {
         case "+":
-          code.add(new Add(getLine()), locals, dynamics);
+          code.add(new Add(getLineStart()), locals, dynamics);
           break;
         case "-":
-          code.add(new Sub(getLine()), locals, dynamics);
+          code.add(new Sub(getLineStart()), locals, dynamics);
           break;
         case "*":
-          code.add(new Mul(getLine()), locals, dynamics);
+          code.add(new Mul(getLineStart()), locals, dynamics);
           break;
         case "/":
-          code.add(new Div(getLine()), locals, dynamics);
+          code.add(new Div(getLineStart()), locals, dynamics);
           break;
         case "=":
-          code.add(new Eql(getLine()), locals, dynamics);
+          code.add(new Eql(getLineStart()), locals, dynamics);
           break;
         case ">":
-          code.add(new Gre(getLine()), locals, dynamics);
+          code.add(new Gre(getLineStart()), locals, dynamics);
           break;
         case "<":
-          code.add(new Less(getLine()), locals, dynamics);
+          code.add(new Less(getLineStart()), locals, dynamics);
           break;
         case ":":
-          code.add(new Cons(getLine()), locals, dynamics);
+          code.add(new Cons(getLineStart()), locals, dynamics);
           break;
         case "<>":
-          code.add(new NEql(getLine()), locals, dynamics);
+          code.add(new NEql(getLineStart()), locals, dynamics);
           break;
         case "and":
-          code.add(new And(getLine()), locals, dynamics);
+          code.add(new And(getLineStart()), locals, dynamics);
           break;
         case "or":
-          code.add(new Or(getLine()), locals, dynamics);
+          code.add(new Or(getLineStart()), locals, dynamics);
           break;
         case "..":
-          code.add(new To(getLine()), locals, dynamics);
+          code.add(new To(getLineStart()), locals, dynamics);
           break;
         case "%":
-          code.add(new Mod(getLine()), locals, dynamics);
+          code.add(new Mod(getLineStart()), locals, dynamics);
           break;
         default:
           throw new java.lang.Error("unknown operator " + op);
@@ -120,10 +120,10 @@ public class BinExp extends AST {
   private void compileAdd1(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     if (left instanceof Int && ((Int) left).value == 1) {
       right.compile(locals, dynamics, code, false);
-      code.add(new Add1(getLine()), locals, dynamics);
+      code.add(new Add1(getLineStart()), locals, dynamics);
     } else {
       left.compile(locals, dynamics, code, false);
-      code.add(new Add1(getLine()), locals, dynamics);
+      code.add(new Add1(getLineStart()), locals, dynamics);
     }
   }
 
@@ -141,18 +141,18 @@ public class BinExp extends AST {
 
   private void compileNotNil(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     left.compile(locals, dynamics, code, false);
-    code.add(new NotNil(getLine()), locals, dynamics);
+    code.add(new NotNil(getLineStart()), locals, dynamics);
   }
 
   private void compileEql0(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     left.compile(locals, dynamics, code, false);
-    code.add(new Is0(getLine()), locals, dynamics);
+    code.add(new Is0(getLineStart()), locals, dynamics);
   }
 
   private void compileEqlBool(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
     left.compile(locals, dynamics, code, false);
     Bool b = (Bool) right;
-    code.add(new IsBool(getLine(), b.value), locals, dynamics);
+    code.add(new IsBool(getLineStart(), b.value), locals, dynamics);
   }
 
   private boolean isEql0() {
@@ -190,7 +190,7 @@ public class BinExp extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new BinExp(left.subst(ast, name), op, right.subst(ast, name));
+    return new BinExp(getLineStart(), getLineEnd(), left.subst(ast, name), op, right.subst(ast, name));
   }
 
   public void setPath(String path) {
@@ -199,6 +199,11 @@ public class BinExp extends AST {
   }
 
   public Type type(Env<String, Type> env) {
+    setType(type0(env));
+    return getType();
+  }
+
+  public Type type0(Env<String, Type> env) {
     Type t1 = left.type(env);
     Type t2 = right.type(env);
     if (op.equals("+")) {
@@ -206,8 +211,71 @@ public class BinExp extends AST {
         return ast.types.Int.INT;
       else if (t1 instanceof ast.types.Str || t2 instanceof ast.types.Str)
         return ast.types.Str.STR;
-      else throw new TypeError(this, "+ expects two integers: " + t1 + " and " + t2);
-    } else throw new TypeError(this, "unknown operator " + op);
+      else if (t1 instanceof ast.types.List && t2 instanceof ast.types.List) {
+        ast.types.List l1 = (ast.types.List) t1;
+        ast.types.List l2 = (ast.types.List) t2;
+        if (Type.equals(l1.getType(), l2.getType(), env))
+          return t1;
+        else throw new TypeError(getLineStart(), getLineEnd(), "+ expects two lists with the same element types: " + t1 + " and " + t2);
+      } else if (t1 instanceof ast.types.Bag && t2 instanceof ast.types.Bag) {
+        ast.types.Bag b1 = (ast.types.Bag) t1;
+        ast.types.Bag b2 = (ast.types.Bag) t2;
+        if (Type.equals(b1.getType(), b2.getType(), env))
+          return t1;
+        else throw new TypeError(getLineStart(), getLineEnd(), "+ expects two lists with the same element types: " + t1 + " and " + t2);
+      } else throw new TypeError(getLineStart(), getLineEnd(), "+ expects numbers, bags, sets or lists: " + t1 + " and " + t2);
+    } else if (op.equals("-")) {
+      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+        return ast.types.Int.INT;
+      else throw new TypeError(getLineStart(), getLineEnd(), "- expects two integers: " + t1 + " and " + t2);
+    } else if (op.equals("*")) {
+      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+        return ast.types.Int.INT;
+      else throw new TypeError(getLineStart(), getLineEnd(), "* expects two integers: " + t1 + " and " + t2);
+    } else if (op.equals("/")) {
+      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+        return ast.types.Int.INT;
+      else throw new TypeError(getLineStart(), getLineEnd(), "/ expects two integers: " + t1 + " and " + t2);
+    } else if (op.equals(">")) {
+      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+        return ast.types.Bool.BOOL;
+      else throw new TypeError(getLineStart(), getLineEnd(), "> expects two integers: " + t1 + " and " + t2);
+    } else if (op.equals("<")) {
+      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+        return ast.types.Bool.BOOL;
+      else throw new TypeError(getLineStart(), getLineEnd(), "> expects two integers: " + t1 + " and " + t2);
+    } else if (op.equals("="))
+      return ast.types.Bool.BOOL;
+    else if (op.equals("and") || op.equals("andalso")) {
+      if (t1 instanceof ast.types.Bool && t2 instanceof ast.types.Bool)
+        return ast.types.Bool.BOOL;
+      else throw new TypeError(getLineStart(), getLineEnd(), "and expects two integers: " + t1 + " and " + t2);
+    } else if (op.equals("or") || op.equals("orelse")) {
+      if (t1 instanceof ast.types.Bool && t2 instanceof ast.types.Bool)
+        return ast.types.Bool.BOOL;
+      else throw new TypeError(getLineStart(), getLineEnd(), "or expects two integers: " + t1 + " and " + t2);
+    } else if (op.equals("<>")) {
+      return ast.types.Bool.BOOL;
+    } else if (op.equals("%")) {
+      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+        return ast.types.Int.INT;
+      else throw new TypeError(getLineStart(), getLineEnd(), "% expects two integers: " + t1 + " and " + t2);
+    } else if (op.equals("..")) {
+      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+        return new ast.types.List(getLineStart(), getLineEnd(), ast.types.Int.INT);
+      else throw new TypeError(getLineStart(), getLineEnd(), ".. expects two integers: " + t1 + " and " + t2);
+    } else if (op.equals(":")) {
+      if (t2 instanceof ast.types.List) {
+        ast.types.List l = (ast.types.List) t2;
+        if (Type.equals(t1, l.getType(), env))
+          return t2;
+        else throw new TypeError(getLineStart(), getLineEnd(), ": incompatible element type: " + t1 + " and " + t2);
+      } else throw new TypeError(getLineStart(), getLineEnd(), ": expects a list: " + t2);
+    } else throw new TypeError(getLineStart(), getLineEnd(), "unknown operator " + op);
+  }
+
+  public String getLabel() {
+    return op + " :: -> " + getType();
   }
 
 }

@@ -27,7 +27,8 @@ public class Block extends AST {
   public Block() {
   }
 
-  public Block(AST... exps) {
+  public Block(int lineStart, int lineEnd, AST... exps) {
+    super(lineStart, lineEnd);
     this.exps = exps;
   }
 
@@ -37,12 +38,12 @@ public class Block extends AST {
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     if (exps.length == 0)
-      code.add(new Null(getLine()), locals, dynamics);
+      code.add(new Null(getLineStart()), locals, dynamics);
     else {
       for (AST exp : exps) {
         if (exp != exps[exps.length - 1]) {
           exp.compile(locals, dynamics, code, false);
-          code.add(new Pop(getLine()), locals, dynamics);
+          code.add(new Pop(getLineStart()), locals, dynamics);
         } else exp.compile(locals, dynamics, code, isLast);
       }
     }
@@ -63,7 +64,7 @@ public class Block extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Block(subst(exps, ast, name));
+    return new Block(getLineStart(), getLineEnd(), subst(exps, ast, name));
   }
 
   public void setPath(String path) {
@@ -72,10 +73,15 @@ public class Block extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    Type type = ast.types.Null.NULL;
+    Type type = ast.types.Void.VOID;
     for (AST exp : exps)
       type = exp.type(env);
-    return type;
+    setType(type);
+    return getType();
+  }
+
+  public String getLabel() {
+    return "block :: " + getType();
   }
 
 }

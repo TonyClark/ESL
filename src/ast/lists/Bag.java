@@ -21,7 +21,8 @@ public class Bag extends AST {
   public Bag() {
   }
 
-  public Bag(AST... elements) {
+  public Bag(int lineStart, int lineEnd, AST... elements) {
+    super(lineStart, lineEnd);
     this.elements = elements;
   }
 
@@ -32,7 +33,7 @@ public class Bag extends AST {
   public void compile(list.List<FrameVar> locals, list.List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     for (AST e : elements)
       e.compile(locals, dynamics, code, false);
-    code.add(new instrs.data.Bag(getLine(),elements.length), locals, dynamics);
+    code.add(new instrs.data.Bag(getLineStart(), elements.length), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -49,7 +50,7 @@ public class Bag extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Bag(subst(elements, ast, name));
+    return new Bag(getLineStart(), getLineEnd(), subst(elements, ast, name));
   }
 
   public void setPath(String path) {
@@ -58,15 +59,21 @@ public class Bag extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    if (elements.length == 0)
-      return ast.types.Bag.NIL;
-    else {
+    if (elements.length == 0) {
+      setType(ast.types.Bag.NIL);
+      return getType();
+    } else {
       Type type = elements[0].type(env);
       for (int i = 1; i < elements.length; i++) {
-        if (!type.equals(elements[i].type(env))) { throw new TypeError(this, "incompatible bag element types."); }
+        if (!Type.equals(type, elements[i].type(env), env)) { throw new TypeError(getLineStart(), getLineEnd(), "incompatible bag element types."); }
       }
-      return new ast.types.Bag(type);
+      setType(new ast.types.Bag(getLineStart(), getLineEnd(), type));
+      return getType();
     }
+  }
+
+  public String getLabel() {
+    return "bag :: " + getType();
   }
 
 }

@@ -11,4 +11,8 @@ public class TypePatternError extends Error {
     this.pattern = pattern;
   }
 
+  public Pattern getPattern() {
+    return pattern;
+  }
+
 }

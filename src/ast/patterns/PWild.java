@@ -2,10 +2,12 @@ package ast.patterns;
 
 import java.util.HashSet;
 import java.util.Vector;
+import java.util.function.BiConsumer;
 
 import actors.CodeBox;
 import ast.AST;
 import ast.binding.Var;
+import ast.binding.declarations.DeclaringLocation;
 import ast.data.Apply;
 import ast.data.Fun;
 import ast.refs.Ref;
@@ -30,11 +32,25 @@ public class PWild extends Pattern {
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, Ref ref, CodeBox code) {
   }
 
-  public Type type(Env<String, Type> env) {
-    return ast.types.Void.VOID;
+  public void type(Env<String, Type> env, BiConsumer<Env<String, Type>, Type> cont) {
+    setType(ast.types.Void.VOID);
+    cont.accept(env, ast.types.Void.VOID);
   }
 
   public Env<String, Type> bind(Env<String, Type> env, Type type) {
     return env;
+  }
+
+  public Type getDeclaredType() {
+    // A wildcard pattern should declare its type.
+    return ast.types.Void.VOID;
+  }
+ 
+  public void processDeclarations(Env<String, Type> env) {
+   
+  }
+
+  public DeclaringLocation[] getContainedDecs() {
+    return new DeclaringLocation[] {};
   }
 }

@@ -15,13 +15,14 @@ public class Error extends AST {
 
   AST message;
 
-  public Error(AST message) {
+  public Error(int lineStart, int lineEnd, AST message) {
+    super(lineStart, lineEnd);
     this.message = message;
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     message.compile(locals, dynamics, code, false);
-    code.add(new instrs.control.Error(getLine()), locals, dynamics);
+    code.add(new instrs.control.Error(getLineStart()), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -37,7 +38,7 @@ public class Error extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Error(message.subst(ast, name));
+    return new Error(getLineStart(), getLineEnd(), message.subst(ast, name));
   }
 
   public String toString() {
@@ -49,11 +50,12 @@ public class Error extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    Type type = message.type(env);
-    if (type.equals(ast.types.Str.STR))
-      return ast.types.Void.VOID;
-    else throw new TypeError(this, "error messages should be strings");
+    setType(ast.types.Void.VOID);
+    return getType();
+  }
 
+  public String getLabel() {
+    return "error :: " + getType();
   }
 
 }

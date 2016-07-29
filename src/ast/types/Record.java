@@ -12,7 +12,8 @@ public class Record extends Type {
   public Record() {
   }
 
-  public Record(Field[] fields) {
+  public Record(int lineStart, int lineEnd, Field[] fields) {
+    super(lineStart, lineEnd);
     this.fields = fields;
   }
 
@@ -37,19 +38,18 @@ public class Record extends Type {
   }
 
   public String toString() {
-    String s = "{ ";
-    for (int i = 0; i < fields.length; i++) {
-      s = s + fields[i];
-      if (i + 1 < fields.length) s = s + "; ";
-    }
-    return s + " }";
+    return "{" + separateWith(fields, ");") + "}";
   }
 
-  public Type eval(Env<String, Type> env) {
+  public Type substType(Type type, String name) {
+    return new Record(getLineStart(), getLineEnd(), substFields(type, name));
+  }
+
+  private Field[] substFields(Type type, String name) {
     Field[] fs = new Field[fields.length];
-    for (int i = 0; i < fs.length; i++)
-      fs[i] = fields[i].eval(env);
-    return new Record(fs);
+    for (int i = 0; i < fields.length; i++)
+      fs[i] = fields[i].substType(type, name);
+    return fs;
   }
 
 }

@@ -1,4 +1,7 @@
-package actors;
+package listeners;
+
+import actors.Actor;
+import actors.Message;
 
 public interface MessageListener {
 

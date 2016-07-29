@@ -27,8 +27,8 @@ public class If extends AST {
   public If() {
   }
 
-  public If(AST test, AST conseq, AST alt) {
-    super();
+  public If(int lineStart, int lineEnd, AST test, AST conseq, AST alt) {
+    super(lineStart, lineEnd);
     this.test = test;
     this.conseq = conseq;
     this.alt = alt;
@@ -47,10 +47,10 @@ public class If extends AST {
     } else {
       test.compile(locals, dynamics, code, false);
       int length = code.getCode().size();
-      SkipFalse jmp1 = new SkipFalse(getLine(), 0);
+      SkipFalse jmp1 = new SkipFalse(getLineStart(), 0);
       code.add(jmp1, locals, dynamics);
       conseq.compile(locals, dynamics, code, isLast);
-      Skip jmp2 = new Skip(getLine(), 0);
+      Skip jmp2 = new Skip(getLineStart(), 0);
       code.add(jmp2, locals, dynamics);
       jmp1.setCount(code.getCode().size() - length);
       length = code.getCode().size() - 1;
@@ -76,7 +76,7 @@ public class If extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new If(test.subst(ast, name), conseq.subst(ast, name), alt.subst(ast, name));
+    return new If(getLineStart(), getLineEnd(), test.subst(ast, name), conseq.subst(ast, name), alt.subst(ast, name));
   }
 
   public void setPath(String path) {
@@ -90,10 +90,16 @@ public class If extends AST {
     if (testType instanceof ast.types.Bool) {
       Type conseqType = conseq.type(env);
       Type altType = alt.type(env);
-      if (conseqType.equals(altType))
+      if (altType instanceof ast.types.Void)
+        return conseqType;
+      else if (Type.equals(conseqType,altType, env))
         return altType;
-      else throw new TypeMatchError(this, conseqType, altType);
-    } else throw new TypeError(this, "expecting Bool, but found " + testType);
+      else throw new TypeMatchError(conseq.getLineStart(), alt.getLineEnd(), conseqType, altType);
+    } else throw new TypeError(test.getLineStart(), test.getLineEnd(), "expecting Bool, but found " + testType);
+  }
+
+  public String getLabel() {
+    return "if :: " + getType();
   }
 
 }

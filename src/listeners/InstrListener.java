@@ -1,5 +1,6 @@
-package actors;
+package listeners;
 
+import actors.Actor;
 import instrs.Instr;
 
 public interface InstrListener {

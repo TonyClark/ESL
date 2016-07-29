@@ -5,8 +5,9 @@ import java.util.HashSet;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.binding.declarations.DecContainer;
+import ast.binding.declarations.DeclaringLocation;
 import ast.types.Type;
-import ast.types.TypeMatchError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import env.Env;
@@ -19,7 +20,7 @@ import list.List;
 
 @BoaConstructor(fields = { "bindings", "exp" })
 
-public class Let extends AST {
+public class Let extends AST implements DecContainer {
 
   public Binding[] bindings;
   public AST       exp;
@@ -27,7 +28,8 @@ public class Let extends AST {
   public Let() {
   }
 
-  public Let(Binding[] bindings, AST exp) {
+  public Let(int lineStart, int lineEnd, Binding[] bindings, AST exp) {
+    super(lineStart, lineEnd);
     this.bindings = bindings;
     this.exp = exp;
   }
@@ -43,23 +45,23 @@ public class Let extends AST {
     HashSet<String> DV = new HashSet<String>();
     exp.DV(DV);
 
-    for (Binding b : bindings) {
+    for (Binding b : Binding.valueBindings(bindings)) {
       if (DV.contains(b.name)) {
-        b.value.compile(locals, dynamics, code, false);
-        code.add(new NewDynamic(getLine()), locals, dynamics);
+        b.getValue().compile(locals, dynamics, code, false);
+        code.add(new NewDynamic(getLineStart()), locals, dynamics);
         dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(b.name, 0));
       } else {
-        b.value.compile(locals, dynamics, code, false);
+        b.getValue().compile(locals, dynamics, code, false);
         locals = locals.cons(new FrameVar(b.name, locals.length()));
-        code.add(new SetFrame(getLine(), locals.length() - 1), locals, dynamics);
-        code.add(new Pop(getLine()), locals, dynamics);
+        code.add(new SetFrame(getLineStart(), locals.length() - 1), locals, dynamics);
+        code.add(new Pop(getLineStart()), locals, dynamics);
       }
     }
     exp.compile(locals, dynamics, code, isLast);
     // Remove the dynamics...
-    for (Binding b : bindings) {
+    for (Binding b : Binding.valueBindings(bindings)) {
       if (DV.contains(b.name)) {
-        code.add(new PopDynamic(getLine()), locals, dynamics);
+        code.add(new PopDynamic(getLineStart()), locals, dynamics);
         dynamics = dynamics.getTail();
       }
     }
@@ -69,7 +71,7 @@ public class Let extends AST {
     HashSet<String> free = new HashSet<String>();
     HashSet<String> bound = new HashSet<String>();
     exp.FV(free);
-    for (Binding b : bindings) {
+    for (Binding b : Binding.valueBindings(bindings)) {
       b.FV(vars);
       bound.add(b.name);
     }
@@ -78,11 +80,11 @@ public class Let extends AST {
   }
 
   public void DV(HashSet<String> vars) {
-    for (Binding b : bindings)
+    for (Binding b : Binding.valueBindings(bindings))
       b.DV(vars);
     HashSet<String> dv = new HashSet<String>();
     exp.DV(dv);
-    for (Binding b : bindings)
+    for (Binding b : Binding.valueBindings(bindings))
       dv.remove(b.name);
     vars.addAll(dv);
   }
@@ -90,15 +92,15 @@ public class Let extends AST {
   public int maxLocals() {
     // This does not remove those bindings that will be implemented as
     // dynamic variables, however it is fail safe...
-    int maxLocals = exp.maxLocals() + bindings.length;
+    int maxLocals = exp.maxLocals() + Binding.valueBindings(bindings).length;
     int valueLocals = 0;
-    for (Binding b : bindings)
+    for (Binding b : Binding.valueBindings(bindings))
       valueLocals = Math.max(valueLocals, b.value.maxLocals());
     return maxLocals + valueLocals;
   }
 
   public AST subst(AST ast, String name) {
-    return new Let(substBindings(ast, name), binds(name) ? exp : exp.subst(ast, name));
+    return new Let(getLineStart(), getLineEnd(), substBindings(ast, name), binds(name) ? exp : exp.subst(ast, name));
   }
 
   private boolean binds(String name) {
@@ -122,16 +124,16 @@ public class Let extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    Env<String, Type> bodyEnv = env;
-    for (Binding b : bindings) {
-      Type bType = b.getType();
-      Type vType = b.getValue().type(env);
-      Type type = bType.bind(vType);
-      if (type != null)
-        bodyEnv = bodyEnv.bind(b.getName(), type);
-      else throw new TypeMatchError(this, bType, vType);
-    }
-    return exp.type(bodyEnv);
+    setType(exp.type(Binding.typeBindingsPar(bindings, env)));
+    return getType();
+  }
+
+  public String getLabel() {
+    return "let :: " + getType();
+  }
+
+  public DeclaringLocation[] getContainedDecs() {
+    return bindings;
   }
 
 }

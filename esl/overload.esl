@@ -1,12 +1,12 @@
 export main;
 
-act main {
+act main::Act{Time(Int)} {
 
-  f(Test(n),Test(m)) = print('x') when (n = 5) and (m = 10);
-  f(Test(n),Test(m)) = print(n+m);
-  f(_,_)  = print('not matched')
+  f(Test(n::Int),Test(m::Int))::Void = print[Str]('x') when (n = 5) and (m = 10);
+  f(Test(n::Int),Test(m::Int))::Void = print[Int](n+m);
+  f(n::Int,m::Int)::Void  = print[Str]('not matched')
   
   Time(21) -> stopAll();
-  Time(n)   -> f(Test(n),Test(n*2))
+  Time(n::Int)   -> f(Test(n),Test(n*2))
 
 }

@@ -12,16 +12,19 @@ import env.Env;
 import exp.BoaConstructor;
 import list.List;
 
-@BoaConstructor(fields = { "value" })
+@BoaConstructor(fields = { "type", "value" })
 
 public class Throw extends AST {
 
-  public AST value;
+  public Type type;
+  public AST  value;
 
   public Throw() {
   }
 
-  public Throw(AST value) {
+  public Throw(int lineStart, int lineEnd, Type type, AST value) {
+    super(lineStart, lineEnd);
+    this.type = type;
     this.value = value;
   }
 
@@ -31,7 +34,7 @@ public class Throw extends AST {
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     value.compile(locals, dynamics, code, false);
-    code.add(new instrs.control.Throw(getLine()), locals, dynamics);
+    code.add(new instrs.control.Throw(getLineStart()), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -47,7 +50,7 @@ public class Throw extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Throw(value.subst(ast, name));
+    return new Throw(getLineStart(), getLineEnd(), type, value.subst(ast, name));
   }
 
   public void setPath(String path) {
@@ -56,7 +59,12 @@ public class Throw extends AST {
 
   public Type type(Env<String, Type> env) {
     value.type(env);
-    return ast.types.Void.VOID;
+    setType(type);
+    return type;
+  }
+
+  public String getLabel() {
+    return "throw :: " + getType();
   }
 
 }

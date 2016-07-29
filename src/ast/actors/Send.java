@@ -12,6 +12,7 @@ import compiler.FrameVar;
 import env.Env;
 import exp.BoaConstructor;
 import list.List;
+import values.Located;
 
 @BoaConstructor(fields = { "target", "args", "time" })
 
@@ -24,7 +25,8 @@ public class Send extends AST {
   public Send() {
   }
 
-  public Send(AST target, AST[] args, AST time) {
+  public Send(int lineStart, int lineEnd, AST target, AST[] args, AST time) {
+    super(lineStart, lineEnd);
     this.target = target;
     this.args = args;
     this.time = time;
@@ -39,7 +41,7 @@ public class Send extends AST {
       arg.compile(locals, dynamics, code, false);
     time.compile(locals, dynamics, code, false);
     target.compile(locals, dynamics, code, false);
-    code.add(new instrs.data.Send(getLine(), args.length), locals, dynamics);
+    code.add(new instrs.data.Send(getLineStart(), args.length), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -60,7 +62,7 @@ public class Send extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Send(target.subst(ast, name), subst(args, ast, name), time.subst(ast, name));
+    return new Send(getLineStart(), getLineEnd(), target.subst(ast, name), subst(args, ast, name), time.subst(ast, name));
   }
 
   public void setPath(String path) {
@@ -71,18 +73,22 @@ public class Send extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    Type type = target.type(env);
+    Type type = target.type(env).deref(env);
     if (type instanceof ast.types.Act) {
       ast.types.Act act = (ast.types.Act) type;
       Type[] types = new Type[args.length];
       for (int i = 0; i < args.length; i++) {
         types[i] = args[i].type(env);
       }
-      Type resultType = act.getType(types);
-      if (resultType != null)
-        return resultType;
-      else throw new TypeError(this, "cannot sent a message of type " + Arrays.toString(types) + " to an actor of type " + act);
-    } else throw new TypeError(this, "expecting an actor type but found " + type);
+      if (act.canSend(types, env)) {
+        setType(ast.types.Void.VOID);
+        return getType();
+      } else throw new TypeError(getLineStart(), getLineEnd(), "cannot find a handler with the supplied types: " + Arrays.toString(types));
+    } else throw new TypeError(getLineStart(), getLineEnd(), "expecting an actor type but found " + type);
+  }
+
+  public String getLabel() {
+    return "send :: " + getType();
   }
 
 }

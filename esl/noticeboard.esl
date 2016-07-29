@@ -1,6 +1,6 @@
 export noticeboard;
 
-import 'esl/lists';
+import 'esl/lists.esl';
 
 act noticeboard {
 

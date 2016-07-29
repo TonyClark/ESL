@@ -21,7 +21,7 @@ public class Head extends AST {
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     value.compile(locals, dynamics, code, false);
-    code.add(new instrs.ops.Head(getLine()), locals, dynamics);
+    code.add(new instrs.ops.Head(getLineStart()), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -52,8 +52,13 @@ public class Head extends AST {
     Type type = value.type(env);
     if (type instanceof ast.types.List) {
       ast.types.List list = (ast.types.List) type;
-      return list.getType();
-    } else throw new TypeError(this, "expecting a list type " + type);
+      setType(list.getType());
+      return getType();
+    } else throw new TypeError(getLineStart(), getLineEnd(), "expecting a list type " + type);
+  }
+
+  public String getLabel() {
+    return "head :: " + getType();
   }
 
 }

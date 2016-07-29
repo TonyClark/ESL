@@ -19,11 +19,11 @@ public class Null extends AST {
   }
 
   public String toString() {
-    return "Null";
+    return "null";
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new instrs.data.Null(getLine()), locals, dynamics);
+    code.add(new instrs.data.Null(getLineStart()), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -44,7 +44,12 @@ public class Null extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    return ast.types.Null.NULL;
+    setType(ast.types.Null.NULL);
+    return getType();
+  }
+
+  public String getLabel() {
+    return  "null";
   }
 
 }

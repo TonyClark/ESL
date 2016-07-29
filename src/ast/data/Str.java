@@ -25,11 +25,11 @@ public class Str extends AST {
   }
 
   public String toString() {
-    return "Str(" + value + ")";
+    return "'" + value + "'";
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new instrs.data.Str(getLine(), value), locals, dynamics);
+    code.add(new instrs.data.Str(getLineStart(), value), locals, dynamics);
   }
 
   public void FV(HashSet<String> vars) {
@@ -50,7 +50,12 @@ public class Str extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    return ast.types.Str.STR;
+    setType(ast.types.Str.STR);
+    return getType();
+  }
+
+  public String getLabel() {
+    return  value + "";
   }
 
 }

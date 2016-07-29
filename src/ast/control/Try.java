@@ -31,7 +31,8 @@ public class Try extends AST {
   public Try() {
   }
 
-  public Try(String path, AST body, BArm[] arms) {
+  public Try(int lineStart, int lineEnd, String path, AST body, BArm[] arms) {
+    super(lineStart, lineEnd);
     this.path = path;
     this.body = body;
     this.arms = arms;
@@ -53,11 +54,11 @@ public class Try extends AST {
 
     desugarCatch().compile(locals, dynamics, code, false);
     desugarBody().compile(locals, dynamics, code, false);
-    code.add(new instrs.control.Try(getLine()), locals, dynamics);
+    code.add(new instrs.control.Try(getLineStart()), locals, dynamics);
   }
 
   public AST desugarBody() {
-    return new Fun(path, tryBodyName(), new Dec[] {}, ast.types.Void.VOID, body);
+    return new Fun(getLineStart(), getLineEnd(), path, tryBodyName(), new Dec[] {}, ast.types.Void.VOID, body);
   }
 
   private String tryBodyName() {
@@ -65,7 +66,7 @@ public class Try extends AST {
   }
 
   public AST desugarCatch() {
-    return new Fun(path, catchName(), new Dec[] { new Dec(path, "$1", ast.types.Void.VOID) }, ast.types.Void.VOID, new Case(new AST[] { new Var("$1") }, arms));
+    return new Fun(getLineStart(), getLineEnd(), path, catchName(), new Dec[] { new Dec(getLineStart(), getLineEnd(), path, "$1", ast.types.Void.VOID) }, ast.types.Void.VOID, new Case(new Dec[] {}, new AST[] { new Var(getLineStart(), getLineEnd(), "$1", null) }, arms));
   }
 
   private String catchName() {
@@ -87,7 +88,7 @@ public class Try extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Try(path, body.subst(ast, name), substArms(ast, name));
+    return new Try(getLineStart(), getLineEnd(), path, body.subst(ast, name), substArms(ast, name));
   }
 
   private BArm[] substArms(AST ast, String name) {
@@ -105,8 +106,12 @@ public class Try extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    // Need to check that the arms are OK...
-   return body.type(env);
+    setType(body.type(env));
+    return getType();
+  }
+
+  public String getLabel() {
+    return "try :: " + getType();
   }
 
 }

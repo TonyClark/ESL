@@ -1,11 +1,12 @@
 export main;
 
-import 'esl/module2';
+import 'esl/module2.esl';
 
-act main {
+act main:: Act { Time(Int) } {
 
-  Time(10) -> { print(f()); stopAll() };
+  Time(10) -> { print[Str](f()); stopAll() };
   
-  Time(t) -> print(t)
+  Time(t::Int) -> print[Int](t)
   
 }
+

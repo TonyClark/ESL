@@ -15,11 +15,7 @@ public class Int extends Type {
     return "Int";
   }
 
-  public boolean equals(Object other) {
-    return other instanceof Int;
-  }
-
-  public Type eval(Env<String, Type> env) {
+  public Type substType(Type type, String name) {
     return this;
   }
 

@@ -6,6 +6,9 @@ import java.util.Vector;
 
 import actors.CodeBox;
 import ast.AST;
+import ast.TreeNode;
+import ast.binding.declarations.DecContainer;
+import ast.binding.declarations.DeclaringLocation;
 import ast.patterns.PTerm;
 import ast.patterns.Pattern;
 import ast.types.HandlerType;
@@ -18,13 +21,12 @@ import list.List;
 
 @BoaConstructor(fields = { "patterns", "guard", "exp" })
 
-public class BArm {
+public class BArm implements TreeNode, DecContainer {
 
-  public Pattern[] patterns;
-
-  public AST       guard;
-
-  public AST       exp;
+  public Pattern[]    patterns;
+  public AST          guard;
+  public AST          exp;
+  private HandlerType type;
 
   public BArm() {
   }
@@ -63,7 +65,7 @@ public class BArm {
   private void compileGuard(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox instrs) {
     if (!isTrivialGuard()) {
       guard.compile(locals, dynamics, instrs, false);
-      instrs.add(new instrs.patterns.FailFalse(guard.getLine()), locals, dynamics);
+      instrs.add(new instrs.patterns.FailFalse(guard.getLineStart()), locals, dynamics);
     }
   }
 
@@ -143,7 +145,7 @@ public class BArm {
   }
 
   public String toString() {
-    return "BArm(" + Arrays.toString(patterns) + "," + exp + ")";
+    return "BArm(" + Arrays.toString(patterns) + "," + guard + "," + exp + ")";
   }
 
   public void setPath(String path) {
@@ -152,12 +154,31 @@ public class BArm {
   }
 
   public HandlerType type(Env<String, Type> env) {
-    Type[] types = new Type[patterns.length];
-    for (int i = 0; i < patterns.length; i++)
-      types[i] = patterns[i].type(env);
-    Type guardType = guard.type(env);
-    Type type = exp.type(env);
-    return new HandlerType(types, type);
+    HandlerType type = new HandlerType();
+    Pattern.types(patterns, env, (newEnv, types) ->
+    {
+      Type.expect(exp.getLineStart(), exp.getLineEnd(), ast.types.Bool.class, exp, guard.type(newEnv));
+      type.setTypes(types);
+      type.setResult(exp.type(newEnv));
+      this.type = type;
+    });
+    return type;
+  }
+
+  public void processDeclarations(Env<String, Type> env) {
+    for (Pattern p : patterns)
+      p.processDeclarations(env);
+  }
+
+  public String getLabel() {
+    return "arm :: " + type;
+  }
+
+  public DeclaringLocation[] getContainedDecs() {
+    DeclaringLocation[] decs = new DeclaringLocation[] {};
+    for (Pattern p : patterns)
+      decs = AST.concatenate(decs, p.getContainedDecs());
+    return decs;
   }
 
 }

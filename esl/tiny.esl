@@ -2,27 +2,43 @@ export main;
  
 import 'esl/lists.esl';
 
-act test () {
-  Time(1,2,3) -> {}
+type Test = Act { Time(Int) };
+type Main = Act { M(Int); N(Int,Int); Time(Int) };
+
+act test::Test {
+  Time(n::Int) -> {}
 };
 
-act main {
-  M(emma) -> self <- N(emma,emma+1);
-  N(x,y) when (x + 1) = y -> {
-    print('caught x + 1 = y'); 
+act main::Main {
+  M(emma::Int) -> self <- N(emma,emma+1);
+  N(x::Int,y::Int) when (x + 1) = y -> {
+    print[Str]('caught x + 1 = y'); 
     stopAll()
   };
-  N(a,b) -> {
-    print('Done: ' + a + ' ' + b);
+  N(a::Int,b::Int) -> {
+    print[Str]('Done: ' + a + ' ' + b);
     stopAll()
   };
-  Time(_) ->
-    let x = length([1,2,3,4,5]);  
-        y = length([1,2,3]) 
+  Time(n::Int) ->
+    let x::Int = length[Int]([1,2,3,4,5]);
+        y::Int = length[Int]([1,2,3]) 
     in self <- M(x)
 };
 
-x = 10 
+x::Int = 10;
+
+list1::[Int] = 0..x;
+
+list2::[Bool] = [true,false];
+
+list3::[Str] = ['a','b'];
+
+list4::[[Int]] = [0..x,1..x,2..x]
+
+
+
+
+
 
 
 

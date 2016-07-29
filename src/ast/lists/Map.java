@@ -39,7 +39,8 @@ public class Map extends AST {
   public Map() {
   }
 
-  public Map(String path, Pattern pattern, AST list, AST body) {
+  public Map(int lineStart, int lineEnd, String path, Pattern pattern, AST list, AST body) {
+    super(lineStart, lineEnd);
     this.path = path;
     this.pattern = pattern;
     this.list = list;
@@ -56,10 +57,10 @@ public class Map extends AST {
 
   public AST desugar() {
     BArm arm2 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, new ast.lists.List());
-    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new BinExp(body, ":", new Apply(new Var("$f"), new Var("$t"))));
-    Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2 });
-    Fun fun = new Fun(path, mapName(), new Dec[] { new Dec(path, "l", ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp);
-    return new Letrec(getLine(), new Binding[] { new Binding(path, "$f", new ast.types.Void(), fun) }, new Apply(new Var("$f"), list));
+    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new BinExp(getLineStart(), getLineEnd(), body, ":", new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "$f", null), new Var(getLineStart(), getLineEnd(), "$t", null))));
+    Case caseExp = new Case(new Dec[] {}, new AST[] { new Var(getLineStart(), getLineEnd(), "l", null) }, new BArm[] { arm1, arm2 });
+    Fun fun = new Fun(getLineStart(), getLineEnd(), path, mapName(), new Dec[] { new Dec(getLineStart(), getLineEnd(), path, "l", ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp);
+    return new Letrec(getLineStart(), getLineEnd(), new Binding[] { new Binding(getLineStart(), getLineEnd(), path, "$f", new ast.types.Void(), fun) }, new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "$f", null), list));
   }
 
   private String mapName() {
@@ -90,7 +91,12 @@ public class Map extends AST {
 
   public Type type(Env<String, Type> env) {
     Type type = body.type(env);
-    return new ast.types.List(type);
+    setType(new ast.types.List(getLineStart(), getLineEnd(), type));
+    return getType();
+  }
+
+  public String getLabel() {
+    return "map :: " + getType();
   }
 
 }

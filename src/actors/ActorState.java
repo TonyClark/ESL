@@ -1,6 +1,6 @@
 package actors;
 
 public enum ActorState {
-  ALIVE, DEAD
+  ALIVE, DEAD, BLOCKED
 
 }

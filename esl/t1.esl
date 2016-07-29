@@ -1,8 +1,8 @@
-value = 10;
+value::Int = 10;
 
-add1() = value := value + 1;
+add1()::()->Void = value := value + 1;
 
-create(n) = 
+create(n::Int)::Void = 
   case n {
     0 -> {};
     x -> {
@@ -11,9 +11,11 @@ create(n) =
     }
   };
 
-act a {
+type A = Act { Time(Int) };
 
-  state = value
+act a::A {
+
+  state = value;
   av = create(2)
   
   Time(n) -> { 

@@ -7,6 +7,8 @@ import java.util.Vector;
 import ast.AST;
 import ast.data.Bool;
 import ast.data.Fun;
+import ast.data.Int;
+import ast.data.Null;
 import ast.data.Str;
 import ast.modules.Module;
 import ast.patterns.PWild;
@@ -14,10 +16,14 @@ import ast.patterns.Pattern;
 import ast.tests.BArm;
 import ast.tests.Case;
 import ast.tests.If;
+import ast.types.Forall;
 import ast.types.Type;
+import ast.types.TypeError;
+import env.Env;
 import exp.BoaConstructor;
+import values.Located;
 
-@BoaConstructor(fields = { "name", "type", "value" })
+@BoaConstructor(fields = { "name", "declaredType", "value" })
 
 public class Binding extends Dec {
 
@@ -58,27 +64,31 @@ public class Binding extends Dec {
     // The pattern of merge is different for 0-arity functions. All but the
     // last must have guards and they use nested if-expressions...
 
-    return new Fun(name, new Dec[] {}, ast.types.Void.VOID, merge0ArityFunctions(name, fs, 0));
+    return new Fun(fs.get(0).getLineStart(), fs.get(0).getLineEnd(), fs.get(0).getPath(), name, new Dec[] {}, fs.get(0).getType(), merge0ArityFunctions(name, fs, 0));
   }
 
   private static AST merge0ArityFunctions(String name, Vector<FunBind> fs, int i) {
     if (i == fs.size())
-      return new ast.control.Error(new Str("no match for " + name));
-    else return new If(fs.get(i).guard, fs.get(i).value, merge0ArityFunctions(name, fs, i + 1));
+      return new ast.control.Error(fs.get(0).getLineStart(), fs.get(0).getLineEnd(), new Str("no match for " + name));
+    else return new If(fs.get(i).getLineStart(), fs.get(i).getLineEnd(), fs.get(i).guard, fs.get(i).value, merge0ArityFunctions(name, fs, i + 1));
   }
 
   private static Binding mergeBinding(Binding[] bindings, String name) {
     Vector<FunBind> fs = new Vector<FunBind>();
     String path = "";
     Type type = new ast.types.Void();
+    int lineStart = 0;
+    int lineEnd = 0;
     for (Binding b : bindings) {
       path = b.path;
-      type = b.type;
+      type = b.getDeclaredType();
+      lineStart = b.getLineStart();
+      lineEnd = b.getLineEnd();
       if (b.getName().equals(name)) if (b instanceof FunBind)
         fs.add((FunBind) b);
       else throw new java.lang.Error("duplicate bindings must be functions: " + name);
     }
-    return new Binding(path, name, type, mergeFunctions(name, fs));
+    return new Binding(lineStart, lineEnd, path, name, type, mergeFunctions(name, fs));
   }
 
   public static Binding[] mergeBindings(Binding[] bindings) {
@@ -119,20 +129,110 @@ public class Binding extends Dec {
       Pattern[] dummies = new Pattern[arity];
       AST[] vars = new AST[arity];
       for (int i = 0; i < arity; i++) {
-        args[i] = new Dec(fs.get(i).getPath(), "$" + i, ast.types.Void.VOID);
+        args[i] = new Dec(fs.get(i).getLineStart(), fs.get(i).getLineEnd(), fs.get(i).getPath(), "$" + i, ast.types.Void.VOID);
         dummies[i] = new PWild();
-        vars[i] = new Var("$" + i);
+        vars[i] = new Var(fs.get(i).getLineStart(), fs.get(i).getLineEnd(), "$" + i, null);
       }
       BArm[] arms = new BArm[fs.size() + 1];
       for (int definition = 0; definition < fs.size(); definition++) {
         Pattern[] patterns = new Pattern[arity];
         for (int arg = 0; arg < arity; arg++)
           patterns[arg] = fs.get(definition).args[arg];
-        arms[definition] = new BArm(patterns, fs.get(definition).guard, fs.get(definition).value);
+        arms[definition] = new BArm(patterns, fs.get(definition).getGuard(), fs.get(definition).getBody());
       }
-      arms[fs.size()] = new BArm(dummies, Bool.TRUE, new ast.control.Error(new Str("ran out of options for " + name)));
-      return new Fun(name, args, ast.types.Void.VOID, new Case(vars, arms));
+      arms[fs.size()] = new BArm(dummies, Bool.TRUE, new ast.control.Error(fs.get(0).getLineStart(), fs.get(0).getLineEnd(), new Str("ran out of options for " + name)));
+      return new Fun(fs.get(0).getLineStart(), fs.get(0).getLineEnd(), fs.get(0).getPath(), name, args, fs.get(0).getType(), new Case(new Dec[] {}, vars, arms));
     }
+  }
+
+  public static TypeBind[] typeBindings(Binding[] bindings) {
+    // Just return those bindings that define types...
+    int tb = 0;
+    for (Binding b : bindings)
+      if (b.isTypeBinding()) tb++;
+    TypeBind[] typeBindings = new TypeBind[tb];
+    int i = 0;
+    for (Binding b : bindings)
+      if (b.isTypeBinding()) typeBindings[i++] = (TypeBind) b;
+    return typeBindings;
+  }
+
+  public static Env<String, Type> typeBindingsPar(Binding[] bindings, Env<String, Type> env) {
+
+    // Process the bindings in parallel...
+
+    TypeBind[] typeBindings = typeBindings(bindings);
+    Binding[] valueBindings = valueBindings(bindings);
+    Env<String, Type> env0 = env;
+
+    // Process the type bindings.
+
+    for (TypeBind typeBinding : typeBindings) {
+      env = typeBinding.bind(env);
+    }
+
+    // Type the values...
+
+    env0 = env;
+    for (Binding valueBinding : valueBindings) {
+      String name = valueBinding.getName();
+      Type dType = valueBinding.getDeclaredType();
+      Type vType = valueBinding.type(env0);
+      if (Type.equals(dType, vType, env0))
+        env = env.bind(valueBinding.getName(), dType);
+      else throw new TypeError(valueBinding.getLineStart(), valueBinding.getLineEnd(), "declared type for " + name + " does not match the type of the value: " + vType);
+    }
+
+    return env;
+  }
+
+  public static Env<String, Type> typeBindingsRec(Binding[] bindings, Env<String, Type> env) {
+
+    // Process the bindings recursively...
+
+    TypeBind[] typeBindings = typeBindings(bindings);
+    Binding[] valueBindings = valueBindings(bindings);
+
+    // Process the type bindings.
+
+    for (TypeBind typeBinding : typeBindings) {
+      env = typeBinding.bind(env);
+    }
+
+    // Add in the declared types to support mutual recursion...
+
+    for (Binding valueBinding : valueBindings) {
+      String name = valueBinding.getName();
+      Type dType = valueBinding.getDeclaredType();
+      env = env.bind(name, dType);
+    }
+
+    for (Binding valueBinding : valueBindings) {
+      String name = valueBinding.getName();
+      Type dType = valueBinding.getDeclaredType();
+      Type vType = valueBinding.type(env);
+      if (!Type.equals(dType, vType, env)) throw new TypeError(valueBinding.getLineStart(), valueBinding.getLineEnd(), "declared type for " + name + " does not match the type of the value: " + vType);
+    }
+
+    // Type the values...
+
+    for (Binding valueBinding : valueBindings) {
+      valueBinding.type(env);
+    }
+
+    return env;
+  }
+
+  public static Binding[] valueBindings(Binding[] bindings) {
+    // Just return those bindings that define values (e.g. not types)...
+    int vb = 0;
+    for (Binding b : bindings)
+      if (b.isValueBinding()) vb++;
+    Binding[] valueBindings = new Binding[vb];
+    int i = 0;
+    for (Binding b : bindings)
+      if (b.isValueBinding()) valueBindings[i++] = b;
+    return valueBindings;
   }
 
   public AST value;
@@ -140,8 +240,8 @@ public class Binding extends Dec {
   public Binding() {
   }
 
-  public Binding(String path, String name, Type type, AST value) {
-    super(path, name, type);
+  public Binding(int lineStart, int lineEnd, String path, String name, Type declaredType, AST value) {
+    super(lineStart, lineEnd, path, name, declaredType);
     this.value = value;
   }
 
@@ -157,44 +257,44 @@ public class Binding extends Dec {
     value.FV(vars);
   }
 
+  public String getLabel() {
+    if (isType())
+      return "type " + name + " = " + value;
+    else if (isSimpleValue())
+      return "value " + name + " :: " + getType() + " = " + value;
+    else return super.getLabel();
+  }
+
   public String getName() {
     return name;
-  }
-
-  public AST getValue() {
-    return value;
-  }
-
-  public Type getType() {
-    return type;
-  }
-
-  public void setType(Type type) {
-    this.type = type;
   }
 
   public String getPath() {
     return path;
   }
 
+  public AST getValue() {
+    return value;
+  }
+
+  private boolean isSimpleValue() {
+    return value instanceof Int || value instanceof Bool || value instanceof Str || value instanceof ast.data.Float || value instanceof Null;
+  }
+
+  private boolean isType() {
+    return value instanceof Type;
+  }
+
+  public boolean isTypeBinding() {
+    return value instanceof Type;
+  }
+
+  public boolean isValueBinding() {
+    return !(value instanceof Type);
+  }
+
   public void setName(String name) {
     this.name = name;
-  }
-
-  public void setValue(AST value) {
-    this.value = value;
-  }
-
-  public Binding subst(AST ast, String name) {
-    return new Binding(path, this.name, type, value.subst(ast, name));
-  }
-
-  public Binding substExportedValues(Collection<Module> values) {
-    return new Binding(path, name, type, value.substExportedValues(values));
-  }
-
-  public String toString() {
-    return "Binding(" + name + "," + value + ")";
   }
 
   public void setPath(String path) {
@@ -202,12 +302,29 @@ public class Binding extends Dec {
     value.setPath(path);
   }
 
-  public boolean isValueBinding() {
-    return !(value instanceof Type);
+  public void setValue(AST value) {
+    this.value = value;
   }
 
-  public boolean isTypeBinding() {
-    return value instanceof Type;
+  public Binding subst(AST ast, String name) {
+    return new Binding(getLineStart(), getLineEnd(), path, this.name, getDeclaredType(), value.subst(ast, name));
+  }
+
+  public Binding substExportedValues(Collection<Module> values) {
+    return new Binding(getLineStart(), getLineEnd(), path, name, getDeclaredType(), value.substExportedValues(values));
+  }
+
+  public String toString() {
+    return "Binding(" + name + "," + value + ")";
+  }
+
+  public Type type(Env<String, Type> env) {
+    Type declaredType = getDeclaredType();
+    Type actualType = getValue().type(env);
+    if (Type.equals(declaredType, actualType, env)) {
+      setType(declaredType);
+      return getType();
+    } else throw new TypeError(declaredType.getLineStart(), declaredType.getLineEnd(), name + " is declared to be of type " + declaredType + " but its value is of type " + actualType);
   }
 
 }

@@ -21,14 +21,14 @@ public class Not extends AST {
   public Not() {
   }
 
-  public Not(AST exp) {
-    super();
+  public Not(int lineStart, int lineEnd, AST exp) {
+    super(lineStart, lineEnd);
     this.exp = exp;
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     exp.compile(locals, dynamics, code, false);
-    code.add(new instrs.ops.Not(getLine()), locals, dynamics);
+    code.add(new instrs.ops.Not(getLineStart()), locals, dynamics);
   }
 
   public void DV(HashSet<String> vars) {
@@ -44,7 +44,7 @@ public class Not extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Not(exp.subst(ast, name));
+    return new Not(getLineStart(), getLineEnd(), exp.subst(ast, name));
   }
 
   public String toString() {
@@ -57,9 +57,14 @@ public class Not extends AST {
 
   public Type type(Env<String, Type> env) {
     Type t = exp.type(env);
+    setType(t);
     if (t instanceof ast.types.Bool)
       return t;
-    else throw new TypeMatchError(this, t, ast.types.Bool.BOOL);
+    else throw new TypeMatchError(exp.getLineStart(), exp.getLineEnd(), t, ast.types.Bool.BOOL);
+  }
+
+  public String getLabel() {
+    return "not :: " + getType();
   }
 
 }

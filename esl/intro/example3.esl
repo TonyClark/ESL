@@ -1,5 +1,11 @@
-export other;
+export other, Other;
 
-act other {
-  Time(_) -> {}
+type Other = Act { Time(Bool) };
+
+act other::Other {
+  Time(n::Bool) -> {}
 }
+
+
+
+

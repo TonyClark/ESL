@@ -41,11 +41,19 @@ public abstract class Instr implements Located {
     // Add all the code boxes against their names into the table...
   }
 
-  public int getLine() {
+  public int getLineStart() {
     return line;
   }
 
-  public void setLine(int line) {
+  public void setLineStart(int line) {
+    this.line = line;
+  }
+
+  public int getLineEnd() {
+    return line;
+  }
+
+  public void setLineEnd(int line) {
     this.line = line;
   }
 

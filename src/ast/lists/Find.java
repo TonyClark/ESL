@@ -40,7 +40,8 @@ public class Find extends AST {
   public Find() {
   }
 
-  public Find(String path, Pattern pattern, AST list, AST body, AST defaultValue) {
+  public Find(int lineStart, int lineEnd, String path, Pattern pattern, AST list, AST body, AST defaultValue) {
+    super(lineStart, lineEnd);
     this.path = path;
     this.pattern = pattern;
     this.list = list;
@@ -58,11 +59,11 @@ public class Find extends AST {
 
   public AST desugar() {
     BArm arm3 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, defaultValue);
-    BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new Apply(new Var("$find"), new Var("$t")));
+    BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "$find", null), new Var(getLineStart(), getLineEnd(), "$t", null)));
     BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PWild()) }, Bool.TRUE, body);
-    Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2, arm3 });
-    Fun fun = new Fun(path, findName(), new Dec[] { new Dec(path, "l", ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp);
-    return new Letrec(getLine(), new Binding[] { new Binding(path, "$find", new ast.types.Void(), fun) }, new Apply(new Var("$find"), list));
+    Case caseExp = new Case(new Dec[] {}, new AST[] { new Var(getLineStart(), getLineEnd(), "l", null) }, new BArm[] { arm1, arm2, arm3 });
+    Fun fun = new Fun(getLineStart(), getLineEnd(), path, findName(), new Dec[] { new Dec(getLineStart(), getLineEnd(), path, "l", ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp);
+    return new Letrec(getLineStart(), getLineEnd(), new Binding[] { new Binding(getLineStart(), getLineEnd(), path, "$find", new ast.types.Void(), fun) }, new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "$find", null), list));
   }
 
   private String findName() {
@@ -94,7 +95,12 @@ public class Find extends AST {
 
   public Type type(Env<String, Type> env) {
     // Need to check the other features of find...
-    return body.type(env);
+    setType(body.type(env));
+    return getType();
+  }
+
+  public String getLabel() {
+    return "find :: " + getType();
   }
 
 }

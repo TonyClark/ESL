@@ -26,7 +26,8 @@ public class Apply extends AST {
   public Apply() {
   }
 
-  public Apply(AST op, AST... args) {
+  public Apply(int lineStart, int lineEnd, AST op, AST... args) {
+    super(lineStart, lineEnd);
     this.op = op;
     this.args = args;
   }
@@ -43,16 +44,16 @@ public class Apply extends AST {
     else if (isApplyFun())
       compileApplyFun(locals, dynamics, code, isLast);
     else {
-      code.add(new StartCall(getLine()), locals, dynamics);
+      code.add(new StartCall(getLineStart()), locals, dynamics);
       for (AST arg : args)
         arg.compile(locals, dynamics, code, false);
       op.compile(locals, dynamics, code, false);
-      code.add(new instrs.apply.Apply(getLine(), args.length), locals, dynamics);
+      code.add(new instrs.apply.Apply(getLineStart(), args.length), locals, dynamics);
     }
   }
 
   private void compileApplyFun(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new StartCall(getLine()), locals, dynamics);
+    code.add(new StartCall(getLineStart()), locals, dynamics);
     for (AST arg : args)
       arg.compile(locals, dynamics, code, false);
     Fun fun = (Fun) op;
@@ -64,19 +65,19 @@ public class Apply extends AST {
   }
 
   private void compileApplyLocal(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new StartCall(getLine()), locals, dynamics);
+    code.add(new StartCall(getLineStart()), locals, dynamics);
     for (AST arg : args)
       arg.compile(locals, dynamics, code, false);
     Var v = (Var) op;
-    lookup(v.name, locals).apply(args.length, getLine(), code, locals, dynamics, isLast);
+    lookup(v.name, locals).apply(args.length, getLineStart(), code, locals, dynamics, isLast);
   }
 
   private void compileApplyDynamic(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new StartCall(getLine()), locals, dynamics);
+    code.add(new StartCall(getLineStart()), locals, dynamics);
     for (AST arg : args)
       arg.compile(locals, dynamics, code, false);
     Var v = (Var) op;
-    lookup(v.name, dynamics).apply(args.length, getLine(), code, locals, dynamics, isLast);
+    lookup(v.name, dynamics).apply(args.length, getLineStart(), code, locals, dynamics, isLast);
   }
 
   private boolean isApplyDynamic(List<DynamicVar> dynamics) {
@@ -114,7 +115,7 @@ public class Apply extends AST {
   }
 
   public AST subst(AST ast, String name) {
-    return new Apply(op.subst(ast, name), subst(args, ast, name));
+    return new Apply(getLineStart(), getLineEnd(), op.subst(ast, name), subst(args, ast, name));
   }
 
   public void setPath(String path) {
@@ -125,19 +126,24 @@ public class Apply extends AST {
 
   public Type type(Env<String, Type> env) {
     Type t = op.type(env);
-    ast.types.Fun funType = Type.expect(ast.types.Fun.class, this, t);
+    ast.types.Fun funType = Type.expect(op.getLineStart(), op.getLineEnd(), ast.types.Fun.class, this, t);
     checkArgTypes(funType, env);
-    return funType.getRange();
+    setType(funType.getRange());
+    return getType();
   }
 
   private void checkArgTypes(ast.types.Fun funType, Env<String, Type> env) {
     if (funType.getDomain().length == args.length) {
-      for (int i = 0; i < args.length; i++) {
+      for (int i = 0; i < funType.getDomain().length; i++) {
         Type suppliedType = args[i].type(env);
         Type expectedType = funType.getDomain()[i];
-        if (expectedType.bind(suppliedType) == null) { throw new TypeMatchError(this, suppliedType, expectedType); }
+        if (!Type.equals(expectedType, suppliedType, env)) { throw new TypeMatchError(getLineStart(), getLineEnd(), suppliedType, Type.eval(expectedType, env)); }
       }
-    } else throw new TypeError(this, "expecting " + funType.getDomain().length + " but supplied " + args.length);
+    } else throw new TypeError(getLineStart(), getLineEnd(), "expecting " + funType.getDomain().length + " type args but supplied with " + args.length);
+  }
+
+  public String getLabel() {
+    return "apply :: " + getType();
   }
 
 }

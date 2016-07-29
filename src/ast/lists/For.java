@@ -20,6 +20,8 @@ import ast.patterns.Pattern;
 import ast.tests.BArm;
 import ast.tests.Case;
 import ast.types.Type;
+import ast.types.TypeError;
+import ast.types.TypeMatchError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import env.Env;
@@ -49,7 +51,8 @@ public class For extends AST {
   public For() {
   }
 
-  public For(String path, Pattern pattern, AST list, AST body) {
+  public For(int lineStart, int lineEnd, String path, Pattern pattern, AST list, AST body) {
+    super(lineStart, lineEnd);
     this.pattern = pattern;
     this.list = list;
     this.body = body;
@@ -67,11 +70,11 @@ public class For extends AST {
 
   public AST desugar() {
     BArm arm3 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, new Block());
-    BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new Apply(new Var("$f"), new Var("$t")));
-    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new Block(body, new Apply(new Var("$f"), new Var("$t"))));
-    Case caseExp = new Case(new AST[] { new Var("l") }, new BArm[] { arm1, arm2, arm3 });
-    Fun fun = new Fun(path, forName(), new Dec[] { new Dec(path, "l", ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp);
-    return new Letrec(getLine(), new Binding[] { new Binding(path, "$f", new ast.types.Void(), fun) }, new Apply(new Var("$f"), list));
+    BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "$f", null), new Var(getLineStart(), getLineEnd(), "$t", null)));
+    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new Block(getLineStart(), getLineEnd(), body, new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "$f", null), new Var(getLineStart(), getLineEnd(), "$t", null))));
+    Case caseExp = new Case(new Dec[] {}, new AST[] { new Var(getLineStart(), getLineEnd(), "l", null) }, new BArm[] { arm1, arm2, arm3 });
+    Fun fun = new Fun(getLineStart(), getLineEnd(), path, forName(), new Dec[] { new Dec(getLineStart(), getLineEnd(), path, "l", ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp);
+    return new Letrec(getLineStart(), getLineEnd(), new Binding[] { new Binding(getLineStart(), getLineEnd(), path, "$f", new ast.types.Void(), fun) }, new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "$f", null), list));
   }
 
   private String forName() {
@@ -113,30 +116,30 @@ public class For extends AST {
     PVar pvar = (PVar) pattern;
     list.compile(locals, dynamics, code, false);
     locals = locals.cons(new FrameVar("$l", locals.length()));
-    code.add(new SetFrame(getLine(), locals.length() - 1), locals, dynamics);
-    code.add(new Null(getLine()), locals, dynamics);
-    code.add(new NewDynamic(getLine()), locals, dynamics);
+    code.add(new SetFrame(getLineStart(), locals.length() - 1), locals, dynamics);
+    code.add(new Null(getLineStart()), locals, dynamics);
+    code.add(new NewDynamic(getLineStart()), locals, dynamics);
     dynamics = dynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(pvar.name, 0));
     int loop = code.getCode().size();
-    code.add(new instrs.vars.FrameVar(getLine(), locals.length() - 1), locals, dynamics);
-    code.add(new isNil(getLine()), locals, dynamics);
-    SkipTrue skiptrue = new SkipTrue(getLine(), 0);
+    code.add(new instrs.vars.FrameVar(getLineStart(), locals.length() - 1), locals, dynamics);
+    code.add(new isNil(getLineStart()), locals, dynamics);
+    SkipTrue skiptrue = new SkipTrue(getLineStart(), 0);
     code.add(skiptrue, locals, dynamics);
     int addr = code.getCode().size();
-    code.add(new instrs.vars.FrameVar(getLine(), locals.length() - 1), locals, dynamics);
-    code.add(new instrs.ops.Head(getLine()), locals, dynamics);
-    code.add(new SetDynamic(getLine(), 0), locals, dynamics);
-    code.add(new instrs.vars.FrameVar(getLine(), locals.length() - 1), locals, dynamics);
-    code.add(new instrs.ops.Tail(getLine()), locals, dynamics);
-    code.add(new SetFrame(getLine(), locals.length() - 1), locals, dynamics);
-    code.add(new Pop(getLine()), locals, dynamics);
+    code.add(new instrs.vars.FrameVar(getLineStart(), locals.length() - 1), locals, dynamics);
+    code.add(new instrs.ops.Head(getLineStart()), locals, dynamics);
+    code.add(new SetDynamic(getLineStart(), 0), locals, dynamics);
+    code.add(new instrs.vars.FrameVar(getLineStart(), locals.length() - 1), locals, dynamics);
+    code.add(new instrs.ops.Tail(getLineStart()), locals, dynamics);
+    code.add(new SetFrame(getLineStart(), locals.length() - 1), locals, dynamics);
+    code.add(new Pop(getLineStart()), locals, dynamics);
     body.compile(locals, dynamics, code, false);
-    code.add(new Pop(getLine()), locals, dynamics);
-    code.add(new Goto(getLine(), loop), locals, dynamics);
-    code.add(new PopDynamic(getLine()), locals, dynamics);
+    code.add(new Pop(getLineStart()), locals, dynamics);
+    code.add(new Goto(getLineStart(), loop), locals, dynamics);
+    code.add(new PopDynamic(getLineStart()), locals, dynamics);
     dynamics = dynamics.getTail();
     skiptrue.setCount(code.getCode().size() - addr);
-    code.add(new Null(getLine()), locals, dynamics);
+    code.add(new Null(getLineStart()), locals, dynamics);
   }
 
   public void compileSimpleLocal(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
@@ -164,25 +167,25 @@ public class For extends AST {
     list.compile(locals, dynamics, code, false);
     locals = locals.cons(new FrameVar("$l", locals.length()));
     locals = locals.cons(new FrameVar(pvar.name, locals.length()));
-    code.add(new SetFrame(getLine(), locals.length() - 2), locals, dynamics);
+    code.add(new SetFrame(getLineStart(), locals.length() - 2), locals, dynamics);
     int loop = code.getCode().size();
-    code.add(new instrs.vars.FrameVar(getLine(), locals.length() - 2), locals, dynamics);
-    code.add(new isNil(getLine()), locals, dynamics);
-    SkipTrue skiptrue = new SkipTrue(getLine(), 0);
+    code.add(new instrs.vars.FrameVar(getLineStart(), locals.length() - 2), locals, dynamics);
+    code.add(new isNil(getLineStart()), locals, dynamics);
+    SkipTrue skiptrue = new SkipTrue(getLineStart(), 0);
     code.add(skiptrue, locals, dynamics);
     int addr = code.getCode().size();
-    code.add(new instrs.vars.FrameVar(getLine(), locals.length() - 2), locals, dynamics);
-    code.add(new instrs.ops.Head(getLine()), locals, dynamics);
-    code.add(new SetFrame(getLine(), locals.length() - 1), locals, dynamics);
-    code.add(new Pop(getLine()), locals, dynamics);
-    code.add(new instrs.vars.FrameVar(getLine(), locals.length() - 2), locals, dynamics);
-    code.add(new instrs.ops.Tail(getLine()), locals, dynamics);
-    code.add(new SetFrame(getLine(), locals.length() - 2), locals, dynamics);
-    code.add(new Pop(getLine()), locals, dynamics);
+    code.add(new instrs.vars.FrameVar(getLineStart(), locals.length() - 2), locals, dynamics);
+    code.add(new instrs.ops.Head(getLineStart()), locals, dynamics);
+    code.add(new SetFrame(getLineStart(), locals.length() - 1), locals, dynamics);
+    code.add(new Pop(getLineStart()), locals, dynamics);
+    code.add(new instrs.vars.FrameVar(getLineStart(), locals.length() - 2), locals, dynamics);
+    code.add(new instrs.ops.Tail(getLineStart()), locals, dynamics);
+    code.add(new SetFrame(getLineStart(), locals.length() - 2), locals, dynamics);
+    code.add(new Pop(getLineStart()), locals, dynamics);
     body.compile(locals, dynamics, code, false);
-    code.add(new Pop(getLine()), locals, dynamics);
-    code.add(new Goto(getLine(), loop), locals, dynamics);
-    code.add(new Null(getLine()), locals, dynamics);
+    code.add(new Pop(getLineStart()), locals, dynamics);
+    code.add(new Goto(getLineStart(), loop), locals, dynamics);
+    code.add(new Null(getLineStart()), locals, dynamics);
     skiptrue.setCount(code.getCode().size() - addr);
 
   }
@@ -216,7 +219,7 @@ public class For extends AST {
       PVar pvar = (PVar) pattern;
       if (name.equals(pvar.name))
         return this;
-      else return new For(path, pattern, list.subst(ast, name), body.subst(ast, name));
+      else return new For(getLineStart(), getLineEnd(), path, pattern, list.subst(ast, name), body.subst(ast, name));
     } else return desugar().subst(ast, name);
   }
 
@@ -227,7 +230,22 @@ public class For extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    return ast.types.Void.VOID;
+    Type t = list.type(env);
+    if (t instanceof ast.types.List) {
+      ast.types.List listType = (ast.types.List) t;
+      pattern.type(env, (newEnv, pType) ->
+      {
+        if (Type.equals(pType, listType.getType(), env)) {
+          body.type(newEnv);
+        } else throw new TypeMatchError(pattern.getLineStart(), pattern.getLineEnd(), listType.getType(), pType);
+      });
+    } else throw new TypeError(list.getLineStart(), list.getLineEnd(), "expecting a list " + t);
+    setType(ast.types.Void.VOID);
+    return getType();
+  }
+
+  public String getLabel() {
+    return "for :: " + getType();
   }
 
 }

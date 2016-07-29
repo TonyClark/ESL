@@ -15,11 +15,7 @@ public class Null extends Type {
     return "Null";
   }
 
-  public boolean equals(Object other) {
-    return other instanceof Null;
-  }
-
-  public Type eval(Env<String, Type> env) {
+  public Type substType(Type type, String name) {
     return this;
   }
 
