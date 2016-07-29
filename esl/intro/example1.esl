@@ -16,7 +16,7 @@ act main::Main {
   // The body of a behaviour contains rules that match messages.
   // Messages are sent to an actor. The system sends Time(n)
   // messages at regular intervals.
-
+  
   Time(t::Int) -> {
 
     // When an actor with the main behaviour processes a Time(n)
@@ -35,6 +35,7 @@ act main::Main {
 // (4) The main actor will appear in the list of actors.
 // (5) Send regular Time(t) messages by pressing the run button (top left).
 // (6) The message will appear in the console.
+
 
 
 
