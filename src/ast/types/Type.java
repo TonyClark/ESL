@@ -25,13 +25,15 @@ public abstract class Type extends AST {
 
     if (t1 == t2) return true;
 
+    if (sameApplication(t1, t2, env)) return true;
+
     t1 = eval(t1, env);
     t2 = eval(t2, env);
 
     if (t1 instanceof Union) return equalsUnion((Union) t1, t2, env);
     if (t2 instanceof Union) return equalsUnion((Union) t2, t1, env);
-    if (t1 instanceof Null) return t2 instanceof Null || t2 instanceof Act;
-    if (t2 instanceof Null) return t1 instanceof Null || t1 instanceof Act;
+    if (t1 instanceof Null) return true;
+    if (t2 instanceof Null) return true;
     if (t1 instanceof Act) return equalsAct((Act) t1, t2, env);
     if (t1 instanceof Apply) return equalsApply((Apply) t1, t2, env);
     if (t1 instanceof Bag) return equalsBag((Bag) t1, t2, env);
@@ -51,6 +53,21 @@ public abstract class Type extends AST {
     if (t1 instanceof Cnstr) return equalsCnstr((Cnstr) t1, t2, env);
 
     return false;
+  }
+
+  private static boolean sameApplication(Type t1, Type t2, Env<String, Type> env) {
+    if (t1 instanceof Apply && t2 instanceof Apply) {
+      Apply a1 = (Apply) t1;
+      Apply a2 = (Apply) t2;
+      if (a1.getName().equals(a2.getName())) {
+        if (a1.getTypes().length == a2.getTypes().length) {
+          for (int i = 0; i < a1.getTypes().length; i++) {
+            if (!equals(a1.getTypes()[i], a2.getTypes()[i], env)) return false;
+          }
+          return true;
+        } else return false;
+      } else return false;
+    } else return false;
   }
 
   private static boolean equals(Type[] types1, Type[] types2, Env<String, Type> env) {

@@ -1,39 +1,58 @@
 export main;
 
-import 'esl/lists','esl/noticeboard';
+import 'esl/lists.esl','esl/noticeboard.esl';
 
-opp(Red) = Green;
-opp(Green) = Red;
+type Colour = union { Red, Green };
+cnstr Red = Colour.Red;
+cnstr Green = Colour.Green;
 
-act customer(colour,pcChange,frequency,availability) {
+type Result = union { S, F, Changed(Colour,Customer) };
+cnstr S = Result.S;
+cnstr F = Result.F;
+cnstr Changed = Result.Changed;
+
+//opp(Red)::Colour = Green;
+//opp(Green)::Colour = Red;
+
+opp(c::Colour)::Colour =
+  case c {
+    Red -> Green;
+    Green -> Red
+  };
+
+type Customer = Act{ export history::[Colour]; recentlyOffered::([Colour])->Bool; Time(Int); Done(Colour) };
+
+act customer(colour::Colour,pcChange::Int,frequency::Int,availability::Int)::Customer {
 
   // A customer produces opportunities at a given frequency.
   // Each opportunity is either Red or Green and there is
   // a pcred %-age chance of it being Red. The opportunity
   // is available for a given number of time clicks.
-   
+  
   export history,recentlyOffered;
   
-  next = 0;                                                     // Controls the frequency.
-  history = [];                                                 // A list of opportunity colours.
-  numberOf(c) = count(c,history);                               // Calculate the number of a colour
-  recentlyOffered(cs) = hasPrefix(history,cs);
-  offer() = nb <- Add(new opportunity(self,colour,availability))
+  next::Int = 0;                                                     // Controls the frequency.
+  history::[Colour] = [][Colour];                                    // A list of opportunity colours.
+  numberOf(c::Colour)::Int = count[Colour](c,history);               // Calculate the number of a colour
+  recentlyOffered(cs::[Colour])::Bool = hasPrefix[Colour](history,cs);
+  offer()::Void = nb <- Add(new opportunity(self,colour,availability))
   
-  Time(_) when next=frequency -> { 
+  Time(n::Int) when next=frequency -> { 
     next := 0;
-    probably(90) {
+    probably(90)::Void {
       offer();
-      probably(pcChange) colour := opp(colour) else {}
+      probably(pcChange)::Void { colour := opp(colour); {} } else {}
     } else {}
   };           // If frequency reached then offer.
-  Time(_) ->  {
+  Time(n::Int) ->  {
     next := next + 1
   };
-  Done(colour) -> history := colour:history                     // Record a completed opportunity.
+  Done(colour::Colour) -> history := colour:history                     // Record a completed opportunity.
 };
 
-act opportunity(customer,colour,availability) {
+type Opportunity = Act{ export customer::Customer; Time(Int); Bid(Colour,Vendor) };
+
+act opportunity(c::Customer,colour::Colour,availability::Int)::Opportunity {
 
   // An opportunity keeps track of the bids by vendors and
   // will inform the winning vendor. For a vendor to win 
@@ -43,32 +62,36 @@ act opportunity(customer,colour,availability) {
   
   export customer;
   
-  tryAward(Bid(_,v),true)  = { v <- Failed; true };
-  tryAward(Bid(c,v),false) = { v <- Award;  true } when c = colour;
-  tryAward(Bid(c,v),false) = { v <- Failed; false };
-  bids = []                                                     // Record the bids.
+  customer::Customer = c;
   
-  b=Bid(colour,vendor) when availability > 0 -> bids := b:bids;                       // Add a new bid.
-  Bid(_,vendor)  -> vendor <- Failed;
-  Time(_) when (availability = 0) and (bids <> []) -> {            // Check whether to award opportunity.
+  tryAward(Bid(c::Colour,v::Vendor),true)::Bool  = { v <- Failed; true };
+  tryAward(Bid(c::Colour,v::Vendor),false)::Bool = { v <- Award;  true } when c = colour;
+  tryAward(Bid(c::Colour,v::Vendor),false)::Bool = { v <- Failed; false };
+  bids::[Bid(Colour,Vendor)] = [][Bid(Colour,Vendor)]                                 // Record the bids.
+  
+  b::Bid(Colour,Vendor) = Bid(colour::Colour,vendor::Vendor) when availability > 0 -> bids := b:bids;                       // Add a new bid.
+  Bid(c::Colour,vendor::Vendor)  -> vendor <- Failed;
+  Time(n::Int) when (availability = 0) and (bids <> []) -> {            // Check whether to award opportunity.
     availability := availability - 1;
-    let won = false in for b in shuffle(bids) do won := tryAward(b,won);                               
-    bids := [];                                                 // Once awarded, reset.
+    let won::Bool = false in for b::Bid(Colour,Vendor) in shuffle[Bid(Colour,Vendor)](bids) do won := tryAward(b,won);                               
+    bids := [][Bid(Colour,Vendor)];                                                 // Once awarded, reset.
     nb <- Remove(self);                                         // Remove from notice-board.
-    kill(self);
+    kill[Opportunity](self);
     customer <- Done(colour)                                    // Inform the customer.
   };
-  Time(_) when (availability = 0) -> {                             // No bids made.
+  Time(n::Int) when (availability = 0) -> {                             // No bids made.
     nb <- Remove(self);                                         // Reset everything.
     customer <- Done(colour);
-    kill(self)                                                  // Causes opportunity to become inactive.
+    kill[Opportunity](self)                                                  // Causes opportunity to become inactive.
   };
-  Time(_) -> availability := availability - 1
+  Time(n::Int) -> availability := availability - 1
 };
 
-nb = new noticeboard;                                          // A global notice-board.
+nb::Noticeboard[Opportunity] = new (noticeboard[Opportunity]);                                         // A global notice-board.
 
-act vendorGoal(colour,vendor,customer) {
+type VendorGoal = Act{ Time(Int) };
+
+act monitor(colour::Colour,vendor::Vendor,customer::Customer)::VendorGoal {
 
   // A vendor goal monitors a vendor. We have just one customer
   // so the goal can access the history of the customer in case
@@ -76,32 +99,34 @@ act vendorGoal(colour,vendor,customer) {
   // vendor: if the goal is not satisfied then the adaptor changes
   // the behaviour by sending the vendor a message.
   
-  checkChange() = {
+  checkChange()::Void = {
     colour := opp(colour); 
     vendor <- Change(colour,customer)
   } when customer.recentlyOffered([opp(colour),opp(colour),opp(colour)]);
   
-  checkChange() = {}
+  checkChange()::Void = {}
   
-  Time(_) -> {
+  Time(n::Int) -> {
     case vendor.history {
-      F:F:F:_ ->  checkChange();
-      _ -> {}
+      F:F:F:l::[Result] ->  checkChange();
+      l::[Result] -> {}
     }
   }
 };                                         // A global notice-board.
 
-act stupidGoal(colour,vendor,customer) {
+act stupidGoal(colour::Colour,vendor::Vendor,customer::Customer)::VendorGoal {
 
   // Flip flop...
   
-  Time(_) -> {
+  Time(n::Int) -> {
     colour := opp(colour); 
     vendor <- Change(colour,customer) 
   }
 };
 
-act vendor(colour) {
+type Vendor = Act{ export history::[Result]; Time(Int); Award(); Failed(); Change(Colour,Customer) };
+
+vendor(colour::Colour)::Vendor = act 'provider' {
   
   // A vendor has a colour that controls the bids for
   // opportunities. When an opportunity is available via the
@@ -109,15 +134,15 @@ act vendor(colour) {
   // colour of the opportunity is.
   
   export history;                                                 
-  history = [];
-  bidding = false;
-  record(x) = history := x:history;
-  bid(o:_) = { o <- Bid(getColour(history,o.customer),self); bidding := true };
-  getColour([],c) = colour;
-  getColour(Changed(colour,customer1):_,customer2) = colour when customer1=customer2;
-  getColour(_:h,c) = getColour(h,c)
+  history::[Result] = [][Result];
+  bidding::Bool = false;
+  record(x::Result)::[Result] = history := x:history;
+  bid(o::Opportunity:l::[Opportunity])::Bool = { o <- Bid(getColour(history,o.customer),self); bidding := true };
+  getColour([][Result],c::Customer)::Colour = colour;
+  getColour(Changed(colour::Colour,customer1::Customer):l::[Result],customer2::Customer)::Colour = colour when customer1=customer2;
+  getColour(l::Result:h::[Result],c::Customer)::Colour = getColour(h,c)
   //Time(_) when (nb.data <> []) and (bidding = false) -> bid(shuffle(nb.data));
-  Time(_) when (nb.data <> []) -> bid(shuffle(nb.data));
+  Time(n::Int) when (nb.data <> []) and not(bidding) -> bid(shuffle[Opportunity](nb.data));
   Award -> {
     record(S);
     bidding := false
@@ -126,117 +151,144 @@ act vendor(colour) {
     record(F);
     bidding := false
   };
-  Change(colour,customer) -> record(Changed(colour,customer));
-  Change(_) -> {};
-  Time(_) -> {}
+  Change(colour::Colour,customer::Customer) -> record(Changed(colour,customer));
+  Change(c::Colour,customer::Customer) -> {};
+  Time(n::Int) -> {}
 };
 
-act simulation(duration,vendors,customers) {
-  cs = [ new customer(Green,50,4,4) | c <- 1..customers ];
-  vs = [ new vendor(Red) | v <- 1..vendors ];
-  gs = [ new vendorGoal(Red,v,c) | v <- vs, c <- cs ]
-  -> print('Start Simulation');
-  Time(t) when t = duration -> {
+type Simulation = Act{ Time(Int) };
+
+act simulation(duration::Int,vendors::Int,customers::Int)::Simulation {
+  cs::[Customer] = [ new customer(Green,50,4,4) | c::Int <- 1..customers ];
+  vs::[Vendor] = [ new vendor(Red) | v::Int <- 1..vendors ];
+  gs::[VendorGoal] = [ new monitor(Red,v,c) | v::Vendor <- vs, c::Customer <- cs ]
+  -> print[Str]('Start Simulation');
+  Time(t::Int) when t = duration -> {
     stopAll();
-    for v in vs do 
-      print('Vendor: ' + v + ' success=' + count(S,v.history) + ' fail=' + count(F,v.history) + ' history = ' + v.history);
-    for c in cs do
-      print('Customer: ' + c + ' ' + c.history)
+    for v::Vendor in vs do 
+      print[Str]('Vendor: ' + v + ' success=' + count[Result](S,v.history) + ' fail=' + count[Result](F,v.history) + ' history = ' + v.history);
+    for c::Customer in cs do
+      print[Str]('Customer: ' + c + ' ' + c.history)
   };
-  Time(_) -> {}
+  Time(n::Int) -> {}
 };
 
-act simulation2(change,duration,vendors,customers,results,goals) {
+type GoalFun = (Colour,Vendor,Customer)->VendorGoal;
+type TaggedGoal = Goal(Str,GoalFun);
+type GoalPair = X(TaggedGoal,TaggedGoal);
+
+runs::Int = 1;
+
+act simulation2(change::Int,duration::Int,vendors::Int,customers::Int,results::[R(Int,Int)],goals::[GoalPair])::Simulation {
 
   // Assume that the customers change with a small %-chance. Try with:
   // (1) Everyone with stupid goals.
   // (2) The single vendor with a vendorGoal.
   // (3) Everyone with vendorGoals.
   
-  getMyGoal(X(Goal(_,myGoal),_) : _) = myGoal;
-  getTheirGoal(X(_,Goal(_,theirGoal)) : _) = theirGoal;
-  getMyGoalName(X(Goal(name,_),_) : _) = name;
-  getTheirGoalName(X(_,Goal(name,_)) : _) = name;
-  moreGoals(_:goals) = goals;
+  getMyGoal(X(Goal(x::Str,myGoal::GoalFun),t::TaggedGoal) : l::[GoalPair])::GoalFun = myGoal;
+  getTheirGoal(X(t::TaggedGoal,Goal(l::Str,theirGoal::GoalFun)) : xs::[GoalPair])::GoalFun = theirGoal;
+  getMyGoalName(X(Goal(name::Str,f::GoalFun),g::TaggedGoal) : l::[GoalPair])::Str = name;
+  getTheirGoalName(X(g::TaggedGoal,Goal(name::Str,f::GoalFun)) : l::[GoalPair])::Str = name;
+  moreGoals(g::GoalPair:goals::[GoalPair])::[GoalPair] = goals;
+ 
+  myGoal::GoalFun = getMyGoal(goals);
+  theirGoal::GoalFun = getTheirGoal(goals);
   
-  myGoal = getMyGoal(goals);
-  theirGoal = getTheirGoal(goals);
-  
-  cs = [ new customer(Red,change,4,4) | c <- 1..customers ];
-  vs = [ new vendor(Green) | v <- 1..vendors ];
-  gs = [ theirGoal(Green,v,c) | v <- vs, c <- cs ];
-  v  = let v = new vendor(Green) 
+  cs::[Customer] = [ new customer(Red,change,4,4) | c::Int <- 1..customers ];
+  vs::[Vendor] = [ new vendor(Green) | v::Int <- 1..vendors ];
+  gs::[VendorGoal] = [ theirGoal(Green,v,c) | v::Vendor <- vs, c::Customer <- cs ];
+  v::Vendor = let v::Vendor = new vendor(Green) 
        in { 
-         for c in cs do myGoal(Green,v,c); 
+         for c::Customer in cs do myGoal(Green,v,c); 
          v 
        };
-  max(x,y) = x when x > y;
-  max(x,y) = y;
-  myResults(rs) =
+  max(x::Int,y::Int)::Int = x when x > y;
+  max(x::Int,y::Int)::Int = y;
+  myResults(rs::[R(Int,Int)])::Str =
     case rs {
-      [R(me,_)] -> me+'';
-      R(me,_):rest -> me+','+myResults(rest);
-      _ -> ''
+      R(me::Int,them::Int):[][R(Int,Int)] -> me+'';
+      R(me::Int,them::Int):rest::[R(Int,Int)] -> me+','+myResults(rest);
+      l::[R(Int,Int)] -> ''
     };
-  theirResults(rs) =
+  theirResults(rs::[R(Int,Int)])::Str =
     case rs {
-      [R(_,them)] -> them+'';
-      R(_,them):rest -> them+','+theirResults(rest);
-      _ -> ''
+      R(me::Int,them::Int):[][R(Int,Int)] -> them+'';
+      R(me::Int,them::Int):rest::[R(Int,Int)] -> them+','+theirResults(rest);
+      l::[R(Int,Int)] -> ''
     };
-  competitorSucc() = 
-    let succ = 0
+  competitorSucc()::Int = 
+    let succ::Int = 0
     in {
-      for c in vs do succ := max(succ,count(S,c.history));
+      for c::Vendor in vs do succ := max(succ,count[Result](S,c.history));
       succ
     }
-  -> print('Start Simulation');
-  Time(t) when t > duration -> {
-    if change > 5
-    then 
-      if moreGoals(goals) = []
+  -> print[Str]('Start Simulation');
+  Time(t::Int) when t > duration -> {
+    if change = runs
+    then
+      if moreGoals(goals) = [][GoalPair]
       then {
-        stopAll();
-        print(getMyGoalName(goals) + ' ' + getTheirGoalName(goals) + ':');
-        print(myResults(results + [R(count(S,v.history),competitorSucc())]));
-        print(theirResults(results + [R(count(S,v.history),competitorSucc())]))
+        print[Str](getMyGoalName(goals) + ' ' + getTheirGoalName(goals) + ':');
+        print[Str](myResults(results + [R(count[Result](S,v.history),competitorSucc())]));
+        print[Str](theirResults(results + [R(count[Result](S,v.history),competitorSucc())]));
+        stopAll()
       } else {
-        for c in cs do kill(c);
-        for v in vs do kill(v);
-        for g in gs do kill(g);
-        kill(v);
+        for c::Customer in cs do kill[Customer](c);
+        for v::Vendor in vs do kill[Vendor](v);
+        for g::VendorGoal in gs do kill[VendorGoal](g);
+        kill[Vendor](v);
         resetTime(0);
-        become simulation2(0,duration,vendors,customers,[],moreGoals(goals));
-        print(getMyGoalName(goals) + ' ' + getTheirGoalName(goals) + ':');
-        print(myResults(results + [R(count(S,v.history),competitorSucc())]));
-        print(theirResults(results + [R(count(S,v.history),competitorSucc())]))
+        become simulation2(1,duration,vendors,customers,[][R(Int,Int)],moreGoals(goals));
+        print[Str](getMyGoalName(goals) + ' ' + getTheirGoalName(goals) + ':');
+        print[Str](myResults(results + [R(count[Result](S,v.history),competitorSucc())]));
+        print[Str](theirResults(results + [R(count[Result](S,v.history),competitorSucc())]))
       }
     else {
-      results := results + [R(count(S,v.history),competitorSucc())];
-      print('restart change = ' + change + ' ' + results);
-      for c in cs do kill(c);
-      for v in vs do kill(v);
-      for g in gs do kill(g);
-      kill(v);
+      results := results + [R(count[Result](S,v.history),competitorSucc())];
+      print[Str]('restart change = ' + change + ' ' + results);
+      for c::Customer in cs do kill[Customer](c);
+      for v::Vendor in vs do kill[Vendor](v);
+      for g::VendorGoal in gs do kill[VendorGoal](g);
+      kill[Vendor](v);
       resetTime(0);
-      become simulation2(change + 1,duration,vendors,customers,results,goals)
+      become simulation2(change + 1,duration,vendors,customers,results,goals);
+      {}
     }
   };
-  Time(_) -> {}
+  Time(n::Int) -> {}
 };
 
-createStupidGoal(col,v,c) = new stupidGoal(col,v,c);
-createNoGoal(col,v,c) = let act empty { Time(_) -> {} } in new empty;
-createCleverGoal(col,v,c) = new vendorGoal(col,v,c);
+createStupidGoal(col::Colour,v::Vendor,c::Customer)::VendorGoal = new stupidGoal(col,v,c);
+createNoGoal(col::Colour,v::Vendor,c::Customer)::VendorGoal = let act empty::Act{Time(Int)} { Time(n::Int) -> {} } in new empty;
+createCleverGoal(col::Colour,v::Vendor,c::Customer)::VendorGoal = new monitor(col,v,c);
 
-mkGoals = [ Goal('none',createNoGoal), Goal('stupid',createStupidGoal), Goal('clever',createCleverGoal) ];
+//mkGoals::[TaggedGoal] = [ Goal('none',createNoGoal), Goal('stupid',createStupidGoal), Goal('clever',createCleverGoal) ];
+mkGoals::[TaggedGoal] = [ Goal('clever',createCleverGoal) ];
 
-act main {
+act main :: Act{Time(Int)} {
   -> {
     setMaxInstructions(100);
-    setInstructionsPerTimeUnit(10000);
-    new simulation2(1000,300,10,5,[], [ X(me,them) | me <- mkGoals, them <- mkGoals ])
+    setInstructionsPerTimeUnit(100000);
+    new simulation2(1,25,1,1,[][R(Int,Int)], [ X(me,them) | me::TaggedGoal <- mkGoals, them::TaggedGoal <- mkGoals ])
   };
-  Time(_) -> {}
+  Time(n::Int) -> {}
 }
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

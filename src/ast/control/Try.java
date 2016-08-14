@@ -8,6 +8,7 @@ import ast.AST;
 import ast.binding.Dec;
 import ast.binding.Var;
 import ast.data.Fun;
+import ast.data.Str;
 import ast.tests.BArm;
 import ast.tests.Case;
 import ast.types.Type;
@@ -61,16 +62,16 @@ public class Try extends AST {
     return new Fun(getLineStart(), getLineEnd(), path, tryBodyName(), new Dec[] {}, ast.types.Void.VOID, body);
   }
 
-  private String tryBodyName() {
-    return "try-body" + (tryCount++);
+  private AST tryBodyName() {
+    return new Str("try-body" + (tryCount++));
   }
 
   public AST desugarCatch() {
     return new Fun(getLineStart(), getLineEnd(), path, catchName(), new Dec[] { new Dec(getLineStart(), getLineEnd(), path, "$1", ast.types.Void.VOID) }, ast.types.Void.VOID, new Case(new Dec[] {}, new AST[] { new Var(getLineStart(), getLineEnd(), "$1", null) }, arms));
   }
 
-  private String catchName() {
-    return "catch" + (catchCount++);
+  private AST catchName() {
+    return new Str("catch" + (catchCount++));
   }
 
   public void FV(HashSet<String> vars) {

@@ -125,7 +125,7 @@ public class Apply extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    Type t = op.type(env);
+    Type t = op.type(env).deref(env);
     ast.types.Fun funType = Type.expect(op.getLineStart(), op.getLineEnd(), ast.types.Fun.class, this, t);
     checkArgTypes(funType, env);
     setType(funType.getRange());

@@ -1,6 +1,5 @@
 package actors;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -13,6 +12,7 @@ import env.Env;
 import instrs.Instr;
 import list.List;
 import list.Nil;
+import listeners.BehaviourListener;
 import listeners.InstrListener;
 import listeners.MessageListener;
 import listeners.NewActorListener;
@@ -71,6 +71,7 @@ public class Actor {
   static MessageListener            messageListener      = MessageListener.NOOP;
   static InstrListener              instrListener        = InstrListener.NOOP;
   static ScheduleListener           scheduleListener     = ScheduleListener.NOOP;
+  static BehaviourListener          behaviourListener    = BehaviourListener.NOOP;
 
   // Stack frame offsets...
 
@@ -180,6 +181,7 @@ public class Actor {
     Type Void = ast.types.Void.VOID;
     Type Int = ast.types.Int.INT;
     Type T = new ast.types.Var(0, 0, "T", null);
+    Type List_T = new ast.types.List(0, 0, T);
     Type[] none = new Type[] {};
     Type fun0_to_T = new ast.types.Fun(0, 0, none, T);
     Env<String, Type> env = new Empty<String, Type>();
@@ -190,6 +192,8 @@ public class Actor {
     env = env.bind("random", new ast.types.Fun(0, 0, new Type[] { Int }, Int));
     env = env.bind("setMaxInstructions", new ast.types.Fun(0, 0, new Type[] { Int }, Void));
     env = env.bind("setInstructionsPerTimeUnit", new ast.types.Fun(0, 0, new Type[] { Int }, Void));
+    env = env.bind("shuffle", new Forall(0, 0, new String[] { "T" }, new ast.types.Fun(0, 0, new Type[] { List_T }, List_T)));
+    env = env.bind("resetTime", new ast.types.Fun(0, 0, new Type[] { Int }, Void));
     return env;
   }
 
@@ -451,6 +455,14 @@ public class Actor {
 
   // The index to the next available stack location...
 
+  public static BehaviourListener getBehaviourListener() {
+    return behaviourListener;
+  }
+
+  public static void setBehaviourListener(BehaviourListener behaviourListener) {
+    Actor.behaviourListener = behaviourListener;
+  }
+
   public static void setStop(boolean stop) {
     Actor.stop = stop;
   }
@@ -580,6 +592,10 @@ public class Actor {
     closeFrame(behaviour.getCode().getLocals(), behaviour.getCode(), behaviour.getDynamics(), null);
     setCodePtr(behaviour.getInitIndex());
     newActorListener.newActor(this);
+  }
+
+  public int getId() {
+    return id;
   }
 
   public void addDynamic(Object value) {
@@ -1227,14 +1243,22 @@ public class Actor {
     } else deliverMessage();
   }
 
-  public void send(Object message, int time) {
+  public void send(Actor source, Object message, int time) {
     Message m = new Message(message, time);
     messages.add(m);
-    messageListener.addMessage(this, m);
+    messageListener.addMessage(source, this, m);
   }
 
-  public void setBehaviour(Behaviour behaviour) {
-    this.behaviour = behaviour;
+  public void send(JavaActor source, Object message, int time) {
+    Message m = new Message(message, time);
+    messages.add(m);
+    messageListener.addMessage(source, this, m);
+  }
+
+  public void setBehaviour(Behaviour newBehaviour) {
+    Behaviour oldBehaviour = behaviour;
+    behaviour = newBehaviour;
+    behaviourListener.behaviourChanged(this, oldBehaviour, newBehaviour);
   }
 
   private void setCatcher(Closure catcher) {
@@ -1343,7 +1367,7 @@ public class Actor {
   }
 
   public String toString() {
-    return "Actor(" + String.format("%04d", id) + "," + behaviour.getName() + ")";
+    return behaviour.getName() + "(" + id + ")";
   }
 
   public void tryAddBags(Bag bag, int id) {

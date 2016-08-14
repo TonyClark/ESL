@@ -46,6 +46,11 @@ public class FunBind extends Binding implements DecContainer {
   }
 
   public Binding desugar() {
+
+    // This should be called after type checking. No type checking can occur
+    // as part of desugaring since we do not have access to the type environment
+    // at this point.
+
     if (isSimple())
       return desugarSimple();
     else return desugarPattern();
@@ -65,11 +70,11 @@ public class FunBind extends Binding implements DecContainer {
     // return new Binding(getLineStart(), getLineEnd(), path, name, getFunctionType(), new Fun(getLineStart(), getLineEnd(), path, name, s, getDeclaredType(), new Case(new Dec[]
     // {}, vs, new BArm[] { a1, a2 })));
     // Do we need the error? Currently it does not type check due to the wild var pattern and the error...
-    return new Binding(getLineStart(), getLineEnd(), path, name, getFunctionType(), new Fun(getLineStart(), getLineEnd(), path, name, s, getDeclaredType(), new Case(new Dec[] {}, vs, new BArm[] { a1 })));
+    return new Binding(getLineStart(), getLineEnd(), path, name, getType(), new Fun(getLineStart(), getLineEnd(), path, new Str(name), s, getDeclaredType(), new Case(new Dec[] {}, vs, new BArm[] { a1 })));
   }
 
   private Binding desugarSimple() {
-    return new Binding(getLineStart(), getLineEnd(), path, name, getFunctionType(), new Fun(getLineStart(), getLineEnd(), path, name, simpleArgs(), getDeclaredType(), new If(getLineStart(), getLineEnd(), guard, body, new ast.control.Error(getLineStart(), getLineEnd(), new Str("guard failed for " + name)))));
+    return new Binding(getLineStart(), getLineEnd(), path, name, getType(), new Fun(getLineStart(), getLineEnd(), path, new Str(name), simpleArgs(), getDeclaredType(), new If(getLineStart(), getLineEnd(), guard, body, new ast.control.Error(getLineStart(), getLineEnd(), new Str("guard failed for " + name)))));
   }
 
   public void DV(HashSet<String> vars) {
@@ -90,26 +95,22 @@ public class FunBind extends Binding implements DecContainer {
   }
 
   private Type getArgType(int i) {
-    Env<String, Type> env = new Empty<String, Type>();
-    Type[] type = new Type[] { null };
-    args[i].type(env, (newEnv, t) -> type[0] = t);
-    return type[0];
+    return args[i].getType();
+    // Env<String, Type> env = new Empty<String, Type>();
+    // Type[] type = new Type[] { null };
+    // args[i].type(env, (newEnv, t) -> type[0] = t);
+    // return type[0];
   }
 
   public AST getBody() {
     return body;
   }
 
-  public Type getFunctionType() {
-    Type[] result = new Type[] { null };
-    Env<String, Type> env = new Empty<String, Type>();
-    Pattern.types(args, env, (newEnv, types) ->
-    {
-      Type t = getType();
-      result[0] = new ast.types.Fun(getLineStart(), getLineEnd(), types, t);
-    });
-    return result[0];
-  }
+  /*
+   * 
+   * public Type getFunctionType() { Type[] result = new Type[] { null }; Env<String, Type> env = new Empty<String, Type>(); Pattern.types(args, env, (newEnv, types) -> { Type t =
+   * getType(); result[0] = new ast.types.Fun(getLineStart(), getLineEnd(), types, t); }); return result[0]; }
+   */
 
   public AST getGuard() {
     return guard;

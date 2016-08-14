@@ -18,7 +18,7 @@ public class Closure implements Fun {
   }
 
   public String toString() {
-    return "<" + name + "/" + arity + ">";
+    return name;
   }
 
   public int getArity() {

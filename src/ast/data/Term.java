@@ -103,12 +103,16 @@ public class Term extends AST {
         type = Type.eval(type, env);
         if (type instanceof Cnstr) {
           // We are OK...
+          Type[] valueTypes = new Type[values.length];
+          for (int i = 0; i < valueTypes.length; i++)
+            valueTypes[i] = values[i].type(env);
           Cnstr cnstr = (Cnstr) type;
-          ast.types.Term term = cnstr.getType();
-          if (Type.equals(new ast.types.Term(getLineStart(), getLineEnd(), name, types), term, env)) {
+          ast.types.Term term1 = cnstr.getType();
+          ast.types.Term term2 = new ast.types.Term(getLineStart(), getLineEnd(), name, valueTypes);
+          if (Type.equals(term1, term2, env)) {
             // Good to go...
             setType(cnstr.getUnion());
-          } else throw new TypeError(getLineStart(), getLineEnd(), "types do not match");
+          } else throw new TypeError(getLineStart(), getLineEnd(), "types do not match: " + term1 + " " + term2);
         } else throw new TypeError(getLineStart(), getLineEnd(), "expecting a constructor: " + name);
       }
     } else {

@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -189,30 +191,34 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
   }
 
   public void displayTree(Module module) {
-    try {
-      String modulePath = new File(module.getPath()).getCanonicalPath();
-      List<DefaultMutableTreeNode> nodes = getSearchNodes((DefaultMutableTreeNode) getModel().getRoot());
-      for (DefaultMutableTreeNode n : nodes) {
-        Object o = n.getUserObject();
-        if (o instanceof SimpleFile) {
-          SimpleFile file = (SimpleFile) o;
-          String filePath = file.getCanonicalPath();
-          if (modulePath.equals(filePath)) {
-            DefaultTreeModel model = (DefaultTreeModel) getModel();
-            TreePath path = new TreePath(n.getPath());
-            boolean isExpanded = isExpanded(path);
-            n.removeAllChildren();
-            module.type(Actor.builtinTypes());
-            displayTree(n, module);
-            model.reload(n);
-            setExpandedState(path, isExpanded);
-            break;
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        try {
+          String modulePath = new File(module.getPath()).getCanonicalPath();
+          List<DefaultMutableTreeNode> nodes = getSearchNodes((DefaultMutableTreeNode) getModel().getRoot());
+          for (DefaultMutableTreeNode n : nodes) {
+            Object o = n.getUserObject();
+            if (o instanceof SimpleFile) {
+              SimpleFile file = (SimpleFile) o;
+              String filePath = file.getCanonicalPath();
+              if (modulePath.equals(filePath)) {
+                DefaultTreeModel model = (DefaultTreeModel) getModel();
+                TreePath path = new TreePath(n.getPath());
+                boolean isExpanded = isExpanded(path);
+                n.removeAllChildren();
+                module.type(Actor.builtinTypes());
+                displayTree(n, module);
+                model.reload(n);
+                setExpandedState(path, isExpanded);
+                break;
+              }
+            }
           }
+        } catch (IOException e) {
+          e.printStackTrace(System.err);
         }
       }
-    } catch (IOException e) {
-      e.printStackTrace(System.err);
-    }
+    });
   }
 
   public void focusGained(FocusEvent e) {

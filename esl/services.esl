@@ -128,14 +128,17 @@ act main::Main {
   // Create the faciliatator with the number of customers and the 
   // reporting time gap...
 
-  f::Facilitator = new facilitator(50,50000)
+  //f::Facilitator = new facilitator(50,50000)
+  f::Facilitator = new facilitator(50,50)
 
   // Set the time limit for the simulation...
 
-  Time(1200000) -> { f <- Stop };
+  Time(500) -> { f <- Stop };
 
   Time(n::Int) -> {}
 }
+
+
 
 
 

@@ -10,29 +10,28 @@ import instrs.Instr;
 
 public class Behaviour extends Instr {
 
-  String  name;
   Key[]   exports;
   int     initIndex;
   CodeBox code;
 
-  public Behaviour(int line,  String name, Key[] exports, int initIndex, CodeBox code) {
+  public Behaviour(int line, Key[] exports, int initIndex, CodeBox code) {
     super(line);
-    this.name = name;
     this.exports = exports;
     this.initIndex = initIndex;
     this.code = code;
   }
 
   public void perform(Actor actor) {
+    String name = (String) actor.popStack();
     actor.pushStack(new actors.Behaviour(name, exports, actor.getDynamics(), initIndex, code));
   }
 
   public String toString() {
-   return pprint("BEHAVIOUR",name);
+    return pprint("BEHAVIOUR");
   }
 
   public void collect(Hashtable<String, CodeBox> boxes) {
-    code.collect("behaviour-" + name, boxes);
+    code.collect("behaviour", boxes);
   }
 
 }

@@ -66,7 +66,7 @@ public class PBind extends Pattern {
     {
       if (Type.equals(type, t, env)) {
         setType(type);
-        cont.accept(env1, type);
+        cont.accept(env1.bind(name, type), type);
       } else throw new TypePatternError(this, "declaration does not match pattern type " + t);
     });
   }

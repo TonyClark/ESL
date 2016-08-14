@@ -278,8 +278,26 @@ public class FileEditor extends JTextPane implements MouseListener, KeyListener,
   }
 
   public void keyReleased(KeyEvent e) {
+    if (e.getKeyChar() == '\n') {
+      insertNewline();
+      e.consume();
+    }
     if (!Character.isWhitespace(e.getKeyChar()) || e.getKeyChar() == '\b') {
       concurrentlyTypeCheckText();
+    }
+
+  }
+
+  private void insertNewline() {
+
+    // Indent based on current line...
+
+    try {
+      int indent = getcurrentIndent(getCaretPosition() - 2);
+      String spaces = (indent == 0) ? "" : String.format("%" + indent + "s", "");
+      getDocument().insertString(getCaretPosition(), spaces, getCharacterAttributes());
+    } catch (BadLocationException e1) {
+      e1.printStackTrace();
     }
   }
 
@@ -287,20 +305,6 @@ public class FileEditor extends JTextPane implements MouseListener, KeyListener,
     if (!dirty) {
       dirty = true;
       edb.dirtyFile(path);
-    }
-    if (e.getKeyChar() == '\n') {
-
-      // Indent based on the current line...
-
-      try {
-        int indent = getcurrentIndent(getCaretPosition() - 2);
-        String spaces = (indent == 0) ? "" : String.format("%" + indent + "s", "");
-        getDocument().insertString(getCaretPosition(), spaces, getCharacterAttributes());
-        e.consume();
-        parseText();
-      } catch (BadLocationException e1) {
-        e1.printStackTrace();
-      }
     }
   }
 
@@ -314,7 +318,7 @@ public class FileEditor extends JTextPane implements MouseListener, KeyListener,
       if (text.charAt(i) == '\n') startPrevLine = i + 1;
     }
     int indent = 0;
-    for (int i = startPrevLine; i < index+1; i++)
+    for (int i = startPrevLine; i < index + 1; i++)
       if (Character.isWhitespace(text.charAt(i)))
         indent++;
       else break;

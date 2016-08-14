@@ -65,28 +65,28 @@ public class State extends JPanel {
     time.setTime(t);
   }
 
-  public void addMessage(Message message) {
+  public synchronized void addMessage(Message message) {
     messages.addMessage(message);
   }
 
-  public void deleteMessage(Message message) {
+  public synchronized void deleteMessage(Message message) {
     messages.deleteMessage(message);
   }
 
-  public void clearVariables() {
+  public synchronized void clearVariables() {
     locals.clear();
     dynamics.clear();
   }
 
-  public void showLocal(String name, Object value) {
+  public synchronized void showLocal(String name, Object value) {
     locals.showVariable(name, value);
   }
 
-  public void showDynamic(String name, Object value) {
+  public synchronized void showDynamic(String name, Object value) {
     dynamics.showVariable(name, value);
   }
 
-  public void showProperties(Object value) {
+  public synchronized void showProperties(Object value) {
     edb.showProperties(value);
   }
 

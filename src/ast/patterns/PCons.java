@@ -72,7 +72,7 @@ public class PCons extends Pattern {
           if (Type.equals(listType.getType(), headType, env)) {
             setType(tailType);
             cont.accept(env2, tailType);
-          } else throw new TypePatternError(this, "expecting head to match tail type " + headType);
+          } else throw new TypePatternError(this, "expecting head to match tail type " + headType + " <> " + listType.getType());
         });
       } else throw new TypePatternError(this, "expecting a list type " + tailType);
     });

@@ -47,7 +47,7 @@ public class CollisionGUI implements JavaActor {
   public CollisionGUI(Actor simulator) {
     try {
       this.simulator = simulator;
-      simulator.send(new Term(SetGUI, this), Actor.getTime());
+      simulator.send(this, new Term(SetGUI, this), Actor.getTime());
       JFrame frame = new JFrame();
       JPanel controls = new JPanel();
       controls.setLayout(new BoxLayout(controls, BoxLayout.PAGE_AXIS));
@@ -119,12 +119,12 @@ public class CollisionGUI implements JavaActor {
           points = new Point[numberOfBalls];
           for (int i = 0; i < numberOfBalls; i++)
             points[i] = new Point(0, 0);
-          simulator.send(new Term(Key.getKey("Start")), simulator.getTime());
+          simulator.send(CollisionGUI.this, new Term(Key.getKey("Start")), simulator.getTime());
         }
       });
       stop.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          simulator.send(new Term(Key.getKey("Stop")), simulator.getTime());
+          simulator.send(CollisionGUI.this, new Term(Key.getKey("Stop")), simulator.getTime());
         }
       });
       controls.add(start);

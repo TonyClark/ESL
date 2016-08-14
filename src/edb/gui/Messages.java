@@ -42,13 +42,13 @@ public class Messages extends JPanel implements MouseListener {
   public void mouseExited(MouseEvent e) {
   }
 
-  public void addMessage(Message message) {
+  public synchronized void addMessage(Message message) {
     messages.add(message);
     list.setListData(messages);
     repaint();
   }
 
-  public void deleteMessage(Message message) {
+  public synchronized void deleteMessage(Message message) {
     messages.remove(message);
     list.setListData(messages);
     repaint();

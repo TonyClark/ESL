@@ -26,4 +26,11 @@ public class Message {
     return time;
   }
 
+  public String getHTMLLabel() {
+    if (value instanceof Term) {
+      Term term = (Term) value;
+      return term.getHTMLLabel();
+    } else return value.toString();
+  }
+
 }

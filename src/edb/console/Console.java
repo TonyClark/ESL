@@ -16,6 +16,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 
 import edb.actions.FontAction;
@@ -75,12 +76,16 @@ public class Console extends JTextPane implements MouseListener, ResizeFont, Foc
   }
 
   public void write(char c) {
-    try {
-      getDocument().insertString(getDocument().getLength(), "" + (char) c, null);
-      setCaretPosition(getText().length());
-    } catch (BadLocationException e) {
-      e.printStackTrace();
-    }
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        try {
+          getDocument().insertString(getDocument().getLength(), "" + (char) c, null);
+          setCaretPosition(getText().length());
+        } catch (BadLocationException e) {
+          e.printStackTrace();
+        }
+      }
+    });
   }
 
   public void resizeFont(int amount) {

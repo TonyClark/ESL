@@ -43,7 +43,7 @@ public class Act extends AST implements DecContainer, RefContainer {
   }
 
   String           path;
-  public String    name;
+  public AST       name;
   public Export    exports;
   public Binding[] bindings;
   public AST       init;
@@ -52,7 +52,7 @@ public class Act extends AST implements DecContainer, RefContainer {
   public Act() {
   }
 
-  public Act(int line, String path, String name, Export exports, Binding[] bindings, AST init, BArm[] arms) {
+  public Act(int line, String path, AST name, Export exports, Binding[] bindings, AST init, BArm[] arms) {
     setLineStart(line);
     this.path = path;
     this.name = name;
@@ -82,6 +82,7 @@ public class Act extends AST implements DecContainer, RefContainer {
       code.add(new Pop(b.getValue().getLineStart()), locals, dynamics);
     }
     orderExports(dynamics);
+    name.compile(locals, dynamics, code, false);
     compileBehaviour(locals, dynamics, code);
 
     // Remove the dynamics...
@@ -109,7 +110,7 @@ public class Act extends AST implements DecContainer, RefContainer {
     init.compile(locals, dynamics, bodyCode, false);
     bodyCode.add(new PopFrame(getLineStart()), locals, dynamics);
     // Set the locals + 1 since the message is the first local...
-    code.add(new instrs.data.Behaviour(getLineStart(), name, toKeys(exports.getStrings()), initIndex, bodyCode), locals, dynamics);
+    code.add(new instrs.data.Behaviour(getLineStart(), toKeys(exports.getStrings()), initIndex, bodyCode), locals, dynamics);
   }
 
   public void DV(HashSet<String> vars) {
@@ -134,6 +135,7 @@ public class Act extends AST implements DecContainer, RefContainer {
     for (BArm arm : arms)
       arm.FV(vars);
     init.FV(vars);
+    name.FV(vars);
     free.removeAll(bound);
     vars.addAll(free);
   }
@@ -144,7 +146,7 @@ public class Act extends AST implements DecContainer, RefContainer {
     for (Binding b : Binding.valueBindings(bindings)) {
       Env<String, Type> bEnv = env;
       Type bType = b.getDeclaredType();
-      if(exports.contains(b.getName())) {
+      if (exports.contains(b.getName())) {
         if (b.getLineStart() == 0 && b.getLineEnd() == 0) {
           System.err.println(b + " has (0,0)");
         }
@@ -169,7 +171,7 @@ public class Act extends AST implements DecContainer, RefContainer {
     // This does not remove those bindings that will be implemented as
     // dynamic variables, however it is fail safe...
 
-    int maxLocals = init.maxLocals() + Binding.valueBindings(bindings).length;
+    int maxLocals = name.maxLocals() + init.maxLocals() + Binding.valueBindings(bindings).length;
     for (BArm arm : arms)
       maxLocals += arm.maxLocals();
     int valueLocals = 0;
@@ -188,7 +190,7 @@ public class Act extends AST implements DecContainer, RefContainer {
         else newExports[dynamic.getIndex()] = export;
       }
     }
-    exports = new Export(exports.getLineStart(),exports.getLineEnd(),newExports);
+    exports = new Export(exports.getLineStart(), exports.getLineEnd(), newExports);
   }
 
   private Type selfType(Env<String, Type> env) {
@@ -213,12 +215,13 @@ public class Act extends AST implements DecContainer, RefContainer {
     for (Binding b : bindings)
       b.setPath(path);
     init.setPath(path);
+    name.setPath(path);
     for (BArm b : arms)
       b.setPath(path);
   }
 
   public AST subst(AST ast, String name) {
-    return new Act(getLineStart(), path, this.name, exports, substBindings(ast, name), init.subst(ast, name), substArms(ast, name));
+    return new Act(getLineStart(), path, this.name.subst(ast, name), exports, substBindings(ast, name), init.subst(ast, name), substArms(ast, name));
   }
 
   private BArm[] substArms(AST ast, String name) {
@@ -254,6 +257,7 @@ public class Act extends AST implements DecContainer, RefContainer {
     env = env.bind("self", selfType(env));
     env = Binding.typeBindingsRec(bindings, env);
     init.type(env);
+    name.type(env);
     MessageType[] handlers = new MessageType[arms.length];
     for (int i = 0; i < arms.length; i++) {
       HandlerType handlerType = arms[i].type(env);

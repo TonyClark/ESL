@@ -65,7 +65,7 @@ public class CollisionFrame extends JPanel implements JavaActor, TabbedActor {
   public CollisionFrame(Actor simulator) {
     try {
       this.simulator = simulator;
-      simulator.send(new Term(SetGUI, this), Actor.getTime());
+      simulator.send(this, new Term(SetGUI, this), Actor.getTime());
       JPanel panel = this;
       JPanel controls = new JPanel();
       setLayout(new BorderLayout());
@@ -138,12 +138,12 @@ public class CollisionFrame extends JPanel implements JavaActor, TabbedActor {
           points = new Point[numberOfBalls];
           for (int i = 0; i < numberOfBalls; i++)
             points[i] = new Point(0, 0);
-          simulator.send(new Term(Key.getKey("Start")), simulator.getTime());
+          simulator.send(CollisionFrame.this, new Term(Key.getKey("Start")), simulator.getTime());
         }
       });
       stop.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          simulator.send(new Term(Key.getKey("Stop")), simulator.getTime());
+          simulator.send(CollisionFrame.this, new Term(Key.getKey("Stop")), simulator.getTime());
         }
       });
       controls.add(start);
@@ -157,7 +157,7 @@ public class CollisionFrame extends JPanel implements JavaActor, TabbedActor {
   }
 
   public void close() {
-    simulator.send(new Term(Key.getKey("Close")), simulator.getTime());
+    simulator.send(this, new Term(Key.getKey("Close")), simulator.getTime());
   }
 
   private void draw(int id, int x, int y) {

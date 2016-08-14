@@ -1,8 +1,8 @@
 package actors;
 
 public class Term {
-  
-  Key   name;
+
+  Key      name;
   Object[] values;
 
   public Term(Key name, Object... values) {
@@ -44,5 +44,13 @@ public class Term {
       }
     }
     return sb.toString();
+  }
+
+  public String getHTMLLabel() {
+    String s = "<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\">";
+    s = s + "<TR><TD><FONT FACE=\"ITALIC\" POINT-SIZE=\"12\">" + name.getString() + "</FONT></TD></TR>";
+    for (Object value : values)
+      s = s + "<TR><TD><FONT POINT-SIZE=\"10\">" + value + "</FONT></TD></TR>";
+    return s + "</TABLE>";
   }
 }

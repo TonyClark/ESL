@@ -30,7 +30,7 @@ public class Fun extends AST {
   }
 
   public String path;
-  public String name;
+  public AST    name;
   public Dec[]  args;
   public Type   declaredType;
 
@@ -39,7 +39,7 @@ public class Fun extends AST {
   public Fun() {
   }
 
-  public Fun(int lineStart, int lineEnd, String path, String name, Dec[] args, Type declaredType, AST body) {
+  public Fun(int lineStart, int lineEnd, String path, AST name, Dec[] args, Type declaredType, AST body) {
     super(lineStart, lineEnd);
     this.path = path;
     this.name = name;
@@ -65,7 +65,8 @@ public class Fun extends AST {
     int frame = body.maxLocals() + args.length;
     CodeBox bodyCode = new CodeBox(path, frame);
     compileBody(locals, dynamics, bodyCode, isLast);
-    code.add(new instrs.data.Fun(getLineStart(), name, args.length, bodyCode), locals, dynamics);
+    name.compile(locals, dynamics, code, isLast);
+    code.add(new instrs.data.Fun(getLineStart(), args.length, bodyCode), locals, dynamics);
   }
 
   public void compileApply(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
@@ -75,7 +76,7 @@ public class Fun extends AST {
     int frame = body.maxLocals() + args.length;
     CodeBox bodyCode = new CodeBox(path, frame);
     compileBody(locals, dynamics, bodyCode, isLast);
-    code.add(new ApplyFun(getLineStart(), name, args.length, bodyCode), locals, dynamics);
+    code.add(new ApplyFun(getLineStart(), args.length, bodyCode), locals, dynamics);
   }
 
   public void compileBody(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox bodyCode, boolean isLast) {
@@ -111,6 +112,7 @@ public class Fun extends AST {
     for (Dec arg : args)
       free.remove(arg.getName());
     vars.addAll(free);
+    name.FV(vars);
   }
 
   public Type getDeclaredType() {
@@ -122,18 +124,19 @@ public class Fun extends AST {
   }
 
   public int maxLocals() {
-    return 0;
+    return name.maxLocals();
   }
 
   public void setPath(String path) {
     this.path = path;
     body.setPath(path);
+    name.setPath(path);
   }
 
   public AST subst(AST ast, String name) {
     if (binds(name))
       return this;
-    else return new Fun(getLineStart(), getLineEnd(), path, this.name, args, declaredType, body.subst(ast, name));
+    else return new Fun(getLineStart(), getLineEnd(), path, this.name.subst(ast, name), args, declaredType, body.subst(ast, name));
   }
 
   public String toString() {
@@ -141,6 +144,7 @@ public class Fun extends AST {
   }
 
   public Type type(Env<String, Type> env) {
+    name.type(env);
     Type[] domain = new Type[args.length];
     for (int i = 0; i < args.length; i++) {
       Type argType = args[i].getDeclaredType();

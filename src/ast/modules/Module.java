@@ -26,6 +26,7 @@ import values.Located;
 import xpl.Interpreter;
 
 @BoaConstructor(fields = { "name", "exports", "imports", "defs" })
+
 public class Module implements TreeNode {
 
   // A module is a file of definitions. It provides a reusable collection of named values.
@@ -35,62 +36,17 @@ public class Module implements TreeNode {
 
   static Hashtable<String, Module> MODULES    = new Hashtable<String, Module>();
 
-  String                           path;
-  long                             createTime = System.currentTimeMillis();
-  public String                    name;
-  public Imports                   imports;
-  public Export                    exports;
-  public Binding[]                 defs;
-  public Hashtable<String, Module> imported   = new Hashtable<String, Module>();
-
-  public void setPath(String path) {
-    this.path = path;
-    for (Binding b : defs)
-      b.setPath(path);
-  }
-
-  public String getPath() {
-    return path;
-  }
-
-  public Binding ref(String name) {
-    for (Binding b : defs)
-      if (b.getName().equals(name)) return b;
-    return null;
-  }
-
-  public Module resolve() throws FileNotFoundException {
-
-    // Recursively load the modules...
-
-    for (Import importedModule : imports.getImports()) {
-      Module module = importModule(importedModule.getName());
-      imported.put(name, module);
-      importedModule.setModule(module);
+  private static Binding[] allBindings() {
+    Binding[] bindings = new Binding[MODULES.keySet().size()];
+    int i = 0;
+    for (String name : MODULES.keySet()) {
+      bindings[i++] = MODULES.get(name).asBinding();
     }
-    return this;
+    return bindings;
   }
-
-  public void type(Env<String, Type> env) throws FileNotFoundException {
-
-    // Perform type checking on the module. The type environment for
-    // checking the module is constructed from the exported values and
-    // types from imported modules...
-
-    Env<String, Type> e = env;
-    resolve();
-    for (String name : imported.keySet()) {
-      imported.get(name).type(e);
-      for (String exported : imported.get(name).getExports().getStrings()) {
-        Binding binding = imported.get(name).ref(exported);
-        if (binding.isTypeBinding())
-          env = env.bind(exported, binding.getDeclaredType());
-        else env = env.bind(exported, binding.getType());
-      }
-    }
-    Binding.typeBindingsRec(defs, env);
+  public static Hashtable<String, Module> getMODULES() {
+    return MODULES;
   }
-
   public static Module importModule(String path) throws FileNotFoundException {
 
     // Import the module and resolve it. If it is already loaded
@@ -107,7 +63,6 @@ public class Module implements TreeNode {
       } else throw new FileNotFoundException("cannot import " + path);
     }
   }
-
   public static Module processModule(String path, Module module) throws FileNotFoundException {
 
     // Sets a shell module in the table to short circuit recursive imports. The
@@ -124,53 +79,21 @@ public class Module implements TreeNode {
     shell.setDefs();
     return shell;
   }
-
-  private void setDefs() {
-
-    // Set value and type variables to point to their establishing definitions...
-    
-    Env<String, DeclaringLocation> env = new Empty<String, DeclaringLocation>();
-    for (Dec d : defs) {
-      env = env.bind(d.getName(), d);
-    }
-    AST.setDefs(exports, env);
-    env = AST.addDecs(imports, env);
-    for (Dec d : defs) {
-      AST.setDefs(d, env);
-    }
+  public static void reset() {
+    MODULES.clear();
   }
+  String                           path;
+  long                             createTime = System.currentTimeMillis();
 
-  private boolean isOutOfDate() {
+  public String                    name;
 
-    // Returns true when the file containing the source of the module has been
-    // modified since the last loading...
+  public Imports                   imports;
 
-    File file = new File(path);
-    return file.lastModified() > createTime;
-  }
+  public Export                    exports;
+  
+  public Binding[]                 defs;
 
-  public AST desugar() {
-    // Create a record for each of the modules in the system:
-    // letrec
-    // M1 = letrec
-    // n1 = e1[Mj.n/n]; // for each name exported by each module imported by M1
-    // ...
-    // nk = ek[Mj.n/n]
-    // in rec{n1=n1;...} // just the exported names.
-    // ...
-    // in M
-    Binding[] bindings = allBindings();
-    return new Letrec(1, 1, bindings, new Var(1, 1, name, null));
-  }
-
-  private static Binding[] allBindings() {
-    Binding[] bindings = new Binding[MODULES.keySet().size()];
-    int i = 0;
-    for (String name : MODULES.keySet()) {
-      bindings[i++] = MODULES.get(name).asBinding();
-    }
-    return bindings;
-  }
+  public Hashtable<String, Module> imported   = new Hashtable<String, Module>();
 
   private Binding asBinding() {
 
@@ -194,34 +117,58 @@ public class Module implements TreeNode {
     return new Binding(0, 0, path, name, recordType, new Letrec(1, 1, getBindings(), getExportedRecord()));
   }
 
+  public AST desugar() {
+    // Create a record for each of the modules in the system:
+    // letrec
+    // M1 = letrec
+    // n1 = e1[Mj.n/n]; // for each name exported by each module imported by M1
+    // ...
+    // nk = ek[Mj.n/n]
+    // in rec{n1=n1;...} // just the exported names.
+    // ...
+    // in M
+    Binding[] bindings = allBindings();
+    return new Letrec(1, 1, bindings, new Var(1, 1, name, null));
+  }
+
+  public String[] exportedTypeNames() {
+    int exportedTypes = 0;
+    for (String name : getExports().getStrings()) {
+      if (namesTypeBinding(name)) exportedTypes++;
+    }
+    String[] names = new String[exportedTypes];
+    exportedTypes = 0;
+    for (String name : getExports().getStrings()) {
+      if (namesTypeBinding(name)) names[exportedTypes++] = name;
+    }
+    return names;
+  }
+
   private Binding getBinding(String name) {
     for (Binding b : defs)
       if (b.getName().equals(name)) return b;
     return null;
   }
 
-  public Binding[] valueBindings() {
-    // Just return those bindings that define values (e.g. not types)...
-    int vb = 0;
-    for (Binding b : defs)
-      if (b.isValueBinding()) vb++;
-    Binding[] valueBindings = new Binding[vb];
-    int i = 0;
-    for (Binding b : defs)
-      if (b.isValueBinding()) valueBindings[i++] = b;
-    return valueBindings;
+  private Binding[] getBindings() {
+
+    // Return the bindings for all the definitions that are scoped over the
+    // module. This includes the value and type definitions. The exported types
+    // are shared with the exporting modules...
+
+    Binding[] typeBindings = getExportedTypeBindings(imported.values());
+    Binding[] valueBindings = new Binding[defs.length];
+    for (int i = 0; i < defs.length; i++)
+      valueBindings[i] = defs[i].substExportedValues(imported.values());
+    return AST.concatenate(typeBindings, valueBindings);
   }
 
-  public Binding[] typeBindings() {
-    // Just return those bindings that define types...
-    int tb = 0;
-    for (Binding b : defs)
-      if (b.isTypeBinding()) tb++;
-    Binding[] typeBindings = new Binding[tb];
-    int i = 0;
-    for (Binding b : defs)
-      if (b.isTypeBinding()) typeBindings[i++] = b;
-    return typeBindings;
+  public TreeNode[] getChildren() {
+    return defs;
+  }
+
+  public Binding[] getDefs() {
+    return defs;
   }
 
   private AST getExportedRecord() {
@@ -245,39 +192,6 @@ public class Module implements TreeNode {
     return new Record(0, 0, fields);
   }
 
-  private Binding[] getBindings() {
-
-    // Return the bindings for all the definitions that are scoped over the
-    // module. This includes the value and type definitions. The exported types
-    // are shared with the exporting modules...
-
-    Binding[] typeBindings = getExportedTypeBindings(imported.values());
-    Binding[] valueBindings = new Binding[defs.length];
-    for (int i = 0; i < defs.length; i++)
-      valueBindings[i] = defs[i].substExportedValues(imported.values());
-    return AST.concatenate(typeBindings, valueBindings);
-  }
-
-  public boolean namesTypeBinding(String name) {
-    for (Binding b : getDefs()) {
-      if (b.isTypeBinding() && b.getName().equals(name)) return true;
-    }
-    return false;
-  }
-
-  public String[] exportedTypeNames() {
-    int exportedTypes = 0;
-    for (String name : getExports().getStrings()) {
-      if (namesTypeBinding(name)) exportedTypes++;
-    }
-    String[] names = new String[exportedTypes];
-    exportedTypes = 0;
-    for (String name : getExports().getStrings()) {
-      if (namesTypeBinding(name)) names[exportedTypes++] = name;
-    }
-    return names;
-  }
-
   private Binding[] getExportedTypeBindings(Collection<Module> modules) {
     int exportedTypes = 0;
     for (Module m : modules)
@@ -290,24 +204,8 @@ public class Module implements TreeNode {
     return typeBindings;
   }
 
-  public String toString() {
-    return "Module(" + name + "," + exports + "," + imports + ")";
-  }
-
-  public static Hashtable<String, Module> getMODULES() {
-    return MODULES;
-  }
-
-  public String getName() {
-    return name;
-  }
-
   public Export getExports() {
     return exports;
-  }
-
-  public Binding[] getDefs() {
-    return defs;
   }
 
   public Hashtable<String, Module> getImported() {
@@ -318,10 +216,6 @@ public class Module implements TreeNode {
     return "module " + name;
   }
 
-  public TreeNode[] getChildren() {
-    return defs;
-  }
-
   public Located getLocated(int charIndex) {
     Located located = AST.getLocated(exports, charIndex);
     if (located != null) return located;
@@ -330,6 +224,117 @@ public class Module implements TreeNode {
       if (located != null) return located;
     }
     return null;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  private boolean isOutOfDate() {
+
+    // Returns true when the file containing the source of the module has been
+    // modified since the last loading...
+
+    File file = new File(path);
+    return file.lastModified() > createTime;
+  }
+
+  public boolean namesTypeBinding(String name) {
+    for (Binding b : getDefs()) {
+      if (b.isTypeBinding() && b.getName().equals(name)) return true;
+    }
+    return false;
+  }
+
+  public Binding ref(String name) {
+    for (Binding b : defs)
+      if (b.getName().equals(name)) return b;
+    return null;
+  }
+
+  public Module resolve() throws FileNotFoundException {
+
+    // Recursively load the modules...
+
+    for (Import importedModule : imports.getImports()) {
+      Module module = importModule(importedModule.getName());
+      imported.put(importedModule.getName(), module);
+      importedModule.setModule(module);
+    }
+    return this;
+  }
+
+  private void setDefs() {
+
+    // Set value and type variables to point to their establishing definitions...
+    
+    Env<String, DeclaringLocation> env = new Empty<String, DeclaringLocation>();
+    for (Dec d : defs) {
+      env = env.bind(d.getName(), d);
+    }
+    AST.setDefs(exports, env);
+    env = AST.addDecs(imports, env);
+    for (Dec d : defs) {
+      AST.setDefs(d, env);
+    }
+  }
+
+  public void setPath(String path) {
+    this.path = path;
+    for (Binding b : defs)
+      b.setPath(path);
+  }
+
+  public String toString() {
+    return "Module(" + name + "," + exports + "," + imports + ")";
+  }
+
+  public void type(Env<String, Type> env) throws FileNotFoundException {
+
+    // Perform type checking on the module. The type environment for
+    // checking the module is constructed from the exported values and
+    // types from imported modules...
+
+    Env<String, Type> e = env;
+    resolve();
+    for (String name : imported.keySet()) {
+      imported.get(name).type(e);
+      for (String exported : imported.get(name).getExports().getStrings()) {
+        Binding binding = imported.get(name).ref(exported);
+        if (binding.isTypeBinding())
+          env = env.bind(exported, binding.getDeclaredType());
+        else env = env.bind(exported, binding.getType());
+      }
+    }
+    Binding.typeBindingsRec(defs, env);
+  }
+
+  public Binding[] typeBindings() {
+    // Just return those bindings that define types...
+    int tb = 0;
+    for (Binding b : defs)
+      if (b.isTypeBinding()) tb++;
+    Binding[] typeBindings = new Binding[tb];
+    int i = 0;
+    for (Binding b : defs)
+      if (b.isTypeBinding()) typeBindings[i++] = b;
+    return typeBindings;
+  }
+
+  public Binding[] valueBindings() {
+    // Just return those bindings that define values (e.g. not types)...
+    int vb = 0;
+    for (Binding b : defs)
+      if (b.isValueBinding()) vb++;
+    Binding[] valueBindings = new Binding[vb];
+    int i = 0;
+    for (Binding b : defs)
+      if (b.isValueBinding()) valueBindings[i++] = b;
+    return valueBindings;
   }
 
 }

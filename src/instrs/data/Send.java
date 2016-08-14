@@ -14,9 +14,8 @@ public class Send extends Instr {
   }
 
   public String toString() {
-   return pprint("SEND",arity);
+    return pprint("SEND", arity);
   }
-
 
   public void perform(Actor actor) {
 
@@ -38,7 +37,7 @@ public class Send extends Instr {
   public void sendActor(Actor actor, Actor target) {
     int time = (int) actor.popStack();
     Object message = actor.popStack();
-    target.send(message, time);
+    target.send(actor, message, time);
     actor.pushStack(target);
   }
 

@@ -11,6 +11,7 @@ import ast.binding.Var;
 import ast.data.Apply;
 import ast.data.Bool;
 import ast.data.Fun;
+import ast.data.Str;
 import ast.patterns.PCons;
 import ast.patterns.PNil;
 import ast.patterns.PVar;
@@ -66,8 +67,8 @@ public class Find extends AST {
     return new Letrec(getLineStart(), getLineEnd(), new Binding[] { new Binding(getLineStart(), getLineEnd(), path, "$find", new ast.types.Void(), fun) }, new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "$find", null), list));
   }
 
-  private String findName() {
-    return "find" + (findCount++);
+  private AST findName() {
+    return new Str("find" + (findCount++));
   }
 
   public void FV(HashSet<String> vars) {

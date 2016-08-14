@@ -12,6 +12,7 @@ import ast.data.Apply;
 import ast.data.BinExp;
 import ast.data.Bool;
 import ast.data.Fun;
+import ast.data.Str;
 import ast.patterns.PCons;
 import ast.patterns.PNil;
 import ast.patterns.PVar;
@@ -63,8 +64,8 @@ public class Map extends AST {
     return new Letrec(getLineStart(), getLineEnd(), new Binding[] { new Binding(getLineStart(), getLineEnd(), path, "$f", new ast.types.Void(), fun) }, new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "$f", null), list));
   }
 
-  private String mapName() {
-    return "map" + (mapCount++);
+  private AST mapName() {
+    return new Str("map" + (mapCount++));
   }
 
   public void FV(HashSet<String> vars) {

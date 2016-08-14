@@ -9,19 +9,28 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
+
+import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 
 import actors.Actor;
 import actors.Behaviour;
@@ -50,6 +59,7 @@ import edb.gui.State;
 import instrs.Instr;
 import instrs.apply.Return;
 import list.Nil;
+import listeners.BehaviourListener;
 import listeners.InstrListener;
 import listeners.MessageListener;
 import listeners.NewActorListener;
@@ -58,13 +68,13 @@ import listeners.StopListener;
 import listeners.TimeListener;
 import xpl.Interpreter;
 
-public class EDB extends JFrame implements NewActorListener, StopListener, TimeListener, MessageListener, InstrListener, ScheduleListener {
+public class EDB extends JFrame implements NewActorListener, StopListener, TimeListener, MessageListener, InstrListener, ScheduleListener, BehaviourListener {
 
   static int    WIDTH       = 1500;
   static int    HEIGHT      = 800;
   static int    X           = 10;
   static int    Y           = 10;
-  static int    BUTTON_SIZE = 30;
+  static int    BUTTON_SIZE = 25;
   static String NAME        = "EDB";
 
   public static void main(String[] args) {
@@ -76,8 +86,9 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     gui.readESL();
   }
 
+  History     history     = new History();
   FileTree    fileTree    = null;
-  FileEditors fileEditors = new FileEditors();
+  FileEditors fileEditors = new FileEditors(this);
   Assembler   assembler   = new Assembler();
   State       state       = new State(this);
   Actors      actors      = new Actors(this);
@@ -100,6 +111,7 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     Actor.setMessageListener(this);
     Actor.setInstrListener(this);
     Actor.setScheduleListener(this);
+    Actor.setBehaviourListener(this);
     showTitle(EDBState.IDLE);
     splash();
   }
@@ -135,7 +147,7 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
   }
 
   private void action_step() {
-    System.out.println("STEP not implemented.");
+    error("STEP not implemented.", "STEP");
   }
 
   public JPanel actorsPanel() {
@@ -147,8 +159,22 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     return consolePanel;
   }
 
-  public void addMessage(Actor actor, Message message) {
+  public void addMessage(Actor source, Actor target, Message message) {
+    try {
+      SwingUtilities.invokeAndWait(new Runnable() {
+        public void run() {
+          if (getActor() == actor) state.addMessage(message);
+        }
+      });
+    } catch (InvocationTargetException | InterruptedException e) {
+      e.printStackTrace();
+    }
+    history.addMessage(source, target, message, Actor.getTime());
+  }
+
+  public void addMessage(JavaActor source, Actor target, Message message) {
     if (getActor() == actor) state.addMessage(message);
+    // history.addMessage(source, target, message, Actor.getTime());
   }
 
   public void addToolBar() {
@@ -203,6 +229,17 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
         }).start();
       }
     });
+    JButton graph = new JButton(getImage("icons/history.png", BUTTON_SIZE, BUTTON_SIZE));
+    graph.setToolTipText("graph");
+    graph.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        new Thread(new Runnable() {
+          public void run() {
+            graph(graph.getX() + graph.getWidth() / 2, graph.getY() + graph.getHeight() / 2);
+          }
+        }).start();
+      }
+    });
     JButton about = new JButton(getImage("icons/about.png", BUTTON_SIZE, BUTTON_SIZE));
     about.setToolTipText("about");
     about.addActionListener(new ActionListener() {
@@ -220,6 +257,7 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     toolBar.add(init);
     toolBar.add(zoom_in);
     toolBar.add(zoom_out);
+    toolBar.add(graph);
     toolBar.add(about);
     setPreferredSize(new Dimension(450, 130));
     add(toolBar, BorderLayout.PAGE_START);
@@ -249,7 +287,15 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
   }
 
   public void deleteMessage(Actor actor, Message message) {
-    if (getActor() == actor) state.deleteMessage(message);
+    try {
+      SwingUtilities.invokeAndWait(new Runnable() {
+        public void run() {
+          if (getActor() == actor) state.deleteMessage(message);
+        }
+      });
+    } catch (InvocationTargetException | InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   public void deschedule(Actor actor) {
@@ -297,6 +343,10 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     fileEditors.fileDeleted(path);
   }
 
+  public void fileHasError(String path, boolean isError) {
+    fileEditors.hasError(path, isError);
+  }
+
   public JPanel fileTree(String root) {
     fileTree = new FileTree(root);
     fileTree.setGui(this);
@@ -316,6 +366,50 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     Image img = new ImageIcon(file).getImage();
     Image newImg = img.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
     return new ImageIcon(newImg);
+  }
+
+  private void graph(int x, int y) {
+    JPopupMenu popup = new JPopupMenu();
+    JMenu history = new JMenu("History");
+    JMenuItem actors = new JMenuItem("Actors");
+    actors.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        if (actor != null) {
+          String html = getHTMLActorGraph();
+          fileEditors.showHTML("Actors(" + actor.getBehaviour().getPath() + ")", html, EDB.this);
+        }
+      }
+    });
+    JMenuItem partial = new JMenuItem("History (Partial)");
+    partial.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        if (actor != null) {
+          HistoryDialog dialog = new HistoryDialog(EDB.this.history, x, y);
+          String svg = EDB.this.history.getString(dialog.getActorStart(), dialog.getActorEnd(), dialog.getMessageStart(), dialog.getMessageEnd());
+          String html = "<HTML>" + svg + "</HTML>";
+          fileEditors.showHTML("History(" + actor.getBehaviour().getPath() + ")", html, EDB.this);
+        }
+      }
+    });
+    JMenuItem all = new JMenuItem("History (All)");
+    all.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        if (actor != null) {
+          String svg = EDB.this.history.getString(0, Actor.getTime(), 0, Actor.getTime());
+          String html = "<HTML>" + svg + "</HTML>";
+          fileEditors.showHTML("History(" + actor.getBehaviour().getPath() + ")", html, EDB.this);
+        }
+      }
+    });
+    history.add(partial);
+    history.add(all);
+    popup.add(actors);
+    popup.add(history);
+    popup.show(this, x, y);
+  }
+
+  public String getHTMLActorGraph() {
+    return history.getString(Actor.getACTORS());
   }
 
   public void initGUI(String root) {
@@ -356,8 +450,21 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     return fileEditors.isDirty(path);
   }
 
+  public boolean isOnLine() {
+
+    // Returns true when the system has an internet connection...
+
+    try {
+      return !"127.0.0.1".equals(InetAddress.getLocalHost().getHostAddress().toString());
+    } catch (UnknownHostException e) {
+      return false;
+    }
+  }
+
   public void load(String path) {
     actors.reset();
+    history.reset();
+    Module.reset();
     showTitle(EDBState.LOADING, path);
     new Thread(new Runnable() {
       public void run() {
@@ -391,7 +498,16 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
   }
 
   public void newActor(Actor actor) {
-    actors.add(actor);
+    try {
+      SwingUtilities.invokeAndWait(new Runnable() {
+        public void run() {
+          actors.add(actor);
+        }
+      });
+    } catch (InvocationTargetException | InterruptedException e) {
+      e.printStackTrace();
+    }
+    history.newActor(actor, Actor.getTime());
   }
 
   public void newActor(JavaActor actor) {
@@ -518,9 +634,13 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
   }
 
   private void splash() {
-    String intro = "esl/intro/help.html";
-    File file = new File(intro);
-    if (file.exists()) openFile(intro);
+    if (isOnLine()) {
+      openFile("http://tonyclark.github.io/ESL/");
+    } else {
+      String intro = "esl/intro/help.html";
+      File file = new File(intro);
+      if (file.exists()) openFile(intro);
+    }
   }
 
   public JPanel stackPanel() {
@@ -540,11 +660,20 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
   }
 
   public void stop() {
+    if (!Actor.isStop()) Actor.stop();
     showTitle(EDBState.IDLE);
   }
 
   public void timeChanged(int time) {
-    state.setTime(time);
+    try {
+      SwingUtilities.invokeAndWait(new Runnable() {
+        public void run() {
+          state.setTime(time);
+        }
+      });
+    } catch (InvocationTargetException | InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   public void zoom_in() {
@@ -556,6 +685,10 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
     if (focus instanceof FileTree) {
       FileTree tree = (FileTree) focus;
       tree.resizeFont(2);
+    }
+    if (focus instanceof BrowserView) {
+      BrowserView view = (BrowserView) focus;
+      view.getBrowser().zoomIn();
     }
   }
 
@@ -569,10 +702,14 @@ public class EDB extends JFrame implements NewActorListener, StopListener, TimeL
       FileTree tree = (FileTree) focus;
       tree.resizeFont(-2);
     }
+    if (focus instanceof BrowserView) {
+      BrowserView view = (BrowserView) focus;
+      view.getBrowser().zoomOut();
+    }
   }
 
-  public void fileHasError(String path, boolean isError) {
-    fileEditors.hasError(path, isError);
+  public void behaviourChanged(Actor actor, Behaviour oldBehaviour, Behaviour newBehaviour) {
+    history.behaviourChanged(actor, oldBehaviour, newBehaviour, Actor.getTime());
   }
 
 }

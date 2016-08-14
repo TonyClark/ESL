@@ -6,13 +6,11 @@ import instrs.Instr;
 
 public class ApplyFun extends Instr {
 
-  String  name;
   int     arity;
   CodeBox code;
 
-  public ApplyFun(int line, String name, int arity, CodeBox code) {
+  public ApplyFun(int line,int arity, CodeBox code) {
     super(line);
-    this.name = name;
     this.arity = arity;
     this.code = code;
   }
@@ -22,7 +20,7 @@ public class ApplyFun extends Instr {
   }
 
   public String toString() {
-    return pprint("APPLYFUN",name,arity);
+    return pprint("APPLYFUN",arity);
   }
 
 }

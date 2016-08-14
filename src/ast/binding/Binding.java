@@ -64,13 +64,13 @@ public class Binding extends Dec {
     // The pattern of merge is different for 0-arity functions. All but the
     // last must have guards and they use nested if-expressions...
 
-    return new Fun(fs.get(0).getLineStart(), fs.get(0).getLineEnd(), fs.get(0).getPath(), name, new Dec[] {}, fs.get(0).getType(), merge0ArityFunctions(name, fs, 0));
+    return new Fun(fs.get(0).getLineStart(), fs.get(0).getLineEnd(), fs.get(0).getPath(), new Str(name), new Dec[] {}, fs.get(0).getType(), merge0ArityFunctions(name, fs, 0));
   }
 
   private static AST merge0ArityFunctions(String name, Vector<FunBind> fs, int i) {
     if (i == fs.size())
       return new ast.control.Error(fs.get(0).getLineStart(), fs.get(0).getLineEnd(), new Str("no match for " + name));
-    else return new If(fs.get(i).getLineStart(), fs.get(i).getLineEnd(), fs.get(i).guard, fs.get(i).value, merge0ArityFunctions(name, fs, i + 1));
+    else return new If(fs.get(i).getLineStart(), fs.get(i).getLineEnd(), fs.get(i).guard, fs.get(i).body, merge0ArityFunctions(name, fs, i + 1));
   }
 
   private static Binding mergeBinding(Binding[] bindings, String name) {
@@ -141,7 +141,7 @@ public class Binding extends Dec {
         arms[definition] = new BArm(patterns, fs.get(definition).getGuard(), fs.get(definition).getBody());
       }
       arms[fs.size()] = new BArm(dummies, Bool.TRUE, new ast.control.Error(fs.get(0).getLineStart(), fs.get(0).getLineEnd(), new Str("ran out of options for " + name)));
-      return new Fun(fs.get(0).getLineStart(), fs.get(0).getLineEnd(), fs.get(0).getPath(), name, args, fs.get(0).getType(), new Case(new Dec[] {}, vars, arms));
+      return new Fun(fs.get(0).getLineStart(), fs.get(0).getLineEnd(), fs.get(0).getPath(), new Str(name), args, fs.get(0).getType(), new Case(new Dec[] {}, vars, arms));
     }
   }
 

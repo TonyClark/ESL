@@ -34,10 +34,6 @@ public class If extends AST {
     this.alt = alt;
   }
 
-  public String toString() {
-    return "If(" + test + "," + conseq + "," + alt + ")";
-  }
-
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     if (test instanceof Bool) {
       Bool b = (Bool) test;
@@ -59,30 +55,38 @@ public class If extends AST {
     }
   }
 
-  public void FV(HashSet<String> vars) {
-    test.FV(vars);
-    alt.FV(vars);
-    conseq.FV(vars);
-  }
-
   public void DV(HashSet<String> vars) {
     test.DV(vars);
     alt.DV(vars);
     conseq.DV(vars);
   }
 
-  public int maxLocals() {
-    return Math.max(test.maxLocals(), Math.max(conseq.maxLocals(), alt.maxLocals()));
+  public void FV(HashSet<String> vars) {
+    test.FV(vars);
+    alt.FV(vars);
+    conseq.FV(vars);
   }
 
-  public AST subst(AST ast, String name) {
-    return new If(getLineStart(), getLineEnd(), test.subst(ast, name), conseq.subst(ast, name), alt.subst(ast, name));
+  public String getLabel() {
+    return "if :: " + getType();
+  }
+
+  public int maxLocals() {
+    return Math.max(test.maxLocals(), Math.max(conseq.maxLocals(), alt.maxLocals()));
   }
 
   public void setPath(String path) {
     test.setPath(path);
     conseq.setPath(path);
     alt.setPath(path);
+  }
+
+  public AST subst(AST ast, String name) {
+    return new If(getLineStart(), getLineEnd(), test.subst(ast, name), conseq.subst(ast, name), alt.subst(ast, name));
+  }
+
+  public String toString() {
+    return "If(" + test + "," + conseq + "," + alt + ")";
   }
 
   public Type type(Env<String, Type> env) {
@@ -96,10 +100,6 @@ public class If extends AST {
         return altType;
       else throw new TypeMatchError(conseq.getLineStart(), alt.getLineEnd(), conseqType, altType);
     } else throw new TypeError(test.getLineStart(), test.getLineEnd(), "expecting Bool, but found " + testType);
-  }
-
-  public String getLabel() {
-    return "if :: " + getType();
   }
 
 }

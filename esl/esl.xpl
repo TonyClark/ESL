@@ -22,7 +22,7 @@ esl = {
   valbind         -> [[ n=name d=valbindDec eql e=exp { Binding(n,d,e) } ]];
   valbindDec      -> [[ ns=optGenericDecs t=typeDec { Dec.generic(ns,t) } ]];
   funbind         -> [[ n=name [[ ns=optGenericDecs lparen [[ ps=funargs ]] rparen t=typeDec d={Dec.generic(ns,FunType(FunType.ptypes(ps),t))} ]] eql e=exp g=guard { FunBind(n,ps,d,e,g) } ]];
-  actbind         -> [[ 'act' n=name gs=optGenericDecs [[ ps=actargs  t=typeDec d={Dec.generic(gs,FunType(FunType.types(ps),t))} ]] lcurl es=exports bs = bindings i=actinit as=barms rcurl  { Binding(n,d,Fun(n,ps,d,Act(n,es,bs,i,as))) } ]];
+  actbind         -> [[ 'act' n=name gs=optGenericDecs [[ ps=actargs  t=typeDec d={Dec.generic(gs,FunType(FunType.types(ps),t))} ]] lcurl es=exports bs = bindings i=actinit as=barms rcurl  { Binding(n,d,Fun(Str(n),ps,d,Act(Str(n),es,bs,i,as))) } ]];
   typebind        -> [[ 'type' n=Name d=typebindDec { TypeBind(n,d,d) } ]];
   typebindDec     -> [[ as=typeargs eql t=type { Dec.funType(as,t) } ]];
   databind        -> [[ 'data' n=Name gs=optGenericDecs eql ds=dataOpts { DataBind(n,Dec.funType(gs,TypeUnion(ds)),Dec.funType(gs,TypeUnion(ds))) } ]];
@@ -74,13 +74,15 @@ esl = {
   postsend(a,m)   -> [[ at t=exp { Send(a,m,t) } | { Send(a,m,Int(0)) } ]];
   exps            -> e=exp es=(comma exp)* { e:es } | {[]};
   op              -> whitespace ('+' | '-' | '*' | '/' | 'andalso' | 'and' | 'orelse' | 'or' |':' | '<>' | '=' | '<' | '>' | '..' | '%');
+  optActName      -> exp | { Str(Act.newName()) };
+  funName         -> exp | { Str(Fun.newName()) };
   simpleExp       -> var | numExp | strExp | bool | me | probably | now | nul
                   |  n=name becomes e=exp { Update(n,e) }
-                  |  [[ 'act'     lcurl es=exports bs = bindings i=actinit as=barms rcurl  { Act(Act.newName(),es,bs,i,as) } ]]
+                  |  [[ 'act'     n=optActName lcurl es=exports bs = bindings i=actinit as=barms rcurl  { Act(n,es,bs,i,as) } ]]
                   |  [[ 'new'     s=string ! lsquare t=type rsquare (lparen ps=exps rparen { NewJava(s,t,ps) } | { NewJava(s,t,[]) }) ]]
                   |  [[ 'new'     n=simpleExp (lparen ps=exps rparen { New(Apply(n,ps)) } | { New(Apply(n,[])) }) ]]
                   |  [[ 'not'    ! e=exp { Not(e) } ]]
-                  |  [[ 'fun'    ! lparen as=params rparen t=typeDec e=exp { Fun(Fun.newName(),as,FunType(FunType.types(as),t),e) } ]]
+                  |  [[ 'fun'    ! n=funName lparen as=params rparen t=typeDec e=exp { Fun(n,as,FunType(FunType.types(as),t),e) } ]]
                   |  [[ 'grab'   ! lparen vs=dynamicRefs rparen e=exp { Grab(vs,e) } ]]
                   |  [[ 'let'    ! bs=bindings  'in' e=exp { Let(bs,e) } ]]
                   |  [[ 'letrec' ! bs=bindings  'in' e=exp { Letrec(bs,e) } ]]
@@ -116,7 +118,7 @@ esl = {
   quals           -> q=qual qs=(comma qual)* { q:qs };
   qual            -> p=pattern leftArrow e=exp { BQual(p,e) };
   qual            -> query e=exp { PQual(e) };
-  probably        -> [[ 'probably' lparen p=exp rparen colon t=type e1=exp whitespace 'else' e2=exp { Apply(Apply(ApplyType(Var('probably'),[t]),[p,Fun(Fun.newName(),[],FunType([],t),e1),Fun(Fun.newName(),[],FunType([],t),e2)]),[]) } ]];
+  probably        -> [[ 'probably' lparen p=exp rparen coloncolon t=type e1=exp whitespace 'else' e2=exp { Apply(Apply(ApplyType(Var('probably'),[t]),[p,Fun(Str(Fun.newName()),[],FunType([],t),e1),Fun(Str(Fun.newName()),[],FunType([],t),e2)]),[]) } ]];
   
   type        -> t = simpleType postType^(t);
   postType(t) -> { t };
