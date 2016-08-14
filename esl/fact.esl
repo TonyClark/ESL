@@ -1,0 +1,33 @@
+export main;
+
+type Customer = Act { Value(Int); Time(Int) };
+type Fact = Act{ Get(Int,Customer); Time(Int) };
+
+act fact::Fact {
+  Get(0,c::Customer) -> c <- Value(1);
+  Get(n::Int,c::Customer) -> {
+    new fact <- Get(n-1,new cust(n,c))
+  };
+  Time(n::Int) -> {}
+};
+
+act cust(n::Int,c::Customer)::Customer {
+  Value(m::Int) -> c <- Value(n*m);
+  Time(n::Int) -> {}
+};
+
+act main::Customer {
+  -> { setMaxInstructions(10);
+       setInstructionsPerTimeUnit(5)
+  };
+  Value(n::Int) -> print[Int](n);
+  Time(n::Int) when n < 50 -> 
+    let f::Fact = new fact
+    in f <- Get(3,self);
+  Time(n::Int) when n > 500 -> stopAll();
+  Time(n::Int) -> {}
+}
+ 
+
+
+

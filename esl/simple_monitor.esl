@@ -1,0 +1,30 @@
+export main;
+
+type Monitored[T] = Act{ export value::T; Time(Int); Action() };
+type Main = Act{ Time(Int) };
+
+act cell::Monitored[Int] {
+  export value;
+  value::Int = 0
+  Action -> print[Str]('Action Performed');
+  Time(n::Int) ->
+    probably(50)::Int {
+      value := value + 1
+    } else value := value - 1
+};
+
+act monitor[T](pred::(T)->Bool,m::Monitored[T])::Main {
+  Time(n::Int) when pred(m.value) -> 
+    m <- Action;
+  Time(n::Int) -> {}
+};
+
+c::Monitored[Int] = new cell;
+
+m::Main = new(monitor[Int])(fun(v::Int)::Bool v > 10,c);
+
+act main::Main {
+  Time(1000) -> stopAll();
+  Time(n::Int) -> {}
+}
+
