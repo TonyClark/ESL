@@ -33,7 +33,13 @@ list2::[Bool] = [true,false];
 
 list3::[Str] = ['a','b'];
 
-list4::[[Int]] = [0..x,1..x,2..x]
+list4::[[Int]] = [0..x,1..x,2..x];
+
+testCase::Int =
+  case 0 {
+    0 -> 0
+  }
+
 
 
 

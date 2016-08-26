@@ -127,8 +127,7 @@ public class FileEditors extends EditorTabbedPane {
     JScrollPane scroller = new JScrollPane(editor);
     scroller.setRowHeaderView(editor.getLines());
     addTab(path, scroller);
-    Module module = editor.parseText();
-    if (module != null) editor.typeCheckText(module);
+    Module module = editor.typeCheckText();
     if (module != null) gui.displayTree(module);
   }
 

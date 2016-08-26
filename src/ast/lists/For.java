@@ -73,7 +73,7 @@ public class For extends AST {
     BArm arm3 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, new Block());
     BArm arm2 = new BArm(new Pattern[] { new PCons(new PWild(), new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "$f", null), new Var(getLineStart(), getLineEnd(), "$t", null)));
     BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new Block(getLineStart(), getLineEnd(), body, new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "$f", null), new Var(getLineStart(), getLineEnd(), "$t", null))));
-    Case caseExp = new Case(new Dec[] {}, new AST[] { new Var(getLineStart(), getLineEnd(), "l", null) }, new BArm[] { arm1, arm2, arm3 });
+    Case caseExp = new Case(getLineStart(), getLineEnd(), new Dec[] {}, new AST[] { new Var(getLineStart(), getLineEnd(), "l", null) }, new BArm[] { arm1, arm2, arm3 });
     Fun fun = new Fun(getLineStart(), getLineEnd(), path, forName(), new Dec[] { new Dec(getLineStart(), getLineEnd(), path, "l", ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp);
     return new Letrec(getLineStart(), getLineEnd(), new Binding[] { new Binding(getLineStart(), getLineEnd(), path, "$f", new ast.types.Void(), fun) }, new Apply(getLineStart(), getLineEnd(), new Var(getLineStart(), getLineEnd(), "$f", null), list));
   }

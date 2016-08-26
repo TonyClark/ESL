@@ -5,7 +5,6 @@ import java.util.HashSet;
 import actors.CodeBox;
 import ast.AST;
 import ast.types.Type;
-import ast.types.TypeMatchError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import env.Env;
@@ -15,47 +14,56 @@ import list.List;
 @BoaConstructor(fields = { "value" })
 public class Str extends AST {
 
-  public String value;
+	public static Str strAt0(String value) {
+		return new Str(0, 0, value);
+	}
 
-  public Str() {
-  }
+	public String value;
 
-  public Str(String value) {
-    this.value = value;
-  }
+	public Str() {
+	}
 
-  public String toString() {
-    return "'" + value + "'";
-  }
+	public Str(String value) {
+		this.value = value;
+	}
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new instrs.data.Str(getLineStart(), value), locals, dynamics);
-  }
+	public Str(int start, int end, String value) {
+		super(start, end);
+		this.value = value;
+	}
 
-  public void FV(HashSet<String> vars) {
-  }
+	public String toString() {
+		return "'" + value + "'";
+	}
 
-  public void DV(HashSet<String> vars) {
-  }
+	public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+		code.add(new instrs.data.Str(getLineStart(), value), locals, dynamics);
+	}
 
-  public int maxLocals() {
-    return 0;
-  }
+	public void FV(HashSet<String> vars) {
+	}
 
-  public AST subst(AST ast, String name) {
-    return this;
-  }
+	public void DV(HashSet<String> vars) {
+	}
 
-  public void setPath(String path) {
-  }
+	public int maxLocals() {
+		return 0;
+	}
 
-  public Type type(Env<String, Type> env) {
-    setType(ast.types.Str.STR);
-    return getType();
-  }
+	public AST subst(AST ast, String name) {
+		return this;
+	}
 
-  public String getLabel() {
-    return  value + "";
-  }
+	public void setPath(String path) {
+	}
+
+	public Type type(Env<String, Type> env) {
+		setType(ast.types.Str.STR);
+		return getType();
+	}
+
+	public String getLabel() {
+		return value + "";
+	}
 
 }

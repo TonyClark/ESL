@@ -219,6 +219,8 @@ public class Module implements TreeNode {
   public Located getLocated(int charIndex) {
     Located located = AST.getLocated(exports, charIndex);
     if (located != null) return located;
+    located = AST.getLocated(imports,charIndex);
+    if(located != null) return located;
     for (Binding b : defs) {
       located = AST.getLocated(b, charIndex);
       if (located != null) return located;

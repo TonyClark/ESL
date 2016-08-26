@@ -29,230 +29,234 @@ import list.List;
 
 public class Case extends AST {
 
-  public Dec[]  decs;
-  public AST[]  exps;
-  public BArm[] arms;
+	public Dec[]	decs;
+	public AST[]	exps;
+	public BArm[]	arms;
 
-  public Case() {
-  }
+	public Case() {
+	}
 
-  public Case(Dec[] decs, AST[] exps, BArm[] arms) {
-    super();
-    this.decs = decs;
-    this.exps = exps;
-    this.arms = arms;
-  }
+	public Case(int start, int end, Dec[] decs, AST[] exps, BArm[] arms) {
+		super(start, end);
+		this.decs = decs;
+		this.exps = exps;
+		this.arms = arms;
+	}
 
-  public String toString() {
-    return "Case(" + Arrays.toString(exps) + "," + Arrays.toString(arms) + ")";
-  }
+	public String toString() {
+		return "Case(" + Arrays.toString(exps) + "," + Arrays.toString(arms) + ")";
+	}
 
-  public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+	public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
 
-    // The exps are evaluated to produce the pattern values that are maintained in registers...
+		// The exps are evaluated to produce the pattern values that are maintained
+		// in registers...
 
-    for (AST exp : exps)
-      exp.compile(locals, dynamics, code, false);
-    code.add(new instrs.patterns.SetPatternValues(getLineStart(), exps.length), locals, dynamics);
+		for (AST exp : exps)
+			exp.compile(locals, dynamics, code, false);
+		code.add(new instrs.patterns.SetPatternValues(getLineStart(), exps.length), locals, dynamics);
 
-    compileArms(locals, dynamics, code, isLast);
-  }
+		compileArms(locals, dynamics, code, isLast);
+	}
 
-  public void compileArms(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+	public void compileArms(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
 
-    // Define the dynamic vars up front ... then remove them at the end...
+		// Define the dynamic vars up front ... then remove them at the end...
 
-    // Compile each arm independently...
+		// Compile each arm independently...
 
-    Vector<CodeBox> armCode = new Vector<CodeBox>();
-    Vector<HashSet<String>> armBV = new Vector<HashSet<String>>();
-    Vector<HashSet<String>> armDV = new Vector<HashSet<String>>();
+		Vector<CodeBox> armCode = new Vector<CodeBox>();
+		Vector<HashSet<String>> armBV = new Vector<HashSet<String>>();
+		Vector<HashSet<String>> armDV = new Vector<HashSet<String>>();
 
-    for (BArm arm : arms) {
+		for (BArm arm : arms) {
 
-      // Work out which variables bound by patterns should be local and which should be dynamic...
+			// Work out which variables bound by patterns should be local and which
+			// should be dynamic...
 
-      HashSet<String> DV = new HashSet<String>();
-      HashSet<String> BV = new HashSet<String>();
+			HashSet<String> DV = new HashSet<String>();
+			HashSet<String> BV = new HashSet<String>();
 
-      for (Pattern p : arm.patterns)
-        p.vars(BV);
-      arm.exp.DV(DV);
+			for (Pattern p : arm.patterns)
+				p.vars(BV);
+			arm.exp.DV(DV);
 
-      armBV.add(BV);
-      armDV.add(DV);
-    }
+			armBV.add(BV);
+			armDV.add(DV);
+		}
 
-    for (int i = 0; i < arms.length; i++) {
+		for (int i = 0; i < arms.length; i++) {
 
-      BArm arm = arms[i];
-      HashSet<String> BV = armBV.get(i);
-      HashSet<String> DV = armDV.get(i);
+			BArm arm = arms[i];
+			HashSet<String> BV = armBV.get(i);
+			HashSet<String> DV = armDV.get(i);
 
-      List<FrameVar> armLocals = locals;
-      List<DynamicVar> armDynamics = dynamics;
+			List<FrameVar> armLocals = locals;
+			List<DynamicVar> armDynamics = dynamics;
 
-      CodeBox instrs = new CodeBox("", 0);
+			CodeBox instrs = new CodeBox("", 0);
 
-      // We have just failed to here so remove the dynamic variables from the
-      // previous arm...
+			// We have just failed to here so remove the dynamic variables from the
+			// previous arm...
 
-      if (i > 0) {
-        for (String v : armBV.get(i - 1)) {
-          if (armDV.get(i - 1).contains(v)) {
-            instrs.add(new PopDynamic(getLineStart()), locals, dynamics);
-            dynamics = dynamics.getTail();
-          }
-        }
-      }
-      for (String v : BV) {
-        if (DV.contains(v)) {
-          armDynamics = armDynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(v, 0));
-          instrs.add(new Null(getLineStart()), locals, dynamics);
-          instrs.add(new NewDynamic(getLineStart()), locals, dynamics);
-        } else armLocals = armLocals.cons(new FrameVar(v, armLocals.length()));
-      }
-      arm.compile(armLocals, armDynamics, instrs, isLast && i == arms.length - 1);
-      for (String v : BV) {
-        if (DV.contains(v)) {
-          instrs.add(new PopDynamic(getLineStart()), locals, dynamics);
-          dynamics = dynamics.getTail();
-        }
-      }
-      armCode.add(instrs);
-    }
+			if (i > 0) {
+				for (String v : armBV.get(i - 1)) {
+					if (armDV.get(i - 1).contains(v)) {
+						instrs.add(new PopDynamic(getLineStart()), locals, dynamics);
+						dynamics = dynamics.getTail();
+					}
+				}
+			}
+			for (String v : BV) {
+				if (DV.contains(v)) {
+					armDynamics = armDynamics.map(DynamicVar::incDynamic).cons(new DynamicVar(v, 0));
+					instrs.add(new Null(getLineStart()), locals, dynamics);
+					instrs.add(new NewDynamic(getLineStart()), locals, dynamics);
+				}
+				else armLocals = armLocals.cons(new FrameVar(v, armLocals.length()));
+			}
+			arm.compile(armLocals, armDynamics, instrs, isLast && i == arms.length - 1);
+			for (String v : BV) {
+				if (DV.contains(v)) {
+					instrs.add(new PopDynamic(getLineStart()), locals, dynamics);
+					dynamics = dynamics.getTail();
+				}
+			}
+			armCode.add(instrs);
+		}
 
-    // Now insert the TRY...SKIP instructions between the arms...
+		// Now insert the TRY...SKIP instructions between the arms...
 
-    for (int i = 0; i < armCode.size(); i++) {
-      int length = code.getCode().size();
-      instrs.patterns.Try tryArm = new instrs.patterns.Try(getLineStart(), 0, i == 0);
-      code.add(tryArm, locals, dynamics);
-      int base = code.getCode().size();
-      CodeBox armCodeBox = armCode.get(i);
-      for (Instr instr : armCodeBox.getCode()) {
-        if (instr instanceof Goto) {
-          Goto g = (Goto) instr;
-          g.setAddress(g.getAddress() + base);
-        }
-        code.add(instr, armCodeBox.getLocalsAt(armCodeBox.indexOf(instr)), armCodeBox.getDynamicsAt(armCodeBox.indexOf(instr)));
-      }
-      // Jump over the rest of the case arms and the end error message...
-      int distance = distance(armCode, i + 1) + 2;
-      Skip jmp = new Skip(getLineStart(), distance);
-      code.add(jmp, locals, dynamics);
-      int offset = code.getCode().size() - length;
-      tryArm.setOffset(offset - 1);
-    }
+		for (int i = 0; i < armCode.size(); i++) {
+			int length = code.getCode().size();
+			instrs.patterns.Try tryArm = new instrs.patterns.Try(getLineStart(), 0, i == 0);
+			code.add(tryArm, locals, dynamics);
+			int base = code.getCode().size();
+			CodeBox armCodeBox = armCode.get(i);
+			for (Instr instr : armCodeBox.getCode()) {
+				if (instr instanceof Goto) {
+					Goto g = (Goto) instr;
+					g.setAddress(g.getAddress() + base);
+				}
+				code.add(instr, armCodeBox.getLocalsAt(armCodeBox.indexOf(instr)), armCodeBox.getDynamicsAt(armCodeBox.indexOf(instr)));
+			}
+			// Jump over the rest of the case arms and the end error message...
+			int distance = distance(armCode, i + 1) + 2;
+			Skip jmp = new Skip(getLineStart(), distance);
+			code.add(jmp, locals, dynamics);
+			int offset = code.getCode().size() - length;
+			tryArm.setOffset(offset - 1);
+		}
 
-    // Add in the error at the end of the case...
+		// Add in the error at the end of the case...
 
-    code.add(new instrs.patterns.CaseError(getLineStart(), this), locals, dynamics);
-  }
+		code.add(new instrs.patterns.CaseError(getLineStart(), this), locals, dynamics);
+	}
 
-  private int distance(Vector<CodeBox> armCode, int start) {
-    // Calculates the length of the code between i and the end. Careful to
-    // add in the TRY and SKIP instructions...
-    int distance = 0;
-    for (int i = start; i < armCode.size(); i++)
-      distance = distance + armCode.get(i).getCode().size() + 2;
-    return distance;
-  }
+	private int distance(Vector<CodeBox> armCode, int start) {
+		// Calculates the length of the code between i and the end. Careful to
+		// add in the TRY and SKIP instructions...
+		int distance = 0;
+		for (int i = start; i < armCode.size(); i++)
+			distance = distance + armCode.get(i).getCode().size() + 2;
+		return distance;
+	}
 
-  public void FV(HashSet<String> vars) {
-    for (AST exp : exps)
-      exp.FV(vars);
-    for (BArm arm : arms)
-      arm.FV(vars);
-  }
+	public void FV(HashSet<String> vars) {
+		for (AST exp : exps)
+			exp.FV(vars);
+		for (BArm arm : arms)
+			arm.FV(vars);
+	}
 
-  public void DV(HashSet<String> vars) {
-    for (AST exp : exps)
-      exp.DV(vars);
-    for (BArm arm : arms)
-      arm.DV(vars);
-  }
+	public void DV(HashSet<String> vars) {
+		for (AST exp : exps)
+			exp.DV(vars);
+		for (BArm arm : arms)
+			arm.DV(vars);
+	}
 
-  public int maxLocals() {
-    int maxLocals = 0;
-    for (AST exp : exps)
-      maxLocals = Math.max(maxLocals, exp.maxLocals());
-    for (BArm arm : arms)
-      maxLocals = Math.max(maxLocals, arm.maxLocals());
-    return maxLocals;
-  }
+	public int maxLocals() {
+		int maxLocals = 0;
+		for (AST exp : exps)
+			maxLocals = Math.max(maxLocals, exp.maxLocals());
+		for (BArm arm : arms)
+			maxLocals = Math.max(maxLocals, arm.maxLocals());
+		return maxLocals;
+	}
 
-  public AST subst(AST ast, String name) {
-    return new Case(decs, subst(exps, ast, name), subst(arms, ast, name));
-  }
+	public AST subst(AST ast, String name) {
+		return new Case(getLineStart(), getLineEnd(), decs, subst(exps, ast, name), subst(arms, ast, name));
+	}
 
-  private BArm[] subst(BArm[] arms, AST ast, String name) {
-    BArm[] as = new BArm[arms.length];
-    for (int i = 0; i < arms.length; i++)
-      as[i] = arms[i].subst(ast, name);
-    return as;
-  }
+	private BArm[] subst(BArm[] arms, AST ast, String name) {
+		BArm[] as = new BArm[arms.length];
+		for (int i = 0; i < arms.length; i++)
+			as[i] = arms[i].subst(ast, name);
+		return as;
+	}
 
-  public void setPath(String path) {
-    for (AST exp : exps)
-      exp.setPath(path);
-    for (BArm arm : arms)
-      arm.setPath(path);
-  }
+	public void setPath(String path) {
+		for (AST exp : exps)
+			exp.setPath(path);
+		for (BArm arm : arms)
+			arm.setPath(path);
+	}
 
-  public Type type(Env<String, Type> env) {
+	public Type type(Env<String, Type> env) {
 
-    // The case expression may include declarations that
-    // type the bound variables in patterns. The pattern
-    // variables are updated...
+		// The case expression may include declarations that
+		// type the bound variables in patterns. The pattern
+		// variables are updated...
 
-    processDeclarations(env);
+		processDeclarations(env);
 
-    // Get the types of the supplied values...
+		// Get the types of the supplied values...
 
-    Type[] suppliedTypes = new Type[exps.length];
-    Type[] expectedTypes = new Type[exps.length];
+		Type[] suppliedTypes = new Type[exps.length];
+		Type[] expectedTypes = new Type[exps.length];
 
-    for (int i = 0; i < exps.length; i++) {
-      suppliedTypes[i] = exps[i].type(env);
-      expectedTypes[i] = ast.types.Void.VOID;
-    }
+		for (int i = 0; i < exps.length; i++) {
+			suppliedTypes[i] = exps[i].type(env);
+			expectedTypes[i] = ast.types.Void.VOID;
+		}
 
-    // The return type. Any void return types are ignored...
+		// The return type. Any void return types are ignored...
 
-    Type resultType = null;
+		Type resultType = null;
 
-    for (BArm arm : arms) {
-      int lineStart = arm.patterns[0].getLineStart();
-      int lineEnd = arm.patterns[0].getLineEnd();
-      if (arm.patterns.length == exps.length) {
-        HandlerType handlerType = arm.type(env);
-        for (int i = 0; i < exps.length; i++) {
-          if (!Term.equals(handlerType.getTypes()[i], suppliedTypes[i], env)) {
-            throw new TypeMatchError(lineStart, lineEnd, suppliedTypes[i], handlerType.getTypes()[i]);
-          }
-        }
-        if (resultType == null)
-          resultType = handlerType.getResult();
-        else if (!Type.equals(resultType, handlerType.getResult(), env)) throw new TypeError(lineStart, lineEnd, "incompatible case arm return types " + resultType + " and " + handlerType.getResult());
-      } else throw new TypeError(lineStart, lineEnd, "incorrect number of arm patterns.");
-    }
+		for (BArm arm : arms) {
+			int lineStart = arm.patterns[0].getLineStart();
+			int lineEnd = arm.patterns[0].getLineEnd();
+			if (arm.patterns.length == exps.length) {
+				HandlerType handlerType = arm.type(env);
+				for (int i = 0; i < exps.length; i++) {
+					if (!Term.equals(handlerType.getTypes()[i], suppliedTypes[i],
+							env)) { throw new TypeMatchError(lineStart, lineEnd, suppliedTypes[i], handlerType.getTypes()[i]); }
+				}
+				if (resultType == null)
+					resultType = handlerType.getResult();
+				else if (!Type.equals(resultType, handlerType.getResult(), env))
+					throw new TypeError(lineStart, lineEnd, "incompatible case arm return types " + resultType + " and " + handlerType.getResult());
+			}
+			else throw new TypeError(lineStart, lineEnd, "incorrect number of arm patterns.");
+		}
 
-    return resultType;
+		return resultType;
 
-  }
+	}
 
-  private void processDeclarations(Env<String, Type> env) {
-    // The declarations type the pattern variables...
-    for (Dec dec : decs)
-      env = env.bind(dec.getName(), dec.getDeclaredType());
-    for (BArm arm : arms) {
-      arm.processDeclarations(env);
-    }
-  }
+	private void processDeclarations(Env<String, Type> env) {
+		// The declarations type the pattern variables...
+		for (Dec dec : decs)
+			env = env.bind(dec.getName(), dec.getDeclaredType());
+		for (BArm arm : arms) {
+			arm.processDeclarations(env);
+		}
+	}
 
-  public String getLabel() {
-    return "case :: " + getType();
-  }
+	public String getLabel() {
+		return "case :: " + getType();
+	}
 
 }

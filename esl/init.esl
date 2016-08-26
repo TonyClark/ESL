@@ -16,8 +16,8 @@ caseTest::(T(Int)) -> G(Bool) =
     T(10) -> G(true);
     T(11) -> G(false);
     T(1)  -> G(true); 
-    K(true) -> G(true);
-    _ -> G(false)
+    //K(true) -> G(true);
+    x::T(Int) -> G(false)
   };
 
 a::Int = f(f(x));
@@ -43,6 +43,7 @@ act main::Main {
     }
   }
 }
+
 
 
 
