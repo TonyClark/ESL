@@ -10,24 +10,26 @@ type Philosopher = Act { export eating::Bool; Time(Int) };
 
 eats::Int = 0;
 
-act philosopher1(i::Int,left::Chopstick,right::Chopstick)::Philosopher {
+act chopstick(i::Int)::Chopstick {
+  export id,active;
+  id::Int = i;
+  active::Bool = false
+  Time(n::Int) -> {}
+};
 
-  // This version of a philosopher should work OK. The amount of eating is non-deterministic
-  // because of the random delay, however, there should be no starvation because the grab-clause
-  // means that chopsticks are grabbed together...
-  
+act philosopher(i::Int,left::Chopstick,right::Chopstick)::Philosopher {
   export eating;
   eating::Bool = false
   Time(n::Int) -> {
-  grab(left.active,right.active) {
-    print[Str](self + ' eats using ' + left.id + ' and ' + right.id);
-    eats := eats + 1;
-    eating := true;
-    for x::Int in 0..random(100) do {};
-    eating := false;
-    print[Str](self + ' releases ' + left.id + ' and ' + right.id)
-  }  
- }
+    grab(left.active,right.active) {
+      print[Str](self + ' eats using ' + left.id + ' and ' + right.id);
+      eats := eats + 1;
+      eating := true;
+      for x::Int in 0..random(100) do {};
+      eating := false;
+      print[Str](self + ' releases ' + left.id + ' and ' + right.id)
+    }  
+  }
 };
 
 act philosopher2(i::Int,left::Chopstick,right::Chopstick)::Philosopher {
@@ -51,13 +53,6 @@ act philosopher2(i::Int,left::Chopstick,right::Chopstick)::Philosopher {
   }
 };
 
-act chopstick(i::Int)::Chopstick {
-  export id,active;
-  id::Int = i;
-  active::Bool = false
-  Time(n::Int) -> {}
-};
-
 max::Int = 3;
 
 chopsticks::[Chopstick] = [ new chopstick(i) | i::Int <- 0..(max) ];
@@ -76,6 +71,7 @@ act main::Main {
   Time(n::Int) -> {}
 
 }
+
 
 
 
