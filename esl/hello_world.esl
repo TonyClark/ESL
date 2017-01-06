@@ -1,0 +1,12 @@
+export main;
+
+type Main = Act { Time(Int) };
+
+limit::Int = 10;
+
+act main::Main {
+  Time(n::Int) when n < limit ->
+    print[Str]('hello world:' + n);
+  Time(n::Int) -> stopAll()
+}
+
