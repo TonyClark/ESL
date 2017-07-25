@@ -1,0 +1,57 @@
+export main;
+
+parameters {
+  i::Int;
+  b::Bool;
+  s::Str;
+  f::Float;
+  c::Choice;
+  configuration c1 {
+    i=100;
+    b=true;
+    s='xxx';
+    f=100.9;
+    c=Two;
+  }
+  configuration c2 {
+    i=200;
+    b=false;
+    s='yyy';
+    f=1.9;
+    c=One;
+  }
+  configuration c3 {
+    i=30;
+    b=false;
+    s='yyy';
+    f=1.9999;
+    c=One;
+  }
+}
+
+type Choice = union{One(),Two()};
+
+cnstr One = Choice.One;
+cnstr Two = Choice.Two;
+
+p::Config(Int,Bool,Str,Float,Choice) = Config(i,b,s,f,c);
+
+
+act main::Act{ Time(Int) } {
+
+  Time(n::Int) -> {
+    print[Str]('result = ' + p);
+    stopAll()
+  }
+}
+
+
+
+
+
+
+
+
+
+
+

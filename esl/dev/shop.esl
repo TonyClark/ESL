@@ -1,0 +1,974 @@
+export main;
+
+import 'esl/displays.esl', 'esl/lists.esl';
+
+type Main = Act { Time(Int) };
+
+data State = 
+               // A customer is in one of the following states...
+  NotInShop(Int)    // Hanging around outside.
+| Browsing(Int)     // Inside the shop looking at items.
+| Queuing(Int,Int)  // Queuing with an item for purchase.
+| SeekingHelp(Int)  // Looking for assistance.
+| GettingHelp(Int,Int) // Customer gets help.
+| OnFloor(Int)      // Looking around to help shoppers.
+| GoTill(Int)       // Walking to a till.
+| AtTill(Int,Int)       // Serving at a till.
+| Helping(Int,Int)     // providing assistance.
+| Raid
+| NoRaid;
+
+type Customer = Act { 
+  export state::State; getId::()->Int;  // Check the state of a customer.
+  help::(Assistant)->Void;      // An assistant changes the state of a customer.
+  Time(Int);                    // Tick.
+  SaleConcluded();              // A purchase was made.
+  SaleTimedOut();               // Customer queued too long.
+  Helped()                      // Help was completed.
+};   
+
+type GangLeader = Act {         // This is really an extension of Customer.
+  export ready::Bool;           // Ready to perform a heist.
+  Time(Int);                    // Tick.
+  OccupyingAssistant(Customer); // One of the gang members is getting help.
+  Leave(Customer)               // The assistant is no longer occupied.
+};   
+
+type Tills = Act { 
+  export getState::()->[TillState];                 // A collection of tills.
+  Time(Int);                                        // Next time unit.
+  Attend(Assistant);                                // An assistant wants to operate the till.
+  Queue(Customer,Int,Int,Int,Int)                   // A customer arrives at the till.
+};
+
+type Assistant = Act {
+  export advising::Customer;getId::()->Int; state::State;     // An assistant can provide help or sell.
+  NoTillFound();                                    // No free tills available.
+  Attending(Int);                                   // Started to serve at a free till.
+  ReturnToFloor();                                  // Finished with this till and return to floor-walking.
+  Time(Int)
+};
+
+type Transactions = Act {                                            
+  export getQueue::()->[Int]; isEmpty::()->Bool;    // Transaction queue at a till.
+  Queue(Customer,Int,Int,Int);                      // Add a customer at a till to the end of the queue.
+  Do();                                             // Serve next customer.
+  Wait()                                            // Ignore all customers.
+};
+
+type Facts = KB[State];
+
+facts::Facts = kb[Facts]{ NoRaid };
+
+time::Int = 0;
+
+type Solver = Rules {
+  fact(State);
+  hist([Int],[Int],[Int],[ShopState])
+};
+
+solver::Solver = rules {
+  fact::(State);
+  nth[T]::(Int,[T],T);
+  nth[T](0,[t|_],t) <- !;
+  nth[T](n,[_|ts],t) <-
+    n' := n - 1,
+    nth[T](n',ts,t);
+  delete[T]::(T,[T],[T]);
+  delete[T](x,[],[]) <- !;
+  delete[T](x,[x | l1],l2) <- !,
+    delete[T](x,l1,l2);
+  delete[T](x,[y | l1],[y | l2]) <-
+    delete[T](x,l1,l2);
+    
+  append[T]::([T],[T],[T]);
+  append[T]([],l,l);
+  append[T]([h|t],l,[h|t']) <- append[T](t,l,t');
+    
+  hist::([Int],[Int],[Int],[ShopState]);
+  hist(cIds,aIds,tIds,[s]) <- state(cIds,aIds,tIds,s), end, !;
+  hist(cIds,aIds,tIds,[s|ss]) <- state(cIds,aIds,tIds,s), !, next[hist(cIds,aIds,tIds,ss)];
+  
+  custStates::(Int,[State]);
+  custStates(id,[NotInShop(id),Browsing(id),SeekingHelp(id),GettingHelp(id,aId),Queuing(id,tId)]);
+  
+  assStates::(Int,[State]);
+  assStates(id,[OnFloor(id),AtTill(id,tId),Helping(id,cId),GoTill(id)]);
+  
+  state::([Int],[Int],[Int],Shop(CustomersOutside,AssistantsOnFloor,CustomersBrowsing,[CustomerHelp],[TillState],Int));
+  state(cIds,aIds,tIds,Shop(cOut,aFloor,cBrowse,cHelp,tState,raid)) <-
+    isRaid(raid),
+    getCStates(0,cIds,cOut),
+    getCStates(1,cIds,cBrowse), 
+    getAStates(0,aIds,aFloor),
+    getCStates(2,cIds,cSeekingHelp),
+    seekHelp(cSeekingHelp,cHelp1),
+    getCStates(3,cIds,cGettingHelp), 
+    getHelp(cGettingHelp,cHelp2),
+    append[CustomerHelp](cHelp1,cHelp2,cHelp), !,
+    getAStates(1,aIds,atTills),
+    getCStates(4,cIds,cQueuing),
+    tState(tIds,atTills,cQueuing,tState);
+    
+  isRaid::(Int);
+  isRaid(0) <- fact(NoRaid), !;
+  isRaid(1) <- fact(Raid), !;
+  isRaid(raid) <- prev[isRaid(raid)];
+    
+  tState::([Int],[Int],[Int],[TillState]);
+  tState([],_,_,[]);
+  tState([tId|tIds],aIds,cIds,[ATill(tId,aState,qState) | rest]) <-
+    attendantState(tId,aIds,aState),
+    qState(tId,cIds,qState),
+    tState(tIds,aIds,cIds,rest);
+    
+  qState::(Int,[Int],[Int]);
+  qState(tId,[],[]) <- !;
+  qState(tId,[cId|cIds],[cId|rest]) <-
+    isQueueing(cId,tId),
+    qState(tId,cIds,rest);
+  qState(tId,[_|cIds],rest) <- qState(tId,cIds,rest);
+  
+  isQueueing::(Int,Int);
+  isQueueing(cId,tId) <- past[fact(Queuing(cId,tId2))], !, tId=tId2;
+    
+  attendantState::(Int,[Int],AttendantState);
+  attendantState(tId,[],NoAttendant);
+  attendantState(tId,[aId|aIds],Attendant(aId)) <- isAtTill(aId,tId);
+  attendantState(tId,[_|aIds],aState) <- attendantState(tId,aIds,aState);
+  
+  isAtTill::(Int,Int);
+  isAtTill(aId,tId) <-  past[fact(AtTill(aId,tId2))], !, tId=tId2;
+    
+  seekHelp::([Int],[CustomerHelp]);
+  seekHelp([],[]);
+  seekHelp([id|ids],[Waiting(id) | rest]) <- seekHelp(ids,rest);
+    
+  getHelp::([Int],[CustomerHelp]);
+  getHelp([],[]);
+  getHelp([id|ids],[CustomerHelped(id,aId) | rest]) <- past[fact(GettingHelp(id,aId))], getHelp(ids,rest);
+    
+  getCStates::(Int,[Int],[Int]);
+  getCStates(_,[],[]) <- !;
+  getCStates(n,[id|idsIn],[id|idsOut]) <- custStates(id,ss), nth[State](n,ss,s), delete[State](s,ss,ss'), recent(id,s,ss'), !, getCStates(n,idsIn,idsOut);
+  getCStates(n,[id|idsIn],idsOut) <- getCStates(n,idsIn,idsOut);
+    
+  getAStates::(Int,[Int],[Int]);
+  getAStates(_,[],[]) <- !;
+  getAStates(n,[id|idsIn],[id|idsOut]) <- assStates(id,ss), nth[State](n,ss,s), delete[State](s,ss,ss'), recent(id,s,ss'), !, getAStates(n,idsIn,idsOut);
+  getAStates(n,[id|idsIn],idsOut) <- getAStates(n,idsIn,idsOut);
+  
+  recent::(Int,State,[State]);
+  recent(id,f,fs) <- fact(f), !;
+  recent(id,f,fs) <- facts(fs), !, false;
+  recent(id,f,fs) <- prev[recent(id,f,fs)];
+  facts::([State]);
+  facts([]) <- false, !;
+  facts([f|fs]) <- fact(f), !;
+  facts([_|fs]) <- facts(fs);
+};
+
+
+// ************************* START OF DISPLAY CODE ********************************
+
+type CustomersOutside = [Int];
+type AssistantsOnFloor = [Int];
+type CustomersBrowsing = [Int];
+data CustomerHelp = CustomerHelped(Int,Int) | Waiting(Int);
+data AttendantState = Attendant(Int) | NoAttendant;
+data TillState = ATill(Int,AttendantState,[Int]);
+type ShopState = Shop(CustomersOutside,AssistantsOnFloor,CustomersBrowsing,[CustomerHelp],[TillState],Int);
+
+shopperIcon::Str = 'https://www.shareicon.net/data/512x512/2015/10/26/662313_man_512x512.png';
+assistantIcon::Str = 'https://cdn1.iconfinder.com/data/icons/people-ios/64/peo-shopkeeper-male-512.png';
+blackLine::Str = 'stroke:black; fill-opacity:0;';
+tillIcon::Str = 'http://icons.iconarchive.com/icons/iconsmind/outline/128/Cash-register-2-icon.png';
+criminalIcon::Str = 'https://image.freepik.com/free-icon/criminal-carrying-money-bag-at-his-back_318-56444.jpg';
+bossIcon::Str = 'https://cdn0.iconfinder.com/data/icons/social-flat-rounded-rects/512/anonymous-512.png';
+iconWidth::Int = 50;
+iconHeight::Int = 50;
+textWidth::Int = 10;
+textHeight::Int = 10;
+gap::Int = 4;
+
+type Display = Act { 
+  RegisterCustomer(Int,Str,[Str]); 
+  ChangeState(Int,Str); 
+  Sale(Int); 
+  TimeOut(Int) 
+};
+
+type CustomerDisplay = C(Int,Str,[Str],Int,Int);
+
+type History = Act {
+  export getHistory::()->[ShopState];
+  SeekHelp(Int);
+  EnterShop(Int);
+  HelpTimeout(Int);
+  QueueAtTill(Int,Int);
+  AssistantHelps(Int,Int);
+  AssistantStopsHelp(Int);
+  SaleConcludedAtTill(Int);
+  SaleTimeOutAtTill(Int);
+  AssistantAtTill(Int,Int);
+  AssistantLeavesTill(Int)
+};
+
+shopHistory::History = null;
+
+act history(history::[ShopState])::History {
+
+  export getHistory;
+  
+  getHistory()::[ShopState] = history;
+  addSeekingHelp(cid::Int,s::ShopState)::ShopState =
+    case s {
+      Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+        Shop(out,onFloor,browsing,Waiting(cid):helping,ts,raid)
+    };
+  addOutsideShop(cid::Int,s::ShopState)::ShopState =
+    case s {
+      Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+        Shop(cid:out,onFloor,browsing,helping,ts,raid)
+    };
+  addBrowsing(cid::Int,s::ShopState)::ShopState =
+    case s {
+      Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+        Shop(out,onFloor,cid:browsing,helping,ts,raid)
+    };
+  addAssistantOnFloor(aid::Int,s::ShopState)::ShopState =
+    case s {
+      Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+        Shop(out,aid:onFloor,browsing,helping,ts,raid)
+    };
+  addToTill(cid::Int,tid::Int,s::ShopState)::ShopState =
+    let addTill(t::TillState)::TillState = case t { ATill(i::Int,a::AttendantState,cids::[Int]) -> if tid = i then ATill(i,a,cid:cids) else ATill(i,a,cids) }
+    in case s {
+         Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+           Shop(out,onFloor,browsing,helping,map[TillState,TillState](addTill,ts),raid)
+       };
+  addAssistantToTill(aid::Int,tid::Int,s::ShopState)::ShopState =
+    let addTill(t::TillState)::TillState = case t { ATill(i::Int,a::AttendantState,cids::[Int]) -> if tid = i then ATill(i,Attendant(aid),cids) else ATill(i,a,cids) }
+    in case s {
+         Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+           Shop(out,onFloor,browsing,helping,map[TillState,TillState](addTill,ts),raid)
+       };
+  addHelping(aid::Int,cid::Int,s::ShopState)::ShopState =
+   case s {
+      Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+         Shop(out,onFloor,browsing,CustomerHelped(cid,aid):helping,ts,raid)
+       };
+  removeOutsideShop(cid::Int,s::ShopState)::ShopState =
+    case s {
+      Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+        Shop(remove[Int](cid,out),onFloor,browsing,helping,ts,raid)
+    };
+  removeFromFloor(aid::Int,s::ShopState)::ShopState =
+    case s {
+      Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+        Shop(out,remove[Int](aid,onFloor),browsing,helping,ts,raid)
+    };
+  removeWaitingOrHelped(cid::Int,s::ShopState)::ShopState =
+    let notBrowsing(c::CustomerHelp)::Bool = case c { Waiting(i::Int) -> i <> cid; CustomerHelped(i::Int,j::Int) -> i <> cid }
+    in case s {
+         Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+           Shop(out,onFloor,browsing,filter[CustomerHelp](notBrowsing,helping),ts,raid)
+       };
+  removeWaiting(cid::Int,s::ShopState)::ShopState =
+    case s {
+      Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+        Shop(out,onFloor,browsing,remove[CustomerHelp](Waiting(cid),helping),ts,raid)
+    };
+  removeFromTill(cid::Int,s::ShopState)::ShopState =
+    case s {
+      Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+        Shop(out,onFloor,browsing,helping,map[TillState,TillState](removeTillCustomer(cid),ts),raid)
+    };
+  removeAssistantFromTill(aid::Int,s::ShopState)::ShopState =
+    case s {
+      Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+        Shop(out,onFloor,browsing,helping,map[TillState,TillState](removeTillAttendant(aid),ts),raid)
+    };
+  removeBrowsing(cid::Int,s::ShopState)::ShopState =
+    case s {
+      Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
+        Shop(out,onFloor,remove[Int](cid,browsing),helping,ts,raid)
+    }
+  SeekHelp(cid::Int) -> history := addSeekingHelp(cid,removeBrowsing(cid,head[ShopState](history))):history;
+  SaleConcludedAtTill(cid::Int) -> history := addOutsideShop(cid,removeFromTill(cid,head[ShopState](history))):history;
+  SaleTimeOutAtTill(cid::Int) -> history := addOutsideShop(cid,removeFromTill(cid,head[ShopState](history))):history;
+  EnterShop(cid::Int) -> history := addBrowsing(cid,removeOutsideShop(cid,head[ShopState](history))):history;
+  HelpTimeout(cid::Int) -> history := addOutsideShop(cid,removeWaiting(cid,head[ShopState](history))):history;
+  QueueAtTill(cid::Int,tid::Int) -> history := addToTill(cid,tid,removeWaitingOrHelped(cid,head[ShopState](history))):history;
+  AssistantHelps(aid::Int,cid::Int) -> history := addHelping(aid,cid,removeFromFloor(aid,removeWaiting(cid,head[ShopState](history)))):history;
+  AssistantStopsHelp(aid::Int) -> history := addAssistantOnFloor(aid,head[ShopState](history)):history;
+  AssistantAtTill(aid::Int,tid::Int) -> history := addAssistantToTill(aid,tid,removeFromFloor(aid,head[ShopState](history))):history;
+  AssistantLeavesTill(aid::Int) -> history := addAssistantOnFloor(aid,removeAssistantFromTill(aid,head[ShopState](history))):history
+};
+
+removeTillCustomer(cid::Int)::(TillState)->TillState =
+  fun(t::TillState)::TillState
+    case t {
+      ATill(tid::Int,s::AttendantState,cids::[Int]) ->
+        ATill(tid,s,remove[Int](cid,cids))
+    };
+
+removeTillAttendant(aid::Int)::(TillState)->TillState =
+  fun(t::TillState)::TillState
+    case t {
+      ATill(tid::Int,Attendant(a::Int),cids::[Int]) when a = aid->
+        ATill(tid,NoAttendant,cids);
+      ATill(tid::Int,s::AttendantState,cids::[Int]) ->
+        ATill(tid,s,cids)
+    };
+
+row(ds::[Data([Property],EDBDisplay)])::Row([Property],[Data(Props,EDBDisplay)]) = Row([Prop('style','border: 1px solid black;')],ds);
+tdata(d::EDBDisplay)::Data([Property],EDBDisplay) = Data([Prop('style','border: 1px solid black;')],d);
+rdata(d::EDBDisplay)::Data([Property],EDBDisplay) = Data([Prop('style','border: 1px solid black;background-color:red;')],d);
+bdata(d::EDBDisplay)::Data([Property],EDBDisplay) = Data([Prop('style','border: 1px solid black;background-color:lightblue;')],d);
+
+act displayB::Display {
+  customers::[CustomerDisplay] = [][CustomerDisplay];
+  asTable()::EDBDisplay =
+    letrec
+      rows(cs::[CustomerDisplay])::[Row([Property],[Data([Property],EDBDisplay)])] =
+        case cs {
+          [][CustomerDisplay] -> [][Row([Property],[Data([Property],EDBDisplay)])];
+            C(c::Int,s::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] -> 
+              [row([bdata(fold[EDBDisplay]HTML('Customer-' + c))] + 
+                   (states(s,ss)) + 
+                   [tdata(fold[EDBDisplay]HTML('Sales = ' + sales)),
+                    tdata(fold[EDBDisplay]HTML('Walkouts = ' + walkouts))])
+              ] + rows(rest)
+        };
+      
+      states(current::Str,allStates::[Str])::[Data([Property],EDBDisplay)] =
+        case allStates {
+          state::Str;
+          ss::[Str];
+          [][Str] -> [][Data([Property],EDBDisplay)];
+          state:ss when state = current -> [rdata(fold[EDBDisplay]HTML(state+''))] + states(current,ss);
+          state:ss -> [tdata(fold[EDBDisplay]HTML(state+''))] + states(current,ss)
+        }
+    in fold[EDBDisplay]Table([][Property],[row([tdata(fold[EDBDisplay]Table([][Property],rows(customers)))])]+[row([tdata(fold[EDBDisplay](HTML('time = ' + now)))])]);
+  changeState(c::Int,s::Str,cs::[CustomerDisplay])::[CustomerDisplay] =
+    case cs {
+      [][CustomerDisplay] -> cs;
+      C(c1::Int,s1::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] when c1 = c-> C(c,s,ss,sales,walkouts):rest;
+      (c1::CustomerDisplay):rest::[CustomerDisplay] -> c1 : (changeState(c,s,rest))
+    };
+  getSales(cs::[CustomerDisplay])::Int =
+    case cs {
+      [][CustomerDisplay] -> 0;
+      C(c1::Int,s1::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] -> sales + getSales(rest)
+    };
+  getWalkouts(cs::[CustomerDisplay])::Int =
+    case cs {
+      [][CustomerDisplay] -> 0;
+      C(c1::Int,s1::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] -> walkouts + getWalkouts(rest)
+    };
+  getEvents(cs::[CustomerDisplay])::Int =
+    case cs {
+      [][CustomerDisplay] -> 0;
+      C(c1::Int,s1::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] -> walkouts + sales + getEvents(rest)
+    };
+  sale(customer::Int,customers::[CustomerDisplay])::[CustomerDisplay] =
+    case customers {
+      [][CustomerDisplay] -> customers;
+      C(c1::Int,s1::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] when c1 = customer -> C(c1,s1,ss,sales+1,walkouts):rest;
+      (c1::CustomerDisplay):rest::[CustomerDisplay] -> c1 : (sale(customer,rest))
+    };
+  timeout(customer::Int,customers::[CustomerDisplay])::[CustomerDisplay] =
+    case customers {
+      [][CustomerDisplay] -> customers;
+      C(c1::Int,s1::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] when c1 = customer-> C(c1,s1,ss,sales,walkouts+1):rest;
+      (c1::CustomerDisplay):rest::[CustomerDisplay] -> c1 : (timeout(customer,rest))
+    }
+  ChangeState(c::Int,s::Str) -> {
+    customers := changeState(c,s,customers);
+    let events::Int = getEvents(customers) in
+    let sales::Int = getSales(customers);
+        walkouts::Int = getWalkouts(customers)
+    in {
+      if events = 0 then events := 1 else {};
+      edb <-Show('customers',fold[EDBDisplay]Table([][Property],[
+        Row([][Property],[
+          Data([][Property],asTable()),
+          Data([][Property],fold[EDBDisplay]Pie([][Property],'Satisfaction',500,300,[
+            Slice([][Property],'satisfied',(sales * 100)/events),
+            Slice([][Property],'unsatisfied',(walkouts * 100)/events)
+          ]))
+        ])
+      ]))
+    }
+  };
+  Sale(c::Int) -> customers := sale(c,customers);
+  TimeOut(c::Int) -> {
+    customers := timeout(c,customers)
+  };
+  RegisterCustomer(c::Int,state::Str,states::[Str]) -> {
+    customers := customers + [C(c,state,states,0,0)];
+    edb <- Show('customers',asTable())
+  } 
+};
+
+display::Display = new displayB;
+
+// **************************** END OF DISPLAY CODE ************************************************
+
+act assistant(id::Int,tills::Tills)::Assistant {
+
+  export state,getId,advising;
+  
+  probOfSelling::Int = 50;                      // Chance of assistant moving from floor to a till.
+  probOfAttendingCustomer::Int = 50;            // Chance of assistant helping a customer on floor.
+  state::State = OnFloor(id);          // An assistant starts on the floor.
+  adviceDuration::Int = 10;                     // How long does help take?
+  counter::Int = 0;                             // A general purpose counter.
+  advising::Customer = null;                    // Who is this customer advising?
+  
+  getId()::Int = id;
+  
+  customerSeeksHelp(cs::[Customer])::Customer =
+    // Find a customer who is seeking help. Return null otherwise...
+    case cs {
+      [][Customer] -> null;
+      c::Customer:cc::[Customer] when c.state = SeekingHelp(c.getId()) -> c;
+      c::Customer:cc::[Customer] -> customerSeeksHelp(cc)
+    };
+    
+  help(c::Customer)::Void = {
+    // Help the supplied customer. We think they need help, but we should check...
+    grab(c.state) {
+      // We have exclusive access to the state of the customer...
+      if c.state = SeekingHelp(c.getId())
+      then {
+        // Go ahead and help the customer...
+        // print[Str]('HELPING ' + c);
+        c.help(self);
+        state := Helping(id,c.getId());
+        shopHistory <- AssistantHelps(id,c.getId());
+        grab(facts,time) {
+          facts.add(state,time);
+          time := time + 1
+        };
+        advising := c;
+        counter := 0
+      } else {
+        // Whoops someone else got there before us...
+        // print[Str]('MISSED OPPORTUNITY TO HELP ' + c)
+      }
+    }
+  };
+  
+  advisingId()::Int = if advising=null then (0-1) else advising.getId();
+  
+  goTill()::Void = {
+    // We have decided to sell stuff. Try to find a till to attend...
+    // print[Str]('GOTILL[' + now + ']: ' + self);
+    tills <- Attend(self);
+    state := GoTill(id)
+  }
+  
+  NoTillFound -> {
+    // No till was free. Just go back to the floor...
+    // print[Str]('NOTILL[' + now + ']: ' + self);
+    state := OnFloor(id)
+  };
+  
+  Attending(id::Int) -> {
+    // A till accepted this assistant...
+    // print[Str]('ATTEND[' + now + ']: ' + self + ' till ' + id);
+    state := AtTill(self.getId(),id);
+    grab(facts,time) {
+      facts.add(state,time);
+      time := time + 1
+    };
+    shopHistory <- AssistantAtTill(getId(),id)
+  };
+  
+  ReturnToFloor -> {
+    // Completed at a till and returning to floor...
+    // print[Str]('GOFLOOR[' + now + ']: ' + self);
+    state := OnFloor(id);
+    grab(facts,time) {
+      facts.add(state,time);
+      time := time + 1
+    };
+    shopHistory <- AssistantLeavesTill(id)
+  };
+  
+  Time(n::Int) when (state = OnFloor(id)) and customerSeeksHelp(customers) <> null -> probably(probOfAttendingCustomer) {
+   let c::Customer = customerSeeksHelp(customers)
+   in if c <> null
+      then help(c)
+      else goTill()
+  } else goTill();
+  
+  Time(n::Int) when state = OnFloor(id) -> probably(probOfSelling) {
+   goTill()
+  };
+  
+  Time(n::Int) when (state = Helping(id,advisingId())) and (counter < adviceDuration) -> {
+    counter := counter + 1
+    // print[Str]('ADVISING ' + counter)
+  };
+  
+  Time(n::Int) when (state = Helping(id,advisingId())) and (counter = adviceDuration) -> {
+    // print[Str]('ADVICE CONCLUDED');
+    state := OnFloor(id);
+    shopHistory <- AssistantStopsHelp(id);
+    advising <- Helped;
+    grab(facts,time) {
+      facts.add(state,time);
+      time := time + 1
+    };
+    advising := null
+  };
+  
+  Time(n::Int) -> {}
+};
+
+act customer(id::Int,tills::Tills)::Customer {
+
+  export state, help, getId;
+
+  state::State = NotInShop(id);
+  getId()::Int = id;
+  probOfEnteringShop::Int = 30;
+  probOfBuying::Int = 20;
+  probOfSeekingHelp::Int = 30;
+  salesTime::Int = 5;
+  waitLimit::Int = 10;
+  counter::Int = 0;
+  helpedBy::Assistant = null;
+  
+  help(a::Assistant)::Void = {
+    state := GettingHelp(id,a.getId());
+    grab(facts,time) {
+      facts.add(state,time);
+      time := time + 1
+    };
+    helpedBy := a;
+    display <- ChangeState(id,'GettingHelp')
+  }
+  
+  Time(n::Int) when state = NotInShop(id) -> probably(probOfEnteringShop) {
+    // print[Str]('ENTER[' + now + ']: ' + self);
+    display <- ChangeState(id,'Browsing');
+    shopHistory <- EnterShop(id);
+    state := Browsing(id);
+    grab(facts,time) {
+      facts.add(state,time);
+      time := time + 1
+    }
+  };
+  Time(n::Int) when state = Browsing(id)  -> probably(probOfSeekingHelp) {
+    // print[Str]('SEEK HELP[' + now + ']: ' + self);
+    display <- ChangeState(id,'SeekingHelp');
+    state := SeekingHelp(id);
+    shopHistory <- SeekHelp(id);
+    grab(facts,time) {
+      facts.add(state,time);
+      time := time + 1
+    };
+    counter := 0
+  };
+  Time(n::Int) when (state = SeekingHelp(id)) and (counter < waitLimit) -> 
+    counter := counter + 1;
+  Time(n::Int) when (state = SeekingHelp(id)) and (counter = waitLimit) -> {
+    display <- TimeOut(id);
+    display <- ChangeState(id,'NotInShop');
+    shopHistory <- HelpTimeout(id);
+    state := NotInShop(id);
+    grab(facts,time) {
+      facts.add(state,time);
+      time := time + 1
+    }
+  };
+  Time(n::Int) when state = Browsing(id)  -> probably(probOfBuying) {
+    let till::Int = random(numOfTills)
+    in {
+      // print[Str]('QUEUE[' + now + ']: ' + self + ' till = ' + till);
+      display <- ChangeState(id,'Queueing');
+      shopHistory <- QueueAtTill(id,till);
+      state := Queuing(id,till);
+      grab(facts,time) {
+        facts.add(state,time);
+        time := time + 1
+      };
+      tills <- Queue(self,till,now,salesTime,waitLimit)
+    }
+  };
+  SaleConcluded -> {
+    // print[Str]('SALE[' + now + ']: ' + self);
+    display <- Sale(id);
+    display <- ChangeState(id,'NotInShop');
+    shopHistory <- SaleConcludedAtTill(id);
+    state := NotInShop(id);
+    grab(facts,time) {
+      facts.add(state,time);
+      time := time + 1
+    }
+  };
+  SaleTimedOut -> {
+    // print[Str]('TIMEOUT[' + now + ']: ' + self);
+    display <- TimeOut(id);
+    display <- ChangeState(id,'NotInShop');
+    shopHistory <- SaleTimeOutAtTill(id);
+    state := NotInShop(id);
+    grab(facts,time) {
+      facts.add(state,time);
+      time := time + 1
+    }
+  };
+  Helped -> {
+    let till::Int = random(numOfTills)
+    in {
+      // print[Str]('QUEUE[' + now + ']: ' + self + ' till = ' + till);
+      display <- ChangeState(id,'Queueing');
+      state := Queuing(id,till);
+      shopHistory <- QueueAtTill(id,till);
+      grab(facts,time) {
+        facts.add(state,time);
+        time := time + 1
+      };
+      tills <- Queue(self,till,now,salesTime,waitLimit)
+    }
+  };
+  Time(n::Int) -> {}
+};
+
+act leader(size::Int)::GangLeader {
+
+  export ready;
+  
+  ready::Bool = false;
+  counter::Int = 0;
+  state::State = NotInShop(0);
+  probOfRaid::Int = 10
+  
+  Time(n::Int) when not(ready) and (counter=0)-> probably(probOfRaid) {
+    // print[Str]('RAID STARTED');
+    ready := true
+  };
+  
+  Time(n::Int) -> {};
+  
+  OccupyingAssistant(c::Customer) -> {
+    counter := counter + 1;
+    if counter = size 
+    then {
+      // print[Str]('RAID SUCCEEDED ' + now);
+      state := NotInShop(0);
+      grab(facts,time) {
+        facts.add(Raid,time);
+        time := time + 1;
+        facts.add(NoRaid,time);
+        time := time + 1
+      };
+      ready := false
+    } else {} // print[Str]('RAID NEEDS ' + (size-counter) + ' MORE ACTIVE MEMBERS')
+  };
+  
+  Leave(c::Customer) -> {
+    counter := counter - 1;
+    if counter = 0
+    then {
+      state := NotInShop(0);
+      ready := false
+    } else {}
+  }
+};
+      
+
+act gangMember(id::Int,leader::GangLeader)::Customer {
+
+  export state, help, getId;
+
+  state::State = NotInShop(id);
+  getId()::Int = id;
+  waitLimit::Int = 10;
+  help(a::Assistant)::Void = {
+    // print[Str]('GANG MEMBER OCCUPYING ASSISTANT');
+    leader <- OccupyingAssistant(self);
+    state := GettingHelp(id,a.getId());
+    grab(facts,time) {
+      facts.add(state,time);
+      time := time + 1
+    }
+  }
+  Time(n::Int) when (state = NotInShop(id)) and leader.ready -> {
+    // print[Str]('GANG MEMBER ENTERED');
+    state := SeekingHelp(id);
+    grab(facts,time) {
+      facts.add(state,time);
+      time := time + 1
+    }
+  };
+  SaleConcluded -> { };
+  SaleTimedOut -> { };
+  Helped -> {
+    // print[Str]('GANG MEMBER LEAVING');
+    leader <- Leave(self);
+    state := NotInShop(id);
+    grab(facts,time) {
+      facts.add(state,time);
+      time := time + 1
+    }
+  };
+  Time(n::Int) -> {}
+};
+
+act noTransactions::Transactions {
+  export isEmpty, getQueue;
+  getQueue()::[Int] = [][Int];
+  isEmpty()::Bool = true
+  Queue(c::Customer,tStart::Int,tDelay::Int,tLim::Int) -> {
+    become aTransaction(c,tStart,tDelay,tLim,new noTransactions)
+  };
+  Do -> {};
+  Wait -> {}
+};
+
+act aTransaction(c::Customer,tStart::Int,tDelay::Int,tLim::Int,next::Transactions)::Transactions {
+  export isEmpty,getQueue;
+  getQueue()::[Int] = c.getId():next.getQueue();
+  isEmpty()::Bool = false
+  Wait -> {
+    next <- Wait;
+    tLim := tLim - 1;
+    //print[Str]('WAIT[' + now + ']: ' + c + ' tLim = ' + tLim);
+    if tLim = 0
+    then {
+      c <- SaleTimedOut;
+      become transacted(next)
+    } else {}
+  };
+  Do -> {
+    next <- Wait;
+    tDelay := tDelay - 1;
+    if tDelay = 0
+    then {
+      c <- SaleConcluded;
+      become transacted(next)
+    } else {}
+  };
+  Queue(c::Customer,tStart::Int,tDelay::Int,tLim::Int) -> next <- Queue(c,tStart,tDelay,tLim)
+};
+
+act transacted(next::Transactions)::Transactions {
+  export isEmpty,getQueue;
+  
+  isEmpty()::Bool = next.isEmpty();
+  getQueue()::[Int] = next.getQueue()
+  
+  Do -> next <- Do;
+  Wait -> next <- Wait;
+  Queue(c::Customer,tStart::Int,tDelay::Int,tLim::Int) -> next <- Queue(c,tStart,tDelay,tLim)
+};
+  
+
+act noTills::Tills {
+  export getState;
+  getState()::[TillState] = [][TillState]
+  Time(n::Int) -> {};
+  Attend(a::Assistant) -> a <- NoTillFound;
+  Queue(c::Customer,n::Int,tStart::Int,tDelay::Int,tLim::Int) -> {}
+};
+
+act aTill(id::Int,next::Tills)::Tills {
+  export getState;
+  
+  getState()::[TillState] = ATill(id,if assistant <> null then Attendant(assistant.getId()) else NoAttendant,transactions.getQueue()):next.getState();
+  broken::Bool = false;
+  assistant::Assistant = null;
+  probOfBreaking::Int = 0;
+  transactions::Transactions = new noTransactions
+  Time(n::Int) when (not(broken)) and (not(assistant = null)) and not(transactions.isEmpty()) -> {
+    //edb.saveState('history' + now);
+    transactions <- Do
+  };
+  Time(n::Int) when (not(assistant = null)) and transactions.isEmpty() -> {
+    transactions := new noTransactions;
+    assistant <- ReturnToFloor;
+    assistant := null
+  };
+  Time(n::Int) -> {
+    probably(probOfBreaking) {
+      //print[Str]('Break Till' + id);
+      broken := true
+    };
+    transactions <- Wait
+  };
+  Attend(a::Assistant) ->
+    if (assistant = null) and not(transactions.isEmpty())
+    then {
+      assistant := a;
+      a <- Attending(id)
+    } else next <- Attend(a);
+  Queue(c::Customer,till::Int,tStart::Int,tDelay::Int,tLim::Int) -> {
+    if till = id
+    then transactions <- Queue(c,tStart,tDelay,tLim)
+    else next <- Queue(c,till,tStart,tDelay,tLim)
+  }
+};
+  
+historyLabel::Str     = 'd';
+numOfCustomers::Int   = 7;
+numOfTills::Int       = 3;
+numOfAssistants::Int  = 2;
+numOfGangMembers::Int = 2;
+numOfSteps::Int       = 100;
+pictureWidth::Int     = 1000;
+pictureHeight::Int    = 1000;
+
+assistants::[Assistant] = [][Assistant];
+customers::[Customer]   = [][Customer];
+tills::Tills            = null;
+
+toPicture(s::ShopState)::EDBDisplay =
+  case s {
+    cOut::[Int];
+    aFloor::[Int];
+    cBrowse::[Int];
+    h::[CustomerHelp];
+    ts::[TillState];
+    raid::Int;
+    Shop(cOut,aFloor,cBrowse,h,ts,raid) -> 
+      letrec customerIcon(id::Int)::Str =
+        if id < numOfCustomers
+        then shopperIcon
+        else criminalIcon;
+        customerOutside(ids::[Int],x::Int)::[PictureElement] = 
+               if ids = [][Int] 
+               then [][PictureElement] 
+               else [Image(x,0,iconWidth,iconHeight,customerIcon(head[Int](ids))),Text(x,(iconHeight+textHeight),head[Int](ids)+'','')]+customerOutside(tail[Int](ids),x+iconWidth);
+             walkingAssistants(ids::[Int],x::Int,y::Int)::[PictureElement] = 
+               if ids = [][Int] 
+               then [][PictureElement] 
+               else [Image(x,y,iconWidth,iconHeight,assistantIcon),Text(x,y+(iconHeight+textHeight),head[Int](ids)+'','')]+walkingAssistants(tail[Int](ids),x,y+(iconHeight+textHeight));
+             browsingCustomers(ids::[Int],x::Int,y::Int)::[PictureElement] = 
+               if ids = [][Int] 
+               then [][PictureElement] 
+               else [Image(x,y,iconWidth,iconHeight,customerIcon(head[Int](ids))),Text(x,y+(iconHeight+textHeight),head[Int](ids)+'','')]+browsingCustomers(tail[Int](ids),x,y+(iconHeight+textHeight));
+             helpedCustomers(cs::[CustomerHelp],x::Int,y::Int)::[PictureElement] =
+               if cs = [][CustomerHelp]
+               then [][PictureElement]
+               else 
+                 case head[CustomerHelp](cs) {
+                   CustomerHelped(cId::Int,aId::Int) -> [
+                     Image(x,y,iconWidth,iconHeight,customerIcon(cId)),Text(x,y+(iconHeight+textHeight),cId+'',''),
+                     Image(x+iconWidth,y,iconWidth,iconHeight,assistantIcon),Text(x+iconWidth,y+(iconHeight+textHeight),aId+'','')]+helpedCustomers(tail[CustomerHelp](cs),x,y+(iconHeight+textHeight));
+                   Waiting(cId::Int) ->
+                     [Image(x,y,iconWidth,iconHeight,customerIcon(cId)),Text(x,y+iconHeight+textHeight,cId+'','')]+helpedCustomers(tail[CustomerHelp](cs),x,y+(iconHeight+textHeight))
+                 };
+              tillStates(ts::[TillState],x::Int,y::Int)::[PictureElement] =
+                if ts = [][TillState]
+                then [][PictureElement]
+                else case head[TillState](ts) {
+                  ATill(n::Int,Attendant(a::Int),cids::[Int]) -> [
+                    Text(x,y+textHeight+gap,'Till('+n+')',''),
+                    Text(x,y+iconHeight+(textHeight*3)+gap+gap,a+'',''),
+                    Image(x,y+textHeight+gap,iconWidth,iconHeight+textHeight+gap+gap,tillIcon)] + queue(cids,x,y+(iconHeight+(textHeight*3)+gap+gap)) + tillStates(tail[TillState](ts),x+iconWidth+gap,y);
+                  ATill(n::Int,NoAttendant,cids::[Int]) -> [
+                    Text(x,y+textHeight+gap,'Till('+n+')',''),
+                    Image(x,y+textHeight + gap,iconWidth,iconHeight+textHeight+gap+gap,tillIcon)] + queue(cids,x,y+(iconHeight+textHeight+textHeight+gap+gap)) + tillStates(tail[TillState](ts),x+iconWidth+gap,y)
+                };
+              queue(cids::[Int],x::Int,y::Int)::[PictureElement] =
+                if cids = [][Int]
+                then [][PictureElement]
+                else [Image(x,y,iconWidth,iconHeight,customerIcon(head[Int](cids))),Text(x,y+(iconHeight+textHeight),head[Int](cids)+'','')] + queue(tail[Int](cids),x,y+(iconHeight+textHeight))
+                    
+                    
+                    
+      in let line::PictureElement = Line(0,iconHeight*2,length[Customer](customers) * (iconWidth*2),iconHeight*2,blackLine)
+         in fold[EDBDisplay]Picture(pictureWidth,pictureHeight,customerOutside(cOut,0) + [line] + (if raid = 1 then [Image(length[Customer](customers) * (iconWidth*2),(iconHeight*3)/2,iconWidth,iconHeight,bossIcon)] else [][PictureElement]) +
+              [Text(0,(iconHeight*2)+gap+textHeight,'Floor','')] +
+              walkingAssistants(aFloor,0,gap+textHeight+(iconHeight*2)) + 
+              [Text(iconWidth*2,(iconHeight*2)+gap+textHeight,'Browsing','')] +
+              browsingCustomers(cBrowse,iconWidth*2,(gap*2)+textHeight+(iconHeight*2)) + 
+              [Text(iconWidth*4,(iconHeight*2)+gap+textHeight,'Helping','')] +
+              helpedCustomers(h,iconWidth*4,(gap*2)+textHeight+(iconHeight*2)) +
+              tillStates(ts,iconWidth*6,(iconHeight*2)))
+  };
+  
+  
+  shopSnapshot()::ShopState = 
+    let customersOutside::[Int] = [ c.getId() | c::Customer <- customers, ?(c.state = NotInShop(c.getId())) ];
+        assistantsOnFloor::[Int] =[ a.getId() | a::Assistant <- assistants, ?(a.state = OnFloor(a.getId())) ];
+        customersBrowsing::[Int] = [ c.getId() | c::Customer <- customers, ?(c.state = Browsing(c.getId())) ];
+        customersHelped::[CustomerHelp] = [ Waiting(c.getId()) | c::Customer <- customers, ?(c.state = SeekingHelp(c.getId())) ] +
+                                          [ CustomerHelped(c.getId(),a.getId()) | c::Customer <- customers, a::Assistant <- assistants, ?(c.state = GettingHelp(c.getId(),a.getId())), ?(a.advising = c) ];
+        tillStates::[TillState] = tills.getState()
+    in Shop(customersOutside,assistantsOnFloor,customersBrowsing,customersHelped,tillStates,0);
+
+act main::Main {
+  -> {
+    setMaxInstructions(500000000);
+    setInstructionsPerTimeUnit(100000000);
+    tills := new noTills;
+    for n::Int in 0..(numOfTills-1) do {
+      tills := new aTill(n,tills)
+    };
+    for n::Int in 0..(numOfCustomers-1) do {
+      customers :=  new customer(n,tills):customers;
+      facts.add(NotInShop(n),time);
+      time := time + 1;
+      display <- RegisterCustomer(n,'NotInShop',['NotInShop','Queueing','Browsing','SeekingHelp','GettingHelp'])
+    };
+    for n::Int in 0..(numOfAssistants-1) do {
+      assistants := new assistant(n,tills):assistants;
+      facts.add(OnFloor(n),time);
+      time := time + 1
+    };
+    let g::GangLeader = new leader(numOfGangMembers)
+    in for n::Int in 0..(numOfGangMembers-1) do {
+         customers := new gangMember(n+numOfCustomers,g):customers;
+         facts.add(NotInShop(n+numOfCustomers),time);
+         time := time + 1
+       };
+       shopHistory := new history([shopSnapshot()])
+  };
+  Time(n::Int) when n > numOfSteps -> {
+    edb.saveHistory('end' + numOfCustomers + historyLabel);
+    for s::ShopState in reverse[ShopState](shopHistory.getHistory()) do {
+      print[ShopState](s)
+    };
+    //edb <- Filmstrip('Shop',[ toPicture(s) | s::ShopState <- reverse[ShopState](shopHistory.getHistory()) ]);
+    print[Str]('Shopped');
+    print[KB[State]](facts);
+    let cIds::[Int] = 0..(numOfCustomers+numOfGangMembers);
+        aIds::[Int] = 0..(numOfAssistants-1);
+        tIds::[Int] = 0..(numOfTills-1)
+    in show hist(cIds,aIds,tIds,history) [cIds,aIds,tIds] from solver using facts {
+         edb <- Filmstrip('ShopFrolRules',[ toPicture(s) | s::ShopState <- history ])
+       } else print[Str]('FAIL');
+    stopAll()
+  };
+  Time(n::Int) -> {}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

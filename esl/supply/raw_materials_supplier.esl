@@ -1,0 +1,9 @@
+export rawMaterialsSupplier,RawMaterialsSupplier;
+
+type RawMaterialsSupplier = Act { Time(Int) };
+
+act rawMaterialsSupplier(location::Str,material::Material(Str))::RawMaterialsSupplier {
+  Time(n::Int) -> {}
+}
+
+

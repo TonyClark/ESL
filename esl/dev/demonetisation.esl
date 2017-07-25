@@ -1,0 +1,593 @@
+export main;
+
+import 'esl/lists.esl';
+
+type Main= Act{Time(Int)};
+
+type Item = Act { Time(Int)} ;
+
+type Shop = Act{ 
+  Time(Int); 
+  Buy(Item, Int, Citizen, PaymentMode);  
+  Paid(Int,PaymentMode); 
+  Demonetisation()
+};
+
+type Citizen = Act { 
+  Time(Int); 
+  ItemDelivered(Item, Int); 
+  Pay(Int, Str, PaymentMode); 
+  Withdrawn(Int); 
+  Demonetisation()
+};
+
+type Bank = Act { 
+  BankWithdraw(Int, Citizen);  
+  ATMWithdraw(Int, Citizen); 
+  RequestForCardSwappingMachine(Shop); 
+  Demonetisation()
+};
+
+
+data PaymentMode =  // Payment mode
+  Card    
+| Cash  
+| Wallet;
+
+data EconomicalState =  
+  Normal   
+| Demonetisation;  
+
+addShop(x::Shop,b::Bag{Shop})::Bag{Shop} = bag{ x | b };  
+getShop(bag{s::Shop|rest::Bag{Shop}})::Shop = s;
+
+addToList[T](x::T, l::[T])::[T] = l+ [x];
+
+ratio(x::Int, y::Int)::Int = if ((x + y) = 0) then 0 else (x *100 )/ (x+y) ;
+
+    
+economicState::EconomicalState = Normal;        
+minimumATMWithdraw::Int = 2000;
+minimumBankWithdraw::Int = 5000;            
+thresholdValue::Int = 200;
+withdrawThreshold::Int = 2; 
+demonetisationFactor::Int = 80;
+cashFlowImprovement::Int = 1;          
+cashFlowLimit::Int = 50 ; 
+needForBuying::Int = 2; 
+restoreFor::Int = 7; 
+maxBankLimit::Int = 10000;
+maxATMLimit::Int = 1000; 
+probabilityOfGettingSwappingMachine::Int = 50;
+weeklyWithdrawLimit::Int = 20000;
+simulationTime::Int = 125;
+demonetisationTime ::Int = 45;
+cashLessCondition::Int = 50;
+excessiveCashCondition::Int = 25000;
+
+item1::Item = new item('Item1', 12, 50, 50);
+item2::Item = new item('Item2', 20, 100, 20);
+item3::Item = new item('Item3', 40, 200, 30);
+bank1::Bank = new bank('Bank', 200000, 50000);
+monitor1::ShopMonitor = new shopStatus(0);
+monitor2::CitizenMonitor = new citizenStatus(0);
+monitor3::CitizenAnalysisMonitor = new citizenAnalysisMonitor(0);
+
+
+unit0::Int = 0;
+unit1::Int = 25;
+unit2::Int = 500;
+unit3::Int = 300;
+
+//Citizens with Card facility and capable of using Wallet, Use cash as a first option for transation
+numOfCitizensWithCardAndWalletCashFirstTryFromATMInAnyCase::Int = unit1;
+numOfCitizensWithCardAndWalletCashFirstTryFromBankInAnyCase::Int = unit1;
+numOfCitizensWithCardAndWalletCashFirstTryFromBothInAnyCase::Int = unit1;
+numOfCitizensWithCardAndWalletCashFirstGoToATMIfBelowThreshold::Int = unit1;
+numOfCitizensWithCardAndWalletCashFirstGoToBankIfBelowThreshold::Int = unit1;
+numOfCitizensWithCardAndWalletCashFirstGoToBothIfBelowThreshold::Int = unit1;
+
+
+//Citizens with Card facility, Use cash as a first option for transation
+numOfCitizensWithCardCashFirstTryFromATMInAnyCase::Int = unit1;
+numOfCitizensWithCardCashFirstTryFromBankInAnyCase::Int = unit1;
+numOfCitizensWithCardCashFirstTryFromBothInAnyCase::Int = unit1;
+numOfCitizensWithCardCashFirstGoToATMIfBelowThreshold::Int = unit1;
+numOfCitizensWithCardCashFirstGoToBankIfBelowThreshold::Int = unit1;
+numOfCitizensWithCardCashFirstGoToBothIfBelowThreshold::Int = unit1;
+
+//Citizens with Wallet facility, Use cash as a first option for transation
+numOfCitizensWithWalletCashFirstTryFromBankInAnyCase::Int = unit1;
+numOfCitizensWithWalletCashFirstGoToBankIfBelowThreshold::Int = unit1;
+
+
+//Citizens with Card facility and capable of using Wallet, Use alternate payment as a first option for transation
+
+numOfCitizensWithCardAndWalletAlternateFirstTryFromATMInAnyCase::Int = unit1;
+numOfCitizensWithCardAndWalletAlternateFirstTryFromBankInAnyCase::Int = unit1;
+numOfCitizensWithCardAndWalletAlternateFirstTryFromBothInAnyCase::Int = unit1;
+numOfCitizensWithCardAndWalletAlternateFirstGoToATMIfBelowThreshold::Int = unit1;
+numOfCitizensWithCardAndWalletAlternateFirstGoToBankIfBelowThreshold::Int = unit1;
+numOfCitizensWithCardAndWalletAlternateFirstGoToBothIfBelowThreshold::Int = unit1;
+
+//Citizens with Card facility, Use alternate payment as a first option for transation
+
+numOfCitizensWithCardAlternateFirstTryFromATMInAnyCase::Int = unit1;
+numOfCitizensWithCardAlternateFirstTryFromBankInAnyCase::Int = unit1;
+numOfCitizensWithCardAlternateFirstTryFromBothInAnyCase::Int = unit1;
+numOfCitizensWithCardAlternateFirstGoToATMIfBelowThreshold::Int = unit1;
+numOfCitizensWithCardAlternateFirstGoToBankIfBelowThreshold::Int = unit1;
+numOfCitizensWithCardAlternateFirstGoToBothIfBelowThreshold::Int = unit1;
+
+//Citizens capable of using  Wallet, Use alternate payment as a first option for transation
+
+numOfCitizensWithWalletAlternateFirstTryFromBankInAnyCase::Int = unit1;
+numOfCitizensWithWalletAlternateFirstGoToBankIfBelowThreshold::Int = unit1;
+
+//Citizens with Card facility and capable of using Wallet, Use alternate payment for transation
+
+numOfCitizensWithCardAndWalletStrictAlternateTryFromATMInAnyCase::Int = unit1;
+numOfCitizensWithCardAndWalletStrictAlternateTryFromBankInAnyCase::Int = unit1;
+numOfCitizensWithCardAndWalletStrictAlternateTryFromBothInAnyCase::Int = unit1;
+numOfCitizensWithCardAndWalletStrictAlternateGoToATMIfBelowThreshold::Int = unit1;
+numOfCitizensWithCardAndWalletStrictAlternateGoToBankIfBelowThreshold::Int = unit1;
+numOfCitizensWithCardAndWalletStrictAlternateGoToBothIfBelowThreshold::Int = unit1;
+
+//Citizens with Card facility , Use alternate payment for transation
+
+numOfCitizensWithCardStrictAlternateTryFromATMInAnyCase::Int = unit1;
+numOfCitizensWithCardStrictAlternateTryFromBankInAnyCase::Int = unit1;
+numOfCitizensWithCardStrictAlternateTryFromBothInAnyCase::Int = unit1;
+numOfCitizensWithCardStrictAlternateGoToATMIfBelowThreshold::Int = unit1;
+numOfCitizensWithCardStrictAlternateGoToBankIfBelowThreshold::Int = unit1;
+numOfCitizensWithCardStrictAlternateGoToBothIfBelowThreshold::Int = unit1;
+
+//Citizens capable of using Wallet, Use alternate payment for transation
+
+numOfCitizensWithWalletStrictAlternateTryFromBankInAnyCase::Int = unit1;
+numOfCitizensWithWalletStrictAlternateGoToBankIfBelowThreshold::Int = unit1;
+
+//Citizens without Card facility and not capable of using Wallet
+
+numOfCitizensWithoutCardAndWalletCashFirstTryFromBankInAnyCase::Int = unit3;
+numOfCitizensWithoutCardAndWalletCashFirstGoToBankIfBelowThreshold::Int = unit3;
+
+numOfBanks::Int = 1;
+
+numOfShopsWithWalletAndCard::Int = 0;
+numOfShopsWithWallet::Int = 2;
+numOfShopsWithCard::Int = 5;
+numOfShopsWithWillingToHaveWallet::Int = 5;
+numOfShopsWithWillingToHaveCard::Int = 2;
+numOfShopsWithWillingToHaveWalletAndCard::Int = 1;
+
+
+citizens::[Citizen] = [][Citizen];
+banks::[Bank] = [][Bank];
+
+shops::[Shop] = bag{};
+shopsStartedAcceptingWallet::[Shop] = [][Shop];
+shopsStartedAcceptingCard::[Shop] = [][Shop];
+
+initCashInHand::Int = 2000;
+shopsWithWalletFacility::Bag{Shop}=bag{};
+shopsWithCardFacility::Bag{Shop}=bag{};     
+shopsWithCardAndWalletFacility::Bag{Shop} = bag{}; 
+
+
+//Citizens with Card facility and capable of using Wallet, Use cash as a first option for transation
+citizensWithCardAndWalletCashFirstTryFromATMInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardAndWalletCashFirstTryFromBankInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardAndWalletCashFirstTryFromBothInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardAndWalletCashFirstGoToATMIfBelowThreshold::[Citizen] = [][Citizen];
+citizensWithCardAndWalletCashFirstGoToBankIfBelowThreshold::[Citizen] = [][Citizen];
+citizensWithCardAndWalletCashFirstGoToBothIfBelowThreshold::[Citizen] = [][Citizen];
+
+
+//Citizens with Card facility, Use cash as a first option for transation
+citizensWithCardCashFirstTryFromATMInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardCashFirstTryFromBankInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardCashFirstTryFromBothInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardCashFirstGoToATMIfBelowThreshold::[Citizen] = [][Citizen];
+citizensWithCardCashFirstGoToBankIfBelowThreshold::[Citizen] = [][Citizen];
+citizensWithCardCashFirstGoToBothIfBelowThreshold::[Citizen] = [][Citizen];
+
+//Citizens with Wallet facility, Use cash as a first option for transation
+citizensWithWalletCashFirstTryFromBankInAnyCase::[Citizen] = [][Citizen];
+citizensWithWalletCashFirstGoToBankIfBelowThreshold::[Citizen] = [][Citizen];
+
+
+//Citizens with Card facility and capable of using Wallet, Use alternate payment as a first option for transation
+
+citizensWithCardAndWalletAlternateFirstTryFromATMInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardAndWalletAlternateFirstTryFromBankInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardAndWalletAlternateFirstTryFromBothInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardAndWalletAlternateFirstGoToATMIfBelowThreshold::[Citizen] = [][Citizen];
+citizensWithCardAndWalletAlternateFirstGoToBankIfBelowThreshold::[Citizen] = [][Citizen];
+citizensWithCardAndWalletAlternateFirstGoToBothIfBelowThreshold::[Citizen] = [][Citizen];
+
+//Citizens with Card facility, Use alternate payment as a first option for transation
+
+citizensWithCardAlternateFirstTryFromATMInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardAlternateFirstTryFromBankInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardAlternateFirstTryFromBothInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardAlternateFirstGoToATMIfBelowThreshold::[Citizen] = [][Citizen];
+citizensWithCardAlternateFirstGoToBankIfBelowThreshold::[Citizen] = [][Citizen];
+citizensWithCardAlternateFirstGoToBothIfBelowThreshold::[Citizen] = [][Citizen];
+
+//Citizens capable of using  Wallet, Use alternate payment as a first option for transation
+
+citizensWithWalletAlternateFirstTryFromBankInAnyCase::[Citizen] = [][Citizen];
+citizensWithWalletAlternateFirstGoToBankIfBelowThreshold::[Citizen] = [][Citizen];
+
+//Citizens with Card facility and capable of using Wallet, Use alternate payment for transation
+
+citizensWithCardAndWalletStrictAlternateTryFromATMInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardAndWalletStrictAlternateTryFromBankInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardAndWalletStrictAlternateTryFromBothInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardAndWalletStrictAlternateGoToATMIfBelowThreshold::[Citizen] = [][Citizen];
+citizensWithCardAndWalletStrictAlternateGoToBankIfBelowThreshold::[Citizen] = [][Citizen];
+citizensWithCardAndWalletStrictAlternateGoToBothIfBelowThreshold::[Citizen] = [][Citizen];
+
+//Citizens with Card facility , Use alternate payment for transation
+
+citizensWithCardStrictAlternateTryFromATMInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardStrictAlternateTryFromBankInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardStrictAlternateTryFromBothInAnyCase::[Citizen] = [][Citizen];
+citizensWithCardStrictAlternateGoToATMIfBelowThreshold::[Citizen] = [][Citizen];
+citizensWithCardStrictAlternateGoToBankIfBelowThreshold::[Citizen] = [][Citizen];
+citizensWithCardStrictAlternateGoToBothIfBelowThreshold::[Citizen] = [][Citizen];
+
+//Citizens capable of using Wallet, Use alternate payment for transation
+
+citizensWithWalletStrictAlternateTryFromBankInAnyCase::[Citizen] = [][Citizen];
+citizensWithWalletStrictAlternateGoToBankIfBelowThreshold::[Citizen] = [][Citizen];
+
+//Citizens without Card facility and not capable of using Wallet
+
+citizensWithoutCardAndWalletCashFirstTryFromBankInAnyCase::[Citizen] = [][Citizen];
+citizensWithoutCardAndWalletCashFirstGoToBankIfBelowThreshold::[Citizen] = [][Citizen];
+allCitizens::[Citizen] = [][Citizen];
+seq::Int = 0;
+
+
+
+act item(n::Str, oPrice::Int, sPrice::Int, expiry::Int)::Item {
+
+  export name, originalPrice, sellingPrice;   
+
+  age::Int           = 0;
+  originalPrice::Int = oPrice;
+  sellingPrice::Int  = sPrice;
+  name::Str          = n
+  
+  Time(n::Int)  -> {}
+
+};
+
+act shop(name::Str, myBank::Bank, walletAccepted::Bool, cardAccepted::Bool, isWillingToTakeWallet::Bool,willingForCardSwappingMachine::Bool)::Shop {
+
+  export isWalletAccepted, isCardAccepted;
+  
+  shopName::Str = name;
+  isWalletAccepted::Bool = walletAccepted;
+  isCardAccepted::Bool =  cardAccepted;
+  isAdapted::Bool = false;
+  purchesedInCash::Int = 0;
+  purchesedInWallet::Int = 0;
+  purchesedInCard::Int = 0;
+  averageSale::Int = 0;
+  lowSale::Int = 0;
+  
+  
+  stratedAcceptingWallet::Int = simulationTime + 1;
+  stratedAcceptingCard::Int = simulationTime + 1;
+  cashPurchesedHistory::[Int] = [][Int];
+  walletPurchesedHistory::[Int] = [][Int];
+  cardPurchesedHistory::[Int] = [][Int];
+  
+  myTime::Int = 0;
+  
+  adapt()::Void =  {
+    isAdapted:= true;
+    if ((isWillingToTakeWallet ) and (not( walletAccepted))) 
+    then { 
+      stratedAcceptingWallet:= myTime; 
+      isWalletAccepted := true;
+      shopsWithWalletFacility := addShop( self, shopsWithWalletFacility); 
+      monitor1 <- ShopsStartedWalletFacility   
+    } else {};
+    if willingForCardSwappingMachine and not(cardAccepted)
+    then myBank <- RequestForCardSwappingMachine(self)
+    else {}            
+  }
+  
+  -> {
+    monitor1 <- ShopsStartedCashFacility;
+    if walletAccepted 
+    then  { 
+      stratedAcceptingWallet := 0 ; 
+      monitor1 <- ShopsStartedWalletFacility
+    } else {};
+    if cardAccepted
+    then {
+      stratedAcceptingCard := 0; 
+      monitor1 <- ShopsStartedCardFacility
+    } else {}
+  }; 
+  
+  Buy(i::Item, quantity::Int, c::Citizen, mode::PaymentMode) -> {  
+    c <- Pay(i.sellingPrice * quantity, self, mode);
+    c <- ItemDelivered(i, quantity)
+  };
+  
+  Paid(a::Int, mode::PaymentMode) ->
+    case mode {
+      Cash -> purchesedInCash := purchesedInCash + a;
+      Wallet -> purchesedInWallet := purchesedInWallet + a;
+      Card -> purchesedInCard := purchesedInCard + a
+    };
+  
+  GotCardSwappingMachine -> {
+     stratedAcceptingCard := myTime;
+     monitor1 <- ShopsStartedCardFacility; 
+     isCardAccepted := true
+  };
+  
+  Time(n::Int)  -> {
+    
+    cashPurchesedHistory := addToList(purchesedInCash,cashPurchesedHistory);
+    walletPurchesedHistory := addToList(purchesedInWallet,walletPurchesedHistory);
+    cardPurchesedHistory := addToList(purchesedInCard,cardPurchesedHistory); 
+    monitor1 <- UpdateFromShop(purchesedInCash, purchesedInWallet, purchesedInCard );
+    
+    case economicState {
+     Normal-> { 
+       let saleAmount::Int = purchesedInCash+ purchesedInWallet + purchesedInCard 
+       in averageSale := (averageSale + saleAmount)/2
+     } ;
+     Demonetisation -> {
+       if not(isAdapted) 
+       then 
+         let saleAmount::Int = purchesedInCash+ purchesedInWallet + purchesedInCard 
+         in {
+           if (saleAmount < (averageSale/2 )) 
+           then {
+   	 if lowSale > 1  
+             then { 
+               adapt(); 
+               lowSale := 0
+             } else lowSale := lowSale + 1
+           } else lowSale:= 0
+         }	
+        else {}
+      }
+    };
+   
+    myTime := myTime + 1;
+    purchesedInCash := 0;
+    purchesedInWallet := 0;
+    purchesedInCard := 0
+  
+  }
+};
+
+act citizen(name::Str, cash::Int, isCapableOfDigitalWallet::Bool, isCardHolder::Bool, preferredShop::Shop, shopWithWalletFacility::Shop, shopWithCardFacility::Shop, myBank::Bank, buyingBehaviour::CitizenBuyingBehaviour, withdrawBehaviour::CashWithdrawBehaviour)::Citizen {
+ 
+ export cashInHand, cashWithdrawnInAWeek;
+ 
+ citizenName::Str = name;
+ cashInHand::Int = cash;
+ myType::CitizenType = CashDependent;
+
+ itemCount::Int = 0;
+ item1ConsumptionRate::Int=0;
+ item2ConsumptionRate::Int=0;
+ item3ConsumptionRate::Int=0;
+ 
+ item1Quantity::Int=0;
+ item2Quantity::Int=0;
+ item3Quantity::Int=0;
+ 
+ noItem1::Int=0;
+ noItem2::Int=0;
+ noItem3::Int=0;
+ atmWithdrwalAttempted::Int=0;
+ bankWithdrwalAttempted::Int=0;
+ cashWithdrawnFromATM::Int = 0;
+ cashWithdrawnFromBank::Int = 0;
+ 
+ weeklyCashTransaction::Int=0;
+ weeklyWalletTransaction::Int = 0;
+ weeklyCardTransaction::Int = 0;
+ cashWithdrawnInAWeek::Int = 0;
+ noCashInHandForDays::Int=0;
+ myTime::Int = 0;
+ myFinancialStatus::FinancialStatus = ModerateCash; 
+  
+                    
+ cashInHandHistory::[Int] = [][Int];
+ noItem1History::[Int]= [][Int];
+ noItem2History::[Int]= [][Int];
+ noItem3History::[Int]= [][Int];
+ atmWithdrwalAttemptedHistory::[Int]= [][Int];
+ bankWithdrwalAttemptedHistory::[Int]= [][Int];
+ cashWithdrawnFromATMHistory::[Int]= [][Int];
+ cashWithdrawnFromBankHistory::[Int]= [][Int];   
+ 
+ buyUsingCash(i::Item, quantity::Int)::Void = {
+   let mode::PaymentMode = Cash 
+   in 
+     if (i.sellingPrice * quantity) < cashInHand 
+     then preferredShop <- Buy(i, quantity, self, mode)
+     else 
+       if cashInHand > 0 
+       then {
+         let q::Int = cashInHand/i.sellingPrice 
+         in preferredShop <- Buy(i, q, self, mode)
+       } else {}
+ };
+  
+ buyUsingWallet(i::Item, quantity::Int)::Void = {
+   let mode::PaymentMode = Wallet 
+   in 
+     if (preferredShop.isWalletAccepted) 
+     then preferredShop <- Buy(i, quantity, self, mode)
+     else shopWithWalletFacility <- Buy(i, quantity, self, mode)
+  };
+ 
+ 
+  buyUsingCard(i::Item, quantity::Int)::Void = 
+    let mode::PaymentMode = Card 
+    in 
+      if preferredShop.isCardAccepted
+      then preferredShop <- Buy(i, quantity, self, mode)
+      else shopWithCardFacility <- Buy(i, quantity, self, mode)
+  };
+  
+  needToBuyInNormalState(i::Item, quantity::Int)::Void = 
+    case preferredShop.isCardAccepted, isCardHolder {
+      true, true -> 
+        let expense::Int = i.sellingPrice * quantity 
+        in 
+          if expense > cashInHand
+          then  buyUsingCard(i, quantity) 
+          else
+           if expense > thresholdValue
+           then  
+             probably(50) buyUsingCard(i, quantity) 
+             else buyUsingCash(i, quantity) }
+           else  buyUsingCash(i, quantity);
+      false, true ->  buyUsingCash(i, quantity);
+      true, false -> buyUsingCash(i, quantity);
+      false,false -> buyUsingCash(i, quantity) 
+    }
+  };
+  
+  needToBuy(i::Item, quantity::Int)::Void = {
+   case economicState {
+    Normal-> needToBuyInNormalState(i, quantity);
+    Demonetisation -> needToBuyInEconmicCrisis(i, quantity)
+    }
+  };
+  
+  needToBuyInEconmicCrisis(i::Item, quantity::Int)::Void = {
+   case isCapableOfDigitalWallet, isCardHolder {      
+      true, true -> {
+        case buyingBehaviour  {
+          CashFirst -> { 
+            let cost::Int = i.sellingPrice * quantity 
+            in {
+              if (cost < cashInHand) 
+              then  buyUsingCash(i, quantity) 
+              else { 
+                case preferredShop.isWalletAccepted, preferredShop.isCardAccepted {
+                  true, true ->{ 
+                    probably(50) buyUsingWallet(i, quantity)
+                    else buyUsingCard(i, quantity)
+                  };
+                  true, false -> buyUsingWallet(i, quantity);
+                  false, true -> buyUsingCard(i, quantity);
+                  false, false -> { 
+                    probably(50) buyUsingWallet(i, quantity) 
+                    else buyUsingCard(i, quantity)}
+                  }
+                }   
+              }    
+            };  
+          AlternateFirst -> {
+            case preferredShop.isWalletAccepted, preferredShop.isCardAccepted {
+              true, true ->
+                probably(50) buyUsingWallet(i, quantity) 
+                else buyUsingCard(i, quantity);
+              true, false -> buyUsingWallet(i, quantity);
+              false, true -> buyUsingCard(i, quantity);
+              false, false ->  {
+                let cost ::Int = i.sellingPrice * quantity 
+                in {
+                  if (cost < cashInHand) 
+                  then  buyUsingCash(i, quantity)
+                  else { 
+                    probably(50) buyUsingWallet(i, quantity) 
+                    else buyUsingCard(i, quantity)}
+                  }
+                }
+              }
+            };
+          StrictAlternate -> {
+            case preferredShop.isWalletAccepted, preferredShop.isCardAccepted {
+              true, true -> 
+                probably(50) buyUsingWallet(i, quantity) 
+                else buyUsingCard(i, quantity);
+              true, false -> buyUsingWallet(i, quantity);
+              false, true -> buyUsingCard(i, quantity);
+              false, false ->  { 
+                probably(50) buyUsingWallet(i, quantity) 
+                else buyUsingCard(i, quantity)}  
+              }
+            }
+          }
+    };
+    true, false -> {
+      case buyingBehaviour  {
+        CashFirst -> { 
+          let cost::Int =  i.sellingPrice * quantity 
+          in {
+             if cost < cashInHand 
+             then  buyUsingCash(i, quantity) 
+             else buyUsingWallet(i, quantity)        
+          }  
+        };
+        AlternateFirst -> {
+          if preferredShop.isWalletAccepted
+          then buyUsingWallet(i, quantity) 
+          else {
+            let cost::Int =  i.sellingPrice * quantity 
+            in {
+              if cost < cashInHand
+              then  buyUsingCash(i, quantity)
+              else buyUsingWallet(i, quantity)    
+            }
+          }
+        };
+        StrictAlternate -> buyUsingWallet(i, quantity)    
+      }     
+    };
+    false, true -> {
+      case buyingBehaviour  {
+        CashFirst -> { 
+           if (i.sellingPrice * quantity) < cashInHand 
+           then  buyUsingCash(i, quantity) 
+           else buyUsingCard(i, quantity)       
+        };
+        AlternateFirst -> {
+          if preferredShop.isCardAccepted
+          then buyUsingCard(i, quantity) 
+          else {
+            let cost::Int = i.sellingPrice * quantity 
+            in {
+              if  cost < cashInHand
+              then  buyUsingCash(i, quantity)
+              else buyUsingCard(i, quantity)
+            }
+          }
+        };
+        StrictAlternate -> buyUsingCard(i, quantity)   
+      }   
+    };
+    false, false -> {
+      if ((i.sellingPrice * quantity) < cashInHand) 
+      then  buyUsingCash(i, quantity) 
+      else{}    
+    }  
+  }                
+};
+  
+  
+act main::Main {
+  Time(n::Int) -> {}
+}
+
+
+
+

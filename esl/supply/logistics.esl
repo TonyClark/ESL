@@ -1,0 +1,9 @@
+export logistics;
+
+type Logistics = Act { Time(Int) };
+
+act logistics::Logistics {
+  Time(n::Int) -> {}
+}
+
+

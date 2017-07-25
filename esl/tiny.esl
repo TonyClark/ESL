@@ -1,0 +1,103 @@
+export main;
+ 
+import 'esl/lists.esl';
+
+type Test = Act { Time(Int) };
+type Main = Act { M(Int); N(Int,Int); Time(Int) };
+
+act test::Test {
+  Time(n::Int) -> {}
+};
+
+act main::Main {
+  M(emma::Int) -> self <- N(emma,emma+1);
+  N(x::Int,y::Int) when (x + 1) = y -> {
+    print[Str]('caught x + 1 = y'); 
+    print[Str]('result2 = ' + testCase(['one','two','one']));
+    stopAll()
+  };
+  N(a::Int,b::Int) -> {
+    print[Str]('Done: ' + a + ' ' + b);
+    stopAll()
+  };
+  Time(n::Int) ->
+    let x::Int = length[Int]([1,2,3,4,5]);
+        y::Int = length[Int]([1,2,3]) 
+    in {
+      caseTest1();
+      self <- M(x)
+    }
+};
+
+caseTest1()::Void =
+  case P(100) {
+    P(x::Int) -> print[Str]('P1')
+  };
+
+x::Int = 10;
+
+list1::[Int] = 0..x;
+
+list2::[Bool] = [true,false];
+
+list3::[Str] = ['a','b'];
+
+list4::[[Int]] = [0..x,1..x,2..x];
+
+testCase(l::[Str])::Int = { print[Str]('test case ' + l);
+  case l {
+    n::Str:ss::[Str] when isOne(n) -> 1 + testCase(ss);
+    n::Str:ss::[Str] when isTwo(n) -> 2 + testCase(ss);
+    [][Str] -> 0;
+    n::Str:ss::[Str] -> testCase(ss)
+  }};
+
+isOne(s::Str)::Bool = {
+  print[Str]('isOne ' + s);
+  case s {
+    'one' -> true;
+    k::Str -> false
+  }
+};
+
+isTwo(s::Str)::Bool = {
+  case s {
+    'two' -> true;
+    k::Str -> false
+  }
+};
+  
+ignore::Void =  
+    print[Str]('result1 = ' + testCase(['one','two','one']))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

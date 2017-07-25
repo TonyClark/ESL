@@ -1,0 +1,93 @@
+export main;
+
+type Main = Act{ Time(Int) };
+
+data FactItems = S1(Int) | S2(Int) | S3(Int);
+
+type Facts = KB[FactItems];
+
+type Solver = Rules {
+  fact(FactItems);
+  hist([Int],History)
+};
+
+solver::Solver = rules {
+  fact::(FactItems);
+  nth[T]::(Int,[T],T);
+  nth[T](0,[t|_],t) <- !;
+  nth[T](n,[_|ts],t) <-
+    n' := n - 1,
+    nth[T](n',ts,t);
+  delete[T]::(T,[T],[T]);
+  delete[T](x,[],[]) <- !;
+  delete[T](x,[x | l1],l2) <- !,
+    delete[T](x,l1,l2);
+  delete[T](x,[y | l1],[y | l2]) <-
+    delete[T](x,l1,l2);
+  hist::([Int],History);
+  hist(ids,[s]) <- state(ids,s), end, !;
+  hist(ids,[s|ss]) <- state(ids,s), !, next[hist(ids,ss)];
+  states::(Int,[FactItems]);
+  states(id,[S1(id),S2(id),S3(id)]);
+  state::([Int],State([Int],[Int],[Int]));
+  state(ids,State(state1,state2,state3)) <-
+    getStates(0,ids,state1), !,
+    getStates(1,ids,state2), !,
+    getStates(2,ids,state3);
+  getStates::(Int,[Int],[Int]);
+  getStates(_,[],[]) <- !;
+  getStates(n,[id|idsIn],[id|idsOut]) <- states(id,ss), nth[FactItems](n,ss,s), delete[FactItems](s,ss,ss'), recent(id,s,ss'), !, getStates(n,idsIn,idsOut);
+  getStates(n,[id|idsIn],idsOut) <- getStates(n,idsIn,idsOut);
+  recent::(Int,FactItems,[FactItems]);
+  recent(id,f,fs) <- fact(f), !;
+  recent(id,f,fs) <- facts(fs), !, false;
+  recent(id,f,fs) <- prev[recent(id,f,fs)];
+  facts::([FactItems]);
+  facts([]) <- false, !;
+  facts([f|fs]) <- fact(f), !;
+  facts([_|fs]) <- facts(fs);
+};
+
+type History = [State([Int],[Int],[Int])];
+
+facts::Facts = kb[Facts]{ 
+  
+};
+
+act main::Main {
+
+ Time(n::Int) -> {
+   facts.add(S1(1),0);
+   facts.add(S2(2),0);
+   facts.add(S3(3),0);
+   facts.add(S2(1),1);
+   facts.add(S3(2),1);
+   facts.add(S1(3),1);
+   facts.add(S3(1),2);
+   facts.add(S1(2),3);
+   facts.add(S2(3),10);
+   show hist([1,2,3],history) from solver using facts {
+     print[History](history)
+   } else print[Str]('FAIL');
+   stopAll()
+ }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,63 @@
+// This file contains the simplest ESL module.
+// It starts and stops immediately.
+
+// The root module of an application must define and export a
+// behaviour definition called main...
+
+export main;
+
+// A file consists of a series of top-level definitions. This
+// file contains a single definition for main...
+
+type Main = Act { Time(Int) };
+  
+act main::Main {
+
+  // The body of a behaviour contains rules that match messages.
+  // Messages are sent to an actor. The system sends Time(n)
+  // messages at regular intervals.
+  
+  Time(t::Int) -> {
+
+    // When an actor with the main behaviour processes a Time(n)
+    // message, it prints a message and stops the system...
+
+    print[Str]('stop at time ' + t);
+    stopAll()
+  }
+}
+
+// To run this file under EDB:
+//
+// (1) Right-click and load the file.
+// (2) An init actor will appear in the list of actors.
+// (3) Run the init actor by pressing the init button (top left).
+// (4) The main actor will appear in the list of actors.
+// (5) Send regular Time(t) messages by pressing the run button (top left).
+// (6) The message will appear in the console.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

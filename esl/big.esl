@@ -1,0 +1,27 @@
+export main;
+
+type Main = Act { Time(Int) };
+
+var::Int = 0;
+
+act x::Main {
+  -> for n::Int in 0..100 do var := var + 1;
+  Time(i::Int) -> var := var + 1
+};
+
+act main::Main {  
+
+  -> {
+    for n::Int in 0..100 do {
+       //print[Main](new x)
+       new x
+     }
+  };
+  Time(n::Int) when n > 10000 -> { print[Str]('Time=' + n + ' ' + var); stopAll() };
+  Time(n::Int) -> { }
+
+}
+
+
+
+

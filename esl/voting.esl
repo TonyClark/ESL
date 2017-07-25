@@ -1,0 +1,120 @@
+export main;
+
+import 'esl/lists.esl';
+
+type Main = Act { Time(Int) };
+
+type GUI = Act { Draw(Int,Int,Int); Init([[Voter]]) };
+
+type Voter = Act {
+  export vote::Int; setKnown::()->Void; distance::(Int,Int)->Int;
+  Time(Int)
+
+};
+
+width::Int = 100;
+height::Int = 100;
+limit::Int = 10000;
+poolSize::Int = 5;
+distance::Int = 3;
+switchingFreq::Int = 10;
+
+act voter(x::Int,y::Int)::Voter {
+
+  export vote, setKnown;
+  
+  vote::Int = probably(49)::Int 1 else 0;
+  known::[Voter] = [][Voter];
+  counter::Int = 0;
+       
+  setKnown()::Void = {
+    for p::Int in 0..(poolSize-1) do
+      let x::Int = random(distance) + 1;
+          y::Int = random(distance) + 1 in
+      let v::Voter = getVoter(x,y)
+      in if not(member[Voter](v,known))
+         then known := v:known
+         else {}
+   };
+         
+    getAgrees(delta::Int)::Voter =
+      if (delta < width) and (delta < height)
+      then 
+         let x::Int = random(distance) + delta;
+             y::Int = random(distance) + delta in
+         let v::Voter = getVoter(x,y)
+         in if (v <> self) and (v.vote = vote) and not(member[Voter](v,known))
+            then v 
+            else getAgrees(delta +1)
+      else null;
+         
+    switch()::Void = 
+      let v::Voter = nth[Voter](known,random(length[Voter](known)))
+      in if v.vote <> vote
+         then
+           let newV::Voter = getAgrees(0)
+           in if newV <> null
+              then {
+                known := remove[Voter](v,known);
+                known := newV:known
+              } else {}
+         else {};
+     
+  influenced()::Void =
+    let v::Voter = nth[Voter](known,random(length[Voter](known)))
+    in if v.vote <> vote
+       then {
+         vote := v.vote;
+         gui <- Draw(vote,x,y)
+       } else {}
+  
+  Time(n::Int) when known <> [][Voter] -> 
+    grab(voters) {
+      counter := counter + 1;
+      if 0 = counter % switchingFreq
+      then switch()
+      else influenced()
+    };
+  
+  Time(n::Int) -> {}
+};
+
+voters::[[Voter]] = [ [ new voter(x,y) | y::Int <- 0..(height-1) ] | x::Int <- 0..(width-1) ];
+
+getVoter(x::Int,y::Int)::Voter = nth[Voter](nth[[Voter]](voters,x),y);
+
+setKnown()::Void = 
+  for x::Int in 0..(width-1) do
+    for y::Int in 0..(height-1) do {
+      getVoter(x,y).setKnown()
+    };
+    
+gui::GUI = new 'test.Voting'[GUI](width,height);
+
+act main::Main {
+
+  -> {
+    grab(voters) {
+      setKnown();
+      print[Str]('KNOWN SET');
+      gui <- Init(voters)
+    }
+  };
+
+ Time(n::Int) when n > limit -> {
+   grab(voters) print[Str]('Voters at ' + n + ' ' + [ [ getVoter(x,y).vote | y::Int <- 0..(height-1) ] | x::Int <- 0..(width-1) ]);
+   stopAll()
+ };
+ 
+ Time(n::Int) -> {
+ }
+ 
+}
+
+
+
+
+
+
+
+

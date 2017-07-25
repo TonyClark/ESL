@@ -1,0 +1,157 @@
+export main;
+
+import 'esl/lists.esl';
+
+// This example is taken from HIVE - An Agent Based Modeling Framework an MSc Thesis by Roohi Bharti.
+// The idea is that customers both consume and provide services. A facilitator F manages a collection
+// of customers that freely interact through F to provide and consume services. Each interaction 
+// benefits the provider by 3 units and costs the consumer 3 units. When a customer loses their
+// wealth, they die. As observed in the thesis, the free simulation of customers results in the wealth
+// being located in a very small number of individuals where the rest of the customers die off.
+
+type Main = Act{ Time(Int) };
+
+type Customer = Act { export wealth::Int; pprint::()->Void; Time(Int); Inc(); Dec(); Release() };
+
+type Facilitator = Act { Start(); Time(Int); FindProvider(Customer); Stop(); Kill(Customer) };
+
+act facilitator(n::Int,rep::Int)::Facilitator {
+
+  // The facilitator is used to manage interactions between a consumer and a provider.
+  // The live customers are maintained on a list...
+
+  customers::[Customer] = [][Customer];
+
+  report(time::Int)::Void = 
+
+    // Produce a report at a particular time. This just prints out the current
+    // wealth of the live customers...
+
+    let totalWealth::Int = 0 
+    in {
+      print[Str]('');
+      print[Str]('Report at time ' + time);
+      for c::Customer in customers do {
+        c.pprint();
+        totalWealth := totalWealth + c.wealth
+      };
+      print[Str]('dead customers = ' + (n - length[Customer](customers)));
+      print[Str]('total wealth = ' + totalWealth)
+    }
+
+  // Initialise at time 1. Note that there is currently a bug in ESL where 'self' has
+  // the wrong value when used in an initialisation clause. Hence the use of a rule...
+
+  Start -> customers := [ new customer(self) | n::Int <- 1..n ];
+
+  // If we have hit the time to produce a report then do so...
+
+  Time(n::Int) when (n % rep) = 0 -> report(n);
+
+  Time(n::Int) -> {};
+
+  // If a customer is going to die then remove it from the list of live customers...
+
+  Kill(c::Customer) -> {
+    customers := remove[Customer](c,customers);
+    kill[Customer](c)
+  };
+
+  Stop -> {
+    report(0);
+    stopAll()
+  };
+
+  FindProvider(c::Customer) -> { 
+
+    // A customer c sends the facilitator a message to find a provider. One is
+    // selected at random. When a customer asks for a provider it will lock
+    // itself until it is unlocked either via a Release message or via an Inc
+    // message. The Inc and Dec messages just transfer wealth from one customer
+    // to another...
+
+    let n::Int = random(length[Customer](customers))
+    in if nth[Customer](customers,n) = c
+       then { c <- Release }
+       else { 
+         nth[Customer](customers,n) <- Dec;
+         c <- Inc
+       } }
+};
+
+act customer(f::Facilitator)::Customer {
+
+  export pprint, wealth;
+
+  busy::Bool = false;
+
+  pprint()::Void = print[Str]('Customer(' + wealth + ')');
+
+  wealth::Int = 100
+
+  Time(n::Int) when not(busy) -> {
+
+    // Each time click, if the customer is not already busy, it checks to see
+    // if it should be killed. If not, then it asks the facilitator for a provider...
+
+    if wealth < 1
+    then f <- Kill(self)
+    else {
+       busy := true; 
+       f <- FindProvider(self)
+    }
+  };
+
+  Time(n::Int) -> {};
+
+  Inc -> {
+
+    // Receive some wealth and become free to interact...
+
+    wealth := wealth + 3; 
+    busy := false
+  };
+
+  Dec when wealth > 0 -> {
+    wealth := wealth - 3; 
+    if wealth < 1 then f <- Kill(self) else {}
+  };
+
+  Dec -> {};
+
+  Release -> busy := false
+
+};
+
+limit::Int = 2000;
+
+act main::Main {
+
+  // Create the faciliatator with the number of customers and the 
+  // reporting time gap...
+
+  //f::Facilitator = new facilitator(50,50000)
+  f::Facilitator = let f::Facilitator = new facilitator(100,100) in { f <- Start; f }
+
+  // Set the time limit for the simulation...
+
+  Time(n::Int) when n > limit -> { f <- Stop };
+
+  Time(n::Int) -> {}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

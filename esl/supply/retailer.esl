@@ -1,0 +1,9 @@
+export retailer;
+
+type Retailer = Act { Time(Int) };
+
+act retailer(location::Str)::Retailer {
+  Time(n::Int) -> {}
+}
+
+

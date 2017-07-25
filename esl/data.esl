@@ -1,0 +1,82 @@
+export main;
+
+type Main = Act { Time(Int) };
+
+//data Coin = Head | Tail;
+
+type Coin = union { Head, Tail };
+cnstr Head = Coin.Head;
+cnstr Tail = Coin.Tail;
+
+// data rec Tree = Leaf | Branch(Tree,Tree)
+
+type Tree = rec T. union{Leaf,Branch(T,T)};
+cnstr Leaf = unfold[Tree].Leaf;
+cnstr Branch = unfold[Tree].Branch;
+
+size(t::Tree)::Int = 
+  case unfold[Tree]t {
+    t1::Tree;
+    t2::Tree;
+    Leaf -> 1;
+    Branch(t1,t2) -> (size(t1)) + (size(t2))
+  };
+
+// data rec List[T] = Nil | Cons(T,List[T])
+
+type List[T] = rec L. union { Nil, Cons(T,L) };
+cnstr Nil[T] = unfold[List[T]].Nil;
+cnstr Cons[T] = unfold[List[T]].Cons;
+
+consInt(i::Int,l::List[Int])::List[Int] = fold[List[Int]]Cons[Int](i,l);
+nilInt::List[Int] = fold[List[Int]]Nil[Int];
+
+type Data[T] = union{ Something(T), Nothing };
+cnstr Something[T] = Data[T].Something;
+cnstr Nothing[T] = Data[T].Nothing;
+
+flip(c::Coin)::Coin =
+  case c {
+    Head -> Tail;
+    Tail -> Head
+  };
+
+get[T](d::Data[T],x::T)::T =
+  case d {
+    Something[T](x) -> x;
+    Nothing[T] -> x
+  };
+
+length[T](l::List[T])::Int =
+  case unfold[List[T]]l {
+    Nil[T] -> 0;
+    Cons[T](h::T,t::List[T]) -> 1 + length[T](t)
+  };
+
+act main::Main {
+
+  Time(n::Int) -> {
+    print[Int](length[Int](consInt(2,consInt(1,nilInt))));
+    print[Coin](flip(flip(Head)));
+    print[Bool](get[Bool](Something[Bool](true),false));
+    print[Bool](get[Bool](Nothing[Bool],true));
+    print[Int](size(fold[Tree]Leaf));
+    stopAll()
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

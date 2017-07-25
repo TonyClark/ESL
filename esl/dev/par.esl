@@ -1,0 +1,196 @@
+export main;
+
+import 'esl/lists.esl','esl/displays.esl';
+
+type Par = Rules {
+  // Used by a passenger to calculate a route.
+  test();
+  a(Int);
+  b(Int)
+};
+
+testRules::Par = rules {
+
+ member::(Int,[Int]);
+ member(n,[n|_]) <- !;
+ member(n,[_|l]) <- member(n,l);
+  
+  mkList::(Int,[Int]);
+  mkList(0,[]);
+  mkList(n,[n|l]) <- m := n - 1, mkList(m,l);
+
+ test::();
+ test <- 
+   mkList(1000,l1),
+   mkList(2000,l2),
+   //member2(1500,l1,l2,dir),
+   par[member2(1500,l1,l2,dir);b(x)],
+   println(dir);
+ 
+ member2::(Int,[Int],[Int],Str);
+ member2(n,l1,l2,'left') <- member(n,l1);
+ member2(n,l1,l2,'right') <- member(n,l2);
+ 
+ b::(Int);
+ b(y) <- println('B');
+
+};
+
+type Gr = G([Str],[E(Str,Str)]);
+
+toDisplay(g::Gr)::EDBDisplay = 
+  case g {
+    G(nodes::[Str],edges::[E(Str,Str)]) ->
+      fold[EDBDisplay]Graph([][Property],[Node([][Property],indexOf[Str](n,nodes),fold[EDBDisplay]HTML(n)) | n::Str <- nodes],[Edge([][Property],indexOf[Str](n1,nodes),indexOf[Str](n2,nodes),fold[EDBDisplay]HTML('')) | E(n1::Str,n2::Str) <- edges ])
+  };
+      
+       
+graph(n::Int)::Gr = 
+  let nodes::[Str] = [ 'n'+i | i::Int <- 0..n ] in
+  let sets::[[Str]] = [ [n] | n::Str <- nodes ]
+  in G(nodes,mkEdges(nodes,sets,[][E(Str,Str)]));
+  
+mkEdges(nodes::[Str],sets::[[Str]],edges::[E(Str,Str)])::[E(Str,Str)] =
+  if length[[Str]](sets) = 1
+  then edges
+  else 
+    let n1::Str = nth[Str](nodes,random(length[Str](nodes)));
+        n2::Str = nth[Str](nodes,random(length[Str](nodes)))
+    in if n1 = n2 then mkEdges(nodes,sets,edges) else mkEdges(nodes,joinSets(n1,n2,sets),E(n1,n2):edges);
+    
+joinSets(n1::Str,n2::Str,sets::[[Str]])::[[Str]] =
+  let c1::[Str] = getSet(n1,sets);
+      c2::[Str] = getSet(n2,sets) in
+  let sets::[[Str]] = remove[[Str]](c1,remove[[Str]](c2,sets)) 
+  in if c1 = c2
+     then sets+[c1]
+     else sets+[c1+c2];
+     
+getSet(n::Str,sets::[[Str]])::[Str] =
+  if sets = [][[Str]]
+  then [][Str]
+  else 
+    if member[Str](n,head[[Str]](sets))
+    then head[[Str]](sets)
+    else getSet(n,tail[[Str]](sets));
+  
+type Solver = Rules {
+  route1(Gr,Str,Str,[Str],[Str]);
+  route2(Gr,Str,Str,[Str],[Str])
+};
+
+solver::Solver = rules {
+
+  // A set of rules used to implement the Solver interface...
+  
+  length[T] :: ([T],Int);
+  length[T]([],0) <- !;
+  length[T]([_ | l],n) <-
+    length[T](l,m),
+    n := m + 1;
+
+  subset[T]::([T],[T]);
+  subset[T]([],s);
+  subset[T]([x | xs],s) <-
+    member[T](x,s),
+    subset[T](xs,s);
+    
+  member[T]::(T,[T]);
+  member[T](x,[x|_]);
+  member[T](x,[_|xs]) <-
+    member[T](x,xs);
+    
+  append[T]::([T],[T],[T]);
+  append[T]([],l,l);
+  append[T]([h|t],l,[h|t']) <- append[T](t,l,t');
+    
+  notMember[T]::(T,[T]);
+  notMember[T](x,l) <- member[T](x,l), !, false;
+  notMember[T](_,_);
+  
+  deleteAll[T]::([T],[T],[T]);
+  deleteAll[T](items,[],items);
+  deleteAll[T](i,[x|xs],o) <-
+    delete[T](x,i,i'),
+    deleteAll[T](i',xs,o);
+    
+  delete[T]::(T,[T],[T]);
+  delete[T](x,[],[]);
+  delete[T](x,[x | l1],l2) <- !,
+    delete[T](x,l1,l2);
+  delete[T](x,[y | l1],[y | l2]) <-
+    delete[T](x,l1,l2);
+  
+  route1::(Gr,Str,Str,[Str],[Str]);
+  route1(g,n,n,visited,[n]) <- !;
+  route1(G(nodes,edges),n,m,visited,[n|planOut]) <- length[Str](visited,l), l < 10,
+    par[link(edges,n,n'); notMember[Str](n',visited), route1(G(nodes,edges),n',m,[n'|visited],planOut)];
+  
+  route2::(Gr,Str,Str,[Str],[Str]);
+  route2(g,n,n,visited,[n]) <- !;
+  route2(G(nodes,edges),n,m,visited,[n|planOut]) <- length[Str](visited,l), l < 10,
+    link(edges,n,n'),notMember[Str](n',visited), route2(G(nodes,edges),n',m,[n'|visited],planOut);
+    
+  link::([E(Str,Str)],Str,Str);
+  link(edges,source,target) <- member[E(Str,Str)](E(source,target),edges);
+  link(edges,source,target) <- member[E(Str,Str)](E(target,source),edges);
+    
+};
+
+test1(g::Gr)::Int =
+  let t0::Int = sysTime()
+  in {
+    show route1(g,'n0','n2',['n'],plan1) [g] from solver {
+      print[[Str]](plan1)
+    } timeout(10000) print[Str]('TIMEOUT 1')
+      else print[Str]('FAIL 1');
+    sysTime() - t0
+  };
+  
+test2(g::Gr)::Int =
+  let t0::Int = sysTime()
+  in {
+    show route2(g,'n0','n2',['n'],plan2) [g] from solver {
+      print[[Str]](plan2)
+    } timeout(10000) print[Str]('TIMEOUT 2')
+      else print[Str]('FAIL 2');
+    sysTime() - t0
+  };
+  
+sysTime::()->Int = builtin[()->Int]('runtime.actors.Builtins','sysTime',0);
+
+tests(lim::Int,m::Int,results::[Result(Int,[Int],[Int])])::[Result(Int,[Int],[Int])] =
+  let runTest(g::Gr,test::(Gr)->Int,n::Int)::[Int] = [ test(g) | x::Int <- 1..m ]
+  in [ let g::Gr = graph(n) in Result(n, runTest(g,test1,n), runTest(g,test2,n)) | n::Int <- (lim - 10)..lim ];
+    
+
+act main::Act { Time(Int) } {
+
+  -> {
+    edb <- Show('graph',toDisplay(graph(30)));
+    for r::Result(Int,[Int],[Int]) in tests(50,3,[][Result(Int,[Int],[Int])]) do {
+       print[Result(Int,[Int],[Int])](r)
+     }
+   };
+  
+  Time(n::Int) -> {
+    print[Str]('time: ' + now);
+    stopAll()
+  }
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

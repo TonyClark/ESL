@@ -1,0 +1,21 @@
+export main;
+
+import 'esl/supply/plant.esl';
+import 'esl/supply/raw_materials_supplier.esl';
+
+act main::Act{Init(); Time(Int)} {
+
+  Init -> 
+    let plant::Plant = new plant('UK');
+        rms1::RawMaterialsSupplier = new rawMaterialsSupplier('UK',Material('Resin'));
+        rms2::RawMaterialsSupplier = new rawMaterialsSupplier('UK',Material('Paint'));
+        rms3::RawMaterialsSupplier = new rawMaterialsSupplier('UK',Material('Packaging'))
+    in {};
+    
+  Time(1) -> 
+    self <- Init;
+
+  Time(n::Int) -> { stopAll() }
+  
+}
+

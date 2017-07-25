@@ -1,0 +1,15 @@
+export main;
+
+act main {
+
+  Time(1) -> print[Str]('this is the start of time.');
+
+  Time(t::Int) when t > 20 -> {
+    print[Str]('this is the end of time.');
+    stopAll()
+  };
+
+  Time(t) -> print[Str]('this is time ' + t)
+}
+
+

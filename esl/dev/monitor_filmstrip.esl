@@ -1,0 +1,122 @@
+export main;
+
+type Customer = Act { export id::Int; Value(Int,Int,Int); Time(Int) };
+type Fact = Act{ export id::Int; Get(Int,Int,Int,Customer); Time(Int) };
+
+type Property = Prop(Str,Str);
+
+type Props = [Property];
+type PictureElement = union { 
+  Rectangle(Int,Int,Int,Int,Str), 
+  Circle(Int,Int,Int,Str), 
+  Line(Int,Int,Int,Int,Str),
+  Image(Int,Int,Int,Int,Str),
+  Text(Int,Int,Str,Str)  
+};
+type EDBDisplay = rec T. union { 
+                                                    // Types of EDB display element.
+  HTML(Str),                                        // Raw HTML.
+  Table(Props,[Row(Props,[Data(Props,T)])]),        // A table of display elements.
+  Pie(Props,Str,Int,Int,[Slice(Props,Str,Int)]),    // A pie chart.
+  Picture(Int,Int,[PictureElement]),
+  Sequence([Actor(Int,Int,Int,Str)],[Message(Int,Int,Int,Str)])
+};
+
+cnstr Sequence = unfold[EDBDisplay].Sequence;
+
+messages::[Message(Int,Str,Str,Str)] = [Message(1,'rec(14)','both(19)','C(Pair(Leaf(L(16)),Leaf(R(17))),0,E(3))'),
+Message(2,'both(19)','implies(13)','C(Pair(Leaf(L(16)),Leaf(R(17))),0,next(18))'),
+Message(2,'implies(13)','split(11)','C(Pair(Leaf(L(16)),Leaf(R(17))),0,both(20))'),
+Message(3,'L(16)','L(16)','Queue'),
+Message(3,'split(11)','both(10)','C(Leaf(L(16)),0,join(21))'),
+Message(3,'split(11)','E(3)','C(Leaf(R(17)),0,join(21))'),
+Message(3,'both(10)','isGRE(5)(4)','C(Leaf(L(16)),0,join(21))'),
+Message(3,'both(10)','prev(9)','C(Leaf(L(16)),0,join(21))'),
+Message(4,'R(17)','R(17)','Queue'),
+Message(4,'L(16)','L(16)','Queue'),
+Message(4,'E(3)','join(21)','C(Leaf(R(17)),0,E(3))'),
+Message(5,'next(18)','rec(14)','C(Pair(Leaf(L(16)),Leaf(R(17))),1,E(3))'),
+Message(5,'next(18)','rec(14)','C(Pair(Leaf(L(16)),Leaf(R(17))),1,E(3))'),
+Message(5,'R(17)','R(17)','Queue'),
+Message(5,'L(16)','L(16)','Queue'),
+Message(6,'R(17)','R(17)','Queue'),
+Message(6,'rec(14)','both(19)','C(Pair(Leaf(L(16)),Leaf(R(17))),1,E(3))'),
+Message(6,'rec(14)','both(19)','C(Pair(Leaf(L(16)),Leaf(R(17))),1,E(3))'),
+Message(6,'L(16)','L(16)','DeQueue'),
+Message(7,'R(17)','R(17)','Queue'),
+Message(7,'both(19)','implies(13)','C(Pair(Leaf(L(16)),Leaf(R(17))),1,next(18))'),
+Message(7,'both(19)','implies(13)','C(Pair(Leaf(L(16)),Leaf(R(17))),1,next(18))'),
+Message(7,'implies(13)','split(11)','C(Pair(Leaf(L(16)),Leaf(R(17))),1,both(23))'),
+Message(7,'implies(13)','split(11)','C(Pair(Leaf(L(16)),Leaf(R(17))),1,both(24))'),
+Message(7,'split(11)','both(10)','C(Leaf(L(16)),1,join(25))'),
+Message(7,'split(11)','E(3)','C(Leaf(R(17)),1,join(25))'),
+Message(7,'split(11)','both(10)','C(Leaf(L(16)),1,join(26))'),
+Message(7,'split(11)','E(3)','C(Leaf(R(17)),1,join(26))'),
+Message(7,'both(10)','isGRE(5)(4)','C(Leaf(L(16)),1,join(25))'),
+Message(7,'both(10)','prev(9)','C(Leaf(L(16)),1,join(25))'),
+Message(7,'both(10)','isGRE(5)(4)','C(Leaf(L(16)),1,join(26))'),
+Message(7,'both(10)','prev(9)','C(Leaf(L(16)),1,join(26))'),
+Message(8,'next(18)','rec(14)','C(Pair(Leaf(L(16)),Leaf(R(17))),2,E(3))'),
+Message(8,'next(18)','rec(14)','C(Pair(Leaf(L(16)),Leaf(R(17))),2,E(3))'),
+Message(8,'prev(9)','both(8)','C(Leaf(L(16)),0,join(25))'),
+Message(8,'prev(9)','both(8)','C(Leaf(L(16)),0,join(26))'),
+Message(8,'L(16)','L(16)','DeQueue'),
+Message(8,'both(8)','isGRE(5)(4)','C(Leaf(L(16)),0,reset(27))'),
+Message(8,'both(8)','prev(7)','C(Leaf(L(16)),0,reset(27))'),
+Message(8,'both(8)','isGRE(5)(4)','C(Leaf(L(16)),0,reset(28))'),
+Message(8,'both(8)','prev(7)','C(Leaf(L(16)),0,reset(28))'),
+Message(8,'R(17)','R(17)','DeQueue'),
+Message(8,'E(3)','join(25)','C(Leaf(R(17)),1,E(3))'),
+Message(8,'E(3)','join(26)','C(Leaf(R(17)),1,E(3))')];
+
+processMessages(ms::[Message(Int,Str,Str,Str)])::[Message(Int,Int,Int,Str)] =
+  case ms {
+    [][Message(Int,Str,Str,Str)] -> [][Message(Int,Int,Int,Str)];
+    Message(time::Int,src::Str,tgt::Str,m::Str):ms::[Message(Int,Str,Str,Str)] -> 
+      Message(time,actorId(src),actorId(tgt),m):processMessages(ms)
+  };
+
+getActors(ms::[Message(Int,Str,Str,Str)])::[Actor(Int,Int,Int,Str)] =
+  case ms {
+    [][Message(Int,Str,Str,Str)] -> [][Actor(Int,Int,Int,Str)];
+    Message(time::Int,src::Str,tgt::Str,m::Str):ms::[Message(Int,Str,Str,Str)] -> 
+      Actor(actorId(src),0,death,actorBehaviour(src)):
+        Actor(actorId(tgt),0,death,actorBehaviour(tgt)):
+          getActors(ms)
+  };
+  
+removeDuplicates(as::[Actor(Int,Int,Int,Str)])::[Actor(Int,Int,Int,Str)] =
+  case as {
+    [][Actor(Int,Int,Int,Str)] -> [][Actor(Int,Int,Int,Str)];
+    Actor(id::Int,b::Int,d::Int,bb::Str):as::[Actor(Int,Int,Int,Str)] ->
+      Actor(id,b,d,bb):removeActor(id,removeDuplicates(as))
+  };
+  
+removeActor(id::Int,as::[Actor(Int,Int,Int,Str)])::[Actor(Int,Int,Int,Str)] =
+  case as {
+    [][Actor(Int,Int,Int,Str)] -> [][Actor(Int,Int,Int,Str)];
+    Actor(id2::Int,b::Int,d::Int,bb::Str):as::[Actor(Int,Int,Int,Str)] ->
+      if id = id2
+      then removeActor(id,as)
+      else Actor(id2,b,d,bb):removeActor(id,as)
+  };
+  
+actorId::(Str)->Int = builtin[(Str)->Int]('test.Strings','actorId',1);
+actorBehaviour::(Str)->Str = builtin[(Str)->Str]('test.Strings','actorBehaviour',1);
+death::Int = 20;
+
+act main::Act{Time(Int)} {
+
+  Time(n::Int) -> {
+    edb <- Show('Sequence',fold[EDBDisplay]Sequence(removeDuplicates(getActors(messages)),processMessages(messages)));
+    stopAll()
+  }
+  
+}
+
+
+
+
+
+
+

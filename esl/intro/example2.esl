@@ -1,0 +1,22 @@
+export main;
+
+import 'esl/intro/example3.esl';
+
+type A = Act { Time(Bool) };
+
+type Main = Act { Time(Int) };
+
+act main::Main {
+  a::A = new other
+  Time(t::Int) -> {
+    print[Other](a);
+    stopAll()
+  }
+}
+
+
+
+
+
+
+

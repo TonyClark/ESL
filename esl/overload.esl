@@ -1,0 +1,14 @@
+export main;
+
+act main::Act{Time(Int)} {
+
+  f(Test(n::Int),Test(m::Int))::Void = print[Str]('x') when (n = 5) and (m = 10);
+  f(Test(n::Int),Test(m::Int))::Void = print[Int](n+m);
+  f(t::Test(Int),m::Test(Int))::Void  = print[Str]('not matched')
+  
+  Time(n::Int) when n > 20 -> stopAll();
+  Time(n::Int)   -> f(Test(n),Test(n*2))
+
+}
+
+

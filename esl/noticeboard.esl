@@ -1,0 +1,20 @@
+export noticeboard, Noticeboard;
+
+import 'esl/lists.esl';
+
+type Noticeboard[T] = Act{ export data::[T]; Time(Int); Add(T); Remove(T) };
+
+act noticeboard[T]::Noticeboard[T] {
+
+  // A notice-board is just a global variable that is shared 
+  // between multiple actors. In this case we record the
+  // current opportunities.
+  
+  export data;
+  data::[T] = [][T]
+  Time(n::Int) -> {};
+  Add(d::T) ->data := d:data;
+  Remove(d::T) -> data := remove[T](d,data)
+}  
+
+

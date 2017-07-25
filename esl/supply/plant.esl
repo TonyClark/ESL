@@ -1,0 +1,9 @@
+export plant,Plant;
+
+type Plant = Act { Time(Int) };
+
+act plant(location::Str)::Plant {
+  Time(n::Int) -> {}
+}
+
+

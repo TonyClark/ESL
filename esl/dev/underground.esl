@@ -1,0 +1,648 @@
+export main;
+
+import 'esl/lists.esl', 'esl/displays.esl';
+
+// This file contains a simulation of passengers on the London Underground. Each passenger is an actor who is
+// responsible for slecting a destination station and planning their journey. A STRIPS-like planner is implemented
+// using the logic rules system of ESL and is used to construct an action plan when a passenger needs to work
+// out how to get to their destination.
+
+limit::Int = 90000; // Stop when time = limit.
+
+type Underground = Act { Time(Int); AddPlan(Traveller,[Action]); Step(); Show() }; // The underground is an actor.
+
+data TravellerState = Travelling(Station) | Planning(ULine,Station,Station) | Arrived(Station); 
+
+type Traveller = Act { export state::TravellerState; id::Int; GetPlan(Underground); ChangeTo(ULine); Time(Int) };
+
+type Location = Loc(Traveller,Station);
+
+data ULine = Central | Piccadilly | District | HammersmithAndCity;
+
+type BrowserListener = Act { BrowserEvent(Str) };
+
+data Station =
+  EalingBroadway | 
+  WestActon   | 
+  NorthActon | 
+  EastActon | 
+  EalingCommon | 
+  WhiteCity | 
+  ShepherdsBush | 
+  HollandPark | 
+  NottingHillGate | 
+  ActonTown | 
+  ChiswickPark | 
+  TurnhamGreen | 
+  StamfordBrook | 
+  RavenscourtPark |
+  Hammersmith | 
+  GoldhawkRoad | 
+  ShepherdsBushMarket | 
+  WoodLane | 
+  BaronsCourt | 
+  GloucesterRoad | 
+  Knightsbridge | 
+  Queensway | 
+  LancasterGate | 
+  MarbleArch | 
+  BondStreet | 
+  OxfordCircus | 
+  TottenhamCourtRoad | 
+  Holborn | 
+  ChanceryLane | 
+  StPauls | 
+  Bank | 
+  LiverpoolStreet | 
+  BethnalGreen | 
+  MileEnd | 
+  Stratford | 
+  WestKensington | 
+  EarlsCourt | 
+  SouthKensington | 
+  SloanSquare | 
+  Victoria | 
+  StJamesPark |
+  Westminster |
+  Embankment |
+  Temple |
+  Blackfriars |
+  MansionHouse |
+  CannonStreet |
+  Monument |
+  TowerHill |
+  AldgateEast |
+  Whitechapel |
+  StepneyGreen |
+  MileEnd | 
+  LatimerRoad | 
+  LadbrookGrove | 
+  WestbournePark | 
+  RoyalOak |
+  Paddington | 
+  EdgewareRoad |
+  BakerStreet | 
+  GreatPortlandStreet | 
+  EustonSquare | 
+  KingsCross | 
+  Farringdon | 
+  Barbican | 
+  Moorgate | 
+  HydeParkCorner | 
+  GreenPark | 
+  PiccadillyCircus | 
+  LeicesterSquare | 
+  CoventGarden | 
+  RussellSquare | 
+  CaledonianRoad | 
+  HollowayRoad |
+  Arsenal |
+  FinsburyPark;
+  
+stations::[Station] = [
+  EalingBroadway, 
+  WestActon, 
+  NorthActon, 
+  EastActon, 
+  EalingCommon, 
+  WhiteCity, 
+  ShepherdsBush, 
+  HollandPark, 
+  NottingHillGate, 
+  ActonTown, 
+  ChiswickPark, 
+  TurnhamGreen, 
+  StamfordBrook, 
+  RavenscourtPark,
+  Hammersmith, 
+  GoldhawkRoad, 
+  ShepherdsBushMarket, 
+  WoodLane, 
+  BaronsCourt, 
+  GloucesterRoad, 
+  Knightsbridge, 
+  Queensway, 
+  LancasterGate, 
+  MarbleArch, 
+  BondStreet, 
+  OxfordCircus, 
+  TottenhamCourtRoad, 
+  Holborn, 
+  ChanceryLane, 
+  StPauls, 
+  Bank, 
+  LiverpoolStreet, 
+  BethnalGreen, 
+  MileEnd, 
+  Stratford, 
+  WestKensington, 
+  EarlsCourt, 
+  SouthKensington, 
+  SloanSquare, 
+  Victoria, 
+  StJamesPark,
+  Westminster,
+  Embankment,
+  Temple,
+  Blackfriars,
+  MansionHouse,
+  CannonStreet,
+  Monument,
+  TowerHill,
+  AldgateEast,
+  Whitechapel,
+  StepneyGreen,
+  MileEnd, 
+  LatimerRoad, 
+  LadbrookGrove, 
+  WestbournePark, 
+  RoyalOak,
+  Paddington, 
+  EdgewareRoad,
+  BakerStreet, 
+  GreatPortlandStreet, 
+  EustonSquare, 
+  KingsCross, 
+  Farringdon, 
+  Barbican, 
+  Moorgate, 
+  HydeParkCorner, 
+  GreenPark, 
+  PiccadillyCircus, 
+  LeicesterSquare, 
+  CoventGarden, 
+  RussellSquare, 
+  CaledonianRoad, 
+  HollowayRoad,
+  Arsenal,
+  FinsburyPark
+];
+
+data State =  On(ULine) | At(Station) | Link(ULine,Station,Station) | ChangeLine(Station,ULine,ULine);
+
+data Action = Move(Station,Station) | Change(Station,ULine,ULine);
+  
+type Solver = Rules {
+  // Used by a passenger to calculate a route.
+  map([State]);
+  route(ULine,Station,Station,[Action])
+};
+
+solver::Solver = rules {
+
+  // A set of rules used to implement the Solver interface...
+
+  subset[T]::([T],[T]);
+  subset[T]([],s);
+  subset[T]([x | xs],s) <-
+    member[T](x,s),
+    subset[T](xs,s);
+    
+  member[T]::(T,[T]);
+  member[T](x,[x|_]);
+  member[T](x,[_|xs]) <-
+    member[T](x,xs);
+    
+  append[T]::([T],[T],[T]);
+  append[T]([],l,l);
+  append[T]([h|t],l,[h|t']) <- append[T](t,l,t');
+    
+  notMember[T]::(T,[T]);
+  notMember[T](x,l) <- member[T](x,l), !, false;
+  notMember[T](_,_);
+  
+  deleteAll[T]::([T],[T],[T]);
+  deleteAll[T](items,[],items);
+  deleteAll[T](i,[x|xs],o) <-
+    delete[T](x,i,i'),
+    deleteAll[T](i',xs,o);
+    
+  delete[T]::(T,[T],[T]);
+  delete[T](x,[],[]);
+  delete[T](x,[x | l1],l2) <- !,
+    delete[T](x,l1,l2);
+  delete[T](x,[y | l1],[y | l2]) <-
+    delete[T](x,l1,l2);
+    
+  // A STRIPS-like planner where
+  // solve(current,goals,sofar,plan) 
+  // is true when plan is a list of actions that is the
+  // extension to sofar that will get from the current 
+  // state to the goal state.
+  
+  solve::([State],[State],[Action],[Action]);
+  solve(state,goal,plan,plan) <-
+    subset[State](goal,state);
+  solve(state,goal,sofar,plan) <- noBacktrack(sofar),
+    action(action,precons,add,delete), //noBacktrack([action|sofar]),
+    subset[State](precons,state),
+    notMember[Action](action,sofar),
+    deleteAll[State](state,delete,remainder),
+    append[State](add,remainder,newState),
+    append[Action](sofar,[action],sofar'),
+    solve(newState,goal,sofar',plan);
+    
+  action::(Action,[State],[State],[State]);
+  action(Move(s1,s2),[At(s1),On(l),Link(l,s1,s2)],[At(s2)],[At(s1)]);
+  action(Move(s1,s2),[At(s1),On(l),Link(l,s2,s1)],[At(s2)],[At(s1)]);
+  action(Change(s,l1,l2),[At(s),On(l1),ChangeLine(s,l1,l2)],[On(l2)],[On(l1)]);
+  action(Change(s,l1,l2),[At(s),On(l1),ChangeLine(s,l2,l1)],[On(l2)],[On(l1)]);
+  
+  // The underground map...
+  map::([State]);
+  map([
+    // Central Line...
+    Link(Central,EalingBroadway,WestActon),
+    Link(Central,WestActon,NorthActon),
+    Link(Central,NorthActon,EastActon),
+    Link(Central,EastActon,WhiteCity),
+    Link(Central,WhiteCity,ShepherdsBush),
+    Link(Central,ShepherdsBush,HollandPark),
+    Link(Central,HollandPark,NottingHillGate),
+    Link(Central,NottingHillGate,Queensway),
+    Link(Central,Queensway,LancasterGate),
+    Link(Central,LancasterGate,MarbleArch),
+    Link(Central,MarbleArch,BondStreet),
+    Link(Central,BondStreet,OxfordCircus),
+    Link(Central,OxfordCircus,TottenhamCourtRoad),
+    Link(Central,TottenhamCourtRoad,Holborn),
+    Link(Central,Holborn,ChanceryLane),
+    Link(Central,ChanceryLane,StPauls),
+    Link(Central,StPauls,Bank),
+    Link(Central,Bank,LiverpoolStreet),
+    Link(Central,LiverpoolStreet,BethnalGreen),
+    Link(Central,BethnalGreen,MileEnd),
+    Link(Central,MileEnd,Stratford),
+    
+    // DistrictLine...
+    Link(District,EalingBroadway,EalingCommon),
+    Link(District,EalingCommon,ActonTown),
+    Link(District,ActonTown,ChiswickPark),
+    Link(District,ChiswickPark,TurnhamGreen),
+    Link(District,TurnhamGreen,StamfordBrook),
+    Link(District,StamfordBrook,RavenscourtPark),
+    Link(District,RavenscourtPark,Hammersmith),
+    Link(District,Hammersmith,BaronsCourt),
+    Link(District,BaronsCourt,WestKensington),
+    Link(District,WestKensington,EarlsCourt),
+    Link(District,EarlsCourt,GloucesterRoad),
+    Link(District,GloucesterRoad,SouthKensington),
+    Link(District,SouthKensington,SloanSquare),
+    Link(District,SloanSquare,Victoria),
+    Link(District,Victoria,StJamesPark),
+    Link(District,StJamesPark,Westminster),
+    Link(District,Westminster,Embankment),
+    Link(District,Embankment,Temple),
+    Link(District,Temple,Blackfriars),
+    Link(District,Blackfriars,MansionHouse),
+    Link(District,MansionHouse,CannonStreet),
+    Link(District,CannonStreet,Monument),
+    Link(District,Monument,TowerHill),
+    Link(District,TowerHill,AldgateEast),
+    Link(District,AldgateEast,Whitechapel),
+    Link(District,Whitechapel,StepneyGreen),
+    Link(District,StepneyGreen,MileEnd),
+    
+    // Hammersmith and City line...
+    Link(HammersmithAndCity,Hammersmith,GoldhawkRoad),
+    Link(HammersmithAndCity,GoldhawkRoad,ShepherdsBushMarket),
+    Link(HammersmithAndCity,ShepherdsBushMarket,WoodLane),
+    Link(HammersmithAndCity,WoodLane,LatimerRoad),
+    Link(HammersmithAndCity,LatimerRoad,LadbrookGrove),
+    Link(HammersmithAndCity,LadbrookGrove,WestbournePark),
+    Link(HammersmithAndCity,WestbournePark,RoyalOak),
+    Link(HammersmithAndCity,RoyalOak,Paddington),
+    Link(HammersmithAndCity,Paddington,EdgewareRoad),
+    Link(HammersmithAndCity,EdgewareRoad,BakerStreet),
+    Link(HammersmithAndCity,BakerStreet,GreatPortlandStreet),
+    Link(HammersmithAndCity,GreatPortlandStreet,EustonSquare),
+    Link(HammersmithAndCity,EustonSquare,KingsCross),
+    Link(HammersmithAndCity,KingsCross,Farringdon),
+    Link(HammersmithAndCity,Farringdon,Barbican),
+    Link(HammersmithAndCity,Barbican,Moorgate),
+    Link(HammersmithAndCity,Moorgate,LiverpoolStreet),
+    Link(HammersmithAndCity,LiverpoolStreet,AldgateEast),
+    Link(HammersmithAndCity,AldgateEast,Whitechapel),
+    Link(HammersmithAndCity,Whitechapel,StepneyGreen),
+    Link(HammersmithAndCity,StepneyGreen,MileEnd),
+    
+    // Piccadilly Line...
+    Link(Piccadilly,ActonTown,TurnhamGreen),
+    Link(Piccadilly,TurnhamGreen,Hammersmith),
+    Link(Piccadilly,Hammersmith,BaronsCourt),
+    Link(Piccadilly,BaronsCourt,EarlsCourt),
+    Link(Piccadilly,EarlsCourt,GloucesterRoad),
+    Link(Piccadilly,GloucesterRoad,SouthKensington),
+    Link(Piccadilly,SouthKensington,Knightsbridge),
+    Link(Piccadilly,Knightsbridge,HydeParkCorner),
+    Link(Piccadilly,HydeParkCorner,GreenPark),
+    Link(Piccadilly,GreenPark,PiccadillyCircus),
+    Link(Piccadilly,PiccadillyCircus,LeicesterSquare),
+    Link(Piccadilly,LeicesterSquare,CoventGarden),
+    Link(Piccadilly,CoventGarden,Holborn),
+    Link(Piccadilly,Holborn,RussellSquare),
+    Link(Piccadilly,RussellSquare,KingsCross),
+    Link(Piccadilly,KingsCross,CaledonianRoad),
+    Link(Piccadilly,CaledonianRoad,HollowayRoad),
+    Link(Piccadilly,HollowayRoad,Arsenal),
+    Link(Piccadilly,Arsenal,FinsburyPark),
+    
+    // Line Changes...
+    ChangeLine(ActonTown,Piccadilly,District),
+    ChangeLine(TurnhamGreen,Piccadilly,District),
+    ChangeLine(Hammersmith,Piccadilly,District),
+    ChangeLine(BaronsCourt,Piccadilly,District),
+    ChangeLine(EarlsCourt,Piccadilly,District),
+    ChangeLine(GloucesterRoad,Piccadilly,District),
+    ChangeLine(SouthKensington,Piccadilly,District),
+    ChangeLine(KingsCross,Piccadilly,HammersmithAndCity),
+    ChangeLine(NottingHillGate,Central,District),
+    ChangeLine(Hammersmith,HammersmithAndCity,Piccadilly),
+    ChangeLine(Holborn,Central,Piccadilly),
+    ChangeLine(Hammersmith,HammersmithAndCity,District),
+    ChangeLine(EalingBroadway,Central,District)
+  ]);
+    
+  backtrack::([Action]);
+  backtrack([]) <- !, false;
+  backtrack([Move(s1,s2) | actions]) <- member[Action](Move(s2,s1),actions),!;
+  backtrack([Change(_,l1,l2) | actions]) <- member[Action](Change(_,_,l1),actions),!;
+  backtrack([action | actions]) <- backtrack(actions);
+  
+  noBacktrack::([Action]);
+  noBacktrack(actions) <- backtrack(actions), !, false;
+  noBacktrack(_);
+  
+  // This is called by a passenger when they are currentl on the
+  // supplied underground line at s1, and they need to go to s2.
+  // The supplied plan is a sequence of actions that go from s1
+  // to s2...
+  
+  route::(ULine,Station,Station,[Action]);
+  route(l,s1,s2,plan) <-
+    map(map), 
+    append[State](map,[At(s1),On(l)],state),
+    solve(state,[At(s2)],[],plan);
+    
+};
+  
+locations::[Location] = [][Location];
+blownUp::[Station] = [][Station];
+  
+graph(travellers::[Traveller])::EDBDisplay =
+  // Produce a display from a list of travellers...
+  show map(m) from solver {
+    let stations::[Station] = mapToStations(m,[][Station]) in
+    let tNode::Node(Props,Int,EDBDisplay) = Node([Prop('shape','plain'),Prop('fontsize','20')],0,table(travellers)) in
+    let label(s::Station)::Str = 
+      if member[Station](s,blownUp) 
+      then '&#128163;' 
+      else 
+        let ts::[Traveller] = [ t | Loc(t::Traveller,ss::Station) <- locations, ?(ss = s) ]
+        in if length[Traveller](ts)=0
+           then '<font face="consolas">'+s+':[ ]</font>'
+           else '<font face="consolas" color="red">'+s+':'+[t.id | t::Traveller <- ts]+'</font>' in
+    let nodes::[Node(Props,Int,EDBDisplay)] = [ Node([Prop('shape','plain'),Prop('fontsize','18'),Prop('URL','edb:'+s)],indexOf[Station](s,stations)+1,fold[EDBDisplay]HTML(label(s))) | s::Station <- stations] in
+    let edges::[Edge(Props,Int,Int,EDBDisplay)] = mapToEdges(m,stations)
+    in fold[EDBDisplay]Graph([Prop('nodesep','0.001'),Prop('ranksep','0.001'),Prop('size','20,15'),Prop('rankdir','TB'),Prop('ratio','fill'),Prop('URL','edb:run1')],nodes,edges)
+  } else Graph([][Prop],[][Node(Props,Int,EDBDisplay)],[][Edge(Props,Int,Int,EDBDisplay)]);
+  
+mapToStations(m::[State],stations::[Station])::[Station] =
+  case m {
+    [][State] ->stations;
+    Link(l::ULine,s1::Station,s2::Station):m::[State] -> 
+      mapToStations(m,adjoin[Station](s1,adjoin[Station](s2,stations)));
+    ChangeLine(s::Station,l1::ULine,l2::ULine):m::[State] -> mapToStations(m,stations)
+  };
+  
+mapToEdges(m::[State],stations::[Station])::[Edge(Props,Int,Int,EDBDisplay)] =
+  case m {
+    [][State] -> [][Edge(Props,Int,Int,EDBDisplay)];
+    Link(l::ULine,s1::Station,s2::Station):m::[State] ->
+     Edge([Prop('color',lineColour(l)),Prop('penwidth','3'),Prop('arrowhead','none')],indexOf[Station](s1,stations)+1,indexOf[Station](s2,stations)+1,fold[EDBDisplay]HTML('')):mapToEdges(m,stations);
+    ChangeLine(s::Station,l1::ULine,l2::ULine):m::[State] -> mapToEdges(m,stations)
+  };
+  
+lineColour(l::ULine)::Str =
+  case l {
+    Central -> 'red';
+    Piccadilly -> 'blue';
+    HammersmithAndCity -> 'green';
+    District -> 'grey';
+    l::ULine -> 'black'
+  };
+  
+mapToNodes(map::[State])::[Node(Props,Int,EDBDisplay)] = [][Node(Props,Int,EDBDisplay)];
+
+graphs::[EDBDisplay] = [][EDBDisplay];
+
+instructions::Str = 
+'Travellers plan their routes on the underground. Each time they reach their destination, they will <br/>
+replan and a new traveller is added. If a traveller arrives at a station where there is a bomb, they <br/>
+are removed from the game. Your task is to remove all the travellers by blowing them up.';
+
+table(travellers::[Traveller])::EDBDisplay =
+  fold[EDBDisplay]Table([Prop('width','500')],
+    [Row([][Property],[Data([Prop('width','500')],fold[EDBDisplay]HTML(t.id + ':' + t.state+''))]) | t::Traveller <- travellers] +
+    [Row([][Property],[Data([Prop('width','500'),Prop('href','edb:run1')],fold[EDBDisplay]HTML(instructions))])] +
+    [Row([][Property],[Data([Prop('width','500'),Prop('href','edb:run1')],fold[EDBDisplay]HTML('Click here to make a move.'))])]
+  );
+ 
+act underground::Underground {
+
+  // The underground is supplied with a collection of plans and
+  // ticks through the plans moving the travellers between stations.
+  // When a plan is exhausted, the particular traveller is asked
+  // to select a new destination and provide a new plan...
+
+  plans::[Plan(Traveller,[Action])] = [][Plan(Traveller,[Action])];
+  travellers::[Traveller] = [][Traveller];
+  
+  perform(plan::Plan(Traveller,[Action]))::[Plan(Traveller,[Action])] =
+    case plan {
+      Plan(t::Traveller,[][Action]) when member[Traveller](t,travellers)-> {
+        t <- GetPlan(self);
+        [][Plan(Traveller,[Action])]
+      };
+      Plan(t::Traveller,p::[Action]) when member[Traveller](t,travellers) -> {
+        action(t,head[Action](p));
+        [Plan(t,tail[Action](p))]
+      };
+      Plan(t::Traveller,p::[Action]) -> [][Plan(Traveller,[Action])]
+    };
+    
+  blowUp(t::Traveller,s::Station)::Void = {
+    travellers := remove[Traveller](t,travellers);
+    locations := remove1[Location](Loc(t,s),locations)
+  };
+  
+  action(t::Traveller,a::Action)::Void =
+    case a {
+      Move(s1::Station,s2::Station) -> {
+        grab(locations,graphs) {
+          if member[Station](s2,blownUp)
+          then blowUp(t,s1)
+          else locations := Loc(t,s2):remove1[Location](Loc(t,s1),locations)
+        }
+      };
+      Change(s::Station,l1::ULine,l2::ULine) -> t <- ChangeTo(l2);
+      a::Action -> {}
+    }
+  
+  AddPlan(t::Traveller,plan::[Action]) -> {
+    travellers := adjoin[Traveller](t,travellers);
+    plans := Plan(t,plan):plans
+  };
+    
+  //Time(n::Int) -> {
+  Step -> {
+    plans := flatten[Plan(Traveller,[Action])]([perform(plan) | plan::Plan(Traveller,[Action]) <- plans ]);
+    let g::EDBDisplay = graph(travellers)
+    in {
+      edb <- Show('Underground',g);
+      graphs := g:graphs
+    }
+  };
+  
+  Show ->  edb <- Show('Underground', graph(travellers));
+  
+  Time(n::Int) -> {}
+
+};
+
+theUnderground::Underground = new underground;
+
+idCounter::Int = 0;
+
+newId()::Int = {
+  idCounter := idCounter + 1;
+  idCounter - 1
+};
+
+act traveller(n::Int,line::ULine,station::Station)::Traveller {
+
+  // A traveller is an independent agent on the underground. They
+  // start at a station and repeatedly select a target station, use
+  // the route-planning rules to create a plan and then enact the 
+  // plan by supplying it to the underground actor.
+
+  export state,id;
+  
+  state::TravellerState = Arrived(station);
+  id::Int = n
+  
+  -> grab(locations) { 
+    locations := Loc(self,station):locations;
+    theUnderground <- AddPlan(self,[][Action])
+  };
+  
+  ChangeTo(l::ULine) -> line := l;
+  
+  GetPlan(u::Underground) ->
+  
+    // This message is sent when the underground 'u' requires a plan for this
+    // traveller. A target is selected at random and the solver is used to
+    // create a plan...
+    
+    let target::Station = nth[Station](stations,random(length[Station](stations)))
+    in {
+      state := Planning(line,station,target);
+      show route(line,station,target,plan) [line,station,target] from solver {
+      
+        // Use the rules 'solver' to create 'plan'. If planning takes too long 
+        // (after 75000 instructions) then the timeout clause is used, if the
+        // planning fails then the 'else' clause is used, otherwise the plan
+        // is supplied to the underground...
+        
+        state := Travelling(target);
+        station := target;
+        u <- AddPlan(self,plan)
+      } timeout(75000) {
+        self <- GetPlan(u)
+      } else self <- GetPlan(u)
+    };
+    
+  Time(n::Int) -> {}
+};
+
+travellers::[Traveller] = [
+  // Some travellers on the underground...
+  new traveller(newId(),District,Westminster),
+  new traveller(newId(),District,TowerHill),
+  new traveller(newId(),Central,EalingBroadway),
+  new traveller(newId(),Central,EalingBroadway),
+  new traveller(newId(),Central,TottenhamCourtRoad), 
+  new traveller(newId(),Central,TottenhamCourtRoad),
+  new traveller(newId(),Piccadilly,TurnhamGreen),
+  new traveller(newId(),Piccadilly,Arsenal),
+  new traveller(newId(),Piccadilly,Hammersmith), 
+  new traveller(newId(),Piccadilly,GreenPark),
+  new traveller(newId(),HammersmithAndCity,LatimerRoad)
+];
+
+act listener::BrowserListener {
+
+  // This browser listener is used to catch mouse clicks where the
+  // user wants to blow-up an underground station. The idea is that
+  // passengers cannot travel through bombed stations, but this is 
+  // not fully implemented.
+  
+  BrowserEvent('run1') -> theUnderground <- Step;
+  
+  BrowserEvent(m::Str) -> {
+    for s::Station in stations do {
+        if (s+'') = m
+        then {
+          blownUp := blownUp+[s];
+          theUnderground <- Show
+        }
+       else {}
+      };
+      if length[Station](blownUp) > 3
+      then {
+        blownUp := tail[Station](blownUp);
+        theUnderground <- Show
+      }
+      else {}
+    }
+};
+
+act main::Act{Time(Int)} {
+  -> {
+    edb <- AddBrowserListener(new listener);
+    theUnderground <- Show
+  };
+  
+  //Time(n::Int) when n > limit -> {
+  //  edb <- Filmstrip('Underground',reverse[EDBDisplay](graphs));
+  //  stopAll()
+  //};
+  
+  Time(n::Int) -> {
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

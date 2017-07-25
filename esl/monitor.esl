@@ -1,0 +1,394 @@
+export main;
+
+import 'esl/lists.esl';
+
+
+type MTree[T] = rec L. union { Leaf(Monitored[T]), Pair(L,L) };
+cnstr Leaf[T] = unfold[MTree[T]].Leaf;
+cnstr Pair[T] = unfold[MTree[T]].Pair;
+
+cache[T](f::()->T)::()->T = 
+  let value::T = null
+  in fun()::T if value = null then { value := f(); value } else value;
+
+// This file contains an implementation of a history monitor based on temporal logic.
+// The language for expressing conditions over histories is:
+//
+// p,q ::= nothing         always satisfied.
+//     | action(A)         always satisfied and performs A.
+//     | always(p)         satisfied when the history h is x:y:z:... and when p is satisfied by h, y:..., z:... etc.
+//     | rec n. p[n]       satisfied when q=p[q/n] and when q is satisfied.
+//     | n                 a name bound in a surrounding scope.
+//     | p;q               satisfied when p and q are satisfied.
+//     | p+q               satisfied when p or q are satisfied.
+//     | N(p)              satisfied when the history is _:h and p is satisfied for h.
+//     | is(c)             satisfied when c(x) and the history is x:h.
+//
+// Note that the conventional approach to achieving a language such as that above is to
+// encode it as an operational language in functions with continuations. The encoding below
+// provides a novel alternative encoding in terms of actors.
+
+// An actor with behaviour Monitored[T] produces a history of elements of type T.
+// Monitors will regularly inspect the history...
+
+type Monitored[T] = Act { export history::[T]; Time(Int) };
+
+// A monitor is supplied with a traced actor and will regularly inspect its history.
+// The type Monitor is paremtetric ith respect to the type T of the history elements.
+// The message Check(a,c,s,f) is sent to a monitor to start monitoring the traced
+// actor a. The integer c is the index into the history of a that defines the current
+// position of the next element to consume. Once the monitor is satisfied with the
+// history, it will send the monitor m a Check message. If the monitor is not satisfied
+// it invokes f()...
+
+type Monitor[T] = rec M. Act { Check(MTree[T],Int,M,()->Void); Time(Int) };
+
+// A word on FOLD and UNFOLD...
+// A recursive type (such as Monitor[T] above) has a form T[rec X.T/X] which
+// substitutes rec X.T for X in T. If A = rec X.T then:
+//
+// (a) unfold[A]e::T[rec X.T/X] when e::A
+// (b) fold[A]e::A when e::T[A/X]
+//
+// Insertion of fold and unfold is required because recursive types have the
+// two forms such as A and T[A/X]. Currently these must be inserted manually. It should
+// be possible to automatically insert these at some later stage.
+
+// The nothing monitor does nothing...
+
+nothing[T]()::Monitor[T] = 
+  fold[Monitor[T]] act 'E' {
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) ->
+      if s = self
+      then {}
+      else {
+        print[Str]('Message(' + now + ',"' + self + '","' + s + '","' + C(a,c,self) +'"),');
+        (unfold[Monitor[T]]s) <- Check(a,c,fold[Monitor[T]]self,f)
+      };
+    Time(n::Int) -> {}
+  };
+
+// Create a constant called idle that does nothing...
+
+idle[T]::Monitor[T] = new (nothing[T])();
+
+// An action is a monitor that performs a command each time is checks the traced actor.
+// The command does not return anything of interest. Once the action is performed, it
+// passes control onto the monitor s...
+
+action[T](command::()->Void)::Monitor[T] =
+  fold[Monitor[T]] act 'action' {
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) -> {
+      command();
+      print[Str]('Message(' + now + ',"' + self + '","' + s + '","' + C(a,c,idle[T]) +'"),');
+      (unfold[Monitor[T]]s) <- Check(a,c,idle[T],f)
+    };
+    Time(n::Int) -> {}
+  };
+
+// An always monitor is supplied with an actor p. For always(p) to be satisfied, it must be 
+// satsified by the the traced actor's history at positions c, c+1, c+2, c+3, ...
+// Note that always(p) = both(p,next(always(p))).
+
+//always1[T](p::Monitor[T])::Monitor[T] = new (rec[T])(fun(q::Monitor[T])::Monitor[T] new (both[T])(p,new (next[T])(always[T](q))));
+always[T](p::Monitor[T])::Monitor[T] = new (rec[T])(fun(q::Monitor[T])::Monitor[T] new (seq[T])(p,new (next[T])(q)));
+
+//eventually1[T](p::Monitor[T])::Monitor[T] = new (rec[T])(fun(q::Monitor[T])::Monitor[T] new (alt[T])(p,new (next[T])(eventually[T](q))));
+eventually[T](p::Monitor[T])::Monitor[T] = new (rec[T])(fun(q::Monitor[T])::Monitor[T] new (alt[T])(p,new (next[T])(q)));
+
+rec1[T](g::(Monitor[T]) -> Monitor[T])::Monitor[T] =
+  fold[Monitor[T]] act 'rec' {
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) -> (unfold[Monitor[T]](g(new (rec[T])(g)))) <- Check(a,c,s,f);
+    Time(n::Int) -> {}
+  };
+  
+rec[T](g::(Monitor[T]) -> Monitor[T])::Monitor[T] =
+  fold[Monitor[T]] act 'rec' {
+    cache::Monitor[T] = null
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) -> 
+      if cache = null
+      then {
+        cache := g(fold[Monitor[T]]self);
+        print[Str]('Message(' + now + ',"' + self + '","' + cache + '","' + C(a,c,s) +'"),');
+        (unfold[Monitor[T]]cache) <- Check(a,c,s,f)
+      } else {
+        print[Str]('Message(' + now + ',"' + self + '","' + cache + '","' + C(a,c,s) +'"),');
+        (unfold[Monitor[T]]cache) <- Check(a,c,s,f)
+      };
+    Time(n::Int) -> {}
+  };
+
+// A both(p,q) monitor is satisfied when both p and q are satisfied at the same index c.
+// Note that both(idle,p) = both(p,idle) = p...
+
+both[T](p::Monitor[T],q::Monitor[T])::Monitor[T] = 
+  fold[Monitor[T]] act 'both' {
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) -> {
+        print[Str]('Message(' + now + ',"' + self + '","' + p + '","' + C(a,c,s) +'"),');
+        print[Str]('Message(' + now + ',"' + self + '","' + q + '","' + C(a,c,s) +'"),');
+      (unfold[Monitor[T]]p) <- Check(a,c,s,f);
+      (unfold[Monitor[T]]q) <- Check(a,c,s,f)
+    };
+    Time(n::Int) -> {}
+  };
+
+split[T](p::Monitor[T],q::Monitor[T])::Monitor[T] = 
+  fold[Monitor[T]] act 'split' {
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) -> 
+      case unfold[MTree[T]]a {
+        Pair[T](t1::MTree[T],t2::MTree[T]) -> 
+          let j::Monitor[T] = new (join[T])(a,s,f)
+          in { 
+            print[Str]('Message(' + now + ',"' + self + '","' + p + '","' + C(t1,c,j) +'"),');
+            print[Str]('Message(' + now + ',"' + self + '","' + q + '","' + C(t2,c,j) +'"),');
+            (unfold[Monitor[T]]p) <- Check(t1,c,j,f);
+            (unfold[Monitor[T]]q) <- Check(t2,c,j,f)
+          };
+        Leaf[T](t::Monitored[T]) -> print[Str]('error leaf supplied to split')
+      };
+    Time(n::Int) -> {}
+  };
+  
+join[T](a::MTree[T],s::Monitor[T],f::()->Void)::Monitor[T] =
+  let left::MTree[T] = null
+  in fold[Monitor[T]] act 'join' {
+    Check(a1::MTree[T],c::Int,s1::Monitor[T],f1::()->Void) ->
+      if left = null
+      then left := a1
+      else {
+        print[Str]('Message(' + now + ',"' + self + '","' + s + '","' + C(a,c,s) +'"),');
+        (unfold[Monitor[T]]s) <- Check(a,c,s,f)
+      };
+    Time(n::Int) -> {}
+ };
+
+seq[T](p::Monitor[T],q::Monitor[T])::Monitor[T] = 
+  fold[Monitor[T]] act 'both' {
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) -> 
+      if s = idle
+      then { 
+         print[Str]('Message(' + now + ',"' + self + '","' + p + '","' + C(a,c,q) +'"),');
+        (unfold[Monitor[T]]p) <- Check(a,c,q,f) 
+      }
+      else
+        let ss::Monitor[T] = new (both[T])(q,s)
+        in {
+          print[Str]('Message(' + now + ',"' + self + '","' + p + '","' + C(a,c,ss) +'"),');
+          (unfold[Monitor[T]]p) <- Check(a,c,ss,f) 
+      } ;
+    Time(n::Int) -> {}
+  };
+
+// A alt(p,q) monitor is satisfied at index c when p is satisfied at index c or when q
+// is satisfied at index q...
+
+alt[T](p::Monitor[T],q::Monitor[T])::Monitor[T] =
+  fold[Monitor[T]] act 'alt' {
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) -> 
+      (unfold[Monitor[T]]p) <- Check(a,c,s,fun()::Void (unfold[Monitor[T]]q) <- Check(a,c,s,f));
+    Time(n::Int) -> {}
+};
+
+xor[T](p::Monitor[T],q::Monitor[T])::Monitor[T] =
+  fold[Monitor[T]] act 'or' {
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) -> {
+      print[Str]('Message(' + now + ',"' + self + '","' + p + '","' + C(a,c,s) +'"),');
+      print[Str]('Message(' + now + ',"' + self + '","' + q + '","' + C(a,c,s) +'"),');
+      (unfold[Monitor[T]]p) <- Check(a,c,s,f);
+      (unfold[Monitor[T]]q) <- Check(a,c,s,f)
+    };
+    Time(n::Int) -> {}
+};
+
+implies[T](p::Monitor[T],q::Monitor[T])::Monitor[T] = 
+  fold[Monitor[T]] act 'implies' {
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) -> 
+      let ss::Monitor[T] = new (seq[T])(q,s)
+      in {
+        print[Str]('Message(' + now + ',"' + self + '","' + p + '","' + C(a,c,ss) +'"),');
+        (unfold[Monitor[T]]p) <- Check(a,c,ss,fun()::Void (unfold[Monitor[T]]s) <- Check(a,c,idle[T],f)) 
+      };
+    Time(n::Int) -> {}
+  };
+  
+next[T](p::Monitor[T])::Monitor[T] =
+  fold[Monitor[T]] act 'next' {
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) -> {
+      print[Str]('Message(' + now + ',"' + self + '","' + p + '","' + C(a,c+1,s) +'"),');
+      (unfold[Monitor[T]]p) <- Check(a,c+1,s,f)
+    };
+    Time(n::Int) -> {}
+  };
+  
+prev[T](p::Monitor[T])::Monitor[T] =
+  fold[Monitor[T]] act 'prev' {
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) -> 
+      let newS()::Monitor[T]= fold[Monitor[T]] act 'reset' {  
+           Check(a::MTree[T],oldC::Int,s::Monitor[T],f::()->Void) -> {
+             print[Str]('Message(' + now + ',"' + self + '","' + s + '","' + C(a,c,idle[T]) +'"),');
+             (unfold[Monitor[T]]s) <- Check(a,c,idle[T],f)
+           };
+           Time(n::Int) -> {} 
+          } in
+      let ss::Monitor[T] = new (newS)()
+      in if c = 0
+        then f()
+        else {
+        print[Str]('Message(' + now + ',"' + self + '","' + p + '","' + C(a,c-1,s) +'"),');
+        (unfold[Monitor[T]]p) <- Check(a,c-1,ss,f)
+      };
+    Time(n::Int) -> {}
+  };
+
+is[T](pred::(T)->Bool,label::Str)::Monitor[T] =
+  fold[Monitor[T]] act 'is' + label {
+    Check(a::MTree[T],c::Int,s::Monitor[T],f::()->Void) -> 
+      case (unfold[MTree[T]]a) {
+        Leaf[T](x::Monitored[T]) ->
+          if length[T](x.history) > c
+          then {
+            if pred(nth[T](x.history,c))
+            then {
+              print[Str]('Message(' + now + ',"' + self + '","' + s + '","' + C(a,c,idle[T]) +'"),');
+              (unfold[Monitor[T]]s) <- Check(a,c,idle[T],f)
+            }
+            else f()
+          } else {
+            print[Str]('Message(' + now + ',"' + self + '","' + self + '","' + C(a,c,s) +'"),');
+            self <- Check(a,c,s,f)
+          };
+        Pair[T](t1::MTree[T],t1::MTree[T]) -> print[Str]('Error: pair found in is.')
+      };
+    Time(n::Int) -> {}
+  };
+
+//type TrueOrFalse = union{T(Int), F(Int)};
+//cnstr T = TrueOrFalse.T;
+//cnstr F = TrueOrFalse.F; 
+
+isF(0)::Bool = true;
+isF(1)::Bool = false;
+isT(1)::Bool = true;
+isT(0)::Bool = false;
+
+isAnything(n::Int)::Bool = true;
+
+act a(prob::Int)::Monitored[Int] {
+  export history;
+  frequency::Int = 1;
+  c::Int = 0;
+  history::[Int] = [][Int]
+  Time(t::Int) -> {
+    c := c + 1;
+    if c = frequency
+    then {
+      c := 0;
+      //history := history + [F,F,T,F]
+      let n::Int = probably(prob)::Int 0 else 1
+      in history := history + [n]
+    } else {}
+  }
+};
+
+approach(id::Str,prob::Int)::Monitored[Int] = act id {
+  export history;
+  frequency::Int = 1;
+  c::Int = 0;
+  history::[Int] = [0]
+  Time(t::Int) -> { 
+    c := c + 1;
+    if c = frequency
+    then {
+      c := 0;
+      probably(prob) {
+          print[Str]('Message(' + now + ',"' + self + '","' + self + '","' + Queue +'"),');
+          history := history + [last[Int](history)+1]
+        } else {
+        if last[Int](history) > 0
+        then {
+          print[Str]('Message(' + now + ',"' + self + '","' + self + '","' + DeQueue +'"),');
+          history := history + [last[Int](history) - 1]
+        }
+        else {}
+      }
+    } else {}
+  }
+};
+
+type Main = Act { Time(Int) };
+
+threeFs()::Monitor[Int] = always[Int](new (alt[Int])(new (both[Int])(new (is[Int])(isF,'F'),new (both[Int])(new (next[Int])(new (is[Int])(isF,'F')),new (both[Int])(new (next[Int])(new (is[Int])(isF,'F')),new (action[Int])(fun()::Void print[Str]('OK'))))),new (is[Int])(isAnything,'Antything')));
+
+anForT()::Monitor[Int] = always[Int](new (xor[Int])(new (is[Int])(isT,'T'),new (is[Int])(isF,'F')));
+
+twice[T](m::Monitor[T])::Monitor[T] = new (seq[T])(m,new (next[T])(m));
+
+prevn[T](c::Int,m::Monitor[T])::Monitor[T] = 
+  // BUG instruction is0 checks for dynamics before locals.
+  if c = 0
+  then idle[T]
+  else new (both[T])(m,new (prev[T])(prevn[T](c-1,m)));
+  
+gre(n::Int)::(Int)->Bool = fun(m::Int)::Bool m > n;
+
+detectLeft::Monitor[Int] = 
+  let checkPrev::Monitor[Int] = prevn[Int](3,new (is[Int])(gre(5),'GRE('+5+')')) in
+  let checker::Monitor[Int] = new (split[Int])(checkPrev,idle[Int])
+  in always[Int](new (implies[Int])(checker,new (action[Int])(fun()::Void print[Str]('FIRE'))));
+
+within[T](n::Int,p::Monitor[T],q::Monitor[T])::Monitor[T] = 
+  case n {
+    0 -> q;
+    m::Int -> new (alt[T])(p,new (next[T])(within[T](n-1,p,q)))
+  };
+  
+alwaysFlip()::Monitor[Int] = always[Int](new (implies[Int])(new (is[Int])(isF,'F'),within[Int](2,new (is[Int])(isT,'T'),new (action[Int])(fun()::Void print[Str]('ALARM'))))); 
+
+tt()::Monitor[Int] = twice[Int](new (split[Int])(new (is[Int])(isT,'T'),new (is[Int])(isF,'F')));
+
+test1()::Void = (unfold[Monitor[Int]]threeFs()) <- Check(fold[MTree[Int]](Leaf[Int](new a(50))),0,idle[Int],fun 'fail'()::Void {});
+
+test2()::Void = (unfold[Monitor[Int]]anForT()) <- Check(fold[MTree[Int]](Leaf[Int](new a(50))),0,idle[Int],fun 'fail' ()::Void {});
+
+test3()::Void = 
+  let left::MTree[Int] = fold[MTree[Int]](Leaf[Int](new a(50)));
+      right::MTree[Int] = fold[MTree[Int]](Leaf[Int](new a(50)))
+  in (unfold[Monitor[Int]]tt()) <- Check(fold[MTree[Int]](Pair[Int](left,right)),0,idle[Int],fun 'fail' ()::Void {});
+  
+test4()::Void = (unfold[Monitor[Int]]alwaysFlip()) <- Check(fold[MTree[Int]](Leaf[Int](new a(95))),0,idle[Int],fun 'fail' ()::Void {});
+
+test5()::Void = (unfold[Monitor[Int]]alwaysFlip()) <- Check(fold[MTree[Int]](Leaf[Int](new a(95))),0,idle[Int],fun 'fail' ()::Void{});
+
+test6()::Void = (unfold[Monitor[Int]]detectLeft) <- Check(fold[MTree[Int]](Pair[Int](fold[MTree[Int]]Leaf[Int](new approach('L',50)),fold[MTree[Int]]Leaf[Int](new approach('R',20)))),0,idle[Int],fun()::Void {});
+
+act main::Main {
+
+  //-> test1();
+
+  Time(n::Int) when n > 7 -> {
+    //edb.saveState('history' + now);
+    //edb.saveHistory('end');
+    stopAll()
+  };
+  
+  Time(1) -> {
+    setMaxInstructions(200);
+    setInstructionsPerTimeUnit(20);
+    test6()
+  };
+
+  Time(n::Int) -> {}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+

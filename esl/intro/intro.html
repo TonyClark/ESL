@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <title></title>
+  </head>
+  <body style="text-align:justify;">
+    <div align="center"><img alt="architecture"
+        src="../../images/architecture.png" width="472" height="314"></div>
+    <p style="text-align:justify;font-family:
+      Arial,Helvetica,sans-serif"><span style="font-family:
+        Arial,Helvetica,sans-serif">EDB allows you to browse, create,
+        edit and run ESL applications.</span>The ESL development
+      environment is called EDB. It supports the development, execution
+      and debugging of ESL applications. The EDB environment consists of
+      a GUI that supports loading and running ESL applications under the
+      debugger, a language environment, XPL, that parses and checks ESL
+      source code from files, and the ESL execution engine. Execution is
+      performed on a collection of virtual-machines each of which is
+      owned by an ESL actor.<br>
+    </p>
+    <p style="text-align:justify;font-family:
+      Arial,Helvetica,sans-serif">ESL is an Actor-based language. An
+      actor is an independent computational unit that runs in its own
+      thread. An actor has a message queue; messages sent to an actor
+      are queued until the actor is ready to consume the message causing
+      a new actor-thread to be created for the message. Actors have
+      state that they can change, and can send messages to other actors.
+      Actor state can be private or shared. At regular fixed intervals,
+      all ESL actors receive a message telling them the current time.
+      The time messages allow the actors to synchronize and are used to
+      drive an ESL application. Think of an ESL application as a
+      community of communicating actors that are synchronized by time
+      messages.</p>
+    <h2><font face="Arial"><u>ESL Application Life-Cycle</u></font></h2>
+    <p><span style="font-family: Arial,Helvetica,sans-serif">The EDB
+        life-cycle for an ESL application is shown below:</span></p>
+    <p style="text-align:center;margin-left:auto;margin-right:auto;"><img
+        alt="" src="execute.png"></p>
+    <p style="text-align:justify;"><span style="font-family:
+        Arial,Helvetica,sans-serif">An ESL application is a collection
+        of files with a main file that is loaded onto the ESL Virtual
+        Machine. Loading a main file causes the file and any file that
+        it imports to be compiled and checked. Subsequent loading will
+        check whether a file has been changed and will only re-load if
+        the file has been modified. </span></p>
+    <p style="text-align:justify;"><span style="font-family:
+        Arial,Helvetica,sans-serif">Once an application has been loaded,
+        it must be initialized. Initialization causes the main actor to
+        be created ready for execution. After initialization you will
+        see an actor called 'main' created in the panel labelled
+        'Actors' in the EDB window. You can run the initializer for an
+        application by clicking on <img alt="init"
+          src="../../icons/init.png" width="15" height="15"> or by
+        stepping by clicking <img alt="step" src="../../icons/step.png"
+          width="15" height="15">.</span></p>
+    <p style="text-align:justify;"><span style="font-family:
+        Arial,Helvetica,sans-serif">Once initialized, the application is
+        ready to run. You can run an application by selecting <img
+          alt="Run" src="../../icons/run.png" width="15" height="15"> in
+        which case it will run until it completes or until it hits a
+        break-point that you have inserted. You can step an application
+        by selecting <img alt="step" src="../../icons/step.png"
+          width="15" height="15"> in which case the application will
+        advance to the next line in the source code. You can stop a
+        running application by clicking on <img alt="stop"
+          src="../../icons/stop.png" width="15" height="15">. </span></p>
+    <p style="text-align:justify;">Any output from the application will
+      be sent to the console. You can clear the console using the
+      right-click menu on the console background.</p>
+    <h2 style="text-align:justify;"><font face="Arial"><u>Working with
+          Files</u></font></h2>
+    <p style="text-align:justify;"><span style="font-family:
+        Arial,Helvetica,sans-serif">The browser-tree on the left shows a
+        view on the file system rooted at the folder supplied as the
+        first startup argument to the EDB Java application. The browser
+        shows only those files that are meaningful to EDB. You can
+        perform the following operations via right-click menus in the
+        browser:</span></p>
+    <ul style="text-align:justify;">
+      <li><span style="font-family: Arial,Helvetica,sans-serif">Create a
+          new file. Change the name of the file by double-clicking on
+          the node in the tree and typing the new name in the selected
+          text. Careful to include the file-extension.</span></li>
+      <li style="font-family: Arial,Helvetica,sans-serif">Create a new
+        folder. Change the name as above.</li>
+      <li style="font-family: Arial,Helvetica,sans-serif">Delete a file.</li>
+      <li style="font-family: Arial,Helvetica,sans-serif">Delete a
+        folder. You can only delete an empty folder.</li>
+      <li><span style="font-family: Arial,Helvetica,sans-serif">Open a
+          file by double-clicking on the file in the browser.</span></li>
+      <li><span style="font-family: Arial,Helvetica,sans-serif">Drag and
+          drop files and folders.</span></li>
+      <li><span style="font-family: Arial,Helvetica,sans-serif">Click on
+          a selected file or folder to get a text editor on the name.<br>
+        </span></li>
+    </ul>
+    <p style="text-align:justify;"><font face="Arial">When you open a
+        file an editor is created showing the contents of the file. If
+        the file is of type '.esl' then the editor will show any
+        parse-errors using a red underline roughtly where the parse
+        error is located. Hover over the red line using the mouse to
+        bring up a diagnostic message that described the reason for the
+        error.</font></p>
+    <font face="Arial"> </font>
+    <p style="text-align:justify;"><font face="Arial">When you have
+        finished editing the file in the editor, you can load and run
+        the file via a right-click menu. Loading the file will only be
+        successful if the file does not contain errors. If the file
+        imports any other applications then they will also be loaded.
+        Loading occurs once and then caches the resulting module. The
+        module will only be reloaded if the source code has changed and
+        you cause a load request. </font></p>
+    <font face="Arial"> </font>
+    <p><font face="Arial">Once loaded, a module must be initialized. The
+        initialization will create an instance of the actor called
+        'main' which must be defined and exported from the loaded
+        module:</font></p>
+    <p></p>
+    <hr>
+    <pre>  import 'm.esl';
+  export main;
+  
+  act main {
+    Time(t) -&gt; {
+      print('stop at time ' + t);
+      stopAll()
+    }
+  }
+</pre>
+    <hr>
+    <p style="text-align:justify;"><span style="font-family:
+        Arial,Helvetica,sans-serif">The example shown above is a single
+        module that imports the module defined in the file m.esl. Since
+        it is a module that defines and exports a behaviour called main,
+        it can be loaded, initialized and executed. When the module is
+        initialized it will create an actor with the behaviour named
+        main and then all actors will be sent Time(n) messages at
+        regular intervals. Assuming that m.esl is empty, the example
+        above will receive the first Time message, print a message and
+        then call the system function stopAll() which immediately stops
+        the execution.<br>
+      </span></p>
+    <p style="text-align:justify;"><span style="font-family:
+        Arial,Helvetica,sans-serif">To try the example above <a
+          href="example1.esl">click here</a>.<br>
+      </span></p>
+    <h2 style="text-align:justify;"><font face="Arial"><u>Working with
+          Actors</u></font></h2>
+    <p><font face="Arial">The Actors panel contains a list of actors
+        that are currently active. Double-clicking on an actor will take
+        you to the file that defines the current behaviour of the actor.</font><br>
+    </p>
+    <p style="text-align:justify;"> </p>
+  </body>
+</html>

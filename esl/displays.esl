@@ -1,0 +1,35 @@
+export Property, Props, PictureElement, EDBDisplay, Graph, HTML, Sequence, Rectangle, Circle, Line, Image, Text, Table, Pie, Picture;
+
+type Property = Prop(Str,Str);
+type Props = [Property];
+
+type PictureElement = union { 
+  Rectangle(Int,Int,Int,Int,Str), 
+  Circle(Int,Int,Int,Str), 
+  Line(Int,Int,Int,Int,Str),
+  Image(Int,Int,Int,Int,Str),
+  Text(Int,Int,Str,Str) 
+};
+
+cnstr Rectangle     = PictureElement.Rectangle;
+cnstr Circle        = PictureElement.Circle;
+cnstr Line          = PictureElement.Line;
+cnstr Image         = PictureElement.Image;
+cnstr Text          = PictureElement.Text;
+
+type EDBDisplay = rec T. union { 
+                                                    // Types of EDB display element.
+  HTML(Str),                                        // Raw HTML.
+  Table(Props,[Row(Props,[Data(Props,T)])]),        // A table of display elements.
+  Pie(Props,Str,Int,Int,[Slice(Props,Str,Int)]),    // A pie chart.
+  Picture(Int,Int,[PictureElement]),
+  Sequence([Actor(Int,Int,Int,Str)],[Message(Int,Int,Int,Str)]),
+  Graph(Props,[Node(Props,Int,T)],[Edge(Props,Int,Int,T)])
+};
+
+cnstr Graph = unfold[EDBDisplay].Graph;
+cnstr HTML = unfold[EDBDisplay].HTML;
+cnstr Sequence = unfold[EDBDisplay].Sequence;
+cnstr Table = unfold[EDBDisplay].Table;
+cnstr Pie = unfold[EDBDisplay].Pie;
+cnstr Picture = unfold[EDBDisplay].Picture

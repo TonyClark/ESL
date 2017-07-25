@@ -1,0 +1,17 @@
+export main;
+
+pp::Forall[T] (T)->Void = builtin[Forall[T] (T)->Void]('runtime.actors.Builtins','pp',1);
+
+length::Forall[T] ([T])->Int = builtin[Forall[T] ([T])->Int]('runtime.actors.Builtins','length',1);
+
+act main::Act { Time(Int) } {
+  Time(n::Int) -> {
+    pp[Str]('HOORAY');
+    pp[Int](length[Int]([1,2,3,4,5,6,7]));
+    stopAll()
+  }
+}
+
+
+
+

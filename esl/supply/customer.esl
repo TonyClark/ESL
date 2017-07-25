@@ -1,0 +1,8 @@
+export customer;
+
+type Customer = Act { Time(Int) };
+
+act customer::Customer {
+  Time(n::Int) -> {}
+}
+

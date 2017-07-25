@@ -1,0 +1,8 @@
+export purchasing;
+
+type Purchasing = Act { Time(Int) };
+
+act purchasing::Purchasing {
+  Time(n::Int) -> {}
+}
+

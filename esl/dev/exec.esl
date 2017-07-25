@@ -1,0 +1,90 @@
+export main;
+
+type Id = Int;
+type Behaviour = [Handler(Str,[Command])];
+type Command = rec C. union { SendC(Id,Str), UpdateC(Str), Block([C]), BecomeC(Str) };
+cnstr SendC = unfold[Command].SendC;
+cnstr UpdateC = unfold[Command].UpdateC;
+cnstr BecomeC = unfold[Command].BecomeC;
+cnstr Block = unfold[Command].Block;
+type Actor = Machine(Id,[Command],Behaviour,[Message(Str)],Int);
+data Action = SendA(Id,Str) | UpdateA(Str) | BecomeA(Str);
+type DB = [Fact(Int,Action)];
+type ESL = State(Set{Actor},DB,Int);
+
+max::Int = 100;
+
+is0(Machine(i::Id,cs::[Command],b::Behaviour,ms::[Message(Str)],t::Int))::Bool = t=0;
+  
+all0(s::Set{Actor})::Bool =
+  case s {
+    set{}[Actor] -> true;
+    set{a::Actor | s::Set{Actor}} -> is0(a) and all0(s)
+  };
+  
+tickActor(Machine(i::Id,cs::[Command],b::Behaviour,ms::[Message(Str)],t::Int))::Actor =
+  Machine(i,cs,b,Message('Time'):ms,max);
+  
+tick(s::Set{Actor})::Set{Actor} =
+  case s {
+    set{}[Actor] -> s;
+    set{a::Actor | s::Set{Actor}} -> set{tickActor(a) | tick(s)}
+  };
+  
+send(target::Int,name::Str,ms::Set{Actor})::Set{Actor} =
+  case ms {
+    set{Machine(i::Id,cs::[Command],b::Behaviour,q::[Message(Str)],t::Int) | ms::Set{Actor}} when i = target ->
+      set{Machine(i,cs,b,Message(name):q,t) | ms}
+  };
+  
+getHandler(n::Str,b::[Handler(Str,[Command])])::[Command] =
+  case b {
+    [][Handler(Str,[Command])] -> [][Command];
+    Handler(m::Str,cs::[Command]):b::[Handler(Str,[Command])] ->
+      if m = n
+      then cs
+      else getHandler(n,b)
+  };
+  
+newState(m::Actor,ms::Set{Actor},db::DB,t::Int)::ESL =
+  case m {
+    Machine(id::Int,[][Command],b::Behaviour,[][Message(Str)],ta::Int) -> State(set{m|ms},db,t);
+    Machine(id::Int,[][Command],b::Behaviour,Message(n::Str):q::[Message(Str)],ta::Int) -> 
+      State(set{Machine(id,getHandler(n,b),b,q,ta-1) | ms},db,t);
+    Machine(id::Int,c::Command:cs::[Command],b::Behaviour,q::[Message(Str)],ta::Int) ->
+      case unfold[Command]c {
+        SendC(target::Int,n::Str) ->
+          State(set{Machine(id,cs,b,q,ta-1) | send(target,n,ms)},Fact(t,SendA(target,n)):db,t);
+        UpdateC(var::Str) ->
+          State(set{Machine(id,cs,b,q,ta-1) | ms},Fact(t,UpdateA(var)):db,t);
+        BecomeC(var::Str) ->
+          State(set{Machine(id,cs,b,q,ta-1) | ms},Fact(t,BecomeA(var)):db,t);
+        Block(commands::[Command]) ->
+          State(set{Machine(id,commands + cs,b,q,ta-1) | ms},db,t)
+      }
+  };
+
+exec(s::ESL)::ESL =
+  case s {
+    a::Set{Actor};
+    db::DB;
+    t::Int;
+    State(a,db,t) when all0(a) -> State(tick(a),db,t+1);
+    State(set{m::Actor | ms::Set{Actor}},db,t) -> newState(m,ms,db,t)
+  };
+  
+behaviour::[Handler(Str,[Command])] = [][Handler(Str,[Command])];
+queue::[Message(Str)] = [][Message(Str)];
+db::DB = [][Fact(Int,Action)];
+control::[Command] = [][Command];
+
+act main::Act { Time(Int) } {
+  Time(n::Int) -> {
+    print[Str](''+exec(State(set{Machine(1,[][Command],[][Handler(Str,[Command])],[][Message(Str)],0)},[][Fact(Int,Action)],0)));
+    print[Str](''+exec(State(set{Machine(1,[fold[Command]SendC(2,'xxx')],behaviour,queue,2),Machine(2,control,behaviour,queue,2)},db,0)));
+    print[Str](''+exec(State(set{Machine(1,[fold[Command]UpdateC('xxx')],behaviour,queue,2),Machine(2,control,behaviour,queue,2)},db,0)));
+    stopAll()
+  }
+}
+
+

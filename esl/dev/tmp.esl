@@ -1,0 +1,54 @@
+export main;
+
+type Main = Act { Time(Int) };
+ 
+type Test = Act { X(Int); Y(); Stop() };
+
+count::Int = 0;
+
+updateCount(x::Int)::Void = 
+  case x {
+    0 -> count := count + 1;
+    y::Int -> updateCount(y-1)
+  };
+
+act test::Test {
+
+  X(x::Int) when x = 500 -> {
+    updateCount(100); 
+    updateCount(100);
+    updateCount(100)
+  };
+  
+  X(x::Int) -> {};
+  
+  Y -> case 1,2 { 1,2 -> {} };
+  
+  Stop -> { print[Int](count); stopAll() }
+  
+};
+
+x::Test = new test;
+
+act main::Main {
+
+  Time(n::Int) when n < 2 -> { 
+    for i::Int in 0..(2000) do {
+       x <- X(500)
+    };
+    x <- Stop };
+  
+  Time(n::Int) -> {}
+  
+}
+
+
+
+
+
+
+
+
+
+
+

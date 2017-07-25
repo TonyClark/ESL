@@ -1,0 +1,8 @@
+export warehouse;
+
+type Warehouse = Act { Time(Int) };
+
+act warehouse::Warehouse {
+  Time(n::Int) -> {}
+}
+
