@@ -228,9 +228,7 @@ public class ESLEditor extends FileEditor {
   }
 
   public void run() {
-    edb.load(path, "");
-    edb.action_init();
-    edb.action_run();
+    load();
   }
 
   protected void setStyle() {

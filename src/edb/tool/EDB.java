@@ -279,34 +279,8 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     return new ImageIcon(file.getAbsolutePath()).getImage();
   }
 
-  public void action_init() {
-    if (toolState == EDBState.LOADED) {
-      // Start a thread...
-      toolState = EDBState.INITIALISING;
-      showTitle(toolState, actor.getBehaviour().getPath());
-      VM = new Thread() {
-        public void run() {
-          actor.run();
-        }
-      };
-      VM.start();
-    }
-  }
-
   public void action_run() {
-    if (toolState == EDBState.INITIALISED) {
-
-      // Run to completion...
-
-      toolState = EDBState.RUNNING;
-      VM = new Thread() {
-        public void run() {
-          time0 = System.currentTimeMillis();
-          showTitle(toolState, actor.getBehaviour().getPath());
-        }
-      };
-      VM.start();
-    }
+    fileEditors.run();
   }
 
   private void action_step() {
@@ -330,13 +304,6 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     run.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         action_run();
-      }
-    });
-    JButton init = new JButton(getImage("icons/init.png", BUTTON_SIZE, BUTTON_SIZE));
-    init.setToolTipText("init");
-    init.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        action_init();
       }
     });
     JButton zoom_in = new JButton(getImage("icons/zoom_in.png", BUTTON_SIZE, BUTTON_SIZE));
@@ -441,7 +408,6 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     toolBar.add(stop);
     // toolBar.add(step);
     toolBar.add(run);
-    toolBar.add(init);
     toolBar.add(zoom_in);
     toolBar.add(zoom_out);
     toolBar.add(graph);

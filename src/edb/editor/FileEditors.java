@@ -425,4 +425,9 @@ public class FileEditors extends EditorTabbedPane {
     }
   }
 
+  public void run() {
+    FileEditor editor = getSelectedFileEditor();
+    if (editor != null) editor.run();
+  }
+
 }

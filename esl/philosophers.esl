@@ -12,7 +12,7 @@ import 'esl/lists.esl', 'esl/displays.esl';
 // The simulation is controlled by the following variables...
 
 timeLimit::Int            = 4000;     // The length of time to run the simulation.
-canDeadlock::Bool         = true;  // Select the strategy for co-ordination.
+canDeadlock::Bool         = false;  // Select the strategy for co-ordination.
 numberOfPhilosophers::Int = 20;     // The number of philosophers (and therefore chopsticks).
 eatTime::Int              = 50;    // Limit on random delay for eating.     
 thinkTime::Int            = 50;    // Limit on random delay for thinking.     
@@ -270,6 +270,7 @@ act main::Main {
   };
   Time(n::Int) -> { }
 }
+
 
 
 
