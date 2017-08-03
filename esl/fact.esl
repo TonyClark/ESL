@@ -125,7 +125,7 @@ act main::Customer {
   messageTime(Message(t::Int,s::Int,tt::Int,l::Str))::Int = t;
   messageBefore(time::Int)::(Message(Int,Int,Int,Str))->Bool = fun(m::Message(Int,Int,Int,Str))::Bool messageTime(m) < time;
   createFilmstrip(ms::[Message(Int,Int,Int,Str)])::[EDBDisplay] =
-    [fold[EDBDisplay]Sequence(actors,select[Message(Int,Int,Int,Str)](messageBefore(t),ms)) | t::Int <- 1..lastTime]
+    [Sequence(actors,select[Message(Int,Int,Int,Str)](messageBefore(t),ms)) | t::Int <- 1..lastTime]
   -> {
     id := addActor('Main');
     computeFact(6);
@@ -143,6 +143,7 @@ act main::Customer {
   };
   Time(n::Int) -> {}
 }
+
 
 
 

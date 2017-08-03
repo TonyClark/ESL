@@ -30,6 +30,8 @@ public abstract class Type extends AST {
     t1 = eval(t1, env);
     t2 = eval(t2, env);
 
+    if (t1 instanceof Rec) return equalsRec((Rec) t1, t2, env);
+    if (t2 instanceof Rec) return equalsRec((Rec) t2, t1, env);
     if (t1 instanceof Union) return equalsUnion((Union) t1, t2, env);
     if (t2 instanceof Union) return equalsUnion((Union) t2, t1, env);
     if (t1 instanceof Null) return true;
@@ -43,7 +45,6 @@ public abstract class Type extends AST {
     if (t1 instanceof Fun) return equalsFun((Fun) t1, t2, env);
     if (t1 instanceof Int) return t2 instanceof Int;
     if (t1 instanceof ast.types.List) return equalsList((ast.types.List) t1, t2, env);
-    if (t1 instanceof Rec) return equalsRec((Rec) t1, t2, env);
     if (t1 instanceof Record) return equalsRecord((Record) t1, t2, env);
     if (t1 instanceof Set) return equalsSet((Set) t1, t2, env);
     if (t1 instanceof Str) return t2 instanceof Str;
@@ -154,7 +155,10 @@ public abstract class Type extends AST {
       if (r.getName().equals(rec.getName())) {
         return equals(r.getType(), rec.getType(), env);
       } else return false;
-    } else return false;
+    } else {
+      // We might need an implicit unfolding of the recursive type...
+      return equals(rec.unfold(), t, env);
+    }
   }
 
   public static boolean equalsRecord(Record record, Type t, Env<String, Type> env) {

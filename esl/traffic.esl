@@ -44,15 +44,15 @@ exitLeft(pos::Int,label::Int,ds::[EDBDisplay])::[EDBDisplay] =
   else addCarOnLeft(pos,label,head[EDBDisplay](ds)):exitLeft(pos+1,label,tail[EDBDisplay](ds));
   
 addCarOnRight(pos::Int,label::Int,d::EDBDisplay)::EDBDisplay =
-  case unfold[EDBDisplay]d {
+  case d {
     Picture(x::Int,y::Int,ps::[PictureElement]) ->
-      fold[EDBDisplay]Picture(x,y,carOnRight(pos,label)+ps)
+      Picture(x,y,carOnRight(pos,label)+ps)
   };
   
 addCarOnLeft(pos::Int,label::Int,d::EDBDisplay)::EDBDisplay =
-  case unfold[EDBDisplay]d {
+  case d {
     Picture(x::Int,y::Int,ps::[PictureElement]) ->
-      fold[EDBDisplay]Picture(x,y,carOnLeft(pos,label)+ps)
+      Picture(x,y,carOnLeft(pos,label)+ps)
   };
   
 carOnRight(pos::Int,label::Int)::[PictureElement] = [
@@ -66,15 +66,15 @@ carOnLeft(pos::Int,label::Int)::[PictureElement] = [
 ];
   
 addCarAtNeckLeft(label::Int,d::EDBDisplay)::EDBDisplay =
-  case unfold[EDBDisplay]d {
+  case d {
     Picture(x::Int,y::Int,es::[PictureElement]) ->
-      fold[EDBDisplay]Picture(x,y,neckCarLeft(label)+es)
+      Picture(x,y,neckCarLeft(label)+es)
   };
   
 addCarAtNeckRight(label::Int,d::EDBDisplay)::EDBDisplay =
-  case unfold[EDBDisplay]d {
+  case d {
     Picture(x::Int,y::Int,es::[PictureElement]) ->
-      fold[EDBDisplay]Picture(x,y,neckCarRight(label)+es)
+      Picture(x,y,neckCarRight(label)+es)
   };
     
 carSize::Int=30;
@@ -147,7 +147,7 @@ rightQCarPicture(position::Int,label::Int)::[PictureElement] =
       Text(x-5,y+5,''+label,'')];
 
 picture(qLeft::Int,qRight::Int,startLeft::Int,startRight::Int)::EDBDisplay =
-  fold[EDBDisplay]Picture(pWidth,pHeight,road+qLeftPicture(qLeft,startLeft) + qRightPicture(qRight,startRight));
+  Picture(pWidth,pHeight,road+qLeftPicture(qLeft,startLeft) + qRightPicture(qRight,startRight));
 
 // **************************************** END OF GUI CODE **********************************************************
 
@@ -276,10 +276,8 @@ act monitor(left::Approach,right::Approach,lights::TrafficLights)::Monitor {
       lights.left.change();
       lights.right.change()
     } else {};
-
-  //Time(n::Int) when (monitorState=PrioritiseRight) and (random(10) < 3) -> {
   
-    monitor()::Void = {
+  monitor()::Void = {
   
     // The PriorityRight strategy will give the right-hand approach to the bottleneck
     // priority over the left unless the left has priority when the right does not.
@@ -343,6 +341,7 @@ act main::Main {
   Time(n::Int) -> {}
   
 }
+
 
 
 

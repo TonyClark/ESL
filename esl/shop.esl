@@ -82,10 +82,10 @@ act displayB::Display {
         case cs {
           [] -> [];
             C(c::Int,s::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] -> 
-              [row([bdata(fold[EDBDisplay]HTML('Customer-' + c))] + 
+              [row([bdata(HTML('Customer-' + c))] + 
                    (states(s,ss)) + 
-                   [tdata(fold[EDBDisplay]HTML('Sales = ' + sales)),
-                    tdata(fold[EDBDisplay]HTML('Walkouts = ' + walkouts))])
+                   [tdata(HTML('Sales = ' + sales)),
+                    tdata(HTML('Walkouts = ' + walkouts))])
               ] + rows(rest)
         };
       
@@ -94,10 +94,10 @@ act displayB::Display {
           state::Str;
           ss::[Str];
           [] -> [];
-          state:ss when state = current -> [rdata(fold[EDBDisplay]HTML(state+''))] + states(current,ss);
+          state:ss when state = current -> [rdata(HTML(state+''))] + states(current,ss);
           state:ss -> [tdata(fold[EDBDisplay]HTML(state+''))] + states(current,ss)
         }
-    in fold[EDBDisplay]Table([][Property],[row([tdata(fold[EDBDisplay]Table([][Property],rows(customers)))])]+[row([tdata(fold[EDBDisplay](HTML('time = ' + now)))])]);
+    in Table([][Property],[row([tdata(Table([][Property],rows(customers)))])]+[row([tdata((HTML('time = ' + now)))])]);
   changeState(c::Int,s::Str,cs::[CustomerDisplay])::[CustomerDisplay] =
     case cs {
       [] -> cs;
@@ -141,7 +141,7 @@ act displayB::Display {
       edb <-Show('customers',fold[EDBDisplay]Table([],[
         Row([],[
           Data([],asTable()),
-          Data([],fold[EDBDisplay]Pie([][Property],'Satisfaction',500,300,[
+          Data([],Pie([][Property],'Satisfaction',500,300,[
             Slice([],'satisfied',(sales * 100)/events),
             Slice([],'unsatisfied',(walkouts * 100)/events)
           ]))
@@ -526,6 +526,7 @@ act main::Main {
   };
   Time(n::Int) -> { wait(delay) }
 }
+
 
 
 

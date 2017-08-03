@@ -104,7 +104,7 @@ toPictures(filmstrip::[Snapshot([Holds(Int,[Chopstick])],[Chopstick])])::[EDBDis
 toPicture(s::Snapshot([Holds(Int,[Chopstick])],[Chopstick]))::EDBDisplay =
   case s {
     Snapshot(holds::[Holds(Int,[Chopstick])],free::[Chopstick]) -> 
-      fold[EDBDisplay]Picture(pictureWidth,pictureHeight,toCircles(0,chopsticks,holds,free) + toPhils(0,holds))
+      Picture(pictureWidth,pictureHeight,toCircles(0,chopsticks,holds,free) + toPhils(0,holds))
   };
   
 toPhils(i::Int,holds::[Holds(Int,[Chopstick])])::[PictureElement] =
@@ -269,5 +269,6 @@ act main::Main {
   };
   Time(n::Int) -> { }
 }
+
 
 

@@ -386,8 +386,8 @@ solver::Solver = rules {
     
 };
   
-locations::[Location] = [][Location];
-blownUp::[Station] = [][Station];
+locations::[Location] = [];
+blownUp::[Station] = [];
   
 graph(travellers::[Traveller])::EDBDisplay =
   // Produce a display from a list of travellers...
@@ -404,8 +404,8 @@ graph(travellers::[Traveller])::EDBDisplay =
            else '<font face="consolas" color="red">'+s+':'+[t.id | t::Traveller <- ts]+'</font>' in
     let nodes::[Node(Props,Int,EDBDisplay)] = [ Node([Prop('shape','plain'),Prop('fontsize','18'),Prop('URL','edb:'+s)],indexOf[Station](s,stations)+1,fold[EDBDisplay]HTML(label(s))) | s::Station <- stations] in
     let edges::[Edge(Props,Int,Int,EDBDisplay)] = mapToEdges(m,stations)
-    in fold[EDBDisplay]Graph([Prop('nodesep','0.001'),Prop('ranksep','0.001'),Prop('size','20,15'),Prop('rankdir','TB'),Prop('ratio','fill'),Prop('URL','edb:run1')],nodes,edges)
-  } else Graph([][Prop],[][Node(Props,Int,EDBDisplay)],[][Edge(Props,Int,Int,EDBDisplay)]);
+    in Graph([Prop('nodesep','0.001'),Prop('ranksep','0.001'),Prop('size','20,15'),Prop('rankdir','TB'),Prop('ratio','fill'),Prop('URL','edb:run1')],nodes,edges)
+  } else Graph([],[],[]);
   
 mapToStations(m::[State],stations::[Station])::[Station] =
   case m {
@@ -432,9 +432,9 @@ lineColour(l::ULine)::Str =
     l::ULine -> 'black'
   };
   
-mapToNodes(map::[State])::[Node(Props,Int,EDBDisplay)] = [][Node(Props,Int,EDBDisplay)];
+mapToNodes(map::[State])::[Node(Props,Int,EDBDisplay)] = [];
 
-graphs::[EDBDisplay] = [][EDBDisplay];
+graphs::[EDBDisplay] = [];
 
 instructions::Str = 
 'Travellers plan their routes on the underground. Each time they reach their destination, they will <br/>
@@ -442,10 +442,10 @@ replan and a new traveller is added. If a traveller arrives at a station where t
 are removed from the game. Your task is to remove all the travellers by blowing them up.';
 
 table(travellers::[Traveller])::EDBDisplay =
-  fold[EDBDisplay]Table([Prop('width','500')],
-    [Row([][Property],[Data([Prop('width','500')],fold[EDBDisplay]HTML(t.id + ':' + t.state+''))]) | t::Traveller <- travellers] +
-    [Row([][Property],[Data([Prop('width','500'),Prop('href','edb:run1')],fold[EDBDisplay]HTML(instructions))])] +
-    [Row([][Property],[Data([Prop('width','500'),Prop('href','edb:run1')],fold[EDBDisplay]HTML('Click here to make a move.'))])]
+  Table([Prop('width','500')],
+    [Row([],[Data([Prop('width','500')],HTML(t.id + ':' + t.state+''))]) | t::Traveller <- travellers] +
+    [Row([],[Data([Prop('width','500'),Prop('href','edb:run1')],HTML(instructions))])] +
+    [Row([],[Data([Prop('width','500'),Prop('href','edb:run1')],HTML('Click here to make a move.'))])]
   );
  
 act underground::Underground {
@@ -455,20 +455,20 @@ act underground::Underground {
   // When a plan is exhausted, the particular traveller is asked
   // to select a new destination and provide a new plan...
 
-  plans::[Plan(Traveller,[Action])] = [][Plan(Traveller,[Action])];
-  travellers::[Traveller] = [][Traveller];
+  plans::[Plan(Traveller,[Action])] = [];
+  travellers::[Traveller] = [];
   
   perform(plan::Plan(Traveller,[Action]))::[Plan(Traveller,[Action])] =
     case plan {
       Plan(t::Traveller,[][Action]) when member[Traveller](t,travellers)-> {
         t <- GetPlan(self);
-        [][Plan(Traveller,[Action])]
+        []
       };
       Plan(t::Traveller,p::[Action]) when member[Traveller](t,travellers) -> {
         action(t,head[Action](p));
         [Plan(t,tail[Action](p))]
       };
-      Plan(t::Traveller,p::[Action]) -> [][Plan(Traveller,[Action])]
+      Plan(t::Traveller,p::[Action]) -> []
     };
     
   blowUp(t::Traveller,s::Station)::Void = {
@@ -533,7 +533,7 @@ act traveller(n::Int,line::ULine,station::Station)::Traveller {
   
   -> grab(locations) { 
     locations := Loc(self,station):locations;
-    theUnderground <- AddPlan(self,[][Action])
+    theUnderground <- AddPlan(self,[])
   };
   
   ChangeTo(l::ULine) -> line := l;
@@ -621,28 +621,5 @@ act main::Act{Time(Int)} {
   Time(n::Int) -> {
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

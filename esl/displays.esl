@@ -27,9 +27,10 @@ type EDBDisplay = rec T. union {
   Graph(Props,[Node(Props,Int,T)],[Edge(Props,Int,Int,T)])
 };
 
-cnstr Graph = unfold[EDBDisplay].Graph;
-cnstr HTML = unfold[EDBDisplay].HTML;
+cnstr Graph    = unfold[EDBDisplay].Graph;
+cnstr HTML     = unfold[EDBDisplay].HTML;
 cnstr Sequence = unfold[EDBDisplay].Sequence;
-cnstr Table = unfold[EDBDisplay].Table;
-cnstr Pie = unfold[EDBDisplay].Pie;
-cnstr Picture = unfold[EDBDisplay].Picture
+cnstr Table    = unfold[EDBDisplay].Table;
+cnstr Pie      = unfold[EDBDisplay].Pie;
+cnstr Picture  = unfold[EDBDisplay].Picture
+
