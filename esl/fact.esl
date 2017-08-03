@@ -16,8 +16,8 @@ cnstr ReturnValue = M.ReturnValue;
 cnstr Zero = M.Zero;
 cnstr Start = M.Start;
 
-actors::[Actor(Int,Int,Int,Str)] = [][Actor(Int,Int,Int,Str)];
-messages::[M] = [][M];
+actors::[Actor(Int,Int,Int,Str)] = [];
+messages::[M] = [];
 
 addActor(behaviour::Str)::Int =
   grab(actors) {
@@ -85,7 +85,7 @@ translate(msIn::[M])::[Message(Int,Int,Int,Str)] =
   case msIn {
     m::M;
     rest::[M];
-    [][M] -> [][Message(Int,Int,Int,Str)];
+    [] -> [];
     Start(n::Int,threadId::Int,c::Customer,f::Fact):rest -> 
       Message(1,c.id,f.id,'[' + threadId + ']Start('+n+')'):translate(rest);
     GetValue(n::Int,threadId::Int,time::Int,source::Fact,target::Fact,sourceCustomer::Customer,targetCustomer::Customer):rest -> 
@@ -143,6 +143,7 @@ act main::Customer {
   };
   Time(n::Int) -> {}
 }
+
 
 
 

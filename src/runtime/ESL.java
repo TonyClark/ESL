@@ -163,4 +163,16 @@ public class ESL {
       instructions = instructions + a.getInstructions();
     return instructions;
   }
+
+  public static void stopOthers(Actor actor) {
+    synchronized (ACTORS) {
+      for (Actor a : ACTORS) {
+        if (a != actor) {
+          a.setState(ActorState.DEAD);
+        }
+      }
+      ACTORS.removeAllElements();
+      ACTORS.addElement(actor);
+    }
+  }
 }

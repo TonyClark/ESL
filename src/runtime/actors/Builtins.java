@@ -39,6 +39,9 @@ public class Builtins {
     builtinNames.add("edb");
     builtinNames.add("builtin");
     builtinNames.add("wait");
+    builtinNames.add("sleep");
+    builtinNames.add("wake");
+    builtinNames.add("stopOthers");
   }
 
   public static void applyBuiltin(Method method, int methodArity, Actor actor, Integer suppliedArity) {
@@ -94,6 +97,9 @@ public class Builtins {
     DynamicVar edb = new DynamicVar("edb", 7);
     DynamicVar builtin = new DynamicVar("builtin", 8);
     DynamicVar wait = new DynamicVar("wait", 9);
+    DynamicVar sleep = new DynamicVar("sleep", 10);
+    DynamicVar wake = new DynamicVar("wake", 11);
+    DynamicVar stopOthers = new DynamicVar("stopOthers", 12);
     List<DynamicVar> env = new Nil<DynamicVar>();
 
     // Order is not important...
@@ -108,6 +114,9 @@ public class Builtins {
     env = env.cons(edb);
     env = env.cons(builtin);
     env = env.cons(wait);
+    env = env.cons(sleep);
+    env = env.cons(wake);
+    env = env.cons(stopOthers);
     return env;
   }
 
@@ -125,10 +134,16 @@ public class Builtins {
     Dynamic edb = new Dynamic(ESL.getEDB());
     Dynamic builtin = new Dynamic(new Builtin("builtin", Builtins::builtin));
     Dynamic wait = new Dynamic(new Builtin("wait", Builtins::wait));
+    Dynamic sleep = new Dynamic(new Builtin("sleep", Builtins::sleep));
+    Dynamic wake = new Dynamic(new Builtin("wake", Builtins::wake));
+    Dynamic stopOthers = new Dynamic(new Builtin("stopOthers", Builtins::stopOthers));
     List<Dynamic> env = new Nil<Dynamic>();
 
     // Order is important - must match indices used in builtinDynamics...
 
+    env = env.cons(stopOthers);
+    env = env.cons(wake);
+    env = env.cons(sleep);
     env = env.cons(wait);
     env = env.cons(builtin);
     env = env.cons(edb);
@@ -194,11 +209,22 @@ public class Builtins {
     env = env.bind("kill", new Forall(-1, -1, new String[] { "T" }, new ast.types.Fun(-1, -1, new Type[] { T }, Void)));
     env = env.bind("random", new ast.types.Fun(-1, -1, new Type[] { Int }, Int));
     env = env.bind("shuffle", new Forall(-1, -1, new String[] { "T" }, new ast.types.Fun(-1, -1, new Type[] { List_T }, List_T)));
-    env = env.bind("resetTime", new ast.types.Fun(-1, -1, new Type[] { }, Void));
+    env = env.bind("resetTime", new ast.types.Fun(-1, -1, new Type[] {}, Void));
     env = env.bind("builtin", new Forall(-1, -1, new String[] { "T" }, new ast.types.Fun(-1, -1, new Type[] { Str, Str, Int }, T)));
     env = env.bind("wait", new ast.types.Fun(-1, -1, new Type[] { Int }, Void));
+    env = env.bind("sleep", new ast.types.Fun(-1, -1, new Type[] {}, Void));
+    env = env.bind("wake", new ast.types.Fun(-1, -1, new Type[] {}, Void));
+    env = env.bind("stopOthers", new ast.types.Fun(-1, -1, new Type[] {}, Void));
     env = env.bind("edb", edb);
     return env;
+  }
+
+  public static void stopOthers(Actor actor, int arity) {
+    if (arity == 0) {
+      actor.closeFrame(0, null, null, null);
+      ESL.stopOthers(actor);
+      actor.returnValue(null);
+    } else throw new Error("stopOthers expects 0 args but supplied with " + arity);
   }
 
   public static void wait(Actor actor, int arity) {
@@ -212,7 +238,33 @@ public class Builtins {
         }
       }
       actor.returnValue(null);
-    }
+    } else throw new Error("wait expects 1 arg but supplied with " + arity);
+  }
+
+  public static void sleep(Actor actor, int arity) {
+    if (arity == 0) {
+      actor.closeFrame(0, null, null, null);
+      synchronized (actor) {
+        try {
+          actor.wait();
+        } catch (Exception x) {
+        }
+      }
+      actor.returnValue(null);
+    } else throw new Error("sleep expects 0 args but supplied with " + arity);
+  }
+
+  public static void wake(Actor actor, int arity) {
+    if (arity == 0) {
+      actor.closeFrame(0, null, null, null);
+      synchronized (actor) {
+        try {
+          actor.notifyAll();
+        } catch (Exception x) {
+        }
+      }
+      actor.returnValue(null);
+    } else throw new Error("wake expects 0 args but supplied with " + arity);
   }
 
   public static void kill(Actor actor, int arity) {

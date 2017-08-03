@@ -34,11 +34,11 @@ public class History implements Serializable, DB, TableModel {
 
   // A history is a record of an ESL application. It records the key messages and events.
 
-  public static final Hashtable<Key, Integer>     arity    = new Hashtable<Key, Integer>();
-  private static final Key                        ACTOR    = Key.getKey("actor");
-  private static final Key                        SEND     = Key.getKey("send");
-  private static final Key                        STATE    = Key.getKey("state");
-  public static final Key                         REF      = Key.getKey("Ref");
+  public static final Hashtable<Key, Integer> arity = new Hashtable<Key, Integer>();
+  private static final Key                    ACTOR = Key.getKey("actor");
+  private static final Key                    SEND  = Key.getKey("send");
+  private static final Key                    STATE = Key.getKey("state");
+  public static final Key                     REF   = Key.getKey("Ref");
 
   public static History inflate(String path) {
     FileInputStream fin;
@@ -54,7 +54,7 @@ public class History implements Serializable, DB, TableModel {
         int a = history.newActorEvents.size();
         int s = history.sendEvents.size();
         int u = history.stateEvents.size();
-        //history.showAsTable();
+        // history.showAsTable();
         System.out.println("[History " + path + " become=" + b + " consume=" + c + " actor=" + a + " send=" + s + " state=" + u + " time=[" + history.getStartOfTime() + "," + history.endOfTime + "]]");
         return history;
       } else throw new Error("expecting a history " + o);
@@ -81,7 +81,7 @@ public class History implements Serializable, DB, TableModel {
   }
 
   public void consume(Actor actor, Message message) {
-    consumeEvents.add(new Consume(actor.getId(), encodeValue(message), (int)ESL.getTime()));
+    consumeEvents.add(new Consume(actor.getId(), encodeValue(message), (int) ESL.getTime()));
   }
 
   private Object encodeValue(Object value) {
@@ -491,6 +491,10 @@ public class History implements Serializable, DB, TableModel {
     frame.add(scroller2, BorderLayout.CENTER);
     frame.pack();
     frame.setVisible(true);
+  }
+
+  public Term getFact(Key name, int arity, int time, int index, Machine machine) {
+    throw new Error("get fact not implemented.");
   }
 
 }

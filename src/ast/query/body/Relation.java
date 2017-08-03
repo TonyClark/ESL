@@ -57,13 +57,13 @@ public class Relation extends BodyElement {
     else if (op == nql)
       compileNql(code, arity, vars, isLast);
     else if (op == greater)
-      compileGreeater(code, arity, vars, isLast);
+      compileGreater(code, arity, vars, isLast);
     else if (op == less)
       compileLess(code, arity, vars, isLast);
     else throw new Error("cannot compile relation " + op.getString());
   }
 
-  private void compileGreeater(Vector<Instr> code, int arity, Vector<String> vars, boolean isLast) {
+  private void compileGreater(Vector<Instr> code, int arity, Vector<String> vars, boolean isLast) {
     left.compile(code, arity, vars);
     right.compile(code, arity, vars);
     code.add(new Greater());

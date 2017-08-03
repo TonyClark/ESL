@@ -17,7 +17,7 @@ act simulator::Simulator {
 
   gui::GUI = null;
   
-  balls::[Ball] = [][Ball]
+  balls::[Ball] = []
   
   SetGUI(g::GUI) -> gui := g;
   
@@ -99,6 +99,7 @@ act main::Main {
      
   Time(n::Int) -> {} 
 }
+
 
 
 

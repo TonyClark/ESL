@@ -532,10 +532,11 @@ typeCheckExp(maps,  maps,            Str(s,e,v),                Str)      <- !;
 typeCheckExp(maps,  maps,            Str(s,e,v),                expected) <- throw TypeError(s,e,'expecting a string');
 typeCheckExp(maps,  maps,            Name(s,e,n),               t)        <- lookup(n,maps,t),!;
 typeCheckExp(maps,  [Map(n,t)|maps], Name(s,e,n),               t);
-typeCheckExp(mapsIn,mapsOut,         Term(s,e,'+',[left,right]),Int)      <- typeCheckExp(mapsIn,mapsOut1,left,Int), typeCheckExp(mapsOut1,mapsOut,right,Int), !;
-typeCheckExp(mapsIn,mapsOut,         Term(s,e,'-',[left,right]),Int)      <- typeCheckExp(mapsIn,mapsOut1,left,Int), typeCheckExp(mapsOut1,mapsOut,right,Int), !;
-typeCheckExp(mapsIn,mapsOut,         Term(s,e,'*',[left,right]),Int)      <- typeCheckExp(mapsIn,mapsOut1,left,Int), typeCheckExp(mapsOut1,mapsOut,right,Int), !;
-typeCheckExp(mapsIn,mapsOut,         Term(s,e,'/',[left,right]),Int)      <- typeCheckExp(mapsIn,mapsOut1,left,Int), typeCheckExp(mapsOut1,mapsOut,right,Int), !;
+typeCheckExp(mapsIn,mapsOut,         Term(s,e,'+',[left,right]),Int)      <- typeCheckExp(mapsIn,mapsOut1,left,Int),     typeCheckExp(mapsOut1,mapsOut,right,Int), !;
+typeCheckExp(mapsIn,mapsOut,         Term(s,e,'+',[left,right]),List(t))  <- typeCheckExp(mapsIn,mapsOut1,left,List(t)), typeCheckExp(mapsOut1,mapsOut,right,List(t)), !;
+typeCheckExp(mapsIn,mapsOut,         Term(s,e,'-',[left,right]),Int)      <- typeCheckExp(mapsIn,mapsOut1,left,Int),     typeCheckExp(mapsOut1,mapsOut,right,Int), !;
+typeCheckExp(mapsIn,mapsOut,         Term(s,e,'*',[left,right]),Int)      <- typeCheckExp(mapsIn,mapsOut1,left,Int),     typeCheckExp(mapsOut1,mapsOut,right,Int), !;
+typeCheckExp(mapsIn,mapsOut,         Term(s,e,'/',[left,right]),Int)      <- typeCheckExp(mapsIn,mapsOut1,left,Int),     typeCheckExp(mapsOut1,mapsOut,right,Int), !;
 typeCheckExp(mapsIn,mapsOut,         Term(s,e,'+',[left,right]),Str)      <- typeCheckExp(mapsIn,mapsOut1,left,Str), !;
 typeCheckExp(mapsIn,mapsOut,         Term(s,e,'+',[left,right]),Str)      <- typeCheckExp(mapsIn,mapsOut1,right,Str), !;
 typeCheckExp(mapsIn,mapsOut,         Term(s,e,'+',[left,right]),Int)      <-
@@ -549,6 +550,10 @@ typeCheckExp(mapsIn,mapsOut,Term(s,e,'+',[left,right]),Int)               <-
 
 do true
 return OK
+
+
+
+
 
 
 

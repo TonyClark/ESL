@@ -94,8 +94,8 @@ act maze::Maze {
   monitor::Int = 0;    // The value of the monitor is not important.
   playerX::Int = 20;   // Start the player at (20,20).
   playerY::Int = 20;   // Start the player at (20,20).
-  ghosts::[GhostInfo] = [][GhostInfo];                              // In principle we can have any number of ghosts.
-  turnCounter::Int = 0;                                             // Used to control when the player should move.
+  ghosts::[GhostInfo] = [];                              // In principle we can have any number of ghosts.
+  turnCounter::Int = 0;                                  // Used to control when the player should move.
   
   eaten()::Bool = exists[GhostInfo](isEatingPlayer,ghosts);         // The player has been eaten.
   is0 :: (Int)[compiler.extensions.Is0] -> Bool = fun(n::Int)::Bool n=0; // Check for 0.
@@ -266,7 +266,7 @@ defaultGhost(direction::Str)::(Ghost,Maze)->Void =
       };
       
     changeDirection(x::Int,y::Int,goalX::Int,goalY::Int,m::Maze)::Void =
-      let directions::[Str] = [][Str]
+      let directions::[Str] = []
       in {
         if x < goalX then directions := 'EAST':directions else {};
         if x > goalX then directions := 'WEST':directions else {};
@@ -278,7 +278,7 @@ defaultGhost(direction::Str)::(Ghost,Maze)->Void =
     
     chooseDirection(x::Int,y::Int,directions::[Str],m::Maze)::Void =
       case directions {
-        [][Str] -> {};
+        [] -> {};
         'NORTH':ds::[Str] -> if not(m.isWall(x,y-1)) then direction := 'NORTH' else chooseDirection(x,y,ds,m);
         'SOUTH':ds::[Str] -> if not(m.isWall(x,y+1)) then direction := 'SOUTH' else chooseDirection(x,y,ds,m);
         'EAST':ds::[Str]  -> if not(m.isWall(x+1,y)) then direction := 'EAST' else chooseDirection(x,y,ds,m);
@@ -384,6 +384,7 @@ act main::Main {
   Time(n::Int) -> {}
   
 }
+
 
 
 

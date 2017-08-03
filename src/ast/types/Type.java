@@ -58,51 +58,6 @@ public abstract class Type extends AST {
     return false;
   }
 
-  private static boolean equalTuples(Tuple t1, Type t2, Env<String, Type> env) {
-    if (t2 instanceof Tuple) {
-      Tuple tuple = (Tuple) t2;
-      if (t1.getTypes().length == tuple.getTypes().length) {
-        for (int i = 0; i < t1.getTypes().length; i++) {
-          if (!equals(t1.getTypes()[i], tuple.getTypes()[i], env)) return false;
-        }
-        return true;
-      } else return false;
-    } else return false;
-  }
-
-  private static boolean equalsRules(Rules t1, Type t2, Env<String, Type> env) {
-    if (t2 instanceof Rules) {
-      Rules rules = (Rules) t2;
-      return t1.containsAllTypes(rules, env) && rules.containsAllTypes(t1, env);
-    } else return false;
-  }
-
-  private static boolean equalsKB(KB t1, Type t2, Env<String, Type> env) {
-    if (t1 instanceof KB) {
-      KB k = (KB) t2;
-      String u1 = t1.getUnion();
-      String u2 = k.getUnion();
-      if (env.binds(u1) && env.binds(u2))
-        return equals(env.lookup(u1), env.lookup(u2), env);
-      else return false;
-    } else return false;
-  }
-
-  private static boolean sameApplication(Type t1, Type t2, Env<String, Type> env) {
-    if (t1 instanceof Apply && t2 instanceof Apply) {
-      Apply a1 = (Apply) t1;
-      Apply a2 = (Apply) t2;
-      if (a1.getName().equals(a2.getName())) {
-        if (a1.getTypes().length == a2.getTypes().length) {
-          for (int i = 0; i < a1.getTypes().length; i++) {
-            if (!equals(a1.getTypes()[i], a2.getTypes()[i], env)) return false;
-          }
-          return true;
-        } else return false;
-      } else return false;
-    } else return false;
-  }
-
   private static boolean equals(Type[] types1, Type[] types2, Env<String, Type> env) {
     if (types1.length == types2.length) {
       for (int i = 0; i < types1.length; i++)
@@ -149,7 +104,15 @@ public abstract class Type extends AST {
   }
 
   public static boolean equalsForall(Forall forall, Type t, Env<String, Type> env) {
-    return equals(t, forall.getType(), env);
+
+    // Catch the use of []::Forall(t) [t] compared to any type [a] for a concrete
+    // type a. This means that it is not always necessary to use type application
+    // to supply a type for the empty list...
+
+    if (t instanceof ast.types.List) {
+      ast.types.List list = (ast.types.List) t;
+      return equals(t, forall.apply(new Type[] { list.getType() }), env);
+    } else return equals(t, forall.getType(), env);
   }
 
   public static boolean equalsFun(Fun fun, Type t, Env<String, Type> env) {
@@ -163,8 +126,23 @@ public abstract class Type extends AST {
     } else return false;
   }
 
+  private static boolean equalsKB(KB t1, Type t2, Env<String, Type> env) {
+    if (t1 instanceof KB) {
+      KB k = (KB) t2;
+      String u1 = t1.getUnion();
+      String u2 = k.getUnion();
+      if (env.binds(u1) && env.binds(u2))
+        return equals(env.lookup(u1), env.lookup(u2), env);
+      else return false;
+    } else return false;
+  }
+
   public static boolean equalsList(ast.types.List list, Type t, Env<String, Type> env) {
-    if (t instanceof ast.types.List) {
+    if (t instanceof Forall) {
+      // Supports checking []...
+      Forall forall = (Forall) t;
+      return equals(forall.apply(new Type[] { list.getType() }), list, env);
+    } else if (t instanceof ast.types.List) {
       ast.types.List l = (ast.types.List) t;
       return equals(list.getType(), l.getType(), env);
     } else return false;
@@ -190,6 +168,13 @@ public abstract class Type extends AST {
         }
         return true;
       } else return false;
+    } else return false;
+  }
+
+  private static boolean equalsRules(Rules t1, Type t2, Env<String, Type> env) {
+    if (t2 instanceof Rules) {
+      Rules rules = (Rules) t2;
+      return t1.containsAllTypes(rules, env) && rules.containsAllTypes(t1, env);
     } else return false;
   }
 
@@ -225,6 +210,18 @@ public abstract class Type extends AST {
     if (t instanceof Var) {
       Var v = (Var) t;
       return var.getName().equals(v.getName());
+    } else return false;
+  }
+
+  private static boolean equalTuples(Tuple t1, Type t2, Env<String, Type> env) {
+    if (t2 instanceof Tuple) {
+      Tuple tuple = (Tuple) t2;
+      if (t1.getTypes().length == tuple.getTypes().length) {
+        for (int i = 0; i < t1.getTypes().length; i++) {
+          if (!equals(t1.getTypes()[i], tuple.getTypes()[i], env)) return false;
+        }
+        return true;
+      } else return false;
     } else return false;
   }
 
@@ -280,6 +277,21 @@ public abstract class Type extends AST {
     return env.lookup(v.getName());
   }
 
+  private static boolean sameApplication(Type t1, Type t2, Env<String, Type> env) {
+    if (t1 instanceof Apply && t2 instanceof Apply) {
+      Apply a1 = (Apply) t1;
+      Apply a2 = (Apply) t2;
+      if (a1.getName().equals(a2.getName())) {
+        if (a1.getTypes().length == a2.getTypes().length) {
+          for (int i = 0; i < a1.getTypes().length; i++) {
+            if (!equals(a1.getTypes()[i], a2.getTypes()[i], env)) return false;
+          }
+          return true;
+        } else return false;
+      } else return false;
+    } else return false;
+  }
+
   public static Type[] substTypes(Type[] types, Type type, String name) {
     Type[] ts = new Type[types.length];
     for (int i = 0; i < types.length; i++)
@@ -294,7 +306,23 @@ public abstract class Type extends AST {
     super(lineStart, lineEnd);
   }
 
+  public abstract void check(Env<String, Type> env);// Throws an error if there is something wrong with the type in the context of the supplied environment...
+
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+  }
+
+  public Object defaultValue() {
+    if (this instanceof ast.types.Int)
+      return 0;
+    else if (this instanceof ast.types.Str)
+      return "''";
+    else if (this instanceof ast.types.Bool)
+      return true;
+    else if (this instanceof ast.types.Float)
+      return 0.0;
+    else if (this instanceof ast.types.List)
+      return new list.Nil<Object>();
+    else return null;
   }
 
   public Type deref(Env<String, Type> env) {
@@ -317,6 +345,10 @@ public abstract class Type extends AST {
 
   public String getLabel() {
     return getClass().getSimpleName();
+  }
+
+  public boolean isSimpleType() {
+    return this instanceof Int || this instanceof Str || this instanceof Bool || this instanceof Float;
   }
 
   public int maxLocals() {
@@ -346,25 +378,5 @@ public abstract class Type extends AST {
 
   public Type type(Env<String, Type> env) {
     throw new TypeError(getLineStart(), getLineEnd(), "cannot type check a type");
-  }
-
-  public abstract void check(Env<String, Type> env);// Throws an error if there is something wrong with the type in the context of the supplied environment...
-
-  public boolean isSimpleType() {
-    return this instanceof Int || this instanceof Str || this instanceof Bool || this instanceof Float;
-  }
-
-  public Object defaultValue() {
-    if (this instanceof ast.types.Int)
-      return 0;
-    else if (this instanceof ast.types.Str)
-      return "''";
-    else if (this instanceof ast.types.Bool)
-      return true;
-    else if (this instanceof ast.types.Float)
-      return 0.0;
-    else if (this instanceof ast.types.List)
-      return new list.Nil<Object>();
-    else return null;
   }
 }

@@ -20,7 +20,7 @@ rightColour::Str = 'fill:red;stroke:red;';
 
 actionsToPictures(qLeft::Int,qRight::Int,startLeft::Int,startRight::Int,as::[Action])::[EDBDisplay] =
   case as {
-    [][Action] -> [][EDBDisplay];
+    [] -> [];
     ArriveLeft:as::[Action] -> picture(qLeft+1,qRight,startLeft,startRight):actionsToPictures(qLeft+1,qRight,startLeft,startRight,as);
     ArriveRight:as::[Action] -> picture(qLeft,qRight+1,startLeft,startRight):actionsToPictures(qLeft,qRight+1,startLeft,startRight,as);
     MoveLeft:as::[Action] -> movesRight(startLeft+1,picture(qLeft-1,qRight,startLeft+1,startRight):actionsToPictures(qLeft-1,qRight,startLeft+1,startRight,as));
@@ -34,12 +34,12 @@ movesLeft(label::Int,ps::[EDBDisplay])::[EDBDisplay] =
   addCarAtNeckRight(label,head[EDBDisplay](ps)):exitLeft(0,label,tail[EDBDisplay](ps));
   
 exitRight(pos::Int,label::Int,ds::[EDBDisplay])::[EDBDisplay] =
-  if (pos = maxCarsWaiting) or (ds = [][EDBDisplay])
+  if (pos = maxCarsWaiting) or (ds = [])
   then ds
   else addCarOnRight(pos,label,head[EDBDisplay](ds)):exitRight(pos+1,label,tail[EDBDisplay](ds));
   
 exitLeft(pos::Int,label::Int,ds::[EDBDisplay])::[EDBDisplay] =
-  if (pos = maxCarsWaiting) or (ds = [][EDBDisplay])
+  if (pos = maxCarsWaiting) or (ds = [])
   then ds
   else addCarOnLeft(pos,label,head[EDBDisplay](ds)):exitLeft(pos+1,label,tail[EDBDisplay](ds));
   
@@ -126,12 +126,12 @@ road::[PictureElement] = [leftTop,leftBottom]+neck+[rightTop,rightBottom]+[centr
 
 qLeftPicture(cars::Int,startLeft::Int)::[PictureElement] = 
   if cars = 0
-  then [][PictureElement]
+  then []
   else leftQCarPicture(cars-1,startLeft+cars)+qLeftPicture(cars-1,startLeft);
   
 qRightPicture(cars::Int,startRight::Int)::[PictureElement] = 
   if cars = 0
-  then [][PictureElement]
+  then []
   else rightQCarPicture(cars-1,startRight+cars) + qRightPicture(cars-1,startRight);
   
 leftQCarPicture(position::Int,label::Int)::[PictureElement] = 
@@ -177,13 +177,13 @@ data MonitorState = PriorityRight | Even | Stuck;
 
 // The following values are used to control the simulation:
 
-qLimit::Int = 3;                                    // How long a queue gets before it becomes interesting.
-qtLimit::Int = 3;                                   // A queue becomes a priority after this many turns.
-tLimit::Int =10000;                                  // How long to run the simulation for.
-sampleDelay::Int = 20;                               // The monitor samples the approaches once per delay.
-moveDelay::Int = 20;                                 // Cars are delayed at the waiting point by this amount.
-actions::[Action] = [][Action];                     // Record the actions so that they can be displayed as pictures.
-monitorState::MonitorState = Even;         // Change this value to modify the monitoring strategy.
+qLimit::Int = 3;                                   // How long a queue gets before it becomes interesting.
+qtLimit::Int = 3;                                  // A queue becomes a priority after this many turns.
+tLimit::Int =10000;                                // How long to run the simulation for.
+sampleDelay::Int = 20;                             // The monitor samples the approaches once per delay.
+moveDelay::Int = 20;                               // Cars are delayed at the waiting point by this amount.
+actions::[Action] = [];                            // Record the actions so that they can be displayed as pictures.
+monitorState::MonitorState = Even;                 // Change this value to modify the monitoring strategy.
 
 act light(c::Str)::TrafficLight {
 
@@ -343,6 +343,7 @@ act main::Main {
   Time(n::Int) -> {}
   
 }
+
 
 
 

@@ -1,22 +1,14 @@
 package ast.query.machine;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Stack;
 import java.util.Vector;
 
-import ast.query.body.Call;
-import ast.query.body.DBName;
 import ast.query.rules.Clause;
 import ast.query.rules.ClauseTable;
-import ast.query.rules.RuleBase;
 import ast.query.value.Var;
 import ast.query.value.Wild;
-import context.StringSource;
-import exp.Exp;
-import grammar.Grammar;
 import history.History;
 import list.Cons;
 import list.List;
@@ -24,8 +16,6 @@ import list.Maybe;
 import runtime.ESL;
 import runtime.data.Key;
 import runtime.data.Term;
-import values.JavaObject;
-import xpl.Interpreter;
 
 public class Machine {
 
@@ -66,82 +56,36 @@ public class Machine {
   private static final int FAIL_TYPE_EVENTUALLY    = 4;
   private static final int FAIL_TYPE_PAST          = 5;
   private static final int FAIL_TYPE_PAR           = 6;
+  private static final int FAIL_TYPE_PAST_FACT     = 7;
 
   private static final int CHOICE_SEQ              = 1;
   private static final int CHOICE_PAR              = 2;
 
   private static int       counter                 = 0;
 
-  public static void main(String[] args) {
-    try {
-      String path = "esl/query/test.q";
-      String historyPath = "/Users/acestc4/Dropbox/SHU_Files/Research/ESL/histories";
-      FileInputStream in = new FileInputStream(path);
-      String text = "";
-      int c = in.read();
-      while (c != -1) {
-        text = text + (char) c;
-        c = in.read();
-      }
-      Call.setDBNames(new DBName[] { new DBName(Key.getKey("actor"), 3), new DBName(Key.getKey("send"), 4), new DBName(Key.getKey("state"), 4) });
-      Grammar grammar = Interpreter.getGrammar("xpl/query.xpl", "query");
-      Object o = null;
-      JavaObject jo = (JavaObject) Interpreter.parseCharSource(path, grammar, "ruleBase", new StringSource(text), new Exp[] {}, false);
-      RuleBase rules = (RuleBase) jo.getTarget();
-      System.out.println(rules);
-      History history = History.inflate(historyPath + "/shop/end.hst");
-      long t0 = System.currentTimeMillis();
-      DB db = new DB() {
+  private ClauseTable      clauseTable;
 
-        public int endOfTime() {
-          return 1;
-        }
+  private DB               db;
 
-        public Object getFactArg(Key name, int arity, int time, int index, int argNumber, Machine machine) {
-          if (argNumber == 0)
-            return index;
-          else return index + 1;
-        }
+  private Object[]         callStack               = new Object[CALL_STACK_SIZE];
+  private Object[]         failStack               = new Object[FAIL_STACK_SIZE];
 
-        public boolean hasFact(Key name, int arity, int time, int index, Machine machine) {
-          return name.getString().equals("x") && arity == 2 && index < 1000;
-        }
+  private Vector<Machine>  children                = new Vector<Machine>();
+  private Machine          parent                  = null;
 
-        public boolean isEnd(int time) {
-          return time == 1;
-        }
-      };
-      Machine machine = new Machine(rules.compile(), history);
-      machine.init(Key.getKey("main"));
-      System.out.println(System.currentTimeMillis() - t0);
-    } catch (IOException ioe) {
-      ioe.printStackTrace(System.err);
-    }
-  }
-
-  private ClauseTable     clauseTable;
-
-  private DB              db;
-
-  private Object[]        callStack      = new Object[CALL_STACK_SIZE];
-  private Object[]        failStack      = new Object[FAIL_STACK_SIZE];
-
-  private Vector<Machine> children       = new Vector<Machine>();
-  private Machine         parent         = null;
-
-  private Stack<Var>      trail          = new Stack<Var>();
-  private int             tos            = 0;
-  private int             tofs           = 0;
-  private int             callFrame      = -1;
-  private int             failFrame      = -1;
-  protected int           programCounter = 0;
-  private int             time           = 0;
-  private int             indent         = 0;
-  private int             choiceMode     = CHOICE_SEQ;
-  private boolean         traceInstrs    = false;
-  private boolean         traceCalls     = false;
-  private boolean         failed         = false;
-  private int             id             = counter++;
+  private Stack<Var>       trail                   = new Stack<Var>();
+  private int              tos                     = 0;
+  private int              tofs                    = 0;
+  private int              callFrame               = -1;
+  private int              failFrame               = -1;
+  protected int            programCounter          = 0;
+  private int              time                    = 0;
+  private int              indent                  = 0;
+  private int              choiceMode              = CHOICE_SEQ;
+  private boolean          traceInstrs             = false;
+  private boolean          traceCalls              = false;
+  private boolean          failed                  = false;
+  private int              id                      = counter++;
 
   public Machine() {
   }
@@ -248,7 +192,8 @@ public class Machine {
     // supplied name and arity, and at the current time...
 
     if (db != null) {
-      if (db.hasFact(name, arity, time, 0, this)) {
+      Term fact = db.getFact(name, arity, time, 0, this);
+      if (fact != null) {
         pushCallStack(name);
         // Push a fail frame and unify the elements in the database.
         int newFrame = enter(null, arity + 1, 0);
@@ -256,12 +201,27 @@ public class Machine {
         boolean ok = true;
         for (int i = 0; i < arity && ok; i++) {
           Object value = getLocal(i);
-          Object dbValue = db.getFactArg(name, arity, time, 0, i, this);
+          Object dbValue = fact.getValues()[i];
           if (!unify(value, dbValue)) ok = false;
         }
         if (!ok)
           fail();
         else returnFrame();
+      } else fail();
+    } else fail();
+  }
+
+  public void enterPastFact(Term term) {
+    if (db != null) {
+      Key name = term.getName();
+      int arity = term.getArity();
+      int t0 = time;
+      Term fact = db.getFact(name, arity, t0, 0, this);
+      while (t0 >= 0 && fact == null)
+        t0--;
+      if (t0 >= 0) {
+        pushPastFactFail(term, 1, t0);
+        if (!unify(term, fact)) fail();
       } else fail();
     } else fail();
   }
@@ -394,12 +354,13 @@ public class Machine {
           int dbIndex = getFailClausePtr();
           arity = getFailDBArity();
           Key name = (Key) getLocal(arity);
-          if (db.hasFact(name, arity, getTime(), dbIndex, this)) {
+          Term fact = db.getFact(name, arity, getTime(), dbIndex, this);
+          if (fact != null) {
             incFailClausePtr();
             boolean ok = true;
             for (int arg = 0; arg < arity && ok; arg++) {
               Object value = getLocal(arg);
-              Object dbValue = db.getFactArg(name, arity, time, dbIndex, arg, this);
+              Object dbValue = fact.getValues()[arg];
               if (!unify(value, dbValue)) ok = false;
             }
             if (!ok)
@@ -409,6 +370,52 @@ public class Machine {
             popFailFrame();
             fail();
           }
+          break;
+
+        case FAIL_TYPE_PAST_FACT:
+
+          // We are looking for a single fact in the past. The stack frame contains the fact
+          // The current time and the index into the database. We are indexing on two variables:
+          // the time and the index into the database for each time unit.
+
+          backtrack(getFailTrailPtr());
+          callFrame = getFailCallFrame();
+          Object[] termTimeAndPC = getPastFactTermAndTime();
+          Term term = (Term) termTimeAndPC[0];
+          int t0 = (int) termTimeAndPC[1];
+          dbIndex = getFailClausePtr();
+
+          boolean found = false;
+
+          // Index through the database at the current time. Once this is exhausted, decrement
+          // the time until it is less than 0. At that point the fail frame is exhausted. Otherwise
+          // when a term in the DB unifies with the supplied term, update the fail frame to
+          // contain the next pair of indices and retry from the call frame and the saved PC...
+
+          while (!found && t0 >= 0) {
+            fact = db.getFact(term.getName(), term.getArity(), t0, dbIndex, this);
+            if (fact != null) {
+              if (unify(fact, term))
+                found = true;
+              else {
+                t0--;
+                dbIndex = 0;
+              }
+            } else {
+              t0--;
+              dbIndex = 0;
+            }
+          }
+
+          if (found) {
+            termTimeAndPC[1] = t0;
+            setFailClausePtr(dbIndex + 1);
+            programCounter = (int) termTimeAndPC[2];
+          } else {
+            popFailFrame();
+            fail();
+          }
+
           break;
 
         case FAIL_TYPE_EVENTUALLY:
@@ -468,7 +475,9 @@ public class Machine {
         default:
           throw new Error("unknown type of fail frame: " + getFailType());
       }
-    } else setFailed(true);
+    } else
+
+      setFailed(true);
 
   }
 
@@ -537,6 +546,10 @@ public class Machine {
 
   private int getFailClausePtr() {
     return (int) failStack[failFrame + FAIL_CLAUSEPTR];
+  }
+
+  private Object[] getPastFactTermAndTime() {
+    return (Object[]) failStack[failFrame + FAIL_DB_ARITY];
   }
 
   private Vector<Clause> getFailClauses() {
@@ -743,7 +756,7 @@ public class Machine {
 
   }
 
-  private void parellelEnter(Vector<Clause> clauses) {
+  private void parallelEnter(Vector<Clause> clauses) {
 
     // The machine splits over the clauses creating a new child for each clause.
     // Each child is a copy of the parent but which enters a different clause...
@@ -789,6 +802,43 @@ public class Machine {
     pushFailStack(callFrame);
     pushFailStack(getTrailPtr());
     failFrame = frame;
+  }
+
+  public void pastFact(Object value) {
+    value = deref(value);
+    if (value instanceof Term) {
+      Term term = (Term) value;
+      enterPastFact(term);
+    } else fail();
+  }
+
+  public void pastFact1(Object value) {
+    value = deref(value);
+    if (value instanceof Term) {
+      Term term = (Term) value;
+      boolean done = false;
+      int t0 = time;
+      int index = 0;
+      Key name = term.getName();
+      int arity = term.getArity();
+      while (!done && t0 >= 0) {
+        Term t = db.getFact(name, arity, t0, index, this);
+        if (t != null) {
+          int trail = getTrailPtr();
+          if (unify(term, t))
+            done = true;
+          else {
+            backtrack(trail);
+            index++;
+          }
+        }
+        if (!done) {
+          t0--;
+          index = 0;
+        }
+      }
+      if (!done) fail();
+    } else fail();
   }
 
   public String path() {
@@ -871,6 +921,17 @@ public class Machine {
     pushFailStack(failFrame);
     pushFailStack(FAIL_TYPE_DB);
     pushFailStack(arity);
+    pushFailStack(index);
+    pushFailStack(callFrame);
+    pushFailStack(getTrailPtr());
+    failFrame = frame;
+  }
+
+  public void pushPastFactFail(Term term, int index, int time) {
+    int frame = tofs;
+    pushFailStack(failFrame);
+    pushFailStack(FAIL_TYPE_PAST_FACT);
+    pushFailStack(new Object[] { term, time, programCounter });
     pushFailStack(index);
     pushFailStack(callFrame);
     pushFailStack(getTrailPtr());
@@ -984,8 +1045,6 @@ public class Machine {
     time = 0;
     indent = 0;
     choiceMode = CHOICE_SEQ;
-    traceInstrs = false;
-    traceCalls = false;
     failed = false;
   }
 
@@ -1024,28 +1083,9 @@ public class Machine {
   }
 
   public void run() {
-    if (getChildren().size() > 0) {
-      for (Machine child : getChildren())
-        if (child.isValidChild()) child.run();
-    } else {
-      while (!runTerminated()) {
-        run1();
-      }
-    }
-  }
-
-  protected void run1() {
-    if (getChildren().size() > 0) {
-      for (Machine child : getChildren())
-        if (child.isValidChild()) child.run1();
-    } else {
+    while (!runTerminated()) {
       ast.query.instrs.Instr i = getClauseCode().get(programCounter++);
-      if (traceInstrs) {
-        System.err.println("Machine(" + path() + ")");
-        System.err.println("Instruction = " + i);
-        printCallFrame(callFrame);
-        System.err.println("--------------------------\n");
-      }
+      if (traceInstrs) System.err.println("Instruction = " + i);
       i.perform(this);
     }
   }
@@ -1253,6 +1293,46 @@ public class Machine {
         unified = unify(t1.getValues()[i], t2.getValues()[i]);
       return unified;
     } else return false;
+  }
+
+  public void before(Term fact, List<Term> facts) {
+    // Holds when the fact is true before any of the supplied facts...
+    int t0 = time;
+    Term found = null;
+    while (t0 >= 0 && found == null) {
+      found = hasFact(fact, t0, 0);
+      if (found == null) found = hasFacts(facts, t0);
+      t0--;
+    }
+    if (found == null)
+      fail();
+    else if (found != null && found != fact) fail();
+  }
+
+  private Term hasFacts(List<Term> facts, int time) {
+    if (facts.isNil())
+      return null;
+    else {
+      Term fact = hasFact((Term) deref(facts.getHead()), time, 0);
+      if (fact != null)
+        return fact;
+      else return hasFacts((List<Term>) deref(facts.getTailMaybe()), time);
+    }
+  }
+
+  private Term hasFact(Term fact, int time, int index) {
+    Key name = fact.getName();
+    int arity = fact.getArity();
+    Term dbFact = db.getFact(name, arity, time, index, this);
+    if (dbFact != null) {
+      int trail = getTrailPtr();
+      if (unify(fact, dbFact))
+        return fact;
+      else {
+        backtrack(trail);
+        return hasFact(fact, time, index + 1);
+      }
+    } else return null;
   }
 
 }

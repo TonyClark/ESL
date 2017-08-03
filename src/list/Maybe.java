@@ -15,19 +15,31 @@ public class Maybe<Element> extends List<Element> {
   }
 
   public boolean isNil() {
-    throw new Error("Maybe.isNil");
+    if (value instanceof List<?>) {
+      List<Element> l = (List<Element>) value;
+      return l.isNil();
+    } else return false;
   }
 
   public Element getHead() {
-    throw new Error("Maybe.getHead");
+    if (value instanceof List<?>) {
+      List<Element> l = (List<Element>) value;
+      return l.getHead();
+    } else throw new Error("Maybe.getHead");
   }
 
   public List<Element> getTail() {
-    throw new Error("Maybe.getTail");
+    if (value instanceof List<?>) {
+      List<Element> l = (List<Element>) value;
+      return l.getTail();
+    } else throw new Error("Maybe.getTail");
   }
 
   public int length() {
-    throw new Error("Maybe.length");
+    if (value instanceof List<?>) {
+      List<Element> l = (List<Element>) value;
+      return l.length();
+    } else throw new Error("Maybe.length");
   }
 
   public List<Element[]> split(List<Element> prefix) {

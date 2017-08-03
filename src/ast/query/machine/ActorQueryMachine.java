@@ -13,7 +13,6 @@ public class ActorQueryMachine extends Machine {
     super(clauseTable, db);
     this.actor = actor;
     this.timeout = timeout;
-    // setTraceInstrs(true);
   }
 
   public ActorQueryMachine() {
@@ -72,20 +71,10 @@ public class ActorQueryMachine extends Machine {
     return super.runTerminated() || (timeout == timeoutCounter);
   }
 
-  protected void run1() {
-    if (getChildren().size() > 0) {
-      for (Machine child : getChildren()) {
-        if (child.isValidChild()) child.run1();
-        timeoutCounter++;
-      }
-    } else {
+  public void run() {
+    while (!runTerminated()) {
       ast.query.instrs.Instr i = getClauseCode().get(programCounter++);
-      if (isTraceInstrs()) {
-        System.err.println("Machine(" + path() + ")");
-        System.err.println("Instruction = " + i);
-        printCallFrame(getCallFrame());
-        System.err.println("--------------------------\n");
-      }
+      if (isTraceInstrs()) System.err.println("Instruction = " + i);
       i.perform(this);
       timeoutCounter++;
     }

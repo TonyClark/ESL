@@ -159,12 +159,12 @@ public class Actor {
   }
 
   public void closeFrame(int locals, CodeBox code, List<Dynamic> dynamics, Closure catcher) {
-    
+
     // A call-frame is closed when all the arguments are pushed and the call
     // is ready to start. The supplied code-box contains the instructions.
-    // The supplied catcher is used to handle any exceptions that may be raised 
+    // The supplied catcher is used to handle any exceptions that may be raised
     // during the call...
-    
+
     frame = openFrame;
     setCode(code);
     setCodePtr(0);
@@ -251,7 +251,7 @@ public class Actor {
 
   public synchronized void execute() {
     while (!ESL.isStop() && state == ActorState.ALIVE) {
-      while (!complete() && !ESL.isStop()) {
+      while (!complete() && !ESL.isStop() && state == ActorState.ALIVE) {
         int i = (int) stack[frame + CODE_PTR];
         stack[frame + CODE_PTR] = (i + 1);
         Instr next = ((CodeBox) stack[frame + CODE]).code.get(i);
@@ -388,7 +388,7 @@ public class Actor {
       }
       reset();
       synchronized (messageQueue) {
-        if (messageQueue.isEmpty())
+        if (messageQueue.isEmpty()) {
           if (behaviour.handlesTime()) {
             deQueueTime(System.currentTimeMillis() - localTime);
           } else try {
@@ -397,7 +397,7 @@ public class Actor {
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
-        else dequeueMessage();
+        } else dequeueMessage();
       }
     }
   }
@@ -952,6 +952,7 @@ public class Actor {
     machine.enter(clause, clause.getArity(), clause.getVars());
     System.gc();
     // machine.setTraceInstrs(true);
+    // machine.setTraceCalls(true);
     machine.run();
     if (machine.timedOut()) {
       setCodePtr(timeoutAddress);
@@ -1065,7 +1066,12 @@ public class Actor {
   public void run() {
     Thread t = new Thread(new Runnable() {
       public void run() {
-        execute();
+        try {
+          execute();
+        } catch (Exception e) {
+          System.err.println("Thread for " + Actor.this + " terminating: " + e);
+          e.printStackTrace(System.err);
+        }
       }
     });
     t.start();

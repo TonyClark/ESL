@@ -8,7 +8,8 @@ type Facts = KB[FactItems];
 
 type Solver = Rules {
   fact(FactItems);
-  hist([Int],History)
+  hist([Int],History);
+  test(FactItems)
 };
 
 solver::Solver = rules {
@@ -46,6 +47,9 @@ solver::Solver = rules {
   facts([]) <- false, !;
   facts([f|fs]) <- fact(f), !;
   facts([_|fs]) <- facts(fs);
+  test::(FactItems);
+  test(f) <- next[!,test(f)];
+  test(f) <- end, past[fact(f)], println(f), false;
 };
 
 type History = [State([Int],[Int],[Int])];
@@ -65,7 +69,13 @@ act main::Main {
    facts.add(S1(3),1);
    facts.add(S3(1),2);
    facts.add(S1(2),3);
-   facts.add(S2(3),10);
+   facts.add(S2(3),5);
+   facts.add(S2(4),6);
+   facts.add(S2(5),8);
+   facts.add(S2(6),10);
+   show test(S2(x)) from solver using facts {
+     print[Int](x)
+   } else print[Str]('FAIL');
    show hist([1,2,3],history) from solver using facts {
      print[History](history)
    } else print[Str]('FAIL');
@@ -73,6 +83,8 @@ act main::Main {
  }
 
 }
+
+
 
 
 

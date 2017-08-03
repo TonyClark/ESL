@@ -16,6 +16,7 @@ import ast.query.instrs.call.StartCall;
 import ast.query.instrs.data.IsVar;
 import ast.query.instrs.data.LoadDB;
 import ast.query.instrs.ops.Println;
+import ast.query.instrs.temporal.Before;
 import ast.query.instrs.temporal.SystemTime;
 import ast.query.value.Value;
 import ast.types.Apply;
@@ -102,6 +103,8 @@ public class Call extends BodyElement implements ReferencingLocation {
       compileSystemTime(code, arity, vars);
     else if (name.getString().equals("loadDB"))
       compileLoadDB(code, arity, vars);
+    else if (name.getString().equals("before") && args.length == 2)
+      compileBefore(code, arity, vars);
     else if (name.getString().equals("fact") && args.length == 1)
       compileFact(code, arity, vars);
     else if (isDBName())
@@ -114,6 +117,12 @@ public class Call extends BodyElement implements ReferencingLocation {
         code.add(new EnterLast(name, args.length));
       else code.addElement(new Enter(name, args.length));
     }
+  }
+
+  private void compileBefore(Vector<Instr> code, int arity, Vector<String> vars) {
+    args[1].compile(code, arity, vars);
+    args[0].compile(code, arity, vars);
+    code.add(new Before());
   }
 
   private void compileDBEntry(Vector<Instr> code, int arity, Vector<String> vars, boolean isLast) {

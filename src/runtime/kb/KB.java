@@ -1,5 +1,6 @@
 package runtime.kb;
 
+import java.util.Hashtable;
 import java.util.Vector;
 
 import ast.query.machine.DB;
@@ -11,7 +12,8 @@ import runtime.data.Term;
 
 public class KB extends Grabbable implements DB {
 
-  Vector<Fact> facts = new Vector<Fact>();
+  Vector<Fact>              facts = new Vector<Fact>();
+  Hashtable<Key, FactCache> cache = new Hashtable<Key, FactCache>();
 
   public KB(Vector<Term> terms, int time) {
     for (Term term : terms) {
@@ -25,12 +27,7 @@ public class KB extends Grabbable implements DB {
   }
 
   public String toString() {
-    String s = "kb{";
-    for (Fact o : facts) {
-      s = s + o;
-      if (facts.lastElement() != o) s = s + ",";
-    }
-    return s + "}";
+    return "kb(" + facts.size() + ")";
   }
 
   public void add(Actor actor, Term o, int time) {
@@ -41,12 +38,25 @@ public class KB extends Grabbable implements DB {
     facts.remove(o);
   }
 
+  private void cache(Key name) {
+    if (!cache.containsKey(name)) {
+      FactCache cached = new FactCache();
+      cache.put(name, cached);
+      for (Fact fact : facts) {
+        if (fact.getTerm().getName() == name) cached.cache(fact);
+      }
+    }
+  }
+
   public Term getFact(Key name, int arity, int time, int index, Machine machine) {
-    for (Fact fact : facts) {
-      if (fact.getTerm().getName() == name && fact.getTerm().getArity() == arity && fact.getTime() == time) {
-        if (index == 0)
-          return fact.getTerm();
-        else index--;
+    cache(name);
+    if (cache.get(name).containsKey(time)) {
+      for (Term term : cache.get(name).get(time)) {
+        if (term.getArity() == arity) {
+          if (index == 0)
+            return term;
+          else index--;
+        }
       }
     }
     return null;

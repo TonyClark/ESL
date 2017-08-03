@@ -71,7 +71,7 @@ type Action = union {
 cnstr Grab = Action.Grab;
 cnstr Release = Action.Release;
 
-history :: [ Action ] = [][Action]; // A history of actions is built-up as the simulation runs.
+history :: [ Action ] = []; // A history of actions is built-up as the simulation runs.
 
 // GUI definitions...
 
@@ -96,8 +96,7 @@ pointY(p::Point(Int,Int))::Int =
 toPictures(filmstrip::[Snapshot([Holds(Int,[Chopstick])],[Chopstick])])::[EDBDisplay] =
   // Map a sequence of snapshots into a sequence of pictures ready to display.
   case filmstrip {
-    [][Snapshot([Holds(Int,[Chopstick])],[Chopstick])] -> 
-      [][EDBDisplay];
+    [] -> []; 
     s::Snapshot([Holds(Int,[Chopstick])],[Chopstick]):fs::[Snapshot([Holds(Int,[Chopstick])],[Chopstick])] -> 
       toPicture(s):toPictures(fs)
   };
@@ -117,7 +116,7 @@ toPhils(i::Int,holds::[Holds(Int,[Chopstick])])::[PictureElement] =
   // overlap with the philosopher icon.
   
   if i = numberOfPhilosophers
-  then [][PictureElement]
+  then []
   else 
     let left::Chopstick = nth[Chopstick](chopsticks,i);
         right::Chopstick = nth[Chopstick](chopsticks,(i+1)%numberOfPhilosophers);
@@ -133,8 +132,8 @@ toPhils(i::Int,holds::[Holds(Int,[Chopstick])])::[PictureElement] =
        
 toPhil(p::Point(Int,Int),lStart::Point(Int,Int),l::Point(Int,Int),r::Point(Int,Int),holdsLeft::Bool,holdsRight::Bool)::[PictureElement] = 
  // Create the picture elements based on the supplied information.
- let leftLine::[PictureElement] = if holdsLeft then [Line(pointX(lStart),pointY(lStart),pointX(l),pointY(l),redLine)] else [][PictureElement];
-     rightLine::[PictureElement] = if holdsRight then [Line(pointX(lStart),pointY(lStart),pointX(r),pointY(r),redLine)] else [][PictureElement];
+ let leftLine::[PictureElement] = if holdsLeft then [Line(pointX(lStart),pointY(lStart),pointX(l),pointY(l),redLine)] else [];
+     rightLine::[PictureElement] = if holdsRight then [Line(pointX(lStart),pointY(lStart),pointX(r),pointY(r),redLine)] else [];
      image::PictureElement = Image(pointX(p)-(philosopherWidth/2),pointY(p)-(philosopherHeight/2),philosopherWidth,philosopherHeight,if holdsRight and holdsLeft then eatingIcon else thinkingIcon)
  in [image] + leftLine + rightLine;
       
@@ -142,7 +141,7 @@ getHolding(i::Int,holds::[Holds(Int,[Chopstick])])::[Chopstick] =
   // An accessor for the holdings of the ith philosopher based on the
   // supplied list of holds.
   case holds {
-    [][Holds(Int,[Chopstick])] -> [][Chopstick];
+    [] -> [];
     Holds(i1::Int,cs::[Chopstick]):hs::[Holds(Int,[Chopstick])] when i1 = i -> cs;
     h::Holds(Int,[Chopstick]):hs::[Holds(Int,[Chopstick])] -> getHolding(i,hs)
   };
@@ -150,7 +149,7 @@ getHolding(i::Int,holds::[Holds(Int,[Chopstick])])::[Chopstick] =
 toCircles(i::Int,chopsticks::[Chopstick],holds::[Holds(Int,[Chopstick])],free::[Chopstick])::[PictureElement] =
   // Turn the chopsticks into circles.
   case chopsticks {
-    [][Chopstick] -> [][PictureElement];
+    [] -> [];
     c::Chopstick:cs::[Chopstick] -> toCircle(i,c,holds,free):toCircles(i+1,cs,holds,free)
   };
     
@@ -168,7 +167,7 @@ filmstrip(history::[Action])::[Snapshot([Holds(Int,[Chopstick])],[Chopstick])] =
   // Map a list of actions to a list of snapshots that record the current state of
   // chopstick-holdings at successive system states.
   case history {
-    [][Action] -> [Snapshot([][Holds(Int,[Chopstick])],chopsticks)];
+    [] -> [Snapshot([][Holds(Int,[Chopstick])],chopsticks)];
     Grab(p::Int,c::Chopstick):h::[Action] -> extendFilmstrip(p,c,filmstrip(h));
     Release(c::Chopstick):h::[Action] -> reduceFilmstrip(c,filmstrip(h))
    };
@@ -191,7 +190,7 @@ reduceFilmstrip(c::Chopstick,fs::[Snapshot([Holds(Int,[Chopstick])],[Chopstick])
 extendHolds(p::Int,c::Chopstick,holds::[Holds(Int,[Chopstick])])::[Holds(Int,[Chopstick])] =
   // Find the holding record for philosopher p and add in chopstick c.
   case holds { 
-    [][Holds(Int,[Chopstick])] -> [Holds(p,[c])];
+    [] -> [Holds(p,[c])];
     Holds(p1::Int,cs::[Chopstick]):hs::[Holds(Int,[Chopstick])] ->
       if p=p1
       then Holds(p,c:cs):hs
@@ -201,7 +200,7 @@ extendHolds(p::Int,c::Chopstick,holds::[Holds(Int,[Chopstick])])::[Holds(Int,[Ch
 reduceHolds(c::Chopstick,holds::[Holds(Int,[Chopstick])])::[Holds(Int,[Chopstick])] = 
   // Remove chopstick c from all holding records.
   case holds {
-    [][Holds(Int,[Chopstick])] -> holds;
+    [] -> holds;
     Holds(p::Int,cs::[Chopstick]):hs::[Holds(Int,[Chopstick])] ->
       if member[Chopstick](c,cs)
       then Holds(p,remove[Chopstick](c,cs)):hs
@@ -270,28 +269,5 @@ act main::Main {
   };
   Time(n::Int) -> { }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

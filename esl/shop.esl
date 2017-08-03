@@ -75,12 +75,12 @@ rdata(d::EDBDisplay)::Data([Property],EDBDisplay) = Data([Prop('style','border: 
 bdata(d::EDBDisplay)::Data([Property],EDBDisplay) = Data([Prop('style','border: 1px solid black;background-color:lightblue;')],d);
 
 act displayB::Display {
-  customers::[CustomerDisplay] = [][CustomerDisplay];
+  customers::[CustomerDisplay] = [];
   asTable()::EDBDisplay =
     letrec
       rows(cs::[CustomerDisplay])::[Row([Property],[Data([Property],EDBDisplay)])] =
         case cs {
-          [][CustomerDisplay] -> [][Row([Property],[Data([Property],EDBDisplay)])];
+          [] -> [];
             C(c::Int,s::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] -> 
               [row([bdata(fold[EDBDisplay]HTML('Customer-' + c))] + 
                    (states(s,ss)) + 
@@ -93,41 +93,41 @@ act displayB::Display {
         case allStates {
           state::Str;
           ss::[Str];
-          [][Str] -> [][Data([Property],EDBDisplay)];
+          [] -> [];
           state:ss when state = current -> [rdata(fold[EDBDisplay]HTML(state+''))] + states(current,ss);
           state:ss -> [tdata(fold[EDBDisplay]HTML(state+''))] + states(current,ss)
         }
     in fold[EDBDisplay]Table([][Property],[row([tdata(fold[EDBDisplay]Table([][Property],rows(customers)))])]+[row([tdata(fold[EDBDisplay](HTML('time = ' + now)))])]);
   changeState(c::Int,s::Str,cs::[CustomerDisplay])::[CustomerDisplay] =
     case cs {
-      [][CustomerDisplay] -> cs;
+      [] -> cs;
       C(c1::Int,s1::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] when c1 = c-> C(c,s,ss,sales,walkouts):rest;
       (c1::CustomerDisplay):rest::[CustomerDisplay] -> c1 : (changeState(c,s,rest))
     };
   getSales(cs::[CustomerDisplay])::Int =
     case cs {
-      [][CustomerDisplay] -> 0;
+      [] -> 0;
       C(c1::Int,s1::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] -> sales + getSales(rest)
     };
   getWalkouts(cs::[CustomerDisplay])::Int =
     case cs {
-      [][CustomerDisplay] -> 0;
+      [] -> 0;
       C(c1::Int,s1::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] -> walkouts + getWalkouts(rest)
     };
   getEvents(cs::[CustomerDisplay])::Int =
     case cs {
-      [][CustomerDisplay] -> 0;
+      [] -> 0;
       C(c1::Int,s1::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] -> walkouts + sales + getEvents(rest)
     };
   sale(customer::Int,customers::[CustomerDisplay])::[CustomerDisplay] =
     case customers {
-      [][CustomerDisplay] -> customers;
+      [] -> customers;
       C(c1::Int,s1::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] when c1 = customer -> C(c1,s1,ss,sales+1,walkouts):rest;
       (c1::CustomerDisplay):rest::[CustomerDisplay] -> c1 : (sale(customer,rest))
     };
   timeout(customer::Int,customers::[CustomerDisplay])::[CustomerDisplay] =
     case customers {
-      [][CustomerDisplay] -> customers;
+      [] -> customers;
       C(c1::Int,s1::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] when c1 = customer-> C(c1,s1,ss,sales,walkouts+1):rest;
       (c1::CustomerDisplay):rest::[CustomerDisplay] -> c1 : (timeout(customer,rest))
     }
@@ -138,12 +138,12 @@ act displayB::Display {
         walkouts::Int = getWalkouts(customers)
     in {
       if events = 0 then events := 1 else {};
-      edb <-Show('customers',fold[EDBDisplay]Table([][Property],[
-        Row([][Property],[
-          Data([][Property],asTable()),
-          Data([][Property],fold[EDBDisplay]Pie([][Property],'Satisfaction',500,300,[
-            Slice([][Property],'satisfied',(sales * 100)/events),
-            Slice([][Property],'unsatisfied',(walkouts * 100)/events)
+      edb <-Show('customers',fold[EDBDisplay]Table([],[
+        Row([],[
+          Data([],asTable()),
+          Data([],fold[EDBDisplay]Pie([][Property],'Satisfaction',500,300,[
+            Slice([],'satisfied',(sales * 100)/events),
+            Slice([],'unsatisfied',(walkouts * 100)/events)
           ]))
         ])
       ]))
@@ -175,7 +175,7 @@ act assistant(tills::Tills)::Assistant {
   customerSeeksHelp(cs::[Customer])::Customer =
     // Find a customer who is seeking help. Return null otherwise...
     case cs {
-      [][Customer] -> null;
+      [] -> null;
       c::Customer:cc::[Customer] when c.state = SeekingHelp -> c;
       c::Customer:cc::[Customer] -> customerSeeksHelp(cc)
     };
@@ -497,7 +497,7 @@ numOfAssistants::Int  = 10;
 numOfGangMembers::Int = 0;
 numOfSteps::Int       = 10000;
 delay::Int            = 1;
-customers::[Customer] = [][Customer];
+customers::[Customer] = [];
 
 act main::Main {
   tills::Tills = null  // Bug: initializer seems to be performed twice.
@@ -526,6 +526,7 @@ act main::Main {
   };
   Time(n::Int) -> { wait(delay) }
 }
+
 
 
 

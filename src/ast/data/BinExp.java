@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import ast.AST;
 import ast.tests.If;
+import ast.types.Forall;
 import ast.types.Type;
 import ast.types.TypeError;
 import compiler.DynamicVar;
@@ -207,6 +208,23 @@ public class BinExp extends AST {
     Type t1 = left.type(env);
     Type t2 = right.type(env);
     if (op.equals("+")) {
+      
+      // Deal with cases arising from []::Forall t.[t] ...
+      
+      if (t1 == ast.types.List.NIL && t2 == ast.types.List.NIL)
+        return t1;
+      else if (t1 instanceof Forall && t2 instanceof ast.types.List) {
+        Forall forall = (Forall) t1;
+        ast.types.List list = (ast.types.List) t2;
+        t1 = forall.apply(new Type[] { list.getType() });
+      } else if (t2 instanceof Forall && t1 instanceof ast.types.List) {
+        Forall forall = (Forall) t2;
+        ast.types.List list = (ast.types.List) t1;
+        t2 = forall.apply(new Type[] { list.getType() });
+      }
+      
+      // End of [] cases.
+      
       if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
         return ast.types.Int.INT;
       else if (t1 instanceof ast.types.Str || t2 instanceof ast.types.Str)
@@ -271,6 +289,11 @@ public class BinExp extends AST {
         return new ast.types.List(getLineStart(), getLineEnd(), ast.types.Int.INT);
       else throw new TypeError(getLineStart(), getLineEnd(), ".. expects two integers: " + t1 + " and " + t2);
     } else if (op.equals(":")) {
+      // Allow the situation: e:[]...
+      if (t2 instanceof Forall) {
+        Forall forall = (Forall) t2;
+        t2 = forall.apply(new Type[] { t1 });
+      }
       if (t2 instanceof ast.types.List) {
         ast.types.List l = (ast.types.List) t2;
         if (Type.equals(t1, l.getType(), env))

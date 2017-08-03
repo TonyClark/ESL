@@ -69,15 +69,16 @@ type Solver = Rules {
 
 solver::Solver = rules {
   fact::(State);
+  before::(State,[State]);
   nth[T]::(Int,[T],T);
   nth[T](0,[t|_],t) <- !;
   nth[T](n,[_|ts],t) <-
     n' := n - 1,
     nth[T](n',ts,t);
+    
   delete[T]::(T,[T],[T]);
   delete[T](x,[],[]) <- !;
-  delete[T](x,[x | l1],l2) <- !,
-    delete[T](x,l1,l2);
+  delete[T](x,[x | l1],l1) <- !;
   delete[T](x,[y | l1],[y | l2]) <-
     delete[T](x,l1,l2);
     
@@ -86,7 +87,7 @@ solver::Solver = rules {
   append[T]([h|t],l,[h|t']) <- append[T](t,l,t');
     
   hist::([Int],[Int],[Int],[ShopState]);
-  hist(cIds,aIds,tIds,[s]) <- state(cIds,aIds,tIds,s), end, !;
+  hist(cIds,aIds,tIds,[s]) <- end, !, state(cIds,aIds,tIds,s);
   hist(cIds,aIds,tIds,[s|ss]) <- state(cIds,aIds,tIds,s), !, next[hist(cIds,aIds,tIds,ss)];
   
   custStates::(Int,[State]);
@@ -98,39 +99,38 @@ solver::Solver = rules {
   state::([Int],[Int],[Int],Shop(CustomersOutside,AssistantsOnFloor,CustomersBrowsing,[CustomerHelp],[TillState],Int));
   state(cIds,aIds,tIds,Shop(cOut,aFloor,cBrowse,cHelp,tState,raid)) <-
     isRaid(raid),
-    getCStates(0,cIds,cOut),
+    getCStates(0,cIds,cOut), 
     getCStates(1,cIds,cBrowse), 
     getAStates(0,aIds,aFloor),
     getCStates(2,cIds,cSeekingHelp),
     seekHelp(cSeekingHelp,cHelp1),
-    getCStates(3,cIds,cGettingHelp), 
+    getCStates(3,cIds,cGettingHelp),
     getHelp(cGettingHelp,cHelp2),
-    append[CustomerHelp](cHelp1,cHelp2,cHelp), !,
+    cHelp := cHelp1 + cHelp2,
     getAStates(1,aIds,atTills),
     getCStates(4,cIds,cQueuing),
     tState(tIds,atTills,cQueuing,tState);
     
   isRaid::(Int);
-  isRaid(0) <- fact(NoRaid), !;
-  isRaid(1) <- fact(Raid), !;
-  isRaid(raid) <- prev[isRaid(raid)];
+  isRaid(0) <- before(NoRaid,[Raid]), !;
+  isRaid(1);
     
   tState::([Int],[Int],[Int],[TillState]);
   tState([],_,_,[]);
   tState([tId|tIds],aIds,cIds,[ATill(tId,aState,qState) | rest]) <-
     attendantState(tId,aIds,aState),
-    qState(tId,cIds,qState),
+    qState(tId,cIds,qState), !,
     tState(tIds,aIds,cIds,rest);
     
   qState::(Int,[Int],[Int]);
   qState(tId,[],[]) <- !;
   qState(tId,[cId|cIds],[cId|rest]) <-
-    isQueueing(cId,tId),
+    isQueueing(cId,tId), !,
     qState(tId,cIds,rest);
   qState(tId,[_|cIds],rest) <- qState(tId,cIds,rest);
   
   isQueueing::(Int,Int);
-  isQueueing(cId,tId) <- past[fact(Queuing(cId,tId2))], !, tId=tId2;
+  isQueueing(cId,tId) <- past[fact(Queuing(cId,tId2)),!], tId=tId2;
     
   attendantState::(Int,[Int],AttendantState);
   attendantState(tId,[],NoAttendant);
@@ -138,7 +138,7 @@ solver::Solver = rules {
   attendantState(tId,[_|aIds],aState) <- attendantState(tId,aIds,aState);
   
   isAtTill::(Int,Int);
-  isAtTill(aId,tId) <-  past[fact(AtTill(aId,tId2))], !, tId=tId2;
+  isAtTill(aId,tId) <-  past[fact(AtTill(aId,tId2)), !], tId=tId2;
     
   seekHelp::([Int],[CustomerHelp]);
   seekHelp([],[]);
@@ -146,26 +146,17 @@ solver::Solver = rules {
     
   getHelp::([Int],[CustomerHelp]);
   getHelp([],[]);
-  getHelp([id|ids],[CustomerHelped(id,aId) | rest]) <- past[fact(GettingHelp(id,aId))], getHelp(ids,rest);
+  getHelp([id|ids],[CustomerHelped(id,aId) | rest]) <- past[fact(GettingHelp(id,aId)),!], getHelp(ids,rest);
     
   getCStates::(Int,[Int],[Int]);
   getCStates(_,[],[]) <- !;
-  getCStates(n,[id|idsIn],[id|idsOut]) <- custStates(id,ss), nth[State](n,ss,s), delete[State](s,ss,ss'), recent(id,s,ss'), !, getCStates(n,idsIn,idsOut);
+  getCStates(n,[id|idsIn],[id|idsOut]) <- custStates(id,ss), nth[State](n,ss,s), delete[State](s,ss,ss'), before(s,ss'), !, getCStates(n,idsIn,idsOut);
   getCStates(n,[id|idsIn],idsOut) <- getCStates(n,idsIn,idsOut);
     
   getAStates::(Int,[Int],[Int]);
   getAStates(_,[],[]) <- !;
-  getAStates(n,[id|idsIn],[id|idsOut]) <- assStates(id,ss), nth[State](n,ss,s), delete[State](s,ss,ss'), recent(id,s,ss'), !, getAStates(n,idsIn,idsOut);
+  getAStates(n,[id|idsIn],[id|idsOut]) <- assStates(id,ss), nth[State](n,ss,s),delete[State](s,ss,ss'), before(s,ss'), !, getAStates(n,idsIn,idsOut);
   getAStates(n,[id|idsIn],idsOut) <- getAStates(n,idsIn,idsOut);
-  
-  recent::(Int,State,[State]);
-  recent(id,f,fs) <- fact(f), !;
-  recent(id,f,fs) <- facts(fs), !, false;
-  recent(id,f,fs) <- prev[recent(id,f,fs)];
-  facts::([State]);
-  facts([]) <- false, !;
-  facts([f|fs]) <- fact(f), !;
-  facts([_|fs]) <- facts(fs);
 };
 
 
@@ -201,7 +192,7 @@ type Display = Act {
 type CustomerDisplay = C(Int,Str,[Str],Int,Int);
 
 type History = Act {
-  export getHistory::()->[ShopState];
+  export getHistory::()->[ShopState]; setHistory::([ShopState])->Void;
   SeekHelp(Int);
   EnterShop(Int);
   HelpTimeout(Int);
@@ -218,9 +209,13 @@ shopHistory::History = null;
 
 act history(history::[ShopState])::History {
 
-  export getHistory;
+  export getHistory, setHistory;
   
   getHistory()::[ShopState] = history;
+  setHistory(h::[ShopState])::Void = {
+    history := h;
+    wake()
+  };
   addSeekingHelp(cid::Int,s::ShopState)::ShopState =
     case s {
       Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
@@ -294,6 +289,8 @@ act history(history::[ShopState])::History {
       Shop(out::[Int],onFloor::[Int],browsing::[Int],helping::[CustomerHelp],ts::[TillState],raid::Int) ->
         Shop(out,onFloor,remove[Int](cid,browsing),helping,ts,raid)
     }
+    
+  -> sleep();
   SeekHelp(cid::Int) -> history := addSeekingHelp(cid,removeBrowsing(cid,head[ShopState](history))):history;
   SaleConcludedAtTill(cid::Int) -> history := addOutsideShop(cid,removeFromTill(cid,head[ShopState](history))):history;
   SaleTimeOutAtTill(cid::Int) -> history := addOutsideShop(cid,removeFromTill(cid,head[ShopState](history))):history;
@@ -423,7 +420,7 @@ act assistant(id::Int,tills::Tills)::Assistant {
   probOfSelling::Int = 50;                      // Chance of assistant moving from floor to a till.
   probOfAttendingCustomer::Int = 50;            // Chance of assistant helping a customer on floor.
   state::State = OnFloor(id);          // An assistant starts on the floor.
-  adviceDuration::Int = 10;                     // How long does help take?
+  adviceDuration::Int = 100;                     // How long does help take?
   counter::Int = 0;                             // A general purpose counter.
   advising::Customer = null;                    // Who is this customer advising?
   
@@ -453,7 +450,8 @@ act assistant(id::Int,tills::Tills)::Assistant {
           time := time + 1
         };
         advising := c;
-        counter := 0
+        counter := 0;
+        wait(delay)
       } else {
         // Whoops someone else got there before us...
         // print[Str]('MISSED OPPORTUNITY TO HELP ' + c)
@@ -467,7 +465,8 @@ act assistant(id::Int,tills::Tills)::Assistant {
     // We have decided to sell stuff. Try to find a till to attend...
     // print[Str]('GOTILL[' + now + ']: ' + self);
     tills <- Attend(self);
-    state := GoTill(id)
+    state := GoTill(id);
+    wait(delay)
   }
   
   NoTillFound -> {
@@ -484,7 +483,8 @@ act assistant(id::Int,tills::Tills)::Assistant {
       facts.add(state,time);
       time := time + 1
     };
-    shopHistory <- AssistantAtTill(getId(),id)
+    shopHistory <- AssistantAtTill(getId(),id);
+    wait(delay)
   };
   
   ReturnToFloor -> {
@@ -495,7 +495,8 @@ act assistant(id::Int,tills::Tills)::Assistant {
       facts.add(state,time);
       time := time + 1
     };
-    shopHistory <- AssistantLeavesTill(id)
+    shopHistory <- AssistantLeavesTill(id);
+    wait(delay)
   };
   
   Time(n::Int) when (state = OnFloor(id)) and customerSeeksHelp(customers) <> null -> probably(probOfAttendingCustomer) {
@@ -510,7 +511,8 @@ act assistant(id::Int,tills::Tills)::Assistant {
   };
   
   Time(n::Int) when (state = Helping(id,advisingId())) and (counter < adviceDuration) -> {
-    counter := counter + 1
+    counter := counter + 1;
+    wait(delay)
     // print[Str]('ADVISING ' + counter)
   };
   
@@ -523,7 +525,8 @@ act assistant(id::Int,tills::Tills)::Assistant {
       facts.add(state,time);
       time := time + 1
     };
-    advising := null
+    advising := null;
+    wait(delay)
   };
   
   Time(n::Int) -> {}
@@ -538,8 +541,8 @@ act customer(id::Int,tills::Tills)::Customer {
   probOfEnteringShop::Int = 30;
   probOfBuying::Int = 20;
   probOfSeekingHelp::Int = 30;
-  salesTime::Int = 5;
-  waitLimit::Int = 10;
+  salesTime::Int = 50;
+  waitLimit::Int = 100;
   counter::Int = 0;
   helpedBy::Assistant = null;
   
@@ -550,7 +553,8 @@ act customer(id::Int,tills::Tills)::Customer {
       time := time + 1
     };
     helpedBy := a;
-    display <- ChangeState(id,'GettingHelp')
+    display <- ChangeState(id,'GettingHelp');
+    wait(delay)
   }
   
   Time(n::Int) when state = NotInShop(id) -> probably(probOfEnteringShop) {
@@ -561,7 +565,8 @@ act customer(id::Int,tills::Tills)::Customer {
     grab(facts,time) {
       facts.add(state,time);
       time := time + 1
-    }
+    };
+    wait(delay)
   };
   Time(n::Int) when state = Browsing(id)  -> probably(probOfSeekingHelp) {
     // print[Str]('SEEK HELP[' + now + ']: ' + self);
@@ -572,10 +577,13 @@ act customer(id::Int,tills::Tills)::Customer {
       facts.add(state,time);
       time := time + 1
     };
-    counter := 0
+    counter := 0;
+    wait(delay)
   };
-  Time(n::Int) when (state = SeekingHelp(id)) and (counter < waitLimit) -> 
+  Time(n::Int) when (state = SeekingHelp(id)) and (counter < waitLimit) -> {
     counter := counter + 1;
+    wait(delay)
+  };
   Time(n::Int) when (state = SeekingHelp(id)) and (counter = waitLimit) -> {
     display <- TimeOut(id);
     display <- ChangeState(id,'NotInShop');
@@ -584,7 +592,8 @@ act customer(id::Int,tills::Tills)::Customer {
     grab(facts,time) {
       facts.add(state,time);
       time := time + 1
-    }
+    };
+    wait(delay)
   };
   Time(n::Int) when state = Browsing(id)  -> probably(probOfBuying) {
     let till::Int = random(numOfTills)
@@ -597,7 +606,8 @@ act customer(id::Int,tills::Tills)::Customer {
         facts.add(state,time);
         time := time + 1
       };
-      tills <- Queue(self,till,now,salesTime,waitLimit)
+      tills <- Queue(self,till,now,salesTime,waitLimit);
+      wait(delay)
     }
   };
   SaleConcluded -> {
@@ -609,7 +619,8 @@ act customer(id::Int,tills::Tills)::Customer {
     grab(facts,time) {
       facts.add(state,time);
       time := time + 1
-    }
+    };
+    wait(delay)
   };
   SaleTimedOut -> {
     // print[Str]('TIMEOUT[' + now + ']: ' + self);
@@ -620,7 +631,8 @@ act customer(id::Int,tills::Tills)::Customer {
     grab(facts,time) {
       facts.add(state,time);
       time := time + 1
-    }
+    };
+    wait(delay)
   };
   Helped -> {
     let till::Int = random(numOfTills)
@@ -633,7 +645,8 @@ act customer(id::Int,tills::Tills)::Customer {
         facts.add(state,time);
         time := time + 1
       };
-      tills <- Queue(self,till,now,salesTime,waitLimit)
+      tills <- Queue(self,till,now,salesTime,waitLimit);
+      wait(delay)
     }
   };
   Time(n::Int) -> {}
@@ -667,7 +680,8 @@ act leader(size::Int)::GangLeader {
         facts.add(NoRaid,time);
         time := time + 1
       };
-      ready := false
+      ready := false;
+      wait(delay)
     } else {} // print[Str]('RAID NEEDS ' + (size-counter) + ' MORE ACTIVE MEMBERS')
   };
   
@@ -676,7 +690,8 @@ act leader(size::Int)::GangLeader {
     if counter = 0
     then {
       state := NotInShop(0);
-      ready := false
+      ready := false;
+      wait(delay)
     } else {}
   }
 };
@@ -696,7 +711,8 @@ act gangMember(id::Int,leader::GangLeader)::Customer {
     grab(facts,time) {
       facts.add(state,time);
       time := time + 1
-    }
+    };
+    wait(delay)
   }
   Time(n::Int) when (state = NotInShop(id)) and leader.ready -> {
     // print[Str]('GANG MEMBER ENTERED');
@@ -704,7 +720,8 @@ act gangMember(id::Int,leader::GangLeader)::Customer {
     grab(facts,time) {
       facts.add(state,time);
       time := time + 1
-    }
+    };
+    wait(delay)
   };
   SaleConcluded -> { };
   SaleTimedOut -> { };
@@ -715,7 +732,8 @@ act gangMember(id::Int,leader::GangLeader)::Customer {
     grab(facts,time) {
       facts.add(state,time);
       time := time + 1
-    }
+    };
+    wait(delay)
   };
   Time(n::Int) -> {}
 };
@@ -738,7 +756,8 @@ act aTransaction(c::Customer,tStart::Int,tDelay::Int,tLim::Int,next::Transaction
   Wait -> {
     next <- Wait;
     tLim := tLim - 1;
-    //print[Str]('WAIT[' + now + ']: ' + c + ' tLim = ' + tLim);
+    //print[Str]('WAIT[' + now + ']: ' + c + ' tLim = ' + tLim);;
+    wait(delay);
     if tLim = 0
     then {
       c <- SaleTimedOut;
@@ -748,6 +767,7 @@ act aTransaction(c::Customer,tStart::Int,tDelay::Int,tLim::Int,next::Transaction
   Do -> {
     next <- Wait;
     tDelay := tDelay - 1;
+    wait(delay);
     if tDelay = 0
     then {
       c <- SaleConcluded;
@@ -792,7 +812,8 @@ act aTill(id::Int,next::Tills)::Tills {
   Time(n::Int) when (not(assistant = null)) and transactions.isEmpty() -> {
     transactions := new noTransactions;
     assistant <- ReturnToFloor;
-    assistant := null
+    assistant := null;
+    wait(delay)
   };
   Time(n::Int) -> {
     probably(probOfBreaking) {
@@ -815,11 +836,12 @@ act aTill(id::Int,next::Tills)::Tills {
 };
   
 historyLabel::Str     = 'd';
-numOfCustomers::Int   = 7;
-numOfTills::Int       = 3;
-numOfAssistants::Int  = 2;
-numOfGangMembers::Int = 2;
-numOfSteps::Int       = 100;
+numOfCustomers::Int   = 15;
+numOfTills::Int       = 4;
+numOfAssistants::Int  = 10;
+numOfGangMembers::Int = 5;
+numOfSteps::Int       = 5000;
+delay::Int            = 1;
 pictureWidth::Int     = 1000;
 pictureHeight::Int    = 1000;
 
@@ -894,7 +916,7 @@ toPicture(s::ShopState)::EDBDisplay =
   };
   
   
-  shopSnapshot()::ShopState = 
+  shopSnapshot()::ShopState =
     let customersOutside::[Int] = [ c.getId() | c::Customer <- customers, ?(c.state = NotInShop(c.getId())) ];
         assistantsOnFloor::[Int] =[ a.getId() | a::Assistant <- assistants, ?(a.state = OnFloor(a.getId())) ];
         customersBrowsing::[Int] = [ c.getId() | c::Customer <- customers, ?(c.state = Browsing(c.getId())) ];
@@ -905,9 +927,8 @@ toPicture(s::ShopState)::EDBDisplay =
 
 act main::Main {
   -> {
-    setMaxInstructions(500000000);
-    setInstructionsPerTimeUnit(100000000);
     tills := new noTills;
+    shopHistory := new history([][ShopState]);
     for n::Int in 0..(numOfTills-1) do {
       tills := new aTill(n,tills)
     };
@@ -928,26 +949,56 @@ act main::Main {
          facts.add(NotInShop(n+numOfCustomers),time);
          time := time + 1
        };
-       shopHistory := new history([shopSnapshot()])
+       shopHistory.setHistory([shopSnapshot()])
   };
   Time(n::Int) when n > numOfSteps -> {
+    stopOthers();
     edb.saveHistory('end' + numOfCustomers + historyLabel);
-    for s::ShopState in reverse[ShopState](shopHistory.getHistory()) do {
-      print[ShopState](s)
-    };
-    //edb <- Filmstrip('Shop',[ toPicture(s) | s::ShopState <- reverse[ShopState](shopHistory.getHistory()) ]);
-    print[Str]('Shopped');
-    print[KB[State]](facts);
+    print[Str]('Shopped ' + time + ' ' + facts);
     let cIds::[Int] = 0..(numOfCustomers+numOfGangMembers);
         aIds::[Int] = 0..(numOfAssistants-1);
         tIds::[Int] = 0..(numOfTills-1)
     in show hist(cIds,aIds,tIds,history) [cIds,aIds,tIds] from solver using facts {
-         edb <- Filmstrip('ShopFrolRules',[ toPicture(s) | s::ShopState <- history ])
+         print[Int](length[ShopState](history));
+         edb <- Filmstrip('ShopFromRules',[ toPicture(s) | s::ShopState <- history ])
        } else print[Str]('FAIL');
     stopAll()
   };
   Time(n::Int) -> {}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
