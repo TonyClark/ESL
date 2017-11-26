@@ -2,7 +2,7 @@ package ast.types;
 
 import java.util.HashSet;
 
-import ast.AST;
+import ast.general.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import env.Env;
@@ -344,8 +344,7 @@ public abstract class Type extends AST {
   public void DV(HashSet<String> vars) {
   }
 
-  public void FV(HashSet<String> vars) {
-  }
+  public abstract void FV(HashSet<String> vars);
 
   public String getLabel() {
     return getClass().getSimpleName();

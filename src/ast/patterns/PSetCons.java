@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Vector;
 import java.util.function.BiConsumer;
 
-import ast.AST;
 import ast.binding.declarations.DeclaringLocation;
+import ast.general.AST;
 import ast.refs.Ref;
 import ast.types.Type;
 import ast.types.TypePatternError;

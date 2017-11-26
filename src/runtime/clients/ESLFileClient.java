@@ -11,13 +11,13 @@ import static runtime.listeners.Listeners.setUpdateListener;
 
 import java.io.FileNotFoundException;
 
-import ast.AST;
 import ast.actors.New;
 import ast.actors.Self;
 import ast.binding.Var;
 import ast.control.Block;
 import ast.data.Apply;
 import ast.data.Ref;
+import ast.general.AST;
 import ast.modules.Module;
 import ast.query.rules.Query;
 import compiler.DynamicVar;
@@ -73,7 +73,7 @@ public class ESLFileClient implements ESLClient, JavaActor {
       // module.configure(name);
       module.resolve();
       AST record = new New(0, 0, "", new Ref(0, 0, module.desugar(), Key.getKey("main")));
-      AST block = new Block(0, 0, record, new Apply(0, 0, "", new Var(0, 0, "kill", null), new Self()));
+      AST block = new Block(0, 0, record, new Apply(0, 0, "", new Var(0, 0, "kill", null, null), new Self()));
       CodeBox codebox = new CodeBox(name, record.maxLocals());
       block.compile(new Nil<FrameVar>(), Builtins.builtinDynamics(), codebox, true);
       codebox.add(new Return(-1), new Nil<FrameVar>(), new Nil<DynamicVar>());

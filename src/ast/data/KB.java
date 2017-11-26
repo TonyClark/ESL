@@ -3,7 +3,7 @@ package ast.data;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import ast.AST;
+import ast.general.AST;
 import ast.types.Type;
 import ast.types.TypeError;
 import ast.types.Union;

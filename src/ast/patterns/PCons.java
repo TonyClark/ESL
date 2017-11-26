@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Vector;
 import java.util.function.BiConsumer;
 
-import ast.AST;
 import ast.binding.declarations.DeclaringLocation;
+import ast.general.AST;
 import ast.refs.Ref;
 import ast.types.Type;
 import ast.types.TypePatternError;
@@ -65,7 +65,14 @@ public class PCons extends Pattern {
   public void type(Env<String, Type> env, BiConsumer<Env<String, Type>, Type> cont) {
     tail.type(env, (env1, tailType) ->
     {
-      if (tailType.restrictsTo(ast.types.List.class) != null) {
+      if (tailType == ast.types.List.NIL) {
+        head.type(env1, (env2, headType) ->
+        {
+          Type t = new ast.types.List(-1, -1, headType);
+          setType(t);
+          cont.accept(env2, t);
+        });
+      } else if (tailType.restrictsTo(ast.types.List.class) != null) {
         ast.types.List listType = (ast.types.List) tailType.restrictsTo(ast.types.List.class);
         head.type(env1, (env2, headType) ->
         {

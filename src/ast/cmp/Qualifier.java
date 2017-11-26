@@ -2,7 +2,7 @@ package ast.cmp;
 
 import java.util.HashSet;
 
-import ast.AST;
+import ast.general.AST;
 import ast.types.Type;
 import env.Env;
 import values.Located;
@@ -45,5 +45,7 @@ public abstract class Qualifier implements Located {
   public abstract void setPath(String path);
 
   public abstract Env<String, Type> bind(Env<String, Type> env);
+
+  public abstract Qualifier subst(AST ast, String name);
 
 }

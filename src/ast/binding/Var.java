@@ -2,9 +2,9 @@ package ast.binding;
 
 import java.util.HashSet;
 
-import ast.AST;
 import ast.binding.declarations.DeclaringLocation;
 import ast.binding.declarations.ReferencingLocation;
+import ast.general.AST;
 import ast.types.Type;
 import ast.types.TypeError;
 import compiler.DynamicVar;
@@ -23,10 +23,11 @@ public class Var extends AST implements ReferencingLocation {
   public Var() {
   }
 
-  public Var(int lineStart, int lineEnd, String name, DeclaringLocation declaringLocation) {
+  public Var(int lineStart, int lineEnd, String name, Type type, DeclaringLocation declaringLocation) {
     super(lineStart, lineEnd);
     this.name = name;
     this.declaringLocation = declaringLocation;
+    setType(type);
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
@@ -75,7 +76,7 @@ public class Var extends AST implements ReferencingLocation {
 
   public Type type(Env<String, Type> env) {
     if (env.binds(name)) {
-      setType(Type.eval(env.lookup(name),env));
+      setType(Type.eval(env.lookup(name), env));
       return getType();
     } else throw new TypeError(getLineStart(), getLineEnd(), "unbound variable " + name);
   }

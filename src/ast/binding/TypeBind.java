@@ -1,6 +1,9 @@
 package ast.binding;
 
-import ast.AST;
+import java.util.HashSet;
+
+import ast.general.AST;
+import ast.types.Rec;
 import ast.types.Type;
 import env.Env;
 import exp.BoaConstructor;
@@ -39,6 +42,18 @@ public class TypeBind extends Binding {
   public TypeBind substBind(Type type, String name) {
     Type t = getDeclaredType().substType(type, name);
     return new TypeBind(getLineStart(), getLineEnd(), getPath(), getName(), t, t);
+  }
+
+  public Type getDeclaredType() {
+    // We might want to introduce a rec N if the binding refers to itself...
+    Type type = super.getDeclaredType();
+    HashSet<String> FV = new HashSet<String>();
+    type.FV(FV);
+    if(FV.contains(getName())) {
+      Rec rec = new Rec(type.getLineStart(),type.getLineEnd(),getName(),type);
+      //System.err.println("INTRODUCED " + rec);
+      return rec;
+    } else return type;
   }
 
 }

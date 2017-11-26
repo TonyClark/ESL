@@ -2,9 +2,9 @@ package ast.actors;
 
 import java.util.HashSet;
 
-import ast.AST;
 import ast.binding.Var;
 import ast.data.Ref;
+import ast.general.AST;
 import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;

@@ -1,6 +1,6 @@
 package ast.types;
 
-import ast.AST;
+import ast.general.AST;
 
 public class TypeMatchError extends TypeError {
 

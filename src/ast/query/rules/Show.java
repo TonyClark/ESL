@@ -3,7 +3,7 @@ package ast.query.rules;
 import java.util.Collections;
 import java.util.HashSet;
 
-import ast.AST;
+import ast.general.AST;
 import ast.query.body.BodyElement;
 import ast.query.body.Call;
 import ast.query.value.Name;

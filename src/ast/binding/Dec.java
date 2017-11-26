@@ -1,5 +1,7 @@
 package ast.binding;
 
+import java.util.HashSet;
+
 import ast.TreeNode;
 import ast.binding.declarations.DeclaringLocation;
 import ast.types.Type;
@@ -106,5 +108,9 @@ public class Dec implements DeclaringLocation, Typed, TreeNode {
 	public Dec substType(Type t, String n) {
 		return new Dec(getLineStart(), getLineEnd(), getPath(), getName(), getDeclaredType().substType(t, n));
 	}
+
+  public void FV(HashSet<String> vars) {
+    declaredType.FV(vars);
+  }
 
 }

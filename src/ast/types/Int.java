@@ -1,5 +1,7 @@
 package ast.types;
 
+import java.util.HashSet;
+
 import env.Env;
 import exp.BoaConstructor;
 
@@ -19,8 +21,11 @@ public class Int extends Type {
     return this;
   }
 
-  public void check(Env<String, Type> env) {
-    
+  public void check(Env<String, Type> env) { 
+  }
+
+
+  public void FV(HashSet<String> vars) {
   }
 
 }

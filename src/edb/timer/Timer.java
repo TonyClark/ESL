@@ -26,7 +26,6 @@ public abstract class Timer extends java.util.Timer {
           cancel();
         } else waiting();
       }
-
     };
   }
 

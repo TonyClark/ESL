@@ -100,6 +100,14 @@ public abstract class List<Element> implements Serializable {
   public Element last() {
     return nth(length() - 1);
   }
+  
+  public List<Element> butlast() {
+    if(isNil())
+      throw new Error("butlast: supplied with empty list.");
+    else if(getTail().isNil())
+      return getTail();
+    else return getTail().butlast().cons(getHead());
+  }
 
   public abstract int length();
 

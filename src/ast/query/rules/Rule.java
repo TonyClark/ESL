@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import ast.AST;
 import ast.binding.declarations.DecContainer;
 import ast.binding.declarations.DeclaringLocation;
+import ast.general.AST;
 import ast.query.body.BodyElement;
 import ast.query.body.Cut;
 import ast.query.instrs.Instr;

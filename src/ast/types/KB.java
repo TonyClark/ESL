@@ -1,6 +1,7 @@
 package ast.types;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import env.Env;
 import exp.BoaConstructor;
@@ -55,6 +56,9 @@ public class KB extends Type {
 
   private Type getDeleteType() {
     return new ast.types.TaggedFun(getLineStart(), getLineEnd(), "compiler.extensions.KBDelete", new Type[] { new Var(getLineStart(), getLineEnd(), union, null), Int.INT }, this);
+  }
+
+  public void FV(HashSet<String> vars) {
   }
 
 }

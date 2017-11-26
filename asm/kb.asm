@@ -1,4 +1,4 @@
-CodeBox(behaviour20,3)
+CodeBox(behaviour17,3)
     0 FRAMEVAR   0         
     1 TRY        123   true      
     2 ISTERM     Time  1          [0]       
@@ -75,7 +75,7 @@ CodeBox(behaviour20,3)
    73 INT        10        
    74 KBADD     
    75 POP       
-   76 instrs.query.data.NewLogicalVar@2bc64bbc
+   76 instrs.query.data.NewLogicalVar@2db50bc6
    77 SETFRAME   2         
    78 POP       
    79 FRAMEVAR   2         
@@ -91,7 +91,7 @@ CodeBox(behaviour20,3)
          5 Enter(Key(test),1)
          6 Return()
    84 FRAMEVAR   2         
-   85 instrs.query.QRecons@220b3adc
+   85 instrs.query.QRecons@7c363a7a
    86 SETFRAME   2         
    87 STARTCALL 
    88 FRAMEVAR   2         
@@ -105,7 +105,7 @@ CodeBox(behaviour20,3)
    96 DYNAMIC    2         
    97 APPLY      1         
    98 POP       
-   99 instrs.query.data.NewLogicalVar@5ab27372
+   99 instrs.query.data.NewLogicalVar@7c4c6c6b
   100 SETFRAME   2         
   101 POP       
   102 FRAMEVAR   2         
@@ -127,7 +127,7 @@ CodeBox(behaviour20,3)
         11 Enter(Key(hist),2)
         12 Return()
   107 FRAMEVAR   2         
-  108 instrs.query.QRecons@7949bf93
+  108 instrs.query.QRecons@2ff4bcef
   109 SETFRAME   2         
   110 STARTCALL 
   111 FRAMEVAR   2         
@@ -155,24 +155,26 @@ CodeBox(asm/kb.asm,4)
     3 NULL      
     4 NEWDYNAMIC
     5 Rules()
- states/2
+   test/1
          0 Local(0)
-         1 SetLocal(2)
-         2 Local(1)
-         3 UPair()
-         4 UTerm(Key(S1),1)
-         5 Local(2)
-         6 Unify()
-         7 UPair()
-         8 UTerm(Key(S2),1)
-         9 Local(2)
-        10 Unify()
-        11 UPair()
-        12 UTerm(Key(S3),1)
-        13 Local(2)
-        14 Unify()
-        15 UNil()
-        16 Return()
+         1 SetLocal(1)
+         2 Next()
+         3 Cut()
+         4 StartCall()
+         5 Local(1)
+         6 Enter(Key(test),1)
+         7 Prev()
+         8 Return()
+   test/1
+         0 Local(0)
+         1 SetLocal(1)
+         2 End()
+         3 Local(1)
+         4 PastFact()
+         5 Local(1)
+         6 Println()
+         7 Fail()
+         8 Return()
  recent/3
          0 Local(0)
          1 SetLocal(3)
@@ -212,6 +214,183 @@ CodeBox(asm/kb.asm,4)
         11 Enter(Key(recent),3)
         12 Next()
         13 Return()
+   hist/2
+         0 Local(0)
+         1 SetLocal(2)
+         2 Local(1)
+         3 UPair()
+         4 SetLocal(3)
+         5 UNil()
+         6 StartCall()
+         7 Local(2)
+         8 Local(3)
+         9 Enter(Key(state),2)
+        10 End()
+        11 Cut()
+        12 Return()
+   hist/2
+         0 Local(0)
+         1 SetLocal(2)
+         2 Local(1)
+         3 UPair()
+         4 SetLocal(3)
+         5 SetLocal(4)
+         6 StartCall()
+         7 Local(2)
+         8 Local(3)
+         9 Enter(Key(state),2)
+        10 Cut()
+        11 Next()
+        12 StartCall()
+        13 Local(2)
+        14 Local(4)
+        15 Enter(Key(hist),2)
+        16 Prev()
+        17 Return()
+    nth/3
+         0 Local(0)
+         1 UInt(0)
+         2 Local(1)
+         3 UPair()
+         4 SetLocal(3)
+         5 Pop()
+         6 Local(2)
+         7 Local(3)
+         8 Unify()
+         9 Cut()
+        10 Return()
+    nth/3
+         0 Local(0)
+         1 SetLocal(3)
+         2 Local(1)
+         3 UPair()
+         4 Pop()
+         5 SetLocal(4)
+         6 Local(2)
+         7 SetLocal(5)
+         8 NewVar(6)
+         9 Local(3)
+        10 Int(1)
+        11 Sub()
+        12 Unify()
+        13 StartCall()
+        14 Local(6)
+        15 Local(4)
+        16 Local(5)
+        17 EnterLast(Key(nth),3)
+        18 Return()
+ delete/3
+         0 Local(0)
+         1 SetLocal(3)
+         2 Local(1)
+         3 UNil()
+         4 Local(2)
+         5 UNil()
+         6 Cut()
+         7 Return()
+ delete/3
+         0 Local(0)
+         1 SetLocal(3)
+         2 Local(1)
+         3 UPair()
+         4 Local(3)
+         5 Unify()
+         6 SetLocal(4)
+         7 Local(2)
+         8 SetLocal(5)
+         9 Cut()
+        10 StartCall()
+        11 Local(3)
+        12 Local(4)
+        13 Local(5)
+        14 EnterLast(Key(delete),3)
+        15 Return()
+ delete/3
+         0 Local(0)
+         1 SetLocal(3)
+         2 Local(1)
+         3 UPair()
+         4 SetLocal(4)
+         5 SetLocal(5)
+         6 Local(2)
+         7 UPair()
+         8 Local(4)
+         9 Unify()
+        10 SetLocal(6)
+        11 StartCall()
+        12 Local(3)
+        13 Local(5)
+        14 Local(6)
+        15 EnterLast(Key(delete),3)
+        16 Return()
+ states/2
+         0 Local(0)
+         1 SetLocal(2)
+         2 Local(1)
+         3 UPair()
+         4 UTerm(Key(S1),1)
+         5 Local(2)
+         6 Unify()
+         7 UPair()
+         8 UTerm(Key(S2),1)
+         9 Local(2)
+        10 Unify()
+        11 UPair()
+        12 UTerm(Key(S3),1)
+        13 Local(2)
+        14 Unify()
+        15 UNil()
+        16 Return()
+  state/2
+         0 Local(0)
+         1 SetLocal(2)
+         2 Local(1)
+         3 UTerm(Key(State),3)
+         4 SetLocal(3)
+         5 SetLocal(4)
+         6 SetLocal(5)
+         7 StartCall()
+         8 Int(0)
+         9 Local(2)
+        10 Local(3)
+        11 Enter(Key(getStates),3)
+        12 Cut()
+        13 StartCall()
+        14 Int(1)
+        15 Local(2)
+        16 Local(4)
+        17 Enter(Key(getStates),3)
+        18 Cut()
+        19 StartCall()
+        20 Int(2)
+        21 Local(2)
+        22 Local(5)
+        23 EnterLast(Key(getStates),3)
+        24 Return()
+  facts/1
+         0 Local(0)
+         1 UNil()
+         2 Fail()
+         3 Cut()
+         4 Return()
+  facts/1
+         0 Local(0)
+         1 UPair()
+         2 SetLocal(1)
+         3 SetLocal(2)
+         4 Local(1)
+         5 Fact()
+         6 Cut()
+         7 Return()
+  facts/1
+         0 Local(0)
+         1 UPair()
+         2 Pop()
+         3 SetLocal(1)
+         4 StartCall()
+         5 Local(1)
+         6 EnterLast(Key(facts),1)
+         7 Return()
 getStates/3
          0 Local(0)
          1 Pop()
@@ -274,185 +453,6 @@ getStates/3
         11 Local(6)
         12 EnterLast(Key(getStates),3)
         13 Return()
-   hist/2
-         0 Local(0)
-         1 SetLocal(2)
-         2 Local(1)
-         3 UPair()
-         4 SetLocal(3)
-         5 UNil()
-         6 StartCall()
-         7 Local(2)
-         8 Local(3)
-         9 Enter(Key(state),2)
-        10 End()
-        11 Cut()
-        12 Return()
-   hist/2
-         0 Local(0)
-         1 SetLocal(2)
-         2 Local(1)
-         3 UPair()
-         4 SetLocal(3)
-         5 SetLocal(4)
-         6 StartCall()
-         7 Local(2)
-         8 Local(3)
-         9 Enter(Key(state),2)
-        10 Cut()
-        11 Next()
-        12 StartCall()
-        13 Local(2)
-        14 Local(4)
-        15 Enter(Key(hist),2)
-        16 Prev()
-        17 Return()
- delete/3
-         0 Local(0)
-         1 SetLocal(3)
-         2 Local(1)
-         3 UNil()
-         4 Local(2)
-         5 UNil()
-         6 Cut()
-         7 Return()
- delete/3
-         0 Local(0)
-         1 SetLocal(3)
-         2 Local(1)
-         3 UPair()
-         4 Local(3)
-         5 Unify()
-         6 SetLocal(4)
-         7 Local(2)
-         8 SetLocal(5)
-         9 Cut()
-        10 StartCall()
-        11 Local(3)
-        12 Local(4)
-        13 Local(5)
-        14 EnterLast(Key(delete),3)
-        15 Return()
- delete/3
-         0 Local(0)
-         1 SetLocal(3)
-         2 Local(1)
-         3 UPair()
-         4 SetLocal(4)
-         5 SetLocal(5)
-         6 Local(2)
-         7 UPair()
-         8 Local(4)
-         9 Unify()
-        10 SetLocal(6)
-        11 StartCall()
-        12 Local(3)
-        13 Local(5)
-        14 Local(6)
-        15 EnterLast(Key(delete),3)
-        16 Return()
-  facts/1
-         0 Local(0)
-         1 UNil()
-         2 Fail()
-         3 Cut()
-         4 Return()
-  facts/1
-         0 Local(0)
-         1 UPair()
-         2 SetLocal(1)
-         3 SetLocal(2)
-         4 Local(1)
-         5 Fact()
-         6 Cut()
-         7 Return()
-  facts/1
-         0 Local(0)
-         1 UPair()
-         2 Pop()
-         3 SetLocal(1)
-         4 StartCall()
-         5 Local(1)
-         6 EnterLast(Key(facts),1)
-         7 Return()
-  state/2
-         0 Local(0)
-         1 SetLocal(2)
-         2 Local(1)
-         3 UTerm(Key(State),3)
-         4 SetLocal(3)
-         5 SetLocal(4)
-         6 SetLocal(5)
-         7 StartCall()
-         8 Int(0)
-         9 Local(2)
-        10 Local(3)
-        11 Enter(Key(getStates),3)
-        12 Cut()
-        13 StartCall()
-        14 Int(1)
-        15 Local(2)
-        16 Local(4)
-        17 Enter(Key(getStates),3)
-        18 Cut()
-        19 StartCall()
-        20 Int(2)
-        21 Local(2)
-        22 Local(5)
-        23 EnterLast(Key(getStates),3)
-        24 Return()
-    nth/3
-         0 Local(0)
-         1 UInt(0)
-         2 Local(1)
-         3 UPair()
-         4 SetLocal(3)
-         5 Pop()
-         6 Local(2)
-         7 Local(3)
-         8 Unify()
-         9 Cut()
-        10 Return()
-    nth/3
-         0 Local(0)
-         1 SetLocal(3)
-         2 Local(1)
-         3 UPair()
-         4 Pop()
-         5 SetLocal(4)
-         6 Local(2)
-         7 SetLocal(5)
-         8 NewVar(6)
-         9 Local(3)
-        10 Int(1)
-        11 Sub()
-        12 Unify()
-        13 StartCall()
-        14 Local(6)
-        15 Local(4)
-        16 Local(5)
-        17 EnterLast(Key(nth),3)
-        18 Return()
-   test/1
-         0 Local(0)
-         1 SetLocal(1)
-         2 Next()
-         3 Cut()
-         4 StartCall()
-         5 Local(1)
-         6 Enter(Key(test),1)
-         7 Prev()
-         8 Return()
-   test/1
-         0 Local(0)
-         1 SetLocal(1)
-         2 End()
-         3 Local(1)
-         4 PastFact()
-         5 Local(1)
-         6 Println()
-         7 Fail()
-         8 Return()
     6 SETDYNAMIC 1         
     7 POP       
     8 KB         0         
@@ -479,7 +479,7 @@ getStates/3
    29 SELF      
    30 APPDYNAMIC 5     1         
    31 RETURN    
-CodeBox(lambda222,2)
+CodeBox(lambda317,2)
     0 DYNAMIC    0         
     1 INT        1         
     2 TERM       S1    1         
@@ -552,7 +552,7 @@ CodeBox(lambda222,2)
    69 INT        10        
    70 KBADD     
    71 POP       
-   72 instrs.query.data.NewLogicalVar@604b90ad
+   72 instrs.query.data.NewLogicalVar@2a9a69ec
    73 SETFRAME   1         
    74 POP       
    75 FRAMEVAR   1         
@@ -568,7 +568,7 @@ CodeBox(lambda222,2)
          5 Enter(Key(test),1)
          6 Return()
    80 FRAMEVAR   1         
-   81 instrs.query.QRecons@1bed9ba2
+   81 instrs.query.QRecons@6732732f
    82 SETFRAME   1         
    83 STARTCALL 
    84 FRAMEVAR   1         
@@ -582,7 +582,7 @@ CodeBox(lambda222,2)
    92 DYNAMIC    2         
    93 APPLY      1         
    94 POP       
-   95 instrs.query.data.NewLogicalVar@528d524e
+   95 instrs.query.data.NewLogicalVar@78027496
    96 SETFRAME   1         
    97 POP       
    98 FRAMEVAR   1         
@@ -604,7 +604,7 @@ CodeBox(lambda222,2)
         11 Enter(Key(hist),2)
         12 Return()
   103 FRAMEVAR   1         
-  104 instrs.query.QRecons@668ccaab
+  104 instrs.query.QRecons@729bbcbd
   105 SETFRAME   1         
   106 STARTCALL 
   107 FRAMEVAR   1         
@@ -621,7 +621,7 @@ CodeBox(lambda222,2)
   118 STARTCALL 
   119 APPDYNAMIC 5     0         
   120 RETURN    
-CodeBox(lambda221,2)
+CodeBox(lambda316,2)
     0 STR        main      
     1 STR        Time      
     2 Fun(1)

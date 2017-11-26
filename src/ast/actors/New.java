@@ -1,7 +1,7 @@
 package ast.actors;
 
-import ast.AST;
 import ast.data.Apply;
+import ast.general.AST;
 import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;

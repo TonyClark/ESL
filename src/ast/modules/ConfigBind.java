@@ -2,8 +2,8 @@ package ast.modules;
 
 import java.util.HashSet;
 
-import ast.AST;
 import ast.binding.Dec;
+import ast.general.AST;
 import ast.types.Type;
 import ast.types.TypeError;
 import env.Env;

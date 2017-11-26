@@ -18,6 +18,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
@@ -46,19 +50,23 @@ import javax.swing.WindowConstants;
 import com.apple.eawt.Application;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 
-import ast.AST;
+import ast.actors.Act;
 import ast.actors.New;
 import ast.actors.Self;
+import ast.binding.Dec;
+import ast.binding.FunBind;
 import ast.binding.declarations.DeclaringLocation;
 import ast.control.Block;
-import ast.data.Apply;
 import ast.data.Ref;
+import ast.general.AST;
+import ast.general.WalkBindings;
 import ast.modules.Module;
 import ast.query.body.Call;
 import ast.query.machine.Machine;
 import ast.query.rules.Query;
 import ast.query.rules.RuleBase;
 import ast.query.value.Var;
+import ast.tests.BArm;
 import ast.types.TypeError;
 import ast.types.TypePatternError;
 import compiler.DynamicVar;
@@ -106,6 +114,7 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
   static final String     NAME            = "EDB";
   static final Key        SAVE_HISTORY    = Key.getKey("saveHistory");
   static final Key        SAVE_STATE      = Key.getKey("saveState");
+  static final Key        SERIALIZE       = Key.getKey("serialize");
   static final Key        SHOW            = Key.getKey("Show");
   static final Key        FILMSTRIP       = Key.getKey("Filmstrip");
   static final Key        ADDBL           = Key.getKey("AddBrowserListener");
@@ -114,6 +123,7 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
   static String           historyFiles    = null;
   static Builtin          saveState       = new Builtin("saveState", EDB::saveState);
   static Builtin          saveHistory     = new Builtin("saveHistory", EDB::saveHistory);
+  static Builtin          serialize       = new Builtin("serialize", EDB::serialize);
   static Builtin          nullSaveState   = new Builtin("nullSaveState", EDB::nullSaveState);
   static Builtin          nullSaveHistory = new Builtin("nullSaveHistory", EDB::nullSaveHistory);
   static Record           math            = getMath();
@@ -222,6 +232,25 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     } else throw new Error("saveHistory expects " + 1 + " arg but supplied with " + arity);
   }
 
+  public static void serialize(Actor actor, int arity) {
+    if (arity == 2) {
+      actor.closeFrame(0, null, null, null);
+      Object data = actor.getFrameVar(0);
+      String path = (String) actor.getFrameVar(1);
+      File file = new File(path);
+      OutputStream fout;
+      try {
+        fout = new FileOutputStream(file);
+        ObjectOutputStream out = new ObjectOutputStream(fout);
+        out.writeObject(data);
+        out.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      actor.returnValue(data);
+    } else throw new Error("serialize expects " + 2 + " args but supplied with " + arity);
+  }
+
   public static void saveState(Actor actor, int arity) {
 
     // Saves a snapshot ...
@@ -296,9 +325,6 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
         stop();
       }
     });
-    /*
-     * JButton step = new JButton(getImage("icons/step.png", BUTTON_SIZE, BUTTON_SIZE)); step.setToolTipText("step"); step.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) { action_step(); } });
-     */
     JButton run = new JButton(getImage("icons/run.png", BUTTON_SIZE, BUTTON_SIZE));
     run.setToolTipText("run");
     run.addActionListener(new ActionListener() {
@@ -542,53 +568,21 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
   }
 
   public boolean hasExport(Key name) {
-    return name == SAVE_HISTORY || name == SAVE_STATE || name == MATH;
+    return name == SAVE_HISTORY || name == SAVE_STATE || name == MATH || name == SERIALIZE;
   }
-
-  /*
-   * 
-   * private String getHTMLActorGraph() { return svg.getString(Actor.getACTORS()); }
-   */
 
   public void initGUI(String root) {
     JSplitPane splitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, fileEditors, consolePanel());
     JSplitPane splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, fileTree(root), splitPane1);
-    // JSplitPane splitPane2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, fileTree(root), actorsPanel());
-    // JSplitPane splitPane3 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPane2, splitPane1);
-    // JSplitPane splitPane5 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, assemblerPanel(), statePanel());
-    // JSplitPane splitPane7 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, propertiesPanel(), stackPanel());
-    // JSplitPane splitPane6 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitPane5, splitPane7);
-    // JSplitPane splitPane4 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPane3, splitPane6);
     splitPane1.setBorder(null);
     splitPane2.setBorder(null);
-    // splitPane3.setBorder(null);
-    // splitPane5.setBorder(null);
-    // splitPane6.setBorder(null);
-    // splitPane7.setBorder(null);
     splitPane1.setOneTouchExpandable(true);
     splitPane2.setOneTouchExpandable(true);
-    // splitPane3.setOneTouchExpandable(true);
-    // splitPane4.setOneTouchExpandable(true);
-    // splitPane5.setOneTouchExpandable(true);
     splitPane1.setDividerLocation(HEIGHT - 200);
     splitPane2.setDividerLocation(200);
-    // splitPane3.setDividerLocation(200);
-    // splitPane4.setDividerLocation(WIDTH);
-    // splitPane5.setDividerLocation(200);
-    // splitPane6.setDividerLocation(HEIGHT - 300);
-    // splitPane7.setDividerLocation(200);
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     add(splitPane2);
   }
-
-  /*
-   * 
-   * private void graph(int x, int y) { JPopupMenu popup = new JPopupMenu(); JMenu history = new JMenu("History"); JMenuItem actors = new JMenuItem("Actors"); actors.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) { if (actor != null) { String html =
-   * getHTMLActorGraph(); fileEditors.showHTML("Actors(" + actor.getBehaviour().getPath() + ")", html, EDB.this); } } }); JMenuItem partial = new JMenuItem("History (Partial)"); partial.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) { if (actor != null) {
-   * HistoryDialog dialog = new HistoryDialog(EDB.this.svg, x, y); String svg = EDB.this.svg.getString(dialog.getActorStart(), dialog.getActorEnd(), dialog.getMessageStart(), dialog.getMessageEnd()); String html = "<HTML>" + svg + "</HTML>"; fileEditors.showHTML("History(" +
-   * actor.getBehaviour().getPath() + ")", html, EDB.this); } } }); JMenuItem all = new JMenuItem("History (All)"); all.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) { if (actor != null) { String svg = EDB.this.svg.getString(0, Actor.getTime(), 0,
-   * Actor.getTime()); String html = "<HTML>" + svg + "</HTML>"; fileEditors.showHTML("History(" + actor.getBehaviour().getPath() + ")", html, EDB.this); } } }); history.add(partial); history.add(all); popup.add(actors); popup.add(history); popup.show(this, x, y); }
-   */
 
   public void interactiveQuery(Call[] calls) {
     if (queryMachine == null) {
@@ -665,7 +659,7 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     }
   }
 
-  public void load(String path, String configName) {
+  public void load(String path, String configName, Vector<FunBind> tracedFuns, Vector<BArm> tracedArms, Vector<Act> tracedActs) {
     history.reset();
     Module.reset();
     showTitle(EDBState.LOADING, path);
@@ -677,10 +671,11 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
           module.resolve();
           typeCheck(module);
           module.configure(configName);
+          module.trace(tracedFuns, tracedArms, tracedActs);
+          // new WalkBindings().walk(module, Builtins.builtinTypes());
           AST desugared = module.desugar();
           AST record = new New(0, 0, "", new Ref(0, 0, desugared, Key.getKey("main")));
-
-          AST block = new Block(0, 0, record, new ast.data.Apply(0, 0, "", new ast.binding.Var(0, 0, "kill", null), new Self()));
+          AST block = new Block(0, 0, record, new ast.data.Apply(0, 0, "", new ast.binding.Var(0, 0, "kill", null, null), new Self()));
           CodeBox codebox = new CodeBox(path, record.maxLocals());
           block.compile(new Nil<FrameVar>(), Builtins.builtinDynamics(), codebox, true);
           codebox.add(new Return(-1), new Nil<FrameVar>(), new Nil<DynamicVar>());
@@ -760,6 +755,8 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
       else return nullSaveState;
     else if (name == MATH)
       return math;
+    else if (name == SERIALIZE)
+      return serialize;
     else return null;
   }
 
@@ -990,6 +987,18 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
       BrowserView view = (BrowserView) focus;
       view.getBrowser().zoomOut();
     }
+  }
+
+  public Vector<FunBind> tracedFuns(String path) {
+    return fileEditors.tracedFuns(path);
+  }
+
+  public Vector<BArm> tracedMessages(String path) {
+    return fileEditors.tracedArms(path);
+  }
+
+  public Vector<Act> tracedActs(String path) {
+    return fileEditors.tracedActs(path);
   }
 
 }

@@ -2,9 +2,9 @@ package ast.cmp;
 
 import java.util.HashSet;
 
-import ast.AST;
 import ast.binding.Var;
 import ast.data.Apply;
+import ast.general.AST;
 import ast.lists.List;
 import ast.tests.If;
 import ast.types.Type;
@@ -21,6 +21,11 @@ public class PQual extends Qualifier {
   public PQual() {
   }
 
+  public PQual(int lineStart, int lineEnd, AST exp) {
+    super(lineStart, lineEnd);
+    this.exp = exp;
+  }
+
   public String toString() {
     return "PQual(" + exp + ")";
   }
@@ -33,7 +38,7 @@ public class PQual extends Qualifier {
   }
 
   public AST desugar(AST value) {
-    return new Apply(getLineStart(), getLineEnd(), "", new Var(getLineStart(), getLineEnd(), "flatten", null), new If(getLineStart(), getLineEnd(), exp, new List(getLineStart(), getLineEnd(), new List(getLineStart(), getLineEnd(), value)), new List(getLineStart(), getLineEnd())));
+    return new Apply(getLineStart(), getLineEnd(), "", new Var(getLineStart(), getLineEnd(), "flatten", null, null), new If(getLineStart(), getLineEnd(), exp, new List(getLineStart(), getLineEnd(), new List(getLineStart(), getLineEnd(), value)), new List(getLineStart(), getLineEnd())));
   }
 
   public void setPath(String path) {
@@ -45,6 +50,10 @@ public class PQual extends Qualifier {
     if (type instanceof ast.types.Bool)
       return env;
     else throw new TypeError(exp.getLineStart(), exp.getLineEnd(), "predicate qualifier expects a boolean valued expression " + type);
+  }
+
+  public Qualifier subst(AST ast, String name) {
+    return new PQual(getLineStart(), getLineEnd(), exp.subst(ast, name));
   }
 
 }

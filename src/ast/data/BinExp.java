@@ -2,7 +2,7 @@ package ast.data;
 
 import java.util.HashSet;
 
-import ast.AST;
+import ast.general.AST;
 import ast.tests.If;
 import ast.types.Forall;
 import ast.types.Type;
@@ -50,10 +50,6 @@ public class BinExp extends AST {
     this.left = left;
     this.op = op;
     this.right = right;
-  }
-
-  public String toString() {
-    return "BinExp(" + left + "," + op + "," + right + ")";
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
@@ -128,6 +124,48 @@ public class BinExp extends AST {
     }
   }
 
+  private void compileEql0(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
+    left.compile(locals, dynamics, code, false);
+    code.add(new Is0(getLineStart()), locals, dynamics);
+  }
+
+  private void compileEqlBool(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
+    left.compile(locals, dynamics, code, false);
+    Bool b = (Bool) right;
+    code.add(new IsBool(getLineStart(), b.value), locals, dynamics);
+  }
+
+  private void compileNotNil(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
+    left.compile(locals, dynamics, code, false);
+    code.add(new NotNil(getLineStart()), locals, dynamics);
+  }
+
+  public void DV(HashSet<String> vars) {
+    left.DV(vars);
+    right.DV(vars);
+  }
+
+  public void FV(HashSet<String> vars) {
+    left.FV(vars);
+    right.FV(vars);
+  }
+
+  public String getLabel() {
+    return op + " :: -> " + getType();
+  }
+
+  public AST getLeft() {
+    return left;
+  }
+
+  public String getOp() {
+    return op;
+  }
+
+  public AST getRight() {
+    return right;
+  }
+
   private boolean isAdd1() {
     if (op.equals("+")) {
       if (left instanceof Int) {
@@ -138,22 +176,6 @@ public class BinExp extends AST {
         return i.value == 1;
       } else return false;
     } else return false;
-  }
-
-  private void compileNotNil(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
-    left.compile(locals, dynamics, code, false);
-    code.add(new NotNil(getLineStart()), locals, dynamics);
-  }
-
-  private void compileEql0(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
-    left.compile(locals, dynamics, code, false);
-    code.add(new Is0(getLineStart()), locals, dynamics);
-  }
-
-  private void compileEqlBool(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code) {
-    left.compile(locals, dynamics, code, false);
-    Bool b = (Bool) right;
-    code.add(new IsBool(getLineStart(), b.value), locals, dynamics);
   }
 
   private boolean isEql0() {
@@ -176,27 +198,21 @@ public class BinExp extends AST {
     } else return false;
   }
 
-  public void FV(HashSet<String> vars) {
-    left.FV(vars);
-    right.FV(vars);
-  }
-
-  public void DV(HashSet<String> vars) {
-    left.DV(vars);
-    right.DV(vars);
-  }
-
   public int maxLocals() {
     return Math.max(left.maxLocals(), right.maxLocals());
+  }
+
+  public void setPath(String path) {
+    left.setPath(path);
+    right.setPath(path);
   }
 
   public AST subst(AST ast, String name) {
     return new BinExp(getLineStart(), getLineEnd(), left.subst(ast, name), op, right.subst(ast, name));
   }
 
-  public void setPath(String path) {
-    left.setPath(path);
-    right.setPath(path);
+  public String toString() {
+    return "BinExp(" + left + "," + op + "," + right + ")";
   }
 
   public Type type(Env<String, Type> env) {
@@ -208,9 +224,9 @@ public class BinExp extends AST {
     Type t1 = left.type(env);
     Type t2 = right.type(env);
     if (op.equals("+")) {
-      
+
       // Deal with cases arising from []::Forall t.[t] ...
-      
+
       if (t1 == ast.types.List.NIL && t2 == ast.types.List.NIL)
         return t1;
       else if (t1 instanceof Forall && t2 instanceof ast.types.List) {
@@ -222,9 +238,9 @@ public class BinExp extends AST {
         ast.types.List list = (ast.types.List) t1;
         t2 = forall.apply(new Type[] { list.getType() });
       }
-      
+
       // End of [] cases.
-      
+
       if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
         return ast.types.Int.INT;
       else if (t1 instanceof ast.types.Str || t2 instanceof ast.types.Str)
@@ -253,11 +269,15 @@ public class BinExp extends AST {
         return ast.types.Int.INT;
       else throw new TypeError(getLineStart(), getLineEnd(), "- expects two integers: " + t1 + " and " + t2);
     } else if (op.equals("*")) {
-      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+      if (t1 instanceof ast.types.Float && t2 instanceof ast.types.Float)
+        return ast.types.Float.FLOAT;
+      else if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
         return ast.types.Int.INT;
       else throw new TypeError(getLineStart(), getLineEnd(), "* expects two integers: " + t1 + " and " + t2);
     } else if (op.equals("/")) {
-      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+      if (t1 instanceof ast.types.Float && t2 instanceof ast.types.Float)
+        return ast.types.Float.FLOAT;
+      else if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
         return ast.types.Int.INT;
       else throw new TypeError(getLineStart(), getLineEnd(), "/ expects two integers: " + t1 + " and " + t2);
     } else if (op.equals(">")) {
@@ -301,10 +321,6 @@ public class BinExp extends AST {
         else throw new TypeError(getLineStart(), getLineEnd(), ": incompatible element type: " + t1 + " and " + t2);
       } else throw new TypeError(getLineStart(), getLineEnd(), ": expects a list: " + t2);
     } else throw new TypeError(getLineStart(), getLineEnd(), "unknown operator " + op);
-  }
-
-  public String getLabel() {
-    return op + " :: -> " + getType();
   }
 
 }

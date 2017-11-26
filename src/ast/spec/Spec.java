@@ -3,6 +3,7 @@ package ast.spec;
 import java.util.Arrays;
 
 import ast.TreeNode;
+import ast.general.AST;
 import ast.query.rules.Rule;
 import exp.BoaConstructor;
 import values.Located;
@@ -10,12 +11,18 @@ import values.Located;
 @BoaConstructor(fields = { "state", "rules", "behaviour" })
 public class Spec implements Located, TreeNode {
 
+  public static Located makeInvisible(Located l) {
+    l.setLineStart(Integer.MAX_VALUE);
+    l.setLineEnd(Integer.MAX_VALUE);
+    return l;
+  }
+
   public State   state;
   public Rule[]  rules;
   public BRule[] behaviour;
 
   int            start = -1;
-  int            end = -1;
+  int            end   = -1;
 
   public Spec() {
   }

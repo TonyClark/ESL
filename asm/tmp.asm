@@ -1,4 +1,123 @@
-CodeBox(behaviour13,5)
+CodeBox(lambda67,3)
+    0 FRAMEVAR   0         
+    1 INT        2         
+    2 LESS      
+    3 SKIPFALSE  26        
+    4 INT        0         
+    5 INT        2000      
+    6 TO        
+    7 SETFRAME   1         
+    8 FRAMEVAR   1         
+    9 ISNIL     
+   10 SKIPTRUE   14        
+   11 FRAMEVAR   1         
+   12 HEAD      
+   13 SETFRAME   2         
+   14 POP       
+   15 FRAMEVAR   1         
+   16 TAIL      
+   17 SETFRAME   1         
+   18 POP       
+   19 INT        500       
+   20 DYNAMIC    0         
+   21 NAMEDSEND X/1
+   22 POP       
+   23 GOTO       8         
+   24 NULL      
+   25 POP       
+   26 DYNAMIC    0         
+   27 NAMEDSEND Stop/0
+   28 SKIP       2         
+   29 NULL      
+   30 RETURN    
+CodeBox(lambda66,4)
+    0 STR        main      
+    1 STR        Time      
+    2 Fun(1)
+    3 BEHAVIOUR 
+    4 RETURN    
+CodeBox(lambda65,1)
+    0 FRAMEVAR   0         
+    1 INT        500       
+    2 EQL       
+    3 SKIPFALSE  13        
+    4 STARTCALL 
+    5 INT        100       
+    6 APPDYNAMIC 1     1         
+    7 POP       
+    8 STARTCALL 
+    9 INT        100       
+   10 APPDYNAMIC 1     1         
+   11 POP       
+   12 STARTCALL 
+   13 INT        100       
+   14 APPDYNAMIC 1     1         
+   15 SKIP       2         
+   16 NULL      
+   17 RETURN    
+CodeBox(lambda64,2)
+    0 INT        1         
+    1 SETFRAME   0         
+    2 POP       
+    3 INT        2         
+    4 SETFRAME   1         
+    5 POP       
+    6 TRY        4     true      
+    7 ISINT      [0]   1         
+    8 ISINT      [1]   2         
+    9 NULL      
+   10 SKIP       2         
+   11 CASEERROR 
+   12 RETURN    
+CodeBox(lambda63,0)
+    0 STARTCALL 
+    1 DYNAMIC    2         
+    2 DYNAMIC    3         
+    3 APPLY      1         
+    4 POP       
+    5 STARTCALL 
+    6 TERM       Spam  0         
+    7 TERM       Spam  0         
+    8 TERM       Plap  1         
+    9 LIST       2         
+   10 DYNAMIC    3         
+   11 APPLY      1         
+   12 POP       
+   13 STARTCALL 
+   14 APPDYNAMIC 6     0         
+   15 RETURN    
+CodeBox(lambda62,4)
+    0 STR        test      
+    1 STR        Stop      
+    2 Fun(0)
+    3 STR        Y         
+    4 Fun(0)
+    5 STR        X         
+    6 Fun(1)
+    7 BEHAVIOUR 
+    8 RETURN    
+CodeBox(lambda61,3)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        6     true      
+    4 ISINT      [1]   0         
+    5 DYNAMIC    2         
+    6 ADD1      
+    7 STATE      count -1        
+    8 SETDYNAMIC 2         
+    9 SKIP       10        
+   10 TRY        7     false     
+   11 SETFRAME   2     [1]       
+   12 STARTCALL 
+   13 FRAMEVAR   2         
+   14 INT        1         
+   15 SUB       
+   16 APPDYNAMIC 1     1         
+   17 SKIP       2         
+   18 CASEERROR 
+   19 RETURN    
+CodeBox(behaviour5,5)
     0 FRAMEVAR   0         
     1 TRY        31    true      
     2 ISTERM     Time  1          [0]       
@@ -41,172 +160,6 @@ CodeBox(behaviour13,5)
    39 RETURN    
    40 NULL      
    41 POPFRAME  
-CodeBox(behaviour12,5)
-    0 FRAMEVAR   0         
-    1 TRY        18    true      
-    2 ISTERM     X     1          [0]       
-    3 SETFRAME   1     [0].ref(0)
-    4 FRAMEVAR   1         
-    5 INT        500       
-    6 EQL       
-    7 FAILFALSE 
-    8 STARTCALL 
-    9 INT        100       
-   10 APPDYNAMIC 1     1         
-   11 POP       
-   12 STARTCALL 
-   13 INT        100       
-   14 APPDYNAMIC 1     1         
-   15 POP       
-   16 STARTCALL 
-   17 INT        100       
-   18 APPDYNAMIC 1     1         
-   19 SKIP       32        
-   20 TRY        4     false     
-   21 ISTERM     X     1          [0]       
-   22 SETFRAME   1     [0].ref(0)
-   23 NULL      
-   24 SKIP       27        
-   25 TRY        14    false     
-   26 ISTERM     Y     0          [0]       
-   27 INT        1         
-   28 SETFRAME   1         
-   29 POP       
-   30 INT        2         
-   31 SETFRAME   2         
-   32 POP       
-   33 TRY        4     true      
-   34 ISINT      [1]   1         
-   35 ISINT      [2]   2         
-   36 NULL      
-   37 SKIP       2         
-   38 CASEERROR 
-   39 SKIP       12        
-   40 TRY        9     false     
-   41 ISTERM     Stop  0          [0]       
-   42 STARTCALL 
-   43 DYNAMIC    2         
-   44 DYNAMIC    3         
-   45 APPLY      1         
-   46 POP       
-   47 STARTCALL 
-   48 APPDYNAMIC 6     0         
-   49 SKIP       2         
-   50 CASEERROR 
-   51 RETURN    
-   52 NULL      
-   53 POPFRAME  
-CodeBox(lambda189,3)
-    0 FRAMEVAR   0         
-    1 INT        2         
-    2 LESS      
-    3 SKIPFALSE  26        
-    4 INT        0         
-    5 INT        2000      
-    6 TO        
-    7 SETFRAME   1         
-    8 FRAMEVAR   1         
-    9 ISNIL     
-   10 SKIPTRUE   14        
-   11 FRAMEVAR   1         
-   12 HEAD      
-   13 SETFRAME   2         
-   14 POP       
-   15 FRAMEVAR   1         
-   16 TAIL      
-   17 SETFRAME   1         
-   18 POP       
-   19 INT        500       
-   20 DYNAMIC    0         
-   21 NAMEDSEND X/1
-   22 POP       
-   23 GOTO       8         
-   24 NULL      
-   25 POP       
-   26 DYNAMIC    0         
-   27 NAMEDSEND Stop/0
-   28 SKIP       2         
-   29 NULL      
-   30 RETURN    
-CodeBox(lambda188,4)
-    0 STR        main      
-    1 STR        Time      
-    2 Fun(1)
-    3 BEHAVIOUR 
-    4 RETURN    
-CodeBox(lambda187,1)
-    0 FRAMEVAR   0         
-    1 INT        500       
-    2 EQL       
-    3 SKIPFALSE  13        
-    4 STARTCALL 
-    5 INT        100       
-    6 APPDYNAMIC 1     1         
-    7 POP       
-    8 STARTCALL 
-    9 INT        100       
-   10 APPDYNAMIC 1     1         
-   11 POP       
-   12 STARTCALL 
-   13 INT        100       
-   14 APPDYNAMIC 1     1         
-   15 SKIP       2         
-   16 NULL      
-   17 RETURN    
-CodeBox(lambda186,2)
-    0 INT        1         
-    1 SETFRAME   0         
-    2 POP       
-    3 INT        2         
-    4 SETFRAME   1         
-    5 POP       
-    6 TRY        4     true      
-    7 ISINT      [0]   1         
-    8 ISINT      [1]   2         
-    9 NULL      
-   10 SKIP       2         
-   11 CASEERROR 
-   12 RETURN    
-CodeBox(lambda185,0)
-    0 STARTCALL 
-    1 DYNAMIC    2         
-    2 DYNAMIC    3         
-    3 APPLY      1         
-    4 POP       
-    5 STARTCALL 
-    6 APPDYNAMIC 6     0         
-    7 RETURN    
-CodeBox(lambda184,4)
-    0 STR        test      
-    1 STR        Stop      
-    2 Fun(0)
-    3 STR        Y         
-    4 Fun(0)
-    5 STR        X         
-    6 Fun(1)
-    7 BEHAVIOUR 
-    8 RETURN    
-CodeBox(lambda183,3)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        6     true      
-    4 ISINT      [1]   0         
-    5 DYNAMIC    2         
-    6 ADD1      
-    7 STATE      count -1        
-    8 SETDYNAMIC 2         
-    9 SKIP       10        
-   10 TRY        7     false     
-   11 SETFRAME   2     [1]       
-   12 STARTCALL 
-   13 FRAMEVAR   2         
-   14 INT        1         
-   15 SUB       
-   16 APPDYNAMIC 1     1         
-   17 SKIP       2         
-   18 CASEERROR 
-   19 RETURN    
 CodeBox(asm/tmp.asm,6)
     0 STARTCALL 
     1 NULL      
@@ -255,3 +208,66 @@ CodeBox(asm/tmp.asm,6)
    44 SELF      
    45 APPDYNAMIC 5     1         
    46 RETURN    
+CodeBox(behaviour4,5)
+    0 FRAMEVAR   0         
+    1 TRY        18    true      
+    2 ISTERM     X     1          [0]       
+    3 SETFRAME   1     [0].ref(0)
+    4 FRAMEVAR   1         
+    5 INT        500       
+    6 EQL       
+    7 FAILFALSE 
+    8 STARTCALL 
+    9 INT        100       
+   10 APPDYNAMIC 1     1         
+   11 POP       
+   12 STARTCALL 
+   13 INT        100       
+   14 APPDYNAMIC 1     1         
+   15 POP       
+   16 STARTCALL 
+   17 INT        100       
+   18 APPDYNAMIC 1     1         
+   19 SKIP       40        
+   20 TRY        4     false     
+   21 ISTERM     X     1          [0]       
+   22 SETFRAME   1     [0].ref(0)
+   23 NULL      
+   24 SKIP       35        
+   25 TRY        14    false     
+   26 ISTERM     Y     0          [0]       
+   27 INT        1         
+   28 SETFRAME   1         
+   29 POP       
+   30 INT        2         
+   31 SETFRAME   2         
+   32 POP       
+   33 TRY        4     true      
+   34 ISINT      [1]   1         
+   35 ISINT      [2]   2         
+   36 NULL      
+   37 SKIP       2         
+   38 CASEERROR 
+   39 SKIP       20        
+   40 TRY        17    false     
+   41 ISTERM     Stop  0          [0]       
+   42 STARTCALL 
+   43 DYNAMIC    2         
+   44 DYNAMIC    3         
+   45 APPLY      1         
+   46 POP       
+   47 STARTCALL 
+   48 TERM       Spam  0         
+   49 TERM       Spam  0         
+   50 TERM       Plap  1         
+   51 LIST       2         
+   52 DYNAMIC    3         
+   53 APPLY      1         
+   54 POP       
+   55 STARTCALL 
+   56 APPDYNAMIC 6     0         
+   57 SKIP       2         
+   58 CASEERROR 
+   59 RETURN    
+   60 NULL      
+   61 POPFRAME  

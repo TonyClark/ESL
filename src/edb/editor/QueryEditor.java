@@ -17,7 +17,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import ast.AST;
+import ast.general.AST;
 import ast.query.body.Call;
 import ast.query.body.DBName;
 import ast.query.machine.DB;
@@ -56,7 +56,7 @@ public class QueryEditor extends FileEditor {
   JFileChooser               chooser          = new JFileChooser(EDB.getHistoryFiles());
 
   public QueryEditor(String path, EDB gui) {
-    super(path, gui);
+    super(path, gui, new QueryDoc());
     registerKeyboardAction(runAction, KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK), JComponent.WHEN_FOCUSED);
     registerKeyboardAction(runAction, KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.META_MASK), JComponent.WHEN_FOCUSED);
     registerKeyboardAction(loadAction, KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK), JComponent.WHEN_FOCUSED);
@@ -166,7 +166,7 @@ public class QueryEditor extends FileEditor {
   public void highlightSyntax() {
     super.highlightSyntax();
     QueryDoc doc = (QueryDoc) getStyledDocument();
-    if (container != null) AST.walk((o) -> highlightQuery(o, doc), container);
+    if (container != null) AST.walk((o) -> highlightQuery(o, doc), (o) -> {}, container);
   }
 
   private boolean isGraph(Object value) {
@@ -285,10 +285,6 @@ public class QueryEditor extends FileEditor {
         }).start();
       }
     }
-  }
-
-  protected void setStyle() {
-    setStyledDocument(new QueryDoc());
   }
 
   private boolean spied(String name) {

@@ -1,5 +1,7 @@
 package ast.types;
 
+import java.util.HashSet;
+
 import env.Env;
 import exp.BoaConstructor;
 
@@ -20,7 +22,9 @@ public class Float extends Type {
   }
 
   public void check(Env<String, Type> env) {
-    
+  }
+
+  public void FV(HashSet<String> vars) {
   }
 
 }

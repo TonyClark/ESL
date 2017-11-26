@@ -1,0 +1,71 @@
+export main;
+
+import 'esl/displays.esl','esl/lists.esl';
+
+type Main    = Act { Time(Int) };                         // Control the simulation.
+type Worker  = Act { export getId::()->Int; Work() };     // Either working or idle.
+data Message = Working(Int) | Idle(Int);                  // Record the states of workers.
+
+act worker(id::Int)::Worker {
+  export getId;
+  getId()::Int = id
+  Work -> {
+    // Do some work and then become idle.
+    grab(messages) messages := messages + [Working(id)];
+    wait(random(10));
+    grab(messages) messages := messages + [Idle(id)]
+  }
+};
+
+range::[Int]        = 0..20;
+workers::[Worker]   = [ new worker(i) | i::Int <- range ];
+limit::Int          = 1000;
+messages::[Message] = [];
+
+act main::Main {
+
+  toText(m::Message)::Str =
+    // Transform a message to text...
+    case m {
+      Working(id::Int) -> id + ' is working.';
+      Idle(id::Int)    -> id + ' is idle.'
+    };
+    
+  getId(m::Message)::Int =
+    // Get an id...
+    case m {
+      Working(id::Int) -> id;
+      Idle(id::Int)    -> id
+    }
+    
+  Time(n::Int) when n < limit -> {
+    // Tell all workers to do something...
+    for w::Worker in workers do {
+      w <- Work
+    }
+  };
+  
+  Time(n::Int) -> {
+    // Transform the messages to a filmstrip of pictures...
+    print[[Message]](messages);
+    edb <- Filmstrip('working',[
+      Picture(1000,100,[Text(50+getId(m)*2,50+getId(m)*2,toText(m),'')]) | m::Message <- messages
+    ]);
+    stopAll()
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,7 @@
 package ast.types;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import ast.binding.Dec;
 import env.Env;
@@ -119,6 +120,13 @@ public class Act extends Type {
 
   public Dec[] getDecs() {
     return decs;
+  }
+
+  public void FV(HashSet<String> vars) {
+    for (Dec dec : decs)
+      dec.FV(vars);
+    for (MessageType handler : handlers)
+      handler.FV(vars);
   }
 
 }

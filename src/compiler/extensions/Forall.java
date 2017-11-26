@@ -1,8 +1,8 @@
 package compiler.extensions;
 
-import ast.AST;
 import ast.binding.Var;
 import ast.data.Apply;
+import ast.general.AST;
 import ast.types.TaggedFun;
 import compiler.DynamicVar;
 import compiler.FrameVar;
@@ -82,7 +82,7 @@ public class Forall extends ApplyOp {
 
     if (pred.getType() instanceof TaggedFun) {
       TaggedFun fun = (TaggedFun) pred.getType();
-      Apply nested = new Apply(getLineStart(), getLineEnd(), fun.getFunLabel(), new Var(-1, -1, predLabel, null), new ast.lists.Head(new Var(-1, -1, listLabel, null)));
+      Apply nested = new Apply(getLineStart(), getLineEnd(), fun.getFunLabel(), new Var(-1, -1, predLabel, null, null), new ast.lists.Head(new Var(-1, -1, listLabel, null, null)));
       nested.compile(locals, dynamics, code, isLast);
     } else {
       // Compile a standard application at this point...

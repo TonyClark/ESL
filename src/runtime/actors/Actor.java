@@ -112,6 +112,7 @@ public class Actor {
   private int               tofs         = 0;                           // Top-of fail-stack.
   private ActorQueryMachine machine      = null;                        // Each actor has a query machine.
   private int               line;                                       // Current source-position.
+  private Thread            thread       = null;                        // My thread.
 
   public Actor() {
   }
@@ -236,8 +237,13 @@ public class Actor {
     }
   }
 
-  void die() {
+  public void die() {
     state = ActorState.DEAD;
+    thread.interrupt();
+  }
+
+  public Thread getThread() {
+    return thread;
   }
 
   public Dynamic dynamicRef(Key name) {
@@ -395,7 +401,7 @@ public class Actor {
             messageQueue.wait();
             dequeueMessage();
           } catch (InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
           }
         } else dequeueMessage();
       }
@@ -1064,7 +1070,7 @@ public class Actor {
   }
 
   public void run() {
-    Thread t = new Thread(new Runnable() {
+    thread = new Thread(new Runnable() {
       public void run() {
         try {
           execute();
@@ -1074,7 +1080,7 @@ public class Actor {
         }
       }
     });
-    t.start();
+    thread.start();
   }
 
   public void send(Actor source, String name, Object[] values) {

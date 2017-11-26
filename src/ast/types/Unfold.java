@@ -1,5 +1,7 @@
 package ast.types;
 
+import java.util.HashSet;
+
 import env.Env;
 import exp.BoaConstructor;
 
@@ -34,6 +36,10 @@ public class Unfold extends Type {
 
   public void check(Env<String, Type> env) {
     type.check(env);
+  }
+
+  public void FV(HashSet<String> vars) {
+    type.FV(vars);
   }
 
 }

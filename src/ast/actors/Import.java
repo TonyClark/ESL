@@ -1,10 +1,10 @@
 package ast.actors;
 
-import ast.AST;
 import ast.binding.Binding;
 import ast.binding.Dec;
 import ast.binding.declarations.DecContainer;
 import ast.binding.declarations.DeclaringLocation;
+import ast.general.AST;
 import ast.modules.Module;
 import exp.BoaConstructor;
 import values.Located;

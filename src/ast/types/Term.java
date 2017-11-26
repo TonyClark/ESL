@@ -1,6 +1,7 @@
 package ast.types;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import env.Env;
 import exp.BoaConstructor;
@@ -53,6 +54,11 @@ public class Term extends Type {
 
   public int getArity() {
     return types.length;
+  }
+
+  public void FV(HashSet<String> vars) {
+    for(Type type : types)
+      type.FV(vars);
   }
 
 }

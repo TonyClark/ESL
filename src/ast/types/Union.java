@@ -1,6 +1,7 @@
 package ast.types;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import env.Env;
 import exp.BoaConstructor;
@@ -70,6 +71,11 @@ public class Union extends Type {
   public void check(Env<String, Type> env) {
     for(Term term : terms)
       term.check(env);
+  }
+
+  public void FV(HashSet<String> vars) {
+    for(Term term : terms)
+      term.FV(vars);
   }
 
 }

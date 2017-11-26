@@ -1,8 +1,9 @@
 package ast.types;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
-import ast.AST;
+import ast.general.AST;
 import ast.query.TypeDec;
 import ast.query.rules.RuleBase;
 import env.Env;
@@ -69,6 +70,10 @@ public class Rules extends Type {
       if (dec.getName().equals(name) && dec.getArity() == arity) return dec.getType();
     }
     return null;
+  }
+
+  public void FV(HashSet<String> vars) {
+    // Not sure what to do here.
   }
 
 }

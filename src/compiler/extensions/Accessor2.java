@@ -1,6 +1,6 @@
 package compiler.extensions;
 
-import ast.AST;
+import ast.general.AST;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import instrs.ops.TermRef;

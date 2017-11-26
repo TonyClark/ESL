@@ -1,4 +1,4 @@
-export adjoin,select1,map,remove,remove1,length,flatten,count,hasPrefix,nth,take,drop,subst,head,tail,isNil,member,reverse,exists,forall,replaceNth,indexOf,select,last,occurrences,filter;
+export adjoin,select1,map,remove,remove1,length,flatten,count,hasPrefix,nth,take,drop,subst,head,tail,isNil,member,reverse,exists,forall,replaceNth,indexOf,select,foldr,last,butlast,occurrences,filter,sum,removeDups,getEntry,hasEntry,lookup,prefixes;
 
 adjoin[T](x::T,l::[T])::[T] =
   if member[T](x,l)
@@ -36,7 +36,7 @@ remove1[T](v::T,l::[T])::[T] =
     h::T;
     t::[T];
     h:t when (h=v) -> t;
-    h:t        -> h:remove[T](v,t);
+    h:t        -> h:remove1[T](v,t);
     []         -> [][T]
   };
 
@@ -65,8 +65,10 @@ setLength[T](s::Set{T})::Int =
     set{h|t} -> 1 + setLength[T](t);
     set{}[T] -> 0
   };
+
+flatten::Forall[T]([[T]])->[T] = builtin[Forall[T] ([[T]])->[T]]('runtime.actors.Builtins','flatten',1);
       
-flatten[T](lists::[[T]])::[T] =
+flattenSemantics[T](lists::[[T]])::[T] =
   case lists {
     h::[T];
     t::[[T]];
@@ -183,8 +185,10 @@ forall::Forall[T]((T)->Bool,[T])[compiler.extensions.Forall]->Bool = fun(pred::(
     x::T:xs::[T] when pred(x) -> forall[T](pred,xs);
     x::T:xs::[T] -> false
   };
+  
+replaceNth::Forall[T] ([T],Int,T)->[T] = builtin[Forall[T] ([T],Int,T)->[T]]('runtime.actors.Builtins','replaceNth',3);
 
-replaceNth[T](l::[T],n::Int,x::T)::[T] = 
+replaceNthSemantics[T](l::[T],n::Int,x::T)::[T] = 
   case l {
     [][T] -> throw[[T]]('cannot replace nth of []');
     h::T:t::[T] when n=0 -> x:t;
@@ -204,12 +208,24 @@ select[T](p::(T)->Bool,l::[T])::[T] =
     h::T:t::[T] when p(h) -> h:select[T](p,t);
     h::T:t::[T] -> select[T](p,t)
   };
+  
+last::Forall[T]([T])->T = builtin[Forall[T]([T])->T]('runtime.actors.Builtins','last',1);
 
-last[T](l::[T])::T =
+lastSemantics[T](l::[T])::T =
   case l {
     [][T] -> throw [T]('cannot find last element of emply list');
     x::T:[][T] -> x;
     h::T:l::[T] -> last[T](l)
+  };
+  
+butlast::Forall[T]([T])->[T] = builtin[Forall[T]([T])->[T]]('runtime.actors.Builtins','butlast',1);
+
+
+butlastSemantics[T](l::[T])::[T] =
+  case l {
+    [][T] -> [][T];
+    [x::T] -> [][T];
+    h::T:l::[T] -> h:butlast[T](l)
   };
 
 occurrences[T](x::T,l::[T])::Int =
@@ -226,7 +242,55 @@ filter[T](pred::(T)->Bool,l::[T])::[T] =
       if pred(h) 
       then h:filter[T](pred,t) 
       else filter[T](pred,t)
-  }
+  };
+  
+foldr[M,N](map::(M)->N,op::(N,N)->N,empty::N,list::[M])::N =
+  case list {
+    [] -> empty;
+    h::M:t::[M] -> op(map(h),foldr[M,N](map,op,empty,t))
+  };
+  
+id[T]::(T)->T = fun(x::T)::T x;
+  
+sum(list::[Int])::Int = foldr[Int,Int](id[Int],fun(x::Int,y::Int)::Int x + y,0,list);
+
+removeDups[T](list::[T])::[T] =
+  case list {
+    [] -> [];
+    x::T:l::[T] -> x:removeDups[T](remove[T](x,l))
+  };
+  
+getEntry[Key,Value](k::Key,table::[TableEntry(Key,Value)])::TableEntry(Key,Value) =
+  case table {
+    [] -> null;
+    TableEntry(kk::Key,vv::Value):table::[TableEntry(Key,Value)] ->
+      if kk = k
+      then TableEntry(kk,vv)
+      else getEntry[Key,Value](k,table)
+  };
+  
+hasEntry[Key,Value](k::Key,table::[TableEntry(Key,Value)])::Bool = getEntry[Key,Value](k,table) <> null;
+  
+lookup[Key,Value](k::Key,table::[TableEntry(Key,Value)])::Value = 
+  case getEntry[Key,Value](k,table) {
+    null -> throw[Value]('no value in table');
+    TableEntry(kk::Key,vv::Value) -> vv
+  };
+  
+prefixes[T](l::[T])::[[T]] =
+  letrec pre(prefixes::[[T]],rest::[T])::[[T]] = { print[[T]](rest);
+    if rest = []
+    then prefixes
+    else pre(prefixes + [ last[[T]](prefixes)+[head[T](rest)] ],tail[T](rest)) }
+  in pre([[]],l)
+
+
+
+
+
+
+
+
 
 
 

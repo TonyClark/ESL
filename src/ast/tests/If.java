@@ -2,8 +2,8 @@ package ast.tests;
 
 import java.util.HashSet;
 
-import ast.AST;
 import ast.data.Bool;
+import ast.general.AST;
 import ast.types.Type;
 import ast.types.TypeError;
 import ast.types.TypeMatchError;

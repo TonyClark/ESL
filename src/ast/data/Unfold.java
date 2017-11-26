@@ -3,8 +3,8 @@ package ast.data;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import ast.AST;
 import ast.binding.Var;
+import ast.general.AST;
 import ast.types.Rec;
 import ast.types.Type;
 import ast.types.TypeError;

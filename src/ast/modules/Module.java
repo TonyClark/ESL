@@ -5,8 +5,8 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.Vector;
 
-import ast.AST;
 import ast.TreeNode;
 import ast.actors.Act;
 import ast.actors.Export;
@@ -15,17 +15,22 @@ import ast.actors.Import;
 import ast.actors.Imports;
 import ast.binding.Binding;
 import ast.binding.Dec;
+import ast.binding.FunBind;
 import ast.binding.Letrec;
 import ast.binding.Var;
 import ast.binding.declarations.DecContainer;
 import ast.binding.declarations.DeclaringLocation;
 import ast.data.Fun;
 import ast.data.Record;
+import ast.general.AST;
+import ast.general.WalkReferences;
+import ast.general.WalkType;
 import ast.spec.BRule;
 import ast.spec.Spec;
 import ast.spec.State;
 import ast.spec.StateDef;
 import ast.spec.VarDec;
+import ast.tests.BArm;
 import ast.types.MessageType;
 import ast.types.Type;
 import ast.types.TypeError;
@@ -198,7 +203,7 @@ public class Module implements TreeNode, LocationContainer, DecContainer {
 
     Binding[] bindings = allBindings();
 
-    return new Letrec(1, 1, bindings, new Var(1, 1, name, null));
+    return new Letrec(1, 1, bindings, new Var(1, 1, name, null, null));
   }
 
   public String[] exportedTypeNames() {
@@ -273,7 +278,7 @@ public class Module implements TreeNode, LocationContainer, DecContainer {
       if (!binding.isTypeBinding()) {
         if (binding == null) throw new Error("cannot find exported definition: " + name);
         Type type = binding.getDeclaredType();
-        fields[fieldIndex++] = new Binding(-1, -1, path, name, type, new Var(-1, -1, exports.getNames()[i].getName(), null));
+        fields[fieldIndex++] = new Binding(-1, -1, path, name, type, new Var(-1, -1, exports.getNames()[i].getName(), null, null));
       }
     }
     return new Record(-1, -1, fields);
@@ -592,6 +597,43 @@ public class Module implements TreeNode, LocationContainer, DecContainer {
     for (Binding b : getDefs())
       if (b.isValueBinding()) valueBindings[i++] = b;
     return valueBindings;
+  }
+
+  public void trace(Vector<FunBind> tracedFuns, Vector<BArm> tracedArms, Vector<Act> tracedActs) {
+    AST.walk((o) ->
+    {
+      if (o instanceof FunBind) {
+        FunBind funBind = (FunBind) o;
+        for (FunBind f : tracedFuns) {
+          if (f.getLineStart() == funBind.getLineStart() && f.getLineEnd() == funBind.getLineEnd()) funBind.setTraced(true);
+        }
+      }
+      if (o instanceof BArm) {
+        BArm arm = (BArm) o;
+        for (BArm a : tracedArms) {
+          if (a.getLineStart() == arm.getLineStart() && a.getLineEnd() == arm.getLineEnd()) arm.setTraced(true);
+        }
+      }
+    }, (o) ->
+    {
+    }, this);
+  }
+
+  public Vector<Warning> check() {
+
+    // Check that all declarations are referenced. If not then supply a warning...
+
+    WalkType walker = new WalkType(DeclaringLocation.class);
+    Vector<Warning> warnings = new Vector<Warning>();
+    walker.walk(this, new Empty<String, Type>());
+    for (DeclaringLocation dec : (Vector<DeclaringLocation>) walker.getReferences()) {
+      WalkReferences walker2 = new WalkReferences(dec);
+      walker2.walk(this, new Empty<String, Type>());
+      if (walker2.getReferences().size() == 0) {
+        warnings.add(new Warning(dec.getLineStart(), dec.getLineEnd(), "unused declaration for " + dec.getName()));
+      }
+    }
+    return warnings;
   }
 
 }

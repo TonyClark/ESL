@@ -3,9 +3,9 @@ package ast.data;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import ast.AST;
 import ast.binding.Dec;
-import ast.types.Forall;
+import ast.binding.Var;
+import ast.general.AST;
 import ast.types.Type;
 import ast.types.TypeMatchError;
 import compiler.DynamicVar;
@@ -14,6 +14,7 @@ import env.Env;
 import exp.BoaConstructor;
 import instrs.apply.ApplyFun;
 import instrs.apply.Return;
+import instrs.debug.EnterTracedFun;
 import instrs.vars.NewDynamic;
 import list.List;
 import list.Nil;
@@ -29,23 +30,25 @@ public class Fun extends AST {
     return "fun" + (funCount++);
   }
 
-  public String path;
-  public AST    name;
-  public Dec[]  args;
-  public Type   declaredType;
+  public String   path;
+  public AST      name;
+  public Dec[]    args;
+  public Type     declaredType;
+  public AST      body;
 
-  public AST    body;
+  private boolean traced = false;
 
   public Fun() {
   }
 
-  public Fun(int lineStart, int lineEnd, String path, AST name, Dec[] args, Type declaredType, AST body) {
+  public Fun(int lineStart, int lineEnd, String path, AST name, Dec[] args, Type declaredType, AST body, boolean traced) {
     super(lineStart, lineEnd);
     this.path = path;
     this.name = name;
     this.args = args;
     this.declaredType = declaredType;
     this.body = body;
+    this.traced = traced;
   }
 
   private int argIndex(String arg) {
@@ -100,6 +103,14 @@ public class Fun extends AST {
       } else locals = locals.cons(new FrameVar(arg.getName(), index));
       index++;
     }
+    if (traced) {
+      for (Dec arg : args) {
+        Var var = new Var(arg.getLineStart(), arg.getLineEnd(), arg.getName(), arg.getDeclaredType(), arg);
+        var.compile(locals, dynamics, bodyCode, isLast);
+      }
+      name.compile(locals, dynamics, bodyCode, isLast);
+      bodyCode.add(new EnterTracedFun(getLineStart(), args.length), locals, dynamics);
+    }
     body.compile(locals, dynamics, bodyCode, true);
     bodyCode.add(new Return(getLineStart()), locals, dynamics);
   }
@@ -138,7 +149,7 @@ public class Fun extends AST {
   public AST subst(AST ast, String name) {
     if (binds(name))
       return this;
-    else return new Fun(getLineStart(), getLineEnd(), path, this.name.subst(ast, name), args, declaredType, body.subst(ast, name));
+    else return new Fun(getLineStart(), getLineEnd(), path, this.name.subst(ast, name), args, declaredType, body.subst(ast, name), traced);
   }
 
   public String toString() {
@@ -152,6 +163,7 @@ public class Fun extends AST {
       Type argType = args[i].getDeclaredType();
       env = env.bind(args[i].getName(), argType);
       domain[i] = argType;
+      args[i].setType(argType);
     }
     Type dType = declaredType;
     Type bType = new ast.types.Fun(declaredType.getLineStart(), declaredType.getLineEnd(), domain, body.type(env));

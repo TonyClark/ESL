@@ -1,6 +1,6 @@
 package ast.actors;
 
-import ast.AST;
+import ast.general.AST;
 
 public abstract class DynamicRef  extends AST {
 

@@ -1,5 +1,7 @@
 package ast.types;
 
+import java.util.HashSet;
+
 import ast.binding.Dec;
 import ast.patterns.Pattern;
 import env.Env;
@@ -61,6 +63,12 @@ public class Fun extends Type {
   public void check(Env<String, Type> env) {
     for(Type type : domain) type.check(env);
     range.check(env);
+  }
+
+  public void FV(HashSet<String> vars) {
+    for(Type type : domain)
+      type.FV(vars);
+    range.FV(vars);
   }
 
 }

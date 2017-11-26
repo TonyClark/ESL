@@ -1,6 +1,7 @@
 package ast.types;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import env.Env;
 import exp.BoaConstructor;
@@ -86,6 +87,11 @@ public class MessageType implements Located {
   public void check(Env<String, Type> env) {
     for(Type type : types)
       type.check(env);
+  }
+
+  public void FV(HashSet<String> vars) {
+    for(Type type : types)
+      type.FV(vars);
   }
 
 }

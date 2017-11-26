@@ -1,50 +1,27 @@
 export main;
 
+import 'esl/lists.esl';
+
 type Main = Act { Time(Int) };
 
-totalValue :: Int = 50;
-assignValue::Int= 100;
-maxTime::Int= 5;
-state::StateOne() = StateOne;
+//l::[Int] = [ x | x::Int <- 0..10 ];
 
 act main::Main {
  	
- 	Time(n::Int) when (n > maxTime) -> {
-   		stopAll()
-   
-   };
- 
-   Time(n::Int) -> {
-   
-   	//let statement within a case block gives the problem. let used without a case block doesn't gives problem.
-   
-  	case state {
-    	StateOne -> { 
-   			print[Str] (' No problem here ' + (totalValue /2));
-    		let localValue::Int = assignValue in {
-  				print[Bool] (false); // statement 1
-   				print[Str]('90'); // statement 2 
- 
-   				// Getting error - java.lang.Error: do not know how to < 16 and 90 if statement 2 is uncommented
- 
-   				if (localValue < (totalValue/3 ))
-				then {  //the result of previous statement is being pushed onto stack, and last pushed value is used in the next computations hence the illegal comparison is produced as an error.
-   					print[Str] ('A')
-   				}
-   				else if(localValue < ( totalValue)) then {
-   					print[Str] ('B')
-   				}
-   				else {
-   				 	print[Str] ('C')
-   				} 
- 
-   		 	} //let
-   		} //StateOne
-   	 } //case
-   	 
+  Time(n::Int) -> {
+     print[Int](length[Int]([ x | x::Int <- 0..100000 ])); 
+     stopAll() 
    }
    
+   
 }
+
+
+
+
+
+
+
 
 
 

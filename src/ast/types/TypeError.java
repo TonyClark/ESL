@@ -1,6 +1,6 @@
 package ast.types;
 
-import ast.AST;
+import ast.general.AST;
 import values.Located;
 
 public class TypeError extends Error implements Located {

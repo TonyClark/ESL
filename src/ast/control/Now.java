@@ -2,7 +2,7 @@ package ast.control;
 
 import java.util.HashSet;
 
-import ast.AST;
+import ast.general.AST;
 import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;

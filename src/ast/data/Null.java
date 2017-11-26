@@ -2,7 +2,7 @@ package ast.data;
 
 import java.util.HashSet;
 
-import ast.AST;
+import ast.general.AST;
 import ast.types.Type;
 import ast.types.TypeMatchError;
 import compiler.DynamicVar;
@@ -49,7 +49,7 @@ public class Null extends AST {
   }
 
   public String getLabel() {
-    return  "null";
+    return "null";
   }
 
 }

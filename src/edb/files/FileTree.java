@@ -345,7 +345,9 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
 
   public void mouseClicked(MouseEvent e) {
     if (e.getClickCount() > 1) {
-      edb.openFile(getSelectedPath());
+      String path = getSelectedPath();
+      if (path.endsWith(".pdf")) path = "file:" + new File(path).getAbsolutePath();
+      edb.openFile(path);
     }
   }
 
@@ -391,7 +393,7 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
       public void actionPerformed(ActionEvent e) {
         if (edb.isDirty(path))
           System.out.println("Save " + path + " before loading.");
-        else edb.load(path,"");
+        else edb.load(path, "", edb.tracedFuns(path), edb.tracedMessages(path), edb.tracedActs(path));
       }
     });
     JMenuItem delete = new JMenuItem("Delete");

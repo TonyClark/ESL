@@ -2,7 +2,7 @@ package ast.cmp;
 
 import java.util.HashSet;
 
-import ast.AST;
+import ast.general.AST;
 import ast.lists.Map;
 import ast.patterns.Pattern;
 import ast.types.Type;
@@ -24,33 +24,51 @@ public class BQual extends Qualifier {
     super(lineStart, lineEnd);
   }
 
-  public String toString() {
-    return "BQual(" + pattern + "," + exp + ")";
-  }
-
-  public void FV(HashSet<String> vars) {
-    exp.FV(vars);
-  }
-
-  public void vars(HashSet<String> vars) {
-    pattern.vars(vars);
-  }
-
-  public AST desugar(AST value) {
-    return new Map(getLineStart(), getLineEnd(), "", pattern, exp, value);
-  }
-
-  public void setPath(String path) {
-    exp.setPath(path);
+  public BQual(int lineStart, int lineEnd, Pattern pattern, AST exp) {
+    super(lineStart, lineEnd);
+    this.pattern = pattern;
+    this.exp = exp;
   }
 
   public Env<String, Type> bind(Env<String, Type> env) {
     Type type = exp.type(env);
     if (type instanceof ast.types.List) {
       ast.types.List list = (ast.types.List) type;
-      env = pattern.bind(env, Type.eval(list.getType(),env));
+      env = pattern.bind(env, Type.eval(list.getType(), env));
       return env;
     } else throw new TypeError(exp.getLineStart(), exp.getLineEnd(), "expecting a list type " + type);
+  }
+
+  public AST desugar(AST value) {
+    return new Map(getLineStart(), getLineEnd(), "", pattern, exp, value);
+  }
+
+  public void FV(HashSet<String> vars) {
+    exp.FV(vars);
+  }
+
+  public AST getExp() {
+    return exp;
+  }
+
+  public Pattern getPattern() {
+    return pattern;
+  }
+
+  public void setPath(String path) {
+    exp.setPath(path);
+  }
+
+  public String toString() {
+    return "BQual(" + pattern + "," + exp + ")";
+  }
+
+  public void vars(HashSet<String> vars) {
+    pattern.vars(vars);
+  }
+
+  public Qualifier subst(AST ast, String name) {
+    return new BQual(getLineStart(), getLineEnd(), pattern, exp.subst(ast, name));
   }
 
 }

@@ -1,6 +1,6 @@
-export Act,ActorDynamicRef,ActType,Apply,ApplyType,ApplyTypeFun,Bag,BagType,Become,Binding,BinExp,Block,BArm,Bool,BoolType,BQual,Case,Cmp,CnstrBind,Configuration,ConfigBind,DataBind,Dec,Export,ExportedName,Float,FloatType,Fold,Fun,FunBind,FunType,Find,For,Forall,Grab,HandlerType,If,Import,Imports,Int,IntType,KB,KBType,Key,Let,Letrec,List,ListType,Map,MessageType,Module,New,NewJava,Not,Now,Null,NullType,Parameters,PAdd,PApplyType,PEmptyBag,PEmptySet,PBagCons,PBind,PBool,PCons,PInt,PNil,PNull,POr,PStr,PSetCons,PQual,PTerm,PVar,PWild,RecType,Ref,Rules,RuleTypeDec,Self,Send,Set,SetType,Show,Str,StrType,TaggedFunType,Term,TermType,Throw,Try,TypeBind,TypeUnion,TypeVar,Unfold,UnfoldType,UnionRef,Update,Var,VarDynamicRef,VoidType
+export AST,Act,ActorDynamicRef,ActType,Apply,ApplyType,ApplyTypeFun,Bag,BagType,Become,Binding,BinExp,Block,BArm,Bool,BoolType,BQual,Case,Cmp,CnstrBind,Configuration,ConfigBind,DataBind,Dec,Export,ExportedName,Float,FloatType,Fold,Fun,FunBind,FunType,Find,For,Forall,Grab,HandlerType,If,Import,Imports,Int,IntType,KB,KBType,Key,Let,Letrec,List,ListType,Map,MessageType,Module,New,NewJava,Not,Now,Null,NullType,Parameters,PAdd,PApplyType,PEmptyBag,PEmptySet,PBagCons,PBind,PBool,PCons,PInt,PNil,PNull,POr,PStr,PSetCons,PQual,PTerm,PVar,PWild,RecType,Ref,Rules,RuleTypeDec,Self,Send,Set,SetType,Show,Str,StrType,TaggedFunType,Term,TermType,Throw,Try,TypeBind,TypeUnion,TypeVar,Unfold,UnfoldType,UnionRef,Update,Var,VarDynamicRef,VoidType
 
-
+AST                 = 'ast.general.AST'.java()
 Act                 = 'ast.actors.Act'.java()
 ActorDynamicRef     = 'ast.actors.ActorDynamicRef'.java()
 ActType             = 'ast.types.Act'.java()

@@ -1,5 +1,7 @@
 package ast.types;
 
+import java.util.HashSet;
+
 import env.Env;
 import exp.BoaConstructor;
 
@@ -49,5 +51,9 @@ public class UnionRef extends Type {
 			if (!union.hasCnstr(name)) throw new TypeError(getLineStart(), getLineEnd(), "no field constructor named " + name);
 		} else throw new TypeError(getLineStart(), getLineEnd(), "expecting a union type.");
 	}
+
+  public void FV(HashSet<String> vars) {
+    type.FV(vars);
+  }
 
 }

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import ast.binding.Dec;
 import ast.types.Forall;
 import ast.types.MessageType;
+import ast.types.Term;
 import ast.types.Type;
 import ast.types.Union;
 import compiler.DynamicVar;
@@ -161,6 +162,7 @@ public class Builtins {
     Type Void = ast.types.Void.VOID;
     Type Int = ast.types.Int.INT;
     Type T = new ast.types.Var(-1, -1, "T", null);
+    Type TreeElement = new ast.types.Var(-1, -1, "TreeElement", null);
     Type List_T = new ast.types.List(-1, -1, T);
     Type[] none = new Type[] {};
     Type fun0_to_T = new ast.types.Fun(-1, -1, none, T);
@@ -186,12 +188,20 @@ public class Builtins {
     ast.types.Term Edge = new ast.types.Term(-1, -1, "Edge", new ast.types.Type[] { Props, Int, Int, T });
     Type Nodes = new ast.types.List(-1, -1, Node);
     Type Edges = new ast.types.List(-1, -1, Edge);
+    ast.types.Term TreeNode = new ast.types.Term(-1, -1, "TreeNode", new ast.types.Type[] { PictElement });
+    ast.types.Term VBox = new ast.types.Term(-1, -1, "VBox", new ast.types.Type[] { Props, new ast.types.List(-1, -1, TreeElement) });
+    ast.types.Term HBox = new ast.types.Term(-1, -1, "HBox", new ast.types.Type[] { Props, new ast.types.List(-1, -1, TreeElement) });
+    ast.types.Term Padding = new ast.types.Term(-1, -1, "Padding", new ast.types.Type[] { Props });
+    ast.types.Term LabelledTree = new ast.types.Term(-1, -1, "LabelledTree", new ast.types.Type[] { Str, TreeElement });
     ast.types.Term Graph = new ast.types.Term(-1, -1, "Graph", new ast.types.Type[] { Props, Nodes, Edges });
     Type Data = new ast.types.Term(-1, -1, "Data", new ast.types.Type[] { Props, T });
     Type Row = new ast.types.Term(-1, -1, "Row", new ast.types.Type[] { Props, new ast.types.List(-1, -1, Data) });
     ast.types.Term Table = new ast.types.Term(-1, -1, "Table", new ast.types.Type[] { Props, new ast.types.List(-1, -1, Row) });
-    Type Display = new ast.types.Rec(-1, -1, "T", new Union(-1, -1, new ast.types.Term[] { Table, HTML, Pie, Picture, Sequence, Graph }));
+    Type TreeEl = new ast.types.Rec(-1, -1, "TreeElement", new Union(-1, -1, new ast.types.Term[] { TreeNode, VBox, HBox, Padding, LabelledTree }));
+    Term Tree = new ast.types.Term(-1, -1, "Tree", new ast.types.Type[] { Int, Int, TreeEl });
+    Type Display = new ast.types.Rec(-1, -1, "T", new Union(-1, -1, new ast.types.Term[] { Table, HTML, Pie, Picture, Sequence, Graph, Tree }));
     Type Displays = new ast.types.List(-1, -1, Display);
+    Dec serialize = new Dec(-1, -1, "", "serialize", new Forall(-1, -1, new String[] { "T" }, new ast.types.Fun(-1, -1, new Type[] { T, Str }, T)));
     Dec saveHistory = new Dec(-1, -1, "", "saveHistory", new ast.types.Fun(-1, -1, new Type[] { Str }, Void));
     Dec saveState = new Dec(-1, -1, "", "saveState", new ast.types.Fun(-1, -1, new Type[] { Str }, Void));
     Type circlePos = new ast.types.Fun(-1, -1, new Type[] { Int, Int, Int, Int }, Point);
@@ -201,7 +211,7 @@ public class Builtins {
     MessageType Filmstrip = new MessageType(-1, -1, new Type[] { new ast.types.Term(-1, -1, "Filmstrip", new Type[] { Str, Displays }) });
     MessageType AddBL = new MessageType(-1, -1, new Type[] { new ast.types.Term(-1, -1, "AddBrowserListener", new Type[] { BrowserListener }) });
     Dec math = new Dec(-1, -1, "", "math", new ast.types.Record(-1, -1, new ast.types.Field[] { new ast.types.Field(-1, -1, "circlePos", circlePos) }));
-    Type edb = new ast.types.Act(-1, -1, new Dec[] { saveHistory, saveState, math }, new MessageType[] { Show, Filmstrip, AddBL });
+    Type edb = new ast.types.Act(-1, -1, new Dec[] { saveHistory, saveState, math, serialize }, new MessageType[] { Show, Filmstrip, AddBL });
     Env<String, Type> env = new Empty<String, Type>();
     env = env.bind("print", new Forall(-1, -1, new String[] { "T" }, new ast.types.Fun(-1, -1, new Type[] { T }, Void)));
     env = env.bind("stopAll", new ast.types.Fun(-1, -1, new Type[0], Void));
@@ -280,6 +290,14 @@ public class Builtins {
     return list.length();
   }
 
+  public static <T> T last(List<T> list) {
+    return list.last();
+  }
+
+  public static <T> List<T> butlast(List<T> list) {
+    return list.butlast();
+  }
+
   public static boolean member(Object x, List<?> l) {
     if (l.isNil())
       return false;
@@ -292,10 +310,30 @@ public class Builtins {
     return list.nth(n);
   }
 
+  public static <T> List<T> replaceNth(List<T> list, int n, T x) {
+    return list.update(n, x);
+  }
+
+  public static <T> List<T> flatten(List<List<T>> list) {
+    return List.flatten(list);
+  }
+
   public static Object pp(Object x) {
     // This is an example static that is used by a builtin created from ESL.
     System.out.println(x);
     return x;
+  }
+
+  public static Object intToFloat(Object x) {
+    if (x instanceof Integer)
+      return (double) ((int) x);
+    else throw new Error("expecting an integer: " + x);
+  }
+
+  public static Object round(Object x) {
+    if (x instanceof Double)
+      return (int) ((double) x);
+    else throw new Error("expecting a float: " + x);
   }
 
   public static void print(Actor actor, int arity) {

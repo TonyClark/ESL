@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
-import ast.AST;
 import ast.binding.Dec;
+import ast.general.AST;
 import ast.patterns.PCons;
 import ast.patterns.PNil;
 import ast.patterns.Pattern;

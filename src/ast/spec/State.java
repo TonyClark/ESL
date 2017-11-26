@@ -3,6 +3,7 @@ package ast.spec;
 import java.util.Arrays;
 
 import ast.TreeNode;
+import ast.general.AST;
 import exp.BoaConstructor;
 import values.Located;
 
@@ -13,7 +14,7 @@ public class State implements Located, TreeNode {
   public StateDef[] states;
 
   int               start = -1;
-  int               end = -1;
+  int               end   = -1;
 
   public State() {
   }

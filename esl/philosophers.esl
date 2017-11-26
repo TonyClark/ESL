@@ -12,8 +12,8 @@ import 'esl/lists.esl', 'esl/displays.esl';
 // The simulation is controlled by the following variables...
 
 timeLimit::Int            = 4000;     // The length of time to run the simulation.
-canDeadlock::Bool         = false;  // Select the strategy for co-ordination.
-numberOfPhilosophers::Int = 20;     // The number of philosophers (and therefore chopsticks).
+canDeadlock::Bool         = true;  // Select the strategy for co-ordination.
+numberOfPhilosophers::Int = 10;     // The number of philosophers (and therefore chopsticks).
 eatTime::Int              = 50;    // Limit on random delay for eating.     
 thinkTime::Int            = 50;    // Limit on random delay for thinking.     
 
@@ -75,8 +75,10 @@ history :: [ Action ] = []; // A history of actions is built-up as the simulatio
 
 // GUI definitions...
 
-eatingIcon::Str = 'http://megaicons.net/static/img/icons_sizes/177/790/256/eat-icon.png';
-thinkingIcon::Str = 'http://files.softicons.com/download/web-icons/very-emotional-emoticons-2-by-artdesigner.lv/png/128x128/Emoticon_40.png';
+//eatingIcon::Str = 'http://megaicons.net/static/img/icons_sizes/177/790/256/eat-icon.png';
+//thinkingIcon::Str = 'http://files.softicons.com/download/web-icons/very-emotional-emoticons-2-by-artdesigner.lv/png/128x128/Emoticon_40.png';
+eatingIcon::Str = 'http://files.softicons.com/download/web-icons/very-emotional-emoticons-2-by-artdesigner.lv/png/128x128/Emoticon_12.png';
+thinkingIcon::Str = 'http://files.softicons.com/download/web-icons/very-emotional-emoticons-2-by-artdesigner.lv/png/128x128/Emoticon_32.png';
 redLine::Str = 'stroke:rgb(255,0,0);stroke-width:2;marker-end:url(#RedTriangle);';
 unfilled::Str = 'stroke:black; fill-opacity:0;';
 filled::Str = '';
@@ -269,6 +271,21 @@ act main::Main {
   };
   Time(n::Int) -> { }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

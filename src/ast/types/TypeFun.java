@@ -1,6 +1,7 @@
 package ast.types;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import ast.binding.Dec;
 import ast.binding.declarations.DecContainer;
@@ -77,6 +78,10 @@ public class TypeFun extends Type implements DecContainer  {
     for(String name : names)
       env = env.bind(name, Void.VOID);
     type.check(env);
+  }
+
+  public void FV(HashSet<String> vars) {
+    type.FV(vars);
   }
 
 }

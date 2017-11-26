@@ -2,7 +2,7 @@ package ast.query.rules;
 
 import java.util.Arrays;
 
-import ast.AST;
+import ast.general.AST;
 import ast.query.QueryError;
 import ast.query.body.BodyElement;
 import ast.query.body.Call;

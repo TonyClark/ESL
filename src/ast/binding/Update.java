@@ -2,10 +2,10 @@ package ast.binding;
 
 import java.util.HashSet;
 
-import ast.AST;
 import ast.actors.Act;
 import ast.data.BinExp;
 import ast.data.Int;
+import ast.general.AST;
 import ast.types.Type;
 import ast.types.TypeError;
 import ast.types.TypeMatchError;

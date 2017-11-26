@@ -4,6 +4,11 @@ type Main = Act { Time(Int) };
  
 type Test = Act { X(Int); Y(); Stop() };
 
+type A = union { Spam(), Plap(A) };
+
+cnstr Spam = unfold[A].Spam;
+cnstr Plap = unfold[A].Plap;
+
 count::Int = 0;
 
 updateCount(x::Int)::Void = 
@@ -24,7 +29,7 @@ act test::Test {
   
   Y -> case 1,2 { 1,2 -> {} };
   
-  Stop -> { print[Int](count); stopAll() }
+  Stop -> { print[Int](count); print[[A]]([Spam,Plap(Spam)]); stopAll() }
   
 };
 
@@ -41,14 +46,5 @@ act main::Main {
   Time(n::Int) -> {}
   
 }
-
-
-
-
-
-
-
-
-
 
 

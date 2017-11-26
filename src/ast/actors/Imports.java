@@ -2,9 +2,9 @@ package ast.actors;
 
 import java.util.Arrays;
 
-import ast.AST;
 import ast.binding.declarations.DecContainer;
 import ast.binding.declarations.DeclaringLocation;
+import ast.general.AST;
 import exp.BoaConstructor;
 import values.Located;
 

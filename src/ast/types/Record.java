@@ -1,5 +1,7 @@
 package ast.types;
 
+import java.util.HashSet;
+
 import env.Env;
 import exp.BoaConstructor;
 
@@ -55,6 +57,11 @@ public class Record extends Type {
   public void check(Env<String, Type> env) {
     for (Field field : fields)
       field.check(env);
+  }
+
+  public void FV(HashSet<String> vars) {
+    for(Field field : fields)
+      field.getType().FV(vars);
   }
 
 }

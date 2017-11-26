@@ -1,5 +1,7 @@
 package ast.types;
 
+import java.util.HashSet;
+
 import ast.binding.declarations.DeclaringLocation;
 import ast.binding.declarations.ReferencingLocation;
 import env.Env;
@@ -53,5 +55,9 @@ public class Var extends Type implements ReferencingLocation {
 	public void check(Env<String, Type> env) {
 	  if (!env.binds(name)) { throw new TypeError(getLineStart(), getLineEnd(), "unbound type variable " + name); }
 	}
+
+  public void FV(HashSet<String> vars) {
+    vars.add(name);
+  }
 
 }

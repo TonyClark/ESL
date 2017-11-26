@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import ast.AST;
 import ast.binding.TypeBind;
 import ast.binding.declarations.DecContainer;
 import ast.binding.declarations.DeclaringLocation;
+import ast.general.AST;
 import ast.query.TypeDec;
 import ast.query.body.BodyElement;
 import ast.query.body.Call;

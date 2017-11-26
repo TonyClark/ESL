@@ -11,7 +11,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Vector;
 import java.util.logging.Level;
 
@@ -27,8 +29,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import com.teamdev.jxbrowser.chromium.Browser;
-import com.teamdev.jxbrowser.chromium.BrowserPreferences;
-import com.teamdev.jxbrowser.chromium.BrowserType;
 import com.teamdev.jxbrowser.chromium.ContextMenuHandler;
 import com.teamdev.jxbrowser.chromium.ContextMenuParams;
 import com.teamdev.jxbrowser.chromium.DefaultLoadHandler;
@@ -42,10 +42,15 @@ import com.teamdev.jxbrowser.chromium.PrintSettings;
 import com.teamdev.jxbrowser.chromium.PrintStatus;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 
+import ast.actors.Act;
+import ast.binding.FunBind;
 import ast.binding.declarations.DeclaringLocation;
 import ast.modules.Module;
+import ast.tests.BArm;
 import edb.tool.EDB;
+import history.History;
 import runtime.actors.Actor;
+import runtime.data.Term;
 
 public class FileEditors extends EditorTabbedPane {
 
@@ -172,10 +177,6 @@ public class FileEditors extends EditorTabbedPane {
     if (i != -1) this.remove(i);
   }
 
-  private boolean isFileEditorContainer(Component component) {
-    return component != null && (component instanceof JScrollPane || component instanceof EditorContainer);
-  }
-
   private FileEditor getFileEditor(Component component) {
     if (component instanceof JScrollPane) {
       JScrollPane scroller = (JScrollPane) component;
@@ -230,6 +231,22 @@ public class FileEditors extends EditorTabbedPane {
     return false;
   }
 
+  private boolean isFileEditorContainer(Component component) {
+    return component != null && (component instanceof JScrollPane || component instanceof EditorContainer);
+  }
+
+  public void join(FileEditor editor) {
+    String tab = editor.getPath();
+    int index = indexOfTab(tab);
+    if (index != -1) {
+      Component component = getComponentAt(index);
+      if (component instanceof EditorContainer) {
+        EditorContainer container = (EditorContainer) component;
+        container.join();
+      }
+    }
+  }
+
   private void loadESLFile(String path, EDB gui) {
     ESLEditor editor = new ESLEditor(path, gui);
     EditorContainer container = new EditorContainer(editor);
@@ -244,6 +261,10 @@ public class FileEditors extends EditorTabbedPane {
   private void loadFile(String path, EDB gui) {
     if (path.startsWith("http"))
       loadURL(path, gui);
+    else if (path.endsWith(".pdf"))
+      loadURL(path, gui);
+    else if (path.endsWith(".flm"))
+      loadFilmstrip(path, gui);
     else if (path.endsWith(".esl"))
       loadESLFile(path, gui);
     else if (path.endsWith(".html"))
@@ -253,6 +274,33 @@ public class FileEditors extends EditorTabbedPane {
     else if (path.endsWith(".r"))
       loadQueryFile(path, gui);
     else System.out.println("FileEditors.loadFile: unknown type of file: " + path);
+  }
+
+  private void loadFilmstrip(String path, EDB edb) {
+
+    // A filmstrip is a serialized term of the form: Filmstrip(Str,[EDBDisplay])
+    // Inflate it and display it...
+
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        FileInputStream fin;
+        try {
+          System.err.println("[ loading filmstrip " + path + " ]");
+          fin = new FileInputStream(path);
+          ObjectInputStream in = new ObjectInputStream(fin);
+          Object o = in.readObject();
+          in.close();
+          if (o != null && o instanceof Term) {
+            System.err.println("[ got filmstrip " + path + " ]");
+            Term filmstrip = (Term) o;
+            edb.send(filmstrip, 0);
+          } else throw new Error("expecting a filmstrip " + o);
+        } catch (IOException | ClassNotFoundException e) {
+          throw new Error(e.toString());
+        }
+      }
+    });
+
   }
 
   private void loadHTMLFile(final String path, EDB gui) {
@@ -314,7 +362,6 @@ public class FileEditors extends EditorTabbedPane {
           }
         });
         browser.loadURL(path);
-
         addTab(path, view);
         setSelectedIndex(indexOfTab(path));
       }
@@ -354,9 +401,26 @@ public class FileEditors extends EditorTabbedPane {
     if (i != -1) getSelectedFileEditor().resizeFont(amount);
   }
 
+  public void run() {
+    FileEditor editor = getSelectedFileEditor();
+    if (editor != null) editor.run();
+  }
+
   public void selectLine(int line) {
     FileEditor editor = getSelectedFileEditor();
     if (editor != null) editor.selectLine(line);
+  }
+
+  public void showDeclaration(String path, DeclaringLocation dec) {
+    int i = indexOfTab(path);
+    if (i == -1) {
+      loadFile(path, edb);
+      i = indexOfTab(path);
+    }
+    setSelectedIndex(i);
+    FileEditor editor = (FileEditor) getSelectedFileEditor();
+    int index = dec.getLineStart();
+    editor.showTextAt(index);
   }
 
   public synchronized void showHTML(String label, String html, EDB gui) {
@@ -389,18 +453,6 @@ public class FileEditors extends EditorTabbedPane {
     setSelectedIndex(indexOfTab(label));
   }
 
-  public void showDeclaration(String path, DeclaringLocation dec) {
-    int i = indexOfTab(path);
-    if (i == -1) {
-      loadFile(path, edb);
-      i = indexOfTab(path);
-    }
-    setSelectedIndex(i);
-    FileEditor editor = (FileEditor) getSelectedFileEditor();
-    int index = dec.getLineStart();
-    editor.showTextAt(index);
-  }
-
   public void split(FileEditor editor) {
     String tab = editor.getPath();
     int index = indexOfTab(tab);
@@ -413,21 +465,31 @@ public class FileEditors extends EditorTabbedPane {
     }
   }
 
-  public void join(FileEditor editor) {
-    String tab = editor.getPath();
-    int index = indexOfTab(tab);
-    if (index != -1) {
-      Component component = getComponentAt(index);
-      if (component instanceof EditorContainer) {
-        EditorContainer container = (EditorContainer) component;
-        container.join();
-      }
+  public Vector<Act> tracedActs(String path) {
+    int i = indexOfTab(path);
+    if (i != -1) {
+      ESLEditor editor = (ESLEditor) getComponentAt(i);
+      return editor.getTracedActs();
     }
+    return new Vector<Act>();
   }
 
-  public void run() {
-    FileEditor editor = getSelectedFileEditor();
-    if (editor != null) editor.run();
+  public Vector<BArm> tracedArms(String path) {
+    int i = indexOfTab(path);
+    if (i != -1) {
+      ESLEditor editor = (ESLEditor) getComponentAt(i);
+      return editor.getTracedArms();
+    }
+    return new Vector<BArm>();
+  }
+
+  public Vector<FunBind> tracedFuns(String path) {
+    int i = indexOfTab(path);
+    if (i != -1) {
+      ESLEditor editor = (ESLEditor) getComponentAt(i);
+      return editor.getTracedFuns();
+    }
+    return new Vector<FunBind>();
   }
 
 }

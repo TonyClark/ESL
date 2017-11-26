@@ -3,8 +3,8 @@ package ast.data;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import ast.AST;
 import ast.binding.Binding;
+import ast.general.AST;
 import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;

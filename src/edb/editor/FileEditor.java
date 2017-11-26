@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Vector;
 
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -43,10 +44,12 @@ import javax.swing.undo.UndoManager;
 import ast.binding.Var;
 import ast.binding.declarations.DeclaringLocation;
 import ast.binding.declarations.ReferencingLocation;
+import ast.modules.Warning;
 import ast.types.Type;
 import ast.types.Typed;
 import edb.actions.FindReplaceAction;
 import edb.actions.FontAction;
+import edb.actions.HelpAction;
 import edb.actions.JoinAction;
 import edb.actions.RedoAction;
 import edb.actions.ResizeFont;
@@ -54,6 +57,7 @@ import edb.actions.SaveAction;
 import edb.actions.ScrollToErrorAction;
 import edb.actions.SplitAction;
 import edb.actions.UndoAction;
+import edb.actions.WarningsAction;
 import edb.tool.EDB;
 import values.Located;
 import values.LocationContainer;
@@ -64,16 +68,19 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
 
   private static final int     ERROR_CHAR_MARGIN          = 5;
   private static final int     ERROR_LENGTH               = 50;
+  protected static final Color WARNING_COLOR              = new Color(255, 0, 255);
   protected static final Color PARSE_ERROR_COLOR          = new Color(0, 0, 255);
   private static final Color   FAINT_GREY                 = new Color(230, 230, 230);
+  private static final Color   BACKGROUND_COLOR           = Color.white;
   private static final int     TOOLTIP_INITIAL_DELAY      = 0;
   private static final int     TOOLTIP_DISMISS_DELAY      = 20000;
   private static final int     SCOLLABLE_TOOL_TIP_WIDTH   = 400;
   private static final int     SCROLLABLE_TOOL_TIP_HEIGHT = 200;
+  private static final String  NEWLINE                    = '\n' + "";
 
   Font                         font                       = new Font("Consolas", Font.PLAIN, 11);
-  Font                         messageFont                = new Font("Ariel", Font.ITALIC, 10);
-  Color                        messageColor               = new Color(100, 0, 0);
+  Font                         messageFont                = new Font("Consolas", Font.PLAIN, 10);
+  Color                        messageColor               = new Color(200, 0, 0);
   String                       path;
   EDB                          edb;
   Located                      over;
@@ -89,10 +96,14 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
   Action                       findReplaceAction          = new FindReplaceAction(this);
   Action                       splitAction                = new SplitAction(this);
   Action                       joinAction                 = new JoinAction(this);
+  Action                       helpAction                 = new HelpAction(this);
+  Action                       warningsAction             = new WarningsAction(this);
 
   boolean                      dirty                      = false;
   TextLineNumber               lines                      = new TextLineNumber(this, font, 1);
   TextError                    error                      = null;
+  Vector<Warning>              warnings                   = new Vector<Warning>();
+  boolean                      showWarnings               = false;
   int                          errorX                     = 0;
   int                          errorY                     = 0;
   int                          flashAt                    = -1;
@@ -105,12 +116,12 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
   LocationContainer            container                  = null;
   String                       message                    = null;
 
-  public FileEditor(String path, EDB gui) {
+  public FileEditor(String path, EDB gui, Doc doc) {
     super();
     this.path = path;
     this.edb = gui;
     setFont(font);
-    setStyle();
+    setStyledDocument(doc);
     setText(readFile(path));
     addMouseListener(this);
     addMouseMotionListener(this);
@@ -121,6 +132,7 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
     ToolTipManager.sharedInstance().setInitialDelay(TOOLTIP_INITIAL_DELAY);
     getDocument().addUndoableEditListener(undoManager);
     setCaretPosition(0);
+    setBackground(BACKGROUND_COLOR);
     ActionListener copyAction = getActionForKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
     ActionListener pasteAction = getActionForKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
     registerKeyboardAction(copyAction, KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.META_MASK), JComponent.WHEN_FOCUSED);
@@ -143,6 +155,10 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
     registerKeyboardAction(scrollToErrorAction, KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.META_MASK), JComponent.WHEN_FOCUSED);
     registerKeyboardAction(findReplaceAction, KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK), JComponent.WHEN_FOCUSED);
     registerKeyboardAction(findReplaceAction, KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.META_MASK), JComponent.WHEN_FOCUSED);
+    registerKeyboardAction(helpAction, KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, InputEvent.CTRL_MASK | InputEvent.SHIFT_DOWN_MASK), JComponent.WHEN_FOCUSED);
+    registerKeyboardAction(helpAction, KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, InputEvent.META_MASK | InputEvent.SHIFT_DOWN_MASK), JComponent.WHEN_FOCUSED);
+    registerKeyboardAction(warningsAction, KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK), JComponent.WHEN_FOCUSED);
+    registerKeyboardAction(warningsAction, KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.META_MASK), JComponent.WHEN_FOCUSED);
   }
 
   public int backupSyntax(int textPos) {
@@ -278,6 +294,8 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
   public String getToolTipText(MouseEvent e) {
     if (error != null)
       return tooltipError(e);
+    else if (tooltipWarning(e) != null)
+      return tooltipWarning(e);
     else if (over != null)
       return tooltipSyntax(e);
 
@@ -333,31 +351,36 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
       if (overTag != null) highlighter.removeHighlight(overTag);
       if (binderTag != null) highlighter.removeHighlight(binderTag);
       if (over != null) {
+        // System.err.println("OVER = " + over);
         overTag = highlighter.addHighlight(over.getLineStart(), over.getLineEnd(), overPainter);
         doc.setStart(over.getLineStart());
         doc.setEnd(over.getLineEnd());
         doc.refreshDocument();
-        if (over instanceof ReferencingLocation) {
-          ReferencingLocation location = (ReferencingLocation) over;
-          declaration = location.getDeclaringLocation();
-          if (declaration != null) {
-            String name = declaration.getName();
-            showBinder.setName(name);
-            if (declaration != null) {
-              int p0 = location.getLineStart();
-              int p1 = declaration.getLineStart();
-              if (p0 < p1) {
-                showBinder.setDirection(BindingPainter.FORWARDS);
-                binderTag = highlighter.addHighlight(p0, p1, showBinder);
-              } else {
-                showBinder.setDirection(BindingPainter.BACKWARDS);
-                binderTag = highlighter.addHighlight(p1, p0, showBinder);
-              }
-            }
+        if (over instanceof ReferencingLocation) highlightDeclaration(highlighter, (ReferencingLocation) over);
+      }
+      doc.refreshDocument();
+    } catch (BadLocationException e) {
+    }
+  }
+
+  private void highlightDeclaration(Highlighter highlighter, ReferencingLocation location) {
+    try {
+      declaration = location.getDeclaringLocation();
+      if (declaration != null) {
+        String name = declaration.getName();
+        showBinder.setName(name);
+        if (declaration != null) {
+          int p0 = location.getLineStart();
+          int p1 = declaration.getLineStart();
+          if (p0 < p1) {
+            showBinder.setDirection(BindingPainter.FORWARDS);
+            binderTag = highlighter.addHighlight(p0, p1, showBinder);
+          } else {
+            showBinder.setDirection(BindingPainter.BACKWARDS);
+            binderTag = highlighter.addHighlight(p1, p0, showBinder);
           }
         }
       }
-      doc.refreshDocument();
     } catch (BadLocationException e) {
     }
   }
@@ -396,7 +419,7 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
   }
 
   public void keyTyped(KeyEvent e) {
-    if (!dirty) {
+    if (!dirty && !e.isControlDown()) {
       dirty = true;
       edb.dirtyFile(path);
     }
@@ -445,8 +468,36 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
     paintError(g);
+    paintWarnings(g);
     paintMessage(g);
     flashParenthesis(g);
+  }
+
+  private void paintWarnings(Graphics g) {
+    if (showWarnings) {
+      for (Warning w : warnings) {
+        Graphics2D g2 = (Graphics2D) g;
+        g2 = (Graphics2D) g2.create();
+        FontMetrics metrics = g2.getFontMetrics();
+        int length = w.getLineEnd() - w.getLineStart();
+        int width = g2.getFontMetrics().charWidth(' ') * (length <= 0 ? 10 : length);
+        try {
+          Rectangle r = modelToView(w.getLineStart());
+          if (r != null) {
+            int wx = r.x;
+            int wy = r.y + metrics.getHeight();
+            g2.setColor(WARNING_COLOR);
+            for (int x = 0; x < width; x = x + 5) {
+              QuadCurve2D.Double e = new QuadCurve2D.Double(wx + x, wy, wx + x + 2.5, wy + 2.5, wx + x + 5, wy);
+              g2.draw(e);
+            }
+          }
+        } catch (BadLocationException e) {
+
+        }
+        g2.dispose();
+      }
+    }
   }
 
   public void paintError(Graphics g) {
@@ -454,14 +505,9 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
       edb.fileHasError(path, true);
       Graphics2D g2 = (Graphics2D) g;
       g2 = (Graphics2D) g2.create();
-      // int height = g2.getFontMetrics().getHeight();
-      // int descent = g2.getFontMetrics().getDescent();
       int length = error.getLineEnd() - error.getLineStart();
       int width = g2.getFontMetrics().charWidth(' ') * (length <= 0 ? 10 : length);
-      // Color c = g.getColor();
       g2.setColor(error.getColor());
-      // g.fillRect(errorX, errorY - (height - descent), width, height);
-      // g.setColor(c);
       for (int x = 0; x < width; x = x + 5) {
         QuadCurve2D.Double e = new QuadCurve2D.Double(errorX + x, errorY, errorX + x + 2.5, errorY + 2.5, errorX + x + 5, errorY);
         g2.draw(e);
@@ -474,18 +520,51 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
 
   private void paintMessage(Graphics g) {
     if (message != null) {
-      Font f = g.getFont();
-      Color c = g.getColor();
-      g.setFont(messageFont);
-      g.setColor(messageColor);
-      Rectangle r = getVisibleRect();
-      int x = (int) (r.getX() + r.getWidth());
-      int y = (int) (r.getY() + r.getHeight());
-      int width = g.getFontMetrics().stringWidth(message);
-      g.drawString(message, x - width, y);
-      g.setFont(f);
-      g.setColor(c);
+
+      // Careful since the message may contain newlines...
+
+      if (message.contains("\n"))
+        paintMultiLineMessage(g);
+      else paintSingleLineMessage(g);
     }
+  }
+
+  private void paintMultiLineMessage(Graphics g) {
+    Font f = g.getFont();
+    Color c = g.getColor();
+    g.setFont(messageFont);
+    g.setColor(messageColor);
+    Rectangle r = getVisibleRect();
+    int x = (int) (r.getX() + r.getWidth());
+    int y = (int) (r.getY() + r.getHeight());
+    String[] lines = message.split(NEWLINE);
+    int maxWidth = 0;
+    for (int i = 0; i < lines.length; i++) {
+      int width = g.getFontMetrics(messageFont).stringWidth(lines[i]);
+      if (width > maxWidth) maxWidth = width;
+    }
+    int height = g.getFontMetrics(messageFont).getHeight();
+    y = y - (height * lines.length);
+    for (String line : lines) {
+      g.drawString(line, x - maxWidth, y);
+      y = y + height;
+    }
+    g.setFont(f);
+    g.setColor(c);
+  }
+
+  private void paintSingleLineMessage(Graphics g) {
+    Font f = g.getFont();
+    Color c = g.getColor();
+    g.setFont(messageFont);
+    g.setColor(messageColor);
+    Rectangle r = getVisibleRect();
+    int x = (int) (r.getX() + r.getWidth());
+    int y = (int) (r.getY() + r.getHeight());
+    int width = g.getFontMetrics(messageFont).stringWidth(message);
+    g.drawString(message, x - width, y);
+    g.setFont(f);
+    g.setColor(c);
   }
 
   public abstract LocationContainer parseText();
@@ -617,9 +696,6 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
     this.message = message;
   }
 
-  protected void setStyle() {
-  }
-
   public void showTextAt(int index) {
     try {
       Rectangle r = modelToView(index);
@@ -649,6 +725,25 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
     } else return "";
   }
 
+  private String tooltipWarning(MouseEvent e) {
+    if (showWarnings) {
+      try {
+        int x = e.getX();
+        int y = e.getY();
+        for (Warning w : warnings) {
+          Rectangle r1 = modelToView(w.getLineStart());
+          if (x >= r1.x && x <= r1.x + ERROR_LENGTH && Math.abs(r1.y - y) < getFontMetrics(getFont()).getHeight()) {
+            String font = "<font color='red' size='2' face='Consolas'>";
+            return "<html>" + font + w.getWarning().replace("\n", "<br>") + "</font></html>";
+          }
+        }
+        return null;
+      } catch (Exception x) {
+        return null;
+      }
+    } else return null;
+  }
+
   private String tooltipSyntax(MouseEvent e) {
     if (over != null) {
       if (declaration != null && hiddenLocation(declaration)) {
@@ -675,4 +770,24 @@ public abstract class FileEditor extends JTextPane implements MouseListener, Key
 
   public abstract void typeCheck();
 
+  public void displayHelp() {
+    String help = "<CTRL>-1       Split Screen\n";
+    help = help + "<CTRL>-2       Join Screen\n";
+    help = help + "<CTRL SHIFT>-? Help\n";
+    help = help + "<CTRL SHIFT>-+ Increase Font\n";
+    help = help + "<CTRL SHIFT>-- Decrease Font\n";
+    help = help + "<CTRL>-c       Copy\n";
+    help = help + "<CTRL>-e       Scroll to Error\n";
+    help = help + "<CTRL>-f       Find/Replace\n";
+    help = help + "<CTRL>-s       Save\n";
+    help = help + "<CTRL>-v       Paste\n";
+    help = help + "<CTRL>-w       Toggle Warnings";
+    setMessage(help);
+    repaint();
+  }
+
+  public void toggleWarnings() {
+    showWarnings = !showWarnings;
+    repaint();
+  };
 }

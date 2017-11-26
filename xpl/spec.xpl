@@ -8,6 +8,7 @@ StateDef    = 'ast.spec.StateDef'.java()
 Update      = 'ast.spec.Update'.java()
 VarDec      = 'ast.spec.VarDec'.java()
 
+
 Always        = 'ast.query.body.Always'.java()
 And           = 'ast.query.body.And'.java()
 ApplyTypeFun  = 'ast.types.Apply'.java()
@@ -59,8 +60,8 @@ VoidType      = 'ast.types.Void'.java()
 
 spec = { 
 
-  start           -> whitespace [[ 'spec' lcurl s=state r=rules b=behaviour rcurl { Spec(s,r,b) } ]] | { Spec(State([],[]),[],[]) };
-  state           -> whitespace [[ 'state' lcurl vs=varDec* ss=stateDef* rcurl { State(vs,ss) } ]] | { State([],[]) };
+  start           -> whitespace [[ 'spec' lcurl s=state r=rules b=behaviour rcurl { Spec(s,r,b) } ]] | { Spec.makeInvisible(Spec(Spec.makeInvisible(State([],[])),[],[])) };
+  state           -> whitespace [[ 'state' lcurl vs=varDec* ss=stateDef* rcurl { State(vs,ss) } ]] | { Spec.makeInvisible(State([],[])) };
   varDec          -> [[ n=name coloncolon t=type semi { VarDec(n,t) } ]];
   stateDef        -> [[ n=Name vs=optArgs b=(leftArrow body | {[]}) semi { StateDef(n,vs,b) } ]];
   rules           -> whitespace [[ 'rules' lcurl rs=rule* rcurl { rs } ]];

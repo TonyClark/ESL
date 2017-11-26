@@ -13,6 +13,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
+import edb.display.Display;
 import edb.sequence.Sequence;
 import list.Cons;
 import list.List;
@@ -68,7 +69,6 @@ public class SVG {
       }
     };
     GRAPH_DIR = configFile.getProperty("graphDirFor" + osName);
-    System.err.println(osName + " " + configFile);
     TEMP_DIR = configFile.getProperty("tempDirFor" + osName);
     DOT = configFile.getProperty("dotFor" + osName);
   }
@@ -278,6 +278,19 @@ public class SVG {
     SVGGraphics2D g2 = new SVGGraphics2D(width, height);
     chart.draw(g2, new Rectangle(width, height));
     return g2.getSVGElement();
+  }
+
+  private static String displayTree(Term term) {
+    // Boxed(width,height,boxed
+    int width = (int) term.getValues()[0];
+    int height = (int) term.getValues()[1];
+    Term treeElement = (Term) term.getValues()[2];
+    Display display = Display.toDisplay(treeElement);
+    SVGGraphics2D g2 = new SVGGraphics2D(width, height);
+    display.draw(0, 0, width, height, g2);
+    String svg = g2.getSVGDocument();
+    g2.dispose();
+    return svg;
   }
 
   private static String displaySequence(Term term) {
@@ -494,6 +507,8 @@ public class SVG {
       return displaySequence(term);
     else if (term.getName().getString().equals("Types"))
       return displayTypes(term);
+    else if (term.getName().getString().equals("Tree"))
+      return displayTree(term);
     else return "unknown term: " + term;
   }
 

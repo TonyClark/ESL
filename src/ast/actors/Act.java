@@ -6,7 +6,6 @@ import java.util.Hashtable;
 import java.util.Stack;
 import java.util.Vector;
 
-import ast.AST;
 import ast.binding.Binding;
 import ast.binding.Dec;
 import ast.binding.declarations.DecContainer;
@@ -16,6 +15,7 @@ import ast.binding.declarations.ReferencingLocation;
 import ast.control.Block;
 import ast.data.Fun;
 import ast.data.Str;
+import ast.general.AST;
 import ast.patterns.PTerm;
 import ast.patterns.PVar;
 import ast.patterns.Pattern;
@@ -145,7 +145,7 @@ public class Act extends AST implements DecContainer, RefContainer {
       args[i] = new Dec(start, end, path, var.getName(), var.getDeclaredType());
     }
     Str nameExp = new Str(start, end, name);
-    return new Fun(start, end, path, nameExp, args, ast.types.Void.VOID, body);
+    return new Fun(start, end, path, nameExp, args, ast.types.Void.VOID, body, false);
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
@@ -287,7 +287,7 @@ public class Act extends AST implements DecContainer, RefContainer {
         if (b.getName().equals(exports.getNames()[i].getName())) {
           if (b.isTypeBinding())
             refs[i] = new ast.types.Var(getLineStart(), getLineEnd(), b.getName(), null);
-          else refs[i] = new ast.binding.Var(getLineStart(), getLineEnd(), b.getName(), null);
+          else refs[i] = new ast.binding.Var(getLineStart(), getLineEnd(), b.getName(), b.getDeclaredType(), null);
         }
       }
       if (refs[i] == null) throw new TypeError(getLineStart(), getLineEnd(), "cannot find a local behaviour definition for " + exports.getNames()[i].getName());

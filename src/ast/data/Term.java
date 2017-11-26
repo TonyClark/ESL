@@ -3,9 +3,9 @@ package ast.data;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import ast.AST;
 import ast.binding.declarations.DeclaringLocation;
 import ast.binding.declarations.ReferencingLocation;
+import ast.general.AST;
 import ast.types.Cnstr;
 import ast.types.Type;
 import ast.types.TypeError;

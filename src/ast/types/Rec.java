@@ -1,5 +1,7 @@
 package ast.types;
 
+import java.util.HashSet;
+
 import env.Env;
 import exp.BoaConstructor;
 
@@ -54,6 +56,13 @@ public class Rec extends Type {
 
   public void check(Env<String, Type> env) {
     type.check(env.bind(name, Void.VOID));
+  }
+
+  public void FV(HashSet<String> vars) {
+    HashSet<String> FV = new HashSet<String>();
+    type.FV(FV);
+    FV.remove(name);
+    vars.addAll(FV);
   }
 
 }

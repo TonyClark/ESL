@@ -3,8 +3,8 @@ package ast.actors;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import ast.AST;
 import ast.data.Term;
+import ast.general.AST;
 import ast.types.Type;
 import ast.types.TypeError;
 import compiler.DynamicVar;

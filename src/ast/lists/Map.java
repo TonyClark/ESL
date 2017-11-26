@@ -2,7 +2,6 @@ package ast.lists;
 
 import java.util.HashSet;
 
-import ast.AST;
 import ast.binding.Binding;
 import ast.binding.Dec;
 import ast.binding.Letrec;
@@ -12,6 +11,7 @@ import ast.data.BinExp;
 import ast.data.Bool;
 import ast.data.Fun;
 import ast.data.Str;
+import ast.general.AST;
 import ast.patterns.PCons;
 import ast.patterns.PNil;
 import ast.patterns.PVar;
@@ -57,11 +57,11 @@ public class Map extends AST {
   }
 
   public AST desugar() {
-    BArm arm2 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, new ast.lists.List());
-    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new BinExp(getLineStart(), getLineEnd(), body, ":", new Apply(getLineStart(), getLineEnd(), "", new Var(getLineStart(), getLineEnd(), "$f", null), new Var(getLineStart(), getLineEnd(), "$t", null))));
-    Case caseExp = new Case(getLineStart(), getLineEnd(), new Dec[] {}, new AST[] { new Var(getLineStart(), getLineEnd(), "l", null) }, new BArm[] { arm1, arm2 });
-    Fun fun = new Fun(getLineStart(), getLineEnd(), path, mapName(), new Dec[] { new Dec(getLineStart(), getLineEnd(), path, "l", ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp);
-    return new Letrec(getLineStart(), getLineEnd(), new Binding[] { new Binding(getLineStart(), getLineEnd(), path, "$f", new ast.types.Void(), fun) }, new Apply(getLineStart(), getLineEnd(), "", new Var(getLineStart(), getLineEnd(), "$f", null), list));
+    BArm arm2 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, new ast.lists.List(), false);
+    BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new BinExp(getLineStart(), getLineEnd(), body, ":", new Apply(getLineStart(), getLineEnd(), "", new Var(getLineStart(), getLineEnd(), "$f", null, null), new Var(getLineStart(), getLineEnd(), "$t", null, null))), false);
+    Case caseExp = new Case(getLineStart(), getLineEnd(), new Dec[] {}, new AST[] { new Var(getLineStart(), getLineEnd(), "l", null, null) }, new BArm[] { arm1, arm2 });
+    Fun fun = new Fun(getLineStart(), getLineEnd(), path, mapName(), new Dec[] { new Dec(getLineStart(), getLineEnd(), path, "l", ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp, false);
+    return new Letrec(getLineStart(), getLineEnd(), new Binding[] { new Binding(getLineStart(), getLineEnd(), path, "$f", new ast.types.Void(), fun) }, new Apply(getLineStart(), getLineEnd(), "", new Var(getLineStart(), getLineEnd(), "$f", null, null), list));
   }
 
   private AST mapName() {

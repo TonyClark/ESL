@@ -1,0 +1,253 @@
+export main;
+
+import 'esl/displays.esl','esl/lists.esl';
+
+type Counter = Act { Move() };
+
+mkX(id::Str)::TreeElement = VBox([Prop('pack','true')],[
+  TreeNode(Text(0,0,'courier:PLAIN:20:black','X')),
+  HBox([Prop('pack','true')],[Padding([]),TreeNode(Text(0,0,'courier:PLAIN:7:black',id)),Padding([])])
+]);
+
+top(t::TreeElement)::TreeElement =
+  VBox([Prop('pack','true')],[
+    HBox([],[t,Padding([])]),
+    HBox([Prop('pack','true')],[
+      VBox([Prop('pack','true')],[Padding([])]),
+      Padding([]),
+      VBox([Prop('pack','true')],[Padding([])]),
+      Padding([])
+    ]),
+    Padding([])
+  ]);
+  
+left(t::TreeElement)::TreeElement =
+  VBox([Prop('pack','true')],[
+    HBox([],[Padding([])]),
+    HBox([Prop('pack','true')],[
+      VBox([Prop('pack','true')],[t,Padding([])]),
+      Padding([]),
+      VBox([Prop('pack','true')],[Padding([])]),
+      Padding([])
+    ]),
+    Padding([])
+  ]);
+  
+right(t::TreeElement)::TreeElement =
+  VBox([Prop('pack','true')],[
+    HBox([],[Padding([])]),
+    HBox([Prop('pack','true')],[
+      VBox([Prop('pack','true')],[Padding([])]),
+      Padding([]),
+      VBox([Prop('pack','true')],[t,Padding([])]),
+      Padding([])
+    ]),
+    Padding([])
+  ]);
+  
+add(t1::TreeElement,t2::TreeElement)::TreeElement =
+  case t1,t2 {
+    VBox(p1::Props,[
+      HBox(topProps1::Props,(top1::[TreeElement])),
+      HBox(p2::Props,[
+        VBox(leftProps1::Props,(left1::[TreeElement])),
+        pad1::TreeElement,
+        VBox(rightProps1::Props,(right1::[TreeElement])),
+        pad2::TreeElement
+      ]),
+      pad3::TreeElement
+    ]),
+    VBox(p3::Props,[
+      HBox(topProps2::Props,(top2::[TreeElement])),
+      HBox(p4::Props,[
+        VBox(leftProps2::Props,(left2::[TreeElement])),
+        pad4::TreeElement,
+        VBox(rightProps2::Props,(right2::[TreeElement])),
+        pad5::TreeElement
+      ]),
+      pad6::TreeElement
+    ]) -> 
+    VBox(p1,[
+      HBox(topProps1,(butlast[TreeElement](top1)+top2)),
+      HBox(p2,[
+        VBox(leftProps1,(butlast[TreeElement](left1)+left2)),
+        pad1,
+        VBox(rightProps1,(butlast[TreeElement](right1)+right2)),
+        pad1
+      ]),
+      pad6
+    ])
+  };
+  
+hist[T](id::(T)->Int,h::[T])::[[T]] =
+  case h {
+    [] -> [];
+    h::[T] -> 
+      let m::T = last[T](h);
+          hh::[T] = butlast[T](h)
+      in hist[T](id,hh) + [combine[T](id,[],hh,m)]
+  };
+  
+combine[T](id::(T)->Int,ids::[Int],h::[T],m::T)::[T] =
+  case h {
+    [] -> if member[Int](id(m),ids) then [] else [m];
+    h::[T] ->
+      let mm::T = last[T](h);
+          hh::[T] = butlast[T](h)
+      in if member[Int](id(m),ids) then combine[T](id,ids,hh,mm) else combine[T](id,ids+[id(m)],hh,mm) + [m]
+  };
+  
+mapMove(m::Move(Int,Int))::State([Int],[Int],[Int],[Int]) =
+  let empty::[Int] = [0,0,0,0]
+  in case m {
+       Move(0,0) -> State([1,0,0,0],empty,empty,empty);
+       Move(0,1) -> State(empty,[1,0,0,0],empty,empty);
+       Move(0,2) -> State(empty,empty,[1,0,0,0],empty);
+       Move(0,3) -> State(empty,empty,empty,[1,0,0,0]);
+       Move(1,0) -> State([0,1,0,0],empty,empty,empty);
+       Move(1,1) -> State(empty,[0,1,0,0],empty,empty);
+       Move(1,2) -> State(empty,empty,[0,1,0,0],empty);
+       Move(1,3) -> State(empty,empty,empty,[0,1,0,0]);
+       Move(2,0) -> State([0,0,1,0],empty,empty,empty);
+       Move(2,1) -> State(empty,[0,0,1,0],empty,empty);
+       Move(2,2) -> State(empty,empty,[0,0,1,0],empty);
+       Move(2,3) -> State(empty,empty,empty,[0,0,1,0]);
+       Move(3,0) -> State([0,0,0,1],empty,empty,empty);
+       Move(3,1) -> State(empty,[0,0,0,1],empty,empty);
+       Move(3,2) -> State(empty,empty,[0,0,0,1],empty);
+       Move(3,3) -> State(empty,empty,empty,[0,0,0,1])
+     };
+     
+combineState(s1::State([Int],[Int],[Int],[Int]),s2::State([Int],[Int],[Int],[Int]))::State([Int],[Int],[Int],[Int]) =
+  case s1,s2 {
+    x1::Int; x2::Int; x3::Int; x4::Int; x5::Int; x6::Int; x7::Int;  x8::Int; x9::Int; x10::Int; x11::Int; x12::Int; x13::Int; x14::Int; x15::Int; x16::Int;
+    y1::Int; y2::Int; y3::Int; y4::Int; y5::Int; y6::Int; y7::Int;  y8::Int; y9::Int; y10::Int; y11::Int; y12::Int; y13::Int; y14::Int; y15::Int; y16::Int;
+    State([x1,x2,x3,x4],[x5,x6,x7,x8],[x9,x10,x11,x12],[x13,x14,x15,x16]),
+    State([y1,y2,y3,y4],[y5,y6,y7,y8],[y9,y10,y11,y12],[y13,y14,y15,y16]) ->
+    State([xor(x1,y1),xor(x2,y2),xor(x3,y3),xor(x4,y4)],
+          [xor(x5,y5),xor(x6,y6),xor(x7,y7),xor(x8,y8)],
+          [xor(x9,y9),xor(x10,y10),xor(x11,y11),xor(x12,y12)],
+          [xor(x13,y13),xor(x14,y14),xor(x15,y15),xor(x16,y16)])
+  };
+  
+emptyState::State([Int],[Int],[Int],[Int]) = State([0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]);
+  
+xor(x::Int,y::Int)::Int = if (x=1) or (y=1) then 1 else 0;
+
+history::[Move(Int,Int)] = [];
+
+treeDisplay(tl::TreeElement,tr::TreeElement,bl::TreeElement,br::TreeElement)::TreeElement =
+  VBox([Prop('pack','true')],[
+    Padding([]),
+    HBox([Prop('pack','true')],[Padding([]),tl,Padding([]),tr,Padding([])]),
+    Padding([]),
+    HBox([Prop('pack','true')],[Padding([]),bl,Padding([]),br,Padding([])]),
+    Padding([])
+  ]);
+  
+treeNum(n::Int)::TreeElement = TreeNode(Text(0,0,'courier:PLAIN:50:black',''+n));
+
+mapState1(s::State([Int],[Int],[Int],[Int]))::TreeElement =
+  case s {
+    State(l1::[Int],l2::[Int],l3::[Int],l4::[Int]) ->
+     treeDisplay(treeNum(sum(l1)),treeNum(sum(l2)),treeNum(sum(l3)),treeNum(sum(l4)))
+  };
+
+mapState2(s::State([Int],[Int],[Int],[Int]))::TreeElement =
+  case s {
+    State(l1::[Int],l2::[Int],l3::[Int],l4::[Int]) ->
+     treeDisplay(
+       treeDisplay(treeNum(nth[Int](l1,0)),treeNum(nth[Int](l1,1)),treeNum(nth[Int](l1,2)),treeNum(nth[Int](l1,3))),
+       treeDisplay(treeNum(nth[Int](l2,0)),treeNum(nth[Int](l2,1)),treeNum(nth[Int](l2,2)),treeNum(nth[Int](l2,3))),
+       treeDisplay(treeNum(nth[Int](l3,0)),treeNum(nth[Int](l3,1)),treeNum(nth[Int](l3,2)),treeNum(nth[Int](l3,3))),
+       treeDisplay(treeNum(nth[Int](l4,0)),treeNum(nth[Int](l4,1)),treeNum(nth[Int](l4,2)),treeNum(nth[Int](l4,3))))
+  };
+  
+dot::TreeElement = TreeNode(Circle(0,0,10,''));
+  
+mapState3(s::State([Int],[Int],[Int],[Int]))::TreeElement =
+  let queue(l::[Int])::[TreeElement] = 
+    let asQelement(n::Int)::[TreeElement] = 
+      let x::Int = nth[Int](l,n) in if x = 0 then [] else [HBox([],[Padding([]),dot,Padding([])])]
+    in flatten[TreeElement](map[Int,[TreeElement]](asQelement,0..3))
+  in
+  case s {
+    State(l1::[Int],l2::[Int],l3::[Int],l4::[Int]) ->
+      HBox([Prop('pack','true')],[
+        VBox([Prop('pack','true')],treeNum(1):queue(l1)),
+        VBox([Prop('pack','true')],treeNum(2):queue(l2)),
+        VBox([Prop('pack','true')],treeNum(3):queue(l3)),
+        VBox([Prop('pack','true')],treeNum(4):queue(l4))
+      ])
+   };
+     
+
+mapHistory(h::[Move(Int,Int)])::State([Int],[Int],[Int],[Int]) = foldr[Move(Int,Int),State([Int],[Int],[Int],[Int])](mapMove,combineState,emptyState,h);
+
+
+
+
+
+
+
+act counter(id::Int,location::Int)::Counter {
+  -> grab(history) history := history + [Move(id,location)];
+  Move -> grab(history) {
+    location := (location + 1) % 4;
+    history := history + [Move(id,location)]
+  }
+};
+  
+limit::Int = 10;
+
+act main::Act{Time(Int)} {
+
+  counters::[Counter] = [new counter(0,0),new counter(1,0),new counter(2,0),new counter(3,0) ]
+
+  Time(n::Int) when n < limit -> { print[Str](self + ' Time = ' + n);
+    for c::Counter in counters do c <- Move
+  };
+
+  Time(n::Int) -> {
+    //print[[[Int]]](hist[Int](fun(n::Int)::Int n,[1,2,3,4,3,5,2,6,1]));
+    //print[[[X(Int)]]](hist[X(Int)](fun(x::X(Int))::Int case x { X(n::Int) -> n },[X(1),X(2),X(3),X(2),X(1)]));
+    //print[[State([Int],[Int],[Int],[Int])]](map[[Move(Int,Int)],State([Int],[Int],[Int],[Int])](mapHistory,histories));
+    //print[[TreeElement]](elements);
+    print[Str](''+length[Move(Int,Int)](history));
+    let histories::[[Move(Int,Int)]] = hist[Move(Int,Int)](fun(x::Move(Int,Int))::Int case x { Move(id::Int,quad::Int) -> id },history) in { print[Str](''+histories);
+    let states::[State([Int],[Int],[Int],[Int])] = map[[Move(Int,Int)],State([Int],[Int],[Int],[Int])](mapHistory,histories) in { print[Str](''+states);
+    let elements::[TreeElement] = map[State([Int],[Int],[Int],[Int]),TreeElement](mapState3,states) in { print[Str](''+elements);
+    let trees::[EDBDisplay] = [ Tree(250,250,e) | e::TreeElement <- elements ] 
+    in { print[Str](''+trees);
+      edb <- Filmstrip('title1',trees);
+      edb <- Filmstrip('title2',[
+        Tree(500,500,top(mkX('0'))),
+        Tree(500,500,add(top(mkX('0')),top(mkX('1')))),
+        Tree(500,500,add(add(top(mkX('0')),top(mkX('1'))),left(mkX('2')))),
+        Tree(500,500,add(add(top(mkX('0')),top(mkX('1'))),add(left(mkX('2')),right(mkX('3'))))),
+        Tree(500,500,add(add(top(mkX('0')),top(mkX('1'))),add(add(left(mkX('2')),right(mkX('3'))),right(mkX('4'))))),
+        Tree(500,500,add(add(top(mkX('0')),top(mkX('1'))),add(add(add(left(mkX('2')),left(mkX('5'))),right(mkX('3'))),right(mkX('4'))))),
+        Tree(500,500,add(add(top(mkX('0')),top(mkX('1'))),add(add(add(left(mkX('2')),left(mkX('5'))),right(mkX('3'))),right(mkX('4')))))
+      ]);
+      stopAll()
+    }
+  }
+} }}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

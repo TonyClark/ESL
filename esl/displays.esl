@@ -1,9 +1,15 @@
-export Property, Props, PictureElement, EDBDisplay, Graph, HTML, Sequence, Rectangle, Circle, Line, Image, Text, Table, Pie, Picture;
+export Property, Props, PictureElement, EDBDisplay, Graph, HTML, Sequence, Rectangle, Circle, Line, Image, Text, Table, Pie, Picture, Tree, TreeNode, VBox,HBox,Padding, TreeElement;
+
+// This file contains a collection of type definitions that can be used to 
+// create data to be supplied to EDB for display.
 
 type Property = Prop(Str,Str);
 type Props = [Property];
 
 type PictureElement = union { 
+
+  // Shapes, images and text with absolute positions...
+  
   Rectangle(Int,Int,Int,Int,Str), 
   Circle(Int,Int,Int,Str), 
   Line(Int,Int,Int,Int,Str),
@@ -17,20 +23,47 @@ cnstr Line          = PictureElement.Line;
 cnstr Image         = PictureElement.Image;
 cnstr Text          = PictureElement.Text;
 
-type EDBDisplay = rec T. union { 
-                                                    // Types of EDB display element.
-  HTML(Str),                                        // Raw HTML.
-  Table(Props,[Row(Props,[Data(Props,T)])]),        // A table of display elements.
-  Pie(Props,Str,Int,Int,[Slice(Props,Str,Int)]),    // A pie chart.
-  Picture(Int,Int,[PictureElement]),
-  Sequence([Actor(Int,Int,Int,Str)],[Message(Int,Int,Int,Str)]),
-  Graph(Props,[Node(Props,Int,T)],[Edge(Props,Int,Int,T)])
+type TreeElement = union {
+
+  // Horizontal and vertical layout with elastic padding...
+  
+  TreeNode(PictureElement),
+  VBox(Props,[TreeElement]),
+  HBox(Props,[TreeElement]),
+  Padding(Props),
+  LabelledTree(Str,TreeElement)
 };
 
+cnstr TreeNode     = unfold[TreeElement].TreeNode;
+cnstr VBox         = unfold[TreeElement].VBox;
+cnstr HBox         = unfold[TreeElement].HBox;
+cnstr Padding      = unfold[TreeElement].Padding;
+cnstr LabelledTree = unfold[TreeElement].LabelledTree;
+
+type EDBDisplay = rec T. union { 
+                                                                 // Types of EDB display element.
+  HTML(Str),                                                     // Raw HTML.
+  Table(Props,[Row(Props,[Data(Props,T)])]),                     // A table of display elements.
+  Pie(Props,Str,Int,Int,[Slice(Props,Str,Int)]),                 // A pie chart.
+  Picture(Int,Int,[PictureElement]),                             // Absolute positions.
+  Sequence([Actor(Int,Int,Int,Str)],[Message(Int,Int,Int,Str)]), // Sequence diagram.
+  Graph(Props,[Node(Props,Int,T)],[Edge(Props,Int,Int,T)]),      // Graph.
+  Tree(Int,Int,TreeElement)                                      // Recursive horizontal and vertical layout.
+};
+
+cnstr Tree     = unfold[EDBDisplay].Tree;
 cnstr Graph    = unfold[EDBDisplay].Graph;
 cnstr HTML     = unfold[EDBDisplay].HTML;
 cnstr Sequence = unfold[EDBDisplay].Sequence;
 cnstr Table    = unfold[EDBDisplay].Table;
 cnstr Pie      = unfold[EDBDisplay].Pie;
 cnstr Picture  = unfold[EDBDisplay].Picture
+
+
+
+
+
+
+
+
 

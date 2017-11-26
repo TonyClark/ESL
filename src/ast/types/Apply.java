@@ -1,6 +1,7 @@
 package ast.types;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import ast.binding.declarations.DeclaringLocation;
 import ast.binding.declarations.ReferencingLocation;
@@ -69,6 +70,11 @@ public class Apply extends Type implements ReferencingLocation {
 
   public void check(Env<String, Type> env) {
     for(Type type : types) type.check(env);
+  }
+
+  public void FV(HashSet<String> vars) {
+    for(Type type : types)
+      type.FV(vars);
   }
 
 }

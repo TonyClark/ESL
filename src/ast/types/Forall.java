@@ -1,5 +1,7 @@
 package ast.types;
 
+import java.util.HashSet;
+
 import ast.binding.Dec;
 import ast.binding.declarations.DecContainer;
 import ast.binding.declarations.DeclaringLocation;
@@ -65,9 +67,17 @@ public class Forall extends Type implements DecContainer {
   }
 
   public void check(Env<String, Type> env) {
-    for(String name : names)
+    for (String name : names)
       env = env.bind(name, Void.VOID);
     type.check(env);
+  }
+
+  public void FV(HashSet<String> vars) {
+    HashSet<String> FV = new HashSet<String>();
+    type.FV(FV);
+    for (String name : names)
+      FV.remove(name);
+    vars.addAll(FV);
   }
 
 }

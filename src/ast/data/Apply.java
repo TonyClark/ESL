@@ -5,8 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import ast.AST;
 import ast.binding.Var;
+import ast.general.AST;
 import ast.types.TaggedFun;
 import ast.types.Type;
 import ast.types.TypeError;

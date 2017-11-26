@@ -28,7 +28,7 @@ esl = {
   valbind         -> [[ n=name d=valbindDec eql e=exp { Binding(n,d,e) } ]];
   valbindDec      -> [[ ns=optGenericDecs t=typeDec { Dec.generic(ns,t) } ]];
   funbind         -> [[ n=name [[ ns=optGenericDecs lparen [[ ps=funargs ]] rparen t=typeDec d={Dec.generic(ns,FunType(FunType.ptypes(ps),t))} ]] eql e=exp g=guard { FunBind(n,ps,d,e,g) } ]];
-  actbind         -> [[ 'act' n=name gs=optGenericDecs [[ ps=actargs  t=typeDec d={Dec.generic(gs,FunType(FunType.types(ps),t))} ]] lcurl es=exports s=spec bs = bindings i=actinit as=barms rcurl  { Binding(n,d,Fun(Str.strAt0(n),ps,d,Act(Str.strAt0(n),ps,es,s,bs,i,as))) } ]];
+  actbind         -> [[ 'act' n=name gs=optGenericDecs [[ ps=actargs  t=typeDec d={Dec.generic(gs,FunType(FunType.types(ps),t))} ]] lcurl es=exports s=spec bs = bindings i=actinit as=barms rcurl  a = { Act(Str.strAt0(n),ps,es,s,bs,i,as) } f = { Fun(Str.strAt0(n),ps,d,a) } { Binding(n,d,f) } ]];
   typebind        -> [[ 'type' n=Name d=typebindDec { TypeBind(n,d,d) } ]];
   typebindDec     -> [[ as=typeargs eql t=type { Dec.funType(as,t) } ]];
   databind        -> [[ 'data' n=Name gs=optGenericDecs eql ds=dataOpts f={Dec.funType(gs,TypeUnion(ds))} { DataBind(n,f,f) } ]];
@@ -36,7 +36,7 @@ esl = {
   dataOpt         -> [[ n=Name (lparen ts=types rparen { TermType(n,ts) } | { TermType(n,[]) }) ]];
   typeargs        -> lsquare ns=Names rsquare { ns } | {[]};
   actargs         -> lparen ps=params rparen {ps} | {[]};
-  actinit         -> arrow e=exp semi {e} | { Null() };
+  actinit         -> arrow e=exp semi {e} | { AST.makeInvisible(Null()) };
   barms           -> a=barm ! as=(semi barm)* { a:as };
   barm            -> [[ p=patterns [[ g=(guard | { Bool(true) }) ]] arrow ! e=exp { BArm(p,g,e) } ]];
   patterns        -> p=pattern ps=(comma pattern)* { p:ps };
@@ -87,7 +87,7 @@ esl = {
                   |  [[ 'new'     s=string ! lsquare t=type rsquare (lparen ps=exps rparen { NewJava(s,t,ps) } | { NewJava(s,t,[]) }) ]]
                   |  [[ 'new'     n=simpleExp (lparen ps=exps rparen { New(n,ps) } | { New(n,[]) }) ]]
                   |  [[ 'not'    ! e=exp { Not(e) } ]]
-                  |  [[ 'fun'    ! n=funName lparen as=params rparen t=typeDec e=exp { Fun(n,as,FunType(FunType.types(as),t),e) } ]]
+                  |  [[ 'fun'    ! n=funName lparen as=params rparen t=typeDec e=exp { Fun(n,as,AST.makeInvisible(FunType(FunType.types(as),t)),e) } ]]
                   |  [[ 'grab'   ! lparen vs=dynamicRefs rparen e=exp { Grab(vs,e) } ]]
                   |  [[ 'let'    ! bs=bindings  'in' e=exp { Let(bs,e) } ]]
                   |  [[ 'letrec' ! bs=bindings  'in' e=exp { Letrec(bs,e) } ]]
