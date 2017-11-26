@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!--
-	Hielo by TEMPLATED	templated.co @templatedco
-	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)-->
+	Hielo by TEMPLATED	templated.co @templatedco	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)-->
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -9,8 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="assets/css/main.css">
   </head>
-  <body>
-    <!-- Header -->
+  <body> <!-- Header -->
     <header id="header" class="alt">
       <div class="logo"><a href="index.html">ESL <span><br>
           </span></a></div>
@@ -24,7 +22,7 @@
         <li><a href="Downloads.html">Downloads</a></li>
       </ul>
     </nav>
-    <!-- Banner --> 
+    <!-- Banner -->
     <section class="banner full">
       <article> <img src="images/slide01.jpg" alt="">
         <div class="inner">
@@ -81,89 +79,61 @@
         <div class="banner-full">
           <div>
             <div class="box">
-              <div class="image fit"> <img src="images/philosopher.png" alt=""> </div>
+              <div class="image fit"> <img src="images/philosopher.png" alt="">
+              </div>
               <div class="content">
                 <header class="align-center">
                   <p>Key Features</p>
                   <h2>ESL</h2>
                 </header>
-                <p> ESL is
-                an <a href="https://en.wikipedia.org/wiki/Actor_model">actor language</a>
-                that has been designed to run applications and <a
-                  href="https://en.wikipedia.org/wiki/Simulation">simulations</a>
-                that require information-rich processing by autonomous
-                computational units. Each actor runs in its own <a
-                  href="https://en.wikipedia.org/wiki/Thread_%28computing%29">thread of
-                  control</a> and communicates with other actors using <a
-href="https://en.wikipedia.org/wiki/Asynchronous_communication">asynchronous
-                  messages</a>. ESL supports <a
-                  href="https://en.wikipedia.org/wiki/Pattern_matching">pattern-matching</a>,
-                <a
-                  href="https://en.wikipedia.org/wiki/Lock_%28computer_science%29">datalocks</a>
-                and <a
-                  href="https://en.wikipedia.org/wiki/Higher-order_function">higher-order
-                  functions</a>. Applications in ESL are highly <a
-                  href="https://en.wikipedia.org/wiki/Concurrent_computing">concurrent</a>
-                and are driven by system generated time-events. ESL can
-                support <a
-                  href="https://en.wikipedia.org/wiki/Sensemaking">sense-making</a>
-                of applications and simulations by generating state
-                histories that <a
-                  href="https://en.wikipedia.org/wiki/Transaction_log">record computation steps</a>; once generated, a history can
-                be interrogated using a <a
-                  href="https://en.wikipedia.org/wiki/Temporal_logic">temporal-logic</a>
-                based <a
-                  href="https://en.wikipedia.org/wiki/Query_language">query language</a>. ESL has a <a
-                  href="https://en.wikipedia.org/wiki/Type_system">static type system</a> that includes <a
-                  href="https://en.wikipedia.org/wiki/Parametric_polymorphism">parametric polymorphism</a>.<br>
-                <br>
-                ESL application development is supported by a tool
-                called EDB that provides real-time support for syntax
-                and type checking. EDB can be used to create and manage
-                an ESL application including its execution, debugging
-                and history management. EDB allows ESL to generate
-                graphical representations of running applications and of
-                their histories.<br>
-                <br>
-                ESL source code is compiled to run on a virtual machine
-                implemented in <a
-                  href="https://en.wikipedia.org/wiki/Java_%28programming_language%29">Java</a>
-                and provides support for Java classes to be integrated
-                with ESL applications by implementing an actor
-                interface. EDB is implemented in <a
-                  href="https://en.wikipedia.org/wiki/Swing_%28Java%29">Swing</a>
-                and uses a collection of open source libraries in
-                addition to <a href="http://www.teamdev.com/jxbrowser">JxBrowser</a>
-                for HTML and SVG support. The use of JxBrowser is
-                governed by the <a
-                  href="http://www.teamdev.com/jxbrowser-licence-agreement">JxBrowser Product Licence Agreement</a>. Both ESL and EDB are
-                available via <a
-                  href="https://en.wikipedia.org/wiki/GNU_General_Public_License">GPLv3</a>.</p>
+                <p> ESL is an <a href="https://en.wikipedia.org/wiki/Actor_model">actor
+                    language</a> that has been designed to run applications and
+                  <a href="https://en.wikipedia.org/wiki/Simulation">simulations</a>
+                  that require information-rich processing by autonomous
+                  computational units. Each actor runs in its own <a href="https://en.wikipedia.org/wiki/Thread_%28computing%29">thread
+                    of control</a> and communicates with other actors using <a
+                    href="https://en.wikipedia.org/wiki/Asynchronous_communication">asynchronous
+                    messages</a>. ESL supports <a href="https://en.wikipedia.org/wiki/Pattern_matching">pattern-matching</a>,
+                  <a href="https://en.wikipedia.org/wiki/Lock_%28computer_science%29">datalocks</a>
+                  and <a href="https://en.wikipedia.org/wiki/Higher-order_function">higher-order
+                    functions</a>. Applications in ESL are highly <a href="https://en.wikipedia.org/wiki/Concurrent_computing">concurrent</a>
+                  and are driven by system generated time-events. ESL can
+                  support <a href="https://en.wikipedia.org/wiki/Sensemaking">sense-making</a>
+                  of applications and simulations by generating state histories
+                  that <a href="https://en.wikipedia.org/wiki/Transaction_log">record
+                    computation steps</a>; once generated, a history can be
+                  interrogated using a <a href="https://en.wikipedia.org/wiki/Temporal_logic">temporal-logic</a>
+                  based <a href="https://en.wikipedia.org/wiki/Query_language">query
+                    language</a>. ESL has a <a href="https://en.wikipedia.org/wiki/Type_system">static
+                    type system</a> that includes <a href="https://en.wikipedia.org/wiki/Parametric_polymorphism">parametric
+                    polymorphism</a>.<br>
+                  <br>
+                  ESL application development is supported by a tool called EDB
+                  that provides real-time support for syntax and type checking.
+                  EDB can be used to create and manage an ESL application
+                  including its execution, debugging and history management. EDB
+                  allows ESL to generate graphical representations of running
+                  applications and of their histories.<br>
+                  <br>
+                  ESL source code is compiled to run on a virtual machine
+                  implemented in <a href="https://en.wikipedia.org/wiki/Java_%28programming_language%29">Java</a>
+                  and provides support for Java classes to be integrated with
+                  ESL applications by implementing an actor interface. EDB is
+                  implemented in <a href="https://en.wikipedia.org/wiki/Swing_%28Java%29">Swing</a>
+                  and uses a collection of open source libraries in addition to
+                  <a href="http://www.teamdev.com/jxbrowser">JxBrowser</a> for
+                  HTML and SVG support. The use of JxBrowser is governed by the
+                  <a href="http://www.teamdev.com/jxbrowser-licence-agreement">JxBrowser
+                    Product Licence Agreement</a>. Both ESL and EDB are
+                  available via <a href="https://en.wikipedia.org/wiki/GNU_General_Public_License">GPLv3</a>.</p>
                 <footer class="align-center"> <a href="#" class="button
                     alt">Learn More</a> </footer>
               </div>
             </div>
           </div>
           <!--
-          <div>
-            <div class="box">
-              <div class="image fit"> <img src="images/pic03.jpg" alt=""> </div>
-              <div class="content">
-                <header class="align-center">
-                  <p>mattis elementum sapien pretium tellus</p>
-                  <h2>Vestibulum sit amet</h2>
-                </header>
-                <p> Cras aliquet urna ut sapien tincidunt, quis malesuada elit
-                  facilisis. Vestibulum sit amet tortor velit. Nam elementum
-                  nibh a libero pharetra elementum. Maecenas feugiat ex purus,
-                  quis volutpat lacus placerat malesuada.</p>
-                <footer class="align-center"> <a href="#" class="button
-                    alt">Learn More</a> </footer>
-              </div>
-            </div>
-          </div>
--->
-        </div>
+          <div>            <div class="box">              <div class="image fit"> <img src="images/pic03.jpg" alt=""> </div>              <div class="content">                <header class="align-center">                  <p>mattis elementum sapien pretium tellus</p>                  <h2>Vestibulum sit amet</h2>                </header>                <p> Cras aliquet urna ut sapien tincidunt, quis malesuada elit                  facilisis. Vestibulum sit amet tortor velit. Nam elementum                  nibh a libero pharetra elementum. Maecenas feugiat ex purus,                  quis volutpat lacus placerat malesuada.</p>                <footer class="align-center"> <a href="#" class="button                    alt">Learn More</a> </footer>              </div>            </div>
+          </div>--> </div>
       </div>
     </section>
     <!-- Two -->
@@ -175,14 +145,23 @@ href="https://en.wikipedia.org/wiki/Asynchronous_communication">asynchronous
         </header>
       </div>
     </section>
-    <!-- Three -->
-    <section id="three" class="wrapper style2">
+    
+    <section id="three" class="wrapper style3">
       <div class="inner">
         <header class="align-center">
           <p class="special">Examples of ESL Applications</p>
           <h2>ESL</h2>
         </header>
         <div class="gallery">
+          <div>
+            Dining philosophers can be  implemented in ESL so that each philosopher 
+            is an actor that needs to grab two chopsticks in order to eat. A co-ordination
+            mechanism must be used in the form of data locks so that two chopsticks are
+            grabbed at a time, otherwise the philosophers can deadlock and starve. ESL
+            can turn an execution history into a filmstrip that is shown as a picture.
+            Dragging the marker left and right moves forward and backward through the
+            execution showing that no deadlock occurs.
+          </div>
           <div>
             <div class="image fit"> <a href="#"><img src="images/dining.jpg" alt=""></a>
             </div>
@@ -192,67 +171,166 @@ href="https://en.wikipedia.org/wiki/Asynchronous_communication">asynchronous
             </div>
           </div>
           <div>
+            Pacman is a game where the player controls the movement through a maze of the 
+            yellow pacman who wants to eat all the food, and where the system controls the 
+            ghosts who are seeking to eat the pacman. All the ghosts are actors who move 
+            independently of the pacman that is controlled by the user via the mouse. The
+            ghosts implement a suitable strategy by inspecting the current state of the world
+            and making a decision about their next move.
+          </div>
+          <div>
+            A road junction is controlled by a pair of traffic lights. Cars travel with greater
+            frequency right to left and therefore they should be given priority. However, the
+            lights should monitor the situation so that the queue from the left does not
+            become too long. This example shows how ESL can be used to implement data monitors
+            where the traffic lights are actors and monitors are actors that trigger changes
+            based on the execution history of the junction queues.
+          </div>
+          <div>
+            <div class="image fit"> <a href="#"><img src="images/traffic.png"
+                  alt=""></a>
+            </div>
+          </div>
+          <div>
             <div class="image fit"> <a href="#"><img src="images/traffic_code.png" alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/traffic.png" alt=""></a>
+            The ESL traffic light application on the right shows the type definitions for the
+            actors and part of the traffic light behaviour definition.
+          </div>
+          <div>
+            ESL can be used to define a simulation. A shop wishes to try out different arrangements of
+            of tills and assistants based on simulations of customer behaviour. Customers enter the shop
+            and may seek help choosing goods before waiting at a queue to pay. If a customer waits too
+            long for assistance or waits too long in a queue at a till then they will abandon their
+            purchase and leave the shop.
+          </div>
+          <div>
+            <div class="image fit"> <a href="#"><img src="images/shopping.png"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/customers.jpg" alt=""></a>
+            <div class="image fit"> <a href="#"><img src="images/shopping_types.png"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/shopping_types.png" alt=""></a>
+            A model of the imulation can be implemented as ESL types...
+          </div>
+          <div>
+            ... or as a structure model....
+          </div>
+          <div>
+            <div class="image fit"> <a href="#"><img src="images/behaviour.png"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/behaviour.png" alt=""></a>
+            <div class="image fit"> <a href="#"><img src="images/customer_machine.png"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/shopping.png" alt=""></a>
+            ... together with a behaviour model.
+          </div>
+          <div>
+            ESL can display a graphical description of the state of the simulation as it occurs.
+            The display on the right shows the state of the customers in the simulation and the
+            current state of their satisfaction (how many have left after failing to make a purchase).
+          </div>
+          <div>
+            <div class="image fit"> <a href="#"><img src="images/customers.jpg"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/customer_machine.png" alt=""></a>
+            <div class="image fit"> <a href="#"><img src="images/shop_filmstrip.png"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/shop_filmstrip.png" alt=""></a>
+            As the shop simulation runs it can save a history of actor states producing a filmstrip.
+            The filmstrip can be transformed into a series of pictures by ESL and displayed in EDB.
+            The snapshot shows a number of assistants waiting on the floor, some criminal customers
+            tying up the assistants in the hope that their accomplices can steal goods from the shop.
+            Four of the tills have queues of customers waiting to make a purchase.
+          </div>
+          <div>
+            Actors often need to make plans that control how they respond to changes in their environment.
+            A simple example is a collection of travellers on the underground who are given the task
+            of travelling between different stations. ESL provides a logic programming language that is used in the
+            example to implement a STRIPS-like planner.
+          </div>
+          <div>
+            <div class="image fit"> <a href="#"><img src="images/underground_code.png"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/underground_code.png" alt=""></a>
+            <div class="image fit"> <a href="#"><img src="images/underground.png"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/underground.png" alt=""></a>
+            Each of the traveller actors run autonomously. The user can click on underground stations to 
+            blow them up. A traveller passing through a blown-up station is removed from the system.
+            The state of the underground is transformed within ESL as a graph that is displayed by EDB.
+          </div>
+          <div>
+            A world consists of two different tribes. Members of a tribe want to be located near members of the
+            same tribe and will feel uncomfortable if too many strangers surround them. If a member is uncomfortable
+            then they will move to a vacant location at random. The starting pint of the simulation is shown where each
+            tribe member is an independent actor.
+          </div>
+          <div>
+            <div class="image fit"> <a href="#"><img src="images/segregation_before.png"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/segregation_before.png" alt=""></a>
+            <div class="image fit"> <a href="#"><img src="images/segregation_after.png"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/segregation_after.png" alt=""></a>
+            After the simulation has run for a period of time, all the tribe members become comfortable and
+            no further moves occur.
+          </div>
+          <div>
+            Predator-prey is a standard multi-agent application where predator actors try to catch the prey
+            actors who in turn try to escape. Each type of actor must implement a strategy that achieves their goals.
+            A predator is an actor that grabs the board, inspects the current tiuation and determines which direction
+            they should move.
+          </div>
+          <div>
+            <div class="image fit"> <a href="#"><img src="images/predator_code.png"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/predator_code.png" alt=""></a>
+            <div class="image fit"> <a href="#"><img src="images/prey_code.png"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/prey_code.png" alt=""></a>
+            A prey is an actor that grabs the board and tries to move away from all the predators.
+          </div>
+          <div>
+            The predator-prey application conforms to a filmstrip pattern that can be encoded in ESL
+            and that supports any application that satisfies given critera.
+          </div>
+          <div>
+          </div>
+          <div>
+            <div class="image fit"> <a href="#"><img src="images/predator1.png"
+                  alt=""></a>
             </div>
           </div>
           <div>
-            <div class="image fit"> <a href="#"><img src="images/predator1.png" alt=""></a>
-            </div>
-          </div>
-          <div>
-            <div class="image fit"> <a href="#"><img src="images/predator2.png" alt=""></a>
+            <div class="image fit"> <a href="#"><img src="images/predator2.png"
+                  alt=""></a>
             </div>
           </div>
         </div>
@@ -260,25 +338,14 @@ href="https://en.wikipedia.org/wiki/Asynchronous_communication">asynchronous
     </section>
     <!-- Footer -->
     <footer id="footer">
-      <div class="container">
-        <ul class="icons">
-          <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a><br>
-          </li>
-          <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a><br>
-          </li>
-          <li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a><br>
-          </li>
-          <li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a><br>
-          </li>
-        </ul>
-      </div>
-      <div class="copyright"> © Untitled. All rights reserved. </div>
-    </footer>
-    <!-- Scripts -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/jquery.scrollex.min.js"></script>
-    <script src="assets/js/skel.min.js"></script>
-    <script src="assets/js/util.js"></script>
-    <script src="assets/js/main.js"></script>
+      <!--
+      <div class="container">        <ul class="icons">          <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a><br>          </li>          <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a><br>          </li>          <li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a><br>          </li>
+          <li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a><br>          </li>        </ul>      </div>      <div class="copyright"> © Untitled. All rights reserved. </div>    </footer>-->
+      <!-- Scripts -->
+      <script src="assets/js/jquery.min.js"></script>
+      <script src="assets/js/jquery.scrollex.min.js"></script>
+      <script src="assets/js/skel.min.js"></script>
+      <script src="assets/js/util.js"></script>
+      <script src="assets/js/main.js"></script> </footer>
   </body>
 </html>
