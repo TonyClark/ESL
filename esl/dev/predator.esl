@@ -107,8 +107,6 @@ act prey(x::Int,y::Int)::Prey {
     // to guide the creation of each snapshot.
     
     stop := true
-    //edb <- Filmstrip('predator',map[[[Location]],EDBDisplay](mapBoard,filmstrip(messages)));
-    //stopAll()
   };
   
   cannotMove()::Bool =
@@ -319,6 +317,7 @@ act main::Main {
   }
   
 }
+
 
 
 

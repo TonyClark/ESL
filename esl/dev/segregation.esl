@@ -47,7 +47,7 @@ emptypc::Int   = 20;
 empty::Int     = 0;
 red::Int       = 1;
 blue::Int      = 2;
-limit::Int     = 2000;
+limit::Int     = 1; // 2000;
 
 opp(c::Int)::Int = if c = red then blue else red;
 colour(c::Int)::Str = if c = red then 'red' else if c = empty then 'white' else 'blue';
@@ -101,6 +101,7 @@ act main::Main {
   }
   
 }
+
 
 
 

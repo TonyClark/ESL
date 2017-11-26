@@ -1,147 +1,617 @@
-CodeBox(lambda199,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
+CodeBox(lambda29,7)
+    0 FRAMEVAR   3         
+    1 SETFRAME   4         
     2 POP       
-    3 TRY        9     true      
-    4 ISCONS     [1]       
-    5 SETFRAME   3     [1].head()
-    6 SETFRAME   2     [1].tail()
-    7 STARTCALL 
-    8 FRAMEVAR   2         
-    9 DYNAMIC    26        
-   10 APPLY      1         
-   11 ADD1      
-   12 SKIP       6         
-   13 TRY        3     false     
-   14 ISNIL      [1]       
-   15 INT        0         
-   16 SKIP       2         
-   17 CASEERROR 
-   18 RETURN    
-CodeBox(lambda198,5)
-    0 FRAMEVAR   1         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        9     true      
-    4 ISCONS     [2]       
-    5 SETFRAME   4     [2].head()
-    6 SETFRAME   3     [2].tail()
-    7 FRAMEVAR   4         
-    8 FRAMEVAR   0         
-    9 EQL       
-   10 FAILFALSE 
-   11 FRAMEVAR   3         
-   12 SKIP       18        
-   13 TRY        11    false     
-   14 ISCONS     [2]       
-   15 SETFRAME   4     [2].head()
-   16 SETFRAME   3     [2].tail()
-   17 FRAMEVAR   4         
-   18 STARTCALL 
-   19 FRAMEVAR   0         
-   20 FRAMEVAR   3         
-   21 DYNAMIC    27        
-   22 APPLY      2         
-   23 CONS      
-   24 SKIP       6         
-   25 TRY        3     false     
-   26 ISNIL      [2]       
-   27 LIST       0         
-   28 SKIP       2         
-   29 CASEERROR 
-   30 RETURN    
-CodeBox(lambda197,5)
-    0 FRAMEVAR   1         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        13    true      
-    4 ISCONS     [2]       
-    5 SETFRAME   4     [2].head()
-    6 SETFRAME   3     [2].tail()
-    7 FRAMEVAR   4         
-    8 FRAMEVAR   0         
-    9 EQL       
-   10 FAILFALSE 
+    3 TRY        3     true      
+    4 ISNIL      [4]       
+    5 FRAMEVAR   2         
+    6 SKIP       19        
+    7 TRY        16    false     
+    8 ISCONS     [4]       
+    9 SETFRAME   6     [4].head()
+   10 SETFRAME   5     [4].tail()
    11 STARTCALL 
-   12 FRAMEVAR   0         
-   13 FRAMEVAR   3         
-   14 DYNAMIC    28        
-   15 APPLY      2         
-   16 SKIP       18        
-   17 TRY        11    false     
-   18 ISCONS     [2]       
-   19 SETFRAME   4     [2].head()
-   20 SETFRAME   3     [2].tail()
-   21 FRAMEVAR   4         
-   22 STARTCALL 
-   23 FRAMEVAR   0         
-   24 FRAMEVAR   3         
-   25 DYNAMIC    28        
-   26 APPLY      2         
-   27 CONS      
-   28 SKIP       6         
-   29 TRY        3     false     
-   30 ISNIL      [2]       
-   31 LIST       0         
-   32 SKIP       2         
-   33 CASEERROR 
-   34 RETURN    
-CodeBox(lambda196,5)
+   12 STARTCALL 
+   13 FRAMEVAR   6         
+   14 APPLYFRAME 0     1         
+   15 STARTCALL 
+   16 FRAMEVAR   0         
+   17 FRAMEVAR   1         
+   18 FRAMEVAR   2         
+   19 FRAMEVAR   5         
+   20 DYNAMIC    3         
+   21 APPLY      4         
+   22 APPLYFRAME 1     2         
+   23 SKIP       2         
+   24 CASEERROR 
+   25 RETURN    
+CodeBox(lambda28,5)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
     3 TRY        3     true      
     4 ISNIL      [2]       
     5 LIST       0         
-    6 SKIP       16        
-    7 TRY        13    false     
+    6 SKIP       24        
+    7 TRY        21    false     
     8 ISCONS     [2]       
     9 SETFRAME   4     [2].head()
    10 SETFRAME   3     [2].tail()
    11 STARTCALL 
    12 FRAMEVAR   4         
    13 APPLYFRAME 0     1         
-   14 STARTCALL 
-   15 FRAMEVAR   0         
-   16 FRAMEVAR   3         
-   17 DYNAMIC    29        
-   18 APPLY      2         
-   19 CONS      
-   20 SKIP       2         
-   21 CASEERROR 
-   22 RETURN    
-CodeBox(lambda195,6)
+   14 SKIPFALSE  9         
+   15 FRAMEVAR   4         
+   16 STARTCALL 
+   17 FRAMEVAR   0         
+   18 FRAMEVAR   3         
+   19 DYNAMIC    4         
+   20 APPLY      2         
+   21 CONS      
+   22 SKIP       6         
+   23 STARTCALL 
+   24 FRAMEVAR   0         
+   25 FRAMEVAR   3         
+   26 DYNAMIC    4         
+   27 APPLY      2         
+   28 SKIP       2         
+   29 CASEERROR 
+   30 RETURN    
+CodeBox(lambda27,5)
+    0 FRAMEVAR   1         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [2]       
+    5 INT        0         
+    6 SKIP       27        
+    7 TRY        14    false     
+    8 ISCONS     [2]       
+    9 SETFRAME   4     [2].head()
+   10 SETFRAME   3     [2].tail()
+   11 FRAMEVAR   4         
+   12 FRAMEVAR   0         
+   13 EQL       
+   14 FAILFALSE 
+   15 STARTCALL 
+   16 FRAMEVAR   0         
+   17 FRAMEVAR   3         
+   18 DYNAMIC    5         
+   19 APPLY      2         
+   20 ADD1      
+   21 SKIP       12        
+   22 TRY        9     false     
+   23 ISCONS     [2]       
+   24 SETFRAME   4     [2].head()
+   25 SETFRAME   3     [2].tail()
+   26 STARTCALL 
+   27 FRAMEVAR   0         
+   28 FRAMEVAR   3         
+   29 DYNAMIC    5         
+   30 APPLY      2         
+   31 SKIP       2         
+   32 CASEERROR 
+   33 RETURN    
+CodeBox(lambda58,3)
+    0 FRAMEVAR   0         
+    1 DYNAMIC    11        
+    2 GRE       
+    3 SKIPFALSE  25        
+    4 DYNAMIC    0         
+    5 SETFRAME   1         
+    6 FRAMEVAR   1         
+    7 ISNIL     
+    8 SKIPTRUE   13        
+    9 FRAMEVAR   1         
+   10 HEAD      
+   11 SETFRAME   2         
+   12 POP       
+   13 FRAMEVAR   1         
+   14 TAIL      
+   15 SETFRAME   1         
+   16 POP       
+   17 FRAMEVAR   2         
+   18 NAMEDSEND Die/0
+   19 POP       
+   20 GOTO       6         
+   21 NULL      
+   22 POP       
+   23 STARTCALL 
+   24 SELF      
+   25 DYNAMIC    29        
+   26 APPLY      1         
+   27 SKIP       19        
+   28 DYNAMIC    0         
+   29 SETFRAME   1         
+   30 FRAMEVAR   1         
+   31 ISNIL     
+   32 SKIPTRUE   13        
+   33 FRAMEVAR   1         
+   34 HEAD      
+   35 SETFRAME   2         
+   36 POP       
+   37 FRAMEVAR   1         
+   38 TAIL      
+   39 SETFRAME   1         
+   40 POP       
+   41 FRAMEVAR   2         
+   42 NAMEDSEND Turn/0
+   43 POP       
+   44 GOTO       30        
+   45 NULL      
+   46 RETURN    
+CodeBox(lambda26,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [1]       
+    5 LIST       0         
+    6 SKIP       19        
+    7 TRY        5     false     
+    8 ISCONS     [1]       
+    9 SETFRAME   2     [1].head()
+   10 ISNIL      [1].tail()
+   11 LIST       0         
+   12 SKIP       13        
+   13 TRY        10    false     
+   14 ISCONS     [1]       
+   15 SETFRAME   2     [1].head()
+   16 SETFRAME   3     [1].tail()
+   17 FRAMEVAR   2         
+   18 STARTCALL 
+   19 FRAMEVAR   3         
+   20 DYNAMIC    6         
+   21 APPLY      1         
+   22 CONS      
+   23 SKIP       2         
+   24 CASEERROR 
+   25 RETURN    
+CodeBox(lambda57,11)
+    0 NULL      
+    1 NEWDYNAMIC
+    2 LIST       0         
+    3 SETDYNAMIC 0         
+    4 POP       
+    5 STR        main      
+    6 STR        Time      
+    7 Fun(1)
+    8 BEHAVIOUR 
+    9 POPDYNAMIC
+   10 RETURN    
+CodeBox(lambda25,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        4     true      
+    4 ISNIL      [1]       
+    5 STR        cannot find last element of emply list
+    6 THROW     
+    7 SKIP       17        
+    8 TRY        5     false     
+    9 ISCONS     [1]       
+   10 SETFRAME   2     [1].head()
+   11 ISNIL      [1].tail()
+   12 FRAMEVAR   2         
+   13 SKIP       11        
+   14 TRY        8     false     
+   15 ISCONS     [1]       
+   16 SETFRAME   2     [1].head()
+   17 SETFRAME   3     [1].tail()
+   18 STARTCALL 
+   19 FRAMEVAR   3         
+   20 DYNAMIC    7         
+   21 APPLY      1         
+   22 SKIP       2         
+   23 CASEERROR 
+   24 RETURN    
+CodeBox(lambda56,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        28    true      
+    4 ISCONS     [1]       
+    5 SETFRAME   3     [1].head()
+    6 SETFRAME   2     [1].tail()
+    7 STARTCALL 
+    8 DYNAMIC    1         
+    9 DYNAMIC    4         
+   10 EQL       
+   11 FRAMEVAR   3         
+   12 DYNAMIC    3         
+   13 EQL       
+   14 AND       
+   15 NOT       
+   16 SKIPFALSE  8         
+   17 STARTCALL 
+   18 DYNAMIC    1         
+   19 FRAMEVAR   3         
+   20 APPDYNAMIC 8     2         
+   21 LIST       1         
+   22 LIST       1         
+   23 SKIP       2         
+   24 LIST       0         
+   25 REF        [Key(flatten)]
+   26 APPLY      1         
+   27 STARTCALL 
+   28 FRAMEVAR   2         
+   29 APPDYNAMIC 0     1         
+   30 CONS      
+   31 SKIP       6         
+   32 TRY        3     false     
+   33 ISNIL      [1]       
+   34 LIST       0         
+   35 SKIP       2         
+   36 CASEERROR 
+   37 RETURN    
+CodeBox(lambda24,5)
+    0 FRAMEVAR   1         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [2]       
+    5 LIST       0         
+    6 SKIP       28        
+    7 TRY        15    false     
+    8 ISCONS     [2]       
+    9 SETFRAME   4     [2].head()
+   10 SETFRAME   3     [2].tail()
+   11 STARTCALL 
+   12 FRAMEVAR   4         
+   13 APPLYFRAME 0     1         
+   14 FAILFALSE 
+   15 FRAMEVAR   4         
+   16 STARTCALL 
+   17 FRAMEVAR   0         
+   18 FRAMEVAR   3         
+   19 DYNAMIC    8         
+   20 APPLY      2         
+   21 CONS      
+   22 SKIP       12        
+   23 TRY        9     false     
+   24 ISCONS     [2]       
+   25 SETFRAME   4     [2].head()
+   26 SETFRAME   3     [2].tail()
+   27 STARTCALL 
+   28 FRAMEVAR   0         
+   29 FRAMEVAR   3         
+   30 DYNAMIC    8         
+   31 APPLY      2         
+   32 SKIP       2         
+   33 CASEERROR 
+   34 RETURN    
+CodeBox(lambda55,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        29    true      
+    4 NULL      
+    5 NEWDYNAMIC
+    6 ISCONS     [1]       
+    7 SETDYNAMIC [1].head() 0         
+    8 SETFRAME   2     [1].tail()
+    9 STARTCALL 
+   10 NULL      
+   11 NEWDYNAMIC
+   12 STR        map1      
+   13 Fun(1)
+   14 SETDYNAMIC 0         
+   15 POP       
+   16 STARTCALL 
+   17 DYNAMIC    3         
+   18 INT        1         
+   19 SUB       
+   20 DYNAMIC    3         
+   21 ADD1      
+   22 TO        
+   23 APPDYNAMIC 0     1         
+   24 POPDYNAMIC
+   25 REF        [Key(flatten)]
+   26 APPLY      1         
+   27 STARTCALL 
+   28 FRAMEVAR   2         
+   29 APPDYNAMIC 1     1         
+   30 CONS      
+   31 POPDYNAMIC
+   32 SKIP       7         
+   33 TRY        4     false     
+   34 POPDYNAMIC
+   35 ISNIL      [1]       
+   36 LIST       0         
+   37 SKIP       2         
+   38 CASEERROR 
+   39 RETURN    
+CodeBox(lambda23,5)
+    0 FRAMEVAR   1         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        5     true      
+    4 ISNIL      [2]       
+    5 INT        0         
+    6 INT        1         
+    7 SUB       
+    8 SKIP       23        
+    9 TRY        9     false     
+   10 ISCONS     [2]       
+   11 SETFRAME   3     [2].head()
+   12 SETFRAME   4     [2].tail()
+   13 FRAMEVAR   3         
+   14 FRAMEVAR   0         
+   15 EQL       
+   16 FAILFALSE 
+   17 INT        0         
+   18 SKIP       13        
+   19 TRY        10    false     
+   20 ISCONS     [2]       
+   21 SETFRAME   3     [2].head()
+   22 SETFRAME   4     [2].tail()
+   23 STARTCALL 
+   24 FRAMEVAR   0         
+   25 FRAMEVAR   4         
+   26 DYNAMIC    9         
+   27 APPLY      2         
+   28 ADD1      
+   29 SKIP       2         
+   30 CASEERROR 
+   31 RETURN    
+CodeBox(lambda54,7)
+    0 FRAMEVAR   0         
+    1 NEWDYNAMIC
+    2 FRAMEVAR   1         
+    3 NEWDYNAMIC
+    4 STARTCALL 
+    5 STARTCALL 
+    6 NULL      
+    7 NEWDYNAMIC
+    8 STR        map0      
+    9 Fun(1)
+   10 SETDYNAMIC 0         
+   11 POP       
+   12 STARTCALL 
+   13 DYNAMIC    2         
+   14 INT        1         
+   15 SUB       
+   16 DYNAMIC    2         
+   17 ADD1      
+   18 TO        
+   19 APPDYNAMIC 0     1         
+   20 POPDYNAMIC
+   21 REF        [Key(flatten)]
+   22 APPLY      1         
+   23 REF        [Key(flatten)]
+   24 APPLY      1         
+   25 SETFRAME   2         
+   26 POP       
+   27 STARTCALL 
+   28 DYNAMIC    1         
+   29 DYNAMIC    0         
+   30 APPDYNAMIC 6     2         
+   31 SETFRAME   3         
+   32 POP       
+   33 STARTCALL 
+   34 FRAMEVAR   3         
+   35 FRAMEVAR   2         
+   36 REF        [Key(occurrences)]
+   37 APPLY      2         
+   38 SETFRAME   4         
+   39 POP       
+   40 STARTCALL 
+   41 STARTCALL 
+   42 FRAMEVAR   3         
+   43 APPDYNAMIC 11    1         
+   44 FRAMEVAR   2         
+   45 REF        [Key(occurrences)]
+   46 APPLY      2         
+   47 SETFRAME   5         
+   48 POP       
+   49 STARTCALL 
+   50 STARTCALL 
+   51 FRAMEVAR   4         
+   52 APPDYNAMIC 22    1         
+   53 STARTCALL 
+   54 FRAMEVAR   4         
+   55 FRAMEVAR   5         
+   56 ADD       
+   57 APPDYNAMIC 22    1         
+   58 DIV       
+   59 instrs.data.Float@1fcfa332
+   60 MUL       
+   61 APPDYNAMIC 21    1         
+   62 RETURN    
+CodeBox(lambda22,6)
     0 FRAMEVAR   0         
     1 SETFRAME   3         
     2 POP       
-    3 TRY        3     true      
+    3 TRY        4     true      
     4 ISNIL      [3]       
-    5 FRAMEVAR   1         
-    6 SKIP       23        
-    7 TRY        9     false     
-    8 ISCONS     [3]       
-    9 SETFRAME   5     [3].head()
-   10 SETFRAME   4     [3].tail()
-   11 STARTCALL 
-   12 FRAMEVAR   5         
-   13 APPLYFRAME 2     1         
+    5 STR        cannot replace nth of []
+    6 THROW     
+    7 SKIP       28        
+    8 TRY        10    false     
+    9 ISCONS     [3]       
+   10 SETFRAME   5     [3].head()
+   11 SETFRAME   4     [3].tail()
+   12 FRAMEVAR   1         
+   13 IS0       
    14 FAILFALSE 
-   15 FRAMEVAR   5         
-   16 SKIP       13        
-   17 TRY        10    false     
-   18 ISCONS     [3]       
-   19 SETFRAME   5     [3].head()
-   20 SETFRAME   4     [3].tail()
-   21 STARTCALL 
-   22 FRAMEVAR   4         
-   23 FRAMEVAR   1         
-   24 FRAMEVAR   2         
-   25 DYNAMIC    30        
-   26 APPLY      3         
-   27 SKIP       2         
-   28 CASEERROR 
-   29 RETURN    
-CodeBox(behaviour13,12)
+   15 FRAMEVAR   2         
+   16 FRAMEVAR   4         
+   17 CONS      
+   18 SKIP       17        
+   19 TRY        14    false     
+   20 ISCONS     [3]       
+   21 SETFRAME   5     [3].head()
+   22 SETFRAME   4     [3].tail()
+   23 FRAMEVAR   5         
+   24 STARTCALL 
+   25 FRAMEVAR   4         
+   26 FRAMEVAR   1         
+   27 INT        1         
+   28 SUB       
+   29 FRAMEVAR   2         
+   30 DYNAMIC    10        
+   31 APPLY      3         
+   32 CONS      
+   33 SKIP       2         
+   34 CASEERROR 
+   35 RETURN    
+CodeBox(lambda53,3)
+    0 STARTCALL 
+    1 DYNAMIC    5         
+    2 FRAMEVAR   1         
+    3 STARTCALL 
+    4 STARTCALL 
+    5 DYNAMIC    5         
+    6 FRAMEVAR   1         
+    7 REF        [Key(nth)]
+    8 APPLY      2         
+    9 FRAMEVAR   0         
+   10 FRAMEVAR   2         
+   11 REF        [Key(replaceNth)]
+   12 APPLY      3         
+   13 REF        [Key(replaceNth)]
+   14 APPLY      3         
+   15 STATE      population -1        
+   16 SETDYNAMIC 5         
+   17 POP       
+   18 FRAMEVAR   0         
+   19 FRAMEVAR   1         
+   20 STARTCALL 
+   21 FRAMEVAR   2         
+   22 APPDYNAMIC 8     1         
+   23 DYNAMIC    0         
+   24 NAMEDSEND SetColour/3
+   25 RETURN    
+CodeBox(lambda21,7)
+    0 FRAMEVAR   1         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [2]       
+    5 FALSE     
+    6 SKIP       41        
+    7 TRY        32    false     
+    8 ISCONS     [2]       
+    9 SETFRAME   3     [2].head()
+   10 SETFRAME   4     [2].tail()
+   11 STARTCALL 
+   12 FRAMEVAR   3         
+   13 APPLYFRAME 0     1         
+   14 FAILFALSE 
+   15 FRAMEVAR   0         
+   16 SETFRAME   5         
+   17 POP       
+   18 FRAMEVAR   4         
+   19 SETFRAME   6         
+   20 POP       
+   21 FRAMEVAR   6         
+   22 ISNIL     
+   23 SKIPTRUE   12        
+   24 STARTCALL 
+   25 FRAMEVAR   6         
+   26 HEAD      
+   27 FRAMEVAR   5         
+   28 APPLY      1         
+   29 SKIPFALSE  8         
+   30 FRAMEVAR   6         
+   31 TAIL      
+   32 SETFRAME   6         
+   33 POP       
+   34 GOTO       21        
+   35 TRUE      
+   36 SKIP       3         
+   37 FALSE     
+   38 NOOP      
+   39 SKIP       8         
+   40 TRY        5     false     
+   41 ISCONS     [2]       
+   42 SETFRAME   3     [2].head()
+   43 SETFRAME   4     [2].tail()
+   44 FALSE     
+   45 SKIP       2         
+   46 CASEERROR 
+   47 RETURN    
+CodeBox(lambda52,2)
+    0 STARTCALL 
+    1 FRAMEVAR   0         
+    2 APPDYNAMIC 7     1         
+    3 STARTCALL 
+    4 FRAMEVAR   1         
+    5 APPDYNAMIC 6     1         
+    6 AND       
+    7 SKIPFALSE  7         
+    8 STARTCALL 
+    9 FRAMEVAR   0         
+   10 FRAMEVAR   1         
+   11 APPDYNAMIC 4     2         
+   12 LIST       1         
+   13 SKIP       2         
+   14 LIST       0         
+   15 RETURN    
+CodeBox(lambda20,7)
+    0 FRAMEVAR   1         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [2]       
+    5 FALSE     
+    6 SKIP       41        
+    7 TRY        9     false     
+    8 ISCONS     [2]       
+    9 SETFRAME   3     [2].head()
+   10 SETFRAME   4     [2].tail()
+   11 STARTCALL 
+   12 FRAMEVAR   3         
+   13 APPLYFRAME 0     1         
+   14 FAILFALSE 
+   15 TRUE      
+   16 SKIP       31        
+   17 TRY        28    false     
+   18 ISCONS     [2]       
+   19 SETFRAME   3     [2].head()
+   20 SETFRAME   4     [2].tail()
+   21 FRAMEVAR   0         
+   22 SETFRAME   5         
+   23 POP       
+   24 FRAMEVAR   4         
+   25 SETFRAME   6         
+   26 POP       
+   27 FRAMEVAR   6         
+   28 ISNIL     
+   29 SKIPTRUE   12        
+   30 STARTCALL 
+   31 FRAMEVAR   6         
+   32 HEAD      
+   33 FRAMEVAR   5         
+   34 APPLY      1         
+   35 SKIPTRUE   8         
+   36 FRAMEVAR   6         
+   37 TAIL      
+   38 SETFRAME   6         
+   39 POP       
+   40 GOTO       27        
+   41 FALSE     
+   42 SKIP       3         
+   43 TRUE      
+   44 NOOP      
+   45 SKIP       2         
+   46 CASEERROR 
+   47 RETURN    
+CodeBox(lambda51,2)
+    0 STARTCALL 
+    1 STARTCALL 
+    2 DYNAMIC    5         
+    3 FRAMEVAR   1         
+    4 REF        [Key(nth)]
+    5 APPLY      2         
+    6 FRAMEVAR   0         
+    7 REF        [Key(nth)]
+    8 APPLY      2         
+    9 RETURN    
+CodeBox(lambda50,0)
+    0 DYNAMIC    13        
+    1 RETURN    
+CodeBox(behaviour1,12)
     0 FRAMEVAR   0         
     1 TRY        30    true      
     2 ISTERM     Time  1          [0]       
@@ -266,20 +736,7 @@ CodeBox(behaviour13,12)
   121 GOTO       60        
   122 NULL      
   123 POPFRAME  
-CodeBox(lambda194,2)
-    0 STARTCALL 
-    1 FRAMEVAR   0         
-    2 FRAMEVAR   1         
-    3 DYNAMIC    14        
-    4 APPLY      2         
-    5 SKIPFALSE  3         
-    6 FRAMEVAR   1         
-    7 SKIP       4         
-    8 FRAMEVAR   0         
-    9 FRAMEVAR   1         
-   10 CONS      
-   11 RETURN    
-CodeBox(behaviour12,2)
+CodeBox(behaviour0,2)
     0 FRAMEVAR   0         
     1 TRY        6     true      
     2 ISTERM     Die   0          [0]       
@@ -290,8 +747,8 @@ CodeBox(behaviour12,2)
     7 SKIP       31        
     8 TRY        28    false     
     9 ISTERM     Turn  0          [0]       
-   10 instrs.vars.PushDynamic@44d54d85
-   11 instrs.control.Grab@4a12bb6f
+   10 instrs.vars.PushDynamic@619a4819
+   11 instrs.control.Grab@76a3d9da
    12 DYNAMIC    2         
    13 DYNAMIC    1         
    14 DYNAMIC    3         
@@ -314,315 +771,82 @@ CodeBox(behaviour12,2)
    31 APPDYNAMIC 0     2         
    32 SKIP       2         
    33 NULL      
-   34 instrs.vars.PushDynamic@4e2d26f5
-   35 instrs.control.Release@b2fb154
+   34 instrs.vars.PushDynamic@232aa3b3
+   35 instrs.control.Release@411e52d7
    36 SKIP       2         
    37 CASEERROR 
    38 RETURN    
    39 NULL      
    40 POPFRAME  
-CodeBox(lambda229,2)
-    0 STARTCALL 
-    1 FRAMEVAR   0         
-    2 FRAMEVAR   1         
-    3 DYNAMIC    0         
-    4 APPLY      2         
-    5 NULL      
-    6 NEQL      
-    7 RETURN    
-CodeBox(lambda228,6)
+CodeBox(lambda19,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [1]       
+    5 LIST       0         
+    6 SKIP       14        
+    7 TRY        11    false     
+    8 ISCONS     [1]       
+    9 SETFRAME   2     [1].head()
+   10 SETFRAME   3     [1].tail()
+   11 STARTCALL 
+   12 FRAMEVAR   3         
+   13 DYNAMIC    13        
+   14 APPLY      1         
+   15 FRAMEVAR   2         
+   16 LIST       1         
+   17 ADD       
+   18 SKIP       2         
+   19 CASEERROR 
+   20 RETURN    
+CodeBox(lambda18,5)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
     3 TRY        3     true      
     4 ISNIL      [2]       
-    5 NULL      
+    5 FALSE     
     6 SKIP       22        
-    7 TRY        19    false     
+    7 TRY        9     false     
     8 ISCONS     [2]       
-    9 ISTERM     TableEntry 2          [2].head()
-   10 SETFRAME   3     [2].head().ref(0)
-   11 SETFRAME   4     [2].head().ref(1)
-   12 SETFRAME   5     [2].tail()
-   13 FRAMEVAR   3         
-   14 FRAMEVAR   0         
-   15 EQL       
-   16 SKIPFALSE  5         
-   17 FRAMEVAR   3         
-   18 FRAMEVAR   4         
-   19 TERM       TableEntry 2         
-   20 SKIP       6         
+    9 SETFRAME   3     [2].head()
+   10 SETFRAME   4     [2].tail()
+   11 FRAMEVAR   3         
+   12 FRAMEVAR   0         
+   13 EQL       
+   14 FAILFALSE 
+   15 TRUE      
+   16 SKIP       12        
+   17 TRY        9     false     
+   18 ISCONS     [2]       
+   19 SETFRAME   3     [2].head()
+   20 SETFRAME   4     [2].tail()
    21 STARTCALL 
    22 FRAMEVAR   0         
-   23 FRAMEVAR   5         
-   24 DYNAMIC    0         
+   23 FRAMEVAR   4         
+   24 DYNAMIC    14        
    25 APPLY      2         
    26 SKIP       2         
    27 CASEERROR 
    28 RETURN    
-CodeBox(lambda227,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [1]       
-    5 LIST       0         
-    6 SKIP       17        
-    7 TRY        14    false     
-    8 ISCONS     [1]       
-    9 SETFRAME   2     [1].head()
-   10 SETFRAME   3     [1].tail()
-   11 FRAMEVAR   2         
-   12 STARTCALL 
-   13 STARTCALL 
-   14 FRAMEVAR   2         
-   15 FRAMEVAR   3         
-   16 DYNAMIC    28        
-   17 APPLY      2         
-   18 DYNAMIC    1         
-   19 APPLY      1         
-   20 CONS      
-   21 SKIP       2         
-   22 CASEERROR 
-   23 RETURN    
-CodeBox(lambda226,2)
-    0 FRAMEVAR   0         
-    1 FRAMEVAR   1         
-    2 ADD       
-    3 RETURN    
-CodeBox(lambda225,1)
-    0 STARTCALL 
-    1 DYNAMIC    2         
-    2 STR        fun145    
-    3 Fun(2)
-    4 INT        0         
-    5 FRAMEVAR   0         
-    6 DYNAMIC    3         
-    7 APPLY      4         
-    8 RETURN    
-CodeBox(lambda224,1)
-    0 FRAMEVAR   0         
+CodeBox(lambda49,0)
+    0 DYNAMIC    11        
     1 RETURN    
-CodeBox(lambda223,7)
-    0 FRAMEVAR   3         
-    1 SETFRAME   4         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [4]       
-    5 FRAMEVAR   2         
-    6 SKIP       19        
-    7 TRY        16    false     
-    8 ISCONS     [4]       
-    9 SETFRAME   6     [4].head()
-   10 SETFRAME   5     [4].tail()
-   11 STARTCALL 
-   12 STARTCALL 
-   13 FRAMEVAR   6         
-   14 APPLYFRAME 0     1         
-   15 STARTCALL 
-   16 FRAMEVAR   0         
-   17 FRAMEVAR   1         
-   18 FRAMEVAR   2         
-   19 FRAMEVAR   5         
-   20 DYNAMIC    3         
-   21 APPLY      4         
-   22 APPLYFRAME 1     2         
-   23 SKIP       2         
-   24 CASEERROR 
-   25 RETURN    
-CodeBox(lambda222,5)
-    0 FRAMEVAR   1         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [2]       
-    5 LIST       0         
-    6 SKIP       24        
-    7 TRY        21    false     
-    8 ISCONS     [2]       
-    9 SETFRAME   4     [2].head()
-   10 SETFRAME   3     [2].tail()
-   11 STARTCALL 
-   12 FRAMEVAR   4         
-   13 APPLYFRAME 0     1         
-   14 SKIPFALSE  9         
-   15 FRAMEVAR   4         
-   16 STARTCALL 
-   17 FRAMEVAR   0         
-   18 FRAMEVAR   3         
-   19 DYNAMIC    4         
-   20 APPLY      2         
-   21 CONS      
-   22 SKIP       6         
-   23 STARTCALL 
-   24 FRAMEVAR   0         
-   25 FRAMEVAR   3         
-   26 DYNAMIC    4         
-   27 APPLY      2         
-   28 SKIP       2         
-   29 CASEERROR 
-   30 RETURN    
-CodeBox(lambda221,5)
-    0 FRAMEVAR   1         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [2]       
-    5 INT        0         
-    6 SKIP       27        
-    7 TRY        14    false     
-    8 ISCONS     [2]       
-    9 SETFRAME   4     [2].head()
-   10 SETFRAME   3     [2].tail()
-   11 FRAMEVAR   4         
-   12 FRAMEVAR   0         
-   13 EQL       
-   14 FAILFALSE 
-   15 STARTCALL 
-   16 FRAMEVAR   0         
-   17 FRAMEVAR   3         
-   18 DYNAMIC    5         
-   19 APPLY      2         
-   20 ADD1      
-   21 SKIP       12        
-   22 TRY        9     false     
-   23 ISCONS     [2]       
-   24 SETFRAME   4     [2].head()
-   25 SETFRAME   3     [2].tail()
-   26 STARTCALL 
-   27 FRAMEVAR   0         
-   28 FRAMEVAR   3         
-   29 DYNAMIC    5         
-   30 APPLY      2         
-   31 SKIP       2         
-   32 CASEERROR 
-   33 RETURN    
-CodeBox(lambda252,3)
-    0 FRAMEVAR   0         
-    1 DYNAMIC    11        
-    2 GRE       
-    3 SKIPFALSE  25        
-    4 DYNAMIC    0         
-    5 SETFRAME   1         
-    6 FRAMEVAR   1         
-    7 ISNIL     
-    8 SKIPTRUE   13        
-    9 FRAMEVAR   1         
-   10 HEAD      
-   11 SETFRAME   2         
-   12 POP       
-   13 FRAMEVAR   1         
-   14 TAIL      
-   15 SETFRAME   1         
-   16 POP       
-   17 FRAMEVAR   2         
-   18 NAMEDSEND Die/0
-   19 POP       
-   20 GOTO       6         
-   21 NULL      
-   22 POP       
-   23 STARTCALL 
-   24 SELF      
-   25 DYNAMIC    29        
-   26 APPLY      1         
-   27 SKIP       19        
-   28 DYNAMIC    0         
-   29 SETFRAME   1         
-   30 FRAMEVAR   1         
-   31 ISNIL     
-   32 SKIPTRUE   13        
-   33 FRAMEVAR   1         
-   34 HEAD      
-   35 SETFRAME   2         
-   36 POP       
-   37 FRAMEVAR   1         
-   38 TAIL      
-   39 SETFRAME   1         
-   40 POP       
-   41 FRAMEVAR   2         
-   42 NAMEDSEND Turn/0
-   43 POP       
-   44 GOTO       30        
-   45 NULL      
-   46 RETURN    
-CodeBox(lambda220,4)
+CodeBox(lambda17,3)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
     3 TRY        3     true      
     4 ISNIL      [1]       
-    5 LIST       0         
-    6 SKIP       19        
-    7 TRY        5     false     
-    8 ISCONS     [1]       
-    9 SETFRAME   2     [1].head()
-   10 ISNIL      [1].tail()
-   11 LIST       0         
-   12 SKIP       13        
-   13 TRY        10    false     
-   14 ISCONS     [1]       
-   15 SETFRAME   2     [1].head()
-   16 SETFRAME   3     [1].tail()
-   17 FRAMEVAR   2         
-   18 STARTCALL 
-   19 FRAMEVAR   3         
-   20 DYNAMIC    6         
-   21 APPLY      1         
-   22 CONS      
-   23 SKIP       2         
-   24 CASEERROR 
-   25 RETURN    
-CodeBox(lambda251,11)
-    0 NULL      
-    1 NEWDYNAMIC
-    2 LIST       0         
-    3 SETDYNAMIC 0         
-    4 POP       
-    5 STR        main      
-    6 STR        Time      
-    7 Fun(1)
-    8 BEHAVIOUR 
-    9 POPDYNAMIC
-   10 RETURN    
-CodeBox(lambda250,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        28    true      
-    4 ISCONS     [1]       
-    5 SETFRAME   3     [1].head()
-    6 SETFRAME   2     [1].tail()
-    7 STARTCALL 
-    8 DYNAMIC    1         
-    9 DYNAMIC    4         
-   10 EQL       
-   11 FRAMEVAR   3         
-   12 DYNAMIC    3         
-   13 EQL       
-   14 AND       
-   15 NOT       
-   16 SKIPFALSE  8         
-   17 STARTCALL 
-   18 DYNAMIC    1         
-   19 FRAMEVAR   3         
-   20 APPDYNAMIC 8     2         
-   21 LIST       1         
-   22 LIST       1         
-   23 SKIP       2         
-   24 LIST       0         
-   25 REF        [Key(flatten)]
-   26 APPLY      1         
-   27 STARTCALL 
-   28 FRAMEVAR   2         
-   29 APPDYNAMIC 0     1         
-   30 CONS      
-   31 SKIP       6         
-   32 TRY        3     false     
-   33 ISNIL      [1]       
-   34 LIST       0         
-   35 SKIP       2         
-   36 CASEERROR 
-   37 RETURN    
+    5 TRUE      
+    6 SKIP       6         
+    7 TRY        3     false     
+    8 SETFRAME   2     [1]       
+    9 FALSE     
+   10 SKIP       2         
+   11 CASEERROR 
+   12 RETURN    
 CodeBox(asm/segregation.asm,47)
     0 STARTCALL 
     1 NULL      
@@ -781,11 +1005,11 @@ CodeBox(asm/segregation.asm,47)
   154 Fun(3)
   155 SETDYNAMIC 17        
   156 POP       
-  157 STR        fun140    
+  157 STR        fun102    
   158 Fun(1)
   159 SETDYNAMIC 16        
   160 POP       
-  161 STR        fun141    
+  161 STR        fun103    
   162 Fun(1)
   163 SETDYNAMIC 15        
   164 POP       
@@ -809,11 +1033,11 @@ CodeBox(asm/segregation.asm,47)
   182 Fun(1)
   183 SETDYNAMIC 13        
   184 POP       
-  185 STR        fun142    
+  185 STR        fun104    
   186 Fun(2)
   187 SETDYNAMIC 12        
   188 POP       
-  189 STR        fun143    
+  189 STR        fun105    
   190 Fun(2)
   191 SETDYNAMIC 11        
   192 POP       
@@ -873,7 +1097,7 @@ CodeBox(asm/segregation.asm,47)
   246 Fun(4)
   247 SETDYNAMIC 3         
   248 POP       
-  249 STR        fun144    
+  249 STR        fun106    
   250 Fun(1)
   251 SETDYNAMIC 2         
   252 POP       
@@ -1091,7 +1315,7 @@ CodeBox(asm/segregation.asm,47)
   464 INT        2         
   465 SETDYNAMIC 11        
   466 POP       
-  467 INT        2000      
+  467 INT        1         
   468 SETDYNAMIC 10        
   469 POP       
   470 STR        opp       
@@ -1143,9 +1367,9 @@ CodeBox(asm/segregation.asm,47)
   516 INT        100       
   517 DYNAMIC    14        
   518 SUB       
-  519 STR        fun138    
+  519 STR        fun100    
   520 Fun(0)
-  521 STR        fun139    
+  521 STR        fun101    
   522 Fun(0)
   523 DYNAMIC    24        
   524 APPLY      3         
@@ -1238,472 +1462,10 @@ CodeBox(asm/segregation.asm,47)
   611 SELF      
   612 APPDYNAMIC 5     1         
   613 RETURN    
-CodeBox(lambda219,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        4     true      
-    4 ISNIL      [1]       
-    5 STR        cannot find last element of emply list
-    6 THROW     
-    7 SKIP       17        
-    8 TRY        5     false     
-    9 ISCONS     [1]       
-   10 SETFRAME   2     [1].head()
-   11 ISNIL      [1].tail()
-   12 FRAMEVAR   2         
-   13 SKIP       11        
-   14 TRY        8     false     
-   15 ISCONS     [1]       
-   16 SETFRAME   2     [1].head()
-   17 SETFRAME   3     [1].tail()
-   18 STARTCALL 
-   19 FRAMEVAR   3         
-   20 DYNAMIC    7         
-   21 APPLY      1         
-   22 SKIP       2         
-   23 CASEERROR 
-   24 RETURN    
-CodeBox(lambda218,5)
-    0 FRAMEVAR   1         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [2]       
-    5 LIST       0         
-    6 SKIP       28        
-    7 TRY        15    false     
-    8 ISCONS     [2]       
-    9 SETFRAME   4     [2].head()
-   10 SETFRAME   3     [2].tail()
-   11 STARTCALL 
-   12 FRAMEVAR   4         
-   13 APPLYFRAME 0     1         
-   14 FAILFALSE 
-   15 FRAMEVAR   4         
-   16 STARTCALL 
-   17 FRAMEVAR   0         
-   18 FRAMEVAR   3         
-   19 DYNAMIC    8         
-   20 APPLY      2         
-   21 CONS      
-   22 SKIP       12        
-   23 TRY        9     false     
-   24 ISCONS     [2]       
-   25 SETFRAME   4     [2].head()
-   26 SETFRAME   3     [2].tail()
-   27 STARTCALL 
-   28 FRAMEVAR   0         
-   29 FRAMEVAR   3         
-   30 DYNAMIC    8         
-   31 APPLY      2         
-   32 SKIP       2         
-   33 CASEERROR 
-   34 RETURN    
-CodeBox(lambda249,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        29    true      
-    4 NULL      
-    5 NEWDYNAMIC
-    6 ISCONS     [1]       
-    7 SETDYNAMIC [1].head() 0         
-    8 SETFRAME   2     [1].tail()
-    9 STARTCALL 
-   10 NULL      
-   11 NEWDYNAMIC
-   12 STR        map8      
-   13 Fun(1)
-   14 SETDYNAMIC 0         
-   15 POP       
-   16 STARTCALL 
-   17 DYNAMIC    3         
-   18 INT        1         
-   19 SUB       
-   20 DYNAMIC    3         
-   21 ADD1      
-   22 TO        
-   23 APPDYNAMIC 0     1         
-   24 POPDYNAMIC
-   25 REF        [Key(flatten)]
-   26 APPLY      1         
-   27 STARTCALL 
-   28 FRAMEVAR   2         
-   29 APPDYNAMIC 1     1         
-   30 CONS      
-   31 POPDYNAMIC
-   32 SKIP       7         
-   33 TRY        4     false     
-   34 POPDYNAMIC
-   35 ISNIL      [1]       
-   36 LIST       0         
-   37 SKIP       2         
-   38 CASEERROR 
-   39 RETURN    
-CodeBox(lambda217,5)
-    0 FRAMEVAR   1         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        5     true      
-    4 ISNIL      [2]       
-    5 INT        0         
-    6 INT        1         
-    7 SUB       
-    8 SKIP       23        
-    9 TRY        9     false     
-   10 ISCONS     [2]       
-   11 SETFRAME   3     [2].head()
-   12 SETFRAME   4     [2].tail()
-   13 FRAMEVAR   3         
-   14 FRAMEVAR   0         
-   15 EQL       
-   16 FAILFALSE 
-   17 INT        0         
-   18 SKIP       13        
-   19 TRY        10    false     
-   20 ISCONS     [2]       
-   21 SETFRAME   3     [2].head()
-   22 SETFRAME   4     [2].tail()
-   23 STARTCALL 
-   24 FRAMEVAR   0         
-   25 FRAMEVAR   4         
-   26 DYNAMIC    9         
-   27 APPLY      2         
-   28 ADD1      
-   29 SKIP       2         
-   30 CASEERROR 
-   31 RETURN    
-CodeBox(lambda248,7)
-    0 FRAMEVAR   0         
-    1 NEWDYNAMIC
-    2 FRAMEVAR   1         
-    3 NEWDYNAMIC
-    4 STARTCALL 
-    5 STARTCALL 
-    6 NULL      
-    7 NEWDYNAMIC
-    8 STR        map7      
-    9 Fun(1)
-   10 SETDYNAMIC 0         
-   11 POP       
-   12 STARTCALL 
-   13 DYNAMIC    2         
-   14 INT        1         
-   15 SUB       
-   16 DYNAMIC    2         
-   17 ADD1      
-   18 TO        
-   19 APPDYNAMIC 0     1         
-   20 POPDYNAMIC
-   21 REF        [Key(flatten)]
-   22 APPLY      1         
-   23 REF        [Key(flatten)]
-   24 APPLY      1         
-   25 SETFRAME   2         
-   26 POP       
-   27 STARTCALL 
-   28 DYNAMIC    1         
-   29 DYNAMIC    0         
-   30 APPDYNAMIC 6     2         
-   31 SETFRAME   3         
-   32 POP       
-   33 STARTCALL 
-   34 FRAMEVAR   3         
-   35 FRAMEVAR   2         
-   36 REF        [Key(occurrences)]
-   37 APPLY      2         
-   38 SETFRAME   4         
-   39 POP       
-   40 STARTCALL 
-   41 STARTCALL 
-   42 FRAMEVAR   3         
-   43 APPDYNAMIC 11    1         
-   44 FRAMEVAR   2         
-   45 REF        [Key(occurrences)]
-   46 APPLY      2         
-   47 SETFRAME   5         
-   48 POP       
-   49 STARTCALL 
-   50 STARTCALL 
-   51 FRAMEVAR   4         
-   52 APPDYNAMIC 22    1         
-   53 STARTCALL 
-   54 FRAMEVAR   4         
-   55 FRAMEVAR   5         
-   56 ADD       
-   57 APPDYNAMIC 22    1         
-   58 DIV       
-   59 instrs.data.Float@65787cd1
-   60 MUL       
-   61 APPDYNAMIC 21    1         
-   62 RETURN    
-CodeBox(lambda216,6)
-    0 FRAMEVAR   0         
-    1 SETFRAME   3         
-    2 POP       
-    3 TRY        4     true      
-    4 ISNIL      [3]       
-    5 STR        cannot replace nth of []
-    6 THROW     
-    7 SKIP       28        
-    8 TRY        10    false     
-    9 ISCONS     [3]       
-   10 SETFRAME   5     [3].head()
-   11 SETFRAME   4     [3].tail()
-   12 FRAMEVAR   1         
-   13 IS0       
-   14 FAILFALSE 
-   15 FRAMEVAR   2         
-   16 FRAMEVAR   4         
-   17 CONS      
-   18 SKIP       17        
-   19 TRY        14    false     
-   20 ISCONS     [3]       
-   21 SETFRAME   5     [3].head()
-   22 SETFRAME   4     [3].tail()
-   23 FRAMEVAR   5         
-   24 STARTCALL 
-   25 FRAMEVAR   4         
-   26 FRAMEVAR   1         
-   27 INT        1         
-   28 SUB       
-   29 FRAMEVAR   2         
-   30 DYNAMIC    10        
-   31 APPLY      3         
-   32 CONS      
-   33 SKIP       2         
-   34 CASEERROR 
-   35 RETURN    
-CodeBox(lambda247,3)
-    0 STARTCALL 
-    1 DYNAMIC    5         
-    2 FRAMEVAR   1         
-    3 STARTCALL 
-    4 STARTCALL 
-    5 DYNAMIC    5         
-    6 FRAMEVAR   1         
-    7 REF        [Key(nth)]
-    8 APPLY      2         
-    9 FRAMEVAR   0         
-   10 FRAMEVAR   2         
-   11 REF        [Key(replaceNth)]
-   12 APPLY      3         
-   13 REF        [Key(replaceNth)]
-   14 APPLY      3         
-   15 STATE      population -1        
-   16 SETDYNAMIC 5         
-   17 POP       
-   18 FRAMEVAR   0         
-   19 FRAMEVAR   1         
-   20 STARTCALL 
-   21 FRAMEVAR   2         
-   22 APPDYNAMIC 8     1         
-   23 DYNAMIC    0         
-   24 NAMEDSEND SetColour/3
-   25 RETURN    
-CodeBox(lambda215,7)
-    0 FRAMEVAR   1         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [2]       
-    5 FALSE     
-    6 SKIP       41        
-    7 TRY        32    false     
-    8 ISCONS     [2]       
-    9 SETFRAME   3     [2].head()
-   10 SETFRAME   4     [2].tail()
-   11 STARTCALL 
-   12 FRAMEVAR   3         
-   13 APPLYFRAME 0     1         
-   14 FAILFALSE 
-   15 FRAMEVAR   0         
-   16 SETFRAME   5         
-   17 POP       
-   18 FRAMEVAR   4         
-   19 SETFRAME   6         
-   20 POP       
-   21 FRAMEVAR   6         
-   22 ISNIL     
-   23 SKIPTRUE   12        
-   24 STARTCALL 
-   25 FRAMEVAR   6         
-   26 HEAD      
-   27 FRAMEVAR   5         
-   28 APPLY      1         
-   29 SKIPFALSE  8         
-   30 FRAMEVAR   6         
-   31 TAIL      
-   32 SETFRAME   6         
-   33 POP       
-   34 GOTO       21        
-   35 TRUE      
-   36 SKIP       3         
-   37 FALSE     
-   38 NOOP      
-   39 SKIP       8         
-   40 TRY        5     false     
-   41 ISCONS     [2]       
-   42 SETFRAME   3     [2].head()
-   43 SETFRAME   4     [2].tail()
-   44 FALSE     
-   45 SKIP       2         
-   46 CASEERROR 
-   47 RETURN    
-CodeBox(lambda246,2)
-    0 STARTCALL 
-    1 FRAMEVAR   0         
-    2 APPDYNAMIC 7     1         
-    3 STARTCALL 
-    4 FRAMEVAR   1         
-    5 APPDYNAMIC 6     1         
-    6 AND       
-    7 SKIPFALSE  7         
-    8 STARTCALL 
-    9 FRAMEVAR   0         
-   10 FRAMEVAR   1         
-   11 APPDYNAMIC 4     2         
-   12 LIST       1         
-   13 SKIP       2         
-   14 LIST       0         
-   15 RETURN    
-CodeBox(lambda214,7)
-    0 FRAMEVAR   1         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [2]       
-    5 FALSE     
-    6 SKIP       41        
-    7 TRY        9     false     
-    8 ISCONS     [2]       
-    9 SETFRAME   3     [2].head()
-   10 SETFRAME   4     [2].tail()
-   11 STARTCALL 
-   12 FRAMEVAR   3         
-   13 APPLYFRAME 0     1         
-   14 FAILFALSE 
-   15 TRUE      
-   16 SKIP       31        
-   17 TRY        28    false     
-   18 ISCONS     [2]       
-   19 SETFRAME   3     [2].head()
-   20 SETFRAME   4     [2].tail()
-   21 FRAMEVAR   0         
-   22 SETFRAME   5         
-   23 POP       
-   24 FRAMEVAR   4         
-   25 SETFRAME   6         
-   26 POP       
-   27 FRAMEVAR   6         
-   28 ISNIL     
-   29 SKIPTRUE   12        
-   30 STARTCALL 
-   31 FRAMEVAR   6         
-   32 HEAD      
-   33 FRAMEVAR   5         
-   34 APPLY      1         
-   35 SKIPTRUE   8         
-   36 FRAMEVAR   6         
-   37 TAIL      
-   38 SETFRAME   6         
-   39 POP       
-   40 GOTO       27        
-   41 FALSE     
-   42 SKIP       3         
-   43 TRUE      
-   44 NOOP      
-   45 SKIP       2         
-   46 CASEERROR 
-   47 RETURN    
-CodeBox(lambda245,2)
-    0 STARTCALL 
-    1 STARTCALL 
-    2 DYNAMIC    5         
-    3 FRAMEVAR   1         
-    4 REF        [Key(nth)]
-    5 APPLY      2         
-    6 FRAMEVAR   0         
-    7 REF        [Key(nth)]
-    8 APPLY      2         
-    9 RETURN    
-CodeBox(lambda213,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [1]       
-    5 LIST       0         
-    6 SKIP       14        
-    7 TRY        11    false     
-    8 ISCONS     [1]       
-    9 SETFRAME   2     [1].head()
-   10 SETFRAME   3     [1].tail()
-   11 STARTCALL 
-   12 FRAMEVAR   3         
-   13 DYNAMIC    13        
-   14 APPLY      1         
-   15 FRAMEVAR   2         
-   16 LIST       1         
-   17 ADD       
-   18 SKIP       2         
-   19 CASEERROR 
-   20 RETURN    
-CodeBox(lambda244,0)
-    0 DYNAMIC    13        
-    1 RETURN    
-CodeBox(lambda212,5)
-    0 FRAMEVAR   1         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [2]       
-    5 FALSE     
-    6 SKIP       22        
-    7 TRY        9     false     
-    8 ISCONS     [2]       
-    9 SETFRAME   3     [2].head()
-   10 SETFRAME   4     [2].tail()
-   11 FRAMEVAR   3         
-   12 FRAMEVAR   0         
-   13 EQL       
-   14 FAILFALSE 
-   15 TRUE      
-   16 SKIP       12        
-   17 TRY        9     false     
-   18 ISCONS     [2]       
-   19 SETFRAME   3     [2].head()
-   20 SETFRAME   4     [2].tail()
-   21 STARTCALL 
-   22 FRAMEVAR   0         
-   23 FRAMEVAR   4         
-   24 DYNAMIC    14        
-   25 APPLY      2         
-   26 SKIP       2         
-   27 CASEERROR 
-   28 RETURN    
-CodeBox(lambda243,0)
-    0 DYNAMIC    11        
-    1 RETURN    
-CodeBox(lambda211,3)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [1]       
-    5 TRUE      
-    6 SKIP       6         
-    7 TRY        3     false     
-    8 SETFRAME   2     [1]       
-    9 FALSE     
-   10 SKIP       2         
-   11 CASEERROR 
-   12 RETURN    
-CodeBox(lambda242,0)
+CodeBox(lambda48,0)
     0 DYNAMIC    12        
     1 RETURN    
-CodeBox(lambda210,4)
+CodeBox(lambda16,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -1720,35 +1482,19 @@ CodeBox(lambda210,4)
    13 SKIP       2         
    14 CASEERROR 
    15 RETURN    
-CodeBox(lambda241,0)
+CodeBox(lambda47,0)
     0 STARTCALL 
     1 STARTCALL 
     2 DYNAMIC    15        
-    3 STR        fun136    
+    3 STR        fun98     
     4 Fun(0)
-    5 STR        fun137    
+    5 STR        fun99     
     6 Fun(0)
     7 DYNAMIC    24        
     8 APPLY      3         
     9 APPLY      0         
    10 RETURN    
-CodeBox(lambda240,1)
-    0 FRAMEVAR   0         
-    1 IS0       
-    2 FRAMEVAR   0         
-    3 DYNAMIC    16        
-    4 EQL       
-    5 FRAMEVAR   0         
-    6 INT        0         
-    7 GRE       
-    8 FRAMEVAR   0         
-    9 DYNAMIC    16        
-   10 LESS      
-   11 AND       
-   12 OR        
-   13 OR        
-   14 RETURN    
-CodeBox(lambda209,4)
+CodeBox(lambda15,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -1765,7 +1511,23 @@ CodeBox(lambda209,4)
    13 SKIP       2         
    14 CASEERROR 
    15 RETURN    
-CodeBox(lambda208,6)
+CodeBox(lambda46,1)
+    0 FRAMEVAR   0         
+    1 IS0       
+    2 FRAMEVAR   0         
+    3 DYNAMIC    16        
+    4 EQL       
+    5 FRAMEVAR   0         
+    6 INT        0         
+    7 GRE       
+    8 FRAMEVAR   0         
+    9 DYNAMIC    16        
+   10 LESS      
+   11 AND       
+   12 OR        
+   13 OR        
+   14 RETURN    
+CodeBox(lambda14,6)
     0 FRAMEVAR   2         
     1 SETFRAME   3         
     2 POP       
@@ -1801,7 +1563,7 @@ CodeBox(lambda208,6)
    32 SKIP       2         
    33 CASEERROR 
    34 RETURN    
-CodeBox(lambda239,1)
+CodeBox(lambda45,1)
     0 FRAMEVAR   0         
     1 IS0       
     2 FRAMEVAR   0         
@@ -1817,7 +1579,7 @@ CodeBox(lambda239,1)
    12 OR        
    13 OR        
    14 RETURN    
-CodeBox(lambda207,5)
+CodeBox(lambda13,5)
     0 FRAMEVAR   1         
     1 IS0       
     2 SKIPFALSE  3         
@@ -1847,7 +1609,7 @@ CodeBox(lambda207,5)
    26 SKIP       2         
    27 CASEERROR 
    28 RETURN    
-CodeBox(lambda238,1)
+CodeBox(lambda44,1)
     0 FRAMEVAR   0         
     1 DYNAMIC    12        
     2 EQL       
@@ -1862,7 +1624,7 @@ CodeBox(lambda238,1)
    11 SKIP       2         
    12 STR        blue      
    13 RETURN    
-CodeBox(lambda206,5)
+CodeBox(lambda12,5)
     0 FRAMEVAR   1         
     1 IS0       
     2 SKIPFALSE  3         
@@ -1894,7 +1656,7 @@ CodeBox(lambda206,5)
    28 SKIP       2         
    29 CASEERROR 
    30 RETURN    
-CodeBox(lambda237,1)
+CodeBox(lambda43,1)
     0 FRAMEVAR   0         
     1 DYNAMIC    12        
     2 EQL       
@@ -1903,7 +1665,7 @@ CodeBox(lambda237,1)
     5 SKIP       2         
     6 DYNAMIC    12        
     7 RETURN    
-CodeBox(lambda205,5)
+CodeBox(lambda11,5)
     0 FRAMEVAR   0         
     1 SETFRAME   2         
     2 POP       
@@ -1931,9 +1693,9 @@ CodeBox(lambda205,5)
    24 SKIP       2         
    25 CASEERROR 
    26 RETURN    
-CodeBox(lambda236,0)
-    0 instrs.vars.PushDynamic@3aee7ad2
-    1 instrs.control.Grab@1d53e9f4
+CodeBox(lambda42,0)
+    0 instrs.vars.PushDynamic@72f7006d
+    1 instrs.control.Grab@1af26ae0
     2 DYNAMIC    2         
     3 DYNAMIC    1         
     4 DYNAMIC    3         
@@ -1956,10 +1718,10 @@ CodeBox(lambda236,0)
    21 APPDYNAMIC 0     2         
    22 SKIP       2         
    23 NULL      
-   24 instrs.vars.PushDynamic@6b004e1b
-   25 instrs.control.Release@4d38295e
+   24 instrs.vars.PushDynamic@6c336536
+   25 instrs.control.Release@5f081a8d
    26 RETURN    
-CodeBox(lambda204,8)
+CodeBox(lambda10,8)
     0 FRAMEVAR   0         
     1 SETFRAME   2         
     2 POP       
@@ -1995,44 +1757,13 @@ CodeBox(lambda204,8)
    32 SKIP       2         
    33 CASEERROR 
    34 RETURN    
-CodeBox(lambda235,0)
+CodeBox(lambda41,0)
     0 STARTCALL 
     1 SELF      
     2 DYNAMIC    31        
     3 APPLY      1         
     4 RETURN    
-CodeBox(lambda203,5)
-    0 FRAMEVAR   1         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        20    true      
-    4 ISCONS     [2]       
-    5 SETFRAME   4     [2].head()
-    6 SETFRAME   3     [2].tail()
-    7 FRAMEVAR   4         
-    8 FRAMEVAR   0         
-    9 EQL       
-   10 SKIPFALSE  8         
-   11 STARTCALL 
-   12 FRAMEVAR   0         
-   13 FRAMEVAR   3         
-   14 DYNAMIC    22        
-   15 APPLY      2         
-   16 ADD1      
-   17 SKIP       6         
-   18 STARTCALL 
-   19 FRAMEVAR   0         
-   20 FRAMEVAR   3         
-   21 DYNAMIC    22        
-   22 APPLY      2         
-   23 SKIP       6         
-   24 TRY        3     false     
-   25 ISNIL      [2]       
-   26 INT        0         
-   27 SKIP       2         
-   28 CASEERROR 
-   29 RETURN    
-CodeBox(lambda234,2)
+CodeBox(lambda40,2)
     0 FRAMEVAR   1         
     1 DYNAMIC    19        
     2 GRE       
@@ -2088,28 +1819,7 @@ CodeBox(lambda234,2)
    52 FRAMEVAR   1         
    53 APPDYNAMIC 0     2         
    54 RETURN    
-CodeBox(lambda202,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        10    true      
-    4 ISCONS     [1]       
-    5 SETFRAME   3     [1].head()
-    6 SETFRAME   2     [1].tail()
-    7 FRAMEVAR   3         
-    8 STARTCALL 
-    9 FRAMEVAR   2         
-   10 DYNAMIC    23        
-   11 APPLY      1         
-   12 ADD       
-   13 SKIP       6         
-   14 TRY        3     false     
-   15 ISNIL      [1]       
-   16 LIST       0         
-   17 SKIP       2         
-   18 CASEERROR 
-   19 RETURN    
-CodeBox(lambda233,3)
+CodeBox(lambda39,3)
     0 FRAMEVAR   0         
     1 NEWDYNAMIC
     2 FRAMEVAR   1         
@@ -2128,27 +1838,7 @@ CodeBox(lambda233,3)
    15 BEHAVIOUR 
    16 POPDYNAMIC
    17 RETURN    
-CodeBox(lambda201,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        9     true      
-    4 TRYSET     1     [1]       
-    5 SETFRAME   3     1.choose()
-    6 SETFRAME   2     1.rest()  
-    7 STARTCALL 
-    8 FRAMEVAR   2         
-    9 DYNAMIC    24        
-   10 APPLY      1         
-   11 ADD1      
-   12 SKIP       6         
-   13 TRY        3     false     
-   14 ISEMPTYSET [1]       
-   15 INT        0         
-   16 SKIP       2         
-   17 CASEERROR 
-   18 RETURN    
-CodeBox(lambda232,2)
+CodeBox(lambda38,2)
     0 STARTCALL 
     1 FRAMEVAR   1         
     2 DYNAMIC    33        
@@ -2176,27 +1866,7 @@ CodeBox(lambda232,2)
    24 TAIL      
    25 APPDYNAMIC 0     2         
    26 RETURN    
-CodeBox(lambda200,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        9     true      
-    4 TRYBAG     1     [1]       
-    5 SETFRAME   3     1.choose()
-    6 SETFRAME   2     1.rest()  
-    7 STARTCALL 
-    8 FRAMEVAR   2         
-    9 DYNAMIC    25        
-   10 APPLY      1         
-   11 ADD1      
-   12 SKIP       6         
-   13 TRY        3     false     
-   14 ISEMPTYBAG [1]       
-   15 INT        0         
-   16 SKIP       2         
-   17 CASEERROR 
-   18 RETURN    
-CodeBox(lambda231,2)
+CodeBox(lambda37,2)
     0 NULL      
     1 NEWDYNAMIC
     2 STR        pre       
@@ -2210,7 +1880,7 @@ CodeBox(lambda231,2)
    10 APPDYNAMIC 0     2         
    11 POPDYNAMIC
    12 RETURN    
-CodeBox(lambda230,5)
+CodeBox(lambda36,5)
     0 STARTCALL 
     1 FRAMEVAR   0         
     2 FRAMEVAR   1         
@@ -2231,3 +1901,333 @@ CodeBox(lambda230,5)
    17 SKIP       2         
    18 CASEERROR 
    19 RETURN    
+CodeBox(lambda35,2)
+    0 STARTCALL 
+    1 FRAMEVAR   0         
+    2 FRAMEVAR   1         
+    3 DYNAMIC    0         
+    4 APPLY      2         
+    5 NULL      
+    6 NEQL      
+    7 RETURN    
+CodeBox(lambda34,6)
+    0 FRAMEVAR   1         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [2]       
+    5 NULL      
+    6 SKIP       22        
+    7 TRY        19    false     
+    8 ISCONS     [2]       
+    9 ISTERM     TableEntry 2          [2].head()
+   10 SETFRAME   3     [2].head().ref(0)
+   11 SETFRAME   4     [2].head().ref(1)
+   12 SETFRAME   5     [2].tail()
+   13 FRAMEVAR   3         
+   14 FRAMEVAR   0         
+   15 EQL       
+   16 SKIPFALSE  5         
+   17 FRAMEVAR   3         
+   18 FRAMEVAR   4         
+   19 TERM       TableEntry 2         
+   20 SKIP       6         
+   21 STARTCALL 
+   22 FRAMEVAR   0         
+   23 FRAMEVAR   5         
+   24 DYNAMIC    0         
+   25 APPLY      2         
+   26 SKIP       2         
+   27 CASEERROR 
+   28 RETURN    
+CodeBox(lambda33,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [1]       
+    5 LIST       0         
+    6 SKIP       17        
+    7 TRY        14    false     
+    8 ISCONS     [1]       
+    9 SETFRAME   2     [1].head()
+   10 SETFRAME   3     [1].tail()
+   11 FRAMEVAR   2         
+   12 STARTCALL 
+   13 STARTCALL 
+   14 FRAMEVAR   2         
+   15 FRAMEVAR   3         
+   16 DYNAMIC    28        
+   17 APPLY      2         
+   18 DYNAMIC    1         
+   19 APPLY      1         
+   20 CONS      
+   21 SKIP       2         
+   22 CASEERROR 
+   23 RETURN    
+CodeBox(lambda32,2)
+    0 FRAMEVAR   0         
+    1 FRAMEVAR   1         
+    2 ADD       
+    3 RETURN    
+CodeBox(lambda31,1)
+    0 STARTCALL 
+    1 DYNAMIC    2         
+    2 STR        fun107    
+    3 Fun(2)
+    4 INT        0         
+    5 FRAMEVAR   0         
+    6 DYNAMIC    3         
+    7 APPLY      4         
+    8 RETURN    
+CodeBox(lambda30,1)
+    0 FRAMEVAR   0         
+    1 RETURN    
+CodeBox(lambda9,5)
+    0 FRAMEVAR   1         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        20    true      
+    4 ISCONS     [2]       
+    5 SETFRAME   4     [2].head()
+    6 SETFRAME   3     [2].tail()
+    7 FRAMEVAR   4         
+    8 FRAMEVAR   0         
+    9 EQL       
+   10 SKIPFALSE  8         
+   11 STARTCALL 
+   12 FRAMEVAR   0         
+   13 FRAMEVAR   3         
+   14 DYNAMIC    22        
+   15 APPLY      2         
+   16 ADD1      
+   17 SKIP       6         
+   18 STARTCALL 
+   19 FRAMEVAR   0         
+   20 FRAMEVAR   3         
+   21 DYNAMIC    22        
+   22 APPLY      2         
+   23 SKIP       6         
+   24 TRY        3     false     
+   25 ISNIL      [2]       
+   26 INT        0         
+   27 SKIP       2         
+   28 CASEERROR 
+   29 RETURN    
+CodeBox(lambda8,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        10    true      
+    4 ISCONS     [1]       
+    5 SETFRAME   3     [1].head()
+    6 SETFRAME   2     [1].tail()
+    7 FRAMEVAR   3         
+    8 STARTCALL 
+    9 FRAMEVAR   2         
+   10 DYNAMIC    23        
+   11 APPLY      1         
+   12 ADD       
+   13 SKIP       6         
+   14 TRY        3     false     
+   15 ISNIL      [1]       
+   16 LIST       0         
+   17 SKIP       2         
+   18 CASEERROR 
+   19 RETURN    
+CodeBox(lambda7,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        9     true      
+    4 TRYSET     0     [1]       
+    5 SETFRAME   3     0.choose()
+    6 SETFRAME   2     0.rest()  
+    7 STARTCALL 
+    8 FRAMEVAR   2         
+    9 DYNAMIC    24        
+   10 APPLY      1         
+   11 ADD1      
+   12 SKIP       6         
+   13 TRY        3     false     
+   14 ISEMPTYSET [1]       
+   15 INT        0         
+   16 SKIP       2         
+   17 CASEERROR 
+   18 RETURN    
+CodeBox(lambda6,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        9     true      
+    4 TRYBAG     0     [1]       
+    5 SETFRAME   3     0.choose()
+    6 SETFRAME   2     0.rest()  
+    7 STARTCALL 
+    8 FRAMEVAR   2         
+    9 DYNAMIC    25        
+   10 APPLY      1         
+   11 ADD1      
+   12 SKIP       6         
+   13 TRY        3     false     
+   14 ISEMPTYBAG [1]       
+   15 INT        0         
+   16 SKIP       2         
+   17 CASEERROR 
+   18 RETURN    
+CodeBox(lambda5,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        9     true      
+    4 ISCONS     [1]       
+    5 SETFRAME   3     [1].head()
+    6 SETFRAME   2     [1].tail()
+    7 STARTCALL 
+    8 FRAMEVAR   2         
+    9 DYNAMIC    26        
+   10 APPLY      1         
+   11 ADD1      
+   12 SKIP       6         
+   13 TRY        3     false     
+   14 ISNIL      [1]       
+   15 INT        0         
+   16 SKIP       2         
+   17 CASEERROR 
+   18 RETURN    
+CodeBox(lambda4,5)
+    0 FRAMEVAR   1         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        9     true      
+    4 ISCONS     [2]       
+    5 SETFRAME   4     [2].head()
+    6 SETFRAME   3     [2].tail()
+    7 FRAMEVAR   4         
+    8 FRAMEVAR   0         
+    9 EQL       
+   10 FAILFALSE 
+   11 FRAMEVAR   3         
+   12 SKIP       18        
+   13 TRY        11    false     
+   14 ISCONS     [2]       
+   15 SETFRAME   4     [2].head()
+   16 SETFRAME   3     [2].tail()
+   17 FRAMEVAR   4         
+   18 STARTCALL 
+   19 FRAMEVAR   0         
+   20 FRAMEVAR   3         
+   21 DYNAMIC    27        
+   22 APPLY      2         
+   23 CONS      
+   24 SKIP       6         
+   25 TRY        3     false     
+   26 ISNIL      [2]       
+   27 LIST       0         
+   28 SKIP       2         
+   29 CASEERROR 
+   30 RETURN    
+CodeBox(lambda3,5)
+    0 FRAMEVAR   1         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        13    true      
+    4 ISCONS     [2]       
+    5 SETFRAME   4     [2].head()
+    6 SETFRAME   3     [2].tail()
+    7 FRAMEVAR   4         
+    8 FRAMEVAR   0         
+    9 EQL       
+   10 FAILFALSE 
+   11 STARTCALL 
+   12 FRAMEVAR   0         
+   13 FRAMEVAR   3         
+   14 DYNAMIC    28        
+   15 APPLY      2         
+   16 SKIP       18        
+   17 TRY        11    false     
+   18 ISCONS     [2]       
+   19 SETFRAME   4     [2].head()
+   20 SETFRAME   3     [2].tail()
+   21 FRAMEVAR   4         
+   22 STARTCALL 
+   23 FRAMEVAR   0         
+   24 FRAMEVAR   3         
+   25 DYNAMIC    28        
+   26 APPLY      2         
+   27 CONS      
+   28 SKIP       6         
+   29 TRY        3     false     
+   30 ISNIL      [2]       
+   31 LIST       0         
+   32 SKIP       2         
+   33 CASEERROR 
+   34 RETURN    
+CodeBox(lambda2,5)
+    0 FRAMEVAR   1         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [2]       
+    5 LIST       0         
+    6 SKIP       16        
+    7 TRY        13    false     
+    8 ISCONS     [2]       
+    9 SETFRAME   4     [2].head()
+   10 SETFRAME   3     [2].tail()
+   11 STARTCALL 
+   12 FRAMEVAR   4         
+   13 APPLYFRAME 0     1         
+   14 STARTCALL 
+   15 FRAMEVAR   0         
+   16 FRAMEVAR   3         
+   17 DYNAMIC    29        
+   18 APPLY      2         
+   19 CONS      
+   20 SKIP       2         
+   21 CASEERROR 
+   22 RETURN    
+CodeBox(lambda1,6)
+    0 FRAMEVAR   0         
+    1 SETFRAME   3         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [3]       
+    5 FRAMEVAR   1         
+    6 SKIP       23        
+    7 TRY        9     false     
+    8 ISCONS     [3]       
+    9 SETFRAME   5     [3].head()
+   10 SETFRAME   4     [3].tail()
+   11 STARTCALL 
+   12 FRAMEVAR   5         
+   13 APPLYFRAME 2     1         
+   14 FAILFALSE 
+   15 FRAMEVAR   5         
+   16 SKIP       13        
+   17 TRY        10    false     
+   18 ISCONS     [3]       
+   19 SETFRAME   5     [3].head()
+   20 SETFRAME   4     [3].tail()
+   21 STARTCALL 
+   22 FRAMEVAR   4         
+   23 FRAMEVAR   1         
+   24 FRAMEVAR   2         
+   25 DYNAMIC    30        
+   26 APPLY      3         
+   27 SKIP       2         
+   28 CASEERROR 
+   29 RETURN    
+CodeBox(lambda0,2)
+    0 STARTCALL 
+    1 FRAMEVAR   0         
+    2 FRAMEVAR   1         
+    3 DYNAMIC    14        
+    4 APPLY      2         
+    5 SKIPFALSE  3         
+    6 FRAMEVAR   1         
+    7 SKIP       4         
+    8 FRAMEVAR   0         
+    9 FRAMEVAR   1         
+   10 CONS      
+   11 RETURN    
