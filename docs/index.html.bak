@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>Hielo by TEMPLATED</title>
+    <title>ESL</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="assets/css/main.css">
   </head>
@@ -132,8 +132,8 @@
             </div>
           </div>
           <!--
-          <div>            <div class="box">              <div class="image fit"> <img src="images/pic03.jpg" alt=""> </div>              <div class="content">                <header class="align-center">                  <p>mattis elementum sapien pretium tellus</p>                  <h2>Vestibulum sit amet</h2>                </header>                <p> Cras aliquet urna ut sapien tincidunt, quis malesuada elit                  facilisis. Vestibulum sit amet tortor velit. Nam elementum                  nibh a libero pharetra elementum. Maecenas feugiat ex purus,                  quis volutpat lacus placerat malesuada.</p>                <footer class="align-center"> <a href="#" class="button                    alt">Learn More</a> </footer>              </div>            </div>
-          </div>--> </div>
+          <div>            <div class="box">              <div class="image fit"> <img src="images/pic03.jpg" alt=""> </div>              <div class="content">                <header class="align-center">                  <p>mattis elementum sapien pretium tellus</p>                  <h2>Vestibulum sit amet</h2>                </header>                <p> Cras aliquet urna ut sapien tincidunt, quis malesuada elit                  facilisis. Vestibulum sit amet tortor velit. Nam elementum                  nibh a libero pharetra elementum. Maecenas feugiat ex purus,                  quis volutpat lacus placerat malesuada.</p>                <footer class="align-center"> <a href="#" class="button                    alt">Learn More</a> </footer>              </div>            </div>          </div>-->
+        </div>
       </div>
     </section>
     <!-- Two -->
@@ -145,7 +145,6 @@
         </header>
       </div>
     </section>
-    
     <section id="three" class="wrapper style3">
       <div class="inner">
         <header class="align-center">
@@ -153,15 +152,14 @@
           <h2>ESL</h2>
         </header>
         <div class="gallery">
-          <div>
-            Dining philosophers can be  implemented in ESL so that each philosopher 
-            is an actor that needs to grab two chopsticks in order to eat. A co-ordination
-            mechanism must be used in the form of data locks so that two chopsticks are
-            grabbed at a time, otherwise the philosophers can deadlock and starve. ESL
-            can turn an execution history into a filmstrip that is shown as a picture.
-            Dragging the marker left and right moves forward and backward through the
-            execution showing that no deadlock occurs.
-          </div>
+          <div> Dining philosophers can be implemented in ESL so that each
+            philosopher is an actor that needs to grab two chopsticks in order
+            to eat. A co-ordination mechanism must be used in the form of data
+            locks so that two chopsticks are grabbed at a time, otherwise the
+            philosophers can deadlock and starve. ESL can turn an execution
+            history into a filmstrip that is shown as a picture. Dragging the
+            marker left and right moves forward and backward through the
+            execution showing that no deadlock occurs. </div>
           <div>
             <div class="image fit"> <a href="#"><img src="images/dining.jpg" alt=""></a>
             </div>
@@ -170,41 +168,39 @@
             <div class="image fit"> <a href="#"><img src="images/pac.jpg" alt=""></a>
             </div>
           </div>
+          <div> Pacman is a game where the player controls the movement through
+            a maze of the yellow pacman who wants to eat all the food, and where
+            the system controls the ghosts who are seeking to eat the pacman.
+            All the ghosts are actors who move independently of the pacman that
+            is controlled by the user via the mouse. The ghosts implement a
+            suitable strategy by inspecting the current state of the world and
+            making a decision about their next move. </div>
+          <div> A road junction is controlled by a pair of traffic lights. Cars
+            travel with greater frequency right to left and therefore they
+            should be given priority. However, the lights should monitor the
+            situation so that the queue from the left does not become too long.
+            This example shows how ESL can be used to implement data monitors
+            where the traffic lights are actors and monitors are actors that
+            trigger changes based on the execution history of the junction
+            queues. </div>
           <div>
-            Pacman is a game where the player controls the movement through a maze of the 
-            yellow pacman who wants to eat all the food, and where the system controls the 
-            ghosts who are seeking to eat the pacman. All the ghosts are actors who move 
-            independently of the pacman that is controlled by the user via the mouse. The
-            ghosts implement a suitable strategy by inspecting the current state of the world
-            and making a decision about their next move.
+            <div class="image fit"> <a href="#"><img src="images/traffic.png" alt=""></a>
+            </div>
           </div>
           <div>
-            A road junction is controlled by a pair of traffic lights. Cars travel with greater
-            frequency right to left and therefore they should be given priority. However, the
-            lights should monitor the situation so that the queue from the left does not
-            become too long. This example shows how ESL can be used to implement data monitors
-            where the traffic lights are actors and monitors are actors that trigger changes
-            based on the execution history of the junction queues.
-          </div>
-          <div>
-            <div class="image fit"> <a href="#"><img src="images/traffic.png"
+            <div class="image fit"> <a href="#"><img src="images/traffic_code.png"
                   alt=""></a>
             </div>
           </div>
-          <div>
-            <div class="image fit"> <a href="#"><img src="images/traffic_code.png" alt=""></a>
-            </div>
-          </div>
-          <div>
-            The ESL traffic light application on the right shows the type definitions for the
-            actors and part of the traffic light behaviour definition.
-          </div>
-          <div>
-            ESL can be used to define a simulation. A shop wishes to try out different arrangements of
-            of tills and assistants based on simulations of customer behaviour. Customers enter the shop
-            and may seek help choosing goods before waiting at a queue to pay. If a customer waits too
-            long for assistance or waits too long in a queue at a till then they will abandon their
-            purchase and leave the shop.
+          <div> The ESL traffic light application on the right shows the type
+            definitions for the actors and part of the traffic light behaviour
+            definition. </div>
+          <div> ESL can be used to define a simulation. A shop wishes to try out
+            different arrangements of of tills and assistants based on
+            simulations of customer behaviour. Customers enter the shop and may
+            seek help choosing goods before waiting at a queue to pay. If a
+            customer waits too long for assistance or waits too long in a queue
+            at a till then they will abandon their purchase and leave the shop.
           </div>
           <div>
             <div class="image fit"> <a href="#"><img src="images/shopping.png"
@@ -216,12 +212,8 @@
                   alt=""></a>
             </div>
           </div>
-          <div>
-            A model of the imulation can be implemented as ESL types...
-          </div>
-          <div>
-            ... or as a structure model....
-          </div>
+          <div> A model of the imulation can be implemented as ESL types... </div>
+          <div> ... or as a structure model.... </div>
           <div>
             <div class="image fit"> <a href="#"><img src="images/behaviour.png"
                   alt=""></a>
@@ -232,13 +224,11 @@
                   alt=""></a>
             </div>
           </div>
-          <div>
-            ... together with a behaviour model.
-          </div>
-          <div>
-            ESL can display a graphical description of the state of the simulation as it occurs.
-            The display on the right shows the state of the customers in the simulation and the
-            current state of their satisfaction (how many have left after failing to make a purchase).
+          <div> ... together with a behaviour model. </div>
+          <div> ESL can display a graphical description of the state of the
+            simulation as it occurs. The display on the right shows the state of
+            the customers in the simulation and the current state of their
+            satisfaction (how many have left after failing to make a purchase).
           </div>
           <div>
             <div class="image fit"> <a href="#"><img src="images/customers.jpg"
@@ -250,19 +240,19 @@
                   alt=""></a>
             </div>
           </div>
-          <div>
-            As the shop simulation runs it can save a history of actor states producing a filmstrip.
-            The filmstrip can be transformed into a series of pictures by ESL and displayed in EDB.
-            The snapshot shows a number of assistants waiting on the floor, some criminal customers
-            tying up the assistants in the hope that their accomplices can steal goods from the shop.
-            Four of the tills have queues of customers waiting to make a purchase.
-          </div>
-          <div>
-            Actors often need to make plans that control how they respond to changes in their environment.
-            A simple example is a collection of travellers on the underground who are given the task
-            of travelling between different stations. ESL provides a logic programming language that is used in the
-            example to implement a STRIPS-like planner.
-          </div>
+          <div> As the shop simulation runs it can save a history of actor
+            states producing a filmstrip. The filmstrip can be transformed into
+            a series of pictures by ESL and displayed in EDB. The snapshot shows
+            a number of assistants waiting on the floor, some criminal customers
+            tying up the assistants in the hope that their accomplices can steal
+            goods from the shop. Four of the tills have queues of customers
+            waiting to make a purchase. </div>
+          <div> Actors often need to make plans that control how they respond to
+            changes in their environment. A simple example is a collection of
+            travellers on the underground who are given the task of travelling
+            between different stations. ESL provides a logic programming
+            language that is used in the example to implement a STRIPS-like
+            planner. </div>
           <div>
             <div class="image fit"> <a href="#"><img src="images/underground_code.png"
                   alt=""></a>
@@ -273,17 +263,17 @@
                   alt=""></a>
             </div>
           </div>
-          <div>
-            Each of the traveller actors run autonomously. The user can click on underground stations to 
-            blow them up. A traveller passing through a blown-up station is removed from the system.
-            The state of the underground is transformed within ESL as a graph that is displayed by EDB.
-          </div>
-          <div>
-            A world consists of two different tribes. Members of a tribe want to be located near members of the
-            same tribe and will feel uncomfortable if too many strangers surround them. If a member is uncomfortable
-            then they will move to a vacant location at random. The starting pint of the simulation is shown where each
-            tribe member is an independent actor.
-          </div>
+          <div> Each of the traveller actors run autonomously. The user can
+            click on underground stations to blow them up. A traveller passing
+            through a blown-up station is removed from the system. The state of
+            the underground is transformed within ESL as a graph that is
+            displayed by EDB. </div>
+          <div> A world consists of two different tribes. Members of a tribe
+            want to be located near members of the same tribe and will feel
+            uncomfortable if too many strangers surround them. If a member is
+            uncomfortable then they will move to a vacant location at random.
+            The starting pint of the simulation is shown where each tribe member
+            is an independent actor. </div>
           <div>
             <div class="image fit"> <a href="#"><img src="images/segregation_before.png"
                   alt=""></a>
@@ -294,16 +284,14 @@
                   alt=""></a>
             </div>
           </div>
-          <div>
-            After the simulation has run for a period of time, all the tribe members become comfortable and
-            no further moves occur.
-          </div>
-          <div>
-            Predator-prey is a standard multi-agent application where predator actors try to catch the prey
-            actors who in turn try to escape. Each type of actor must implement a strategy that achieves their goals.
-            A predator is an actor that grabs the board, inspects the current tiuation and determines which direction
-            they should move.
-          </div>
+          <div> After the simulation has run for a period of time, all the tribe
+            members become comfortable and no further moves occur. </div>
+          <div> Predator-prey is a standard multi-agent application where
+            predator actors try to catch the prey actors who in turn try to
+            escape. Each type of actor must implement a strategy that achieves
+            their goals. A predator is an actor that grabs the board, inspects
+            the current tiuation and determines which direction they should
+            move. </div>
           <div>
             <div class="image fit"> <a href="#"><img src="images/predator_code.png"
                   alt=""></a>
@@ -314,15 +302,13 @@
                   alt=""></a>
             </div>
           </div>
-          <div>
-            A prey is an actor that grabs the board and tries to move away from all the predators.
-          </div>
-          <div>
-            The predator-prey application conforms to a filmstrip pattern that can be encoded in ESL
-            and that supports any application that satisfies given critera.
-          </div>
-          <div>
-          </div>
+          <div> A prey is an actor that grabs the board and tries to move away
+            from all the predators. </div>
+          <div> The predator-prey application conforms to a filmstrip pattern
+            that can be encoded in ESL and that supports any application that
+            satisfies given critera. The following two snapshots are generaed by
+            the general pattern. </div>
+          <div> </div>
           <div>
             <div class="image fit"> <a href="#"><img src="images/predator1.png"
                   alt=""></a>
@@ -339,8 +325,7 @@
     <!-- Footer -->
     <footer id="footer">
       <!--
-      <div class="container">        <ul class="icons">          <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a><br>          </li>          <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a><br>          </li>          <li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a><br>          </li>
-          <li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a><br>          </li>        </ul>      </div>      <div class="copyright"> © Untitled. All rights reserved. </div>    </footer>-->
+      <div class="container">        <ul class="icons">          <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a><br>          </li>          <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a><br>          </li>          <li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a><br>          </li>          <li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a><br>          </li>        </ul>      </div>      <div class="copyright"> © Untitled. All rights reserved. </div>    </footer>-->
       <!-- Scripts -->
       <script src="assets/js/jquery.min.js"></script>
       <script src="assets/js/jquery.scrollex.min.js"></script>
