@@ -1,4 +1,61 @@
-CodeBox(lambda313,8)
+CodeBox(lambda6,7)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [1]       
+    5 LIST       0         
+    6 SKIP       24        
+    7 TRY        21    false     
+    8 ISCONS     [1]       
+    9 ISTERM     Message 4          [1].head()
+   10 SETFRAME   5     [1].head().ref(0)
+   11 SETFRAME   3     [1].head().ref(1)
+   12 SETFRAME   2     [1].head().ref(2)
+   13 SETFRAME   6     [1].head().ref(3)
+   14 SETFRAME   4     [1].tail()
+   15 FRAMEVAR   5         
+   16 STARTCALL 
+   17 FRAMEVAR   3         
+   18 APPDYNAMIC 2     1         
+   19 STARTCALL 
+   20 FRAMEVAR   2         
+   21 APPDYNAMIC 2     1         
+   22 FRAMEVAR   6         
+   23 TERM       Message 4         
+   24 STARTCALL 
+   25 FRAMEVAR   4         
+   26 APPDYNAMIC 6     1         
+   27 CONS      
+   28 SKIP       2         
+   29 CASEERROR 
+   30 RETURN    
+CodeBox(behaviour1,2)
+    0 FRAMEVAR   0         
+    1 TRY        18    true      
+    2 ISTERM     Time  1          [0]       
+    3 SETFRAME   1     [0].ref(0)
+    4 STR        Sequence  
+    5 STARTCALL 
+    6 STARTCALL 
+    7 DYNAMIC    7         
+    8 APPDYNAMIC 5     1         
+    9 APPDYNAMIC 4     1         
+   10 STARTCALL 
+   11 DYNAMIC    7         
+   12 APPDYNAMIC 6     1         
+   13 TERM       Sequence 2         
+   14 DYNAMIC    15        
+   15 NAMEDSEND Show/2
+   16 POP       
+   17 STARTCALL 
+   18 APPDYNAMIC 11    0         
+   19 SKIP       2         
+   20 CASEERROR 
+   21 RETURN    
+   22 NULL      
+   23 POPFRAME  
+CodeBox(lambda9,8)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -36,7 +93,24 @@ CodeBox(lambda313,8)
    34 SKIP       2         
    35 CASEERROR 
    36 RETURN    
-CodeBox(lambda312,7)
+CodeBox(lambda11,1)
+    0 STR        Sequence  
+    1 STARTCALL 
+    2 STARTCALL 
+    3 DYNAMIC    7         
+    4 APPDYNAMIC 5     1         
+    5 APPDYNAMIC 4     1         
+    6 STARTCALL 
+    7 DYNAMIC    7         
+    8 APPDYNAMIC 6     1         
+    9 TERM       Sequence 2         
+   10 DYNAMIC    15        
+   11 NAMEDSEND Show/2
+   12 POP       
+   13 STARTCALL 
+   14 APPDYNAMIC 11    0         
+   15 RETURN    
+CodeBox(lambda8,7)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -67,122 +141,6 @@ CodeBox(lambda312,7)
    27 SKIP       2         
    28 CASEERROR 
    29 RETURN    
-CodeBox(lambda311,7)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [1]       
-    5 LIST       0         
-    6 SKIP       34        
-    7 TRY        31    false     
-    8 ISCONS     [1]       
-    9 ISTERM     Message 4          [1].head()
-   10 SETFRAME   5     [1].head().ref(0)
-   11 SETFRAME   3     [1].head().ref(1)
-   12 SETFRAME   2     [1].head().ref(2)
-   13 SETFRAME   6     [1].head().ref(3)
-   14 SETFRAME   4     [1].tail()
-   15 STARTCALL 
-   16 FRAMEVAR   3         
-   17 APPDYNAMIC 2     1         
-   18 INT        0         
-   19 DYNAMIC    0         
-   20 STARTCALL 
-   21 FRAMEVAR   3         
-   22 APPDYNAMIC 1     1         
-   23 TERM       Actor 4         
-   24 STARTCALL 
-   25 FRAMEVAR   2         
-   26 APPDYNAMIC 2     1         
-   27 INT        0         
-   28 DYNAMIC    0         
-   29 STARTCALL 
-   30 FRAMEVAR   2         
-   31 APPDYNAMIC 1     1         
-   32 TERM       Actor 4         
-   33 STARTCALL 
-   34 FRAMEVAR   4         
-   35 APPDYNAMIC 5     1         
-   36 CONS      
-   37 CONS      
-   38 SKIP       2         
-   39 CASEERROR 
-   40 RETURN    
-CodeBox(lambda310,7)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [1]       
-    5 LIST       0         
-    6 SKIP       24        
-    7 TRY        21    false     
-    8 ISCONS     [1]       
-    9 ISTERM     Message 4          [1].head()
-   10 SETFRAME   5     [1].head().ref(0)
-   11 SETFRAME   3     [1].head().ref(1)
-   12 SETFRAME   2     [1].head().ref(2)
-   13 SETFRAME   6     [1].head().ref(3)
-   14 SETFRAME   4     [1].tail()
-   15 FRAMEVAR   5         
-   16 STARTCALL 
-   17 FRAMEVAR   3         
-   18 APPDYNAMIC 2     1         
-   19 STARTCALL 
-   20 FRAMEVAR   2         
-   21 APPDYNAMIC 2     1         
-   22 FRAMEVAR   6         
-   23 TERM       Message 4         
-   24 STARTCALL 
-   25 FRAMEVAR   4         
-   26 APPDYNAMIC 6     1         
-   27 CONS      
-   28 SKIP       2         
-   29 CASEERROR 
-   30 RETURN    
-CodeBox(behaviour16,2)
-    0 FRAMEVAR   0         
-    1 TRY        18    true      
-    2 ISTERM     Time  1          [0]       
-    3 SETFRAME   1     [0].ref(0)
-    4 STR        Sequence  
-    5 STARTCALL 
-    6 STARTCALL 
-    7 DYNAMIC    7         
-    8 APPDYNAMIC 5     1         
-    9 APPDYNAMIC 4     1         
-   10 STARTCALL 
-   11 DYNAMIC    7         
-   12 APPDYNAMIC 6     1         
-   13 TERM       Sequence 2         
-   14 DYNAMIC    15        
-   15 NAMEDSEND Show/2
-   16 POP       
-   17 STARTCALL 
-   18 APPDYNAMIC 11    0         
-   19 SKIP       2         
-   20 CASEERROR 
-   21 RETURN    
-   22 NULL      
-   23 POPFRAME  
-CodeBox(lambda315,1)
-    0 STR        Sequence  
-    1 STARTCALL 
-    2 STARTCALL 
-    3 DYNAMIC    7         
-    4 APPDYNAMIC 5     1         
-    5 APPDYNAMIC 4     1         
-    6 STARTCALL 
-    7 DYNAMIC    7         
-    8 APPDYNAMIC 6     1         
-    9 TERM       Sequence 2         
-   10 DYNAMIC    15        
-   11 NAMEDSEND Show/2
-   12 POP       
-   13 STARTCALL 
-   14 APPDYNAMIC 11    0         
-   15 RETURN    
 CodeBox(asm/monitor_filmstrip.asm,10)
     0 STARTCALL 
     1 NULL      
@@ -204,17 +162,17 @@ CodeBox(asm/monitor_filmstrip.asm,10)
    17 INT        1         
    18 STR        rec(14)   
    19 STR        both(19)  
-   20 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),0,E(3))
+   20 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),0,E(3))
    21 TERM       Message 4         
    22 INT        2         
    23 STR        both(19)  
    24 STR        implies(13)
-   25 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),0,next(18))
+   25 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),0,next(18))
    26 TERM       Message 4         
    27 INT        2         
    28 STR        implies(13)
    29 STR        split(11) 
-   30 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),0,both(20))
+   30 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),0,both(20))
    31 TERM       Message 4         
    32 INT        3         
    33 STR        L(16)     
@@ -259,12 +217,12 @@ CodeBox(asm/monitor_filmstrip.asm,10)
    72 INT        5         
    73 STR        next(18)  
    74 STR        rec(14)   
-   75 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),1,E(3))
+   75 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),1,E(3))
    76 TERM       Message 4         
    77 INT        5         
    78 STR        next(18)  
    79 STR        rec(14)   
-   80 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),1,E(3))
+   80 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),1,E(3))
    81 TERM       Message 4         
    82 INT        5         
    83 STR        R(17)     
@@ -284,12 +242,12 @@ CodeBox(asm/monitor_filmstrip.asm,10)
    97 INT        6         
    98 STR        rec(14)   
    99 STR        both(19)  
-  100 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),1,E(3))
+  100 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),1,E(3))
   101 TERM       Message 4         
   102 INT        6         
   103 STR        rec(14)   
   104 STR        both(19)  
-  105 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),1,E(3))
+  105 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),1,E(3))
   106 TERM       Message 4         
   107 INT        6         
   108 STR        L(16)     
@@ -304,22 +262,22 @@ CodeBox(asm/monitor_filmstrip.asm,10)
   117 INT        7         
   118 STR        both(19)  
   119 STR        implies(13)
-  120 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),1,next(18))
+  120 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),1,next(18))
   121 TERM       Message 4         
   122 INT        7         
   123 STR        both(19)  
   124 STR        implies(13)
-  125 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),1,next(18))
+  125 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),1,next(18))
   126 TERM       Message 4         
   127 INT        7         
   128 STR        implies(13)
   129 STR        split(11) 
-  130 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),1,both(23))
+  130 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),1,both(23))
   131 TERM       Message 4         
   132 INT        7         
   133 STR        implies(13)
   134 STR        split(11) 
-  135 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),1,both(24))
+  135 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),1,both(24))
   136 TERM       Message 4         
   137 INT        7         
   138 STR        split(11) 
@@ -364,12 +322,12 @@ CodeBox(asm/monitor_filmstrip.asm,10)
   177 INT        8         
   178 STR        next(18)  
   179 STR        rec(14)   
-  180 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),2,E(3))
+  180 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),2,E(3))
   181 TERM       Message 4         
   182 INT        8         
   183 STR        next(18)  
   184 STR        rec(14)   
-  185 STR        C(Pair(Leaf(L(16)),Leaf(R(17))),2,E(3))
+  185 STR        C(Fork(Leaf(L(16)),Leaf(R(17))),2,E(3))
   186 TERM       Message 4         
   187 INT        8         
   188 STR        prev(9)   
@@ -486,9 +444,51 @@ CodeBox(asm/monitor_filmstrip.asm,10)
   299 SELF      
   300 APPDYNAMIC 5     1         
   301 RETURN    
-CodeBox(lambda314,1)
+CodeBox(lambda10,1)
     0 STR        main      
     1 STR        Time      
     2 Fun(1)
     3 BEHAVIOUR 
     4 RETURN    
+CodeBox(lambda7,7)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [1]       
+    5 LIST       0         
+    6 SKIP       34        
+    7 TRY        31    false     
+    8 ISCONS     [1]       
+    9 ISTERM     Message 4          [1].head()
+   10 SETFRAME   5     [1].head().ref(0)
+   11 SETFRAME   3     [1].head().ref(1)
+   12 SETFRAME   2     [1].head().ref(2)
+   13 SETFRAME   6     [1].head().ref(3)
+   14 SETFRAME   4     [1].tail()
+   15 STARTCALL 
+   16 FRAMEVAR   3         
+   17 APPDYNAMIC 2     1         
+   18 INT        0         
+   19 DYNAMIC    0         
+   20 STARTCALL 
+   21 FRAMEVAR   3         
+   22 APPDYNAMIC 1     1         
+   23 TERM       Actor 4         
+   24 STARTCALL 
+   25 FRAMEVAR   2         
+   26 APPDYNAMIC 2     1         
+   27 INT        0         
+   28 DYNAMIC    0         
+   29 STARTCALL 
+   30 FRAMEVAR   2         
+   31 APPDYNAMIC 1     1         
+   32 TERM       Actor 4         
+   33 STARTCALL 
+   34 FRAMEVAR   4         
+   35 APPDYNAMIC 5     1         
+   36 CONS      
+   37 CONS      
+   38 SKIP       2         
+   39 CASEERROR 
+   40 RETURN    
