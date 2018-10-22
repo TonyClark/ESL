@@ -24,7 +24,7 @@ import java.awt.*;
  * It controls the coordinated movement of the birds and the detection,
  * separation logic.
  *
- * @author      Michael LaLena
+ * @author      Michael LaLena 
  * @version     1.0
  */
 class AFlock {
