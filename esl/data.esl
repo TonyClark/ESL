@@ -1,0 +1,154 @@
+export main;
+
+type Main = Act { Time(Int); }
+
+//data Coin = Head | Tail;
+
+type Coin = union { Head, Tail }
+cnstr Head = Coin.Head;
+cnstr Tail = Coin.Tail;
+
+// data rec Tree = Leaf | Branch(Tree,Tree)
+
+type Tree = rec T. union{Leaf,Branch(T,T)}
+cnstr Leaf = unfold[Tree].Leaf;
+cnstr Branch = unfold[Tree].Branch;
+
+size(t::Tree)::Int = 
+  case unfold[Tree]t {
+    t1::Tree;
+    t2::Tree;
+    Leaf -> 1;
+    Branch(t1,t2) -> (size(t1)) + (size(t2));
+  }
+
+// data rec List[T] = Nil | Cons(T,List[T])
+
+type List[T] = rec L. union { Nil, Cons(T,L) }
+cnstr Nil[T] = unfold[List[T]].Nil;
+cnstr Cons[T] = unfold[List[T]].Cons;
+
+consInt(i::Int,l::List[Int])::List[Int] = fold[List[Int]]Cons[Int](i,l);
+nilInt::List[Int] = fold[List[Int]]Nil[Int];
+
+type Data[T] = union{ Something(T), Nothing }
+cnstr Something[T] = Data[T].Something;
+cnstr Nothing[T] = Data[T].Nothing;
+
+type Event = rec T. union{
+  Primitive(Str),
+  Between(T,T,T),
+  Eventually(T),
+  Next(T),
+  Seq(T,T),
+  Delay(()-> T),
+  Occurrences(T,Int),
+  And(T,T),
+  Or(T,T),
+  Not(T),
+  Star(T)
+}
+
+cnstr Primitive   = unfold[Event].Primitive;
+cnstr Between     = unfold[Event].Between;
+cnstr Eventually  = unfold[Event].Eventually;
+cnstr Seq         = unfold[Event].Seq;
+cnstr Next        = unfold[Event].Next;
+cnstr Delay       = unfold[Event].Delay;
+cnstr Occurrences = unfold[Event].Occurrences;
+cnstr And         = unfold[Event].And;
+cnstr Or          = unfold[Event].Or;
+cnstr Not         = unfold[Event].Not;
+cnstr Star        = unfold[Event].Star;
+
+type Trace   = [Str];
+type Success = (Trace,Fail) -> Bool;
+type Fail    = () -> Bool;
+type Matcher = (Trace,Success,Fail) -> Bool;
+
+compilePattern(p::Event)::Matcher =
+  case p {
+    Primitive(s1::Str) ->
+      fun(t::Trace,s::Success,f::Fail)::Bool
+        case t {
+          (s2::Str):(t::Trace) when s1=s2 -> s(t,f);
+          t::Trace             -> f();
+        }   
+    Next(n::Event) ->
+      let matcher::Matcher = compilePattern(n);
+      in fun(t::Trace,s::Success,f::Fail)::Bool 
+           case t {
+             (skip::Str):(rest::Trace) -> matcher(rest,s,f);
+             (x::Trace) -> f();
+           }  
+    Eventually(k::Event) ->
+      compilePattern(Or(k,Delay(fun()::Event Next(Eventually(k)))));
+    Delay(d::()->Event) ->
+      fun(t::Trace,s::Success,f::Fail)::Bool
+        (compilePattern(d()))(t,s,f);
+    Or(p1::Event,p2::Event) ->
+      let matcher1::Matcher = compilePattern(p1);
+          matcher2::Matcher = compilePattern(p2);
+      in fun(t::Trace,s::Success,f::Fail)::Bool
+           matcher1(t,s,fun()::Bool 
+            matcher2(t,s,f));
+    And(p1::Event,p2::Event) ->
+      let matcher1::Matcher = compilePattern(p1);
+          matcher2::Matcher = compilePattern(p2);
+      in fun(t::Trace,s::Success,f::Fail)::Bool
+           matcher1(t,fun(ignore::Trace,f::Fail)::Bool
+             matcher2(t,s,f),f);
+    Occurrences(e::Event,0) -> fun(t::Trace,s::Success,f::Fail)::Bool s(t,f);
+    Occurrences(e::Event,n::Int) -> compilePattern(And(e,Next(Occurrences(e,n-1))));
+  }
+
+flip(c::Coin)::Coin =
+  case c {
+    Head -> Tail;
+    Tail -> Head;
+  }
+
+get[T](d::Data[T],x::T)::T =
+  case d {
+    Something[T](x) -> x;
+    Nothing[T] -> x;
+  }
+
+length[T](l::List[T])::Int =
+  case unfold[List[T]]l {
+    Nil[T] -> 0;
+    Cons[T](h::T,t::List[T]) -> 1 + length[T](t);
+  }
+
+act main::Main {
+
+  matcher1::Matcher = null[Matcher];
+  matcher2::Matcher = null[Matcher];
+  matcher3::Matcher = null[Matcher];
+  matcher4::Matcher = null[Matcher];
+   
+  -> {
+    matcher1 := compilePattern(Primitive('E1'));
+    matcher2 := compilePattern(Eventually(Primitive('E1')));
+    matcher3 := compilePattern(And(Eventually(Primitive('E1')),Eventually(Primitive('E2'))));
+    matcher4 := compilePattern(Occurrences(Primitive('E0'),10));
+  }
+
+  Time(n::Int) -> {
+    print[Int](length[Int](consInt(2,consInt(1,nilInt))));
+    print[Coin](flip(flip(Head)));
+    print[Bool](get[Bool](Something[Bool](true),false));
+    print[Bool](get[Bool](Nothing[Bool],true));
+    print[Int](size(fold[Tree]Leaf));
+    print[Bool](matcher1(['E1'],fun(t::Trace,f::Fail)::Bool true,fun()::Bool false));
+    print[Bool](matcher2(['E3','E2','E1'],fun(t::Trace,f::Fail)::Bool true,fun()::Bool false));
+    print[Bool](matcher3(['E3','E3','E3','E3','E3','E3','E3','E2','E1'],fun(t::Trace,f::Fail)::Bool true,fun()::Bool false));
+    print[Bool](matcher4(['E0','E0','E0','E0','E0','E0','E0','E0','E0','E0'],fun(t::Trace,f::Fail)::Bool true,fun()::Bool false));
+    stopAll();
+  }
+
+}
+
+
+
+

@@ -1,0 +1,176 @@
+export main;
+
+import 'esl/lists.esl', 'esl/displays.esl';
+
+type Customer = Act { export id::Int; Value(Int,Int,Int); Time(Int); }
+type Fact = Act{ export id::Int; Get(Int,Int,Int,Customer); Time(Int); }
+
+type M = union{ 
+  GetValue(Int,Int,Int,Fact,Fact,Customer,Customer), 
+  ReturnValue(Int,Int,Int,Customer,Customer), 
+  Zero(Int,Int,Fact,Customer),
+  Start(Int,Int,Customer,Fact)
+}
+cnstr GetValue = M.GetValue;
+cnstr ReturnValue = M.ReturnValue;
+cnstr Zero = M.Zero;
+cnstr Start = M.Start;
+
+actors::[Actor(Int,Int,Int,Str)] = [];
+messages::[M] = [];
+
+addActor(behaviour::Str)::Int =
+  grab(actors) {
+    let id::Int = length[Actor(Int,Int,Int,Str)](actors);
+    in {
+      actors := actors + [Actor(id,0,timeOut,behaviour)];
+      id;
+    }
+  }
+  
+addGet(threadId::Int,time::Int,n::Int,source::Fact,target::Fact,sourceCustomer::Customer,targetCustomer::Customer)::Void =
+  grab(messages) {
+    messages := messages + [GetValue(n,threadId,time,source,target,sourceCustomer,targetCustomer)];
+  }
+  
+addReturn(threadId::Int,time::Int,v::Int,customer::Customer,proxy::Customer)::Void = 
+ grab(messages) {
+   messages := messages + [ ReturnValue(v,threadId,time,customer,proxy) ];
+ }
+ 
+addZero(threadId::Int,time::Int,f::Fact,c::Customer)::Void =
+  grab(messages) {
+    messages := messages + [ Zero(threadId,time,f,c) ];
+  }
+ 
+addStart(n::Int,threadId::Int,c::Customer,f::Fact)::Void =
+  grab(messages) {
+    messages := messages + [ Start(n,threadId,c,f) ];
+  }
+  
+limit::Int = 4;       
+timeOut::Int = 1000;
+
+act fact::Fact {
+  export id;
+  id::Int = 0;
+  -> id := addActor('fact');
+  Get(0,threadId::Int,time::Int,c::Customer) -> {
+    addZero(threadId,time,self,c);
+    c <- Value(threadId,time+1,1);
+  }
+  Get(n::Int,threadId::Int,time::Int,c::Customer) -> {
+    let cc::Customer = new cust(n,c);
+    in {
+      addGet(threadId,time,n-1,self,self,c,cc);
+      self <- Get(n-1,threadId,time+1,cc);
+    }
+  }
+  Time(n::Int) -> {}
+}
+
+act cust(n::Int,c::Customer)::Customer {
+  export id;
+  id::Int = 0;
+  -> id := addActor('cust');
+  Value(threadId::Int,time::Int,m::Int) -> {
+    addReturn(threadId,time,n*m,self,c);
+    setDeath(id,time);
+    c <- Value(threadId,time+1,n*m);
+  }
+  Time(t::Int) -> {}
+}
+
+translate(msIn::[M])::[Message(Int,Int,Int,Str)] =
+  case msIn {
+    m::M;
+    rest::[M];
+    [] -> [];
+    Start(n::Int,threadId::Int,c::Customer,f::Fact):rest -> 
+      Message(1,c.id,f.id,'[' + threadId + ']Start('+n+')'):translate(rest);
+    GetValue(n::Int,threadId::Int,time::Int,source::Fact,target::Fact,sourceCustomer::Customer,targetCustomer::Customer):rest -> 
+      Message(time,source.id,target.id,'[' + threadId + ']Get(' + n + ',' + sourceCustomer.id + ',' + targetCustomer.id + ')'):translate(rest);
+    ReturnValue(n::Int,threadId::Int,time::Int,source::Customer,target::Customer):rest -> 
+      Message(time,source.id,target.id,'[' + threadId + ']Return(' + n + ')'):translate(rest);
+    Zero(threadId::Int,time::Int,f::Fact,c::Customer):rest -> 
+      Message(time,f.id,c.id,'[' + threadId + ']One'):translate(rest);
+  }
+  
+getActor(id::Int,as::[Actor(Int,Int,Int,Str)])::Actor(Int,Int,Int,Str) =
+  case as {
+    Actor(i::Int,time::Int,death::Int,b::Str):l::[Actor(Int,Int,Int,Str)] when i = id -> Actor(i,time,death,b);
+    a::Actor(Int,Int,Int,Str):l::[Actor(Int,Int,Int,Str)] -> getActor(id,l);
+  }
+  
+changeDeath(Actor(i::Int,birth::Int,death::Int,b::Str),t::Int)::Actor(Int,Int,Int,Str) = Actor(i,birth,t,b);
+  
+setDeath(id::Int,time::Int)::Void =
+  let oldActor::Actor(Int,Int,Int,Str) = getActor(id,actors); in
+  let newActor::Actor(Int,Int,Int,Str) = changeDeath(oldActor,time);
+  in grab(actors) {
+   actors := subst[Actor(Int,Int,Int,Str)](newActor,oldActor,actors);
+  }
+
+act main::Customer {
+  export id;
+  id::Int = 0;
+  counter::Int = 0;
+  f::Fact = new fact;
+  lastTime::Int = 0;
+  computeFact(n::Int)::Void = {
+    addStart(n,counter,self,f);
+    counter := counter + 1;
+    f <- Get(n,counter-1,1,self);
+  }
+  messageTime(Message(t::Int,s::Int,tt::Int,l::Str))::Int = t;
+  messageBefore(time::Int)::(Message(Int,Int,Int,Str))->Bool = fun(m::Message(Int,Int,Int,Str))::Bool messageTime(m) < time;
+  createFilmstrip(ms::[Message(Int,Int,Int,Str)])::[EDBDisplay] =
+    [Sequence(actors,select[Message(Int,Int,Int,Str)](messageBefore(t),ms)) | t::Int <- 1..lastTime];
+  -> {
+    id := addActor('Main');
+    computeFact(6);
+    computeFact(7);
+    computeFact(8);
+  }
+  Value(threadId::Int,time::Int,n::Int) -> {
+    print[Str](n + ' at ' + time);
+    setDeath(id,time);
+    if time > lastTime then lastTime := time; else {}
+  }
+  Time(n::Int) when n > timeOut -> {
+    edb <- Filmstrip('Sequence',createFilmstrip(translate(messages)));
+    stopAll();
+  }
+  Time(n::Int) -> {}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

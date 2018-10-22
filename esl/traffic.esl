@@ -1,0 +1,372 @@
+export main;
+
+import 'new_esl/lists.esl', 'new_esl/displays.esl';
+
+// This example is taken from the paper Monitoring Norm Violations in Multi-Agent Systems by Nils Bulling, Mehdi Dastani
+// and Max Knobbout. The paper describes an example of a road with a bottleneck that is only wide enough for a single
+// car. The paper uses LTL to specify that cars from the right should be given priority at the bottleneck so that the
+// lights controller does not flip-flop. The scenario provides a useful example of a monitor in ESL. The approaches to the
+// bottleneck from left and right are represented as actors that supply cars at a specified rate, the traffic lights 
+// that control flow through the bottleneck is an actor. The monitor can detect the number of cars waiting on either side
+// of the bottleneck and can modify the state of the traffic-lights.
+
+// **************************************** START OF GUI CODE **********************************************************
+
+// Ths following ESL code transforms a sequence of actions that describe events at the bottleneck to a sequence of pictures
+// that show what happens as a filmstrip. 
+
+leftColour::Str = 'fill:green;stroke:green;';
+rightColour::Str = 'fill:red;stroke:red;';
+
+actionsToPictures(qLeft::Int,qRight::Int,startLeft::Int,startRight::Int,as::[Action])::[EDBDisplay] =
+  case as {
+    [] -> [];
+    ArriveLeft:as::[Action] -> picture(qLeft+1,qRight,startLeft,startRight):actionsToPictures(qLeft+1,qRight,startLeft,startRight,as);
+    ArriveRight:as::[Action] -> picture(qLeft,qRight+1,startLeft,startRight):actionsToPictures(qLeft,qRight+1,startLeft,startRight,as);
+    MoveLeft:as::[Action] -> movesRight(startLeft+1,picture(qLeft-1,qRight,startLeft+1,startRight):actionsToPictures(qLeft-1,qRight,startLeft+1,startRight,as));
+    MoveRight:as::[Action] -> movesLeft(startRight+1,picture(qLeft,qRight-1,startLeft,startRight+1):actionsToPictures(qLeft,qRight-1,startLeft,startRight+1,as));
+  }
+  
+movesRight(label::Int,ps::[EDBDisplay])::[EDBDisplay] =
+  addCarAtNeckLeft(label,head[EDBDisplay](ps)):exitRight(0,label,tail[EDBDisplay](ps));
+  
+movesLeft(label::Int,ps::[EDBDisplay])::[EDBDisplay] =
+  addCarAtNeckRight(label,head[EDBDisplay](ps)):exitLeft(0,label,tail[EDBDisplay](ps));
+  
+exitRight(pos::Int,label::Int,ds::[EDBDisplay])::[EDBDisplay] =
+  if (pos = maxCarsWaiting) or (ds = [])
+  then ds;
+  else addCarOnRight(pos,label,head[EDBDisplay](ds)):exitRight(pos+1,label,tail[EDBDisplay](ds));
+  
+exitLeft(pos::Int,label::Int,ds::[EDBDisplay])::[EDBDisplay] =
+  if (pos = maxCarsWaiting) or (ds = [])
+  then ds;
+  else addCarOnLeft(pos,label,head[EDBDisplay](ds)):exitLeft(pos+1,label,tail[EDBDisplay](ds));
+  
+addCarOnRight(pos::Int,label::Int,d::EDBDisplay)::EDBDisplay =
+  case d {
+    Picture(x::Int,y::Int,ps::[PictureElement]) ->
+      Picture(x,y,carOnRight(pos,label)+ps);
+  }
+  
+addCarOnLeft(pos::Int,label::Int,d::EDBDisplay)::EDBDisplay =
+  case d {
+    Picture(x::Int,y::Int,ps::[PictureElement]) ->
+      Picture(x,y,carOnLeft(pos,label)+ps);
+  }
+  
+carOnRight(pos::Int,label::Int)::[PictureElement] = [
+  Circle(border+waits+gapLength+carSize+(carSize*pos),border+width/4,carSize/2,leftColour),
+  Text(border+waits+gapLength+carSize+(carSize*pos)-5,5+border+width/4,label+'','')
+];
+  
+carOnLeft(pos::Int,label::Int)::[PictureElement] = [
+  Circle(border+waits-(carSize+(carSize*pos)),border+(3*(width/4)),carSize/2,rightColour),
+  Text(border+waits-((carSize+(carSize*pos))+5),5+border+(3*(width/4)),label+'','')
+];
+  
+addCarAtNeckLeft(label::Int,d::EDBDisplay)::EDBDisplay =
+  case d {
+    Picture(x::Int,y::Int,es::[PictureElement]) ->
+      Picture(x,y,neckCarLeft(label)+es);
+  }
+  
+addCarAtNeckRight(label::Int,d::EDBDisplay)::EDBDisplay =
+  case d {
+    Picture(x::Int,y::Int,es::[PictureElement]) ->
+      Picture(x,y,neckCarRight(label)+es);
+  }
+    
+carSize::Int=30;
+carGap::Int = 2;
+maxCarsWaiting::Int = 7;  // Change this to vary the width of the display.
+width::Int = 4*carSize;
+border::Int = 50;
+waits::Int = (carSize+carGap)*maxCarsWaiting;
+neckLength::Int = 100;
+neckWidth::Int = carSize+10;
+gapLength::Int = 150;
+gapWidth::Int = 100;
+leftCarY::Int = (border+(width/4));
+rightCarY::Int = (border+width-(width/4));
+pWidth::Int = 1500;
+pHeight::Int = 1000;
+
+neckCarLeft(label::Int)::[PictureElement] = [
+  Circle(border+waits+(gapLength/2),border+width/2,carSize/2,leftColour),
+  Text(border+waits+(gapLength/2)-5,5+border+width/2,''+label,'')
+];
+
+neckCarRight(label::Int)::[PictureElement] = [
+  Circle(border+waits+(gapLength/2),border+width/2,carSize/2,rightColour),
+  Text(border+waits+(gapLength/2)-5,5+border+width/2,''+label,'')
+];
+
+leftTop::PictureElement = Line(border,border,border+waits,border,'stroke:black;');
+leftBottom::PictureElement = Line(border,border+width,border+waits,border+width,'stroke:black;');
+rightTop::PictureElement = Line(border+waits+gapLength,border,border+waits+gapLength+waits,border,'stroke:black;');
+rightBottom::PictureElement = Line(border+waits+gapLength,width+border,border+waits+gapLength+waits,width+border,'stroke:black;');
+
+topNeck::[PictureElement] = [
+  Line(border+waits,border,border+waits+(gapLength-neckLength)/2,border+(width-neckWidth)/2,'stroke:black;'),
+  Line(border+waits+(gapLength-neckLength)/2,border+(width-neckWidth)/2,border+waits+gapLength-(gapLength-neckLength)/2,border+(width-neckWidth)/2,'stroke:black;'),
+  Line(border+waits+gapLength-(gapLength-neckLength)/2,border+(width-neckWidth)/2,border+waits+gapLength,border,'stroke:black;')
+];
+bottomNeck::[PictureElement] = [
+  Line(border+waits,border+width,border+waits+(gapLength-neckLength)/2,border+width-(width-neckWidth)/2,'stroke:black;'),
+  Line(border+waits+(gapLength-neckLength)/2,width+border-(width-neckWidth)/2,border+waits+gapLength-(gapLength-neckLength)/2,width+border-(width-neckWidth)/2,'stroke:black;'),
+  Line(border+waits+gapLength-(gapLength-neckLength)/2,width+border-(width-neckWidth)/2,border+waits+gapLength,border+width,'stroke:black;')
+];
+
+neck::[PictureElement] = topNeck+bottomNeck;
+
+centre::PictureElement = Line(border,border+width/2,border+(waits*2)+gapLength,border+width/2,'stroke:grey;stroke-dasharray:5,5;');
+
+road::[PictureElement] = [leftTop,leftBottom]+neck+[rightTop,rightBottom]+[centre];
+
+qLeftPicture(cars::Int,startLeft::Int)::[PictureElement] = 
+  if cars = 0
+  then [];
+  else leftQCarPicture(cars-1,startLeft+cars)+qLeftPicture(cars-1,startLeft);
+  
+qRightPicture(cars::Int,startRight::Int)::[PictureElement] = 
+  if cars = 0
+  then [];
+  else rightQCarPicture(cars-1,startRight+cars) + qRightPicture(cars-1,startRight);
+  
+leftQCarPicture(position::Int,label::Int)::[PictureElement] = 
+  let x::Int = border+waits-(((carSize+carGap)*position)+carSize);
+      y::Int = leftCarY;
+  in [Circle(x,y,carSize/2,leftColour),
+      Text(x-5,y+5,''+label,'')];
+      
+rightQCarPicture(position::Int,label::Int)::[PictureElement] =
+  let x::Int = border+waits+gapLength+((carSize+carGap)*position)+carSize;
+      y::Int = rightCarY;
+  in [Circle(x,y,carSize/2,rightColour),
+      Text(x-5,y+5,''+label,'')];
+
+picture(qLeft::Int,qRight::Int,startLeft::Int,startRight::Int)::EDBDisplay =
+  Picture(pWidth,pHeight,road+qLeftPicture(qLeft,startLeft) + qRightPicture(qRight,startRight));
+
+// **************************************** END OF GUI CODE **********************************************************
+
+type Main = Act { Time(Int); }
+
+type TrafficLights = Act { export left::TrafficLight; right::TrafficLight; Time(Int); }
+
+type TrafficLight = Act { export colour::Str; change::()->Void; Time(Int); }
+
+type Approach = Act { export getQueue::()->Int; prioritise::()->Bool; move::()->Void; Time(Int); }
+
+type Monitor = Act { Time(Int); }
+
+type Action = union{
+  MoveLeft,
+  MoveRight,
+  ArriveLeft,
+  ArriveRight
+}
+
+cnstr MoveLeft = Action.MoveLeft;
+cnstr MoveRight = Action.MoveRight;
+cnstr ArriveLeft = Action.ArriveLeft;
+cnstr ArriveRight = Action.ArriveRight;
+
+data MonitorState = PriorityRight | Even | Stuck;
+
+// The following values are used to control the simulation:
+
+qLimit::Int = 3;                                   // How long a queue gets before it becomes interesting.
+qtLimit::Int = 3;                                  // A queue becomes a priority after this many turns.
+tLimit::Int =10000;                                // How long to run the simulation for.
+sampleDelay::Int = 20;                             // The monitor samples the approaches once per delay.
+moveDelay::Int = 20;                               // Cars are delayed at the waiting point by this amount.
+actions::[Action] = [];                            // Record the actions so that they can be displayed as pictures.
+monitorState::MonitorState = Even;                 // Change this value to modify the monitoring strategy.
+
+act light(c::Str)::TrafficLight {
+
+  export colour, change;
+  
+  colour::Str = c;
+  
+  change()::Void =
+    case colour {
+      'RED' -> colour := 'GREEN';
+      'GREEN' -> colour := 'RED';
+    }
+  
+  Time(n::Int) -> {}
+  
+}
+
+act trafficLights(l::TrafficLight,r::TrafficLight)::TrafficLights {
+
+  export left,right;
+  
+  left::TrafficLight = l;
+  right::TrafficLight = r;
+  
+  Time(n::Int) -> {}
+}
+
+act approach(id::Str,light::TrafficLight,probOfNewCar::Int)::Approach {
+
+  // The approach to the bottleneck. Cars are generated using the supplied
+  // probability and can only move when the traffic light is green.
+
+  export getQueue,move,prioritise;
+
+  queue::[Int] = [0];   // A historical record of the cars at the approach.
+  
+  getQueue()::Int =
+    grab(queue) {
+      head[Int](queue);
+    }
+    
+  prioritise()::Bool =
+    // We have priority for movement if the number of cars waiting at the approach
+    // to the bottleneck is at the qLimit and has been for qtLimit turns...
+    grab(queue) {
+      if length[Int](queue) > qtLimit
+      then forall[Int](fun(n::Int)::Bool n > qLimit,take[Int](queue,qtLimit));
+      else false;
+    }
+    
+  move()::Void =
+    grab(queue,actions) {
+      if light.colour = 'GREEN'
+      then 
+        if head[Int](queue) > 0
+        then {
+          queue := (head[Int](queue) - 1) : queue;
+          actions := actions + [if id = 'left' then MoveLeft else MoveRight];
+        } else {}
+      else {}
+    }
+  
+  Time(n::Int) -> {
+    probably(probOfNewCar) { 
+      grab(queue,actions) { 
+        queue := (head[Int](queue) + 1) : queue;
+        actions := actions + [if id = 'left' then ArriveLeft else ArriveRight];
+      }
+    }
+    move();
+    wait(10);
+  }
+  
+}
+
+act mon(left::Approach,right::Approach,lights::TrafficLights)::Monitor {
+
+  queueRight()::Bool = right.getQueue() > 0;
+  
+  allowRight()::Void = 
+    if lights.right.colour = 'RED' 
+    then {
+      lights.right.change();
+      lights.left.change();
+    } else {}
+    
+  allowLeft()::Void = 
+    if lights.left.colour = 'RED' 
+    then {
+      lights.left.change();
+      lights.right.change();
+    } else {}
+  
+  mon()::Void = {
+  
+    // The PriorityRight strategy will give the right-hand approach to the bottleneck
+    // priority over the left unless the left has priority when the right does not.
+    // Otherwise the strategy services cars at the right approach before those at the left.
+    
+      case monitorState {
+        PriorityRight ->
+    if right.prioritise()
+    then allowRight();
+    else 
+      if left.prioritise()
+      then allowLeft();
+      else
+        if queueRight()
+        then allowRight();
+        else allowLeft();
+        Even ->
+  
+    // If the state is Even then we just change the lights with equal
+    // probability...
+    
+    probably(50) allowLeft(); else allowRight();
+  }}
+  
+  Time(n::Int) -> {
+  
+    // This assumes that moveDelay < sampleDelay. It controls when the cars
+    // on the approaches to the bottleneck get the opportunity to move. Although
+    // both are given the opportunity to move, only one will succeed because of 
+    // the traffic lights.
+    
+    mon();
+  }
+  
+  Time(n::Int) -> {}
+  
+}
+
+// Create the configuration of lights, approaches and monitor...
+
+l1::TrafficLight = new light('RED');
+l2::TrafficLight = new light('GREEN');
+left::Approach = new approach('left',l1,40);
+right::Approach = new approach('right',l2,50);
+lights::TrafficLights = new trafficLights(l1,l2);
+m::Monitor = new mon(left,right,lights);
+
+act main::Main {
+
+  stop::Bool = false;
+
+  Time(n::Int) when (n > tLimit) and not(stop) -> {
+    stop := true;
+    print[[Action]](actions);
+    print[Int](length[Action](actions));
+    print[[EDBDisplay]](actionsToPictures(0,0,0,0,actions));
+    edb <- Filmstrip('Traffic Filmstrip',actionsToPictures(0,0,0,0,actions));
+    stopAll();
+  }
+  
+  Time(n::Int) -> {}
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

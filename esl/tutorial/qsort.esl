@@ -1,0 +1,51 @@
+export main;
+
+data Direction = Left | Right | Final;
+
+Act QSort { Sorted([Int],Direction); }
+
+nums::[Int] = [ random(50) | n::Int <- 0..25 ];
+
+act qmain(l::[Int])::QSort {                                    // The starting point for sorting.
+  -> new qsorter(self,l,Final);                                 // Think of this as the initial
+  Sorted(l::[Int],Final) -> {                                   // call frame. When it is returned
+    print[[Int]](l);                                            // to, it prints the sorted list
+    stopAll();                                                  // and stops.
+  }
+}
+
+act qwaiter(parent::QSort,n::Int,dir::Direction)::QSort {       // This is waiting for two separate
+  left::[Int] = null[[Int]];                                    // lists to be sorted. When both
+  right::[Int] = null[[Int]];                                   // have been received from the left
+  check()::Void =                                               // and right (in any order) then it
+    if left <> null[[Int]] and right <> null[[Int]]             // returns to the parent.
+    then parent <- Sorted(left+[n]+right,dir); 
+    else {}
+  Sorted(l::[Int],Left)  -> { left := l;  check(); }
+  Sorted(l::[Int],Right) -> { right := l; check(); }
+}
+
+act qsorter(parent::QSort,l::[Int],dir::Direction)::QSort {     // A request to sort the list l and
+  -> case l {                                                   // to return to the parent from the
+       [] -> parent <- Sorted(l,dir);                           // supplied direction. If the list is
+       x::Int:l::[Int] -> {                                     // non-empty then nested sorters are
+         new qsorter(self,[ n | n::Int <- l, ?(n<x) ],Left);    // created with this as the parent
+         new qsorter(self,[ n | n::Int <- l, ?(n>x) ],Right);   // and this becomes a waiting actor.
+         become qwaiter(parent,x,dir);                          // Becoming a waiter is equivalent to
+         {}                                                     // a nested stack frame. No-one should
+       }                                                        // ever return to this behaviour so
+     }                                                          // its Sorted handler is an error.
+  Sorted(l::[Int],d::Direction) -> throw[Void] 'error!';
+}
+  
+act main::Act{} { -> new qmain(nums); }
+
+qsort(l::[Int])::[Int] =
+  // Sequential quicksort...
+  case l {
+    [] ->[];
+    x::Int:l::[Int] ->
+      qsort([ n | n::Int <- l, ?(n<x) ])
+      + [x] +
+      qsort([ n | n::Int <- l, ?(n>x) ]);
+  }

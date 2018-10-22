@@ -1,0 +1,256 @@
+export adjoin,select1,map,remove,remove1,removeAll,length,flatten,count,hasPrefix,nth,take,drop,subst,head,tail,isNil,member,reverse,exists,forall,replaceNth,indexOf,select,foldr,last,butlast,occurrences,filter,sum,removeDups,prefixes,subset,setEql;
+
+adjoin[T](x::T,l::[T])::[T] =
+  if member[T](x,l)
+  then l;
+  else x:l;
+  
+select1[T](l::[T],d::T,p::(T)->Bool)::T =
+  case l {
+    [][T] -> d;
+    h::T:t::[T] when p(h) -> h;
+    h::T:t::[T] -> select1[T](t,d,p);
+  }
+
+map[M,N](f::(M)->N,l::[M])::[N] =
+  case l {
+    m::M;
+    ms::[M];
+    [][M] -> [][N];
+    m:ms -> (f(m)):map[M,N](f,ms);
+  }
+
+remove[T](v::T,l::[T])::[T] =
+  case l {
+    h::T;
+    t::[T];
+    h:t when (h=v) -> remove[T](v,t);
+    h:t        -> h:remove[T](v,t);
+    []         -> [][T];
+  }
+
+remove1[T](v::T,l::[T])::[T] =
+  case l {
+    h::T;
+    t::[T];
+    h:t when (h=v) -> t;
+    h:t        -> h:remove1[T](v,t);
+    []         -> [][T];
+  }
+
+length[T](l::[T])::Int = 
+  case l {
+    h::T;
+    t::[T];
+    h:t -> 1 + length[T](t);
+    [] -> 0;
+  }
+      
+flatten[T](lists::[[T]])::[T] =
+  case lists {
+    h::[T];
+    t::[[T]];
+    h:t -> h+flatten[T](t);
+    [][[T]] -> [][T];
+  }
+        
+count[T](x::T,l::[T])::Int =
+  case l {
+    h::T;
+    t::[T];
+    h:t -> if h = x then 1+count[T](x,t); else count[T](x,t);
+    []  -> 0;
+  }
+  
+hasPrefix[T](list::[T],prefix::[T])::Bool =
+  case list,prefix {
+    x::T;
+    y::T;
+    l1::[T];
+    l2::[T];
+    l1,[][T] -> true;
+    x:list,y:prefix when x=y -> hasPrefix[T](list,prefix);
+    l1,l2 -> false;
+  }
+
+nth[T](l::[T],n::Int)::T =
+  case l {
+    h::T;
+    t::[T];
+    h:t    -> if n = 0 then h; else nth[T](t,n-1);
+    [][T]  -> throw[T]('cannot take nth element.');
+  }
+  
+take[T](l::[T],n::Int)::[T] = 
+  if n = 0
+  then [][T];
+  else 
+    case l {
+      h::T;
+      t::[T];
+      h:t -> h:(take[T](t,n-1));
+      [][T] -> throw[[T]]('cannot take element ' + n);
+    }
+  
+drop[T](l::[T],n::Int)::[T] = 
+  if n = 0
+  then l;
+  else 
+    case l {
+      h::T;
+      t::[T];
+      h:t -> drop[T](t,n-1);
+      [] -> throw[[T]]('cannot drop element ' + n);
+    }
+    
+subst[T](n::T,o::T,l::[T])::[T] =
+  case l {
+    h::T;
+    t::[T];
+    [][T] -> [][T];
+    h:t -> if h = o then n:(subst[T](n,o,t)); else h:(subst[T](n,o,t));
+  }
+  
+head[T](l::[T])::T =
+  case l {
+    h::T;
+    t::[T];
+    h:t -> h;
+    [][T] -> throw[T]('cannot take the head of []');
+  }
+  
+tail[T](l::[T])::[T] =
+  case l {
+    h::T;
+    t::[T];
+    h:t -> t;
+    [][T] -> throw[[T]]('cannot take the tail of []');
+  }
+  
+isNil[T](l::[T])::Bool =
+  case l {
+    [][T] -> true;
+    l::[T] -> false;
+  }
+
+member[T](e::T,l::[T])::Bool =
+  case l {
+    [][T] -> false;
+    x::T:xs::[T] when x = e -> true;
+    x::T:xs::[T]-> member[T](e,xs);
+  }
+  
+reverse[T](l::[T])::[T] =
+  case l {
+    [][T] -> [][T];
+    x::T:xs::[T] -> reverse[T](xs) + [x];
+  }
+
+exists[T](pred::(T)->Bool,l::[T])::Bool =
+  case l {
+    [][T] -> false;
+    x::T:xs::[T] when pred(x) -> true;
+    x::T:xs::[T] -> exists[T](pred,xs);
+  }
+
+forall[T](pred::(T)->Bool,l::[T])::Bool =
+  case l {
+    [][T] -> true;
+    x::T:xs::[T] when pred(x) -> forall[T](pred,xs);
+    x::T:xs::[T] -> false;
+  }
+
+replaceNth[T](l::[T],n::Int,x::T)::[T] = 
+  case l {
+    [][T] -> throw[[T]]('cannot replace nth of []');
+    h::T:t::[T] when n=0 -> x:t;
+    h::T:t::[T] -> h:replaceNth[T](t,n-1,x);
+  }
+
+indexOf[T](t::T,l::[T])::Int =
+  case l {
+    [][T] -> 0-1;
+    h::T:l::[T] when h=t -> 0;
+    h::T:l::[T] -> 1 + indexOf[T](t,l);
+  }
+  
+select[T](p::(T)->Bool,l::[T])::[T] =
+  case l {
+    [][T] -> [][T];
+    h::T:t::[T] when p(h) -> h:select[T](p,t);
+    h::T:t::[T] -> select[T](p,t);
+  }
+
+last[T](l::[T])::T =
+  case l {
+    [][T] -> throw [T]('cannot find last element of emply list');
+    x::T:[][T] -> x;
+    h::T:l::[T] -> last[T](l);
+  }
+
+butlast[T](l::[T])::[T] =
+  case l {
+    [][T] -> [][T];
+    [x::T] -> [][T];
+    h::T:l::[T] -> h:butlast[T](l);
+  }
+
+occurrences[T](x::T,l::[T])::Int =
+  case l {
+    [][T] -> 0;
+    h::T:t::[T] when h=x -> 1 + occurrences[T](x,t);
+    h::T:t::[T] -> occurrences[T](x,t);
+  }
+  
+filter[T](pred::(T)->Bool,l::[T])::[T] = 
+  case l {
+    [][T] -> [][T];
+    h::T:t::[T] ->
+      if pred(h) 
+      then h:filter[T](pred,t);
+      else filter[T](pred,t);
+  }
+  
+foldr[M,N](map::(M)->N,op::(N,N)->N,empty::N,list::[M])::N =
+  case list {
+    [] -> empty;
+    h::M:t::[M] -> op(map(h),foldr[M,N](map,op,empty,t));
+  }
+  
+id[T](x::T)::T = x;
+  
+sum(list::[Int])::Int = foldr[Int,Int](id[Int],fun(x::Int,y::Int)::Int x + y,0,list);
+
+removeDups[T](list::[T])::[T] =
+  case list {
+    [] -> [][T];
+    x::T:l::[T] -> x:removeDups[T](remove[T](x,l));
+  }
+  
+prefixes[T](l::[T])::[[T]] =
+  letrec pre(prefixes::[[T]],rest::[T])::[[T]] = { //print[[T]](rest);
+    if rest = [][T]
+    then prefixes;
+    else pre(prefixes + [ last[[T]](prefixes)+[head[T](rest)] ],tail[T](rest)); }
+  in pre([[][T]],l);
+  
+// New Operations...
+
+subset[T](l1::[T],l2::[T])::Bool =
+  case l1 {
+    [][T] -> true;
+    x::T:l1::[T] when member[T](x,l2) -> subset[T](l1,l2);
+    x::[T] -> false;
+  }
+  
+setEql[T](l1::[T],l2::[T])::Bool = subset[T](l1,l2) and subset[T](l2,l1);
+
+removeAll[T](removables::[T],l::[T])::[T] =
+  case removables {
+    [][T] -> l;
+    t::T:r::[T] -> removeAll[T](r,remove[T](t,l));
+  }
+
+
+
+

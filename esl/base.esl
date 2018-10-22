@@ -1,0 +1,36 @@
+import 'new_esl/displays.esl';
+
+type Math = {
+  circlePos::(Int,Int,Int,Int) -> Point
+};
+
+type BrowserListener = Act {
+  BrowserEvent(Str);
+}
+
+data P = Point(Int,Int);
+
+type EDB = Act {
+
+  export 
+    math::Math;
+    message::Forall[T] (T)->T; 
+    display::Forall[T] (Str,T)->Void; 
+    button::(Str,Str,Str,Str,()->Void)->Void;
+  
+  Show(Str,EDBDisplay);
+  Filmstrip(Str,[EDBDisplay]);
+  AddBrowserListener(BrowserListener);
+  Edit(EditTypes);
+}
+
+type ESL = {
+  edb::EDB;
+  parse::Forall[T](Str)->T;
+  wait::(Int)->Void;
+  builtin::Forall[T] (Str,Str,Int)->T;
+  randon::(Int)->Int;
+  kill::Forall[T](T)->Void;
+  stopAll::()->Void;
+  print::Forall[T](T)->T
+};

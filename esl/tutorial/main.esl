@@ -1,0 +1,22 @@
+// An ESL module is a collection of definitions.
+// Modules can export names so that other modules
+// can import them...
+
+export main;
+
+Act Main {
+  // Declares a behaviour type that defines
+  // the interface of any behaviour that conforms to it...
+  Time(Int);
+}
+
+act main::Main {
+  // Defines a behaviour that conforms to a behaviour
+  // type. May contain local state, local functions and
+  // message handlers...
+  Time(n::Int) when n > 1000 -> stopAll();
+  Time(n::Int) -> {
+    print[Str]('time = ' + n);
+    wait(1);
+  }
+}

@@ -1,0 +1,199 @@
+export main;
+
+import 'esl/lists.esl';
+
+type GUI = Act{ Time(Int); Draw(Facts) };
+
+type Simulator = Act { export gui::GUI; SetGUI(GUI); Start(Int); Stop(); Time(Int); Close() };
+
+type Main = Act { Time(Int) };
+
+type Miner = Act { Time(Int) };
+
+data FactItem =
+  Miners(Int)             // The number of miners.
+| Turn(Int)               // The id of the miner whose turn it is.
+| Id(Int,Miner)           // The miner and their identifier.
+| Pos(Int,Int,Int,Int)    // The position of the miner and their ore.
+| Base(Int,Int,Int)       // The position of the base and its ore.
+| Ore(Int,Int,Int);       // The position of an ore seam and the amount.
+
+type MiningMonitor = Monitor[FactItem];
+
+type Facts = KB[FactItem];
+
+facts::Facts = kb[Facts]{};
+
+turns::MiningMonitor = 
+    monitor[FactItem] {
+      turn Miners(n::Int) Turn(n::Int) -> {
+        grab(facts) {
+          facts.delete(Turn(n),0);
+          facts.add(Turn(0),0)
+        }
+      }
+    };
+
+act simulator::Simulator {
+
+  export gui;
+
+  gui::GUI = null;
+  miners::[Miner] = []
+  
+  SetGUI(g::GUI) -> gui := g;
+  
+  Start(noOfMiners::Int) -> {
+    facts :=  kb[Facts]{};
+    turns.listen(facts);
+    for id::Int in 0..noOfMiners do {
+      let m::Miner = new miner(id)
+      in {
+        facts.add(Id(id,m),0);
+        facts.add(Pos(id,basex,basey,0),0)
+      }
+    };
+    facts.add(Base(basex,basey,0),0);
+    facts.add(Ore(orex1,orey1,200),0);
+    facts.add(Ore(orex2,orey2,200),0);
+    facts.add(Miners(noOfMiners+1),0);
+    facts.add(Turn(noOfMiners+1),0);
+    gui <- Draw(facts);
+    print[MiningMonitor](turns)
+  };
+  
+  Stop -> {
+    for m::Miner in miners do kill[Miner](m);
+    for f::FactItem in facts.asList() do
+      facts.delete(f,0);
+    print[Str]('Stopped ' + facts.asList())
+  };
+
+  Close -> stopAll();
+  
+  Time(t::Int) -> { }
+  
+};
+    
+near(n::Int,m::Int)::Bool = (n=m) or ((n-m) = 1) or ((m-n) = 1);
+    
+nearOre(x::Int,y::Int)::Bool = 
+  exists[FactItem](fun(f::FactItem)::Bool
+    case f {
+      Ore(ox::Int,oy::Int,n::Int) ->
+        (near(ox,x)) and (near(oy,y));
+      i::FactItem -> false
+    },facts.asList());
+
+act miner(id::Int)::Miner {
+
+  action()::Facts = {
+    actions := actions + 1;
+    print[Str]('TURN ' + (id+1));
+    grab(facts) {
+      facts.delete(Turn(id),0);
+      facts.add(Turn(id+1),0)
+    }
+  };
+    
+  m::MiningMonitor = 
+    monitor[FactItem] {
+      moveRandom Pos({id},x::Int,y::Int,0) Turn({id}) Id({id},o::Miner) ->  {
+        if not(nearOre(x,y))
+        then 
+          //print[Str]('DB = ' + facts.asList());
+          grab(facts) {
+            //print[Str]('move random ' + id + '(' + x + ',' + y + ')');
+            facts.delete(Pos(id,x,y,0),0);
+            facts.add(Pos(id,x+(random(3)-1),y+(random(3)-1),0),0);
+            facts.delete(Turn(id),0);
+            facts.add(Turn(id+1),0);
+            gui <- Draw(facts)
+          } else {}
+      }
+      move Pos({id},oldx::Int,oldy::Int,0) Turn({id}) Id({id},o::Miner) Ore(newx::Int,newy::Int,m::Int) ->  {
+        if (near(oldx,newx)) and not((oldx = newx) and (oldy = newy))
+        then 
+          grab(facts) {
+            actions := actions + 1;
+            //print[Str]('move ' + id + '(' + newx + ',' + newy + ',' + oldx + ',' + newy + ')');
+            facts.delete(Pos(id,oldx,oldy,0),0);
+            facts.add(Pos(id,newx,newy,0),0);
+            facts.delete(Turn(id),0);
+            facts.add(Turn(id+1),0)
+          } else {}
+      }
+      pickUp Pos({id},x::Int,y::Int,0) Turn({id}) Id({id},o::Miner) Ore(x::Int,y::Int,stock::Int) ->  {
+        if stock > 9
+        then 
+          grab(facts) {
+            actions := actions + 1;
+            //print[Str]('pickup ' + id + '(' + x + ',' + y + ')');
+            facts.delete(Pos(id,x,y,0),0);
+            facts.add(Pos(id,x,y,10),0);
+            facts.delete(Ore(x,y,stock),0);
+            facts.add(Ore(x,y,stock-10),0);
+            facts.delete(Turn(id),0);
+            facts.add(Turn(id+1),0)
+         } else {}
+      }
+      moveWithLoad Pos({id},x::Int,y::Int,load::Int) Turn({id}) Id({id},o::Miner) ->  {
+        if (load > 0) and ((x <> 0) or (y <> 0))
+        then 
+          grab(facts) {
+            actions := actions + 1;
+            //print[Str]('movewithload ' + id + '(' + x + ',' + y + ')');
+            facts.delete(Pos(id,x,y,load),0);
+            let dx::Int = if x > 0 then x-1 else if x < 0 then x+1 else x;
+                dy::Int = if y > 0 then y-1 else if y < 0 then y+1 else y
+            in {
+              facts.add(Pos(id,dx,dy,load),0);
+              facts.delete(Turn(id),0);
+              facts.add(Turn(id+1),0)
+            }
+          } else {}
+      }
+      drop Pos({id},0,0,load::Int) Turn({id}) Id({id},o::Miner) Base(0,0,amount::Int) -> {
+        if load > 0 
+        then 
+          grab(facts) {
+            actions := actions + 1;
+            print[Str]('drop ' + id + '(' + load + ')');
+            facts.delete(Pos(id,0,0,load),0);
+            facts.add(Pos(id,0,0,0),0);
+            facts.delete(Base(0,0,amount),0);
+            facts.add(Base(0,0,amount+load),0);
+            facts.delete(Turn(id),0);
+            facts.add(Turn(id+1),0)
+        } else {}
+      }
+    }
+    -> m.listen(facts);
+    Time(n::Int) -> {}
+};
+
+actions::Int = 0;
+
+  basex::Int = 0;
+  basey::Int = 0;
+  orex1::Int = 10;
+  orey1::Int = 10;
+  orex2::Int = 0-10;
+  orey2::Int = 0-10;
+  timeLimit::Int = 30000;
+  gui::GUI = new 'test.Miners'[GUI](new simulator);
+
+act main::Main {
+
+  Time(n::Int) -> {}
+  
+}
+
+
+
+
+
+
+
+
+

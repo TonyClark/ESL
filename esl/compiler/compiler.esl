@@ -1,0 +1,112 @@
+/********************************************************************************************************************************
+ *                                                                                                                              *
+ *                                                 The ESL Compiler                                                             *
+ *                                                 ================                                                             *
+ *                                                                                                                              *
+ *   The ESL compiler performs type-checking, case-expression simplification, variable analysis, and translation to Java.       *
+ *                                                                                                                              *
+ *   (a) Type checking is performed on ESL source to check operations and messages are correctly performed.                     *
+ *   (b) Case expressions are simplified to allow them to be represented as switch and if in Java.                              *
+ *   (c) Variable analysis is performed to ensure that lambda-bound variables can be updated in Java.                           *
+ *   (d) ESL AST is translated to Java AST. The Java AST is translated to a String and written to a file.                       *
+ *                                                                                                                              *
+ *   The target Java code is written to esl.* and relies on library code in the classes esl.Lib and esl.ESLVal.                 *
+ *                                                                                                                              *
+ ********************************************************************************************************************************/
+
+export main, compileFile, compileModule; 
+
+import 
+  'esl/compiler/ppExp.esl', 
+  'esl/lists.esl',
+  'esl/compiler/types.esl',
+  'esl/compiler/typeCheck.esl', 
+  'esl/compiler/toJava.esl',
+  'esl/displays.esl',
+  'esl/compiler/dynamicVars.esl',
+  'esl/compiler/strings.esl';
+
+type Main = Act { Time(Int); }
+
+//data EditType =
+//  ESLSource(Str,Str)
+//| JavaSource(Str,Str,Str)
+//| RawText(Str);
+
+type EDB = Act {
+  Edit(EditType);
+}
+
+//edb::EDB = null[EDB];
+
+moduleImports(m::AST)::[Str] = 
+  case m {
+    Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind]) ->  
+      imports;
+  }
+
+compileFile(sourceFile::Str)::Void =
+  let path::[Str] = toPath(sourceFile); in
+  let className::Str = pathToJavaClassName(path); in
+  let sourcePath::Str = 'src/' + joinBy(#/,butlast[Str](path)) + '/' + className + '.java'; in
+  let package1::Str = pathToJavaPackage(path);
+  in { 
+    if sourcePath.writeDate < sourceFile.writeDate
+    then compileModule(sourcePath,package1,className,sourceFile);
+    else print[Str]('[ ' + sourceFile + ' is up to date. ]');
+  }
+
+compileModule(sourcePath::Str,package1::Str,name::Str,path::Str)::Void = {
+  print[Str]('[ compile ' + sourcePath + ']');
+  try {
+    let module::AST = parse[AST](path); in
+    let imports::[Str] = moduleImports(module);
+    in { 
+      typeCheckModule(path);
+      let untypedJModule::JMod = moduleToJava(module); 
+      in { 
+        dynamicVarsJModule(untypedJModule);
+        edb <- Edit(JavaSource(sourcePath,name,ppJModule(name,package1,untypedJModule)));  
+        for i::Str in imports do {
+          compileFile(i); 
+        }
+      }
+    }
+  } catch {
+      message::Str ->  print[Str]('Type Error: ' + message); 
+  }
+}
+  
+act main::Main { 
+  Time(t::Int) -> {
+    print[Str]('Start of system');
+    //compileFile('esl/compiler/test1.esl');  
+    //compileFile('esl/compiler/shop.esl');  
+    compileFile('esl/lists.esl');      
+    compileFile('esl/tables.esl');   
+    compileFile('esl/compiler/strings.esl');  
+    compileFile('esl/compiler/compiler.esl'); 
+    compileFile('esl/compiler/ppExp.esl');
+    compileFile('esl/compiler/typeCheck.esl'); 
+    compileFile('esl/compiler/toJava.esl');  
+    compileFile('esl/compiler/dynamicVars.esl');
+    compileFile('esl/compiler/cases.esl'); 
+    //compileFile('esl/compiler/test2.esl'); 
+    //compileFile('esl/compiler/collisions.esl');
+    //compileFile('esl/compiler/philosophers.esl'); 
+    //compileFile('esl/compiler/segregation.esl');
+    //compileFile('esl/compiler/boids.esl');
+    //compileFile('esl/compiler/predator.esl');
+    //compileFile('esl/compiler/strings.esl');
+    compileFile('esl/tutorial/search.esl');
+    compileFile('esl/tutorial/main.esl');
+    compileFile('esl/tutorial/qsort.esl');
+    compileFile('esl/tutorial/mapReduce.esl');
+    compileFile('esl/tutorial/termites.esl');
+    compileFile('esl/tutorial/philosophers.esl');
+    compileFile('esl/tutorial/segregation.esl');
+    compileFile('esl/tutorial/shop.esl');
+    print[Str]('DONE');
+    stopAll();
+  }
+}

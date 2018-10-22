@@ -1,0 +1,13 @@
+export main;
+
+Act Main {
+  Time(Int);
+}
+
+act main::Main {
+  Time(n::Int) when n > 100 -> stopAll();
+  Time(n::Int) -> {
+    print[Str]('time = ' + n);
+    wait(1);
+  }
+}

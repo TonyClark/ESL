@@ -1,0 +1,74 @@
+export toPath, joinBy, splitBy, pathToJavaPackage, pathToJavaClassName,replaceChar, javaString;
+
+import 'esl/lists.esl';
+
+type Main = Act { Time(Int); } 
+
+pathSeparator::Int = #/; 
+ 
+javaString(s::Str)::Str = 
+  letrec 
+    f(l::[Int])::[Int] =
+      case l {
+        [] -> [][Int];
+        #":l::[Int] -> [#\backslash,#"] + f(l);
+        #\newline:l::[Int] -> [#\backslash,#n] + f(l); 
+        c::Int:l::[Int] -> c:f(l);
+      }
+  in f(s.explode).implode;
+
+replaceChar(s::Str,change::Int,insert::Str)::Str = 
+  letrec
+    replace(chars::[Int])::[Int] =
+      case chars {
+        [][Int] -> [][Int];
+        c::Int:chars::[Int] when c = change -> insert.explode + replace(chars);
+        c::Int:chars::[Int] -> c: replace(chars);
+      }
+  in replace(s.explode).implode;
+
+splitBy(c::Int,s::Str)::[Str] = 
+  letrec 
+    isNotChar(i::Int)::Bool = c <> i;
+    maybeDropOne(l::[Int])::[Int] = case l { [][Int] -> l; h::Int:t::[Int] -> t; }
+    splitter(chars::[Int])::[Str] = { 
+      case chars {
+        [][Int] -> [][Str]; 
+        chars::[Int] -> takeWhile[Int](isNotChar,chars).implode : splitter(maybeDropOne(dropWhile[Int](isNotChar,chars))); 
+      }
+    }
+  in splitter(s.explode);
+
+joinBy(c::Int,ss::[Str])::Str =
+  case ss {
+    [][Str] -> '';
+    [s::Str] -> s;
+    s::Str:ss::[Str] -> s + [c].implode + joinBy(c,ss);
+  }
+
+isLower(c::Int)::Bool = (c = #a or c > #a) and (c = #z or c < #z);
+
+upcase(c::Int)::Int = 
+  if isLower(c)
+  then (c - #a) + #A;
+  else c;
+
+upcaseInitial(s::Str)::Str = ([upcase(head[Int](s.explode))] + tail[Int](s.explode)).implode;
+
+toPath(p::Str)::[Str] = splitBy(pathSeparator,p);
+
+pathToJavaPackage(p::[Str])::Str =
+  let names::[Str] = butlast[Str](p);
+  in joinBy(#.,names);
+
+pathToJavaClassName(p::[Str])::Str =
+  let name::Str = head[Str](splitBy(#.,last[Str](p)));
+  in upcaseInitial(name);
+
+act main::Main {
+  Time(n::Int) -> {
+    print[Str]('"spam" plap\nplop');
+    print[Str](replaceChar('start"plap"end',#",'"'));
+    stopAll();
+  }
+}

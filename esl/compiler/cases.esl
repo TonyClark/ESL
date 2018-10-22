@@ -1,0 +1,494 @@
+/********************************************************************************************************************************
+ *                                                                                                                              *
+ *                                                 The ESL Case Compiler                                                        *
+ *                                                 =====================                                                        *
+ *                                                                                                                              *
+ *   Case expressions contain nested patterns of varying types. Java code is produced for a simple case expressions that match  *
+ *   term names, cons/nil, or constants of the same type. A simple case expression can be implemented in Java using a switch    *
+ *   or an if. This file contains ESL code that translates a complex case expression into a simple case expression suitable for *
+ *   efficient representation in Java. The case compiler is based on the paper: Optimizing Pattern Matching by Fabrice Le       *
+ *   Fessant and Luc Maranget https://dl.acm.org/citation.cfm?id=507641.                                                        *
+ *                                                                                                                              *
+ ********************************************************************************************************************************/
+
+export translateCases, main;
+
+import 'esl/lists.esl','esl/compiler/types.esl', 'esl/compiler/ppExp.esl';
+
+type Main = Act { Time(Int); }
+
+loc0::Loc = Pos(0,0);
+
+voidType::Type = VoidType(loc0); 
+
+varCounter::Int = 0;
+
+newVar()::Str = { 
+  varCounter := varCounter + 1; 
+  '$'+varCounter;
+}
+
+translateArms(as::[Arm])::[Arm] =
+  case as {
+    [][Arm] -> [][Arm];
+    BArm(l::Loc,ps::[Pattern],g::AST,e::AST):as::[Arm] -> LArm(l,ps,[][[TBind]],g,e):translateArms(as);
+  }
+
+newVars(n::Int)::[Str] = if n=0 then []; else newVar():newVars(n-1); 
+  
+translateCases(exp::AST)::AST = 
+  case exp {
+    Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind]) -> 
+      Module(path,name,exports,imports,x,y,[ translateDef(d) | d::TBind <- defs]);
+    FunExp(l::Loc,n::AST,args::[TDec],t::Type,e::AST) -> 
+      FunExp(l,n,args,t,translateCases(e));
+    StrExp(l::Loc,v::Str) -> exp;
+    IntExp(l::Loc,v::Int) -> exp;
+    BoolExp(l::Loc,v::Bool) -> exp;
+    NullExp(l::Loc) -> exp;
+    FloatExp(l::Loc,f::Float) -> exp;
+    Term(l::Loc,n::Str,ts::[Type],es::[AST]) -> Term(l,n,ts,[ translateCases(e) | e::AST <- es]);
+    List(l::Loc,es::[AST]) -> List(l,[ translateCases(e) | e::AST <- es]);
+    Block(l::Loc,es::[AST]) -> Block(l,[ translateCases(e) | e::AST <- es]); 
+    Apply(l::Loc,op::AST,args::[AST]) -> Apply(l,translateCases(op),[ translateCases(e) | e::AST <- args]);
+    ApplyTypeExp(l::Loc,op::AST,args::[Type]) -> ApplyTypeExp(l,translateCases(op),args);
+    Case(l::Loc,ds::[TDec],es::[AST],as::[Arm]) -> compileCase(l,es,translateArms(as),CaseError(l));
+    BinExp(l::Loc,e1::AST,op::Str,e2::AST) -> BinExp(l,translateCases(e1),op,translateCases(e2));
+    For(l::Loc,p::Pattern,e1::AST,e2::AST) -> For(l,p,translateCases(e1),translateCases(e2));
+    Throw(l::Loc,t::Type,e::AST) -> Throw(l,t,translateCases(e));
+    Try(l::Loc,e::AST,as::[Arm]) -> Try(l,translateCases(e),[ translateArm(a) | a::Arm <- as]);
+    ActExp(l::Loc,n::AST,args::[TDec],x::[Str],spec::Str,locals::[TBind],init::AST,handlers::[Arm]) -> 
+      ActExp(l,n,args,x,spec,[ translateDef(b) | b::TBind <- locals],translateCases(init),[ translateArm(h) | h::Arm <- handlers]);
+    If(l::Loc,e1::AST,e2::AST,e3::AST) -> If(l,translateCases(e1),translateCases(e2),translateCases(e3));
+    Self(l::Loc) -> exp;
+    Update(l::Loc,n::Str,e::AST) -> Update(l,n,translateCases(e));
+    Ref(l::Loc,e::AST,n::Str) -> Ref(l,translateCases(e),n);
+    Var(l::Loc,n::Str) -> exp;
+    Send(l::Loc,target::AST,message::AST) -> Send(l,translateCases(target),translateCases(message));
+    Cmp(l::Loc,e::AST,qs::[Qualifier]) -> Cmp(l,translateCases(e),[ translateQual(q) | q::Qualifier <- qs]);
+    New(l::Loc,b::AST,args::[AST]) -> New(l,translateCases(b),[ translateCases(e) | e::AST <- args]);
+    NewJava(l::Loc,className::Str,t::Type,args::[AST]) -> NewJava(l,className,t,[ translateCases(e) | e::AST <- args ]);
+    Let(l::Loc,bs::[TBind],e::AST) -> Let(l,[ translateDef(b) | b::TBind <- bs],translateCases(e));
+    Letrec(l::Loc,bs::[TBind],e::AST) -> Letrec(l,[ translateDef(b) | b::TBind <- bs],translateCases(e));
+    Grab(l::Loc,rs::[DRef],e::AST) -> Grab(l,rs,translateCases(e));
+    Probably(l::Loc,p::AST,t::Type,e1::AST,e2::AST) -> Probably(l,translateCases(p),t,translateCases(e1),translateCases(e2));
+    Not(l::Loc,e::AST) -> Not(l,translateCases(e));
+    Fold(l::Loc,t::Type,e::AST) -> Fold(l,t,translateCases(e));
+    Unfold(l::Loc,t::Type,e::AST) -> Unfold(l,t,translateCases(e));
+    Now(l::Loc) -> exp;
+    Become(l::Loc,e::AST) -> Become(l,translateCases(e));
+    x::AST -> throw [AST]exp;
+  }
+
+armPatterns(arm::Arm)::[Pattern] =
+  case arm {
+    LArm(l::Loc,ps::[Pattern],bs::[[TBind]],g::AST,e::AST) -> ps;
+  }
+
+armBody(arm::Arm)::AST =
+  case arm {
+    LArm(l::Loc,ps::[Pattern],bs::[[TBind]],g::AST,e::AST) -> e;
+  }
+
+armGuard(arm::Arm)::AST =
+  case arm {
+    LArm(l::Loc,ps::[Pattern],bs::[[TBind]],g::AST,e::AST) -> g;
+  }
+
+setArmBody(arm::Arm,e::AST)::Arm =
+  case arm {
+    LArm(l::Loc,ps::[Pattern],bs::[[TBind]],g::AST,old::AST) -> LArm(l,ps,bs,g,e);
+  }
+
+setArmPatterns(arm::Arm,ps::[Pattern])::Arm =
+  case arm {
+    LArm(l::Loc,old::[Pattern],bs::[[TBind]],g::AST,e::AST) -> LArm(l,ps,bs,g,e); 
+  }
+
+addArmBindings(arm::Arm,newBS::[TBind])::Arm =
+  case arm {
+    LArm(l::Loc,ps::[Pattern],bs::[[TBind]],g::AST,e::AST) -> LArm(l,ps,bs + [newBS],g,e);
+  }
+
+isPVar(p::Pattern)::Bool = 
+  case p {
+    PVar(l::Loc,n::Str,t::Type) -> true;
+    p::Pattern -> false;
+  }
+
+isPInt(p::Pattern)::Bool = 
+  case p {
+    PInt(l::Loc,n::Int) -> true;
+    p::Pattern -> false;
+  }
+
+isPStr(p::Pattern)::Bool = 
+  case p {
+    PStr(l::Loc,n::Str) -> true;
+    p::Pattern -> false;
+  }
+
+isPBool(p::Pattern)::Bool = 
+  case p {
+    PBool(l::Loc,b::Bool) -> true;
+    p::Pattern -> false;
+  }
+
+isPTerm(p::Pattern)::Bool = 
+  case p {
+    PTerm(l::Loc,n::Str,ts::[Type],ps::[Pattern]) -> true;
+    p::Pattern -> false;
+  }
+
+isPCons(p::Pattern)::Bool = 
+  case p {
+    PCons(l::Loc,h::Pattern,t::Pattern) -> true;
+    p::Pattern -> false;
+  }
+
+isPNil(p::Pattern)::Bool = 
+  case p {
+    PNil(l::Loc) -> true;
+    PApplyType(l1::Loc,PNil(l2::Loc),ts::[Type]) -> true;
+    p::Pattern -> false;
+  }
+
+isPList(p::Pattern)::Bool = isPCons(p) or isPNil(p);
+
+pTermName(p::Pattern)::Str = 
+  case p {
+    PTerm(l::Loc,n::Str,ts::[Type],ps::[Pattern]) -> n;
+  }
+
+pTermArgs(p::Pattern)::[Pattern] = 
+  case p {
+    PTerm(l::Loc,n::Str,ts::[Type],ps::[Pattern]) -> ps;
+  }
+
+pVarName(p::Pattern)::Str = 
+  case p {
+    PVar(l::Loc,n::Str,t::Type) -> n;
+  }
+
+pConsHead(p::Pattern)::Pattern = 
+  case p {
+    PCons(l::Loc,h::Pattern,t::Pattern) -> h;
+  }
+
+pConsTail(p::Pattern)::Pattern = 
+  case p {
+    PCons(l::Loc,h::Pattern,t::Pattern) -> t;
+  }
+
+pIntValue(p::Pattern)::Int = 
+  case p {
+    PInt(l::Loc,n::Int) -> n;
+  }
+
+pStrValue(p::Pattern)::Str = 
+  case p {
+    PStr(l::Loc,n::Str) -> n;
+  }
+
+pBoolValue(p::Pattern)::Bool = 
+  case p {
+    PBool(l::Loc,b::Bool) -> b; 
+  }
+
+isEmptyPatterns(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool length[Pattern](armPatterns(a)) = 0,arms);
+
+isFirstColumnVars(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool isPVar(head[Pattern](armPatterns(a))),arms);
+
+isFirstColumnInts(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool isPInt(head[Pattern](armPatterns(a))),arms);
+
+isFirstColumnStrs(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool isPStr(head[Pattern](armPatterns(a))),arms);
+
+isFirstColumnBools(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool isPBool(head[Pattern](armPatterns(a))),arms);
+
+isFirstColumnCnstrs(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool isPTerm(head[Pattern](armPatterns(a))),arms);
+
+isFirstColumnLists(arms::[Arm])::Bool = 
+  let isList(a::Arm)::Bool = isPCons(head[Pattern](armPatterns(a))) or isPNil(head[Pattern](armPatterns(a))); 
+  in forall[Arm](isList,arms);
+
+dropPattern(arm::Arm)::Arm = setArmPatterns(arm,tail[Pattern](armPatterns(arm)));
+
+firstVarNames(arms::[Arm])::[Str] = map[Arm,Str](fun(a::Arm)::Str pVarName(head[Pattern](armPatterns(a))),arms);
+
+sharedCnstr(arms::[Arm])::Str = pTermName(head[Pattern](armPatterns(head[Arm](arms))));
+
+sharedInt(arms::[Arm])::Int = pIntValue(head[Pattern](armPatterns(head[Arm](arms))));
+
+sharedStr(arms::[Arm])::Str = pStrValue(head[Pattern](armPatterns(head[Arm](arms))));
+
+sharedBool(arms::[Arm])::Bool = pBoolValue(head[Pattern](armPatterns(head[Arm](arms))));
+
+bindVarsBody(e::AST,vNames::[Str])::([Arm])->[Arm] = fun(arms::[Arm])::[Arm] 
+  letrec
+    bind(arms::[Arm],vNames::[Str])::[Arm] =
+      case arms,vNames {
+        [][Arm],[][Str] -> [][Arm];
+        a::Arm:arms::[Arm],v::Str:vNames::[Str] ->  
+          case e {
+            Var(l::Loc,n::Str) when n = v -> a:bind(arms,vNames);
+            e::AST -> addArmBindings(a,[Binding(loc0,v,voidType,voidType,e)]):bind(arms,vNames); 
+          }
+      }
+  in bind(arms,vNames);
+
+bindVars(e::AST,arms::[Arm])::[Arm] =
+  (bindVarsBody(e,firstVarNames(arms)))(map[Arm,Arm](dropPattern,arms));  
+
+cnstrArms(c::Str,arms::[Arm])::[Arm] = filter[Arm](fun(a::Arm)::Bool pTermName(head[Pattern](armPatterns(a))) = c,arms);
+
+intArms(n::Int,arms::[Arm])::[Arm] = filter[Arm](fun(a::Arm)::Bool pIntValue(head[Pattern](armPatterns(a))) = n,arms);
+
+strArms(s::Str,arms::[Arm])::[Arm] = filter[Arm](fun(a::Arm)::Bool pStrValue(head[Pattern](armPatterns(a))) = s,arms);
+
+boolArms(b::Bool,arms::[Arm])::[Arm] = filter[Arm](fun(a::Arm)::Bool pBoolValue(head[Pattern](armPatterns(a))) = b,arms);
+
+fieldBindings(e::AST,names::[Str])::[TBind] = [ Binding(loc0,n,voidType,voidType,TermRef(e,indexOf[Str](n,names))) | n::Str <- names ];
+
+explodeCnstr(a::Arm)::Arm =
+  setArmPatterns(a,pTermArgs(head[Pattern](armPatterns(a))) + tail[Pattern](armPatterns(a)));
+
+explodeCons(a::Arm)::Arm =
+  setArmPatterns(a,[pConsHead(head[Pattern](armPatterns(a))),pConsTail(head[Pattern](armPatterns(a)))] + tail[Pattern](armPatterns(a)));
+
+cnstrArm(l::Loc,e::AST,es::[AST],arms::[Arm],alt::AST)::AST = { 
+  let names::[Str] = newVars(length[Pattern](pTermArgs(head[Pattern](armPatterns(head[Arm](arms))))));
+  in {
+    Let(loc0,fieldBindings(e,names),compileCase(l,[Var(loc0,n) | n::Str <- names] + es,[ explodeCnstr(a) | a::Arm <- arms],alt));
+  }
+}
+
+processCnstrs(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = { 
+  let cnstrs::[Str] = removeDups[Str](map[Pattern,Str](pTermName,map[[Pattern],Pattern](head[Pattern],map[Arm,[Pattern]](armPatterns,arms)))); in
+  let armss::[[Arm]] = map[Str,[Arm]](fun(c::Str)::[Arm] cnstrArms(c,arms),cnstrs);
+  // BUG: l is overidden by armss in the following. Must be to do with the list comprehension...
+  //in CaseTerm(l,head[AST](es),[TArm(sharedCnstr(as),cnstrArm(l,head[AST](es),tail[AST](es),as,alt)) | as::[Arm] <- armss],alt);
+  in CaseTerm(l,head[AST](es),createTArms(l,armss,es,alt),alt);
+}
+
+createTArms(l::Loc,armss::[[Arm]],es::[AST],alt::AST)::[CaseTermArm] =
+  case armss {
+    [][[Arm]] -> [][CaseTermArm];
+    as::[Arm]:armss::[[Arm]] -> TArm(sharedCnstr(as),cnstrArm(l,head[AST](es),tail[AST](es),as,alt)):createTArms(l,armss,es,alt);
+  }
+
+processConsArms(loc::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
+  let l::AST = head[AST](es);
+      hn::Str = newVar();
+      tn::Str = newVar(); in
+  let hp::Pattern = PVar(loc0,hn,voidType);
+      tp::Pattern = PVar(loc0,tn,voidType);
+      hv::AST = Var(loc0,hn);
+      tv::AST = Var(loc0,tn);
+  in Let(loc0,[Binding(loc0,hn,voidType,voidType,Head(l)),Binding(loc0,tn,voidType,voidType,Tail(l))],compileCase(loc,[hv,tv]+tail[AST](es),[ explodeCons(a) | a::Arm <- arms ],alt));
+
+processLists(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = { 
+  let consArms::[Arm] = filter[Arm](fun(a::Arm)::Bool isPCons(head[Pattern](armPatterns(a))),arms);
+      nilArms::[Arm] = map[Arm,Arm](dropPattern,filter[Arm](fun(a::Arm)::Bool isPNil(head[Pattern](armPatterns(a))),arms));
+  in {
+    CaseList(l,head[AST](es),processConsArms(l,es,consArms,alt),compileCase(l,tail[AST](es),nilArms,alt),alt);
+  }
+}
+
+processInts(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
+  let ints::[Int] = removeDups[Int](map[Pattern,Int](pIntValue,map[[Pattern],Pattern](head[Pattern],map[Arm,[Pattern]](armPatterns,arms)))); in
+  let armss::[[Arm]] = map[Int,[Arm]](fun(c::Int)::[Arm] intArms(c,arms),ints);
+  in CaseInt(l,head[AST](es),[IArm(sharedInt(as),compileCase(l,tail[AST](es),[dropPattern(a) | a::Arm <- as],alt)) | as::[Arm] <- armss],alt); 
+
+processStrs(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = 
+  let strs::[Str] = removeDups[Str](map[Pattern,Str](pStrValue,map[[Pattern],Pattern](head[Pattern],map[Arm,[Pattern]](armPatterns,arms)))); in
+  let armss::[[Arm]] = map[Str,[Arm]](fun(c::Str)::[Arm] strArms(c,arms),strs);
+  in CaseStr(l,head[AST](es),[SArm(sharedStr(as),compileCase(l,tail[AST](es),[dropPattern(a) | a::Arm <- as],alt)) | as::[Arm] <- armss],alt); 
+
+processBools(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = 
+  let bools::[Bool] = removeDups[Bool](map[Pattern,Bool](pBoolValue,map[[Pattern],Pattern](head[Pattern],map[Arm,[Pattern]](armPatterns,arms)))); in
+  let armss::[[Arm]] = map[Bool,[Arm]](fun(c::Bool)::[Arm] boolArms(c,arms),bools);
+  in CaseBool(l,head[AST](es),[BoolArm(sharedBool(as),compileCase(l,tail[AST](es),[dropPattern(a) | a::Arm <- as],alt)) | as::[Arm] <- armss],alt); 
+
+splitTerms(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = 
+  compileCase(l,es,select[Arm](fun(a::Arm)::Bool isPTerm(head[Pattern](armPatterns(a))),arms),
+    compileCase(l,es,reject[Arm](fun(a::Arm)::Bool isPTerm(head[Pattern](armPatterns(a))),arms),alt));
+ 
+splitLists(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = { 
+  compileCase(l,es,select[Arm](fun(a::Arm)::Bool isPList(head[Pattern](armPatterns(a))),arms),
+    compileCase(l,es,reject[Arm](fun(a::Arm)::Bool isPList(head[Pattern](armPatterns(a))),arms),alt));
+}
+    
+splitInts(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
+  compileCase(l,es,select[Arm](fun(a::Arm)::Bool isPInt(head[Pattern](armPatterns(a))),arms),
+    compileCase(l,es,reject[Arm](fun(a::Arm)::Bool isPInt(head[Pattern](armPatterns(a))),arms),alt));
+    
+splitStrs(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
+  compileCase(l,es,select[Arm](fun(a::Arm)::Bool isPStr(head[Pattern](armPatterns(a))),arms),
+    compileCase(l,es,reject[Arm](fun(a::Arm)::Bool isPStr(head[Pattern](armPatterns(a))),arms),alt));
+    
+splitBools(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
+  compileCase(l,es,select[Arm](fun(a::Arm)::Bool isPBool(head[Pattern](armPatterns(a))),arms),
+    compileCase(l,es,reject[Arm](fun(a::Arm)::Bool isPBool(head[Pattern](armPatterns(a))),arms),alt));
+    
+splitVars(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
+  compileCase(l,es,select[Arm](fun(a::Arm)::Bool isPVar(head[Pattern](armPatterns(a))),arms),
+    compileCase(l,es,reject[Arm](fun(a::Arm)::Bool isPVar(head[Pattern](armPatterns(a))),arms),alt));
+
+splitCase(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
+
+  // Must select non-var patterns over variables...
+
+  let firstPatterns::[Pattern] = map[[Pattern],Pattern](head[Pattern],map[Arm,[Pattern]](armPatterns,arms)); in
+  let nonVarPatterns::[Pattern] = filter[Pattern](fun(p::Pattern)::Bool not(isPVar(p)),firstPatterns); 
+  in {
+    if isPTerm(head[Pattern](nonVarPatterns))
+    then splitTerms(l,es,arms,alt);
+    else if isPList(head[Pattern](nonVarPatterns))
+    then splitLists(l,es,arms,alt);
+    else if isPInt(head[Pattern](nonVarPatterns))
+    then splitInts(l,es,arms,alt);
+    else if isPStr(head[Pattern](nonVarPatterns))
+    then splitStrs(l,es,arms,alt);
+    else if isPBool(head[Pattern](nonVarPatterns))
+    then splitBools(l,es,arms,alt);
+    else if isPVar(head[Pattern](firstPatterns))
+    then splitVars(l,es,arms,alt);
+    else throw[AST]('unknown split case: ' + arms);
+  }
+
+compileCase(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = { 
+  if arms = [][Arm]
+  then alt;
+  else if isEmptyPatterns(arms)
+  then foldArms(l,arms,alt); 
+  else if isFirstColumnVars(arms)
+  then compileCase(l,tail[AST](es),bindVars(head[AST](es),arms),alt);
+  else if isFirstColumnCnstrs(arms)
+  then processCnstrs(l,es,arms,alt);
+  else if isFirstColumnLists(arms)
+  then processLists(l,es,arms,alt);
+  else if isFirstColumnInts(arms)
+  then processInts(l,es,arms,alt);
+  else if isFirstColumnBools(arms)
+  then processBools(l,es,arms,alt);
+  else if isFirstColumnStrs(arms)
+  then processStrs(l,es,arms,alt);
+  else splitCase(l,es,arms,alt);
+}
+
+foldArms(l::Loc,arms::[Arm],alt::AST)::AST = 
+  case arms {
+    [][Arm] -> alt;
+    LArm(al::Loc,[][Pattern],bs::[[TBind]],g::AST,e::AST):arms::[Arm] -> 
+      foldArm(al,bs,g,e,foldArms(l,arms,alt));
+  }
+
+foldArm(l::Loc,bss::[[TBind]],g::AST,e::AST,alt::AST)::AST =
+  case bss {
+    [][[TBind]] -> 
+      case g {
+        BoolExp(bl::Loc,true) -> e;
+        g::AST -> If(l,g,e,alt);
+      }
+    bs::[TBind]:bss::[[TBind]] ->
+      Let(l,bs,foldArm(l,bss,g,e,alt));
+  }
+      
+translateQual(q::Qualifier)::Qualifier = 
+  case q {
+    BQual(l::Loc,p::Pattern,e::AST) -> BQual(l,p,translateCases(e));
+    PQual(l::Loc,p::AST) -> PQual(l,translateCases(p));
+  }
+      
+translateArm(a::Arm)::Arm = 
+  case a {
+    LArm(l::Loc,ps::[Pattern],bs::[[TBind]],guard::AST,e::AST) -> LArm(l,ps,bs,translateCases(guard),translateCases(e));
+  }
+ 
+translateDef(b::TBind)::TBind = 
+  case b {
+    Binding(l::Loc,name::Str,t::Type,st::Type,value::AST) -> Binding(l,name,t,st,translateCases(value));
+    TypeBind(l::Loc,name::Str,t::Type,ignore::AST) -> b;
+    DataBind(l::Loc,name::Str,t::Type,ignore::AST) -> b;
+    FunBind(l::Loc,n::Str,args::[Pattern],t::Type,st::Type,body::AST,guard::AST) -> FunBind(l,n,args,t,st,translateCases(body),translateCases(guard));
+    CnstrBind(l::Loc,name::Str,t::Type,ignore::AST) -> b;
+    x::TBind -> throw[TBind]x;
+  }
+
+pterm(n::Str,ps::[Pattern])::Pattern = PTerm(loc0,n,[][Type],ps);
+pvar(n::Str)::Pattern = PVar(loc0,n,voidType);
+var(n::Str)::AST = Var(loc0,n);
+pcons(h::Pattern,t::Pattern)::Pattern = PCons(loc0,h,t);
+  
+case0::AST = 
+  Case(Pos(0,0),[][TDec],[Var(Pos(0,0),'x'),Var(Pos(0,0),'y')],[
+      BArm(loc0,[PVar(loc0,'xx',voidType),PVar(loc0,'yy',voidType)],BoolExp(loc0,true),Var(loc0,'OK'))
+    ]);
+  
+case1::AST = 
+  Case(Pos(0,0),[][TDec],[Var(Pos(0,0),'x'),Var(Pos(0,0),'y')],[
+      BArm(loc0,[pterm('A',[pterm('B',[pvar('v0')]),pvar('v1'),pvar('v2')]),pterm('C',[])],BoolExp(loc0,true),Var(loc0,'OK1')),
+      BArm(loc0,[pvar('v0'),pterm('C',[])],BoolExp(loc0,true),Var(loc0,'OK2'))
+      //BArm(loc0,[pterm('A',[pterm('K',[pvar('v0')]),pvar('v1'),pvar('v2')]),pterm('D',[])],BoolExp(loc0,true),Var(loc0,'OK2')),
+      //BArm(loc0,[pterm('A',[pterm('K',[pvar('v0')]),pvar('v1'),pvar('v2')]),pterm('C',[])],BoolExp(loc0,true),Var(loc0,'OK3')),
+      //BArm(loc0,[pterm('D',[pterm('K',[pvar('v0')]),pvar('v1'),pvar('v2')]),pterm('D',[])],BoolExp(loc0,true),Var(loc0,'OK4'))
+      //BArm(loc0,[pterm('A',[pvar('b'),pvar('v1'),pvar('v2')]),pterm('C',[])],BoolExp(loc0,true),Var(loc0,'OK1')),
+      //BArm(loc0,[PVar(loc0,'xx',void),PVar(loc0,'yy',void)],BoolExp(loc0,true),Var(loc0,'OK2'))
+    ]);
+
+case2::AST =
+  Case(loc0,[][TDec],[var('l')],[
+    BArm(loc0,[PNil(loc0)],var('g1'),var('M1')),
+    BArm(loc0,[pcons(pterm('One',[]),pvar('rest1'))],var('g1'),var('M1')),
+    BArm(loc0,[pcons(pterm('Succ',[pterm('One',[])]),pvar('rest2'))],var('g2'),var('M2')),
+    BArm(loc0,[pcons(pterm('Infinity',[]),PNil(loc0))],var('g3'),var('M3'))
+  ]);
+
+case3::AST =
+  Case(loc0,[][TDec],[var('x'),var('y')],[
+    BArm(loc0,[PInt(loc0,0),PInt(loc0,1)],var('g1'),var('M1')),
+    BArm(loc0,[PInt(loc0,1),PInt(loc0,0)],var('g2'),var('M2')),
+    BArm(loc0,[PInt(loc0,0),pvar('x')],var('g3'),var('M3')),
+    BArm(loc0,[pvar('x'),PInt(loc0,1)],var('g4'),var('M4'))
+  ]);
+
+case4::AST =
+  Case(loc0,[][TDec],[var('x'),var('y')],[
+    BArm(loc0,[PStr(loc0,'one'),PInt(loc0,1)],var('g1'),var('M1')),
+    BArm(loc0,[PStr(loc0,'one'),PInt(loc0,0)],var('g2'),var('M2')),
+    BArm(loc0,[PStr(loc0,'two'),pvar('x')],var('g3'),var('M3')),
+    BArm(loc0,[pvar('x'),PInt(loc0,1)],var('g4'),var('M4'))
+  ]);
+
+case5::AST =
+  Case(loc0,[][TDec],[var('x'),var('y')],[
+    BArm(loc0,[PStr(loc0,'one'),PInt(loc0,1)],var('g1'),var('M1')),
+    BArm(loc0,[PStr(loc0,'one'),PInt(loc0,0)],var('g2'),var('M2')),
+    BArm(loc0,[PStr(loc0,'two'),pvar('x')],var('g3'),var('M3')),
+    BArm(loc0,[pvar('x'),PInt(loc0,1)],var('g4'),var('M4')),
+    BArm(loc0,[PBool(loc0,true),PInt(loc0,1)],var('g4'),var('M4'))
+  ]);
+
+case6::AST =
+  Case(loc0,[][TDec],[var('x')],[
+    BArm(loc0,[pterm('A',[PInt(loc0,1)])],var('g1'),var('M1'))
+  ]);
+
+act main::Main {
+
+  Time(n::Int) -> {
+    try {
+      print[Str](ppExp(0,translateCases(case0)));
+      print[Str](ppExp(0,translateCases(case1)));
+      print[Str](ppExp(0,translateCases(case2)));
+      print[Str](ppExp(0,translateCases(case3)));
+      print[Str](ppExp(0,translateCases(case4)));
+      print[Str](ppExp(0,translateCases(case5)));
+      print[Str](ppExp(0,translateCases(case6)));
+    }
+    catch {
+      x::Str -> print[Str](x);
+    }
+    stopAll();
+  }
+}

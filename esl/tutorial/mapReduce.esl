@@ -1,0 +1,117 @@
+export main;
+
+import 'esl/compiler/strings.esl', 'esl/lists.esl';
+
+words::[Str] = splitBy(#\space,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?');
+
+Act Main {} 
+
+data KV[Key,Value] = Key(Key,Value);                                                  // Key(K,V) associated key K with value V.
+
+type Group[Key,Value]  = Act { Store(KV[Key,Value]);     }                             // Groups all values with the same key.
+type Map[In]           = Act { Perform(In);              }                             // Maps input to key-value pairs.
+type Reduce[Key,Value] = Act { Process(KV[Key,[Value]]); }                             // Processes all values associated with a key.
+
+act mkMap[In,Key,Value](f::(In)->KV[Key,Value],g::Group[Key,Value])::Map[In]  {        // Create a map from values::In to Key(Key,Value) pairs.
+  Perform(x::In) ->                                                                    // The value is supplied and passed to the grouper
+    g <- Store(f(x));                                                                  // after mapping with f.
+}
+
+act mkGroup[Key,Value](n::Int,reduce::Reduce[Key,Value])::Group[Key,Value] {           // Create a grouper for n key-value pairs collect them
+  results :: [KV[Key,[Value]]] = [];                                                   // in a list of results and pass on to the reducer
+  add(x::KV[Key,Value],rs::[KV[Key,[Value]]])::[KV[Key,[Value]]] =                     // when all n have been received. The operation add
+    case x {                                                                           // ensures that all values with the same key wind up
+      Key[Key,Value](i::Key,v::Value) ->                                               // in the same pair in the results list.
+        case rs {
+          [] -> [Key[Key,[Value]](i,[v])];
+          Key[Key,[Value]](j::Key,vs::[Value]):rs::[KV[Key,[Value]]] when i = j -> Key[Key,[Value]](i,v:vs):rs;
+          r::KV[Key,[Value]]:rs::[KV[Key,[Value]]]  -> r:add(x,rs);
+        }
+    }
+  Store(x::KV[Key,Value]) when n = 1 -> {                                              // If x is the last pair then add it to the results
+    results := add(x,results);                                                         // list and send each key-values pair to the reducer.
+    for r::KV[Key,[Value]] in results do {                                             // Note that there is just one reducer, but we could
+      reduce <- Process(r);                                                            // partition the results and send them concurrently
+    }                                                                                  // to multiple reducers.
+  }
+  Store(x::KV[Key,Value]) -> {                                                         // Otherwise, just add it to the results list and
+    results := add(x,results);                                                         // record one more result.
+    n := n - 1;
+  }
+}
+
+mapper[In,Key,Value](l::[In],f::(In)->KV[Key,Value], g::Group[Key,Value])::Void =      // Create a mapper from a function, a collection
+  for x::In in l do  (new (mkMap[In,Key,Value])(f,g)) <- Perform(x);                   // of input results, and a grouper.
+
+// Map word lengths to the words of that length. Each word is mapped to a pair Key(length,word)
+// then keys are grouped to produce Key(length,[w1,w2,w3,...]) containing the length and all
+// words of that length. Then the length and words of that length are printed.
+
+act reduceWordLen::Reduce[Int,Str] {
+  Process(r::KV[Int,[Str]]) ->
+    case r {
+      Key[Int,[Str]](i::Int,s::[Str]) -> 
+        print[Str](i + ' ' + s);
+    } 
+}
+
+strLen(s::Str)::KV[Int,Str] = Key[Int,Str](length[Int](s.explode),s);
+
+mapReduceWordLength()::Void =
+  let g::Group[Int,Str] = new (mkGroup[Int,Str])(length[Str](words),new reduceWordLen); 
+  in mapper[Str,Int,Str](words,strLen,g);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+// Map a word to the number of its occurrences. Each word is mapped to a pair Key(word,1).
+// The keys are grouped in order to produce pairs Key(word,[1,1,1,...]) where the occurrences
+// of '1' denote the occurrences of the word in the original text. Then the reducer prints
+// each word and the number of occurrences.
+
+act occurs::Reduce[Str,Int] {
+  Process(r::KV[Str,[Int]]) ->
+    case r {
+      Key[Str,[Int]](s::Str,is::[Int]) ->
+        print[Str](s + ' ocurrences = ' + length[Int](is));
+    }
+}
+
+strOccurs(s::Str)::KV[Str,Int] = Key[Str,Int](s,1);
+
+mapReduceOccurrences()::Void =
+  let g::Group[Str,Int] = new (mkGroup[Str,Int])(length[Str](words),new occurs);
+  in mapper[Str,Str,Int](words,strOccurs,g);
+
+act main::Main {
+  -> {
+    mapReduceWordLength();
+    mapReduceOccurrences();
+  }
+}

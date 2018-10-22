@@ -1,0 +1,75 @@
+export Table,addEntries,addEntry,emptyTable,getEntry,hasEntry,lookup;
+
+data X[K,V] = TableEntry(K,V);
+
+//type R[K,V] = union { TableEntry(K,V) }
+ 
+type Table[Key,Value] = [ X[Key,Value]  ];
+
+f[T]()::[T] = [][T];
+
+emptyTable::Forall[Key,Value] Table[Key,Value] = f[ X[Key,Value] ]();
+
+addEntry[Key,Value](k::Key,v::Value,t::Table[Key,Value])::Table[Key,Value] = TableEntry[Key,Value](k,v):t;
+
+addEntries[Key,Value](ks::[Key],vs::[Value],t::Table[Key,Value])::Table[Key,Value] =
+  case ks,vs {
+    [][Key],[][Value] -> t;  
+    [][Key],vs::[Value] -> throw[Table[Key,Value]]('ran out of keys');
+    ks::[Key],[][Value] -> throw[Table[Key,Value]]('ran out of values');
+    k::Key:ks::[Key],v::Value:vs::[Value] -> addEntries[Key,Value](ks,vs,addEntry[Key,Value](k,v,t));
+  }
+  
+getEntry[Key,Value](k::Key,table::[X[Key,Value]])::X[Key,Value] =
+  case table {
+    [] -> null[X[Key,Value]];
+    TableEntry[Key,Value](kk::Key,vv::Value):table::[X[Key,Value]] ->
+      if kk = k
+      then TableEntry[Key,Value](kk,vv);
+      else getEntry[Key,Value](k,table);
+  }
+  
+hasEntry[Key,Value](k::Key,table::Table[Key,Value])::Bool = getEntry[Key,Value](k,table) <> null[X[Key,Value]];
+  
+lookup[Key,Value](k::Key,table::Table[Key,Value])::Value = 
+  case getEntry[Key,Value](k,table) {
+    TableEntry[Key,Value](kk::Key,vv::Value) -> vv;
+    e::X[Key,Value] when e = null[X[Key,Value]] -> throw[Value]('no key ' + k + ' in table.');
+  }
+
+/*
+
+type Table[Key,Value] = [ union { TableEntry(Key,Value) }  ];
+
+f[T]()::[T] = [][T];
+
+emptyTable::Forall[Key,Value] [ TableEntry(Key,Value) ] = f[ TableEntry(Key,Value) ]();
+
+addEntry[Key,Value](k::Key,v::Value,t::Table[Key,Value])::Table[Key,Value] = TableEntry[Key,Value](k,v):t;
+
+addEntries[Key,Value](ks::[Key],vs::[Value],t::Table[Key,Value])::Table[Key,Value] =
+  case ks,vs {
+    [][Key],[][Value] -> t;  
+    [][Key],vs::[Value] -> throw[Table[Key,Value]]('ran out of keys');
+    ks::[Key],[][Value] -> throw[Table[Key,Value]]('ran out of values');
+    k::Key:ks::[Key],v::Value:vs::[Value] -> addEntries[Key,Value](ks,vs,addEntry[Key,Value](k,v,t));
+  }
+  
+getEntry[Key,Value](k::Key,table::[TableEntry(Key,Value)])::TableEntry(Key,Value) =
+  case table {
+    [] -> null[TableEntry(Key,Value)];
+    TableEntry(kk::Key,vv::Value):table::[TableEntry(Key,Value)] ->
+      if kk = k
+      then TableEntry(kk,vv);
+      else getEntry[Key,Value](k,table);
+  }
+  
+hasEntry[Key,Value](k::Key,table::[TableEntry(Key,Value)])::Bool = getEntry[Key,Value](k,table) <> null[TableEntry(Key,Value)];
+  
+lookup[Key,Value](k::Key,table::[TableEntry(Key,Value)])::Value = 
+  case getEntry[Key,Value](k,table) {
+    null -> throw[Value]('no key ' + k + ' in table.');
+    TableEntry(kk::Key,vv::Value) -> vv;
+  }
+
+  */

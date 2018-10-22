@@ -1,0 +1,136 @@
+export main;
+
+import 'esl/lists.esl';
+
+type Main = Act { }
+
+type Boid = Act { export getPos::() -> Vec; Move; Draw; }
+
+type Panel = Act { export dist::(Float,Float,Float,Float) -> Float; BoidAt(Int,Int,Int,Int); }
+
+data Vec = Vector(Float,Float,Float);
+
+vectorX(v::Vec)::Float = case v { Vector(x::Float,y::Float,z::Float) -> x; }
+vectorY(v::Vec)::Float = case v { Vector(x::Float,y::Float,z::Float) -> y; }
+vectorZ(v::Vec)::Float = case v { Vector(x::Float,y::Float,z::Float) -> z; }
+setVectorX(v::Vec,f::Float)::Vec = case v { Vector(x::Float,y::Float,z::Float) -> Vector(f,y,z); }
+setVectorY(v::Vec,f::Float)::Vec = case v { Vector(x::Float,y::Float,z::Float) -> Vector(x,f,z); }
+setVectorZ(v::Vec,f::Float)::Vec = case v { Vector(x::Float,y::Float,z::Float) -> Vector(x,y,f); }
+
+addVectors(v1::Vec,v2::Vec)::Vec = Vector(vectorX(v1) + vectorX(v2),vectorY(v1) + vectorY(v2), vectorZ(v1) + vectorZ(v2));
+subVectors(v1::Vec,v2::Vec)::Vec = Vector(vectorX(v1) - vectorX(v2),vectorY(v1) - vectorY(v2), vectorZ(v1) - vectorZ(v2));
+divVector(v::Vec,f::Float)::Vec = Vector(vectorX(v)/f,vectorY(v)/f,vectorZ(v)/f);
+
+intToFloat::(Int)->Float = builtin[(Int)->Float]('runtime.actors.Builtins','intToFloat',1);
+round::(Float)->Int = builtin[(Float)->Int]('runtime.actors.Builtins','round',1);
+width::Int = 1000;
+height::Int = 700;
+size::Int = 200;
+start::Bool = false;
+
+panel::Panel = new 'esl.boids.BoidPanel'[Panel](width,height);
+
+boids::Array[Boid] = new Array[Boid](size);
+
+n1::Float = 0.0-1;
+
+act boid(id::Int,pos::Vec,vel::Vec)::Boid {
+
+  export getPos;
+
+  getX()::Int = round(vectorX(pos));
+  getY()::Int = round(vectorY(pos));
+  getZ()::Int = round(vectorZ(pos));
+  getPos()::Vec = pos;
+
+  draw()::Void = {
+    panel <- BoidAt(id,getX(),getY(),getZ());
+  }
+
+  boundPosition()::Vec =  
+    let v::Vec = Vector(0.0,0.0,0.0);
+    in {
+      if vectorX(pos) < 0 then v := setVectorX(v,10.0); else {}
+      if vectorX(pos) > width then v := setVectorX(v,0-10.0); else {}
+      if vectorY(pos) < 0 then v := setVectorY(v,10.0); else {}
+      if vectorY(pos) > height then v := setVectorY(v,0-10.0); else {}
+      if vectorZ(pos) < 0 then v := setVectorZ(v,10.0); else {}
+      if vectorZ(pos) > 10 then v := setVectorZ(v,0-10.0); else {}
+      v;
+    }
+
+  rule1()::Vec = 
+    let v::Vec = Vector(0.0,0.0,0.0);
+    in {
+      for i::Int in 0..size do {
+        if boids[i] <> self
+        then v := addVectors(v,boids[i].getPos());
+        else {}
+      }
+      v := divVector(subVectors(divVector(v,(size-1)*1.0),pos),100.0);
+      //print[Str]('boid ' + id + ' @ ' + pos + ' velocity delta is ' + v);
+      v;
+    }
+
+  rule2()::Vec = 
+    let c::Vec = Vector(0.0,0.0,0.0);
+    in {
+      for i::Int in 0..size do {
+        if boids[i] <> self
+        then 
+          if panel.dist(vectorX(boids[i].getPos()),vectorY(boids[i].getPos()),vectorX(pos),vectorY(pos)) < 100.0
+          then c := subVectors(c,subVectors(boids[i].getPos(),pos));
+          else {}
+        else {}
+      }
+      c;
+    }
+
+  move()::Void = {
+    let v1::Vec = rule1();
+        v2::Vec = boundPosition();
+        v3::Vec = rule2();
+    in {
+      //print[Str]('boid ' + id + ' @ ' + pos + ' vel = ' + vel + ' vel mod = ' + addVectors(vel,addVectors(v1,v2)));
+      vel := addVectors(vel,addVectors(v1,addVectors(v2,v3)));
+      pos := addVectors(pos,vel);
+      //print[Str]('boid '+  id + ' new @ ' + pos);
+    }
+  }
+
+  -> self <- Draw;
+
+  Draw when start -> {
+    draw();
+    self <- Move;
+  }
+
+  Draw -> self <- Draw;
+
+  Move when start -> {
+    move();
+    self <- Draw;
+  }
+
+  Move -> self <- Move;
+
+  //Time(n::Int) -> { null[Void]; }
+}
+
+act main::Main {
+
+   -> {
+    edb.display[Panel]('Boids',panel);  
+    edb.button('Boids','stop','icons/stop.png','stop application',fun()::Void stopAll()); 
+    for n::Int in 0..size do
+      let x::Float = random(width) * 1.0;
+          y::Float = random(height) * 1.0;
+          z::Float = (random(4) + 1)* 1.0;
+      in boids[n] := new boid(n,Vector(x,y,z),Vector(1.0,1.0,1.0));
+    start := true;
+  }
+    
+}
+
+
+

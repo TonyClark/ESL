@@ -1,0 +1,311 @@
+export main;
+
+import 'new_esl/lists.esl','new_esl/displays.esl';
+
+// This file contains the definition of a simple predator-prey situation where each of the 
+// predators and the prey are represented as actors. The implementation also provides an
+// example of a simple pattern that maps a history of events to a filmstrip via a semantic
+// structure which is defined as a monoid.
+
+type Main = Act { Time(Int); }
+type Predator = Act { export getX::()->Int; getY::()->Int; at::(Int,Int)->Bool; getId::()->Int; Move; }
+type Prey = Act { export getX::()->Int; getY::()->Int; at::(Int,Int)->Bool; Move; }
+data Message = MovePredator(Int,Int,Int) | MovePrey(Int,Int);
+data Location = EmptyLoc | PredLoc | PreyLoc | Rock;
+
+board::[[Location]] = []; // The semantic structure.
+
+messages::[Message] = []; // The history trace.
+
+abs(n::Int)::Int = if n < 0 then (0-n); else n;
+
+stop::Bool = false;
+
+act predator(id::Int,x::Int,y::Int)::Predator {
+
+  // A predator is trying to box the prey into a situation where it
+  // cannot move. The predator will always move towards the prey
+  // unless it hits an occupied location in which case it moves at random.
+
+  export getX, getY, at, getId;
+  
+  getX()::Int = x;
+  getY()::Int = y;
+  getId()::Int = id;
+  at(px::Int,py::Int)::Bool = (px = x) and (py = y);
+  
+  move(dx::Int,dy::Int)::Void = {
+  
+    // Attempt to move by (dx,dy) and fail if this is
+    // not a legal position. Record a move on the messages.
+    
+    if legalPredatorPos(x+dx,y+dy)  
+    then { 
+      x := x + dx;
+      y := y + dy;
+      messages := messages + [MovePredator(id,x,y)];
+    } else { }
+  }
+
+  Move -> grab(messages) { 
+  
+    // Called at regular intervals. This needs to update the messages if
+    // the predator moves, do use the messages variable as a lock. The use
+    // of turn ensures that predators and prey all work in turn.
+    
+    if turn = id
+    then {
+      turn := (turn + 1) % (numOfPredators+1);
+      let dx::Int = if thePrey.getX() > x then 1; else if thePrey.getX() < x then 0 - 1; else 0;
+          dy::Int = if thePrey.getY() > y then 1; else if thePrey.getY() < y then 0 - 1; else 0;
+      in { 
+        // Work out which way we should move. The predators can only move N,S,E, or W.
+        if (dy <> 0) and legalPredatorPos(x,y+dy)
+        then move(0,dy);
+        else if (dx <> 0) and legalPredatorPos(x+dx,y)
+        then move(dx,0);
+        else probably(50) move(0,1-random(3)); else move(1-random(3),0);
+      }
+    } else {}
+  }
+
+}
+
+act prey(x::Int,y::Int)::Prey {
+
+  // The prey is trying to evade the predators. If it becomes unable to
+  // move then it loses.
+
+  export getX, getY, at;
+  
+  getX()::Int = x;
+  getY()::Int = y;
+  
+  at(px::Int,py::Int)::Bool = (px = x) and (py = y);
+  dir(n::Int)::Int = if n < 0 then (0-1); else 1;
+  
+  dirX::Int = 1 - random(3);
+  dirY::Int = 1 - random(3);
+  
+  move(dx::Int,dy::Int)::Void = {
+  
+    // Move by (dx,dy) if that is a legal direction.
+    // Record the event on the messages.
+    
+    if legalPreyPos(x+dx,y+dy)
+    then {
+      x := x + dx;
+      y := y + dy;
+      messages := messages + [MovePrey(x,y)];
+    } else { }
+  }
+  
+  predatorWins()::Void = {
+  
+    // Once the game is over, create a filmstrip and display what happened.
+    // Creation of the filmstrip uses the semantic structure of locations
+    // to guide the creation of each snapshot.
+    
+    stop := true;
+  }
+  
+  cannotMove()::Bool =
+    
+    // Prey can move diagonally. The game is over when the prey cannot make
+    // a move.
+    
+    (not(legalPreyPos(x-1,y-1))) and
+    (not(legalPreyPos(x-1,y))) and
+    (not(legalPreyPos(x+1,y))) and
+    (not(legalPreyPos(x,y-1))) and
+    (not(legalPreyPos(x,y+1)))and
+    (not(legalPreyPos(x+1,y+1)));
+    
+  changeDir()::Void =
+    if legalPreyPos(x-1,y-1)
+    then { dirX := 0-1; dirY := 0-1; }
+    else if legalPreyPos(x-1,y)
+    then { dirX := 0-1; dirY := 0; }
+    else if legalPreyPos(x,y-1)
+    then { dirX := 0; dirY := 0-1; }
+    else  if legalPreyPos(x+1,y)
+    then { dirX := 1; dirY := 0; }
+    else if legalPreyPos(x,y+1)
+    then { dirX := 0; dirY := 1; }
+    else if legalPreyPos(x+1,y+1)
+    then { dirX := 1; dirY := 1; }
+    else {}
+
+  Move -> grab(messages) { 
+  
+    // When it is the turn of the prey keep moving in the direction that is
+    // selected until that is not legal. Then change direction...
+    
+    if turn = numOfPredators
+    then {
+      turn := (turn + 1) % (numOfPredators+1);
+      if cannotMove()
+      then predatorWins();
+      else if legalPreyPos(x+dirX,y+dirY)
+      then move(dirX,dirY);
+      else changeDir();
+    } else {}
+  }
+
+}
+
+size::Int = 30;                    // Controls the size of the grid elements.
+width::Int = 20;                   // The width of the world.
+height::Int = 20;                  // The height of the world.
+numOfPredators::Int = 40;           // Total number of predators.
+numOfRocks::Int = random(10) + 5;  // The number of rocks in the world.
+points::[Point(Int,Int)] = 
+  letrec generate(ps::[Point(Int,Int)],n::Int)::[Point(Int,Int)] = 
+    if n = 0
+    then [];
+    else 
+      let x::Int = random(width); 
+          y::Int = random(height); 
+      in if member[Point(Int,Int)](Point(x,y),ps) 
+         then generate(ps,n); 
+         else Point(x,y):generate(Point(x,y):ps,n-1);
+  in generate([],numOfPredators+1+numOfRocks);
+pointX(Point(x::Int,y::Int))::Int = x;
+pointY(Point(x::Int,y::Int))::Int = y;
+limit::Int = 100;
+turn::Int = 0;
+
+rocks::[Point(Int,Int)] = drop[Point(Int,Int)](points,numOfPredators+1);
+
+predators::[Predator] = [ new predator(p,pointX(nth[Point(Int,Int)](points,p)),pointY(nth[Point(Int,Int)](points,p))) | p::Int <- 0..(numOfPredators-1) ];
+
+thePrey::Prey = new prey(pointX(nth[Point(Int,Int)](points,numOfPredators)),pointY(nth[Point(Int,Int)](points,numOfPredators)));
+
+onBoard(x::Int,y::Int)::Bool = (x > (0-1)) and (x < (width + 1)) and (y > (0-1)) and (y < (height + 1));
+
+onRock(x::Int,y::Int)::Bool = member[Point(Int,Int)](Point(x,y),rocks);
+
+legalPreyPos(x::Int,y::Int)::Bool = (not(onRock(x,y))) and onBoard(x,y) and not(exists[Predator](fun(p::Predator)::Bool p.at(x,y),predators));
+legalPredatorPos(x::Int,y::Int)::Bool = (not(onRock(x,y))) and onBoard(x,y) and (not(exists[Predator](fun(p::Predator)::Bool p.at(x,y),predators))) and not(thePrey.at(x,y));
+
+mapMessage(m::Message)::[[Location]] = 
+  case m {
+    MovePredator(i::Int,x0::Int,y0::Int) ->
+     [[ if (x=x0) and (y=y0) then PredLoc else if onRock(x,y) then Rock else EmptyLoc | x::Int <- 0..width ] | y::Int <- 0..height ];
+    MovePrey(x0::Int,y0::Int) ->
+      [[ if (x=x0) and (y=y0) then PreyLoc else if onRock(x,y) then Rock else EmptyLoc | x::Int <- 0..width ] | y::Int <- 0..height ];
+  }
+  
+mergeLocations(l1::Location,l2::Location)::Location =
+  if l1 = EmptyLoc then l2; else if l2 = EmptyLoc then l1; else if l1 = PredLoc then PredLoc; else if l1 = PreyLoc then PreyLoc; else Rock;
+  //case l1,l2 {
+  //  EmptyLoc,l2::Location -> l2;
+  //  l1::Location,EmptyLoc -> l1;
+  //  EmptyLoc,EmptyLoc -> EmptyLoc;
+  //  PredLoc,PredLoc -> PredLoc;
+  //  PreyLoc,PreyLoc -> PreyLoc;
+  //  Rock,Rock -> Rock
+  //};
+  
+mergeBoards(b1::[[Location]],b2::[[Location]])::[[Location]] = 
+ [ [ mergeLocations(nth[Location](nth[[Location]](b1,y),x),nth[Location](nth[[Location]](b2,y),x)) | x::Int <- 0..width ] | y::Int <- 0..height ];
+  
+mergeDisplays(d1::EDBDisplay,d2::EDBDisplay)::EDBDisplay =
+  case d1,d2 {
+    Tree(w1::Int,h1::Int,t1::TreeElement),Tree(w2::Int,h2::Int,t2::TreeElement) -> Tree(w1,h1,mergeTrees(t1,t2));
+  }
+    
+  
+getBoard(ms::[Message])::[[Location]] = foldr[Message,[[Location]]](mapMessage,mergeBoards,[],ms);
+  
+hist[T](id::(T)->Int,h::[T])::[[T]] =
+  case h {
+    [] -> [];
+    h::[T] -> 
+      let m::T = last[T](h);
+          hh::[T] = butlast[T](h);
+      in hist[T](id,hh) + [combine[T](id,[],hh,m)];
+  }
+  
+combine[T](id::(T)->Int,ids::[Int],h::[T],m::T)::[T] =
+  case h {
+    [] -> if member[Int](id(m),ids) then []; else [m];
+    h::[T] ->
+      let mm::T = last[T](h);
+          hh::[T] = butlast[T](h);
+      in if member[Int](id(m),ids) then combine[T](id,ids,hh,mm); else combine[T](id,ids+[id(m)],hh,mm) + [m];
+  }
+  
+emptyBoard::[[Location]] = [[ if onRock(x,y) then Rock else EmptyLoc | x::Int <- 0..width ] | y::Int <- 0..height ];
+
+messageId(m::Message)::Int = case m { MovePredator(id::Int,x::Int,y::Int) -> id; m::Message -> (0-1); }
+   
+filmstrip(ms::[Message])::[[[Location]]] = 
+  let h::[[Message]] = hist[Message](messageId,ms);
+  in { print[Str]('history length = ' + length[[Message]](h));
+    emptyBoard:map[[Message],[[Location]]](fun(ms::[Message])::[[Location]] foldr[Message,[[Location]]](mapMessage,mergeBoards,emptyBoard,ms),h);
+  }
+
+space::TreeElement = TreeNode(Rectangle(0,0,size,size,''));
+rockIcon::TreeElement = TreeNode(Image(0,0,size,size,'images/predator/rock.png'));
+predIcon::TreeElement = TreeNode(Image(0,0,size,size,'images/predator/wolf.jpg'));
+preyIcon::TreeElement = TreeNode(Image(0,0,size,size,'images/predator/sheep.jpg'));
+
+mergeTrees(d1::TreeElement,d2::TreeElement)::TreeElement =
+  case d1,d2 {
+    VBox(p1::[Property],l1::[TreeElement]),VBox(p2::[Property],l2::[TreeElement]) ->
+      VBox(p1,[ mergeTrees(nth[TreeElement](l1,i),nth[TreeElement](l2,i)) | i::Int <- 0..(length[TreeElement](l1)-1)]);
+    HBox(p1::[Property],l1::[TreeElement]),HBox(p2::[Property],l2::[TreeElement]) ->
+      HBox(p1,[ mergeTrees(nth[TreeElement](l1,i),nth[TreeElement](l2,i)) | i::Int <- 0..(length[TreeElement](l1)-1)]);
+    Padding(p1::[Property]),t::TreeElement -> 
+      t;
+    t::TreeElement,Padding(p2::[Property]) ->
+      t;
+    TreeNode(Rectangle(w::Int,h::Int,s1::Int,s2::Int,p::Str)),d2::TreeElement ->
+      d2;
+    d1::TreeElement,TreeNode(Rectangle(w::Int,h::Int,s1::Int,s2::Int,p::Str)) ->
+      d1;
+    d1::TreeElement,d2::TreeElement ->
+      d1;
+  }
+
+mapBoard(b::[[Location]])::EDBDisplay =
+  let mapRow(row::[Location])::TreeElement = HBox([],[ case l { PredLoc -> predIcon; PreyLoc -> preyIcon; EmptyLoc ->space; Rock -> rockIcon; } | l::Location <- row ]);
+  in Tree(width*size,height*size,VBox([],[ mapRow(nth[[Location]](b,y)) | y::Int <- 0..height ]));
+  
+omega[E](events::[E],id::(E)->Int,e::(E)->EDBDisplay,oplus::(EDBDisplay,EDBDisplay)->EDBDisplay,epsilon::EDBDisplay)::[EDBDisplay] =
+  let states::[[E]] = hist[E](id,events); in { print[Str]('States = ' + length[[E]](states));
+  let semantics::[EDBDisplay] = map[[E],EDBDisplay](fun(ms::[E])::EDBDisplay { print[Str]('Messages = ' + length[E](ms)); foldr[E,EDBDisplay](e,oplus,epsilon,ms); },states);
+  in semantics; }
+  
+mapBoth(m::Message)::EDBDisplay = mapBoard(mapMessage(m));
+ 
+  
+act main::Main {
+
+  -> messages := map[Predator,Message](fun(p::Predator)::Message MovePredator(p.getId(),p.getX(),p.getY()),predators) + [MovePrey(thePrey.getX(),thePrey.getY())];
+
+  Time(n::Int) when (not(stop)) and (n < limit) -> {
+    for p::Predator in predators do {
+      p <- Move;
+    }
+    thePrey <- Move;
+    wait(1);
+  }
+
+  Time(n::Int) -> {
+   print[Str]('Start Filmstrip Creation');
+   rocks := [Point(2,2)];
+   for p::EDBDisplay in omega[Message]([MovePrey(1,0),MovePredator(1,0,1),MovePrey(1,1),MovePredator(1,0,2)],messageId,mapBoth,mergeDisplays,mapBoard(emptyBoard)) do
+     print[EDBDisplay](p);
+   let film::[EDBDisplay] = omega[Message](messages,messageId,mapBoth,mergeDisplays,mapBoard(emptyBoard));
+   in {
+     print[Str]('Film = ' + length[EDBDisplay](film));
+     edb <- Filmstrip('predator',film);
+     stopAll();
+   }
+  }
+  
+}
+
+

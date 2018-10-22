@@ -1,0 +1,72 @@
+package edb.editor.esl;
+
+import java.awt.Color;
+
+import org.fife.ui.rsyntaxtextarea.parser.Parser;
+import org.fife.ui.rsyntaxtextarea.parser.ParserNotice;
+
+public class ESLParserNotice implements ParserNotice {
+	
+	private Parser parser;
+	private int line;
+	private int offset;
+	private String message;
+	private int length;
+
+	public ESLParserNotice(Parser parser,int line,int offset,String message,int length) {
+		this.parser = parser;
+		this.line = line;
+		this.offset = offset;
+		this.message = message;
+		this.length = length;
+	}
+
+	public int compareTo(ParserNotice o) {
+		return o==this ? 0 : -1;
+	}
+
+	public boolean containsPosition(int arg0) {
+		return true;
+	}
+
+	public Color getColor() {
+		return Color.red;
+	}
+
+	public boolean getKnowsOffsetAndLength() {
+		return true;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public Level getLevel() {
+		return ParserNotice.Level.ERROR;
+	}
+
+	public int getLine() {
+		return line;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public Parser getParser() {
+		return parser;
+	}
+
+	public boolean getShowInEditor() {
+		return true;
+	}
+
+	public String getToolTipText() {
+		return message;
+	}
+
+}

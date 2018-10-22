@@ -1,0 +1,13 @@
+
+
+import 'esl/lists.esl';
+         
+splitBy(c::Int,s::Str)::[Str] = 
+  letrec 
+    splitter(chars::[Int])::[Str] = { 
+      case chars {
+        [][Int] -> [][Str]; 
+        chars::[Int] ->  ['XXXXX']; 
+      }
+    }
+  in splitter(s.explode); 

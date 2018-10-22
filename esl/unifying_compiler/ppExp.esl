@@ -1,0 +1,505 @@
+export main, ppExp, ppExps, ppArm, ppArms, ppJModule;
+ 
+import 'new_esl/lists.esl','new_esl/compiler/types.esl';
+
+type Main = Act { Time(Int); }
+
+indentStr(indent::Int)::Str =
+  if indent = 0
+  then '';
+  else ' ' + indentStr(indent-1);
+
+nl(indent::Int)::Str = '\n' + indentStr(indent);
+
+ppJoin(indent::Int,ss::[Str])::Str =
+  case ss {
+    [][Str] -> '';
+    [s::Str] -> s;
+    [s1::Str,s2::Str] -> s1 + nl(indent) + s2;
+    s::Str:ss::[Str] -> s + nl(indent) + ppJoin(indent,ss);
+  }
+
+ppExps(indent::Int,exps::[AST],sep::Str)::Str =
+  case exps {
+    [][AST] -> '';
+    e1::AST:e2::AST:es::[AST] -> ppExp(indent,e1) + sep + ppExps(indent,e2:es,sep);
+    e::AST:[][AST] -> ppExp(indent,e);
+  }
+
+ppPattern(p::Pattern)::Str = 
+  case p {
+    PVar(l::Loc,n::Str,t::Type) -> n;
+    PTerm(l::Loc,n::Str,[][Type],ps::[Pattern]) -> n + ppPatterns(ps);
+    PTerm(l::Loc,n::Str,ts::[Type],ps::[Pattern]) -> n + ppPatterns(ps);
+    PApplyType(l::Loc,p::Pattern,ts::[Type]) -> ppPattern(p);
+    PNil(l::Loc) -> '[]';
+    PInt(l::Loc,n::Int) -> ''+n;
+    PBool(l::Loc,b::Bool) -> ''+b;
+    PStr(l::Loc,s::Str) -> '\'' + s + '\'';
+    PCons(l::Loc,h::Pattern,t::Pattern) -> ppPattern(h) + ':' + ppPattern(t);
+    p::Pattern -> '<unknown: ' + p + '>';
+  }
+
+ppPatterns(ps::[Pattern])::[Str] = map[Pattern,Str](ppPattern,ps);
+
+
+ppExp(indent::Int,exp::AST)::Str = {
+  case exp {
+    Module(name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind]) -> {
+      'module ' + name + '{' + nl(indent+2) + 
+         ppBinds(indent+2,defs) + nl(indent) + 
+       '}';
+    }
+    Var(l::Loc,n::Str) -> n;
+    StrExp(l::Loc,v::Str) -> '\'' + v + '\'';
+    IntExp(l::Loc,v::Int) -> v+'';
+    BoolExp(l::Loc,v::Bool) -> v+'';
+    NullExp(l::Loc) -> 'null';
+    FloatExp(l::Loc,n::Int,m::Int) -> n+'.'+m;
+    Apply(l::Loc,op::AST,args::[AST]) -> {
+      ppExp(indent,op) + '(' + ppExps(indent,args,',') + ')';
+    }
+    ApplyTypeExp(l::Loc,op::AST,args::[Type]) -> {
+      ppExp(indent,op);
+    }
+    /*
+    FunExp(l::Loc,n::AST,args::[TDec],t::Type,e::AST) -> {
+      walk(n);
+      for Dec(dl::Loc,dn::Str,dt::Type) in args do {
+        walkType(dt);
+      }
+      walkType(t);
+      walk(e);
+    }
+    Ap
+
+    */
+    Block(l::Loc,es::[AST]) -> {
+      '{' + nl(indent+2) + ppExps(indent+2,es,';') + nl(indent) + '}'; 
+    }
+    Case(l::Loc,ds::[TDec],es::[AST],as::[Arm]) -> {
+      'case ' + ppExps(indent,es,',') + ' {' + 
+         nl(indent+2) + ppJoin(indent+2,map[Arm,Str](fun(a::Arm)::Str ppArm(indent,a),as)) + nl(indent) + 
+       '}';
+    }
+    CaseTerm(l::Loc,e::AST,arms::[CaseTermArm],alt::AST) ->
+      'caseTerm ' + ppExp(indent,e) + ' {' +
+         nl(indent+2) + ppJoin(indent+2,map[CaseTermArm,Str](fun(a::CaseTermArm)::Str ppCaseTermArm(indent+2,a),arms)) + nl(indent+2) +
+         'else ' + ppExp(indent+4,alt) + nl(indent) +  
+       '}';
+    CaseList(l::Loc,e::AST,cons::AST,nil::AST,alt::AST) ->
+      'caseList ' + ppExp(indent,e) + ' {' +
+        nl(indent+2) + 'CONS ->' + nl(indent+4) + ppExp(indent+4,cons) + 
+        nl(indent+2) + 'NIL ->' + nl(indent+4) + ppExp(indent+4,nil) + nl(indent+2) +
+         'else ' + ppExp(indent+4,alt) + nl(indent) +  
+       '}';
+    CaseInt(l::Loc,e::AST,arms::[CaseIntsArm],alt::AST) ->
+      'caseInt ' + ppExp(indent,e) + ' {' +
+         nl(indent+2) + ppJoin(indent+2,map[CaseIntsArm,Str](fun(a::CaseIntsArm)::Str ppCaseIntsArm(indent+2,a),arms)) + nl(indent+2) +
+         'else ' + ppExp(indent+4,alt) + nl(indent) +  
+       '}';
+    CaseStr(l::Loc,e::AST,arms::[CaseStrsArm],alt::AST) ->
+      'caseStr ' + ppExp(indent,e) + ' {' +
+         nl(indent+2) + ppJoin(indent+2,map[CaseStrsArm,Str](fun(a::CaseStrsArm)::Str ppCaseStrsArm(indent+2,a),arms)) + nl(indent+2) +
+         'else ' + ppExp(indent+4,alt) + nl(indent) +  
+       '}';
+    CaseBool(l::Loc,e::AST,arms::[CaseBoolsArm],alt::AST) ->
+      'caseBool ' + ppExp(indent,e) + ' {' +
+         nl(indent+2) + ppJoin(indent+2,map[CaseBoolsArm,Str](fun(a::CaseBoolsArm)::Str ppCaseBoolsArm(indent+2,a),arms)) + nl(indent+2) +
+         'else ' + ppExp(indent+4,alt) + nl(indent) +  
+       '}';
+    CaseError(l::Loc) -> 'caseError()';
+    Head(e::AST) -> 'head(' + ppExp(indent,e) + ')';
+    Tail(e::AST) -> 'tail(' + ppExp(indent,e) + ')';
+    Cons(h::AST,t::AST) -> 'cons(' + ppExp(indent,h) + ',' + ppExp(indent,t) + ')';
+    If(l::Loc,e1::AST,e2::AST,e3::AST) -> { 
+      'if ' + ppExp(indent,e1) + nl(indent) + 'then' + nl(indent+2) + ppExp(indent+2,e2) + nl(indent) + 'else' + nl(indent+2) + ppExp(indent+2,e3);
+    }
+    Let(l::Loc,bs::[TBind],e::AST) -> {
+      'let ' + ppBinds(indent+4,bs) + nl(indent) + 'in ' + ppExp(indent+3,e);
+    }
+    Letrec(l::Loc,bs::[TBind],e::AST) -> {
+      'letrec ' + ppBinds(indent+7,bs) + nl(indent) + 'in ' + ppExp(indent+3,e);
+    }
+    List(l::Loc,es::[AST]) -> {
+      '[' + ppExps(indent,es,',') + ']';
+    }
+    Throw(l::Loc,t::Type,e::AST) -> {
+      'throw ' + ppExp(indent,e);
+    }
+    Term(l::Loc,n::Str,ts::[Type],es::[AST]) -> {
+      n + '(' + ppExps(indent,es,',') + ')';
+    }
+    TermRef(e::AST,n::Int) -> 
+      'termRef(' + ppExp(indent,e) + ',' + n + ')';
+    BinExp(l::Loc,e1::AST,op::Str,e2::AST) -> {
+      ppExp(indent,e1) + op + ppExp(indent,e2);
+    }
+    Update(l::Loc,n::Str,e::AST) -> n + ' := ' + ppExp(indent,e);
+    /*
+    For(l::Loc,p::Pattern,e1::AST,e2::AST) -> {
+      walkPattern(p);
+      walk(e1);
+      walk(e2);
+    }
+    Try(l::Loc,e::AST,as::[Arm]) -> {
+      walk(e);
+      for a::Arm in as do walkArm(a);
+    }
+    ActExp(l::Loc,n::AST,args::[TDec],x::[Str],spec::Str,locals::[TBind],init::AST,handlers::[Arm]) -> {
+      walk(n);
+      for Dec(dl::Loc,dn::Str,dt::Type) in args do walkType(dt);
+      for b::TBind in locals do walkBind(b);
+      walk(init);
+      for a::Arm in handlers do walkArm(a);
+    }
+    Self(l::Loc) -> {}
+    Update(l::Loc,n::Str,e::AST) -> walk(e);
+    Ref(l::Loc,e::AST,n::Str) -> walk(e);
+    Var(l::Loc,n::Str) -> {}
+    Send(l::Loc,target::AST,message::AST) -> {
+      walk(target);
+      walk(message);
+    }
+    Cmp(l::Loc,e::AST,qs::[Qualifier]) -> {
+      walk(e);
+      for q::Qualifier in qs do walkQualifier(q);
+    }
+    New(l::Loc,b::AST,args::[AST]) -> {
+      walk(b);
+      for a::AST in args do walk(a);
+    }
+    NewJava(l::Loc,className::Str,t::Type,args::[AST]) -> {
+      walkType(t);
+      for a::AST in args do walk(a);
+    }
+    Grab(l::Loc,rs::[DRef],e::AST) -> {
+      walk(e);
+    }
+    Probably(l::Loc,p::AST,t::Type,e1::AST,e2::AST) -> {
+      walk(p);
+      walkType(t);
+      walk(e1);
+      walk(e2);
+    }
+    Not(l::Loc,e::AST) -> walk(e);
+    Fold(l::Loc,t::Type,e::AST) -> {
+      walkType(t);
+      walk(e);
+    }
+    Unfold(l::Loc,t::Type,e::AST) -> {
+      walkType(t);
+      walk(e);
+    }
+    Now(l::Loc) -> {}
+    Become(l::Loc,e::AST) -> walk(e);
+    x::AST -> throw [Void]Walk(x);
+    */
+  }
+}
+
+ppBinds(indent::Int,bs::[TBind])::Str = ppJoin(indent,map[TBind,Str](fun(b::TBind)::Str ppBind(indent,b),bs));
+
+ppBind(indent::Int,b::TBind)::Str = 
+  case b {
+    Binding(l::Loc,name::Str,t::Type,value::AST) -> {
+      name + '=' + ppExp(indent,value) + ';';
+    }
+    TypeBind(l::Loc,name::Str,t::Type,ignore::AST) -> {
+      'type ' + name;
+    }
+    DataBind(l::Loc,name::Str,t::Type,ignore::AST) -> {
+      'data ' + name;
+    }
+    FunBind(l::Loc,name::Str,args::[Pattern],t::Type,body::AST,guard::AST) -> {
+      name + '(' + ppPatterns(args) + ') = ' + nl(indent+2) + ppExp(indent+2,body);
+    }
+    CnstrBind(l::Loc,name::Str,t::Type,ignore::AST) -> {
+      name;
+    }
+    x::TBind -> throw[Str](WalkBind(x));
+  }
+
+/*
+walkQualifier(q::Qualifier)::Void = 
+  case q {
+    BQual(l::Loc,p::Pattern,e::AST) -> {
+      walkPattern(p);
+      walk(e);
+    }
+    PQual(l::Loc,p::AST) -> walk(p);
+  }
+*/  
+ppArm(indent::Int,a::Arm)::Str = 
+  case a {
+    BArm(l::Loc,ps::[Pattern],guard::AST,e::AST) -> {
+      ppPatterns(ps) + ' -> ' + nl(indent+2) + ppExp(indent+2,e);
+    }
+  }
+
+ppArms(indent::Int,arms::[Arm])::Str = ppJoin(indent,map[Arm,Str](fun(a::Arm)::Str ppArm(indent,a),arms));
+
+ppCaseTermArm(indent::Int,a::CaseTermArm)::Str = 
+  case a {
+    TArm(n::Str,e::AST) -> {
+      n + ' -> ' + nl(indent+2) + ppExp(indent+2,e);
+    }
+  }
+  
+ppCaseIntsArm(indent::Int,a::CaseIntsArm)::Str = 
+  case a {
+    IArm(n::Int,e::AST) -> {
+      n + ' -> ' + nl(indent+2) + ppExp(indent+2,e);
+    }
+  }
+  
+ppCaseStrsArm(indent::Int,a::CaseStrsArm)::Str = 
+  case a {
+    SArm(n::Str,e::AST) -> {
+      '\'' + n + '\'' + ' -> ' + nl(indent+2) + ppExp(indent+2,e);
+    }
+  }
+  
+ppCaseBoolsArm(indent::Int,a::CaseBoolsArm)::Str = 
+  case a {
+    BoolArm(b::Bool,e::AST) -> {
+      b + ' -> ' + nl(indent+2) + ppExp(indent+2,e);
+    }
+  }
+      
+/*  
+walkBind(b::TBind)::Void = 
+  case b {
+    Binding(l::Loc,name::Str,t::Type,value::AST) -> {
+      walkType(t);
+      walk(value);
+    }
+    TypeBind(l::Loc,name::Str,t::Type,ignore::AST) -> {
+      walkType(t);
+    }
+    DataBind(l::Loc,name::Str,t::Type,ignore::AST) -> {
+      walkType(t);
+    }
+    FunBind(l::Loc,n::Str,args::[Pattern],t::Type,body::AST,guard::AST) -> {
+      for p::Pattern in args do
+        walkPattern(p);
+      walkType(t);
+      walk(body);
+      walk(guard);
+    }
+    CnstrBind(l::Loc,name::Str,t::Type,ignore::AST) -> {
+      walkType(t);
+    }
+    x::TBind -> throw[Void](WalkBind(x));
+  }
+      
+walkPattern(p::Pattern)::Void = { //print[Pattern](p);
+  case p {
+    PVar(l::Loc,n::Str,t::Type) -> {
+      walkType(t);
+    }
+    PTerm(l::Loc,n::Str,ts::[Type],ps::[Pattern]) -> {
+      for t::Type in ts do walkType(t);
+      for p::Pattern in ps do walkPattern(p);
+    }
+    PApplyType(l::Loc,p::Pattern,ts::[Type]) -> {
+      walkPattern(p);
+      for t::Type in ts do walkType(t);
+    }
+    PNil(l::Loc) -> {}
+    PInt(l::Loc,i::Int) -> {}
+    PStr(l::Loc,s::Str) -> {}
+    PBool(l::Loc,b::Bool) -> {}
+    PCons(l::Loc,h::Pattern,t::Pattern) -> {
+      walkPattern(h);
+      walkPattern(t);
+    }
+    x::Pattern -> throw[Void] WalkPattern(x);
+  }
+}
+
+*/
+
+ppJModule(indent::Int,m::JMod)::Str =
+  case m {
+    JModule(n::Str,exports::[Str],fields::[JFieldDef]) ->
+      'class ' + n + ' {' + nl(indent + 2) +
+         ppJoin(indent+2,map[JFieldDef,Str](fun(f::JFieldDef)::Str ppJModuleField(indent+2,exports,f),fields)) + nl(indent) +
+       '}';
+  }
+
+ppJModuleField(indent::Int,exports::[Str], f::JFieldDef)::Str =
+  case f {
+    JField(n::Str,t::JType,e::JExp) ->
+      (if member[Str](n,exports) then 'public ' else 'private ') +
+      'static ' + ppJType(indent,t,true,false) + ' ' + n + ' = ' + ppJExp(indent,e) + ';';
+  }
+
+
+
+ppJTypes(indent::Int,types::[JType],sep::Str,isLHS::Bool,isArg::Bool)::Str =
+  case types {
+    [][JType] -> '';
+    e1::JType:e2::JType:es::[JType] -> ppJType(indent,e1,isLHS,isArg) + sep + ppJTypes(indent,e2:es,sep,isLHS,isArg);
+    e::JType:[][JType] -> ppJType(indent,e,isLHS,isArg);
+  }
+
+ppJType(indent::Int,t::JType,isLHS::Bool,isArg::Bool)::Str = { //print[Str]('ppJType ' + t);
+  case t {
+    JIntegerType -> 'Integer';
+    JBooleanType -> 'Boolean';
+    JDoubleType -> 'Double';
+    JStringType -> 'String';
+    JListType(t::JType) -> 'List';
+    JFunType(dom::[JType],ran::JType) -> 'Function' + length[JType](dom) + '<' + ppJTypes(indent,dom+[ran],',',true,true) + '>';
+    JObject -> 'Object';
+    JTermType -> 'Term';
+    JUnknown(v::TVar) -> 'Object';
+    JNullType(JUnknown(v::TVar)) -> 'Object';
+    JNullType(t::JType) -> ppJType(indent,t,isLHS,isArg);
+    t::JType -> ''+t; //throw[Str]('unknown type ppType: ' + t);
+  }
+}
+
+ppJCastType(indent::Int,t::JType,isLHS::Bool,isArg::Bool)::Str = { //print[Str]('ppJType ' + t);
+  case t {
+    JIntegerType -> 'Integer';
+    JBooleanType -> 'Boolean';
+    JDoubleType -> 'Double';
+    JStringType -> 'String';
+    JListType(t::JType) -> 'List';
+    JFunType(dom::[JType],ran::JType) -> 'Function' + length[JType](dom);
+    JObject -> 'Object';
+    JTermType -> 'Term';
+    JUnknown(v::TVar) -> 'Object';
+    JNullType(JUnknown(v::TVar)) -> 'Object';
+    JNullType(t::JType) -> ppJCastType(indent,t,isLHS,isArg);
+    t::JType -> ''+t; //throw[Str]('unknown type ppType: ' + t);
+  }
+}
+
+jTypeToArg(t::JType,isLHS::Bool,isArg::Bool)::JType = 
+  case t {
+    JIntegerType -> t;
+    JBooleanType -> t;
+    JDoubleType -> t;
+    JStringType -> t;
+    JListType(t::JType) -> JListType(jTypeToArg(t,isLHS,isArg));
+    JFunType(dom::[JType],ran::JType) -> JFunType([jTypeToArg(t,isLHS,isArg) | t::JType <- dom],jTypeToArg(ran,isLHS,isArg));
+    JObject -> t;
+    JTermType -> t;
+    JUnknown(v::TVar) when isLHS -> t;
+    JUnknown(v::TVar) -> JObject;
+    t::JType -> t; //throw[JType]('unknown type jTypeToArg: ' + t);
+  }
+
+ppJExps(indent::Int,exps::[JExp],sep::Str)::Str =
+  case exps {
+    [][JExp] -> '';
+    e1::JExp:e2::JExp:es::[JExp] -> ppJExp(indent,e1) + sep + ppJExps(indent,e2:es,sep);
+    e::JExp:[][JExp] -> ppJExp(indent,e);
+  }
+
+ppJDecs(indent::Int,decs::[JDeclaration],sep::Str)::Str =
+  case decs {
+    [][JDeclaration] -> '';
+    e1::JDeclaration:e2::JDeclaration:es::[JDeclaration] -> pJDec(indent,e1) + sep + ppJDecs(indent,e2:es,sep);
+    e::JDeclaration:[][JDeclaration] -> pJDec(indent,e);
+  }
+
+pJDec(indent::Int,d::JDeclaration)::Str =
+  case d {
+    JDec(n::Str,t::JType) -> ppJType(indent,t,true,false) + ' ' + n;
+  }
+
+ppJExp(indent::Int,e::JExp)::Str = { //print[Str]('ppJExp ' + e);
+  case e {
+    JConstExp(JConstInt(n::Int)) -> n+'';
+    JConstExp(JConstBool(b::Bool)) -> b+'';
+    JConstExp(JConstStr(s::Str)) -> '"' + s + '"';
+    JConstExp(JConstDouble(d::Float)) -> d+'';
+    JNil(t::JType) -> 'new Nil()';
+    JList(t::JType,es::[JExp]) -> ppJListExp(indent,t,es);
+    JTerm(n::Str,es::[JExp]) -> ppJTerm(indent,n,es);
+    JFun(n::JExp,args::[JDeclaration],t::JType,body::JCommand) -> ppJFun(indent,n,args,t,body);
+    JBinExp(e1::JExp,'==',e2::JExp) -> 'eql(' + ppJExp(indent,e1) + ',' + ppJExp(indent,e2) + ')';
+    JBinExp(e1::JExp,':',e2::JExp) -> ppJExp(indent,e2) + '.cons(' + ppJExp(indent,e1) + ')';
+    JBinExp(e1::JExp,op::Str,e2::JExp) ->  
+      ppJExp(indent,e1) + ' ' + op + ' ' + ppJExp(indent,e2);
+    JNull -> 'null';
+    JVar(n::Str,t::JType) -> n; 
+    JError(e::JExp) -> 'error(' + ppJExp(indent,e) + ')';
+    JApply(e::JExp,es::[JExp]) -> ppJExp(indent,e) + '.apply(' + ppJExps(indent,es,',') + ')';
+    JCommandExp(c::JCommand,t::JType) -> '((Supplier<' + ppJType(indent,t,true,true) + '>)() -> { ' + nl(indent+2) + 
+      ppJCommand(indent+2,c) + nl(indent) +  
+    '}).get()';
+    JHead(e::JExp) -> 'head(' + ppJExp(indent,e) + ')';
+    JTail(e::JExp) -> 'tail(' + ppJExp(indent,e) + ')';
+    JCast(t::JType,e::JExp) -> '((' + ppJCastType(indent,t,false,false) + ') ' + ppJExp(indent,e) + ')';
+    e::JExp -> ''+e;
+  }
+}
+
+ppJFun(indent::Int,n::JExp,args::[JDeclaration],t::JType,body::JCommand)::Str =
+  let dom::[JType] = [ t | JDec(n::Str,t::JType) <- args ];
+      ran::JType = t; in
+  let gArgs::Str = '<' + ppJTypes(indent,dom+[ran],',',true,true) + '>';
+  in  'new Function' + length[JDeclaration](args) + gArgs + '() {' + nl(indent+2) +
+        'public String getFunctionName() { return ' + ppJExp(indent,n) + '; }' + nl(indent+2) +
+        'public ' + ppJType(indent,ran,true,false) + ' apply(' + ppJDecs(indent,args,',') + ') {' + nl(indent+4) + 
+           ppJCommand(indent+4,body) + nl(indent+2) + 
+         '}' + nl(indent) +
+      '}';
+
+ppJCommand(indent::Int,c::JCommand)::Str = 
+  case c {
+    JIfCommand(e::JExp,c1::JCommand,c2::JCommand) ->
+      'if(' + ppJExp(indent,e) + ')' + nl(indent+2) + 
+        ppJCommand(indent+2,c1) + nl(indent+2) +
+        'else' + nl(indent+4) + ppJCommand(indent+4,c2);
+    JReturn(e::JExp) -> 'return ' + ppJExp(indent+2,e) + ';';
+    JCaseList(l::JExp,cons::JCommand,nil::JCommand,alt::JCommand) -> {
+      'if(' + ppJExp(indent,l) + ' instanceof Cons)' + nl(indent+2) + ppJCommand(indent+2,cons) + nl(indent) +
+      'else if(' + ppJExp(indent,l) + ' instanceof Nil)' + nl(indent+2) + ppJCommand(indent+2,nil) + nl(indent) +
+      'else ' + ppJCommand(indent+2,alt);
+    }
+    JLet(bs::[JFieldDef],c::JCommand) -> '{' +
+      ppJFields(indent+2,bs) + nl(indent+2) + ppJCommand(indent,c) + nl(indent) + 
+    '}';
+    JBlock(cs::[JCommand]) -> ppJoin(indent,[ ppJCommand(indent,c) | c::JCommand <- cs ]);
+    JUpdate(n::Str,e::JExp) -> n + ' = ' + ppJExp(indent,e) + ';';
+    c::JCommand -> ''+c;
+  }
+
+ppJFields(indent::Int,bs::[JFieldDef])::Str = 
+  case bs {
+    [][JFieldDef] -> '';
+    f::JFieldDef:bs::[JFieldDef] -> ppFieldDef(indent,f) + nl(indent) + ppJFields(indent,bs);
+  }
+
+ppFieldDef(indent::Int,f::JFieldDef)::Str =
+  case f {
+    JField(n::Str,t::JType,e::JExp) -> ppJType(indent,t,true,false) + ' ' + n + ' = ' + ppJExp(indent+2,e) + ';';
+  }
+  
+ppJTerm(indent::Int,n::Str,es::[JExp])::Str =
+  case es {
+    [][JExp] ->  'new Term("' + n + '")';
+    es::[JExp] -> 'new Term("' + n + '",' + ppJExps(indent,es,',') + ')';
+  }
+
+ppJListExp(indent::Int,t::JType,es::[JExp])::Str =
+  'list(' + ppJExps(indent,es,',') + ')';
+  
+act main::Main { 
+  Time(t::Int) -> {
+    try {
+    print[Str](ppExp(0,parse[AST]('new_esl/compiler/test1.esl'))); 
+   }
+   catch {
+      message::Str ->  print[Str]('PP Error: ' + message); 
+    }
+    print[Str]('DONE');
+    stopAll();
+  }
+}

@@ -1,0 +1,58 @@
+export main;
+
+
+type Main = Act { Time(Int); }
+
+type A = Act {}
+
+data Test = F(A) | G(Test);
+
+type Parent = Act { X; }
+
+type Child = Act{}
+
+act parent::Parent {
+  -> for n::Int in 0..30 do new child(n,self);
+  X -> {}
+}
+  
+act child(id::Int,p::Parent)::Child {
+  send(n::Int)::Int =
+    if n = 1000000 then { print[Str](id + ' ' + n); n; } else { p <- X; send(n+1); }
+  -> send(0);
+}
+
+count::Int = 0;
+
+act a::A { -> count := count + 1; }
+
+limit::Int = 1048576;
+
+act main::Main {
+
+  t0::Int = 0;
+
+  create(n::Int)::Int =
+    if n = limit
+    then n;
+    else {
+      new a;
+      create(n+1);
+    }
+
+  -> { t0 := now; create(0); print[Int](now - t0); print[Int](count); new parent; }
+  
+  Time(t::Int) -> { } //stopAll();  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

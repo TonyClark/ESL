@@ -1,0 +1,555 @@
+export main, ppExp, ppExps, ppArm, ppArms, ppJModule, ppType, ppTypes, ppTypeEnv;
+ 
+import 
+  'esl/lists.esl',
+  'esl/compiler/types.esl',
+  'esl/compiler/dynamicVars.esl', 
+  'esl/compiler/strings.esl';
+
+type Main = Act { Time(Int); }
+
+p0::Loc = Pos(0,0);
+
+indentStr(indent::Int)::Str =
+  if indent = 0
+  then '';
+  else ' ' + indentStr(indent-1);
+
+nl(indent::Int)::Str = '\n' + indentStr(indent);
+
+ppJoin(indent::Int,ss::[Str])::Str =
+  case ss {
+    [][Str] -> '';
+    [s::Str] -> s;
+    [s1::Str,s2::Str] -> s1 + nl(indent) + s2;
+    s::Str:ss::[Str] -> s + nl(indent) + ppJoin(indent,ss);
+  }
+
+ppTypeEnv(env::TEnv)::Str =
+  let s::Str = '[';
+  in {
+    for Map(n::Str,t::Type) in env do
+      s := s + n + '->' + ppType(t) + ',';
+    s+']';
+  }
+
+ppTypes(ts::[Type])::[Str] = map[Type,Str](ppType,ts);
+  
+ppType(t::Type)::Str =
+  case t {
+    ActType(l::Loc,decs::[TDec],handlers::[MType]) -> '' + t;
+    ApplyType(l::Loc,n::Str,args::[Type]) -> n + map[Type,Str](ppType,args);
+    ApplyTypeFun(l::Loc,op::Type,args::[Type]) -> ppType(op) + map[Type,Str](ppType,args);
+    ArrayType(l::Loc,t::Type) -> 'Array[' + ppType(t) + ']';
+    BoolType(l::Loc) -> 'Bool';
+    FloatType(l::Loc) -> 'Float';
+    FieldType(l::Loc,n::Str,t::Type) -> n + '::' + ppType(t);
+    ForallType(l::Loc,ns::[Str],t::Type) -> 'Forall' + ns + '.' + ppType(t);
+    FunType(l::Loc,d::[Type],r::Type) -> map[Type,Str](ppType,d) + '->' + ppType(r);
+    TaggedFunType(l::Loc,d::[Type],p::Str,r::Type) -> map[Type,Str](ppType,d) + '->' + ppType(r);
+    IntType(l::Loc) -> 'Int';
+    ListType(l::Loc,t::Type) -> '[' + ppType(t) + ']';
+    NullType(l::Loc) -> 'Null';
+    RecType(l::Loc,n::Str,t::Type) -> 'rec ' + n + '.' + ppType(t);
+    RecordType(l::Loc,fs::[Type])  -> '{' + ppTypes(fs) + '}';
+    StrType(l::Loc) -> 'Str';
+    TermType(l::Loc,n::Str,ts::[Type]) -> n + map[Type,Str](ppType,ts);
+    TypeFun(l::Loc,ns::[Str],t::Type) -> 'Fun' + ns + '.' + ppType(t);
+    UnfoldType(l::Loc,t::Type) -> 'unfold ' + ppType(t);
+    UnionType(l::Loc,ts::[Type]) -> 'union ' + map[Type,Str](ppType,ts);
+    VarType(l::Loc,n::Str) -> n;
+    VoidType(l::Loc) -> 'Void';
+    UnionRef(l::Loc,t::Type,n::Str) -> ppType(t) + '.' + n;
+    TypeClosure(f::()->Type) -> f + '';
+    x::Type -> '<unknown ' + x + '>';
+  }
+  
+ppExps(indent::Int,exps::[AST],sep::Str)::Str =
+  case exps {
+    [][AST] -> '';
+    e1::AST:e2::AST:es::[AST] -> ppExp(indent,e1) + sep + ppExps(indent,e2:es,sep); 
+    e::AST:[][AST] -> ppExp(indent,e);
+  }
+
+ppPattern(p::Pattern)::Str = 
+  case p {
+    PVar(l::Loc,n::Str,t::Type) -> n;
+    PTerm(l::Loc,n::Str,[][Type],ps::[Pattern]) -> n + ppPatterns(ps);
+    PTerm(l::Loc,n::Str,ts::[Type],ps::[Pattern]) -> n + ppPatterns(ps);
+    PApplyType(l::Loc,p::Pattern,ts::[Type]) -> ppPattern(p);
+    PNil(l::Loc) -> '[]';
+    PInt(l::Loc,n::Int) -> ''+n;
+    PBool(l::Loc,b::Bool) -> ''+b;
+    PStr(l::Loc,s::Str) -> '\'' + s + '\'';
+    PCons(l::Loc,h::Pattern,t::Pattern) -> ppPattern(h) + ':' + ppPattern(t);
+    p::Pattern -> '<unknown: ' + p + '>';
+  }
+
+ppPatterns(ps::[Pattern])::[Str] = map[Pattern,Str](ppPattern,ps);
+
+
+ppExp(indent::Int,exp::AST)::Str = {
+  case exp {
+    Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind]) -> {
+      'module ' + name + '{' + nl(indent+2) + 
+         ppBinds(indent+2,defs) + nl(indent) + 
+       '}';
+    }
+    Var(l::Loc,n::Str) -> n;
+    StrExp(l::Loc,v::Str) -> '\'' + v + '\'';
+    IntExp(l::Loc,v::Int) -> v+'';
+    BoolExp(l::Loc,v::Bool) -> v+'';
+    NullExp(l::Loc) -> 'null';
+    FloatExp(l::Loc,f::Float) -> f+'';
+    Apply(l::Loc,op::AST,args::[AST]) -> {
+      ppExp(indent,op) + '(' + ppExps(indent,args,',') + ')';
+    }
+    ApplyTypeExp(l::Loc,op::AST,args::[Type]) -> {
+      ppExp(indent,op);
+    }
+    Block(l::Loc,es::[AST]) -> {
+      '{' + nl(indent+2) + ppExps(indent+2,es,';') + nl(indent) + '}'; 
+    }
+    Case(l::Loc,ds::[TDec],es::[AST],as::[Arm]) -> {
+      'case ' + ppExps(indent,es,',') + ' {' + 
+         nl(indent+2) + ppJoin(indent+2,map[Arm,Str](fun(a::Arm)::Str ppArm(indent,a),as)) + nl(indent) + 
+       '}';
+    }
+    CaseTerm(l::Loc,e::AST,arms::[CaseTermArm],alt::AST) ->
+      'caseTerm ' + ppExp(indent,e) + ' {' +
+         nl(indent+2) + ppJoin(indent+2,map[CaseTermArm,Str](fun(a::CaseTermArm)::Str ppCaseTermArm(indent+2,a),arms)) + nl(indent+2) +
+         'else ' + ppExp(indent+4,alt) + nl(indent) +  
+       '}';
+    CaseList(l::Loc,e::AST,cons::AST,nil::AST,alt::AST) ->
+      'caseList ' + ppExp(indent,e) + ' {' +
+        nl(indent+2) + 'CONS ->' + nl(indent+4) + ppExp(indent+4,cons) + 
+        nl(indent+2) + 'NIL ->' + nl(indent+4) + ppExp(indent+4,nil) + nl(indent+2) +
+         'else ' + ppExp(indent+4,alt) + nl(indent) +  
+       '}';
+    CaseInt(l::Loc,e::AST,arms::[CaseIntsArm],alt::AST) ->
+      'caseInt ' + ppExp(indent,e) + ' {' +
+         nl(indent+2) + ppJoin(indent+2,map[CaseIntsArm,Str](fun(a::CaseIntsArm)::Str ppCaseIntsArm(indent+2,a),arms)) + nl(indent+2) +
+         'else ' + ppExp(indent+4,alt) + nl(indent) +  
+       '}';
+    CaseStr(l::Loc,e::AST,arms::[CaseStrsArm],alt::AST) ->
+      'caseStr ' + ppExp(indent,e) + ' {' +
+         nl(indent+2) + ppJoin(indent+2,map[CaseStrsArm,Str](fun(a::CaseStrsArm)::Str ppCaseStrsArm(indent+2,a),arms)) + nl(indent+2) +
+         'else ' + ppExp(indent+4,alt) + nl(indent) +  
+       '}';
+    CaseBool(l::Loc,e::AST,arms::[CaseBoolsArm],alt::AST) ->
+      'caseBool ' + ppExp(indent,e) + ' {' +
+         nl(indent+2) + ppJoin(indent+2,map[CaseBoolsArm,Str](fun(a::CaseBoolsArm)::Str ppCaseBoolsArm(indent+2,a),arms)) + nl(indent+2) +
+         'else ' + ppExp(indent+4,alt) + nl(indent) +  
+       '}';
+    CaseError(l::Loc) -> 'caseError()';
+    Head(e::AST) -> 'head(' + ppExp(indent,e) + ')';
+    Tail(e::AST) -> 'tail(' + ppExp(indent,e) + ')';
+    Cons(h::AST,t::AST) -> 'cons(' + ppExp(indent,h) + ',' + ppExp(indent,t) + ')';
+    If(l::Loc,e1::AST,e2::AST,e3::AST) -> { 
+      'if ' + ppExp(indent,e1) + nl(indent) + 'then' + nl(indent+2) + ppExp(indent+2,e2) + nl(indent) + 'else' + nl(indent+2) + ppExp(indent+2,e3);
+    }
+    FunExp(l::Loc,n::AST,args::[TDec],t::Type,e::AST) -> {
+      'fun(' + ppDecs(indent,args) + ')::' + ppType(t) + ' ' + ppExp(indent+2,e);
+    }
+    Let(l::Loc,bs::[TBind],e::AST) -> {
+      'let ' + ppBinds(indent+4,bs) + nl(indent) + 'in ' + ppExp(indent+3,e);
+    }
+    Letrec(l::Loc,bs::[TBind],e::AST) -> {
+      'letrec ' + ppBinds(indent+7,bs) + nl(indent) + 'in ' + ppExp(indent+3,e);
+    }
+    List(l::Loc,es::[AST]) -> {
+      '[' + ppExps(indent,es,',') + ']';
+    }
+    Throw(l::Loc,t::Type,e::AST) -> {
+      'throw ' + ppExp(indent,e);
+    }
+    Term(l::Loc,n::Str,ts::[Type],es::[AST]) -> {
+      n + '(' + ppExps(indent,es,',') + ')';
+    }
+    TermRef(e::AST,n::Int) -> 
+      'termRef(' + ppExp(indent,e) + ',' + n + ')';
+    BinExp(l::Loc,e1::AST,op::Str,e2::AST) -> {
+      ppExp(indent,e1) + op + ppExp(indent,e2);
+    }
+    Update(l::Loc,n::Str,e::AST) -> n + ' := ' + ppExp(indent,e);
+    NewArray(l::Loc,t::Type,n::AST) -> 'new Array[' + ppType(t) + '](' + ppExp(indent,n) + ')';
+    For(l::Loc,p::Pattern,e1::AST,e2::AST) -> 
+      'for ' + ppPattern(p) + ' in ' + ppExp(indent,e1) + ' do {' + nl(indent+2) + ppExp(indent+2,e2) + '}';
+    Try(l::Loc,e::AST,as::[Arm]) -> {
+      'try ' + ppExp(indent,e) + ' {' + 
+         nl(indent+2) + ppJoin(indent+2,map[Arm,Str](fun(a::Arm)::Str ppArm(indent,a),as)) + nl(indent) + 
+       '}';
+    }
+    ActExp(l::Loc,n::AST,args::[TDec],x::[Str],spec::Str,locals::[TBind],init::AST,handlers::[Arm]) -> {
+      'act ' + ppExp(indent,n) + '(' + ppDecs(indent,args) + ') {' + nl(indent+2) + ppBinds(indent+5,locals) + nl(indent+2) +
+        '-> ' + ppExp(indent+4,init) + nl(indent+2) +
+        ppJoin(indent+2,map[Arm,Str](fun(a::Arm)::Str ppArm(indent,a),handlers)) + nl(indent) + 
+        '}';
+    }
+    Self(l::Loc) -> 'self';
+    Update(l::Loc,n::Str,e::AST) -> n + ' := ' + ppExp(indent,e);
+    Ref(l::Loc,e::AST,n::Str) -> ppExp(indent,e) + '.' + n;
+    Send(l::Loc,target::AST,message::AST) -> 
+      ppExp(indent,target) + ' <- ' + ppExp(indent,message);
+    Cmp(l::Loc,e::AST,qs::[Qualifier]) -> {
+      '[' + ppExp(indent,e) + ' | ' + ppJoin(indent+2,map[Qualifier,Str](fun(q::Qualifier)::Str ppQual(indent,q),qs)) + ']';
+    }
+    New(l::Loc,b::AST,args::[AST]) -> {
+      'new ' + ppExp(indent,b) + '(' + ppExps(indent,args,',') + ')';
+    }
+    NewJava(l::Loc,className::Str,t::Type,args::[AST]) -> {
+      'javaNew[' + ppType(t) + '](\' + className + ' + ppExps(indent,args,',') + ')';
+    }
+    Grab(l::Loc,rs::[DRef],e::AST) -> {
+      '*********grab';
+    }
+    Probably(l::Loc,p::AST,t::Type,e1::AST,e2::AST) -> {
+      '**** probably';
+    }
+    Not(l::Loc,e::AST) -> 'not(' + ppExp(indent,e) + ')';
+    Fold(l::Loc,t::Type,e::AST) -> {
+      '******** fold';
+    }
+    Unfold(l::Loc,t::Type,e::AST) -> {
+      '******unfold';
+    }
+    Now(l::Loc) -> 'now';
+    Become(l::Loc,e::AST) -> 'become ' + ppExp(indent,e);
+    ArrayRef(l::Loc,a::AST,i::AST) -> ppExp(indent,a) + '[' + ppExp(indent,i) + ']';
+    ArrayUpdate(l::Loc,a::AST,i::AST,v::AST) -> ppExp(indent,a) + '[' + ppExp(indent,i) + '] := ' + ppExp(indent,v);
+    x::AST -> throw [Str]('ppExp: ' + x);
+  }
+}
+
+ppQual(indent::Int,q::Qualifier)::Str = 'qualifier: ' + q;
+
+ppDecs(indent::Int,bs::[TDec])::Str = ppJoin(indent,map[TDec,Str](fun(b::TDec)::Str ppDec(indent,b),bs));
+
+ppDec(indent::Int,d::TDec)::Str =
+  case d {
+    Dec(l::Loc,n::Str,dt::Type,t::Type) -> n + '::' + ppType(t);
+  }
+
+ppBinds(indent::Int,bs::[TBind])::Str = ppJoin(indent,map[TBind,Str](fun(b::TBind)::Str ppBind(indent,b),bs));
+
+ppBind(indent::Int,b::TBind)::Str = 
+  case b {
+    Binding(l::Loc,name::Str,t::Type,st::Type,value::AST) -> {
+      name + '=' + ppExp(indent,value) + ';';
+    }
+    TypeBind(l::Loc,name::Str,t::Type,ignore::AST) -> {
+      'type ' + name;
+    }
+    DataBind(l::Loc,name::Str,t::Type,ignore::AST) -> {
+      'data ' + name;
+    }
+    FunBind(l::Loc,name::Str,args::[Pattern],t::Type,st::Type,body::AST,guard::AST) -> {
+      name + '(' + ppPatterns(args) + ') = ' + nl(indent+2) + ppExp(indent+2,body);
+    }
+    CnstrBind(l::Loc,name::Str,t::Type,ignore::AST) -> {
+      name;
+    }
+    x::TBind -> throw[Str] ('ppBind: ' + x);
+  }
+
+ppArm(indent::Int,a::Arm)::Str = 
+  case a {
+    BArm(l::Loc,ps::[Pattern],guard::AST,e::AST) -> {
+      ppPatterns(ps) + ' -> ' + nl(indent+2) + ppExp(indent+2,e);
+    }
+  }
+
+ppArms(indent::Int,arms::[Arm])::Str = ppJoin(indent,map[Arm,Str](fun(a::Arm)::Str ppArm(indent,a),arms));
+
+ppCaseTermArm(indent::Int,a::CaseTermArm)::Str = 
+  case a {
+    TArm(n::Str,e::AST) -> {
+      n + ' -> ' + nl(indent+2) + ppExp(indent+2,e);
+    }
+  }
+  
+ppCaseIntsArm(indent::Int,a::CaseIntsArm)::Str = 
+  case a {
+    IArm(n::Int,e::AST) -> {
+      n + ' -> ' + nl(indent+2) + ppExp(indent+2,e);
+    }
+  }
+  
+ppCaseStrsArm(indent::Int,a::CaseStrsArm)::Str = 
+  case a {
+    SArm(n::Str,e::AST) -> {
+      '\'' + n + '\'' + ' -> ' + nl(indent+2) + ppExp(indent+2,e);
+    }
+  }
+  
+ppCaseBoolsArm(indent::Int,a::CaseBoolsArm)::Str = 
+  case a {
+    BoolArm(b::Bool,e::AST) -> {
+      b + ' -> ' + nl(indent+2) + ppExp(indent+2,e);
+    }
+  }
+      
+
+
+getImport(sourceFile::Str)::Str =
+  let path::[Str] = toPath(sourceFile); in
+  let p::Str = pathToJavaPackage(path);
+      className::Str = pathToJavaClassName(path);
+  in case sourceFile {
+       'esl/lists.esl' -> '// import static ' + p + '.' + className + '.*;';
+       x::Str -> 'import static ' + p + '.' + className + '.*;';
+     }
+
+ppJModule(name::Str,p::Str,m::JMod)::Str =
+  case m {
+    JModule(n::Str,exports::[Str],imports::[Str],fields::[JFieldDef]) ->
+      'package ' + p + ';' + nl(0) +
+      'import esl.lib.*;' + nl(0) + 
+      'import static esl.lib.Lib.*;' + nl(0) +
+      ppJoin(0,[  getImport(i)  | i::Str <- imports ]) + nl(0) + 
+      'import java.util.function.Supplier;' + nl(0) + 
+      'public class ' + name + ' {' + nl(2) +
+        'public static ESLVal getSelf() { return $null; }' + nl(2) +
+         ppJoin(2,map[JFieldDef,Str](fun(f::JFieldDef)::Str ppJModuleField(2,exports,f),fields)) + nl(0) +
+         'public static void main(String[] args) {' + nl(2) +  
+            (if member[Str]('main',exports) then '  newActor(main,new ESLVal(new Actor())); ' + nl(2) else '') + 
+         '}' + nl(0) + 
+      '}';
+  }
+
+ppJModuleField(indent::Int,exports::[Str], f::JFieldDef)::Str = 
+  case f {
+    JField('edb',t::JType,JNull) -> '// static ESLVal edb = null;';
+    JField(n::Str,t::JType,e::JExp) ->
+      (if member[Str](n,exports) then 'public ' else 'private ') +
+      'static ESLVal ' + n + ' = ' + ppJExp(indent,[],e) + ';';
+  }
+
+ppJExps(indent::Int,dynamics::[Str],exps::[JExp],sep::Str)::Str =
+  case exps { 
+    [][JExp] -> '';
+    e1::JExp:e2::JExp:es::[JExp] -> ppJExp(indent,dynamics,e1) + sep + ppJExps(indent,dynamics,e2:es,sep);
+    e::JExp:[][JExp] -> ppJExp(indent,dynamics,e);
+  }
+
+ppJDecs(indent::Int,decs::[JDeclaration],sep::Str)::Str =
+  case decs {
+    [][JDeclaration] -> '';
+    e1::JDeclaration:e2::JDeclaration:es::[JDeclaration] -> pJDec(indent,e1) + sep + ppJDecs(indent,e2:es,sep);
+    e::JDeclaration:[][JDeclaration] -> pJDec(indent,e);
+  }
+
+pJDec(indent::Int,d::JDeclaration)::Str =
+  case d {
+    JDec(n::Str,t::JType) -> 'ESLVal ' + n;
+  }
+
+ppJExp(indent::Int,dynamics::[Str],e::JExp)::Str = { //print[Str]('ppJExp ' + e);
+  case e {
+    JArrayRef(a::JExp,i::JExp) -> ppJExp(indent,dynamics,a) + '.array[' + ppJExp(indent,dynamics,i) + '.intVal]';
+    JArrayUpdate(a::JExp,i::JExp,v::JExp) -> ppJExp(indent,dynamics,a) + '.array[' + ppJExp(indent,dynamics,i) + '.intVal] = ' + ppJExp(indent,dynamics,v);
+    JBecome(e::JExp,[][JExp]) -> 'become(' + ppJExp(indent+2,dynamics,e) + ',getSelf())';
+    JBecome(e::JExp,es::[JExp]) -> 'become(' + ppJExp(indent+2,dynamics,e) + ',getSelf(),' +  ppJExps(indent,dynamics,es,',') + ')';
+    JConstExp(JConstInt(0)) -> '$zero';
+    JConstExp(JConstInt(1)) -> '$one';
+    JConstExp(JConstInt(n::Int)) -> 'new ESLVal('+n+')';
+    JConstExp(JConstBool(true)) -> '$true';
+    JConstExp(JConstBool(false)) -> '$false';
+    JConstExp(JConstStr(s::Str)) -> 'new ESLVal("'+ javaString(s) + '")';
+    JConstExp(JConstDouble(d::Float)) -> 'new ESLVal('+d+')';
+    JNot(e::JExp) -> ppJExp(indent,dynamics,e) + '.not()';
+    JNil(t::JType) -> '$nil';
+    JList(t::JType,es::[JExp]) -> ppJListExp(indent,dynamics,t,es);
+    JTerm(n::Str,[][JExp]) ->  'new ESLVal("' + n + '",new ESLVal[]{})'; 
+    JTerm(n::Str,es::[JExp]) -> 'new ESLVal("' + n +  '",' + ppJExps(indent,dynamics,es,',') + ')';
+    JFun(n::JExp,args::[JDeclaration],t::JType,body::JCommand) -> ppJFun(indent,dynamics,n,args,t,body);
+    JBinExp(e1::JExp,'==',e2::JExp) -> ppJExp(indent,dynamics,e1) + '.equals(' + ppJExp(indent,dynamics,e2) + ')';
+    JBinExp(e1::JExp,'cons',e2::JExp) -> ppJExp(indent,dynamics,e2) + '.cons(' + ppJExp(indent,dynamics,e1) + ')';
+    JBinExp(e1::JExp,op::Str,e2::JExp) -> ppJExp(indent,dynamics,e1) + '.' + op + '(' + ppJExp(indent,dynamics,e2) + ')';
+    JNull -> '$null';
+    JNow -> 'now()';
+    JVar(n::Str,t::JType) when member[Str](n,dynamics) -> n + '[0]'; 
+    JVar(n::Str,t::JType) -> n; 
+    JError(e::JExp) -> 'error(' + ppJExp(indent,dynamics,e) + ')';
+    JApply(e::JExp,es::[JExp]) -> ppJExp(indent,dynamics,e) + '.apply(' + ppJExps(indent,dynamics,es,',') + ')';
+    JCommandExp(c::JCommand,t::JType) -> '((Supplier<ESLVal>)() -> { ' + nl(indent+2) + 
+      ppJCommand(indent+2,dynamics,c) + nl(indent) +  
+    '}).get()';
+    JIfExp(e::JExp,e1::JExp,e2::JExp) -> '(' + ppJExp(indent,dynamics,e) + '.boolVal) ? (' + ppJExp(indent,dynamics,e1) + ') : (' + ppJExp(indent,dynamics,e2) + ')';
+    JHead(e::JExp) -> ppJExp(indent,dynamics,e) + '.head()';
+    JTail(e::JExp) -> ppJExp(indent,dynamics,e) + '.tail()';
+    JTermRef(e::JExp,n::Int) -> ppJExp(indent,dynamics,e) + '.termRef(' + n + ')';
+    JMapFun(f::JExp,l::JExp) -> ppJExp(indent,dynamics,f) + '.map(' + ppJExp(indent,dynamics,l) + ')';
+    JFlatten(ls::JExp) -> ppJExp(indent,dynamics,ls) + '.flatten()';
+    JBehaviour(es::[Str],fs::[JFieldDef],init::JExp,JFun(n::JExp,args::[JDeclaration],t::JType,body::JCommand),time::JCommand) ->
+      'new ESLVal(new BehaviourAdapter(' + (if time = JBlock([]) then 'false' else 'true') + ',getSelf(),' + ppJExp(indent,dynamics,n) + ') {' + nl(indent+2) +
+        //'ESLVal self = getSelf();' + nl(indent+2) + 
+        ppJFields(indent+2,dynamics,fs) + nl(indent+2) + //'{ handler = ' + ppJExp(indent+2,dynamics,handler) + '; }' + nl(indent+2) +
+        'public ESLVal handle(ESLVal $m) {' + ppJCommand(indent+2,dynamics,body) + '}' + nl(indent+2) +
+        'public ESLVal get(String name) {' + nl(indent+4) +
+           'switch(name) {' + nl(indent+6) +
+             ppJoin(indent+6,[ 'case "' + n + '": return ' + n + ';' | n::Str <- es ]) + nl(indent+6) +
+             'default: throw new Error("ref illegal " + self + "." + name);' + nl(indent + 4) + 
+           '}' + nl(indent+2) +
+        '}' + nl(indent) +
+        'public void handleTime(ESLVal $t) {' + nl(indent + 2) +
+           ppJCommand(indent+2,dynamics,time) + nl(indent) +
+        '}' + nl(indent) + 
+        'public ESLVal init() {' + nl(indent+4) + 
+          'return ' + ppJExp(indent+6,dynamics,init) + ';' + nl(indent+2) +
+        '}' + nl(indent) +
+      '})';
+    JNew(b::JExp,[][JExp]) ->  'newActor(' + ppJExp(indent,dynamics,b) + ',new ESLVal(new Actor()))';
+    JNew(b::JExp,args::[JExp]) ->  'newActor(' + ppJExp(indent,dynamics,b) + ',new ESLVal(new Actor()),' +  ppJExps(indent,dynamics,args,',') + ')';
+    JNewArray(i::JExp) -> 'newArray(' + ppJExp(indent,dynamics,i) + '.intVal)';
+    JNewJava(n::Str,[][JExp]) ->  'newJavaActor("' + n + '")';
+    JNewJava(n::Str,args::[JExp]) ->  'newJavaActor("' + n + '",' + ppJExps(indent,dynamics,args,',') + ')'; 
+    JSend(e::JExp,m::Str,[][JExp]) -> 'Lib.send(' + ppJExp(indent,dynamics,e) + ',"' + m + '")';
+    JSend(e::JExp,m::Str,args::[JExp]) -> 'Lib.send(' + ppJExp(indent,dynamics,e) + ',"' + m + '",' + ppJExps(indent,dynamics,args,',') + ')';
+    JSelf -> 'getSelf()';
+    JRef(e::JExp,n::Str) -> ppJExp(indent,dynamics,e) + '.ref("' + n + '")';
+    JGrab(es::[JExp],c::JExp) -> 'lock(new Function(new ESLVal("grab"),getSelf()) {' + nl(indent+2) +
+      'public ESLVal apply(ESLVal ...args) { ' + nl(indent+4) +
+        'return ' + ppJExp(indent,dynamics,c) + ';' + nl(indent+2) +
+      '}},' + ppJExps(indent,dynamics,es,',') + ')';
+    JTry(e::JExp,n::Str,c::JCommand) -> 'new Function(new ESLVal("try"),getSelf()) {' + nl(indent+2) + 
+      'public ESLVal apply(ESLVal... args) { ' + nl(indent+4) +
+        'try { ' + nl(indent+6) +
+          'return ' + ppJExp(indent+4,dynamics,e) + ';' + nl(indent+4) +
+        '} catch(ESLError $exception) {' + nl(indent+6) +
+          'ESLVal ' + n + ' = $exception.value;' + nl(indent+6) +
+          ppJCommand(indent,dynamics,c) + nl(indent+4) +
+        '}' + nl(indent+2) +
+      '}' + nl(indent) +
+    '}.apply()';
+    JProbably(e::JExp,e1::JExp,e2::JExp) -> 'probably(' + ppJExp(indent,dynamics,e) + ',' + ppJExp(indent,dynamics,probFun(e1)) + ',' + ppJExp(indent,dynamics,probFun(e2)) + ')';
+    e::JExp -> '********** unknown expression: ' + e;
+  }
+}
+
+probFun(e::JExp)::JExp = JFun(JConstExp(JConstStr('probFun')),[],null[JType],JReturn(e));
+
+ppJFun(indent::Int,dynamics::[Str],n::JExp,args::[JDeclaration],t::JType,body::JCommand)::Str = {
+  let freeDynamics::[Str] = dynamicVarsJCommand(body);
+      argNames::[Str] = [ n | JDec(n::Str,t::JType) <- args ]; in
+  let boundDynamics::[Str] = [ d | d::Str <- argNames, ?(member[Str](d,freeDynamics)) ]; in
+  let dom::[JType] = [ t | JDec(n::Str,t::JType) <- args ];
+      ran::JType = t; 
+  in  'new ESLVal(new Function(' + ppJExp(indent,dynamics,n) + ',getSelf()) {' + nl(indent+2) +
+        'public ESLVal apply(ESLVal... $args) {' + nl(indent+4) + 
+           ppFunArgs(indent,0,args,boundDynamics) + 
+           ppJCommand(indent+4,boundDynamics + [ d | d::Str <- dynamics, ?(not(member[Str](d,argNames))) ],body) + nl(indent+2) + 
+         '}' + nl(indent) +
+      '})';
+}
+
+ppFunArgs(indent::Int,i::Int,args::[JDeclaration],dynamicArgs::[Str])::Str =
+  case args {
+    [][JDeclaration] -> '';
+    JDec(n::Str,t::JType):args::[JDeclaration] when member[Str](n,dynamicArgs) -> 
+      'ESLVal[] ' + n + ' = new ESLVal[]{$args[' + i + ']};' + nl(indent) + ppFunArgs(indent,i+1,args,dynamicArgs);
+    JDec(n::Str,t::JType):args::[JDeclaration]  -> 
+      'ESLVal ' + n + ' = $args[' + i + '];' + nl(indent) + ppFunArgs(indent,i+1,args,dynamicArgs);
+  }
+
+ppJCommand(indent::Int,dynamics::[Str],c::JCommand)::Str = { 
+  case c {
+    JIfCommand(e::JExp,c1::JCommand,c2::JCommand) ->
+      'if(' + ppJExp(indent,dynamics,e) + '.boolVal)' + nl(indent+2) + 
+        ppJCommand(indent+2,dynamics,c1) + nl(indent+2) +
+        'else' + nl(indent+4) + ppJCommand(indent+4,dynamics,c2);
+    JReturn(JCommandExp(c::JCommand,t::JType)) -> ppJCommand(indent,dynamics,c);
+    JReturn(e::JExp) -> 'return ' + ppJExp(indent+2,dynamics,e) + ';';
+    JCaseList(l::JExp,cons::JCommand,nil::JCommand,alt::JCommand) -> { 
+      'if(' + ppJExp(indent,dynamics,l) + '.isCons())' + nl(indent+2) + ppJCommand(indent+2,dynamics,cons) + nl(indent) +
+      'else if(' + ppJExp(indent,dynamics,l) + '.isNil())' + nl(indent+2) + ppJCommand(indent+2,dynamics,nil) + nl(indent) +
+      'else ' + ppJCommand(indent+2,dynamics,alt);
+    }
+    JCaseTerm(e::JExp,arms::[JTermArm],alt::JCommand) ->
+      'switch(' + ppJExp(indent,dynamics,e) + '.termName) {' + nl(indent+2) +
+      ppJoin(indent,[ 'case "' + n + '": ' + ppJCommand(indent+2,dynamics,c) | JTArm(n::Str,i::Int,c::JCommand) <- arms ]) + nl(indent+2) +
+      'default: ' + ppJCommand(indent+2,dynamics,alt) + nl(indent) + 
+      '}';
+    JCaseInt(e::JExp,arms::[JIntArm],alt::JCommand) -> 
+      'switch(' + ppJExp(indent,dynamics,e) + '.intVal) {' + nl(indent+2) + 
+      ppJoin(indent,[ 'case ' + n + ': ' + ppJCommand(indent+2,dynamics,c) | JIArm(n::Int,c::JCommand) <- arms ]) + nl(indent+2) +
+      'default: ' + ppJCommand(indent+2,dynamics,alt) + nl(indent) + 
+      '}';
+    JCaseStr(e::JExp,arms::[JStrArm],alt::JCommand) -> 
+      'switch(' + ppJExp(indent,dynamics,e) + '.strVal) {' + nl(indent+2) + 
+      ppJoin(indent,[ 'case "' + s + '": ' + ppJCommand(indent+2,dynamics,c) | JSArm(s::Str,c::JCommand) <- arms ]) +  nl(indent+2) +
+      'default: ' + ppJCommand(indent+2,dynamics,alt) + nl(indent) + 
+      '}';
+    JCaseBool(e::JExp,arms::[JBoolArm],alt::JCommand) -> 
+      'switch(' + ppJExp(indent,dynamics,e) + '.boolVal ? 1 : 0) {' + nl(indent+2) + 
+      ppJoin(indent,[ 'case ' + (if b then 1 else 0) + ': ' + ppJCommand(indent+2,dynamics,c) | JBArm(b::Bool,c::JCommand) <- arms ]) +  nl(indent+2) +
+      'default: ' + ppJCommand(indent+2,dynamics,alt) + nl(indent) + 
+      '}';
+    JLet(bs::[JFieldDef],c::JCommand) -> {
+      let boundVars::[Str] = [ n | JField(n::Str,t::JType,e::JExp) <- bs ];
+          dynamicVars::[Str] = dynamicVarsJCommand(c); in
+      let boundDynamicVars::[Str] = filter[Str](fun(s::Str)::Bool member[Str](s,dynamicVars),boundVars);
+      in '{' + ppJFields(indent+2,dynamics + boundDynamicVars,bs) + nl(indent+2) + ppJCommand(indent,dynamics+boundDynamicVars,c) + nl(indent) + '}';
+    }
+    JLetRec(bs::[JFieldDef],c::JCommand) -> 
+      // Recursive closures in Java are a pain...
+      // For now only define recursive functions or side-effect free variables... 
+      'LetRec letrec = new LetRec() {' + nl(indent+2) +
+      ppJFields(indent+2,dynamics,bs) + nl(indent+2) +
+      'public ESLVal get(String name) {' + nl(indent+4) +
+      'switch(name) {' + nl(indent+6) +
+      ppJoin(indent+6,[ 'case "' + n + '": return ' + n + ';' + nl(indent+6) | JField(n::Str,t::JType,e::JExp) <- bs ]) +
+      nl(indent+6) + 'default: throw new Error("cannot find letrec binding");' + nl(indent+4) + 
+      '}' + nl(indent+4) + '}' + nl(indent+2) + '};' +
+      nl(indent) + 
+      ppJoin(indent,[ 'ESLVal ' + n + ' = letrec.get("' + n + '");' + nl(indent) |  JField(n::Str,t::JType,e::JExp) <- bs ]) +
+      nl(indent+2) + ppJCommand(indent,dynamics,c) + nl(indent);
+    JBlock(cs::[JCommand]) -> '{' + ppJoin(indent,[ ppJCommand(indent,dynamics,c) | c::JCommand <- cs ]) + '}';
+    JUpdate(n::Str,e::JExp) when member[Str](n,dynamics) -> n + '[0] = ' + ppJExp(indent,dynamics,e) + ';';
+    JUpdate(n::Str,e::JExp) -> n + ' = ' + ppJExp(indent,dynamics,e) + ';';
+    JFor(listName::Str,varName::Str,e::JExp,c::JCommand) -> '{' + nl(indent+2) + 
+      'ESLVal ' + listName + ' = ' + ppJExp(indent+2,dynamics,e) + ';' + nl(indent+2) +
+      'while(' + listName + '.isCons()) {' + nl(indent+4) +
+        'ESLVal ' + varName + ' = ' + listName + '.headVal;' + nl(indent+4) +
+        ppJCommand(indent+4,dynamics,c) + nl(indent+4) +
+        listName + ' = ' + listName + '.tailVal;' + 
+      '}' + nl(indent) +
+    '}'; 
+    JStatement(e::JExp) -> ppJExp(indent,dynamics,e) + ';';
+    c::JCommand -> '******* unknown command: ' + c;
+  }
+}
+  
+ppJFields(indent::Int,dynamics::[Str],bs::[JFieldDef])::Str = 
+  case bs {
+    [][JFieldDef] -> '';
+    f::JFieldDef:bs::[JFieldDef] -> ppFieldDef(indent,dynamics,f) + nl(indent) + ppJFields(indent,dynamics,bs);
+  }
+
+ppFieldDef(indent::Int,dynamics::[Str],f::JFieldDef)::Str =
+  case f {
+    JField(n::Str,t::JType,e::JExp) when member[Str](n,dynamics) ->  'ESLVal[] ' + n + ' = new ESLVal[]{' + ppJExp(indent+2,dynamics,e) + '};';
+    JField(n::Str,t::JType,e::JExp) -> 'ESLVal ' + n + ' = ' + ppJExp(indent+2,dynamics,e) + ';';
+  }
+  
+ppJTerm(indent::Int,dynamics::[Str],n::Str,es::[JExp])::Str =
+  case es {
+    [][JExp] ->  'new Term("' + n + '")';
+    es::[JExp] -> 'new Term("' + n + '",' + ppJExps(indent,dynamics,es,',') + ')';
+  }
+
+ppJListExp(indent::Int,dynamics::[Str],t::JType,es::[JExp])::Str =
+  'ESLVal.list(' + ppJExps(indent,dynamics,es,',') + ')';
+ 
+act main::Main { 
+  Time(t::Int) -> {
+    try {
+    print[Str](ppExp(0,parse[AST]('esl/compiler/test1.esl'))); 
+   }
+   catch {
+      message::Str ->  print[Str]('PP Error: ' + message); 
+    }
+    print[Str]('DONE');
+    stopAll();
+  }
+}

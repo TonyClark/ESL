@@ -1,0 +1,284 @@
+export main;
+
+import 'esl/displays.esl', 'esl/lists.esl';
+
+// This file implements two variants of the Dining Philosophers where a number of philosopher actors
+// must co-ordinate in order to share chopsticks that are required to eat. The chopsticks represent
+// shared resources: each chopstick is shared by exactly two philosophers and two chopsticks are
+// required to eat. Each philosopher is either thinking or eating. To eat they must grab two chopsticks.
+// Since all actors operate concurrently, there is a danger that deadlock can occur if access to the
+// chopsticks is not co-ordinated appropriately.
+
+// The simulation is controlled by the following variables... 
+
+timeLimit::Int            = 5000;    // The length of time to run the simulation.
+canDeadlock::Bool         = false;   // Select the strategy for co-ordination.
+numberOfPhilosophers::Int = 10;      // The number of philosophers (and therefore chopsticks).
+eatTime::Int              = 50;      // Limit on random delay for eating.     
+thinkTime::Int            = 50;      // Limit on random delay for thinking.     
+
+// In addition to representing the Dining Philosophers, this file generates a filmstrip of pictures
+// showing a sequence of syatem states. The filmstrip can be played backwards and forwards. The
+// following data definition for picture elements is used to create the filmstrip.
+
+Act Main { Time(Int); } 
+ 
+Act Chopstick { 
+
+  // A chopstick is a shared resource. Each chopstick has a unique id. Co-ordination
+  // is achieved through locks that are implemented using lock-variables that can be
+  // grabbed by an actor-thread. Each chopstick exports a lock-variable called 'active'
+  // that is used by a philosopher when it wants to grab the chopstick to eat. The
+  // value of the variable 'active' is not important.
+  
+}
+
+type Philosopher = Act { 
+
+  // A philosopher is either thinking or eating. The amount of time taken to eat or think 
+  // is variable. 
+  
+  Time(Int); 
+}
+
+// ************************** Begin Filmstrip Definitions **************************************
+//
+// The simulation builds up a history of actions. Once complete the history of actions is mapped
+// to a sequence of snapshots of the type Snapshot([Holds(Int,[Chopstick]),[Chopstick]) where the
+// terms with functor Holds record the chopsticks that are currently held by each philosopher 
+// (via their id) and the chopsticks that are currently on the table. The sequence of snapshots
+// are then transformed into pictures using shapes and images.
+//
+// Controls for the picture elements...
+
+data Point = Point(Int,Int);
+
+pictureWidth::Int      = 1000;   // The overall display width.
+pictureHeight::Int     = 1000;   // The overall display height.
+centreX::Int           = 500;    // The centre of the display.
+centreY::Int           = 250;    // The centre of the display.
+chopstickRadius::Int   = 100;    // Position of chopsticks.
+philosopherRadius::Int = 200;    // Position of philosophers.
+philosopherWidth::Int  = 40;     // Width of icon.
+philosopherHeight::Int = 40;     // Height of icon.
+
+data Action =
+  // An action is recorded when a philosopher interacts with a chopstick. A list of
+  // actions is used to generate a filmstrip.
+  Grab(Int,Chopstick)
+| Release(Chopstick);
+
+history :: [ Action ] = []; // A history of actions is built-up as the simulation runs.
+
+// GUI definitions...
+
+//eatingIcon::Str = 'http://megaicons.net/static/img/icons_sizes/177/790/256/eat-icon.png';
+//thinkingIcon::Str = 'http://files.softicons.com/download/web-icons/very-emotional-emoticons-2-by-artdesigner.lv/png/128x128/Emoticon_40.png';
+eatingIcon::Str = 'http://files.softicons.com/download/web-icons/very-emotional-emoticons-2-by-artdesigner.lv/png/128x128/Emoticon_12.png';
+thinkingIcon::Str = 'http://files.softicons.com/download/web-icons/very-emotional-emoticons-2-by-artdesigner.lv/png/128x128/Emoticon_32.png';
+redLine::Str = 'stroke:rgb(255,0,0);stroke-width:2;marker-end:url(#RedTriangle);';
+unfilled::Str = 'stroke:black; fill-opacity:0;';
+filled::Str = '';
+
+data Hold = Holds(Int,[Chopstick]);
+data Snap = Snapshot([Hold],[Chopstick]);
+Act EDB { 
+  export math :: { circlePos :: (Int,Int,Int,Int) -> Point };
+  Filmstrip(Str,[EDBDisplay]);
+}
+
+edb::EDB = null[EDB];
+
+pointX(p::Point)::Int =
+  // An accessor for a point. Get the X co-ordinate.
+  case p {
+    Point(x::Int,y::Int) -> x;
+  }
+
+pointY(p::Point)::Int =
+  // An accessor for a point. Get the Y co-ordinate.
+  case p {
+    Point(x::Int,y::Int) -> y;
+  }
+
+toPictures(filmstrip::[Snap])::[EDBDisplay] =
+  // Map a sequence of snapshots into a sequence of pictures ready to display.
+  case filmstrip {
+    [] -> []; 
+    s::Snap:fs::[Snap] -> 
+      toPicture(s):toPictures(fs);
+  }
+  
+toPicture(s::Snap)::EDBDisplay =
+  case s {
+    Snapshot(holds::[Hold],free::[Chopstick]) -> 
+      Picture(pictureWidth,pictureHeight,toCircles(0,chopsticks,holds,free) + toPhils(0,holds));
+  }
+  
+toPhils(i::Int,holds::[Hold])::[PictureElement] =
+
+  // Create an icon for the ith philosopher. This will depend on whether the philosopher is eating
+  // or thinking. They are eating if they are currently holding two chopsticks. Also add in 
+  // lines for each chopstick they are holding. The end position of each chopstick-line must be
+  // calculated. The end-points of the lines are adjusted appropriately so that they do not
+  // overlap with the philosopher icon.
+  
+  if i = numberOfPhilosophers
+  then [];
+  else 
+    let left::Chopstick = nth[Chopstick](chopsticks,i);
+        right::Chopstick = nth[Chopstick](chopsticks,(i+1)%numberOfPhilosophers);
+        holding::[Chopstick] = getHolding(i,holds);
+        angle::Int = 360/numberOfPhilosophers;
+    in let leftPoint::Point = edb.math.circlePos(centreX,centreY,chopstickRadius,angle*i);
+           rightPoint::Point = edb.math.circlePos(centreX,centreY,chopstickRadius,(angle*(i+1)));
+           holdingLeft::Bool = member[Chopstick](left,holding);
+           holdingRight::Bool = member[Chopstick](right,holding);
+           linePoint::Point =  edb.math.circlePos(centreX,centreY,philosopherRadius - 50,(angle*i)+(angle/2));
+           philPoint::Point =  edb.math.circlePos(centreX,centreY,philosopherRadius - 30,(angle*i)+(angle/2));
+       in toPhil(philPoint,linePoint,leftPoint,rightPoint,holdingLeft,holdingRight) + toPhils(i+1,holds);
+       
+toPhil(p::Point,lStart::Point,l::Point,r::Point,holdsLeft::Bool,holdsRight::Bool)::[PictureElement] = 
+ // Create the picture elements based on the supplied information.
+ let leftLine::[PictureElement] = if holdsLeft then [Line(pointX(lStart),pointY(lStart),pointX(l),pointY(l),redLine)]; else [];
+     rightLine::[PictureElement] = if holdsRight then [Line(pointX(lStart),pointY(lStart),pointX(r),pointY(r),redLine)]; else [];
+     image::PictureElement = Image(pointX(p)-(philosopherWidth/2),pointY(p)-(philosopherHeight/2),philosopherWidth,philosopherHeight,if holdsRight and holdsLeft then eatingIcon else thinkingIcon);
+ in [image] + leftLine + rightLine;
+      
+getHolding(i::Int,holds::[Hold])::[Chopstick] =
+  // An accessor for the holdings of the ith philosopher based on the
+  // supplied list of holds.
+  case holds {
+    [] -> [];
+    Holds(i1::Int,cs::[Chopstick]):hs::[Hold] when i1 = i -> cs;
+    h::Holds(Int,[Chopstick]):hs::[Hold] -> getHolding(i,hs);
+  }
+  
+toCircles(i::Int,chopsticks::[Chopstick],holds::[Hold],free::[Chopstick])::[PictureElement] =
+  // Turn the chopsticks into circles.
+  case chopsticks {
+    [] -> [];
+    c::Chopstick:cs::[Chopstick] -> toCircle(i,c,holds,free):toCircles(i+1,cs,holds,free);
+  }
+    
+toCircle(i::Int,c::Chopstick,holds::[Hold],free::[Chopstick])::PictureElement =  
+  // Turn a chopstick into a circle. If the chopstick is currently being held by a philosopher
+  // then it is filled otherwise it is shown unfilled.
+  case edb.math.circlePos(centreX,centreY,chopstickRadius,(360/(numberOfPhilosophers))*i) {
+    Point(x::Int,y::Int) when member[Chopstick](c,free) ->
+      Circle(x,y,10,unfilled);
+    Point(x::Int,y::Int) -> 
+      Circle(x,y,10,filled);
+   }
+
+filmstrip(history::[Action])::[Snap] = 
+  // Map a list of actions to a list of snapshots that record the current state of
+  // chopstick-holdings at successive system states.
+  case history {
+    [] -> [Snapshot([][Hold],chopsticks)];
+    Grab(p::Int,c::Chopstick):h::[Action] -> extendFilmstrip(p,c,filmstrip(h));
+    Release(c::Chopstick):h::[Action] -> reduceFilmstrip(c,filmstrip(h));
+   }
+   
+extendFilmstrip(p::Int,c::Chopstick,fs::[Snap])::[Snap] =
+  // Add a new snapshot to the head of the filmstrip recording that philosopher p is
+  // currently holding chopstick c.
+  case fs {
+    Snapshot(holds::[Hold],free::[Chopstick]):fs::[Snap] ->
+      Snapshot(extendHolds(p,c,holds),remove[Chopstick](c,free)):Snapshot(holds,free):fs;
+  }
+  
+reduceFilmstrip(c::Chopstick,fs::[Snap])::[Snap] =
+  // Add a new snapshot where chopstick c has been dropped by whichever philosopher is currently holding it.
+  case fs {
+    Snapshot(holds::[Hold],free::[Chopstick]):fs::[Snap] ->
+      Snapshot(reduceHolds(c,holds),c:free):Snapshot(holds,free):fs;
+  }
+    
+extendHolds(p::Int,c::Chopstick,holds::[Hold])::[Hold] =
+  // Find the holding record for philosopher p and add in chopstick c.
+  case holds { 
+    [] -> [Holds(p,[c])];
+    Holds(p1::Int,cs::[Chopstick]):hs::[Hold] ->
+      if p=p1
+      then Holds(p,c:cs):hs;
+      else Holds(p1,cs):extendHolds(p,c,hs);
+  }
+  
+reduceHolds(c::Chopstick,holds::[Hold])::[Hold] = 
+  // Remove chopstick c from all holding records.
+  case holds {
+    [] -> holds;
+    Holds(p::Int,cs::[Chopstick]):hs::[Hold] ->
+      if member[Chopstick](c,cs)
+      then Holds(p,remove[Chopstick](c,cs)):hs;
+      else Holds(p,cs):reduceHolds(c,hs);
+  }
+   
+// ************************** End Filmstrip Definitions *****************************************
+
+eat()::Void = wait(eatTime);
+think()::Void = wait(thinkTime);
+
+act philosopher1(i::Int,left::Chopstick,right::Chopstick)::Philosopher {
+
+  // The amount of eating is non-deterministic because of the random delay, however, there should be no 
+  // starvation because the grab-clause means that chopsticks are grabbed together. It is not possible
+  // for philosophers to deadlock waiting for the same chopstick.
+  
+  Time(n::Int) when n < timeLimit -> {
+    think();
+    grab(left,right) {
+      grab(history) history := Grab(i,left):Grab(i,right):history;
+      eat();
+      grab(history) history := Release(left):Release(right):history;
+    }  
+  }
+  Time(n::Int) -> {}
+}
+
+act philosopher2(i::Int,left::Chopstick,right::Chopstick)::Philosopher {
+
+  // This version of a philosopher may lead to deadlock because each of the chopsticks are
+  // grabbed independently (and there is a delay in between)...
+  
+  Time(n::Int) when n < timeLimit -> {
+    think();
+    grab(left) {
+      grab(history) history := Grab(i,left):history;
+      think();
+      grab(right) {
+         grab(history) history := Grab(i,right):history;
+        eat();
+      }
+    }
+    history := Release(left):Release(right):history;
+  }
+  Time(n::Int) -> {}
+}
+
+act chopstick::Chopstick {
+}
+
+chopsticks::[Chopstick] = [ new chopstick | i::Int <- 0..numberOfPhilosophers ];
+
+philosophers::[Philosopher] = 
+  if canDeadlock
+  then [ new philosopher2(i,nth[Chopstick](chopsticks,i),nth[Chopstick](chopsticks,(i+1)%numberOfPhilosophers)) | i::Int <- 0..numberOfPhilosophers ];
+  else [ new philosopher1(i,nth[Chopstick](chopsticks,i),nth[Chopstick](chopsticks,(i+1)%numberOfPhilosophers)) | i::Int <- 0..numberOfPhilosophers ]; 
+    
+act main::Main {
+  Time(n::Int) when n > timeLimit -> { 
+    edb <- Filmstrip('Philosophers',reverse[EDBDisplay](toPictures(filmstrip(history))));
+    stopAll(); 
+  }
+  Time(n::Int) -> { }
+}
+
+
+
+
+
+
+
+

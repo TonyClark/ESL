@@ -1,0 +1,147 @@
+export main;
+
+import 'new_esl/tmp/lists.esl';
+
+// Behaviour types:
+// Main runs the application.
+// Agent exists at a location in the world.
+// Grid is an external Java actor for the display.
+
+type Main = Act { Time(Int); }
+
+type Agent = Act { Turn; }
+
+type Grid = Act { SetColour(Int,Int,Str); }
+
+// External functions...
+
+intToFloat::(Int)->Float = builtin[(Int)->Float]('runtime.actors.Builtins','intToFloat',1);
+round::(Float)->Int = builtin[(Float)->Int]('runtime.actors.Builtins','round',1);
+
+// Basic list-processing...
+
+// Parameters that control the application:
+
+similarpc::Int = 70;       // 70% of neighbours should be the same colour.
+width::Int     = 600;     // Number of locations wide.
+height::Int    = 300;      // Number of locations high.
+redpc::Int     = 60;       // Starting with 60% red population.
+emptypc::Int   = 10;       // 10% of locations hould be empty.
+empty::Int     = 0;        // The encoding for an empty location.
+red::Int       = 1;        // The encoding for a red location.
+blue::Int      = 2;        // The encoding for a bloue location.
+limit::Int     = 500000;  // A millisecond time limit.
+
+// The locations are represented on a width*height matrix represented as nested lists...
+
+opp(c::Int)::Int = if c = red then blue; else red;
+colour(c::Int)::Str = if c = red then 'red'; else if c = empty then 'white'; else 'blue';
+
+legalx(x::Int)::Bool = (x = 0) or (x = width) or ((x > 0) and (x < width));
+legaly(y::Int)::Bool = (y = 0) or (y = height) or ((y > 0) and (y < height));
+
+population::[[Int]] = 
+  [ [ probably(100-emptypc)::Int { 
+        probably(redpc)::Int red; else blue; 
+      } else empty 
+    | w::Int <- 0..width ] 
+  | h::Int <- 0..height ];
+
+popEl(x::Int,y::Int)::Int = nth[Int](nth[[Int]](population,y),x);
+
+popElp(x::Int,y::Int)::[Int] = [popEl(x%width,y%height)];
+  
+popSet(x::Int,y::Int,c::Int)::Void = {
+  population := replaceNth[[Int]](population,y,replaceNth[Int](nth[[Int]](population,y),x,c));
+  grid <- SetColour(x,y,colour(c));
+}
+
+popSim(x::Int,y::Int)::Int =
+  let surround::[Int] = flatten[Int]([ popElp(x0,y0) | x0::Int <- (x-1)..(x+2), y0::Int <- (y-1)..(y+2), ?not((x0 = x) and (y0 = y)) ]);
+      colour::Int = popEl(x,y);
+  in let sim::Int = occurrences[Int](colour,surround);
+         diff::Int = occurrences[Int](opp(colour),surround);
+     in round((intToFloat(sim)/(intToFloat(sim+diff)))* 100.0);
+     
+     // An external Java actor that deals with the graphics...
+  
+grid::Grid = new 'esl.grid.Grid'[Grid](width,height,2);
+
+act agent(x::Int,y::Int)::Agent {
+
+  // An agent lives at (x,y) and wants to live in a neighbourhood
+  // of agents with a similar colour...
+  
+  findEmpty(x0::Int,y0::Int)::Void = 
+    if popEl(x0,y0) = empty
+      then {
+      popSet(x0,y0,popEl(x,y));
+      popSet(x,y,empty);
+      x := x0;
+      y := y0;
+    } else findEmpty(random(width),random(height));
+    
+  Turn -> { 
+    grab(population) {
+      // If the neighbours are less than the required
+      // similarity then find an empty location and
+      // move to it...
+      if popSim(x,y) < similarpc
+      then {
+        findEmpty(random(width),random(height));
+      } else {}
+    }
+    self <- Turn;
+  }
+}
+
+act main::Main {
+  // Create the agents, send their initial colour to the
+  // GUI and then send them a Turn message to start the
+  // simulation
+  agents::[Agent] = [][Agent];
+   -> {
+    for y::Int in 0..height do {
+      for x::Int in 0..width do {
+        if popEl(x,y) <> empty
+        then {
+          let a::Agent = new agent(x,y);
+          in {
+            agents := a:agents;
+            grid <- SetColour(x,y,colour(popEl(x,y)));
+            a <- Turn;
+          }
+        } else {}
+      }
+    }
+  }
+ 
+  Time(n::Int) when n > limit -> { 
+    print[Str]('STOP ' + n + ' ' + limit);
+    stopAll();
+  }
+  
+  Time(n::Int) -> {} 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

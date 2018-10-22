@@ -1,0 +1,3811 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  static = false;
+}
+
+PARSER_BEGIN(ESL)
+package parser;
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.reflect.Array;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.util.Stack;
+import java.util.Vector; 
+import ast.actors.*;
+import ast.actors.Act;
+import ast.modules.Module;
+import values.Located;
+import ast.general.AST;
+import java.util.Arrays;
+import ast.binding.*;
+import ast.binding.Var;
+import ast.types.*;
+import ast.tests.*;
+import ast.patterns.*;
+import ast.types.Void;
+import ast.types.Field;
+import ast.data.BinExp;
+import ast.data.Not;
+import ast.data.NewArray;
+import ast.data.ArrayUpdate;
+import ast.data.ArrayRef;
+import runtime.data.*;
+import ast.lists.*;
+import ast.lists.Bag;
+import ast.lists.Set;
+import ast.control.Try;
+import ast.control.Throw;
+import ast.cmp.*;
+import ast.data.Term;
+import ast.data.Record;
+import ast.control.Block;
+import ast.data.ApplyType;
+import ast.data.Ref;
+import ast.control.Now;
+import java.util.Hashtable;
+
+public class ESL
+{
+  String input = null;
+  Stack < Integer > starts = new Stack < Integer > ();
+
+  public static String readFile(String name)
+  {
+    try
+    {
+      return new String(Files.readAllBytes(FileSystems.getDefault().getPath(name)));
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+      return "";
+    }
+  }
+
+  public static void main(String args []) throws ParseException
+  {
+    String input = readFile("src/parser/test.esl");
+    ESL parser = new ESL(new StringReader(input));
+    parser.setInput(input);
+    Module module = (parser.module("example.esl"));
+    AST.printTree(module, System.out, 0);
+  }
+
+  public static < T > T [] asArray(Vector < T > values, Class < T > c)
+  {
+    return values.toArray((T []) Array.newInstance(c, values.size()));
+  }
+
+  public void setInput(String input)
+  {
+    this.input = input;
+  }
+
+  public void start(Token token)
+  {
+    starts.push(getCharStart(token));
+  }
+
+  public void end(Token token, Located ast)
+  {
+    int start = starts.pop();
+    ast.setLineStart(start);
+    ast.setLineEnd(getCharEnd(token));
+  }
+
+  public void end0(Token token, Located ast)
+  {
+    int start = starts.peek();
+    ast.setLineStart(start);
+    ast.setLineEnd(getCharEnd(token));
+  }
+  Hashtable < Integer, Integer > startCache = new Hashtable < Integer, Integer > ();
+
+  public int getCharStart(Token token)
+  {
+    int beginLine = token.beginLine - 1;
+    int beginCol = token.beginColumn - 1;
+    if (startCache.containsKey(beginLine)) 
+    return startCache.get(beginLine) + beginCol;
+    else
+    {
+      int charStart = 0;
+      while (beginLine > 0)
+      {
+        if (input.charAt(charStart) == '\n') 
+        beginLine--;
+        charStart++;
+      }
+      startCache.put(token.beginLine - 1, charStart);
+      return charStart + beginCol;
+    }
+  }
+
+  public int getCharEnd(Token token)
+  {
+    return getCharStart(token) + token.image.length();
+  }
+
+  public String stripString(String s)
+  {
+    return s.substring(1, s.length() - 1).replace("\\n","\n");
+  }
+}
+
+PARSER_END(ESL)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+| < MLCOMMENT :
+    "/*" (~[ "*" ])* "*"
+    (
+      ~[ "*", "/" ] (~[ "*" ])* "*"
+    | "*"
+    )*
+    "/" >
+| < SINGLE_LINE_COMMENT :
+    "//" (~[ "\n", "\r" ])*
+    (
+      "\n"
+    | "\r"
+    | "\r\n"
+    )? >
+}
+
+TOKEN : /* OPERATORS */
+{
+  < PLUS : "+" >
+| < MINUS : "-" >
+| < MULTIPLY : "*" >
+| < DIVIDE : "/" >
+| < EQL : "=" >
+| < MOD : "%" >
+| < NEQL : "<>" >
+| < GRE : ">" >
+| < GRE_EQ : ">=" >
+| < LESS : "<" >
+| < LESS_EQ : "<=" >
+| < UPDATE : ":=" >
+| < TO : ".." >
+| < OR : "or" >
+| < AND : "and" >
+| < ORELSE : "orelse" >
+| < ANDALSO : "andalso" >
+}
+
+TOKEN : /* KEYWORDS */
+{
+  < IMPORT : "import" >
+| < EXPORT : "export" >
+| < ACT : "act" >
+| < WHEN : "when" >
+| < NOT : "not" >
+| < IF : "if" >
+| < THEN : "then" >
+| < ELSE : "else" >
+| < NEW : "new" >
+| < FUN : "fun" >
+| < GRAB : "grab" >
+| < LET : "let" >
+| < LETREC : "letrec" >
+| < IN : "in" >
+| < CASE : "case" >
+| < FOR : "for" >
+| < DO : "do" >
+| < TRY : "try" >
+| < CATCH : "catch" >
+| < THROW : "throw" >
+| < FIND : "find" >
+| < BAG : "bag" >
+| < SET : "set" >
+| < KB : "kb" >
+| < FOLD : "fold" >
+| < UNFOLD : "unfold" >
+| < TRUE : "true" >
+| < FALSE : "false" >
+| < SELF : "self" >
+| < NOW : "now" >
+| < NULL : "null" >
+| < TYPE : "type" >
+| < INT_T : "Int" >
+| < FLOAT_T : "Float" >
+| < BOOL_T : "Bool" >
+| < ARRAY_T : "Array" >
+| < STR_T : "Str" >
+| < NULL_T : "Null" >
+| < VOID_T : "Void" >
+| < BAG_T : "Bag" >
+| < SET_T : "Set" >
+| < ACT_T : "Act" >
+| < FORALL_T : "Forall" >
+| < REC : "rec" >
+| < UNION_T : "union" >
+| < DATA : "data" >
+| < CNSTR : "cnstr" >
+| < PROBABLY : "probably" >
+| < BECOME : "become" >
+}
+
+TOKEN :
+{
+  < INTEGER_CONSTANT : (< DIGIT >)+ >
+| < LOGIC_CONSTANT :
+    "true"
+  | "false" >
+| < STRING_CONSTANT :
+    "\'"
+    (
+      ~[ "\'", "\\", "\n", "\r" ]
+    | "\\" 
+      (
+      [ "n", "t", "b", "r", "f", "\\", "\'", "\"" ]
+      )
+    )*
+    "\'" >
+| < #DIGIT : [ "0"-"9" ] >
+}
+
+TOKEN :
+{
+  < CHARACTER : "#" ~[ "\\" ] >
+| < NAMEDCHARACTER : "#\\" >
+}
+
+TOKEN :
+{
+  < IDENTIFIER :
+    < LOWER_LETTER >
+    (
+      < LETTER >
+    | < DIGIT >
+    )*
+    ([ "$" ])? >
+| < UPPER_IDENTIFIER :
+    < UPPER_LETTER >
+    (
+      < LETTER >
+    | < DIGIT >
+    )*
+    ([ "$" ])? >
+| < LETTER : ([ "a"-"z", "A"-"Z" ]) >
+| < LOWER_LETTER : ([ "a"-"z" ]) >
+| < UPPER_LETTER : ([ "A"-"Z" ]) >
+}
+
+TOKEN :
+{
+  < SEMI : ";" >
+| < COMMA : "," >
+| < COLONCOLON : "::" >
+| < COLON : ":" >
+| < LSQUARE : "[" >
+| < RSQUARE : "]" >
+| < LCURL : "{" >
+| < RCURL : "}" >
+| < LPAREN : "(" >
+| < RPAREN : ")" >
+| < ARROW : "->" >
+| < LEFTARROW : "<-" >
+| < DOT : "." >
+| < BAR : "|" >
+| < QUERY : "?" >
+| < UNDERSCORE : "_" >
+| < HASH : "#" >
+| < BACKSLASH : "\\" >
+}
+
+Module module(String name) :
+{
+  Imports is;
+  Export es;
+  Binding [ ] bs;
+}
+{
+  es = exports() 
+  is = imports() 
+  bs = bindings() 
+  < EOF >
+  {
+    Module m = new Module();
+    m.name = name;
+    m.imports = is;
+    m.exports = es;
+    m.defs = bs;
+    return m;
+  }
+}
+
+Module moduleWithErrors(String name) :
+{
+  Imports is = null;
+  Export es = null;
+  Binding [ ] bs = new Binding [ 0 ];
+}
+{
+  try
+  {
+    es = exports() 
+    is = imports() 
+    bs = bindingsWithError()
+  }
+  catch (ParseException e)
+  {}
+  {
+    Module m = new Module();
+    m.name = name;
+    m.imports = is;
+    m.exports = es;
+    m.defs = bs;
+    return m;
+  }
+}
+
+Binding [ ] bindings() :
+{
+  Vector < Binding > bindings = new Vector < Binding > ();
+}
+{
+  (
+    LOOKAHEAD(2)
+    binding(bindings)
+  )*
+  {
+    return asArray(bindings, Binding.class);
+  }
+}
+
+Binding [ ] bindingsWithError() :
+{
+  Vector < Binding > bindings = new Vector < Binding > ();
+}
+{
+  try
+  {
+    (
+    LOOKAHEAD(2)
+    binding(bindings)
+    ) *
+  }
+  catch (ParseException e)
+  {
+    return asArray(bindings, Binding.class);
+  }
+  {
+    return asArray(bindings, Binding.class);
+  }
+}
+
+void binding(Vector < Binding > bindings) :
+{
+}
+{
+  actBinding(bindings)
+| actTypeBinding(bindings)
+| valueBinding(bindings)
+| typeBinding(bindings)
+| dataBinding(bindings)
+| cnstrBinding(bindings)
+}
+
+void cnstrBinding(Vector < Binding > bindings) :
+{
+  String name, field;
+  String [ ] generics;
+  Type type;
+}
+{
+  < CNSTR >
+  {
+    start(token);
+  }
+  name = Name() generics = optGenericDecs() < EQL > 
+  type = type() < DOT > field = Name() < SEMI >
+  {
+    UnionRef ref = new UnionRef();
+    ref.setLineStart(type.getLineStart());
+    ref.setLineEnd(getCharEnd(token));
+    ref.type = type;
+    ref.name = field;
+    CnstrBind bind = new CnstrBind();
+    end(token, bind);
+    bind.name = name;
+    Type fun = Dec.funType(generics, ref);
+    bind.declaredType = fun;
+    bind.value = fun;
+    bindings.add(bind);
+  }
+}
+
+void dataBinding(Vector < Binding > bindings) :
+{
+  String name;
+  String [ ] generics;
+  ast.types.Term [ ] terms;
+}
+{
+  < DATA >
+  {
+    start(token);
+  }
+  name = Name() 
+  generics = optGenericDecs() 
+  < EQL > 
+  terms = dataOpts() 
+  < SEMI >
+  {
+    ast.types.Union union = new ast.types.Union();
+    union.terms = terms;
+    end(token, union);
+    Type f = Dec.funType(generics, union);
+    f.setLineStart(union.getLineStart());
+    f.setLineEnd(union.getLineEnd());
+    DataBind bind = new DataBind();
+    bind.setLineStart(union.getLineStart());
+    bind.setLineEnd(union.getLineEnd());
+    bind.name = name;
+    bind.declaredType = f;
+    bind.value = f;
+    bindings.add(bind);
+  }
+}
+
+ast.types.Term [ ] dataOpts() :
+{
+  Vector < ast.types.Term > terms = new Vector < ast.types.Term > ();
+  ast.types.Term term;
+}
+{
+  term = dataOpt()
+  {
+    terms.add(term);
+  }
+  (
+    < BAR > term = dataOpt()
+    {
+      terms.add(term);
+    }
+  )*
+  {
+    return asArray(terms, ast.types.Term.class);
+  }
+}
+
+ast.types.Term dataOpt() :
+{
+  String name;
+  Type [ ] types = new Type [ 0 ];
+}
+{
+  name = Name()
+  {
+    start(token);
+  }
+  [ < LPAREN > 
+  types = types() 
+  < RPAREN > ]
+  {
+    ast.types.Term term = new ast.types.Term();
+    end(token, term);
+    term.name = name;
+    term.types = types;
+    return term;
+  }
+}
+
+void typeBinding(Vector < Binding > bindings) :
+{
+  String name;
+  String [ ] args;
+  Type type;
+}
+{
+  < TYPE >
+  {
+    start(token);
+  }
+  name = Name() 
+  args = optGenericDecs() 
+  < EQL > 
+  type = typeRHS()
+  {
+    TypeBind bind = new TypeBind();
+    end(token, bind);
+    bind.name = name;
+    type = Dec.funType(args, type);
+    bind.declaredType = type;
+    bind.value = type;
+    bindings.add(bind);
+  }
+}
+
+void actTypeBinding(Vector < Binding > bindings) :
+{
+  Dec [ ] decs = new Dec [ 0 ];
+  String name;
+  MessageType [ ] handlers = new MessageType [ 0 ];
+}
+{
+  < ACT_T >
+  {
+    start(token);
+  }
+  name = Name() 
+  < LCURL > 
+  [ decs = exportedDecs() ] 
+  handlers = messageTypes() 
+  < RCURL >
+  {
+    ast.types.Act act = new ast.types.Act();
+    TypeBind bind = new TypeBind();
+    end(token, bind);
+    bind.name = name;
+    bind.declaredType = act;
+    bind.value = act;
+    bindings.add(bind);
+    act.decs = decs;
+    act.handlers = handlers;
+    act.setLineStart(bind.getLineStart());
+    act.setLineEnd(bind.getLineEnd());
+  }
+}
+
+void actBinding(Vector < Binding > bindings) :
+{
+  String name;
+  String [ ] generics;
+  Dec [ ] ps;
+  Act act;
+  Type type;
+  Binding [ ] defs;
+  Export exports;
+  AST init;
+  BArm [ ] arms;
+}
+{
+  < ACT >
+  {
+    start(token);
+  }
+  name = name() 
+  generics = optGenericDecs() 
+  ps = actArgs() 
+  type = typeDec()
+  {
+    ast.types.Fun funType = new ast.types.Fun();
+    funType.domain = ast.types.Fun.types(ps);
+    funType.range = type;
+    type = Dec.generic(generics, funType);
+  }
+  < LCURL > 
+  exports = exports() 
+  defs = bindings() 
+  init = actInit() 
+  arms = arms() 
+  < RCURL >
+  {
+    act = new Act();
+    end0(token, act);
+    act.name = ast.data.Str.strAt0(name);
+    act.args = ps;
+    act.bindings = defs;
+    act.exports = exports;
+    act.init = init;
+    act.arms = arms;
+    ast.data.Fun f = new ast.data.Fun();
+    f.name = ast.data.Str.strAt0(name);
+    f.args = ps;
+    f.declaredType = type;
+    f.body = act;
+    f.setLineStart(act.getLineStart());
+    f.setLineEnd(act.getLineEnd());
+    Binding binding = new Binding();
+    end(token, binding);
+    binding.name = name;
+    binding.declaredType = type;
+    binding.sourceType = type;
+    binding.value = f;
+    bindings.add(binding);
+  }
+}
+
+BArm [ ] arms() :
+{
+  Vector < BArm > arms = new Vector < BArm > ();
+}
+{
+  (
+    arm(arms)
+  )*
+  {
+    return asArray(arms, BArm.class);
+  }
+}
+
+void arm(Vector < BArm > arms) :
+{
+  Pattern [ ] patterns;
+  AST guard;
+  AST body;
+}
+{
+  patterns = patterns() 
+  guard = guard() 
+  < ARROW > 
+  body = command()
+  {
+    BArm arm = new BArm();
+    arm.setLineStart(patterns [ 0 ].getLineStart());
+    arm.setLineEnd(body.getLineEnd());
+    arm.patterns = patterns;
+    arm.guard = guard;
+    arm.exp = body;
+    arms.add(arm);
+  }
+}
+
+AST guard() :
+{
+  AST guard;
+}
+{
+  < WHEN > guard = exp()
+  {
+    return guard;
+  }
+|
+  {
+    return new ast.data.Bool(true);
+  }
+}
+
+Pattern [ ] patterns() :
+{
+  Vector < Pattern > patterns = new Vector < Pattern > ();
+  Pattern p;
+}
+{
+  p = pattern()
+  {
+    patterns.add(p);
+  }
+  (
+    < COMMA > p = pattern()
+    {
+      patterns.add(p);
+    }
+  )*
+  {
+    return asArray(patterns, Pattern.class);
+  }
+}
+
+Pattern pattern() :
+{
+  Pattern pattern, other;
+  Type [ ] types;
+}
+{
+  pattern = simplePattern()
+  (
+    < COLON > 
+    other = pattern()
+    {
+      PCons cons = new PCons();
+      cons.setLineStart(pattern.getLineStart());
+      cons.setLineEnd(other.getLineEnd());
+      cons.head = pattern;
+      cons.tail = other;
+      pattern = cons;
+    }
+  | < OR > 
+    other = pattern()
+    {
+      POr or = new POr();
+      or.setLineStart(pattern.getLineStart());
+      or.setLineEnd(other.getLineEnd());
+      or.alt1 = pattern;
+      or.alt2 = other;
+      pattern = or;
+    }
+  | < PLUS > 
+    other = pattern()
+    {
+      PAdd add = new PAdd();
+      add.setLineStart(pattern.getLineStart());
+      add.setLineEnd(other.getLineEnd());
+      add.left = pattern;
+      add.right = other;
+      pattern = add;
+    }
+  | < LSQUARE > 
+    types = types() 
+    < RSQUARE >
+    {
+      PApplyType apply = new PApplyType();
+      apply.setLineStart(pattern.getLineStart());
+      apply.setLineEnd(getCharEnd(token));
+      apply.pattern = pattern;
+      apply.types = types;
+      pattern = apply;
+    }
+  )*
+  {
+    return pattern;
+  }
+}
+
+Pattern simplePattern() :
+{
+  Pattern pattern;
+}
+{
+  (
+    pattern = varPattern()
+  | pattern = intPattern()
+  | pattern = termPattern()
+  | pattern = listPattern()
+  | pattern = strPattern()
+  | pattern = boolPattern()
+  | pattern = wildPattern()
+  | pattern = nullPattern()
+  | pattern = bagPattern()
+  | pattern = setPattern()
+  | < LPAREN > pattern = pattern() < RPAREN >
+  )
+  {
+    return pattern;
+  }
+}
+
+Pattern setPattern() :
+{
+  Pattern pattern;
+}
+{
+  < SET >
+  {
+    start(token);
+  }
+  < LCURL >
+  (
+    < RCURL >
+    {
+      PEmptySet set = new PEmptySet();
+      end(token, set);
+      return set;
+    }
+  | 
+    pattern = pattern() 
+    pattern = setPatternTail(pattern)
+    {
+      end(token, pattern);
+      return pattern;
+    }
+  )
+}
+
+Pattern bagPattern() :
+{
+  Pattern pattern;
+}
+{
+  < BAG >
+  {
+    start(token);
+  }
+  < LCURL >
+  (
+    < RCURL >
+    {
+      PEmptyBag bag = new PEmptyBag();
+      end(token, bag);
+      return bag;
+    }
+  | 
+    pattern = pattern() 
+    pattern = bagPatternTail(pattern)
+    {
+      end(token, pattern);
+      return pattern;
+    }
+  )
+}
+
+Pattern bagPatternTail(Pattern head) :
+{
+  Pattern pattern;
+  PBagCons cons = new PBagCons();
+}
+{
+  < RCURL >
+  {
+    cons.head = head;
+    cons.tail = new PEmptyBag();
+    return cons;
+  }
+| 
+  < COMMA > 
+  pattern = pattern() 
+  pattern = bagPatternTail(pattern)
+  {
+    cons.head = head;
+    cons.tail = pattern;
+    return cons;
+  }
+| < BAR > 
+  pattern = pattern() 
+  < RCURL >
+  {
+    cons.head = head;
+    cons.tail = pattern;
+    return cons;
+  }
+}
+
+Pattern setPatternTail(Pattern head) :
+{
+  Pattern pattern;
+  PSetCons cons = new PSetCons();
+}
+{
+  < RCURL >
+  {
+    cons.head = head;
+    cons.tail = new PEmptySet();
+    return cons;
+  }
+| 
+  < COMMA > 
+  pattern = pattern() 
+  pattern = setPatternTail(pattern)
+  {
+    cons.head = head;
+    cons.tail = pattern;
+    return cons;
+  }
+| < BAR > 
+  pattern = pattern() 
+  < RCURL >
+  {
+    cons.head = head;
+    cons.tail = pattern;
+    return cons;
+  }
+}
+
+Pattern nullPattern() :
+{
+}
+{
+  < NULL >
+  {
+    PNull p = new PNull();
+    p.setLineStart(getCharStart(token));
+    p.setLineEnd(getCharEnd(token));
+    return p;
+  }
+}
+
+Pattern wildPattern() :
+{
+}
+{
+  < UNDERSCORE >
+  {
+    PWild wild = new PWild();
+    wild.setLineStart(getCharStart(token));
+    wild.setLineEnd(getCharEnd(token));
+    return wild;
+  }
+}
+
+Pattern boolPattern() :
+{
+  PBool b = new PBool();
+}
+{
+  < TRUE >
+  {
+    b.setLineStart(getCharStart(token));
+    b.setLineEnd(getCharEnd(token));
+    b.value = true;
+    return b;
+  }
+| 
+  < FALSE >
+  {
+    b.setLineStart(getCharStart(token));
+    b.setLineEnd(getCharEnd(token));
+    b.value = false;
+    return b;
+  }
+}
+
+Pattern listPattern() :
+{
+  Pattern pattern;
+}
+{
+  < LSQUARE >
+  {
+    start(token);
+  }
+  (
+    < RSQUARE >
+    {
+      PNil nil = new PNil();
+      end(token, nil);
+      pattern = nil;
+    }
+  | pattern = pattern() 
+    pattern = listPatternTail(pattern)
+    {
+      end(token, pattern);
+    }
+  )
+  {
+    return pattern;
+  }
+}
+
+Pattern listPatternTail(Pattern head) :
+{
+  Pattern pattern;
+}
+{
+  (
+    < RSQUARE >
+    {
+      PCons cons = new PCons();
+      cons.head = head;
+      cons.tail = new PNil();
+      return cons;
+    }
+  | < COMMA > 
+    pattern = pattern() 
+    pattern = listPatternTail(pattern)
+    {
+      PCons pair = new PCons();
+      pair.head = head;
+      pair.tail = pattern;
+      return pair;
+    }
+  )
+}
+
+Pattern termPattern() :
+{
+  String name;
+  Pattern [ ] patterns = new Pattern [ 0 ];
+  Type [ ] types = new Type [ 0 ];
+}
+{
+  name = Name()
+  {
+    start(token);
+  }
+  [
+    LOOKAHEAD(2)
+    < LSQUARE > types = types() < RSQUARE >
+  ]
+  [ < LPAREN > patterns = patterns() < RPAREN > ]
+  {
+    PTerm term = new PTerm();
+    end(token, term);
+    term.name = name;
+    term.patterns = patterns;
+    term.types = types;
+    return term;
+  }
+}
+
+Pattern strPattern() :
+{
+}
+{
+  < STRING_CONSTANT >
+  {
+    PStr i = new PStr();
+    i.setLineStart(getCharStart(token));
+    i.setLineEnd(getCharEnd(token));
+    i.value = stripString(token.image);
+    return i;
+  }
+}
+
+Pattern intPattern() :
+{
+  PInt i = new PInt();
+  String n;
+}
+{
+  < INTEGER_CONSTANT >
+  {
+    i.setLineStart(getCharStart(token));
+    i.setLineEnd(getCharEnd(token));
+    i.value = Integer.parseInt(token.image);
+    return i;
+  }
+| 
+  < CHARACTER >
+  {
+    i.setLineStart(getCharStart(token));
+    i.setLineEnd(getCharEnd(token));
+    i.value = token.image.charAt(1);
+    return i;
+  }
+| < NAMEDCHARACTER > 
+  n = name()
+  {
+    i.setLineStart(getCharStart(token));
+    i.setLineEnd(getCharEnd(token));
+    if (n.equals("space")) 
+    i.value = ' ';
+    else if (n.equals("newline")) 
+    i.value = '\n';
+    else if (n.equals("backslash")) 
+    i.value = '\\';
+    else i.value = n.charAt(0);
+    return i;
+  }
+}
+
+Pattern varPattern() :
+{
+  String name;
+  Type type;
+  Pattern pattern;
+}
+{
+  < IDENTIFIER >
+  {
+    name = token.image;
+    start(token);
+  }
+  type = optTypeDec()
+  (
+    < EQL > 
+    pattern = pattern()
+    {
+      PBind bind = new PBind();
+      end(token, bind);
+      bind.name = name;
+      bind.type = type;
+      bind.pattern = pattern;
+      return bind;
+    }
+  |
+    {
+      PVar var = new PVar();
+      end(token, var);
+      var.name = name;
+      var.declaredType = type;
+      return var;
+    }
+  )
+}
+
+Type optTypeDec() :
+{
+  Type type;
+}
+{
+  < COLONCOLON > 
+  type = type()
+  {
+    return type;
+  }
+|
+  {
+    return new Void();
+  }
+}
+
+AST actInit() :
+{
+  AST exp;
+}
+{
+  < ARROW > exp = command()
+  {
+    return exp;
+  }
+|
+  {
+    return AST.makeInvisible(new ast.data.Null());
+  }
+}
+
+Dec [ ] actArgs() :
+{
+  Dec [ ] ps;
+}
+{
+  < LPAREN > ps = params() < RPAREN >
+  {
+    return ps;
+  }
+|
+  {
+    return new Dec [ 0 ];
+  }
+}
+
+Dec [ ] params() :
+{
+  Vector < Dec > params = new Vector < Dec > ();
+  Dec d;
+}
+{
+  d = dec()
+  {
+    params.add(d);
+  }
+  (
+    < COMMA > d = dec()
+    {
+      params.add(d);
+    }
+  )*
+  {
+    return asArray(params, Dec.class);
+  }
+|
+  {
+    return new Dec [ 0 ];
+  }
+}
+
+Dec dec() :
+{
+  String name;
+  Type type;
+}
+{
+  < IDENTIFIER >
+  {
+    name = token.image;
+    start(token);
+  }
+  < COLONCOLON > 
+  type = type()
+  {
+    Dec dec = new Dec();
+    end(token, dec);
+    dec.name = name;
+    dec.declaredType = type;
+    dec.sourceType = type;
+    return dec;
+  }
+}
+
+Field field() :
+{
+  String name;
+  Type type;
+}
+{
+  < IDENTIFIER >
+  {
+    name = token.image;
+    start(token);
+  }
+  < COLONCOLON > 
+  type = type()
+  {
+    Field field = new Field();
+    end(token, field);
+    field.name = name;
+    field.type = type;
+    return field;
+  }
+}
+
+void valueBinding(Vector < Binding > bindings) :
+{
+  String name;
+  String [ ] generics;
+  Pattern [ ] params = new Pattern [ 0 ];
+  Type type, range;
+  AST exp, guard, body;
+}
+{
+  < IDENTIFIER >
+  {
+    name = token.image;
+    start(token);
+  }
+  generics = optGenericDecs()
+  (
+    type = typeDec() 
+    < EQL > 
+    exp = command()
+    {
+      Binding b = new Binding();
+      b.name = name;
+      b.declaredType = Dec.generic(generics, type);
+      b.sourceType = Dec.generic(generics, type);
+      b.value = exp;
+      end(token, b);
+      bindings.add(b);
+    }
+  | 
+    < LPAREN > 
+    [ params = patterns() ] 
+    < RPAREN > 
+    < COLONCOLON > 
+    range = type() 
+    < EQL > 
+    body = command() 
+    guard = guard()
+    {
+      FunBind bind = new FunBind();
+      end(token, bind);
+      bind.name = name;
+      bind.args = params;
+      ast.types.Fun funType = new ast.types.Fun();
+      Type [ ] types = ast.types.Fun.ptypes(params);
+      funType.domain = types;
+      funType.range = range;
+      Type g = Dec.generic(generics, funType);
+      bind.declaredType = g;
+      bind.sourceType = g;
+      bind.body = body;
+      bind.guard = guard;
+      bindings.add(bind);
+    }
+  )
+}
+
+AST exp() :
+{
+  AST exp;
+}
+{
+  (
+    exp = ifExp()
+  | exp = funExp()
+  | exp = grabExp()
+  | exp = probablyExp()
+  | exp = letExp()
+  | exp = letrecExp()
+  | exp = caseExp()
+  | exp = forExp()
+  | exp = findExp()
+  | exp = tryExp()
+  | exp = throwExp()
+  | exp = bagExp()
+  | exp = setExp()
+  | exp = kbExp()
+  | exp = foldExp()
+  | exp = unfoldExp()
+  | LOOKAHEAD(3)
+    exp = recordExp()
+  | exp = blockExp()
+  | exp = newExp()
+  | exp = becomeExp()
+  | exp = compositeExp()
+  )
+  {
+    return exp;
+  }
+}
+
+AST probablyCommand() :
+{
+  AST exp, body;
+  AST alt = new Block();
+  Type type = new ast.types.Void();
+}
+{
+  < PROBABLY >
+  {
+    start(token);
+  }
+  < LPAREN > 
+  exp = exp() 
+  < RPAREN > 
+  type = optTypeDec() 
+  body = command() 
+  [ < ELSE > alt = command() ]
+  {
+    Probably p = new Probably();
+    end(token, p);
+    p.exp = exp;
+    p.type = type;
+    p.body = body;
+    p.alt = alt;
+    return p;
+  }
+}
+
+AST probablyExp() :
+{
+  AST exp, body;
+  AST alt = new Block();
+  Type type = new ast.types.Void();
+}
+{
+  < PROBABLY >
+  {
+    start(token);
+  }
+  < LPAREN > 
+  exp = exp() 
+  < RPAREN > 
+  type = optTypeDec() 
+  body = exp() 
+  [ < ELSE > alt = exp() ]
+  {
+    Probably p = new Probably();
+    end(token, p);
+    p.exp = exp;
+    p.type = type;
+    p.body = body;
+    p.alt = alt;
+    return p;
+  }
+}
+
+AST applyExp() :
+{
+  AST exp;
+}
+{
+  exp = basicExp() 
+  exp = postExp(exp)
+  {
+    return exp;
+  }
+}
+
+AST postExp(AST exp) :
+{
+  AST [ ] exps = new AST [ 0 ];
+  Type [ ] types = new Type [ 0 ];
+  String name;
+  AST index;
+  AST value;
+}
+{
+  (
+    < LPAREN > 
+    [ exps = exps() ] 
+    < RPAREN >
+    {
+      ast.data.Apply apply = new ast.data.Apply();
+      apply.setLineStart(exp.getLineStart());
+      apply.setLineEnd(getCharEnd(token));
+      apply.op = exp;
+      apply.args = exps;
+      exp = apply;
+    }
+    exp = postExp(exp)
+  | LOOKAHEAD(2)
+    < LSQUARE > 
+    [ types = types() ] 
+    < RSQUARE >
+    {
+      ApplyType applyType = new ApplyType();
+      applyType.setLineStart(exp.getLineStart());
+      applyType.setLineEnd(getCharEnd(token));
+      applyType.op = exp;
+      applyType.args = types;
+      exp = applyType;
+    }
+    exp = postExp(exp)
+  | < LSQUARE > 
+    index = exp() 
+    < RSQUARE >
+    (
+      < UPDATE > 
+      value = exp()
+      {
+        exp = new ArrayUpdate(exp, index, value);
+      }
+    |
+      {
+        exp = new ArrayRef(exp, index);
+      }
+      exp = postExp(exp)
+    )
+  | < DOT > 
+    name = name()
+    {
+      Ref ref = new Ref();
+      ref.setLineStart(exp.getLineStart());
+      ref.setLineEnd(getCharEnd(token));
+      ref.namespace = exp;
+      ref.name = Key.getKey(name);
+      exp = ref;
+    }
+    exp = postExp(exp)
+  |
+    {}
+  )
+  {
+    return exp;
+  }
+}
+
+AST blockExp() :
+{
+  Vector < AST > commands = new Vector < AST > ();
+  AST command;
+}
+{
+  < LCURL >
+  {
+    start(token);
+  }
+  (
+    command = command()
+    {
+      commands.add(command);
+    }
+  )*
+  < RCURL >
+  {
+    Block block = new Block();
+    end(token, block);
+    block.exps = asArray(commands, AST.class);
+    return block;
+  }
+}
+
+AST command() :
+{
+  AST command;
+}
+{
+  (
+    command = ifCommand()
+  | command = funCommand()
+  | command = letCommand()
+  | command = letrecCommand()
+  | LOOKAHEAD(3)
+    command = recordExp() < SEMI >
+  | command = blockExp()
+  | command = grabCommand()
+  | command = probablyCommand()
+  | command = caseExp()
+  | command = forCommand()
+  | command = findCommand()
+  | command = tryExp()
+  | command = newExp() < SEMI >
+  | command = becomeExp() < SEMI >
+  | command = throwExp() < SEMI >
+  | command = bagExp()
+  | command = setExp()
+  | command = kbExp()
+  | command = foldExp() < SEMI >
+  | command = unfoldExp() < SEMI >
+  | command = compositeExp() < SEMI >
+  )
+  {
+    return command;
+  }
+}
+
+AST recordExp() :
+{
+  Vector < Binding > fields = new Vector < Binding > ();
+  Binding field;
+}
+{
+  < LCURL >
+  {
+    start(token);
+  }
+  field = recordField()
+  {
+    fields.add(field);
+  }
+  (
+    < SEMI > 
+    field = recordField()
+    {
+      fields.add(field);
+    }
+  )*
+  < RCURL >
+  {
+    ast.data.Record record = new ast.data.Record(- 1, - 1, asArray(fields, Binding.class));
+    end(token, record);
+    return record;
+  }
+}
+
+Binding recordField() :
+{
+  String name;
+  AST value;
+}
+{
+  name = name()
+  {
+    name = token.image;
+    start(token);
+  }
+  < ARROW > 
+  value = exp()
+  {
+    Binding b = new Binding(- 1, - 1, "", name, new Void(), new Void(), value);
+    end(token, b);
+    b.setLineEnd(value.getLineEnd());
+    return b;
+  }
+}
+
+AST termExp() :
+{
+  String name;
+  AST [ ] exps = new AST [ 0 ];
+  Type [ ] types = new Type [ 0 ];
+}
+{
+  name = Name()
+  {
+    start(token);
+  }
+  [
+    LOOKAHEAD(2)
+    < LSQUARE > types = types() < RSQUARE >
+  ]
+  [
+    LOOKAHEAD(2)
+    < LPAREN > exps = exps() < RPAREN >
+  ]
+  {
+    Term term = new Term();
+    end(token, term);
+    term.name = name;
+    term.types = types;
+    term.values = exps;
+    return term;
+  }
+}
+
+AST listExp() :
+{
+  AST exp;
+  Vector < AST > exps = new Vector < AST > ();
+  Qualifier [ ] quals;
+}
+{
+  < LSQUARE >
+  {
+    start(token);
+  }
+  (
+    < RSQUARE >
+    {
+      ast.lists.List empty = new ast.lists.List();
+      end(token, empty);
+      empty.elements = new AST [ 0 ];
+      return empty;
+    }
+  | 
+    exp = exp()
+    (
+      {
+        exps.add(exp);
+      }
+      (
+        < COMMA > 
+        exp = exp()
+        {
+          exps.add(exp);
+        }
+      )*
+      < RSQUARE >
+      {
+        ast.lists.List singleton = new ast.lists.List();
+        end(token, singleton);
+        singleton.elements = asArray(exps, AST.class);
+        return singleton;
+      }
+    | 
+      < BAR > 
+      quals = quals() 
+      < RSQUARE >
+      {
+        Cmp cmp = new Cmp();
+        end(token, cmp);
+        cmp.exp = exp;
+        cmp.qualifiers = quals;
+        return cmp;
+      }
+    )
+  )
+}
+
+Qualifier [ ] quals() :
+{
+  Vector < Qualifier > quals = new Vector < Qualifier > ();
+  Qualifier qual;
+}
+{
+  qual = qual()
+  {
+    quals.add(qual);
+  }
+  (
+    < COMMA > 
+    qual = qual()
+    {
+      quals.add(qual);
+    }
+  )*
+  {
+    return asArray(quals, Qualifier.class);
+  }
+}
+
+Qualifier qual() :
+{
+  Pattern pattern;
+  AST exp;
+}
+{
+  pattern = pattern() 
+  < LEFTARROW > 
+  exp = exp()
+  {
+    BQual bqual = new BQual();
+    bqual.setLineStart(pattern.getLineStart());
+    bqual.setLineEnd(exp.getLineEnd());
+    bqual.pattern = pattern;
+    bqual.exp = exp;
+    return bqual;
+  }
+| < QUERY >
+  {
+    start(token);
+  }
+  exp = exp()
+  {
+    PQual pqual = new PQual();
+    end(token, pqual);
+    pqual.setLineEnd(exp.getLineEnd());
+    pqual.exp = exp;
+    return pqual;
+  }
+}
+
+AST kbExp() :
+{
+  Type type;
+  AST [ ] exps = new AST [ 0 ];
+}
+{
+  < KB >
+  {
+    start(token);
+  }
+  < LSQUARE > 
+  type = type() 
+  < RSQUARE > 
+  < LCURL > 
+  [ exps = exps() ] 
+  < RCURL >
+  {
+    ast.data.KB kb = new ast.data.KB();
+    end(token, kb);
+    kb.type = type;
+    kb.elements = exps;
+    return kb;
+  }
+}
+
+AST unfoldExp() :
+{
+  Type type;
+  AST exp;
+}
+{
+  < UNFOLD >
+  {
+    start(token);
+  }
+  < LSQUARE > 
+  type = type() 
+  < RSQUARE > 
+  exp = exp()
+  {
+    ast.data.Unfold unfold = new ast.data.Unfold();
+    end(token, unfold);
+    unfold.type = type;
+    unfold.exp = exp;
+    return unfold;
+  }
+}
+
+AST foldExp() :
+{
+  Type type;
+  AST exp;
+}
+{
+  < FOLD >
+  {
+    start(token);
+  }
+  < LSQUARE > 
+  type = type() 
+  < RSQUARE > 
+  exp = exp()
+  {
+    ast.data.Fold fold = new ast.data.Fold();
+    end(token, fold);
+    fold.type = type;
+    fold.exp = exp;
+    return fold;
+  }
+}
+
+AST bagExp() :
+{
+  AST [ ] exps = new AST [ 0 ];
+  Bag bag = new Bag();
+  AST exp;
+}
+{
+  < BAG >
+  {
+    start(token);
+  }
+  < LCURL > 
+  [ exps = exps() ]
+  (
+    < RCURL >
+    {
+      end(token, bag);
+      bag.elements = exps;
+      return bag;
+    }
+  | < BAR > 
+    exp = exp() 
+    < RCURL >
+    {
+      end(token, bag);
+      bag.elements = exps;
+      BinExp binExp = new BinExp();
+      binExp.left = bag;
+      binExp.op = "+";
+      binExp.right = exp;
+      binExp.setLineStart(bag.getLineStart());
+      binExp.setLineEnd(bag.getLineEnd());
+      return binExp;
+    }
+  )
+}
+
+AST setExp() :
+{
+  AST [ ] exps = new AST [ 0 ];
+  AST exp;
+  Set set = new Set();
+}
+{
+  < SET >
+  {
+    start(token);
+  }
+  < LCURL > 
+  [ exps = exps() ]
+  (
+    < RCURL >
+    {
+      end(token, set);
+      set.elements = exps;
+      return set;
+    }
+  | < BAR > 
+    exp = exp() 
+    < RCURL >
+    {
+      end(token, set);
+      set.elements = exps;
+      BinExp binExp = new BinExp();
+      binExp.left = set;
+      binExp.op = "+";
+      binExp.right = exp;
+      binExp.setLineStart(set.getLineStart());
+      binExp.setLineEnd(set.getLineEnd());
+      return binExp;
+    }
+  )
+}
+
+AST throwExp() :
+{
+  Type type;
+  AST exp;
+}
+{
+  < THROW >
+  {
+    start(token);
+  }
+  < LSQUARE > 
+  type = type() 
+  < RSQUARE > 
+  exp = exp()
+  {
+    Throw t = new Throw();
+    end(token, t);
+    t.type = type;
+    t.value = exp;
+    return t;
+  }
+}
+
+AST tryExp() :
+{
+  AST exp;
+  BArm [ ] arms;
+}
+{
+  < TRY >
+  {
+    start(token);
+  }
+  exp = exp() 
+  < CATCH > 
+  < LCURL > 
+  arms = arms() 
+  < RCURL >
+  {
+    Try t = new Try();
+    end(token, t);
+    t.body = exp;
+    t.arms = arms;
+    return t;
+  }
+}
+
+AST forExp() :
+{
+  Pattern pattern;
+  AST list;
+  AST body;
+}
+{
+  < FOR >
+  {
+    start(token);
+  }
+  pattern = pattern() 
+  < IN > 
+  list = exp() 
+  < DO > 
+  body = exp()
+  {
+    For f = new For();
+    end(token, f);
+    f.pattern = pattern;
+    f.list = list;
+    f.body = body;
+    return f;
+  }
+}
+
+AST forCommand() :
+{
+  Pattern pattern;
+  AST list;
+  AST body;
+}
+{
+  < FOR >
+  {
+    start(token);
+  }
+  pattern = pattern() 
+  < IN > 
+  list = exp() 
+  < DO > 
+  body = command()
+  {
+    For f = new For();
+    end(token, f);
+    f.pattern = pattern;
+    f.list = list;
+    f.body = body;
+    return f;
+  }
+}
+
+AST findExp() :
+{
+  Pattern pattern;
+  AST list;
+  AST alt;
+  AST body;
+}
+{
+  < FIND >
+  {
+    start(token);
+  }
+  pattern = pattern() 
+  < IN > 
+  list = exp() 
+  < DO > 
+  body = exp() 
+  < ELSE > 
+  alt = exp()
+  {
+    Find f = new Find();
+    end(token, f);
+    f.pattern = pattern;
+    f.list = list;
+    f.body = body;
+    f.defaultValue = alt;
+    return f;
+  }
+}
+
+AST findCommand() :
+{
+  Pattern pattern;
+  AST list;
+  AST alt;
+  AST body;
+}
+{
+  < FIND >
+  {
+    start(token);
+  }
+  pattern = pattern() 
+  < IN > 
+  list = exp() 
+  < DO > 
+  body = exp() 
+  < ELSE > 
+  alt = command()
+  {
+    Find f = new Find();
+    end(token, f);
+    f.pattern = pattern;
+    f.list = list;
+    f.body = body;
+    f.defaultValue = alt;
+    return f;
+  }
+}
+
+AST caseExp() :
+{
+  AST [ ] values;
+  Dec [ ] decs = new Dec [ 0 ];
+  BArm [ ] arms;
+}
+{
+  < CASE >
+  {
+    start(token);
+  }
+  values = exps() 
+  < LCURL > 
+  [ decs = decs() ] 
+  arms = arms() 
+  < RCURL >
+  {
+    Case c = new Case();
+    end(token, c);
+    c.decs = decs;
+    c.exps = values;
+    c.arms = arms;
+    return c;
+  }
+}
+
+AST letExp() :
+{
+  Binding [ ] bindings;
+  AST body;
+}
+{
+  < LET >
+  {
+    start(token);
+  }
+  bindings = bindings() 
+  < IN > 
+  body = exp()
+  {
+    Let let = new Let();
+    end(token, let);
+    let.bindings = bindings;
+    let.exp = body;
+    return let;
+  }
+}
+
+AST letCommand() :
+{
+  Binding [ ] bindings;
+  AST body;
+}
+{
+  < LET >
+  {
+    start(token);
+  }
+  bindings = bindings() 
+  < IN > 
+  body = command()
+  {
+    Let let = new Let();
+    end(token, let);
+    let.bindings = bindings;
+    let.exp = body;
+    return let;
+  }
+}
+
+AST letrecExp() :
+{
+  Binding [ ] bindings;
+  AST body;
+}
+{
+  < LETREC >
+  {
+    start(token);
+  }
+  bindings = bindings() 
+  < IN > 
+  body = exp()
+  {
+    Letrec let = new Letrec();
+    end(token, let);
+    let.bindings = bindings;
+    let.exp = body;
+    return let;
+  }
+}
+
+AST letrecCommand() :
+{
+  Binding [ ] bindings;
+  AST body;
+}
+{
+  < LETREC >
+  {
+    start(token);
+  }
+  bindings = bindings() 
+  < IN > 
+  body = command()
+  {
+    Letrec let = new Letrec();
+    end(token, let);
+    let.bindings = bindings;
+    let.exp = body;
+    return let;
+  }
+}
+
+AST grabExp() :
+{
+  DynamicRef [ ] refs;
+  AST exp;
+}
+{
+  < GRAB >
+  {
+    start(token);
+  }
+  < LPAREN > 
+  refs = dynamicRefs() 
+  < RPAREN > 
+  exp = exp()
+  {
+    Grab grab = new Grab();
+    end(token, grab);
+    grab.setLineEnd(exp.getLineEnd());
+    grab.vars = refs;
+    grab.body = exp;
+    return grab;
+  }
+}
+
+AST grabCommand() :
+{
+  DynamicRef [ ] refs;
+  AST exp;
+}
+{
+  < GRAB >
+  {
+    start(token);
+  }
+  < LPAREN > 
+  refs = dynamicRefs() 
+  < RPAREN > 
+  exp = command()
+  {
+    Grab grab = new Grab();
+    end(token, grab);
+    grab.setLineEnd(exp.getLineEnd());
+    grab.vars = refs;
+    grab.body = exp;
+    return grab;
+  }
+}
+
+DynamicRef [ ] dynamicRefs() :
+{
+  Vector < DynamicRef > refs = new Vector < DynamicRef > ();
+  DynamicRef ref;
+}
+{
+  ref = dynamicRef()
+  {
+    refs.add(ref);
+  }
+  (
+    < COMMA > 
+    ref = dynamicRef()
+    {
+      refs.add(ref);
+    }
+  )*
+  {
+    return asArray(refs, DynamicRef.class);
+  }
+}
+
+DynamicRef dynamicRef() :
+{
+  AST exp;
+  String name;
+}
+{
+  LOOKAHEAD(2)
+  exp = basicExp() 
+  < DOT > 
+  name = name()
+  {
+    ActorDynamicRef ref = new ActorDynamicRef();
+    ref.setLineStart(exp.getLineStart());
+    ref.setLineEnd(getCharEnd(token));
+    ref.actor = exp;
+    ref.name = Key.getKey(name);
+    return ref;
+  }
+| name = name()
+  {
+    VarDynamicRef var = new VarDynamicRef();
+    var.setLineStart(getCharStart(token));
+    var.setLineEnd(getCharEnd(token));
+    ast.binding.Var v = new ast.binding.Var();
+    v.setLineStart(getCharStart(token));
+    v.setLineEnd(getCharEnd(token));
+    v.setName(token.image);
+    var.name = v;
+    return var;
+  }
+}
+
+AST funExp() :
+{
+  AST name;
+  Dec [ ] params = new Dec [ 0 ];
+  Type type;
+  AST exp;
+}
+{
+  < FUN >
+  {
+    start(token);
+  }
+  name = funName() 
+  < LPAREN > params = params() < RPAREN > 
+  < COLONCOLON > 
+  type = type() 
+  exp = exp()
+  {
+    ast.data.Fun fun = new ast.data.Fun();
+    end(token, fun);
+    fun.setLineEnd(exp.getLineEnd());
+    fun.name = name;
+    fun.args = params;
+    ast.types.Fun funType = new ast.types.Fun();
+    funType.domain = ast.types.Fun.types(params);
+    funType.range = type;
+    funType = (ast.types.Fun) AST.makeInvisible(funType);
+    fun.declaredType = funType;
+    fun.body = exp;
+    return fun;
+  }
+}
+
+AST funCommand() :
+{
+  AST name;
+  Dec [ ] params = new Dec [ 0 ];
+  Type type;
+  AST exp;
+}
+{
+  < FUN >
+  {
+    start(token);
+  }
+  name = funName() 
+  < LPAREN > params = params() < RPAREN > 
+  < COLONCOLON > 
+  type = type() 
+  exp = command()
+  {
+    ast.data.Fun fun = new ast.data.Fun();
+    end(token, fun);
+    fun.setLineEnd(exp.getLineEnd());
+    fun.name = name;
+    fun.args = params;
+    ast.types.Fun funType = new ast.types.Fun();
+    funType.domain = ast.types.Fun.types(params);
+    funType.range = type;
+    funType = (ast.types.Fun) AST.makeInvisible(funType);
+    fun.declaredType = funType;
+    fun.body = exp;
+    return fun;
+  }
+}
+
+AST funName() :
+{
+  AST exp;
+}
+{
+  (
+    < LSQUARE > exp = exp() < RSQUARE >
+  |
+    {
+      exp = ast.data.Str.strAt0(ast.data.Fun.newName());
+    }
+  )
+  {
+    return exp;
+  }
+}
+
+AST newExp() :
+{
+  AST exp;
+}
+{
+  < NEW >
+  {
+    start(token);
+  }
+  (
+    exp = javaNew()
+  | exp = arrayNew()
+  | exp = eslNew()
+  )
+  {
+    return exp;
+  }
+}
+
+AST becomeExp() :
+{
+  AST exp;
+  AST [ ] args = new AST [ 0 ];
+}
+{
+  < BECOME >
+  {
+    start(token);
+  }
+  exp = basicExp()
+  [
+    LOOKAHEAD(2)
+    args = actuals()
+  ]
+  {
+    Become b = new Become();
+    end(token, b);
+    ast.data.Apply apply = new ast.data.Apply();
+    apply.op = exp;
+    apply.args = args;
+    b.behaviour = apply;
+    return b;
+  }
+}
+
+AST eslNew() :
+{
+  AST exp;
+  AST [ ] args = new AST [ 0 ];
+}
+{
+  exp = basicExp()
+  [
+    LOOKAHEAD(2)
+    args = actuals()
+  ]
+  {
+    New n = new New();
+    end(token, n);
+    n.op = exp;
+    n.args = args;
+    return n;
+  }
+}
+
+AST arrayNew() :
+{
+  Type type;
+  AST length;
+}
+{
+  < ARRAY_T >
+  {
+    start(token);
+  }
+  < LSQUARE > 
+  type = type() 
+  < RSQUARE > 
+  < LPAREN > 
+  length = exp() 
+  < RPAREN >
+  {
+    NewArray newArray = new NewArray();
+    end(token, newArray);
+    newArray.type = type;
+    newArray.length = length;
+    return newArray;
+  }
+}
+
+AST javaNew() :
+{
+  String path;
+  Type type;
+  AST [ ] args = new AST [ 0 ];
+}
+{
+  < STRING_CONSTANT >
+  {
+    path = stripString(token.image);
+  }
+  < LSQUARE > 
+  type = type() 
+  < RSQUARE >
+  [
+    LOOKAHEAD(2)
+    args = actuals()
+  ]
+  {
+    NewJava newJava = new NewJava();
+    end(token, newJava);
+    newJava.className = path;
+    newJava.type = type;
+    newJava.args = args;
+    return newJava;
+  }
+}
+
+AST [ ] actuals() :
+{
+  Vector < AST > args = new Vector < AST > ();
+  AST exp;
+}
+{
+  < LPAREN > 
+  exp = exp()
+  {
+    args.add(exp);
+  }
+  (
+    < COMMA > 
+    exp = exp()
+    {
+      args.add(exp);
+    }
+  )*
+  < RPAREN >
+  {
+    return asArray(args, AST.class);
+  }
+}
+
+AST [ ] exps() :
+{
+  Vector < AST > exps = new Vector < AST > ();
+  AST exp;
+}
+{
+  exp = exp()
+  {
+    exps.add(exp);
+  }
+  (
+    < COMMA > 
+    exp = exp()
+    {
+      exps.add(exp);
+    }
+  )*
+  {
+    return asArray(exps, AST.class);
+  }
+}
+
+Type [ ] types() :
+{
+  Vector < Type > types = new Vector < Type > ();
+  Type type;
+}
+{
+  type = type()
+  {
+    types.add(type);
+  }
+  (
+    < COMMA > 
+    type = type()
+    {
+      types.add(type);
+    }
+  )*
+  {
+    return asArray(types, Type.class);
+  }
+}
+
+Dec [ ] decs() :
+{
+  Vector < Dec > decs = new Vector < Dec > ();
+  Dec dec;
+}
+{
+  dec = dec() < SEMI >
+  {
+    decs.add(dec);
+  }
+  (
+    LOOKAHEAD(2)
+    dec = dec() 
+    < SEMI >
+    {
+      decs.add(dec);
+    }
+  )*
+  {
+    return asArray(decs, Dec.class);
+  }
+}
+
+Field [ ] fields() :
+{
+  Vector < Field > fields = new Vector < Field > ();
+  Field field;
+}
+{
+  field = field()
+  {
+    fields.add(field);
+  }
+  (
+    < SEMI > 
+    field = field()
+    {
+      fields.add(field);
+    }
+  )*
+  {
+    return asArray(fields, Field.class);
+  }
+}
+
+AST ifExp() :
+{
+  AST test, conseq, alt;
+}
+{
+  < IF >
+  {
+    start(token);
+  }
+  test = exp() 
+  < THEN > 
+  conseq = exp() 
+  < ELSE > 
+  alt = exp()
+  {
+    If cond = new If();
+    end(token, cond);
+    cond.setLineEnd(alt.getLineEnd());
+    cond.test = test;
+    cond.conseq = conseq;
+    cond.alt = alt;
+    return cond;
+  }
+}
+
+AST ifCommand() :
+{
+  AST test, conseq, alt;
+}
+{
+  < IF >
+  {
+    start(token);
+  }
+  test = exp() 
+  < THEN > 
+  conseq = command() 
+  < ELSE > 
+  alt = command()
+  {
+    If cond = new If();
+    end(token, cond);
+    cond.setLineEnd(alt.getLineEnd());
+    cond.test = test;
+    cond.conseq = conseq;
+    cond.alt = alt;
+    return cond;
+  }
+}
+
+AST basicExp() :
+{
+  AST exp;
+}
+{
+  (
+    exp = numExp()
+  | exp = strExp()
+  | exp = boolExp()
+  | exp = selfExp()
+  | exp = nowExp()
+  | exp = nullExp()
+  | exp = varExp()
+  | exp = listExp()
+  | exp = termExp()
+  | < LPAREN > 
+    exp = exp() 
+    < RPAREN >
+  )
+  {
+    return exp;
+  }
+}
+
+AST sendExp() :
+{
+  AST exp;
+  AST arg;
+}
+{
+  exp = applyExp()
+  (
+    < LEFTARROW > 
+    arg = exp()
+    {
+      Send send = new Send();
+      send.setLineStart(exp.getLineStart());
+      send.setLineEnd(arg.getLineEnd());
+      send.target = exp;
+      send.arg = arg;
+      return send;
+    }
+  |
+    {
+      return exp;
+    }
+  )
+}
+
+AST nullExp() :
+{
+}
+{
+  < NULL >
+  {
+    ast.data.Null exp = new ast.data.Null();
+    exp.setLineStart(getCharStart(token));
+    exp.setLineEnd(getCharEnd(token));
+    return exp;
+  }
+}
+
+AST selfExp() :
+{
+}
+{
+  < SELF >
+  {
+    Self self = new Self();
+    self.setLineStart(getCharStart(token));
+    self.setLineEnd(getCharEnd(token));
+    return self;
+  }
+}
+
+AST nowExp() :
+{
+}
+{
+  < NOW >
+  {
+    Now now = new Now();
+    now.setLineStart(getCharStart(token));
+    now.setLineEnd(getCharEnd(token));
+    return now;
+  }
+}
+
+AST boolExp() :
+{
+  ast.data.Bool bool = new ast.data.Bool();
+}
+{
+  < TRUE >
+  {
+    bool.setLineStart(getCharStart(token));
+    bool.setLineEnd(getCharEnd(token));
+    bool.value = true;
+    return bool;
+  }
+| < FALSE >
+  {
+    bool.setLineStart(getCharStart(token));
+    bool.setLineEnd(getCharEnd(token));
+    bool.value = false;
+    return bool;
+  }
+}
+
+AST strExp() :
+{
+}
+{
+  < STRING_CONSTANT >
+  {
+    ast.data.Str str = new ast.data.Str();
+    str.setLineStart(getCharStart(token));
+    str.setLineEnd(getCharEnd(token));
+    str.value = stripString(token.image);
+    return str;
+  }
+}
+
+AST numExp() :
+{
+  ast.data.Int num = new ast.data.Int();
+  String n;
+}
+{
+  < CHARACTER >
+  {
+    num.setLineStart(getCharStart(token));
+    num.setLineEnd(getCharEnd(token));
+    num.value = token.image.charAt(1);
+    return num;
+  }
+| < NAMEDCHARACTER > 
+  n = name()
+  {
+    num.setLineStart(getCharStart(token));
+    num.setLineEnd(getCharEnd(token));
+    if (n.equals("space")) 
+    num.value = ' ';
+    else if (n.equals("newline"))  
+    num.value = '\n';
+    else if (n.equals("backslash"))  
+    num.value = '\\';
+    else num.value = n.charAt(0);
+    return num;
+  }
+| 
+  < INTEGER_CONSTANT >
+  {
+    num.setLineStart(getCharStart(token));
+    num.setLineEnd(getCharEnd(token));
+    num.value = Integer.parseInt(token.image);
+  }
+  (
+    < DOT > 
+    < INTEGER_CONSTANT >
+    {
+      ast.data.Float f = new ast.data.Float();
+      f.setLineStart(num.getLineStart());
+      f.setLineEnd(getCharEnd(token));
+      f.n = num.value;
+      f.m = Integer.parseInt(token.image);
+      return f;
+    }
+  |
+    {
+      return num;
+    }
+  )
+}
+
+AST compositeExp() :
+{
+  AST exp, value;
+}
+{
+  exp = conditionalOrExp()
+  [
+    LOOKAHEAD(2)
+    < UPDATE > value = exp()
+    {
+      Update update = new Update();
+      update.setLineStart(exp.getLineStart());
+      update.setLineEnd(value.getLineEnd());
+      update.name = ((Var) exp).name;
+      update.value = value;
+      exp = update;
+    }
+  ]
+  {
+    return exp;
+  }
+}
+
+AST conditionalOrExp() :
+{
+  AST exp;
+  AST right;
+  BinExp binExp = new BinExp();
+}
+{
+  exp = conditionalAndExp()
+  (
+    LOOKAHEAD(2)
+    < OR > 
+    right = conditionalOrExp()
+    {
+      binExp.setLineStart(exp.getLineStart());
+      binExp.setLineEnd(right.getLineEnd());
+      binExp.left = exp;
+      binExp.op = "or";
+      binExp.right = right;
+      exp = binExp;
+    }
+  | 
+    < ORELSE > 
+    right = conditionalOrExp()
+    {
+      binExp.setLineStart(exp.getLineStart());
+      binExp.setLineEnd(right.getLineEnd());
+      binExp.left = exp;
+      binExp.op = "orelse";
+      binExp.right = right;
+      exp = binExp;
+    }
+  )*
+  {
+    return exp;
+  }
+}
+
+AST conditionalAndExp() :
+{
+  AST exp;
+  AST right;
+  BinExp binExp = new BinExp();
+}
+{
+  exp = eqExp()
+  (
+    < AND > 
+    right = conditionalAndExp()
+    {
+      binExp.setLineStart(exp.getLineStart());
+      binExp.setLineEnd(right.getLineEnd());
+      binExp.left = exp;
+      binExp.op = "and";
+      binExp.right = right;
+      exp = binExp;
+    }
+  | < ANDALSO > 
+    right = conditionalAndExp()
+    {
+      binExp.setLineStart(exp.getLineStart());
+      binExp.setLineEnd(right.getLineEnd());
+      binExp.left = exp;
+      binExp.op = "andalso";
+      binExp.right = right;
+      exp = binExp;
+    }
+  )*
+  {
+    return exp;
+  }
+}
+
+AST eqExp() :
+{
+  AST exp;
+  AST right;
+  BinExp binExp = new BinExp();
+}
+{
+  exp = relationalExp()
+  (
+    LOOKAHEAD(2)
+    < EQL > 
+    right = eqExp()
+    {
+      binExp.setLineStart(exp.getLineStart());
+      binExp.setLineEnd(right.getLineEnd());
+      binExp.left = exp;
+      binExp.op = "=";
+      binExp.right = right;
+      exp = binExp;
+    }
+  | 
+    < NEQL > 
+    right = eqExp()
+    {
+      binExp.setLineStart(exp.getLineStart());
+      binExp.setLineEnd(right.getLineEnd());
+      binExp.left = exp;
+      binExp.op = "<>";
+      binExp.right = right;
+      exp = binExp;
+    }
+  )*
+  {
+    return exp;
+  }
+}
+
+AST relationalExp() :
+{
+  AST exp;
+}
+{
+  exp = additiveExp() 
+  exp = postAdditiveExp(exp)
+  {
+    return exp;
+  }
+}
+
+AST postAdditiveExp(AST left) :
+{
+  String op;
+  AST right;
+}
+{
+  op = relationalOp() 
+  right = relationalExp()
+  {
+    BinExp binExp = new BinExp();
+    binExp.setLineStart(left.getLineStart());
+    binExp.setLineEnd(right.getLineEnd());
+    binExp.left = left;
+    binExp.op = op;
+    binExp.right = right;
+    left = postAdditiveExp(binExp);
+    return left;
+  }
+| < TO > 
+  right = additiveExp()
+  {
+    BinExp toExp = new BinExp();
+    toExp.setLineStart(left.getLineStart());
+    toExp.setLineEnd(right.getLineEnd());
+    toExp.left = left;
+    toExp.op = "..";
+    toExp.right = right;
+    return toExp;
+  }
+|
+  {
+    return left;
+  }
+}
+
+String relationalOp() :
+{}
+{
+  < GRE >
+  {
+    return ">";
+  }
+| < GRE_EQ >
+  {
+    return ">=";
+  }
+| < LESS >
+  {
+    return "<";
+  }
+| < LESS_EQ >
+  {
+    return "<=";
+  }
+| < COLON >
+  {
+    return ":";
+  }
+}
+
+AST additiveExp() :
+{
+  AST exp;
+  String op;
+  AST right;
+}
+{
+  exp = multiplicativeExp()
+  (
+    LOOKAHEAD(2)
+    op = additiveOp() 
+    right = additiveExp()
+    {
+      BinExp binExp = new BinExp();
+      binExp.setLineStart(exp.getLineStart());
+      binExp.setLineEnd(right.getLineEnd());
+      binExp.left = exp;
+      binExp.op = op;
+      binExp.right = right;
+      exp = binExp;
+    }
+  )*
+  {
+    return exp;
+  }
+}
+
+String additiveOp() :
+{}
+{
+  < PLUS >
+  {
+    return "+";
+  }
+| < MINUS >
+  {
+    return "-";
+  }
+| < MOD >
+  {
+    return "%";
+  }
+}
+
+AST multiplicativeExp() :
+{
+  AST exp;
+  String op;
+  AST right;
+}
+{
+  exp = unaryExp()
+  (
+    LOOKAHEAD(2)
+    op = multiplicativeOp() 
+    right = multiplicativeExp()
+    {
+      BinExp binExp = new BinExp();
+      binExp.setLineStart(exp.getLineStart());
+      binExp.setLineEnd(right.getLineEnd());
+      binExp.left = exp;
+      binExp.op = op;
+      binExp.right = right;
+      exp = binExp;
+    }
+  )*
+  {
+    return exp;
+  }
+}
+
+String multiplicativeOp() :
+{}
+{
+  < MULTIPLY >
+  {
+    return "*";
+  }
+| < DIVIDE >
+  {
+    return "/";
+  }
+}
+
+AST unaryExp() :
+{
+  AST exp;
+}
+{
+  < NOT >
+  {
+    start(token);
+  }
+  < LPAREN > 
+  exp = exp() 
+  < RPAREN >
+  {
+    Not not = new Not();
+    end(token, not);
+    not.exp = exp;
+    return not;
+  }
+| exp = sendExp()
+  {
+    return exp;
+  }
+}
+
+AST varExp() :
+{
+  String name;
+  Var var;
+  AST exp;
+}
+{
+  < IDENTIFIER >
+  {
+    start(token);
+    var = new Var();
+    end(token, var);
+    var.name = token.image;
+    return var;
+  }
+}
+
+Type typeDec() :
+{
+  Type t;
+}
+{
+  < COLONCOLON > 
+  t = type()
+  {
+    return t;
+  }
+}
+
+Type type() :
+{
+  Type t;
+}
+{
+  (
+    t = intType()
+  | t = floatType()
+  | t = boolType()
+  | t = strType()
+  | t = nullType()
+  | t = voidType()
+  | t = listType()
+  | t = funType()
+  | t = bagType()
+  | t = setType()
+  | t = arrayType()
+  | t = actType()
+  | t = unionType()
+  | t = unfoldType()
+  | t = recType()
+  | t = recordType()
+  | t = forallType()
+  | LOOKAHEAD(2)
+    t = termParensType()
+  | LOOKAHEAD(2)
+    t = appType()
+  | t = namedType()
+  )
+  {
+    return t;
+  }
+}
+
+Type typeRHS() :
+{
+  Type t;
+}
+{
+  (
+    t = intType() < SEMI >
+  | t = floatType() < SEMI >
+  | t = boolType() < SEMI >
+  | t = strType() < SEMI >
+  | t = nullType() < SEMI >
+  | t = voidType() < SEMI >
+  | t = listType() < SEMI >
+  | t = funType() < SEMI >
+  | t = bagType() < SEMI >
+  | t = setType() < SEMI >
+  | t = arrayType() < SEMI >
+  | t = unfoldType() < SEMI >
+  | t = forallType() < SEMI >
+  | t = recordType() < SEMI >
+  | t = recRHS()
+  | t = unionType()
+  | t = actType()
+  | LOOKAHEAD(2)
+    t = termParensType() < SEMI >
+  | LOOKAHEAD(2)
+    t = appType() < SEMI >
+  | t = namedType() < SEMI >
+  )
+  {
+    return t;
+  }
+}
+
+Type forallType() :
+{
+  String name;
+  Vector < String > names = new Vector < String > ();
+  Type type;
+}
+{
+  < FORALL_T >
+  {
+    start(token);
+  }
+  < LSQUARE > 
+  name = Name()
+  {
+    names.add(name);
+  }
+  (
+    < COMMA > 
+    name = Name()
+    {
+      names.add(name);
+    }
+  )*
+  < RSQUARE > 
+  type = type()
+  {
+    Forall forall = new Forall();
+    end(token, forall);
+    forall.names = asArray(names, String.class);
+    forall.type = type;
+    return forall;
+  }
+}
+
+Type recType() :
+{
+  String var;
+  Type type;
+}
+{
+  < REC >
+  {
+    start(token);
+  }
+  var = Name() 
+  < DOT > 
+  type = type()
+  {
+    Rec rec = new Rec();
+    end(token, rec);
+    rec.name = var;
+    rec.type = type;
+    return rec;
+  }
+}
+
+Type recRHS() :
+{
+  String var;
+  Type type;
+}
+{
+  < REC >
+  {
+    start(token);
+  }
+  var = Name() 
+  < DOT > 
+  type = typeRHS()
+  {
+    Rec rec = new Rec();
+    end(token, rec);
+    rec.name = var;
+    rec.type = type;
+    return rec;
+  }
+}
+
+Type unfoldType() :
+{
+  Type type;
+}
+{
+  < UNFOLD >
+  {
+    start(token);
+  }
+  < LSQUARE > 
+  type = type() 
+  < RSQUARE >
+  {
+    ast.types.Unfold unfold = new ast.types.Unfold();
+    end(token, unfold);
+    unfold.type = type;
+    return unfold;
+  }
+}
+
+Type unionType() :
+{
+  ast.types.Term term;
+  Vector < ast.types.Term > types = new Vector < ast.types.Term > ();
+}
+{
+  < UNION_T >
+  {
+    start(token);
+  }
+  < LCURL > 
+  term = termType()
+  {
+    types.add(term);
+  }
+  (
+    LOOKAHEAD(2)
+    < COMMA > 
+    term = termType()
+    {
+      types.add(term);
+    }
+  )*
+  < RCURL >
+  {
+    ast.types.Union union = new ast.types.Union();
+    end(token, union);
+    union.terms = asArray(types, ast.types.Term.class);
+    return union;
+  }
+}
+
+Type appType() :
+{
+  String name;
+  Type [ ] types;
+}
+{
+  name = Name()
+  {
+    start(token);
+  }
+  < LSQUARE > 
+  types = types() 
+  < RSQUARE >
+  {
+    ast.types.Apply apply = new ast.types.Apply();
+    end(token, apply);
+    apply.name = name;
+    apply.types = types;
+    return apply;
+  }
+}
+
+Type actType() :
+{
+  Dec [ ] decs = new Dec [ 0 ];
+  MessageType [ ] handlers = new MessageType [ 0 ];
+}
+{
+  < ACT_T >
+  {
+    start(token);
+  }
+  < LCURL > 
+  [ decs = exportedDecs() ] 
+  handlers = messageTypes() 
+  < RCURL >
+  {
+    ast.types.Act act = new ast.types.Act();
+    end(token, act);
+    act.decs = decs;
+    act.handlers = handlers;
+    return act;
+  }
+}
+
+MessageType [ ] messageTypes() :
+{
+  Vector < MessageType > messageTypes = new Vector < MessageType > ();
+}
+{
+  (
+    messageType(messageTypes)
+  )*
+  {
+    return asArray(messageTypes, MessageType.class);
+  }
+}
+
+ast.types.Term termType() :
+{
+  String name;
+  Type [ ] types = new Type [ 0 ];
+}
+{
+  name = Name()
+  {
+    start(token);
+  }
+  [ < LPAREN > 
+  types = types() 
+  < RPAREN > ]
+  {
+    ast.types.Term term = new ast.types.Term();
+    end(token, term);
+    term.name = name;
+    term.types = types;
+    return term;
+  }
+}
+
+ast.types.Term termParensType() :
+{
+  String name;
+  Type [ ] types = new Type [ 0 ];
+}
+{
+  name = Name()
+  {
+    start(token);
+  }
+  < LPAREN > 
+  types = types() 
+  < RPAREN >
+  {
+    ast.types.Term term = new ast.types.Term();
+    end(token, term);
+    term.name = name;
+    term.types = types;
+    return term;
+  }
+}
+
+void messageType(Vector < MessageType > messageTypes) :
+{
+  String name;
+  Type [ ] types = new Type [ 0 ];
+}
+{
+  name = Name()
+  {
+    start(token);
+  }
+  [ < LPAREN > 
+  types = types() 
+  < RPAREN > ] 
+  < SEMI >
+  {
+    ast.types.MessageType m = new ast.types.MessageType();
+    end(token, m);
+    m.types = new Type [ ]
+    {
+      new ast.types.Term(- 1, - 1, name, types)
+    }
+    ;
+    messageTypes.add(m);
+  }
+}
+
+Dec [ ] exportedDecs() :
+{
+  Dec [ ] decs;
+}
+{
+  < EXPORT > 
+  decs = decs()
+  {
+    return decs;
+  }
+}
+
+Type funType() :
+{
+  Type [ ] domain = new Type [ 0 ];
+  String path;
+  Type range;
+}
+{
+  < LPAREN >
+  {
+    start(token);
+  }
+  [ domain = types() ] 
+  < RPAREN >
+  (
+    < ARROW > 
+    range = type()
+    {
+      ast.types.Fun fun = new ast.types.Fun();
+      end(token, fun);
+      fun.domain = domain;
+      fun.range = range;
+      return fun;
+    }
+  | < LSQUARE > 
+    path = path() 
+    < RSQUARE > 
+    < ARROW > 
+    range = type()
+    {
+      ast.types.TaggedFun tagged = new ast.types.TaggedFun();
+      end(token, tagged);
+      tagged.domain = domain;
+      tagged.funLabel = path;
+      tagged.range = range;
+      return tagged;
+    }
+  )
+}
+
+String path() :
+{
+  Vector < String > path = new Vector < String > ();
+  String name;
+}
+{
+  (
+    name = name()
+  | name = Name()
+  )
+  {
+    path.add(name);
+  }
+  (
+    < DOT >
+    (
+      name = name()
+    | name = Name()
+    )
+    {
+      path.add(name);
+    }
+  )*
+  {
+    return ast.types.TaggedFun.label(asArray(path, String.class));
+  }
+}
+
+Type setType() :
+{
+  Type type;
+}
+{
+  < SET_T >
+  {
+    start(token);
+  }
+  < LCURL > 
+  type = type() 
+  < RCURL >
+  {
+    ast.types.Set set = new ast.types.Set();
+    end(token, set);
+    set.type = type;
+    return set;
+  }
+}
+
+Type arrayType() :
+{
+  Type type;
+}
+{
+  < ARRAY_T >
+  {
+    start(token);
+  }
+  < LSQUARE > 
+  type = type() 
+  < RSQUARE >
+  {
+    ast.types.Array array = new ast.types.Array();
+    end(token, array);
+    array.type = type;
+    return array;
+  }
+}
+
+Type bagType() :
+{
+  Type type;
+}
+{
+  < BAG_T >
+  {
+    start(token);
+  }
+  < LCURL > 
+  type = type() 
+  < RCURL >
+  {
+    ast.types.Bag bag = new ast.types.Bag();
+    end(token, bag);
+    bag.type = type;
+    return bag;
+  }
+}
+
+Type listType() :
+{
+  Type type;
+}
+{
+  < LSQUARE >
+  {
+    start(token);
+  }
+  type = type() 
+  < RSQUARE >
+  {
+    ast.types.List list = new ast.types.List();
+    end(token, list);
+    list.type = type;
+    return list;
+  }
+}
+
+Type recordType() :
+{
+  Field [ ] fields = new Field [ 0 ];
+}
+{
+  < LCURL >
+  {
+    start(token);
+  }
+  [ fields = fields() ] 
+  < RCURL >
+  {
+    ast.types.Record record = new ast.types.Record();
+    end(token, record);
+    record.fields = fields;
+    return record;
+  }
+}
+
+Type voidType() :
+{
+}
+{
+  < VOID_T >
+  {
+    ast.types.Void i = new ast.types.Void();
+    i.setLineStart(getCharStart(token));
+    i.setLineEnd(getCharEnd(token));
+    return i;
+  }
+}
+
+Type nullType() :
+{
+}
+{
+  < NULL_T >
+  {
+    ast.types.Null i = new ast.types.Null();
+    i.setLineStart(getCharStart(token));
+    i.setLineEnd(getCharEnd(token));
+    return i;
+  }
+}
+
+Type strType() :
+{
+}
+{
+  < STR_T >
+  {
+    ast.types.Str i = new ast.types.Str();
+    i.setLineStart(getCharStart(token));
+    i.setLineEnd(getCharEnd(token));
+    return i;
+  }
+}
+
+Type boolType() :
+{
+}
+{
+  < BOOL_T >
+  {
+    ast.types.Bool i = new ast.types.Bool();
+    i.setLineStart(getCharStart(token));
+    i.setLineEnd(getCharEnd(token));
+    return i;
+  }
+}
+
+Type floatType() :
+{
+}
+{
+  < FLOAT_T >
+  {
+    ast.types.Float i = new ast.types.Float();
+    i.setLineStart(getCharStart(token));
+    i.setLineEnd(getCharEnd(token));
+    return i;
+  }
+}
+
+Type intType() :
+{
+}
+{
+  < INT_T >
+  {
+    ast.types.Int i = new ast.types.Int();
+    i.setLineStart(getCharStart(token));
+    i.setLineEnd(getCharEnd(token));
+    return i;
+  }
+}
+
+Type namedType() :
+{
+  ast.types.Var t;
+}
+{
+  < UPPER_IDENTIFIER >
+  {
+    start(token);
+    t = new ast.types.Var();
+    t.name = token.image;
+    end(token, t);
+    return t;
+  }
+}
+
+String [ ] optGenericDecs() :
+{
+  String name;
+  Vector < String > names = new Vector < String > ();
+}
+{
+  < LSQUARE > 
+  name = Name()
+  {
+    names.add(name);
+  }
+  (
+    < COMMA > 
+    name = Name()
+    {
+      names.add(name);
+    }
+  )*
+  < RSQUARE >
+  {
+    return asArray(names, String.class);
+  }
+|
+  {
+    return new String [ 0 ];
+  }
+}
+
+Export exports() :
+{
+  Vector < ExportedName > names = new Vector < ExportedName > ();
+  Export e = new Export();
+}
+{
+  < EXPORT >
+  {
+    start(token);
+  }
+  exportedName(names)
+  (
+    < COMMA > exportedName(names)
+  )*
+  < SEMI >
+  {
+    e.names = asArray(names, ExportedName.class);
+    end(token, e);
+    return e;
+  }
+|
+  {
+    e.names = new ExportedName [ ]
+    {}
+    ;
+    return e;
+  }
+}
+
+void exportedName(Vector < ExportedName > names) :
+{
+  String n;
+}
+{
+  (
+    n = name()
+  | n = Name()
+  )
+  {
+    start(token);
+    ExportedName en = new ExportedName();
+    names.add(en);
+    en.name = n;
+    end(token, en);
+  }
+}
+
+String name() :
+{
+}
+{
+  < IDENTIFIER >
+  {
+    return token.image;
+  }
+}
+
+String Name() :
+{
+}
+{
+  < UPPER_IDENTIFIER >
+  {
+    return token.image;
+  }
+}
+
+Imports imports() :
+{
+  Vector < Import > imports = new Vector < Import > ();
+  Imports is = new Imports();
+}
+{
+  < IMPORT >
+  {
+    start(token);
+  }
+  importName(imports)
+  (
+    < COMMA > importName(imports)
+  )*
+  < SEMI >
+  {
+    Import [ ] allImports = asArray(imports, Import.class);
+    is.imports = allImports;
+    end(token, is);
+    return is;
+  }
+|
+  {
+    is.imports = new Import [ 0 ];
+    return is;
+  }
+}
+
+void importName(Vector < Import > imports) :
+{
+}
+{
+  < STRING_CONSTANT >
+  {
+    imports.add(new Import(getCharStart(token), getCharEnd(token), stripString(token.image)));
+  }
+}

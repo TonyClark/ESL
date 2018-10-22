@@ -1,0 +1,42 @@
+export main;
+
+Act Main       {                   } 
+Act Searcher   { Time(Int);        }   // Hunting for the *
+Act Controller { Time(Int); Found; }   // Informed when * is found.
+
+size::Int                = 1000;                          // The size of the square board.
+numOfSearchers::Int      = 353;                            // The number of searcher actors.
+board::Array[Array[Str]] = new Array[Array[Str]](size);   // A board is an array of arrays.
+max(a::Int,b::Int)::Int  = if a > b then a; else b;       // Retun the max of a and b..
+
+act controller::Controller {
+  count::Int = 0;                                         // Keep a count of the time taken.
+  Time(n::Int) -> count := count + 1;                     // Add 1 to the time counter.
+  Found -> {                                              // One of the searcher actors has
+    print[Str]('Found in ' + count + ' steps');           // sound the *.
+    stopAll();
+  }
+}
+
+act searcher(control::Controller)::Searcher {             // Start in a random place on the board.
+  x::Int = random(size);                                  // Move randomly each time unit until
+  y::Int = random(size);                                  // The * has been found. When it is, send
+  delta(n::Int)::Int = (n + max(random(3) - 1,0)) % size; // a message to the control.
+  Time(n::Int) ->                                         // Each move is 1 unit away from the
+    if board[x][y] = '*'                                  // current position, until the edge of
+    then control <- Found;                                // the board is encountered.
+    else { x := delta(x); y := delta(y); }
+}
+
+act main::Main {
+  -> {
+    for x::Int in 0..size do {                            // Set up the board. All the locations
+      board[x] := new Array[Str](size);                   // are initialised to empty. Except
+      for y::Int in 0..size do                            // one random location holds the *.
+        board[x][y] := '';                                // All the searcher actors share the 
+    }                                                     // same control.
+    board[random(size)][random(size)] := '*';
+    let control::Controller = new controller; 
+    in for i::Int in 0..numOfSearchers do new searcher(control);
+  }
+}

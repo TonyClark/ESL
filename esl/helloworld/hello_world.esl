@@ -1,0 +1,32 @@
+export main;
+
+// This file demonstrates a collection of independent workers.
+
+type Main = Act { Time(Int); }
+
+type Worker = Act { Work; }
+
+act worker(id::Int)::Worker {
+  Work -> {
+    print[Str]('Hello World: ' + id);
+    wait(random(10));
+  }
+}
+
+range::[Int]      = 0..10;                               // The number of workers.
+workers::[Worker] = [ new worker(i) | i::Int <- range ]; // Create a list of workers.
+limit::Int        = 100;                                 // How long to run the simulation.
+
+act main::Main {
+  Time(n::Int) when n < limit -> {
+    for w::Worker in workers do {
+      w <- Work;
+    }
+  }
+  Time(n::Int) -> stopAll();
+}
+
+
+
+
+

@@ -1,0 +1,139 @@
+
+type Number = Int;
+
+data Simple = One | Two;
+
+type SimpleRef = Simple;
+
+data Structure = Three(Int) | Four(Str);
+
+type Structures = [Structure];
+
+data RecStructure1 = Five | Six(RecStructure2);
+
+data RecStructure2 = Seven | Eight(RecStructure1);
+
+type MyList1[T] = MyList2[T];
+
+type MyList2[X] = [X];
+
+data Tree[X] = Leaf(X) | Pair(Tree[X],Tree[X]);
+
+data Error = Err(Str);
+
+a::Number = 10;
+
+b::Str = 'plap';
+
+c::Bool = true;
+
+d::Float = 1.5;
+
+//e::Void = null[Void];
+
+f::MyList1[Number] = h;
+
+g::Str = { 1; true; 'plap'; }
+
+h::[Number] = [1,2,3];
+
+i::Bool = not(true);
+
+j::[SimpleRef] = [One,Two];
+
+k::Structures = [Three(3),Four('plap')];
+
+l::[RecStructure1] = [Five,Six(Eight(Six(Seven)))];
+
+m::(Int,Str)->(Str,Int)->Str = fun(x::Number,y::Str)::(Str,Int)->Str fun(a::Str,b::Number)::Str y;
+
+n::Str = if true then m(10,'plap')('plap',10); else m(20,'plop')('plop',30);
+
+o::Tree[Int] = Pair[Int](Leaf[Int](100),Leaf[Int](200));
+
+p::Tree[Str] = Pair[Str](Leaf[Str]('a'),Pair[Str](Pair[Str](Leaf[Str]('a'),Pair[Str](Leaf[Str]('b'),Pair[Str](Leaf[Str]('a'),Pair[Str](Leaf[Str]('b'),Leaf[Str]('c'))))),Leaf[Str]('c')));
+
+q[T]::(T)->T = fun(x::T)::T x;
+
+r::(Int)->Int = q[(Int)->Int](q[Int]);
+
+s::Int = a + 1 -1 * 3 / 2;
+
+t::[Int] = [][Number];
+
+u::Number = for x::Int in [1,2,3] do x;
+
+v::Str = throw[Str] Err('spam');
+
+w::{x::Int} = null[{x::Int}];
+
+x::{person::{name::Str;age::Int};y::Int} = {person -> {name->'fred';age -> 90};y->100};
+
+y::{name::Str;age::Int} = x.person;
+
+z::Number =
+  case Pair[Int](Leaf[Number](100),Leaf[Int](10)) {
+    Leaf[Int](p) -> p;
+    Pair[Int](Leaf[Int](p1),Leaf[Int](p2)) -> p1 + p2;
+  }
+
+length[T]::([T])->Number = fun(l::[T])::Int  
+  case l {
+    [] -> 0;
+    h:t -> 1 + length[T](t);
+  }
+
+l1::Int = length[Str](['a','b','c']);
+l2::Int = length[Int]([1,2,3]);
+
+walk[T,R]::(Tree[T],(T)->R,(R,R)->R)->R = fun(t::Tree[T],f::(T)->R,o::(R,R)->R)::R
+  case t {
+    Pair[T](t1::Tree[T],t2::[Tree]) -> o(walk[T,R](t1,f,o),walk[T,R](t2,f,o));
+    Leaf[T](x) -> f(x);
+  }
+
+tree1::Tree[Int] = Leaf[Int](100);
+
+treeResult1::Int = walk[Int,Int](tree1,fun(x::Number)::Int x + 1,fun(x::Int,y::Int)::Number x + y);
+
+treeResult2::Str = walk[Int,Str](tree1,fun(x::Int)::Str ''+x,fun(x::Str,y::Str)::Str '' + x + y);
+
+addAll(l::[Int])::Int = 
+  case l {
+    [] -> 0;
+    h:t -> h + addAll(t);
+  }
+
+let1::Int = let x::Number = 1; in x + 1;
+let2::Int = let x::Str = '1'; in let x::Int = 1; in x + 1;
+let3::Int = letrec f(l::[Int])::Int = case l { [] -> 0; h:t -> h + f(t); } in f([1,2,3]);
+
+last[T](l::[T])::T =
+  case l {
+    [][T] -> throw [T]('cannot find last element of emply list');
+    x::T:[][T] -> x;
+    h::T:l::[T] -> last[T](l);
+  }
+  
+head[T](l::[T])::T =
+  case l {
+    h::T;
+    t::[T];
+    h:t -> h;
+    [][T] -> throw[T]('cannot take the head of []');
+  }
+  
+tail[T](l::[T])::[T] =
+  case l {
+    h::T;
+    t::[T];
+    h:t -> t;
+    [][T] -> throw[[T]]('cannot take the tail of []');
+  }
+  
+prefixes[T](l::[T])::[[T]] =
+  letrec pre(prefixes::[[T]],rest::[T])::[[T]] = { //print[[T]](rest);
+    if rest = [][T]
+    then prefixes;
+    else pre(prefixes + [ last[[T]](prefixes)+[head[T](rest)] ],tail[T](rest)); }
+  in pre([[][T]],l);

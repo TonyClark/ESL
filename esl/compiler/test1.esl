@@ -1,0 +1,42 @@
+export main;
+
+Act Main { }
+
+data Tree = 
+  Branch(Tree,Tree)
+| Leaf(Int);
+
+x::Tree = Branch(Leaf(100),Leaf(300));
+
+f[T](x::T,y::T)::T = x;
+
+test(x::Tree)::Int = 
+ case x {
+   Branch(a,b) -> test(a) + test(b);
+   Leaf(x) -> x;
+ }
+
+testParBind(a::Int,b::Int)::Int =
+  let x::Int = 100;
+      y::Int = 200;
+  in x;
+
+g::(Int,Int) -> Int = fun(x::Int,y::Int)::Int x + y;
+
+mkTree(n::Int)::Tree =
+  case n {
+    0 -> Leaf(1);
+    m -> Branch(mkTree(m-1),mkTree(m-1));
+  }
+
+act main::Main { 
+
+ f(x::Int)::Int = x;
+
+  -> { 
+    print[Int](test(mkTree(20))); 
+    stopAll(); 
+  }
+  
+}
+
