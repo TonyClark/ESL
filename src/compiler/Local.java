@@ -6,8 +6,8 @@ import runtime.functions.CodeBox;
 
 public abstract class Local {
 
-  String name;
-  int    index;
+  String  name;
+  int     index;
 
   public Local(String name, int index) {
     super();

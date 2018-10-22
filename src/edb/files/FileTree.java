@@ -14,7 +14,12 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -42,6 +47,18 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.DiagnosticListener;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.StandardLocation;
+import javax.tools.ToolProvider;
+
+import com.google.googlejavaformat.FormatterDiagnostic;
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
 
 import ast.TreeNode;
 import ast.binding.declarations.DecContainer;
@@ -94,7 +111,7 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
     }
 
     public String getName() {
-      int i = super.getName().lastIndexOf('/');
+      int i = super.getName().lastIndexOf(EDB.isMac() ? '/' : '\\');
       if (i != -1)
         return super.getName().substring(i + 1);
       else return super.getName();
@@ -105,7 +122,7 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
     }
 
     public String toString() {
-      int i = path.lastIndexOf('/');
+      int i = path.lastIndexOf(EDB.isMac() ? '/' : '\\');
       if (i != -1)
         return path.substring(i + 1);
       else return path;
@@ -114,24 +131,19 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
 
   static Font font = new Font("Consolas", Font.PLAIN, 10);
 
-  private static void displayTree(DefaultMutableTreeNode parent, TreeNode node) {
-
-    // This method descends into node and shows all the children as defined by BoaConstructors.
-
-    String name = node.getClass().getSimpleName().toLowerCase();
-    DefaultMutableTreeNode open = new DefaultMutableTreeNode(node) {
-      public String toString() {
-        return node.getLabel();
-      }
-    };
-    parent.add(open);
-    Hashtable<String, TreeNode[]> children = TreeNode.getChildren(node);
-    for (String field : children.keySet()) {
-      DefaultMutableTreeNode fieldNode = new DefaultMutableTreeNode(new edb.files.Field(field));
-      open.add(fieldNode);
-      for (TreeNode child : children.get(field)) {
-        displayTree(fieldNode, child);
-      }
+  private static void displayDefinitionTree(DefaultMutableTreeNode parent, Query query) {
+    DeclaringLocation[] decs = query.getRules().getTypeDecs();
+    List<DeclaringLocation> list = Arrays.asList(decs);
+    Collections.sort(list, (x, y) -> x.getName().compareTo(y.getName()));
+    decs = list.toArray(new TypeDec[0]);
+    for (DeclaringLocation dec : decs) {
+      String name = dec.getName();
+      DefaultMutableTreeNode node = new DefaultMutableTreeNode(dec) {
+        public String toString() {
+          return name;
+        }
+      };
+      parent.add(node);
     }
   }
 
@@ -164,19 +176,24 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
     }
   }
 
-  private static void displayDefinitionTree(DefaultMutableTreeNode parent, Query query) {
-    DeclaringLocation[] decs = query.getRules().getTypeDecs();
-    List<DeclaringLocation> list = Arrays.asList(decs);
-    Collections.sort(list, (x, y) -> x.getName().compareTo(y.getName()));
-    decs = list.toArray(new TypeDec[0]);
-    for (DeclaringLocation dec : decs) {
-      String name = dec.getName();
-      DefaultMutableTreeNode node = new DefaultMutableTreeNode(dec) {
-        public String toString() {
-          return name;
-        }
-      };
-      parent.add(node);
+  private static void displayTree(DefaultMutableTreeNode parent, TreeNode node) {
+
+    // This method descends into node and shows all the children as defined by BoaConstructors.
+
+    String name = node.getClass().getSimpleName().toLowerCase();
+    DefaultMutableTreeNode open = new DefaultMutableTreeNode(node) {
+      public String toString() {
+        return node.getLabel();
+      }
+    };
+    parent.add(open);
+    Hashtable<String, TreeNode[]> children = TreeNode.getChildren(node);
+    for (String field : children.keySet()) {
+      DefaultMutableTreeNode fieldNode = new DefaultMutableTreeNode(new edb.files.Field(field));
+      open.add(fieldNode);
+      for (TreeNode child : children.get(field)) {
+        displayTree(fieldNode, child);
+      }
     }
   }
 
@@ -305,6 +322,24 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
     });
   }
 
+  private DefaultMutableTreeNode findPath(File path, DefaultMutableTreeNode root) {
+    SimpleFile file = (SimpleFile) root.getUserObject();
+    try {
+      if (file.getCanonicalPath().equals(path.getCanonicalPath()))
+        return root;
+      else {
+        for (int i = 0; i < root.getChildCount(); i++) {
+          DefaultMutableTreeNode child = (DefaultMutableTreeNode) root.getChildAt(i);
+          DefaultMutableTreeNode found = findPath(path, child);
+          if (found != null) return found;
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
   public void focusGained(FocusEvent e) {
     edb.setFocus(this);
   }
@@ -328,10 +363,9 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
 
   public String getSelectedPath() {
     Object[] path = getSelectionPath().getPath();
-    if (EDB.getOsflag().startsWith("Win") && (path[path.length - 1] != null)) { return path[path.length - 1].toString(); }
     String p = "";
     for (int i = 0; i < path.length; i++) {
-      String newP = (p.length() > 0) ? p + "/" : p;
+      String newP = (p.length() > 0) ? p + (EDB.isMac() ? "/" : "\\") : p;
       if (new File(newP + path[i]).exists()) {
         p = newP + path[i];
       }
@@ -352,7 +386,6 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
   }
 
   public void mouseDragged(MouseEvent e) {
-
   }
 
   public void mouseEntered(MouseEvent e) {
@@ -369,6 +402,7 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
   }
 
   public void mouseReleased(MouseEvent e) {
+    if (e.isPopupTrigger()) popup(e.getX(), e.getY());
   }
 
   private boolean namesFolder(String path) {
@@ -379,6 +413,8 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
     TreePath path = getSelectionPath();
     if (path.getLastPathComponent().toString().endsWith(".esl")) {
       popupESL(getSelectedPath(), x, y);
+    } else if (path.getLastPathComponent().toString().endsWith(".java")) {
+      popupJava(getSelectedPath(), x, y);
     } else {
       if (namesFolder(getSelectedPath())) {
         popupFolder(getSelectedPath(), x, y);
@@ -388,6 +424,15 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
 
   private void popupESL(String path, int x, int y) {
     JPopupMenu popup = new JPopupMenu();
+    popupFile(popup, path, x, y);
+    JMenuItem translate = new JMenuItem("Translate");
+    translate.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        if (edb.isDirty(path))
+          System.out.println("Save " + path + " before loading.");
+        else edb.translate(path, edb.tracedFuns(path), edb.tracedMessages(path), edb.tracedActs(path));
+      }
+    });
     JMenuItem load = new JMenuItem("Load");
     load.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -396,6 +441,12 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
         else edb.load(path, "", edb.tracedFuns(path), edb.tracedMessages(path), edb.tracedActs(path));
       }
     });
+    popup.add(load);
+    popup.add(translate);
+    popup.show(this, x, y);
+  }
+
+  private void popupFile(JPopupMenu popup, String path, int x, int y) {
     JMenuItem delete = new JMenuItem("Delete");
     delete.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -410,9 +461,7 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
         }
       }
     });
-    popup.add(load);
     popup.add(delete);
-    popup.show(this, x, y);
   }
 
   private void popupFolder(String path, int x, int y) {
@@ -464,10 +513,135 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
         }
       }
     });
+    JMenuItem refresh = new JMenuItem("Refresh");
+    refresh.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        refresh(new File(path));
+      }
+    });
+    popup.add(refresh);
     popup.add(newFile);
     popup.add(newFolder);
     popup.add(delete);
     popup.show(this, x, y);
+  }
+
+  private void popupJava(String path, int x, int y) { 
+    JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem format = new JMenuItem("Format");
+    format.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        Formatter formatter = new Formatter();
+        String text = parser.ESL.readFile(path);
+        try {
+          writeFile(path, formatter.formatSource(text));
+        } catch (FormatterException formatException) {
+          for (FormatterDiagnostic d : formatException.diagnostics()) {
+            int line = d.line() - 1;
+            int column = d.column() - 1;
+            System.err.println("ERROR " + line + " " + column);
+            int charStart = 0;
+            while (line > 0) {
+              System.err.print(text.charAt(charStart));
+              if (text.charAt(charStart) == '\n') line--;
+              charStart++;
+            }
+            edb.error(path, charStart + column, d.message());
+          }
+        }
+      }
+    });
+    DiagnosticListener<JavaFileObject> listener = new DiagnosticListener<JavaFileObject>() {
+      public void report(Diagnostic<? extends JavaFileObject> d) {
+        int charPos = (int) d.getPosition();
+        String error = d.getMessage(null);
+        edb.error(path, charPos, error);
+        System.err.println(error);
+      }
+    };
+    JMenuItem run = new JMenuItem("Run");
+    run.addActionListener(new ActionListener() {
+
+      public void actionPerformed(ActionEvent e) {
+        StandardJavaFileManager fileManager = compiler.getStandardFileManager(listener, null, null);
+        try {
+            fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(new File(EDB.isMac() ? "bin/" : "bin\\")));
+            fileManager.setLocation(StandardLocation.CLASS_PATH, Arrays.asList(new File(EDB.isMac() ? "bin/" : "bin\\")));
+        } catch (IOException e2) {
+          e2.printStackTrace();
+        }
+        String[] options = new String[] {}; //{"-Xlint:unchecked", "-verbose"};
+        boolean ok = compiler.getTask(null, fileManager, listener, Arrays.asList(options), null, fileManager.getJavaFileObjects(path)).call();
+        System.out.println("[ compile " + path + " = " + ok + "]");
+        try {
+          fileManager.close();
+        } catch (IOException e2) {
+          e2.printStackTrace();
+        }
+        String[] names = (EDB.isWindows()) ? path.replace("\\", "/").split("/") : path.split("/");
+        String name = names[names.length - 1].replace(".java", "");
+        try {
+          ClassLoader parentClassLoader = DynamicClassLoader.class.getClassLoader();
+          DynamicClassLoader classLoader = new DynamicClassLoader(parentClassLoader);
+          System.err.println("load " + "esl." + name);
+          Class<?> _class = classLoader.loadClass("esl." + name);
+          Method method = _class.getMethod("main",String[].class);
+          method.invoke(null,new Object[] {new String[] {}});
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
+          e1.printStackTrace();
+        }
+      }
+
+    });
+    popupFile(popup, path, x, y);
+    popup.add(format);
+    popup.add(run);
+    popup.show(this, x, y);
+  }
+
+  protected void writeFile(String path, String text) {
+    PrintWriter out;
+    try {
+      out = new PrintWriter(new FileOutputStream(path));
+      out.print(text);
+      out.close();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void refresh(DefaultMutableTreeNode root) {
+    SimpleFile file = (SimpleFile) root.getUserObject();
+    if (file.exists()) {
+      if (file.isDirectory()) {
+        for (File child : file.listFiles()) {
+          DefaultMutableTreeNode childNode = findPath(child, root);
+          if (childNode != null) {
+            refresh(childNode);
+          } else {
+            DefaultMutableTreeNode ret = new DefaultMutableTreeNode(new SimpleFile(child.getAbsolutePath()));
+            SwingUtilities.invokeLater(new Runnable() {
+              public void run() {
+                DefaultTreeModel model = (DefaultTreeModel) getModel();
+                model.insertNodeInto(ret, root, root.getChildCount());
+              }
+            });
+            if (child.isDirectory()) for (File c : child.listFiles())
+              ret.add(scan(c));
+          }
+        }
+      }
+    } else {
+      DefaultTreeModel model = (DefaultTreeModel) getModel();
+      model.removeNodeFromParent(root);
+      edb.fileDeleted(file.getName());
+    }
+  }
+
+  private void refresh(File path) {
+    DefaultMutableTreeNode root = findPath(path, (DefaultMutableTreeNode) getModel().getRoot());
+    if (root != null) refresh(root);
   }
 
   public void resizeFont(int amount) {
@@ -476,23 +650,6 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
     Font newFont = font.deriveFont(font.getStyle(), size);
     setFont(newFont);
     repaint();
-  }
-
-  public void setGui(EDB gui) {
-    this.edb = gui;
-  }
-
-  public void valueChanged(TreeSelectionEvent e) {
-    DefaultMutableTreeNode node = (DefaultMutableTreeNode) getLastSelectedPathComponent();
-    if (node == null)
-      // Nothing is selected.
-      return;
-    Object nodeInfo = node.getUserObject();
-    if (nodeInfo instanceof DeclaringLocation) {
-      DeclaringLocation dec = (DeclaringLocation) nodeInfo;
-      String path = getSelectedPath();
-      edb.showDeclaration(path, dec);
-    }
   }
 
   public void selectDeclaration(String path, DeclaringLocation dec) {
@@ -509,6 +666,23 @@ public class FileTree extends JTree implements MouseListener, FocusListener, Mou
           }
         }
       }
+    }
+  }
+
+  public void setGui(EDB gui) {
+    this.edb = gui;
+  }
+
+  public void valueChanged(TreeSelectionEvent e) {
+    DefaultMutableTreeNode node = (DefaultMutableTreeNode) getLastSelectedPathComponent();
+    if (node == null)
+      // Nothing is selected.
+      return;
+    Object nodeInfo = node.getUserObject();
+    if (nodeInfo instanceof DeclaringLocation) {
+      DeclaringLocation dec = (DeclaringLocation) nodeInfo;
+      String path = getSelectedPath();
+      edb.showDeclaration(path, dec);
     }
   }
 

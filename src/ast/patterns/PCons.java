@@ -72,8 +72,8 @@ public class PCons extends Pattern {
           setType(t);
           cont.accept(env2, t);
         });
-      } else if (tailType.restrictsTo(ast.types.List.class) != null) {
-        ast.types.List listType = (ast.types.List) tailType.restrictsTo(ast.types.List.class);
+      } else if (Type.eval(tailType,env1).restrictsTo(ast.types.List.class) != null) {
+        ast.types.List listType = (ast.types.List) Type.eval(tailType,env1).restrictsTo(ast.types.List.class);
         head.type(env1, (env2, headType) ->
         {
           if (Type.equals(listType.getType(), headType, env)) {

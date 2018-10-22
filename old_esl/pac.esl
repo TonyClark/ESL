@@ -30,7 +30,7 @@ type Maze = Act {
   // that allows any actor to lock the board and perform access and
   // update via the exported functions.
 
-  export monitor::Int; 
+  export mon::Int; 
          isGhostTurn::(Ghost)->Bool;        // Checks whether a ghost can move.
          ghostMoved::()->Void;              // Record that current ghost has moved.
          moveGhost::(Ghost,Int,Int)->Void;  // Update the position of a ghost.
@@ -74,7 +74,7 @@ act ghost(m::Maze,strategy::(Ghost,Maze)->Void)::Ghost {
   // has exclusive access.
 
   Time(n::Int) when (n % delay) = 0 ->
-    grab(m.monitor) { 
+    grab(m.mon) { 
       if m.isGhostTurn(self)
       then {
         strategy(self,m);
@@ -89,9 +89,9 @@ act ghost(m::Maze,strategy::(Ghost,Maze)->Void)::Ghost {
 
 act maze::Maze {
 
-  export monitor, isGhostTurn, ghostMoved, moveGhost, isWall, atHome, ghostX, ghostY, playerX, playerY;
+  export mon, isGhostTurn, ghostMoved, moveGhost, isWall, atHome, ghostX, ghostY, playerX, playerY;
   
-  monitor::Int = 0;    // The value of the monitor is not important.
+  mon::Int     = 0;    // The value of the monitor is not important.
   playerX::Int = 20;   // Start the player at (20,20).
   playerY::Int = 20;   // Start the player at (20,20).
   ghosts::[GhostInfo] = [];                              // In principle we can have any number of ghosts.
@@ -220,7 +220,7 @@ act maze::Maze {
   Time(n::Int) when (n % delay) = 0 -> 
     // Check the state of play. If it is time for a player-move
     // then move the player.
-    grab(monitor) {
+    grab(mon) {
       if eaten() then playerLoses() else {};
       if allEaten() then playerWins() else {};
       if turnCounter = length[GhostInfo](ghosts) 
@@ -384,6 +384,7 @@ act main::Main {
   Time(n::Int) -> {}
   
 }
+
 
 
 

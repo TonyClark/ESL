@@ -81,7 +81,7 @@ public class PBind extends Pattern {
 
   public DeclaringLocation[] getContainedDecs() {
     DeclaringLocation[] locs = pattern.getContainedDecs();
-    return AST.concatenate(locs, new DeclaringLocation[] { new Dec(getLineStart(), getLineEnd(), "", name, type) });
+    return AST.concatenate(locs, new DeclaringLocation[] { new Dec(getLineStart(), getLineEnd(), "", name, type,type) });
   }
 
   public String pprint() {

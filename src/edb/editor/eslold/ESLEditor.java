@@ -1,4 +1,4 @@
-package edb.editor;
+package edb.editor.eslold;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -36,11 +37,14 @@ import ast.types.TypeError;
 import ast.types.TypePatternError;
 import context.ParseError;
 import context.StringSource;
+import edb.editor.file.Doc;
+import edb.editor.file.FileEditor;
 import edb.timer.ESLEditorTimer;
 import edb.tool.EDB;
 import edb.tool.SVG;
 import exp.Exp;
 import grammar.Grammar;
+import runtime.ESL;
 import runtime.actors.Builtins;
 import runtime.data.Key;
 import runtime.data.Term;
@@ -58,7 +62,7 @@ public class ESLEditor extends FileEditor {
   private static final Color                   TRACED_COLOUR       = new Color(0, 0, 200, 100);
 
   int                                          flashAt             = -1;
-  ESLEditorTimer                               timer               = new ESLEditorTimer(this, 2000);
+  ESLEditorTimer                               timer               = new ESLEditorTimer(this, EDB.getParseDelay());
   Vector<Stack<String>>                        tracedPaths         = new Vector<Stack<String>>();
   Vector<FunBind>                              tracedFuns          = new Vector<FunBind>();
   Vector<BArm>                                 tracedArms          = new Vector<BArm>();
@@ -110,6 +114,18 @@ public class ESLEditor extends FileEditor {
     if (m.matches())
       return m.group(3);
     else return null;
+  }
+
+  private Module getModule() {
+    if (ESL.useXPL) {
+
+      Grammar grammar = Interpreter.getGrammar("esl/esl.xpl", "esl");
+      Object o = Interpreter.parseCharSource(path, grammar, "file", new StringSource(getText()), new Exp[] { new exp.Str(path) }, false);
+      JavaObject jo = (JavaObject) o;
+      return (Module) jo.getTarget();
+    } else {
+      return Module.parseModule("file", getText());
+    }
   }
 
   public Stack<String> getPath(String name, int pos) {
@@ -223,11 +239,13 @@ public class ESLEditor extends FileEditor {
           JMenuItem item = new JMenuItem("Configuration[" + c.getName() + "]");
           load.add(item);
           item.addActionListener(new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
               if (isDirty())
                 System.out.println("Save " + path + " before loading.");
               else edb.load(path, c.getName(), tracedFuns, tracedArms, tracedActs);
             }
+
           });
         }
         popup.add(load);
@@ -244,7 +262,7 @@ public class ESLEditor extends FileEditor {
     }
   }
 
-  public void paintComponent(Graphics g) {
+  public synchronized void paintComponent(Graphics g) {
     super.paintComponent(g);
     paintTracedBindings(g);
     paintTracedArms(g);
@@ -305,12 +323,6 @@ public class ESLEditor extends FileEditor {
     g.setColor(c);
   }
 
-  private void paintTracedBindings(Graphics g) {
-    for (Binding b : tracedFuns) {
-      paintTracedBinding(b, g);
-    }
-  }
-
   private void paintTracedBinding(Binding b, Graphics g) {
     FontMetrics f = g.getFontMetrics();
     Color c = g.getColor();
@@ -328,42 +340,27 @@ public class ESLEditor extends FileEditor {
     }
   }
 
+  private void paintTracedBindings(Graphics g) {
+    for (Binding b : tracedFuns) {
+      paintTracedBinding(b, g);
+    }
+  }
+
   public LocationContainer parseText() {
     try {
       error = null;
       container = null;
-      Grammar grammar = Interpreter.getGrammar("esl/esl.xpl", "esl");
-      Object o = Interpreter.parseCharSource(path, grammar, "file", new StringSource(getText()), new Exp[] { new exp.Str(path) }, false);
-      JavaObject jo = (JavaObject) o;
-      walk(jo.getTarget());
+      Module module = getModule();
+      walk(module);
       ((Doc) getStyledDocument()).refreshDocument();
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          repaint();
-        }
-      });
-      container = (Module) jo.getTarget();
+      container = module;
       container = Module.processModule(path, (Module) container);
       return container;
     } catch (ParseError error) {
-      SwingUtilities.invokeLater(new Runnable() {
-
-        public void run() {
-          setError(backupSyntax(error.getPosition()), 0, error.getMessage(), PARSE_ERROR_COLOR);
-          repaint();
-        }
-      });
+      setError(error.getPosition(), 0, error.getMessage(), PARSE_ERROR_COLOR);
     } catch (FileNotFoundException e) {
-      SwingUtilities.invokeLater(new Runnable() {
-
-        public void run() {
-          setError(0, 0, e.getMessage(), PARSE_ERROR_COLOR);
-          repaint();
-        }
-      });
-    } catch (
-
-    BadLocationException e) {
+      setError(0, 0, e.getMessage(), PARSE_ERROR_COLOR);
+    } catch (BadLocationException e) {
       e.printStackTrace();
     }
     return null;
@@ -434,10 +431,12 @@ public class ESLEditor extends FileEditor {
       } else {
         JMenuItem trace = new JMenuItem("Trace");
         trace.addActionListener(new ActionListener() {
+
           public void actionPerformed(ActionEvent e) {
             tracePath(getPath(name, act.getLineStart()));
             if (edb.isCheckSyntax()) parseText();
           }
+
         });
         popup.add(trace);
       }
@@ -460,10 +459,12 @@ public class ESLEditor extends FileEditor {
       } else {
         JMenuItem trace = new JMenuItem("Trace");
         trace.addActionListener(new ActionListener() {
+
           public void actionPerformed(ActionEvent e) {
             tracePath(path);
             if (edb.isCheckSyntax()) parseText();
           }
+
         });
         popup.add(trace);
       }
@@ -488,6 +489,7 @@ public class ESLEditor extends FileEditor {
         } else {
           JMenuItem trace = new JMenuItem("Trace");
           trace.addActionListener(new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
               tracePath(path);
               if (edb.isCheckSyntax()) parseText();
@@ -517,14 +519,25 @@ public class ESLEditor extends FileEditor {
     }
   }
 
-  public synchronized void textChanged() {
+  public void textChanged() {
 
     // Called when an ESL file has been changed. Type checking might take a while so
     // do it concurrently. In addition, type checking will require the file to be
     // parsed, so we do not need to do that separately.
 
-    timer.reset();
     ((ESLDoc) getStyledDocument()).reset();
+    if (ESL.useXPL)
+      timer.reset();
+    else textChangedNow();
+  }
+
+  private void textChangedNow() {
+    setMessage(null);
+    if (getEDB().isCheckSyntax() && getEDB().isCheckTypes()) {
+      typeCheckText();
+    } else if (getEDB().isCheckSyntax()) {
+      parseText();
+    } else resetEditor();
   }
 
   private void toggleBreakpoint() {
@@ -541,7 +554,7 @@ public class ESLEditor extends FileEditor {
     if (edb.isCheckTypes()) concurrentlyTypeCheckText();
   }
 
-  protected synchronized Module typeCheckText() {
+  public Module typeCheckText() {
     try {
       Module module = (Module) parseText();
       if (module != null) {
@@ -549,20 +562,19 @@ public class ESLEditor extends FileEditor {
         module.type(Builtins.builtinTypes());
         warnings = module.check();
         edb.displayTree(module);
-        repaint();
         return module;
       }
     } catch (TypeError e) {
       e.printStackTrace(System.err);
       setError(e.getLineStart(), e.getLineEnd(), e.getMessage(), TYPE_ERROR_COLOR);
-      repaint();
     } catch (TypePatternError e) {
       e.printStackTrace(System.err);
       Pattern p = e.getPattern();
       setError(p.getLineStart(), p.getLineEnd(), e.getMessage(), PATTERN_ERROR_COLOR);
-      repaint();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace(System.err);
     }
     return null;
   }

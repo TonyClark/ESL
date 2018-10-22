@@ -16,6 +16,26 @@ import env.Env;
 import list.List;
 import runtime.functions.CodeBox;
 
+import java.util.Vector;
+import java.util.function.BiConsumer;
+
+import ast.binding.Var;
+import ast.binding.declarations.DeclaringLocation;
+import ast.data.Apply;
+import ast.data.Fun;
+import ast.general.AST;
+import ast.refs.Ref;
+import ast.tests.If;
+import ast.tests.IsNil;
+import ast.types.Type;
+import compiler.DynamicVar;
+import compiler.FrameVar;
+import env.Env;
+import exp.BoaConstructor;
+import list.List;
+import runtime.functions.CodeBox;
+
+@BoaConstructor(fields = { })
 public class PEmptySet extends Pattern {
 
   public void vars(HashSet<String> vars) {

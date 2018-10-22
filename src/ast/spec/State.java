@@ -10,11 +10,11 @@ import values.Located;
 @BoaConstructor(fields = { "vars", "states" })
 public class State implements Located, TreeNode {
 
-  public VarDec[]   vars;
-  public StateDef[] states;
+  public VarDec[]   vars   = new VarDec[0];
+  public StateDef[] states = new StateDef[0];
 
-  int               start = -1;
-  int               end   = -1;
+  int               start  = -1;
+  int               end    = -1;
 
   public State() {
   }

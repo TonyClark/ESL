@@ -38,7 +38,7 @@ import xpl.Interpreter;
 
 public class Console extends JTextPane implements MouseListener, ResizeFont, FocusListener, KeyListener, Runnable {
 
-  private static final int MAX_OUTPUT_STRING = 300;
+  private static final int MAX_OUTPUT_STRING = 1000;
 
   static Font              font              = new Font("Courier", Font.PLAIN, 10);
   static Color             NORMAL_BACKGROUND = Color.white;

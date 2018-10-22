@@ -7,14 +7,18 @@ import runtime.actors.Actor;
 
 public class Grabbable {
 
-  Lock  lock      = new ReentrantLock();
+	Lock lock = new ReentrantLock();
 
-  public void grab(Actor actor) {
-    lock.lock();
-  }
+	public void grab(Actor actor) {
+		lock.lock();
+	}
 
-  public void release() {
-    lock.unlock();
-  }
+	public void release() {
+		lock.unlock();
+	}
+
+	public Lock getLock() {
+		return lock;
+	}
 
 }

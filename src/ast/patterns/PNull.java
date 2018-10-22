@@ -4,21 +4,19 @@ import java.util.HashSet;
 import java.util.Vector;
 import java.util.function.BiConsumer;
 
-import ast.binding.Var;
 import ast.binding.declarations.DeclaringLocation;
-import ast.data.Apply;
-import ast.data.Fun;
-import ast.general.AST;
 import ast.refs.Ref;
-import ast.tests.If;
-import ast.tests.IsNull;
+import ast.types.Forall;
 import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import env.Env;
+import exp.BoaConstructor;
 import list.List;
 import runtime.functions.CodeBox;
+import types.Var;
 
+@BoaConstructor(fields = { })
 public class PNull extends Pattern {
 
   public void vars(HashSet<String> vars) {
@@ -33,7 +31,7 @@ public class PNull extends Pattern {
 
   public void type(Env<String, Type> env, BiConsumer<Env<String, Type>, Type> cont) {
     setType( ast.types.Null.NULL);
-    cont.accept(env, ast.types.Null.NULL);
+    cont.accept(env, new Forall(getLineStart(),getLineEnd(),new String[] {"T"},new ast.types.Var(getLineStart(),getLineEnd(),"T", null)));
   }
 
   public Env<String, Type> bind(Env<String, Type> env, Type type) {

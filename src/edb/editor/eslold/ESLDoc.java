@@ -1,4 +1,4 @@
-package edb.editor;
+package edb.editor.eslold;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -13,6 +13,8 @@ import javax.swing.text.StyleContext;
 
 import ast.data.Term;
 import ast.patterns.PTerm;
+import edb.editor.file.Doc;
+import edb.editor.file.HiliteWord;
 
 public class ESLDoc extends Doc {
 
@@ -60,25 +62,28 @@ public class ESLDoc extends Doc {
     refreshDocument();
   }
 
-  protected synchronized void refreshDocument() throws BadLocationException {
+  public void refreshDocument() throws BadLocationException {
     String text = getText(0, getLength());
     final List<HiliteWord> list = processWords(text);
     setCharacterAttributes(0, text.length(), defaultStyle, true);
     for (HiliteWord word : list) {
-      int p0 = word._position;
-      if (word.keyType() == KeywordType.VALUE)
-        setCharacterAttributes(p0, word._word.length(), cwStyle, true);
-      else if (word.keyType() == KeywordType.BOOL)
-        setCharacterAttributes(p0, word._word.length(), boolStyle, true);
-      else if (word.keyType() == KeywordType.TYPE)
-        setCharacterAttributes(p0, word._word.length(), typeStyle, true);
-      else if (word.keyType() == KeywordType.COMMENT)
-        setCharacterAttributes(p0, word._word.length(), commentStyle, true);
-      else if (word.keyType() == KeywordType.STRING)
-        setCharacterAttributes(p0, word._word.length(), stringStyle, true);
-      else if (word.keyType() == KeywordType.TERM)
-        setCharacterAttributes(p0, word._word.length(), termStyle, true);
-      else if (word.keyType() == KeywordType.PTERM) setCharacterAttributes(p0, word._word.length(), ptermStyle, true);
+      try {
+        int p0 = word._position;
+        if (word.keyType() == KeywordType.VALUE)
+          setCharacterAttributes(p0, word._word.length(), cwStyle, true);
+        else if (word.keyType() == KeywordType.BOOL)
+          setCharacterAttributes(p0, word._word.length(), boolStyle, true);
+        else if (word.keyType() == KeywordType.TYPE)
+          setCharacterAttributes(p0, word._word.length(), typeStyle, true);
+        else if (word.keyType() == KeywordType.COMMENT)
+          setCharacterAttributes(p0, word._word.length(), commentStyle, true);
+        else if (word.keyType() == KeywordType.STRING)
+          setCharacterAttributes(p0, word._word.length(), stringStyle, true);
+        else if (word.keyType() == KeywordType.TERM)
+          setCharacterAttributes(p0, word._word.length(), termStyle, true);
+        else if (word.keyType() == KeywordType.PTERM) setCharacterAttributes(p0, word._word.length(), ptermStyle, true);
+      } catch (Exception e) {
+      }
     }
     super.refreshDocument();
   }
@@ -115,7 +120,7 @@ public class ESLDoc extends Doc {
           } else {
             char ch = data[index++];
             if (!(Character.isLetter(ch) || Character.isDigit(ch) || ch == '_')) {
-              lastWhitespacePosition = index-1;
+              lastWhitespacePosition = index - 1;
               if (word.length() > 0) {
                 if (isReservedWord(word)) {
                   hiliteWords.add(new HiliteWord(word, (lastWhitespacePosition - word.length()), KeywordType.VALUE));
@@ -164,9 +169,9 @@ public class ESLDoc extends Doc {
 
   private static final boolean isReservedWord(String word) {
     String trimmed = word.trim();
-    return (trimmed.equals("then") || trimmed.equals("grab") || trimmed.equals("act") || trimmed.equals("import") || trimmed.equals("for") || trimmed.equals("find") || trimmed.equals("do") || trimmed.equals("not") || trimmed.equals("fun") || trimmed.equals("letrec") || trimmed.equals("let") || trimmed.equals("in") || trimmed.equals("new")
-        || trimmed.equals("case") || trimmed.equals("become") || trimmed.equals("self") || trimmed.equals("probably") || trimmed.equals("now") || trimmed.equals("null") || trimmed.equals("if") || trimmed.equals("else") || trimmed.equals("when") || trimmed.equals("and") || trimmed.equals("or") || trimmed.equals("try") || trimmed.equals("catch")
-        || trimmed.equals("throw") || trimmed.equals("bag") || trimmed.equals("set") || trimmed.equals("export") || trimmed.equals("union") || trimmed.equals("where") || trimmed.equals("rules") || trimmed.equals("show") || trimmed.equals("from") || trimmed.equals("timeout") || trimmed.equals("kb") || trimmed.equals("parameters")
+    return (trimmed.equals("monitor") || trimmed.equals("then") || trimmed.equals("grab") || trimmed.equals("act") || trimmed.equals("import") || trimmed.equals("for") || trimmed.equals("find") || trimmed.equals("do") || trimmed.equals("not") || trimmed.equals("fun") || trimmed.equals("letrec") || trimmed.equals("let") || trimmed.equals("in")
+        || trimmed.equals("new") || trimmed.equals("case") || trimmed.equals("become") || trimmed.equals("self") || trimmed.equals("probably") || trimmed.equals("now") || trimmed.equals("null") || trimmed.equals("if") || trimmed.equals("else") || trimmed.equals("when") || trimmed.equals("and") || trimmed.equals("or") || trimmed.equals("try")
+        || trimmed.equals("catch") || trimmed.equals("throw") || trimmed.equals("bag") || trimmed.equals("set") || trimmed.equals("export") || trimmed.equals("union") || trimmed.equals("where") || trimmed.equals("rules") || trimmed.equals("show") || trimmed.equals("from") || trimmed.equals("timeout") || trimmed.equals("kb") || trimmed.equals("parameters")
         || trimmed.equals("configuration"));
   }
 
@@ -178,7 +183,7 @@ public class ESLDoc extends Doc {
   private static final boolean isTypeWord(String word) {
     String trimmed = word.trim();
     return (trimmed.equals("data") || trimmed.equals("cnstr") || trimmed.equals("type") || trimmed.equals("unfold") || trimmed.equals("fold") || trimmed.equals("Void") || trimmed.equals("Fun") || trimmed.equals("rec") || trimmed.equals("Float") || trimmed.equals("Str") || trimmed.equals("Bool") || trimmed.equals("Int") || trimmed.equals("Act")
-        || trimmed.equals("Set") || trimmed.equals("Bag") || trimmed.equals("Rules") || trimmed.equals("KB"));
+        || trimmed.equals("Set") || trimmed.equals("Bag") || trimmed.equals("Rules") || trimmed.equals("KB") || trimmed.equals("Monitor"));
   }
 
   public synchronized void registerTerm(Term node) {

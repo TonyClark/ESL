@@ -70,7 +70,7 @@ public class TypeFun extends Type implements DecContainer  {
   public DeclaringLocation[] getContainedDecs() {
     DeclaringLocation[] decs = new DeclaringLocation[names.length];
     for (int i = 0; i < decs.length; i++)
-      decs[i] = new Dec(getLineStart(), getLineEnd(), "", names[i], this);
+      decs[i] = new Dec(getLineStart(), getLineEnd(), "", names[i], this,this);
     return decs;
   }
 

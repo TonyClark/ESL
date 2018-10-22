@@ -75,10 +75,12 @@ public class Update extends AST {
 
   public void DV(HashSet<String> vars) {
     value.DV(vars);
+    if(!vars.contains(name)) vars.add(name);
   }
 
   public void FV(HashSet<String> vars) {
     value.FV(vars);
+    if(!vars.contains(name)) vars.add(name);
   }
 
   public int maxLocals() {
@@ -100,7 +102,7 @@ public class Update extends AST {
   public Type type(Env<String, Type> env) {
     Type valueType = value.type(env);
     if (env.binds(name)) {
-      Type varType = env.lookup(name);
+      Type varType = Type.eval(env.lookup(name),env);
       if (Type.equals(varType, valueType, env)) {
         setType(ast.types.Void.VOID);
         return getType();

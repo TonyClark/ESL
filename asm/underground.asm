@@ -1,4 +1,208 @@
-CodeBox(lambda349,8)
+CodeBox(lambda349,5)
+    0 FRAMEVAR   1         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [2]       
+    5 FALSE     
+    6 SKIP       22        
+    7 TRY        9     false     
+    8 ISCONS     [2]       
+    9 SETFRAME   3     [2].head()
+   10 SETFRAME   4     [2].tail()
+   11 FRAMEVAR   3         
+   12 FRAMEVAR   0         
+   13 EQL       
+   14 FAILFALSE 
+   15 TRUE      
+   16 SKIP       12        
+   17 TRY        9     false     
+   18 ISCONS     [2]       
+   19 SETFRAME   3     [2].head()
+   20 SETFRAME   4     [2].tail()
+   21 STARTCALL 
+   22 FRAMEVAR   0         
+   23 FRAMEVAR   4         
+   24 DYNAMIC    14        
+   25 APPLY      2         
+   26 SKIP       2         
+   27 CASEERROR 
+   28 RETURN    
+CodeBox(lambda348,3)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [1]       
+    5 TRUE      
+    6 SKIP       6         
+    7 TRY        3     false     
+    8 SETFRAME   2     [1]       
+    9 FALSE     
+   10 SKIP       2         
+   11 CASEERROR 
+   12 RETURN    
+CodeBox(lambda347,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        5     true      
+    4 ISCONS     [1]       
+    5 SETFRAME   3     [1].head()
+    6 SETFRAME   2     [1].tail()
+    7 FRAMEVAR   2         
+    8 SKIP       7         
+    9 TRY        4     false     
+   10 ISNIL      [1]       
+   11 STR        cannot take the tail of []
+   12 THROW     
+   13 SKIP       2         
+   14 CASEERROR 
+   15 RETURN    
+CodeBox(lambda346,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        5     true      
+    4 ISCONS     [1]       
+    5 SETFRAME   3     [1].head()
+    6 SETFRAME   2     [1].tail()
+    7 FRAMEVAR   3         
+    8 SKIP       7         
+    9 TRY        4     false     
+   10 ISNIL      [1]       
+   11 STR        cannot take the head of []
+   12 THROW     
+   13 SKIP       2         
+   14 CASEERROR 
+   15 RETURN    
+CodeBox(lambda345,6)
+    0 FRAMEVAR   2         
+    1 SETFRAME   3         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [3]       
+    5 LIST       0         
+    6 SKIP       28        
+    7 TRY        25    false     
+    8 ISCONS     [3]       
+    9 SETFRAME   5     [3].head()
+   10 SETFRAME   4     [3].tail()
+   11 FRAMEVAR   5         
+   12 FRAMEVAR   1         
+   13 EQL       
+   14 SKIPFALSE  10        
+   15 FRAMEVAR   0         
+   16 STARTCALL 
+   17 FRAMEVAR   0         
+   18 FRAMEVAR   1         
+   19 FRAMEVAR   4         
+   20 DYNAMIC    17        
+   21 APPLY      3         
+   22 CONS      
+   23 SKIP       9         
+   24 FRAMEVAR   5         
+   25 STARTCALL 
+   26 FRAMEVAR   0         
+   27 FRAMEVAR   1         
+   28 FRAMEVAR   4         
+   29 DYNAMIC    17        
+   30 APPLY      3         
+   31 CONS      
+   32 SKIP       2         
+   33 CASEERROR 
+   34 RETURN    
+CodeBox(lambda344,5)
+    0 FRAMEVAR   1         
+    1 IS0       
+    2 SKIPFALSE  3         
+    3 FRAMEVAR   0         
+    4 SKIP       24        
+    5 FRAMEVAR   0         
+    6 SETFRAME   2         
+    7 POP       
+    8 TRY        11    true      
+    9 ISCONS     [2]       
+   10 SETFRAME   4     [2].head()
+   11 SETFRAME   3     [2].tail()
+   12 STARTCALL 
+   13 FRAMEVAR   3         
+   14 FRAMEVAR   1         
+   15 INT        1         
+   16 SUB       
+   17 DYNAMIC    18        
+   18 APPLY      2         
+   19 SKIP       9         
+   20 TRY        6     false     
+   21 ISNIL      [2]       
+   22 STR        cannot drop element 
+   23 FRAMEVAR   1         
+   24 ADD       
+   25 THROW     
+   26 SKIP       2         
+   27 CASEERROR 
+   28 RETURN    
+CodeBox(lambda343,5)
+    0 FRAMEVAR   1         
+    1 IS0       
+    2 SKIPFALSE  3         
+    3 LIST       0         
+    4 SKIP       26        
+    5 FRAMEVAR   0         
+    6 SETFRAME   2         
+    7 POP       
+    8 TRY        13    true      
+    9 ISCONS     [2]       
+   10 SETFRAME   4     [2].head()
+   11 SETFRAME   3     [2].tail()
+   12 FRAMEVAR   4         
+   13 STARTCALL 
+   14 FRAMEVAR   3         
+   15 FRAMEVAR   1         
+   16 INT        1         
+   17 SUB       
+   18 DYNAMIC    19        
+   19 APPLY      2         
+   20 CONS      
+   21 SKIP       9         
+   22 TRY        6     false     
+   23 ISNIL      [2]       
+   24 STR        cannot take element 
+   25 FRAMEVAR   1         
+   26 ADD       
+   27 THROW     
+   28 SKIP       2         
+   29 CASEERROR 
+   30 RETURN    
+CodeBox(lambda342,5)
+    0 FRAMEVAR   0         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        16    true      
+    4 ISCONS     [2]       
+    5 SETFRAME   4     [2].head()
+    6 SETFRAME   3     [2].tail()
+    7 FRAMEVAR   1         
+    8 IS0       
+    9 SKIPFALSE  3         
+   10 FRAMEVAR   4         
+   11 SKIP       8         
+   12 STARTCALL 
+   13 FRAMEVAR   3         
+   14 FRAMEVAR   1         
+   15 INT        1         
+   16 SUB       
+   17 DYNAMIC    20        
+   18 APPLY      2         
+   19 SKIP       7         
+   20 TRY        4     false     
+   21 ISNIL      [2]       
+   22 STR        cannot take nth element.
+   23 THROW     
+   24 SKIP       2         
+   25 CASEERROR 
+   26 RETURN    
+CodeBox(lambda341,8)
     0 FRAMEVAR   0         
     1 SETFRAME   2         
     2 POP       
@@ -34,7 +238,7 @@ CodeBox(lambda349,8)
    32 SKIP       2         
    33 CASEERROR 
    34 RETURN    
-CodeBox(lambda348,5)
+CodeBox(lambda340,5)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -65,7 +269,7 @@ CodeBox(lambda348,5)
    27 SKIP       2         
    28 CASEERROR 
    29 RETURN    
-CodeBox(lambda347,4)
+CodeBox(lambda339,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -86,7 +290,7 @@ CodeBox(lambda347,4)
    17 SKIP       2         
    18 CASEERROR 
    19 RETURN    
-CodeBox(lambda346,4)
+CodeBox(lambda338,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -106,7 +310,7 @@ CodeBox(lambda346,4)
    16 SKIP       2         
    17 CASEERROR 
    18 RETURN    
-CodeBox(lambda345,4)
+CodeBox(lambda337,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -126,7 +330,7 @@ CodeBox(lambda345,4)
    16 SKIP       2         
    17 CASEERROR 
    18 RETURN    
-CodeBox(lambda344,4)
+CodeBox(lambda336,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -146,7 +350,7 @@ CodeBox(lambda344,4)
    16 SKIP       2         
    17 CASEERROR 
    18 RETURN    
-CodeBox(lambda343,5)
+CodeBox(lambda335,5)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -178,7 +382,7 @@ CodeBox(lambda343,5)
    28 SKIP       2         
    29 CASEERROR 
    30 RETURN    
-CodeBox(lambda342,5)
+CodeBox(lambda334,5)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -214,7 +418,10 @@ CodeBox(lambda342,5)
    32 SKIP       2         
    33 CASEERROR 
    34 RETURN    
-CodeBox(lambda341,5)
+CodeBox(lambda398,1)
+    0 NULL      
+    1 RETURN    
+CodeBox(lambda333,5)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -238,7 +445,7 @@ CodeBox(lambda341,5)
    20 SKIP       2         
    21 CASEERROR 
    22 RETURN    
-CodeBox(lambda340,6)
+CodeBox(lambda332,6)
     0 FRAMEVAR   0         
     1 SETFRAME   3         
     2 POP       
@@ -269,7 +476,13 @@ CodeBox(lambda340,6)
    27 SKIP       2         
    28 CASEERROR 
    29 RETURN    
-CodeBox(lambda339,2)
+CodeBox(lambda397,1)
+    0 STR        main      
+    1 STR        Time      
+    2 Fun(1)
+    3 BEHAVIOUR 
+    4 RETURN    
+CodeBox(lambda331,2)
     0 STARTCALL 
     1 FRAMEVAR   0         
     2 FRAMEVAR   1         
@@ -282,7 +495,128 @@ CodeBox(lambda339,2)
     9 FRAMEVAR   1         
    10 CONS      
    11 RETURN    
-CodeBox(lambda399,0)
+CodeBox(lambda396,3)
+    0 STR        listener  
+    1 BEHAVIOUR 
+    2 RETURN    
+CodeBox(lambda395,6)
+    0 STARTCALL 
+    1 DYNAMIC    19        
+    2 STARTCALL 
+    3 STARTCALL 
+    4 DYNAMIC    19        
+    5 REF        [Key(length)]
+    6 APPLY      1         
+    7 APPDYNAMIC 23    1         
+    8 REF        [Key(nth)]
+    9 APPLY      2         
+   10 SETFRAME   1         
+   11 POP       
+   12 DYNAMIC    3         
+   13 DYNAMIC    2         
+   14 FRAMEVAR   1         
+   15 TERM       Planning 3         
+   16 STATE      state 0         
+   17 SETDYNAMIC 1         
+   18 POP       
+   19 instrs.query.data.NewLogicalVar@2631e49e
+   20 SETFRAME   2         
+   21 POP       
+   22 FRAMEVAR   1         
+   23 FRAMEVAR   2         
+   24 DYNAMIC    2         
+   25 DYNAMIC    3         
+   26 DYNAMIC    18        
+   27 NULL      
+   28 INT        75000     
+   29 Show(56,60,Clause($-show,4))
+         0 Local(0)
+         1 SetLocal(4)
+         2 Local(1)
+         3 SetLocal(5)
+         4 Local(2)
+         5 SetLocal(6)
+         6 Local(3)
+         7 SetLocal(7)
+         8 StartCall()
+         9 Local(4)
+        10 Local(5)
+        11 Local(7)
+        12 Local(6)
+        13 Enter(Key(route),4)
+        14 Return()
+   30 DYNAMIC    3         
+   31 instrs.query.QRecons@2e37751f
+   32 SETDYNAMIC 3         
+   33 DYNAMIC    2         
+   34 instrs.query.QRecons@5bd30fd7
+   35 SETDYNAMIC 2         
+   36 FRAMEVAR   2         
+   37 instrs.query.QRecons@8ebb2c6
+   38 SETFRAME   2         
+   39 FRAMEVAR   1         
+   40 instrs.query.QRecons@2157a251
+   41 SETFRAME   1         
+   42 FRAMEVAR   1         
+   43 TERM       Travelling 1         
+   44 STATE      state 0         
+   45 SETDYNAMIC 1         
+   46 POP       
+   47 FRAMEVAR   1         
+   48 STATE      station 0         
+   49 SETDYNAMIC 2         
+   50 POP       
+   51 SELF      
+   52 FRAMEVAR   2         
+   53 FRAMEVAR   0         
+   54 NAMEDSEND AddPlan/2
+   55 GOTO       63        
+   56 FRAMEVAR   0         
+   57 SELF      
+   58 NAMEDSEND GetPlan/1
+   59 GOTO       63        
+   60 FRAMEVAR   0         
+   61 SELF      
+   62 NAMEDSEND GetPlan/1
+   63 RETURN    
+CodeBox(lambda394,1)
+    0 NULL      
+    1 RETURN    
+CodeBox(lambda393,1)
+    0 FRAMEVAR   0         
+    1 STATE      line  0         
+    2 SETDYNAMIC 3         
+    3 RETURN    
+CodeBox(lambda392,13)
+    0 FRAMEVAR   0         
+    1 NEWDYNAMIC
+    2 FRAMEVAR   1         
+    3 NEWDYNAMIC
+    4 FRAMEVAR   2         
+    5 NEWDYNAMIC
+    6 NULL      
+    7 NEWDYNAMIC
+    8 NULL      
+    9 NEWDYNAMIC
+   10 DYNAMIC    2         
+   11 TERM       Arrived 1         
+   12 SETDYNAMIC 1         
+   13 POP       
+   14 DYNAMIC    4         
+   15 SETDYNAMIC 0         
+   16 POP       
+   17 STR        traveller 
+   18 STR        ChangeTo  
+   19 Fun(1)
+   20 STR        Time      
+   21 Fun(1)
+   22 STR        GetPlan   
+   23 Fun(1)
+   24 BEHAVIOUR 
+   25 POPDYNAMIC
+   26 POPDYNAMIC
+   27 RETURN    
+CodeBox(lambda391,0)
     0 DYNAMIC    2         
     1 ADD1      
     2 STATE      idCounter -1        
@@ -292,7 +626,7 @@ CodeBox(lambda399,0)
     6 INT        1         
     7 SUB       
     8 RETURN    
-CodeBox(lambda398,4)
+CodeBox(lambda390,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -314,7 +648,7 @@ CodeBox(lambda398,4)
    18 SKIP       2         
    19 CASEERROR 
    20 RETURN    
-CodeBox(lambda397,2)
+CodeBox(lambda389,2)
     0 STARTCALL 
     1 FRAMEVAR   0         
     2 DYNAMIC    3         
@@ -331,7 +665,7 @@ CodeBox(lambda397,2)
    13 STATE      plans 0         
    14 SETDYNAMIC 4         
    15 RETURN    
-CodeBox(lambda396,0)
+CodeBox(lambda388,0)
     0 STR        Underground
     1 STARTCALL 
     2 DYNAMIC    3         
@@ -339,10 +673,10 @@ CodeBox(lambda396,0)
     4 DYNAMIC    28        
     5 NAMEDSEND Show/2
     6 RETURN    
-CodeBox(lambda395,1)
+CodeBox(lambda387,1)
     0 NULL      
     1 RETURN    
-CodeBox(lambda394,4)
+CodeBox(lambda386,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -364,11 +698,11 @@ CodeBox(lambda394,4)
    18 SKIP       2         
    19 CASEERROR 
    20 RETURN    
-CodeBox(lambda393,1)
+CodeBox(lambda385,1)
     0 STARTCALL 
     1 NULL      
     2 NEWDYNAMIC
-    3 STR        map86     
+    3 STR        map102    
     4 Fun(1)
     5 SETDYNAMIC 0         
     6 POP       
@@ -397,7 +731,7 @@ CodeBox(lambda393,1)
    29 STATE      graphs -1        
    30 SETDYNAMIC 11        
    31 RETURN    
-CodeBox(lambda392,6)
+CodeBox(lambda384,6)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -405,9 +739,9 @@ CodeBox(lambda392,6)
     4 ISTERM     Move  2          [2]       
     5 SETFRAME   3     [2].ref(0)
     6 SETFRAME   4     [2].ref(1)
-    7 instrs.vars.PushDynamic@7c83cba
-    8 instrs.vars.PushDynamic@65beba0b
-    9 instrs.control.Grab@37ae77ae
+    7 instrs.vars.PushDynamic@34ddb4e9
+    8 instrs.vars.PushDynamic@77b3a812
+    9 instrs.control.Grab@221b49a0
    10 STARTCALL 
    11 FRAMEVAR   4         
    12 DYNAMIC    16        
@@ -432,9 +766,9 @@ CodeBox(lambda392,6)
    31 CONS      
    32 STATE      locations -1        
    33 SETDYNAMIC 17        
-   34 instrs.vars.PushDynamic@391d5710
-   35 instrs.vars.PushDynamic@7f768165
-   36 instrs.control.Release@6f081262
+   34 instrs.vars.PushDynamic@3ec22298
+   35 instrs.vars.PushDynamic@6761b355
+   36 instrs.control.Release@df87493
    37 SKIP       15        
    38 TRY        8     false     
    39 ISTERM     Change 3          [2]       
@@ -451,7 +785,7 @@ CodeBox(lambda392,6)
    50 SKIP       2         
    51 CASEERROR 
    52 RETURN    
-CodeBox(lambda391,2)
+CodeBox(lambda383,2)
     0 STARTCALL 
     1 FRAMEVAR   0         
     2 DYNAMIC    3         
@@ -470,7 +804,7 @@ CodeBox(lambda391,2)
    15 STATE      locations -1        
    16 SETDYNAMIC 17        
    17 RETURN    
-CodeBox(lambda390,4)
+CodeBox(lambda382,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -520,7 +854,7 @@ CodeBox(lambda390,4)
    46 SKIP       2         
    47 CASEERROR 
    48 RETURN    
-CodeBox(lambda389,9)
+CodeBox(lambda381,9)
     0 NULL      
     1 NEWDYNAMIC
     2 NULL      
@@ -565,7 +899,7 @@ CodeBox(lambda389,9)
    41 POPDYNAMIC
    42 POPDYNAMIC
    43 RETURN    
-CodeBox(lambda388,4)
+CodeBox(lambda380,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -600,14 +934,215 @@ CodeBox(lambda388,4)
    31 SKIP       2         
    32 CASEERROR 
    33 RETURN    
-CodeBox(lambda387,2)
+CodeBox(behaviour29,2)
+    0 FRAMEVAR   0         
+    1 TRY        4     true      
+    2 ISTERM     Time  1          [0]       
+    3 SETFRAME   1     [0].ref(0)
+    4 NULL      
+    5 SKIP       2         
+    6 CASEERROR 
+    7 RETURN    
+    8 STARTCALL 
+    9 DYNAMIC    0         
+   10 NEWACTOR  
+   11 APPLY      0         
+   12 SETACTOR  
+   13 DYNAMIC    23        
+   14 NAMEDSEND AddBrowserListener/1
+   15 POP       
+   16 DYNAMIC    3         
+   17 NAMEDSEND Show/0
+   18 POPFRAME  
+CodeBox(behaviour28,4)
+    0 FRAMEVAR   0         
+    1 TRY        5     true      
+    2 ISTERM     BrowserEvent 1          [0]       
+    3 ISSTR      [0].ref(0) run1      
+    4 DYNAMIC    3         
+    5 NAMEDSEND Step/0
+    6 SKIP       56        
+    7 TRY        53    false     
+    8 ISTERM     BrowserEvent 1          [0]       
+    9 SETFRAME   1     [0].ref(0)
+   10 DYNAMIC    14        
+   11 SETFRAME   2         
+   12 FRAMEVAR   2         
+   13 ISNIL     
+   14 SKIPTRUE   28        
+   15 FRAMEVAR   2         
+   16 HEAD      
+   17 SETFRAME   3         
+   18 POP       
+   19 FRAMEVAR   2         
+   20 TAIL      
+   21 SETFRAME   2         
+   22 POP       
+   23 FRAMEVAR   3         
+   24 STR                  
+   25 ADD       
+   26 FRAMEVAR   1         
+   27 EQL       
+   28 SKIPFALSE  11        
+   29 DYNAMIC    11        
+   30 FRAMEVAR   3         
+   31 LIST       1         
+   32 ADD       
+   33 STATE      blownUp -1        
+   34 SETDYNAMIC 11        
+   35 POP       
+   36 DYNAMIC    3         
+   37 NAMEDSEND Show/0
+   38 SKIP       2         
+   39 NULL      
+   40 POP       
+   41 GOTO       12        
+   42 NULL      
+   43 POP       
+   44 STARTCALL 
+   45 DYNAMIC    11        
+   46 REF        [Key(length)]
+   47 APPLY      1         
+   48 INT        3         
+   49 GRE       
+   50 SKIPFALSE  9         
+   51 DYNAMIC    11        
+   52 TAIL      
+   53 STATE      blownUp -1        
+   54 SETDYNAMIC 11        
+   55 POP       
+   56 DYNAMIC    3         
+   57 NAMEDSEND Show/0
+   58 SKIP       2         
+   59 NULL      
+   60 SKIP       2         
+   61 CASEERROR 
+   62 RETURN    
+   63 NULL      
+   64 POPFRAME  
+CodeBox(behaviour27,11)
+    0 FRAMEVAR   0         
+    1 TRY        6     true      
+    2 ISTERM     ChangeTo 1          [0]       
+    3 SETFRAME   1     [0].ref(0)
+    4 FRAMEVAR   1         
+    5 STATE      line  0         
+    6 SETDYNAMIC 3         
+    7 SKIP       74        
+    8 TRY        66    false     
+    9 ISTERM     GetPlan 1          [0]       
+   10 SETFRAME   1     [0].ref(0)
+   11 STARTCALL 
+   12 DYNAMIC    19        
+   13 STARTCALL 
+   14 STARTCALL 
+   15 DYNAMIC    19        
+   16 REF        [Key(length)]
+   17 APPLY      1         
+   18 APPDYNAMIC 23    1         
+   19 REF        [Key(nth)]
+   20 APPLY      2         
+   21 SETFRAME   2         
+   22 POP       
+   23 DYNAMIC    3         
+   24 DYNAMIC    2         
+   25 FRAMEVAR   2         
+   26 TERM       Planning 3         
+   27 STATE      state 0         
+   28 SETDYNAMIC 1         
+   29 POP       
+   30 instrs.query.data.NewLogicalVar@75566ac5
+   31 SETFRAME   3         
+   32 POP       
+   33 FRAMEVAR   2         
+   34 FRAMEVAR   3         
+   35 DYNAMIC    2         
+   36 DYNAMIC    3         
+   37 DYNAMIC    18        
+   38 NULL      
+   39 INT        75000     
+   40 Show(58,62,Clause($-show,4))
+         0 Local(0)
+         1 SetLocal(4)
+         2 Local(1)
+         3 SetLocal(5)
+         4 Local(2)
+         5 SetLocal(6)
+         6 Local(3)
+         7 SetLocal(7)
+         8 StartCall()
+         9 Local(4)
+        10 Local(5)
+        11 Local(7)
+        12 Local(6)
+        13 Enter(Key(route),4)
+        14 Return()
+   41 DYNAMIC    3         
+   42 instrs.query.QRecons@5a2f4015
+   43 SETDYNAMIC 3         
+   44 DYNAMIC    2         
+   45 instrs.query.QRecons@30beab1e
+   46 SETDYNAMIC 2         
+   47 FRAMEVAR   3         
+   48 instrs.query.QRecons@7e2c1d76
+   49 SETFRAME   3         
+   50 FRAMEVAR   2         
+   51 instrs.query.QRecons@386a4034
+   52 SETFRAME   2         
+   53 FRAMEVAR   2         
+   54 TERM       Travelling 1         
+   55 STATE      state 0         
+   56 SETDYNAMIC 1         
+   57 POP       
+   58 FRAMEVAR   2         
+   59 STATE      station 0         
+   60 SETDYNAMIC 2         
+   61 POP       
+   62 SELF      
+   63 FRAMEVAR   3         
+   64 FRAMEVAR   1         
+   65 NAMEDSEND AddPlan/2
+   66 GOTO       74        
+   67 FRAMEVAR   1         
+   68 SELF      
+   69 NAMEDSEND GetPlan/1
+   70 GOTO       74        
+   71 FRAMEVAR   1         
+   72 SELF      
+   73 NAMEDSEND GetPlan/1
+   74 SKIP       7         
+   75 TRY        4     false     
+   76 ISTERM     Time  1          [0]       
+   77 SETFRAME   1     [0].ref(0)
+   78 NULL      
+   79 SKIP       2         
+   80 CASEERROR 
+   81 RETURN    
+   82 instrs.vars.PushDynamic@186590c4
+   83 instrs.control.Grab@5d463e8d
+   84 SELF      
+   85 DYNAMIC    2         
+   86 TERM       Loc   2         
+   87 DYNAMIC    17        
+   88 CONS      
+   89 STATE      locations -1        
+   90 SETDYNAMIC 17        
+   91 POP       
+   92 SELF      
+   93 LIST       0         
+   94 DYNAMIC    8         
+   95 NAMEDSEND AddPlan/2
+   96 instrs.vars.PushDynamic@431f5ffe
+   97 instrs.control.Release@299ecc49
+   98 POPFRAME  
+CodeBox(lambda379,2)
     0 STR        width     
     1 STR        500       
     2 TERM       Prop  2         
     3 LIST       1         
     4 NULL      
     5 NEWDYNAMIC
-    6 STR        map85     
+    6 STR        map101    
     7 Fun(1)
     8 SETDYNAMIC 0         
     9 POP       
@@ -647,381 +1182,83 @@ CodeBox(lambda387,2)
    43 ADD       
    44 TERM       Table 2         
    45 RETURN    
-CodeBox(lambda386,1)
-    0 LIST       0         
-    1 RETURN    
-CodeBox(lambda385,3)
+CodeBox(behaviour26,10)
     0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        3     true      
-    4 ISTERM     Central 0          [1]       
-    5 STR        red       
-    6 SKIP       18        
-    7 TRY        3     false     
-    8 ISTERM     Piccadilly 0          [1]       
-    9 STR        blue      
-   10 SKIP       14        
-   11 TRY        3     false     
-   12 ISTERM     HammersmithAndCity 0          [1]       
-   13 STR        green     
-   14 SKIP       10        
-   15 TRY        3     false     
-   16 ISTERM     District 0          [1]       
-   17 STR        grey      
-   18 SKIP       6         
-   19 TRY        3     false     
-   20 SETFRAME   2     [1]       
-   21 STR        black     
-   22 SKIP       2         
-   23 CASEERROR 
-   24 RETURN    
-CodeBox(lambda384,7)
-    0 FRAMEVAR   0         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [2]       
-    5 LIST       0         
-    6 SKIP       54        
-    7 TRY        39    false     
-    8 ISCONS     [2]       
-    9 ISTERM     Link  3          [2].head()
-   10 SETFRAME   3     [2].head().ref(0)
-   11 SETFRAME   5     [2].head().ref(1)
-   12 SETFRAME   6     [2].head().ref(2)
-   13 SETFRAME   4     [2].tail()
-   14 STR        color     
-   15 STARTCALL 
-   16 FRAMEVAR   3         
-   17 APPDYNAMIC 7     1         
-   18 TERM       Prop  2         
-   19 STR        penwidth  
-   20 STR        3         
-   21 TERM       Prop  2         
-   22 STR        arrowhead 
-   23 STR        none      
-   24 TERM       Prop  2         
-   25 LIST       3         
-   26 STARTCALL 
-   27 FRAMEVAR   5         
-   28 FRAMEVAR   1         
-   29 REF        [Key(indexOf)]
-   30 APPLY      2         
-   31 ADD1      
-   32 STARTCALL 
-   33 FRAMEVAR   6         
-   34 FRAMEVAR   1         
-   35 REF        [Key(indexOf)]
-   36 APPLY      2         
-   37 ADD1      
-   38 STR                  
-   39 TERM       HTML  1         
-   40 TERM       Edge  4         
-   41 STARTCALL 
-   42 FRAMEVAR   4         
-   43 FRAMEVAR   1         
-   44 APPDYNAMIC 8     2         
-   45 CONS      
-   46 SKIP       14        
-   47 TRY        11    false     
-   48 ISCONS     [2]       
-   49 ISTERM     ChangeLine 3          [2].head()
-   50 SETFRAME   3     [2].head().ref(0)
-   51 SETFRAME   4     [2].head().ref(1)
-   52 SETFRAME   5     [2].head().ref(2)
-   53 SETFRAME   6     [2].tail()
-   54 STARTCALL 
-   55 FRAMEVAR   6         
-   56 FRAMEVAR   1         
-   57 APPDYNAMIC 8     2         
-   58 SKIP       2         
-   59 CASEERROR 
-   60 RETURN    
-CodeBox(lambda383,7)
-    0 FRAMEVAR   0         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [2]       
-    5 FRAMEVAR   1         
-    6 SKIP       34        
-    7 TRY        19    false     
-    8 ISCONS     [2]       
-    9 ISTERM     Link  3          [2].head()
-   10 SETFRAME   3     [2].head().ref(0)
-   11 SETFRAME   5     [2].head().ref(1)
-   12 SETFRAME   6     [2].head().ref(2)
-   13 SETFRAME   4     [2].tail()
-   14 STARTCALL 
-   15 FRAMEVAR   4         
-   16 STARTCALL 
-   17 FRAMEVAR   5         
-   18 STARTCALL 
-   19 FRAMEVAR   6         
-   20 FRAMEVAR   1         
-   21 REF        [Key(adjoin)]
-   22 APPLY      2         
-   23 REF        [Key(adjoin)]
-   24 APPLY      2         
-   25 APPDYNAMIC 9     2         
-   26 SKIP       14        
-   27 TRY        11    false     
-   28 ISCONS     [2]       
-   29 ISTERM     ChangeLine 3          [2].head()
-   30 SETFRAME   3     [2].head().ref(0)
-   31 SETFRAME   4     [2].head().ref(1)
-   32 SETFRAME   5     [2].head().ref(2)
-   33 SETFRAME   6     [2].tail()
-   34 STARTCALL 
-   35 FRAMEVAR   6         
-   36 FRAMEVAR   1         
-   37 APPDYNAMIC 9     2         
-   38 SKIP       2         
-   39 CASEERROR 
-   40 RETURN    
-CodeBox(lambda382,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        31    true      
-    4 ISCONS     [1]       
-    5 SETFRAME   3     [1].head()
-    6 SETFRAME   2     [1].tail()
-    7 STR        shape     
-    8 STR        plain     
-    9 TERM       Prop  2         
-   10 STR        fontsize  
-   11 STR        18        
-   12 TERM       Prop  2         
-   13 STR        URL       
-   14 STR        edb:      
-   15 FRAMEVAR   3         
-   16 ADD       
-   17 TERM       Prop  2         
-   18 LIST       3         
-   19 STARTCALL 
-   20 FRAMEVAR   3         
-   21 DYNAMIC    2         
-   22 REF        [Key(indexOf)]
-   23 APPLY      2         
-   24 ADD1      
-   25 STARTCALL 
-   26 FRAMEVAR   3         
-   27 APPDYNAMIC 1     1         
-   28 TERM       HTML  1         
-   29 TERM       Node  3         
-   30 STARTCALL 
-   31 FRAMEVAR   2         
-   32 APPDYNAMIC 0     1         
-   33 CONS      
-   34 SKIP       6         
-   35 TRY        3     false     
-   36 ISNIL      [1]       
-   37 LIST       0         
-   38 SKIP       2         
-   39 CASEERROR 
-   40 RETURN    
-CodeBox(lambda381,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        9     true      
-    4 ISCONS     [1]       
-    5 SETFRAME   3     [1].head()
-    6 SETFRAME   2     [1].tail()
-    7 REF        [Key(id)] 
-    8 STARTCALL 
-    9 FRAMEVAR   2         
-   10 APPDYNAMIC 0     1         
-   11 CONS      
-   12 SKIP       6         
-   13 TRY        3     false     
-   14 ISNIL      [1]       
-   15 LIST       0         
-   16 SKIP       2         
-   17 CASEERROR 
-   18 RETURN    
-CodeBox(lambda380,5)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        22    true      
-    4 ISCONS     [1]       
-    5 ISTERM     Loc   2          [1].head()
-    6 SETFRAME   4     [1].head().ref(0)
-    7 SETFRAME   2     [1].head().ref(1)
-    8 SETFRAME   3     [1].tail()
-    9 STARTCALL 
-   10 FRAMEVAR   2         
-   11 DYNAMIC    1         
-   12 EQL       
-   13 SKIPFALSE  5         
-   14 FRAMEVAR   4         
-   15 LIST       1         
-   16 LIST       1         
-   17 SKIP       2         
-   18 LIST       0         
-   19 REF        [Key(flatten)]
-   20 APPLY      1         
-   21 STARTCALL 
-   22 FRAMEVAR   3         
-   23 APPDYNAMIC 0     1         
-   24 CONS      
-   25 SKIP       6         
-   26 TRY        3     false     
-   27 ISNIL      [1]       
-   28 LIST       0         
-   29 SKIP       2         
-   30 CASEERROR 
-   31 RETURN    
-CodeBox(lambda379,4)
-    0 FRAMEVAR   0         
-    1 NEWDYNAMIC
-    2 STARTCALL 
-    3 DYNAMIC    0         
-    4 DYNAMIC    13        
-    5 REF        [Key(member)]
-    6 APPLY      2         
-    7 SKIPFALSE  3         
-    8 STR        &#128163; 
-    9 SKIP       46        
-   10 STARTCALL 
-   11 NULL      
-   12 NEWDYNAMIC
-   13 STR        map82     
-   14 Fun(1)
-   15 SETDYNAMIC 0         
-   16 POP       
-   17 STARTCALL 
-   18 DYNAMIC    15        
-   19 APPDYNAMIC 0     1         
-   20 POPDYNAMIC
-   21 REF        [Key(flatten)]
-   22 APPLY      1         
-   23 SETFRAME   1         
-   24 POP       
-   25 STARTCALL 
-   26 FRAMEVAR   1         
-   27 REF        [Key(length)]
-   28 APPLY      1         
-   29 IS0       
-   30 SKIPFALSE  7         
-   31 STR        <font face="consolas">
-   32 DYNAMIC    0         
-   33 STR        :[ ]</font>
-   34 ADD       
-   35 ADD       
-   36 SKIP       19        
-   37 STR        <font face="consolas" color="red">
-   38 DYNAMIC    0         
-   39 STR        :         
-   40 NULL      
-   41 NEWDYNAMIC
-   42 STR        map83     
-   43 Fun(1)
-   44 SETDYNAMIC 0         
-   45 POP       
-   46 STARTCALL 
-   47 FRAMEVAR   1         
-   48 APPDYNAMIC 0     1         
-   49 POPDYNAMIC
-   50 STR        </font>   
-   51 ADD       
-   52 ADD       
-   53 ADD       
-   54 ADD       
-   55 RETURN    
-CodeBox(lambda378,8)
-    0 instrs.query.data.NewLogicalVar@2b5f1b2a
-    1 SETFRAME   1         
-    2 POP       
-    3 FRAMEVAR   1         
-    4 DYNAMIC    13        
-    5 NULL      
-    6 INT        -1        
-    7 Show(76,78,Clause($-show,1))
-         0 Local(0)
-         1 SetLocal(1)
-         2 StartCall()
-         3 Local(1)
-         4 Enter(Key(map),1)
-         5 Return()
-    8 FRAMEVAR   1         
-    9 instrs.query.QRecons@78a97c86
-   10 SETFRAME   1         
-   11 STARTCALL 
-   12 FRAMEVAR   1         
-   13 LIST       0         
-   14 APPDYNAMIC 9     2         
-   15 NEWDYNAMIC
-   16 STR        shape     
-   17 STR        plain     
-   18 TERM       Prop  2         
-   19 STR        fontsize  
-   20 STR        20        
-   21 TERM       Prop  2         
-   22 LIST       2         
-   23 INT        0         
-   24 STARTCALL 
-   25 FRAMEVAR   0         
-   26 APPDYNAMIC 5     1         
-   27 TERM       Node  3         
-   28 SETFRAME   2         
+    1 TRY        19    true      
+    2 ISTERM     AddPlan 2          [0]       
+    3 SETFRAME   1     [0].ref(0)
+    4 SETFRAME   2     [0].ref(1)
+    5 STARTCALL 
+    6 FRAMEVAR   1         
+    7 DYNAMIC    3         
+    8 REF        [Key(adjoin)]
+    9 APPLY      2         
+   10 STATE      travellers 0         
+   11 SETDYNAMIC 3         
+   12 POP       
+   13 FRAMEVAR   1         
+   14 FRAMEVAR   2         
+   15 TERM       Plan  2         
+   16 DYNAMIC    4         
+   17 CONS      
+   18 STATE      plans 0         
+   19 SETDYNAMIC 4         
+   20 SKIP       50        
+   21 TRY        33    false     
+   22 ISTERM     Step  0          [0]       
+   23 STARTCALL 
+   24 NULL      
+   25 NEWDYNAMIC
+   26 STR        map102    
+   27 Fun(1)
+   28 SETDYNAMIC 0         
    29 POP       
-   30 STR        label     
-   31 Fun(1)
-   32 NEWDYNAMIC
-   33 NULL      
-   34 NEWDYNAMIC
-   35 STR        map84     
-   36 Fun(1)
-   37 SETDYNAMIC 0         
+   30 STARTCALL 
+   31 DYNAMIC    5         
+   32 APPDYNAMIC 0     1         
+   33 POPDYNAMIC
+   34 REF        [Key(flatten)]
+   35 APPLY      1         
+   36 STATE      plans 0         
+   37 SETDYNAMIC 4         
    38 POP       
    39 STARTCALL 
-   40 DYNAMIC    2         
-   41 APPDYNAMIC 0     1         
-   42 POPDYNAMIC
-   43 SETFRAME   3         
-   44 POP       
-   45 STARTCALL 
-   46 FRAMEVAR   1         
-   47 DYNAMIC    1         
-   48 APPDYNAMIC 10    2         
-   49 SETFRAME   4         
-   50 POP       
-   51 STR        nodesep   
-   52 STR        0.001     
-   53 TERM       Prop  2         
-   54 STR        ranksep   
-   55 STR        0.001     
-   56 TERM       Prop  2         
-   57 STR        size      
-   58 STR        20,15     
-   59 TERM       Prop  2         
-   60 STR        rankdir   
-   61 STR        TB        
-   62 TERM       Prop  2         
-   63 STR        ratio     
-   64 STR        fill      
-   65 TERM       Prop  2         
-   66 STR        URL       
-   67 STR        edb:run1  
-   68 TERM       Prop  2         
-   69 LIST       6         
-   70 FRAMEVAR   3         
-   71 FRAMEVAR   4         
-   72 TERM       Graph 3         
-   73 POPDYNAMIC
-   74 POPDYNAMIC
-   75 GOTO       82        
-   76 NULL      
-   77 GOTO       82        
-   78 LIST       0         
-   79 LIST       0         
-   80 LIST       0         
-   81 TERM       Graph 3         
-   82 RETURN    
+   40 DYNAMIC    3         
+   41 APPDYNAMIC 15    1         
+   42 SETFRAME   1         
+   43 POP       
+   44 STR        Underground
+   45 FRAMEVAR   1         
+   46 DYNAMIC    28        
+   47 NAMEDSEND Show/2
+   48 POP       
+   49 FRAMEVAR   1         
+   50 DYNAMIC    11        
+   51 CONS      
+   52 STATE      graphs -1        
+   53 SETDYNAMIC 11        
+   54 SKIP       16        
+   55 TRY        8     false     
+   56 ISTERM     Show  0          [0]       
+   57 STR        Underground
+   58 STARTCALL 
+   59 DYNAMIC    3         
+   60 APPDYNAMIC 15    1         
+   61 DYNAMIC    28        
+   62 NAMEDSEND Show/2
+   63 SKIP       7         
+   64 TRY        4     false     
+   65 ISTERM     Time  1          [0]       
+   66 SETFRAME   1     [0].ref(0)
+   67 NULL      
+   68 SKIP       2         
+   69 CASEERROR 
+   70 RETURN    
+   71 NULL      
+   72 POPFRAME  
+CodeBox(lambda378,1)
+    0 LIST       0         
+    1 RETURN    
 CodeBox(asm/underground.asm,48)
     0 STARTCALL 
     1 NULL      
@@ -1180,11 +1417,11 @@ CodeBox(asm/underground.asm,48)
   154 Fun(3)
   155 SETDYNAMIC 17        
   156 POP       
-  157 STR        fun196    
+  157 STR        fun141    
   158 Fun(1)
   159 SETDYNAMIC 16        
   160 POP       
-  161 STR        fun197    
+  161 STR        fun142    
   162 Fun(1)
   163 SETDYNAMIC 15        
   164 POP       
@@ -1208,11 +1445,11 @@ CodeBox(asm/underground.asm,48)
   182 Fun(1)
   183 SETDYNAMIC 13        
   184 POP       
-  185 STR        fun198    
+  185 STR        fun143    
   186 Fun(2)
   187 SETDYNAMIC 12        
   188 POP       
-  189 STR        fun199    
+  189 STR        fun144    
   190 Fun(2)
   191 SETDYNAMIC 11        
   192 POP       
@@ -1272,7 +1509,7 @@ CodeBox(asm/underground.asm,48)
   246 Fun(4)
   247 SETDYNAMIC 3         
   248 POP       
-  249 STR        fun200    
+  249 STR        fun145    
   250 Fun(1)
   251 SETDYNAMIC 2         
   252 POP       
@@ -1402,184 +1639,122 @@ CodeBox(asm/underground.asm,48)
   376 POPDYNAMIC
   377 SETDYNAMIC 0         
   378 POP       
-  379 NULL      
-  380 NEWDYNAMIC
-  381 NULL      
-  382 NEWDYNAMIC
-  383 NULL      
-  384 NEWDYNAMIC
-  385 NULL      
-  386 NEWDYNAMIC
-  387 NULL      
-  388 NEWDYNAMIC
-  389 NULL      
-  390 NEWDYNAMIC
-  391 NULL      
-  392 NEWDYNAMIC
-  393 NULL      
-  394 NEWDYNAMIC
-  395 NULL      
-  396 NEWDYNAMIC
-  397 NULL      
-  398 NEWDYNAMIC
-  399 NULL      
-  400 NEWDYNAMIC
-  401 NULL      
-  402 NEWDYNAMIC
-  403 NULL      
-  404 NEWDYNAMIC
-  405 NULL      
-  406 NEWDYNAMIC
-  407 NULL      
-  408 NEWDYNAMIC
-  409 INT        90000     
-  410 SETFRAME   2         
-  411 POP       
-  412 TERM       EalingBroadway 0         
-  413 TERM       WestActon 0         
-  414 TERM       NorthActon 0         
-  415 TERM       EastActon 0         
-  416 TERM       EalingCommon 0         
-  417 TERM       WhiteCity 0         
-  418 TERM       ShepherdsBush 0         
-  419 TERM       HollandPark 0         
-  420 TERM       NottingHillGate 0         
-  421 TERM       ActonTown 0         
-  422 TERM       ChiswickPark 0         
-  423 TERM       TurnhamGreen 0         
-  424 TERM       StamfordBrook 0         
-  425 TERM       RavenscourtPark 0         
-  426 TERM       Hammersmith 0         
-  427 TERM       GoldhawkRoad 0         
-  428 TERM       ShepherdsBushMarket 0         
-  429 TERM       WoodLane 0         
-  430 TERM       BaronsCourt 0         
-  431 TERM       GloucesterRoad 0         
-  432 TERM       Knightsbridge 0         
-  433 TERM       Queensway 0         
-  434 TERM       LancasterGate 0         
-  435 TERM       MarbleArch 0         
-  436 TERM       BondStreet 0         
-  437 TERM       OxfordCircus 0         
-  438 TERM       TottenhamCourtRoad 0         
-  439 TERM       Holborn 0         
-  440 TERM       ChanceryLane 0         
-  441 TERM       StPauls 0         
-  442 TERM       Bank  0         
-  443 TERM       LiverpoolStreet 0         
-  444 TERM       BethnalGreen 0         
-  445 TERM       MileEnd 0         
-  446 TERM       Stratford 0         
-  447 TERM       WestKensington 0         
-  448 TERM       EarlsCourt 0         
-  449 TERM       SouthKensington 0         
-  450 TERM       SloanSquare 0         
-  451 TERM       Victoria 0         
-  452 TERM       StJamesPark 0         
-  453 TERM       Westminster 0         
-  454 TERM       Embankment 0         
-  455 TERM       Temple 0         
-  456 TERM       Blackfriars 0         
-  457 TERM       MansionHouse 0         
-  458 TERM       CannonStreet 0         
-  459 TERM       Monument 0         
-  460 TERM       TowerHill 0         
-  461 TERM       AldgateEast 0         
-  462 TERM       Whitechapel 0         
-  463 TERM       StepneyGreen 0         
-  464 TERM       MileEnd 0         
-  465 TERM       LatimerRoad 0         
-  466 TERM       LadbrookGrove 0         
-  467 TERM       WestbournePark 0         
-  468 TERM       RoyalOak 0         
-  469 TERM       Paddington 0         
-  470 TERM       EdgewareRoad 0         
-  471 TERM       BakerStreet 0         
-  472 TERM       GreatPortlandStreet 0         
-  473 TERM       EustonSquare 0         
-  474 TERM       KingsCross 0         
-  475 TERM       Farringdon 0         
-  476 TERM       Barbican 0         
-  477 TERM       Moorgate 0         
-  478 TERM       HydeParkCorner 0         
-  479 TERM       GreenPark 0         
-  480 TERM       PiccadillyCircus 0         
-  481 TERM       LeicesterSquare 0         
-  482 TERM       CoventGarden 0         
-  483 TERM       RussellSquare 0         
-  484 TERM       CaledonianRoad 0         
-  485 TERM       HollowayRoad 0         
-  486 TERM       Arsenal 0         
-  487 TERM       FinsburyPark 0         
-  488 LIST       76        
-  489 SETDYNAMIC 14        
-  490 POP       
-  491 Rules()
-  solve/4
-         0 Local(0)
-         1 SetLocal(4)
-         2 Local(1)
-         3 SetLocal(5)
-         4 Local(2)
-         5 SetLocal(6)
-         6 Local(3)
-         7 Local(6)
-         8 Unify()
-         9 StartCall()
-        10 Local(5)
-        11 Local(4)
-        12 Enter(Key(subset),2)
-        13 Return()
-  solve/4
-         0 Local(0)
-         1 SetLocal(4)
-         2 Local(1)
-         3 SetLocal(5)
-         4 Local(2)
-         5 SetLocal(6)
-         6 Local(3)
-         7 SetLocal(7)
-         8 StartCall()
-         9 Local(6)
-        10 Enter(Key(noBacktrack),1)
-        11 StartCall()
-        12 NewVar(8)
-        13 NewVar(9)
-        14 NewVar(10)
-        15 NewVar(11)
-        16 Enter(Key(action),4)
-        17 StartCall()
-        18 Local(9)
-        19 Local(4)
-        20 Enter(Key(subset),2)
-        21 StartCall()
-        22 Local(8)
-        23 Local(6)
-        24 Enter(Key(notMember),2)
-        25 StartCall()
-        26 Local(4)
-        27 Local(11)
-        28 NewVar(12)
-        29 Enter(Key(deleteAll),3)
-        30 StartCall()
-        31 Local(10)
-        32 Local(12)
-        33 NewVar(13)
-        34 Enter(Key(append),3)
-        35 StartCall()
-        36 Local(6)
-        37 Local(8)
-        38 Nil()
-        39 Pair()
-        40 NewVar(14)
-        41 Enter(Key(append),3)
-        42 StartCall()
-        43 Local(13)
-        44 Local(5)
-        45 Local(14)
-        46 Local(7)
-        47 EnterLast(Key(solve),4)
-        48 Return()
+  379 RECORD     0         
+  380 SETFRAME   0         
+  381 POP       
+  382 NULL      
+  383 NEWDYNAMIC
+  384 NULL      
+  385 NEWDYNAMIC
+  386 NULL      
+  387 NEWDYNAMIC
+  388 NULL      
+  389 NEWDYNAMIC
+  390 NULL      
+  391 NEWDYNAMIC
+  392 NULL      
+  393 NEWDYNAMIC
+  394 NULL      
+  395 NEWDYNAMIC
+  396 NULL      
+  397 NEWDYNAMIC
+  398 NULL      
+  399 NEWDYNAMIC
+  400 NULL      
+  401 NEWDYNAMIC
+  402 NULL      
+  403 NEWDYNAMIC
+  404 NULL      
+  405 NEWDYNAMIC
+  406 NULL      
+  407 NEWDYNAMIC
+  408 NULL      
+  409 NEWDYNAMIC
+  410 NULL      
+  411 NEWDYNAMIC
+  412 INT        90000     
+  413 SETFRAME   2         
+  414 POP       
+  415 TERM       EalingBroadway 0         
+  416 TERM       WestActon 0         
+  417 TERM       NorthActon 0         
+  418 TERM       EastActon 0         
+  419 TERM       EalingCommon 0         
+  420 TERM       WhiteCity 0         
+  421 TERM       ShepherdsBush 0         
+  422 TERM       HollandPark 0         
+  423 TERM       NottingHillGate 0         
+  424 TERM       ActonTown 0         
+  425 TERM       ChiswickPark 0         
+  426 TERM       TurnhamGreen 0         
+  427 TERM       StamfordBrook 0         
+  428 TERM       RavenscourtPark 0         
+  429 TERM       Hammersmith 0         
+  430 TERM       GoldhawkRoad 0         
+  431 TERM       ShepherdsBushMarket 0         
+  432 TERM       WoodLane 0         
+  433 TERM       BaronsCourt 0         
+  434 TERM       GloucesterRoad 0         
+  435 TERM       Knightsbridge 0         
+  436 TERM       Queensway 0         
+  437 TERM       LancasterGate 0         
+  438 TERM       MarbleArch 0         
+  439 TERM       BondStreet 0         
+  440 TERM       OxfordCircus 0         
+  441 TERM       TottenhamCourtRoad 0         
+  442 TERM       Holborn 0         
+  443 TERM       ChanceryLane 0         
+  444 TERM       StPauls 0         
+  445 TERM       Bank  0         
+  446 TERM       LiverpoolStreet 0         
+  447 TERM       BethnalGreen 0         
+  448 TERM       MileEnd 0         
+  449 TERM       Stratford 0         
+  450 TERM       WestKensington 0         
+  451 TERM       EarlsCourt 0         
+  452 TERM       SouthKensington 0         
+  453 TERM       SloanSquare 0         
+  454 TERM       Victoria 0         
+  455 TERM       StJamesPark 0         
+  456 TERM       Westminster 0         
+  457 TERM       Embankment 0         
+  458 TERM       Temple 0         
+  459 TERM       Blackfriars 0         
+  460 TERM       MansionHouse 0         
+  461 TERM       CannonStreet 0         
+  462 TERM       Monument 0         
+  463 TERM       TowerHill 0         
+  464 TERM       AldgateEast 0         
+  465 TERM       Whitechapel 0         
+  466 TERM       StepneyGreen 0         
+  467 TERM       MileEnd 0         
+  468 TERM       LatimerRoad 0         
+  469 TERM       LadbrookGrove 0         
+  470 TERM       WestbournePark 0         
+  471 TERM       RoyalOak 0         
+  472 TERM       Paddington 0         
+  473 TERM       EdgewareRoad 0         
+  474 TERM       BakerStreet 0         
+  475 TERM       GreatPortlandStreet 0         
+  476 TERM       EustonSquare 0         
+  477 TERM       KingsCross 0         
+  478 TERM       Farringdon 0         
+  479 TERM       Barbican 0         
+  480 TERM       Moorgate 0         
+  481 TERM       HydeParkCorner 0         
+  482 TERM       GreenPark 0         
+  483 TERM       PiccadillyCircus 0         
+  484 TERM       LeicesterSquare 0         
+  485 TERM       CoventGarden 0         
+  486 TERM       RussellSquare 0         
+  487 TERM       CaledonianRoad 0         
+  488 TERM       HollowayRoad 0         
+  489 TERM       Arsenal 0         
+  490 TERM       FinsburyPark 0         
+  491 LIST       76        
+  492 SETDYNAMIC 14        
+  493 POP       
+  494 Rules()
  subset/2
          0 Local(0)
          1 UNil()
@@ -1602,9 +1777,49 @@ CodeBox(asm/underground.asm,48)
         12 Local(4)
         13 EnterLast(Key(subset),2)
         14 Return()
+ append/3
+         0 Local(0)
+         1 UNil()
+         2 Local(1)
+         3 SetLocal(3)
+         4 Local(2)
+         5 Local(3)
+         6 Unify()
+         7 Return()
+ append/3
+         0 Local(0)
+         1 UPair()
+         2 SetLocal(3)
+         3 SetLocal(4)
+         4 Local(1)
+         5 SetLocal(5)
+         6 Local(2)
+         7 UPair()
+         8 Local(3)
+         9 Unify()
+        10 SetLocal(6)
+        11 StartCall()
+        12 Local(4)
+        13 Local(5)
+        14 Local(6)
+        15 EnterLast(Key(append),3)
+        16 Return()
     map/1
          0 Local(0)
          1 UConst([Link(Central,EalingBroadway,WestActon),Link(Central,WestActon,NorthActon),Link(Central,NorthActon,EastActon),Link(Central,EastActon,WhiteCity),Link(Central,WhiteCity,ShepherdsBush),Link(Central,ShepherdsBush,HollandPark),Link(Central,HollandPark,NottingHillGate),Link(Central,NottingHillGate,Queensway),Link(Central,Queensway,LancasterGate),Link(Central,LancasterGate,MarbleArch),Link(Central,MarbleArch,BondStreet),Link(Central,BondStreet,OxfordCircus),Link(Central,OxfordCircus,TottenhamCourtRoad),Link(Central,TottenhamCourtRoad,Holborn),Link(Central,Holborn,ChanceryLane),Link(Central,ChanceryLane,StPauls),Link(Central,StPauls,Bank),Link(Central,Bank,LiverpoolStreet),Link(Central,LiverpoolStreet,BethnalGreen),Link(Central,BethnalGreen,MileEnd),Link(Central,MileEnd,Stratford),Link(District,EalingBroadway,EalingCommon),Link(District,EalingCommon,ActonTown),Link(District,ActonTown,ChiswickPark),Link(District,ChiswickPark,TurnhamGreen),Link(District,TurnhamGreen,StamfordBrook),Link(District,StamfordBrook,RavenscourtPark),Link(District,RavenscourtPark,Hammersmith),Link(District,Hammersmith,BaronsCourt),Link(District,BaronsCourt,WestKensington),Link(District,WestKensington,EarlsCourt),Link(District,EarlsCourt,GloucesterRoad),Link(District,GloucesterRoad,SouthKensington),Link(District,SouthKensington,SloanSquare),Link(District,SloanSquare,Victoria),Link(District,Victoria,StJamesPark),Link(District,StJamesPark,Westminster),Link(District,Westminster,Embankment),Link(District,Embankment,Temple),Link(District,Temple,Blackfriars),Link(District,Blackfriars,MansionHouse),Link(District,MansionHouse,CannonStreet),Link(District,CannonStreet,Monument),Link(District,Monument,TowerHill),Link(District,TowerHill,AldgateEast),Link(District,AldgateEast,Whitechapel),Link(District,Whitechapel,StepneyGreen),Link(District,StepneyGreen,MileEnd),Link(HammersmithAndCity,Hammersmith,GoldhawkRoad),Link(HammersmithAndCity,GoldhawkRoad,ShepherdsBushMarket),Link(HammersmithAndCity,ShepherdsBushMarket,WoodLane),Link(HammersmithAndCity,WoodLane,LatimerRoad),Link(HammersmithAndCity,LatimerRoad,LadbrookGrove),Link(HammersmithAndCity,LadbrookGrove,WestbournePark),Link(HammersmithAndCity,WestbournePark,RoyalOak),Link(HammersmithAndCity,RoyalOak,Paddington),Link(HammersmithAndCity,Paddington,EdgewareRoad),Link(HammersmithAndCity,EdgewareRoad,BakerStreet),Link(HammersmithAndCity,BakerStreet,GreatPortlandStreet),Link(HammersmithAndCity,GreatPortlandStreet,EustonSquare),Link(HammersmithAndCity,EustonSquare,KingsCross),Link(HammersmithAndCity,KingsCross,Farringdon),Link(HammersmithAndCity,Farringdon,Barbican),Link(HammersmithAndCity,Barbican,Moorgate),Link(HammersmithAndCity,Moorgate,LiverpoolStreet),Link(HammersmithAndCity,LiverpoolStreet,AldgateEast),Link(HammersmithAndCity,AldgateEast,Whitechapel),Link(HammersmithAndCity,Whitechapel,StepneyGreen),Link(HammersmithAndCity,StepneyGreen,MileEnd),Link(Piccadilly,ActonTown,TurnhamGreen),Link(Piccadilly,TurnhamGreen,Hammersmith),Link(Piccadilly,Hammersmith,BaronsCourt),Link(Piccadilly,BaronsCourt,EarlsCourt),Link(Piccadilly,EarlsCourt,GloucesterRoad),Link(Piccadilly,GloucesterRoad,SouthKensington),Link(Piccadilly,SouthKensington,Knightsbridge),Link(Piccadilly,Knightsbridge,HydeParkCorner),Link(Piccadilly,HydeParkCorner,GreenPark),Link(Piccadilly,GreenPark,PiccadillyCircus),Link(Piccadilly,PiccadillyCircus,LeicesterSquare),Link(Piccadilly,LeicesterSquare,CoventGarden),Link(Piccadilly,CoventGarden,Holborn),Link(Piccadilly,Holborn,RussellSquare),Link(Piccadilly,RussellSquare,KingsCross),Link(Piccadilly,KingsCross,CaledonianRoad),Link(Piccadilly,CaledonianRoad,HollowayRoad),Link(Piccadilly,HollowayRoad,Arsenal),Link(Piccadilly,Arsenal,FinsburyPark),ChangeLine(ActonTown,Piccadilly,District),ChangeLine(TurnhamGreen,Piccadilly,District),ChangeLine(Hammersmith,Piccadilly,District),ChangeLine(BaronsCourt,Piccadilly,District),ChangeLine(EarlsCourt,Piccadilly,District),ChangeLine(GloucesterRoad,Piccadilly,District),ChangeLine(SouthKensington,Piccadilly,District),ChangeLine(KingsCross,Piccadilly,HammersmithAndCity),ChangeLine(NottingHillGate,Central,District),ChangeLine(Hammersmith,HammersmithAndCity,Piccadilly),ChangeLine(Holborn,Central,Piccadilly),ChangeLine(Hammersmith,HammersmithAndCity,District),ChangeLine(EalingBroadway,Central,District)])
+         2 Return()
+noBacktrack/1
+         0 Local(0)
+         1 SetLocal(1)
+         2 StartCall()
+         3 Local(1)
+         4 Enter(Key(backtrack),1)
+         5 Cut()
+         6 Fail()
+         7 Return()
+noBacktrack/1
+         0 Local(0)
+         1 Pop()
          2 Return()
 notMember/2
          0 Local(0)
@@ -1653,19 +1868,6 @@ deleteAll/3
         16 Local(6)
         17 EnterLast(Key(deleteAll),3)
         18 Return()
-noBacktrack/1
-         0 Local(0)
-         1 SetLocal(1)
-         2 StartCall()
-         3 Local(1)
-         4 Enter(Key(backtrack),1)
-         5 Cut()
-         6 Fail()
-         7 Return()
-noBacktrack/1
-         0 Local(0)
-         1 Pop()
-         2 Return()
 backtrack/1
          0 Local(0)
          1 UNil()
@@ -1713,49 +1915,39 @@ backtrack/1
          5 Local(2)
          6 EnterLast(Key(backtrack),1)
          7 Return()
- delete/3
+  route/4
          0 Local(0)
-         1 SetLocal(3)
+         1 SetLocal(4)
          2 Local(1)
-         3 UNil()
+         3 SetLocal(5)
          4 Local(2)
-         5 UNil()
-         6 Return()
- delete/3
-         0 Local(0)
-         1 SetLocal(3)
-         2 Local(1)
-         3 UPair()
-         4 Local(3)
-         5 Unify()
-         6 SetLocal(4)
-         7 Local(2)
-         8 SetLocal(5)
-         9 Cut()
-        10 StartCall()
-        11 Local(3)
-        12 Local(4)
-        13 Local(5)
-        14 EnterLast(Key(delete),3)
-        15 Return()
- delete/3
-         0 Local(0)
-         1 SetLocal(3)
-         2 Local(1)
-         3 UPair()
-         4 SetLocal(4)
-         5 SetLocal(5)
-         6 Local(2)
-         7 UPair()
-         8 Local(4)
-         9 Unify()
-        10 SetLocal(6)
+         5 SetLocal(6)
+         6 Local(3)
+         7 SetLocal(7)
+         8 StartCall()
+         9 NewVar(8)
+        10 Enter(Key(map),1)
         11 StartCall()
-        12 Local(3)
+        12 Local(8)
         13 Local(5)
-        14 Local(6)
-        15 EnterLast(Key(delete),3)
-        16 Return()
+        14 Term(At,1)
+        15 Local(4)
+        16 Term(On,1)
+        17 Nil()
+        18 Pair()
+        19 Pair()
+        20 NewVar(9)
+        21 Enter(Key(append),3)
+        22 StartCall()
+        23 Local(9)
+        24 Local(6)
+        25 Term(At,1)
+        26 Nil()
+        27 Pair()
+        28 Nil()
+        29 Local(7)
+        30 EnterLast(Key(solve),4)
+        31 Return()
  action/4
          0 Local(0)
          1 UTerm(Key(Move),2)
@@ -1900,7 +2092,22 @@ backtrack/1
         33 Unify()
         34 UNil()
         35 Return()
-  route/4
+  solve/4
+         0 Local(0)
+         1 SetLocal(4)
+         2 Local(1)
+         3 SetLocal(5)
+         4 Local(2)
+         5 SetLocal(6)
+         6 Local(3)
+         7 Local(6)
+         8 Unify()
+         9 StartCall()
+        10 Local(5)
+        11 Local(4)
+        12 Enter(Key(subset),2)
+        13 Return()
+  solve/4
          0 Local(0)
          1 SetLocal(4)
          2 Local(1)
@@ -1910,56 +2117,46 @@ backtrack/1
          6 Local(3)
          7 SetLocal(7)
          8 StartCall()
-         9 NewVar(8)
-        10 Enter(Key(map),1)
+         9 Local(6)
+        10 Enter(Key(noBacktrack),1)
         11 StartCall()
-        12 Local(8)
-        13 Local(5)
-        14 Term(At,1)
-        15 Local(4)
-        16 Term(On,1)
-        17 Nil()
-        18 Pair()
-        19 Pair()
-        20 NewVar(9)
-        21 Enter(Key(append),3)
-        22 StartCall()
-        23 Local(9)
-        24 Local(6)
-        25 Term(At,1)
-        26 Nil()
-        27 Pair()
-        28 Nil()
-        29 Local(7)
-        30 EnterLast(Key(solve),4)
-        31 Return()
- append/3
-         0 Local(0)
-         1 UNil()
-         2 Local(1)
-         3 SetLocal(3)
-         4 Local(2)
-         5 Local(3)
-         6 Unify()
-         7 Return()
- append/3
-         0 Local(0)
-         1 UPair()
-         2 SetLocal(3)
-         3 SetLocal(4)
-         4 Local(1)
-         5 SetLocal(5)
-         6 Local(2)
-         7 UPair()
-         8 Local(3)
-         9 Unify()
-        10 SetLocal(6)
-        11 StartCall()
-        12 Local(4)
-        13 Local(5)
-        14 Local(6)
-        15 EnterLast(Key(append),3)
-        16 Return()
+        12 NewVar(8)
+        13 NewVar(9)
+        14 NewVar(10)
+        15 NewVar(11)
+        16 Enter(Key(action),4)
+        17 StartCall()
+        18 Local(9)
+        19 Local(4)
+        20 Enter(Key(subset),2)
+        21 StartCall()
+        22 Local(8)
+        23 Local(6)
+        24 Enter(Key(notMember),2)
+        25 StartCall()
+        26 Local(4)
+        27 Local(11)
+        28 NewVar(12)
+        29 Enter(Key(deleteAll),3)
+        30 StartCall()
+        31 Local(10)
+        32 Local(12)
+        33 NewVar(13)
+        34 Enter(Key(append),3)
+        35 StartCall()
+        36 Local(6)
+        37 Local(8)
+        38 Nil()
+        39 Pair()
+        40 NewVar(14)
+        41 Enter(Key(append),3)
+        42 StartCall()
+        43 Local(13)
+        44 Local(5)
+        45 Local(14)
+        46 Local(7)
+        47 EnterLast(Key(solve),4)
+        48 Return()
  member/2
          0 Local(0)
          1 SetLocal(2)
@@ -1981,184 +2178,224 @@ backtrack/1
          8 Local(3)
          9 EnterLast(Key(member),2)
         10 Return()
-  492 SETDYNAMIC 13        
-  493 POP       
-  494 LIST       0         
-  495 SETDYNAMIC 12        
+ delete/3
+         0 Local(0)
+         1 SetLocal(3)
+         2 Local(1)
+         3 UNil()
+         4 Local(2)
+         5 UNil()
+         6 Return()
+ delete/3
+         0 Local(0)
+         1 SetLocal(3)
+         2 Local(1)
+         3 UPair()
+         4 Local(3)
+         5 Unify()
+         6 SetLocal(4)
+         7 Local(2)
+         8 SetLocal(5)
+         9 Cut()
+        10 StartCall()
+        11 Local(3)
+        12 Local(4)
+        13 Local(5)
+        14 EnterLast(Key(delete),3)
+        15 Return()
+ delete/3
+         0 Local(0)
+         1 SetLocal(3)
+         2 Local(1)
+         3 UPair()
+         4 SetLocal(4)
+         5 SetLocal(5)
+         6 Local(2)
+         7 UPair()
+         8 Local(4)
+         9 Unify()
+        10 SetLocal(6)
+        11 StartCall()
+        12 Local(3)
+        13 Local(5)
+        14 Local(6)
+        15 EnterLast(Key(delete),3)
+        16 Return()
+  495 SETDYNAMIC 13        
   496 POP       
   497 LIST       0         
-  498 SETDYNAMIC 11        
+  498 SETDYNAMIC 12        
   499 POP       
-  500 STR        graph     
-  501 Fun(1)
-  502 SETDYNAMIC 10        
-  503 POP       
-  504 STR        mapToStations
-  505 Fun(2)
-  506 SETDYNAMIC 9         
-  507 POP       
-  508 STR        mapToEdges
-  509 Fun(2)
-  510 SETDYNAMIC 8         
-  511 POP       
-  512 STR        lineColour
-  513 Fun(1)
-  514 SETDYNAMIC 7         
-  515 POP       
-  516 STR        mapToNodes
-  517 Fun(1)
-  518 SETFRAME   3         
-  519 POP       
-  520 LIST       0         
-  521 SETDYNAMIC 6         
+  500 LIST       0         
+  501 SETDYNAMIC 11        
+  502 POP       
+  503 STR        graph     
+  504 Fun(1)
+  505 SETDYNAMIC 10        
+  506 POP       
+  507 STR        mapToStations
+  508 Fun(2)
+  509 SETDYNAMIC 9         
+  510 POP       
+  511 STR        mapToEdges
+  512 Fun(2)
+  513 SETDYNAMIC 8         
+  514 POP       
+  515 STR        lineColour
+  516 Fun(1)
+  517 SETDYNAMIC 7         
+  518 POP       
+  519 STR        mapToNodes
+  520 Fun(1)
+  521 SETFRAME   3         
   522 POP       
-  523 STR        Travellers plan their routes on the underground. Each time they reach their destination, they will <br/>
+  523 LIST       0         
+  524 SETDYNAMIC 6         
+  525 POP       
+  526 STR        Travellers plan their routes on the underground. Each time they reach their destination, they will <br/>
 replan and a new traveller is added. If a traveller arrives at a station where there is a bomb, they <br/>
 are removed from the game. Your task is to remove all the travellers by blowing them up.
-  524 SETDYNAMIC 5         
-  525 POP       
-  526 STR        table     
-  527 Fun(1)
-  528 SETDYNAMIC 4         
-  529 POP       
-  530 STR        underground
-  531 Fun(0)
-  532 SETFRAME   4         
-  533 POP       
-  534 STARTCALL 
-  535 FRAMEVAR   4         
-  536 NEWACTOR  
-  537 APPLY      0         
-  538 SETACTOR  
-  539 SETDYNAMIC 3         
-  540 POP       
-  541 INT        0         
-  542 SETDYNAMIC 2         
+  527 SETDYNAMIC 5         
+  528 POP       
+  529 STR        table     
+  530 Fun(1)
+  531 SETDYNAMIC 4         
+  532 POP       
+  533 STR        underground
+  534 Fun(0)
+  535 SETFRAME   4         
+  536 POP       
+  537 STARTCALL 
+  538 FRAMEVAR   4         
+  539 NEWACTOR  
+  540 APPLY      0         
+  541 SETACTOR  
+  542 SETDYNAMIC 3         
   543 POP       
-  544 STR        newId     
-  545 Fun(0)
-  546 SETFRAME   5         
-  547 POP       
-  548 STR        traveller 
-  549 Fun(3)
-  550 SETFRAME   6         
-  551 POP       
-  552 STARTCALL 
-  553 STARTCALL 
-  554 APPLYFRAME 5     0         
-  555 TERM       District 0         
-  556 TERM       Westminster 0         
-  557 FRAMEVAR   6         
-  558 NEWACTOR  
-  559 APPLY      3         
-  560 SETACTOR  
-  561 STARTCALL 
-  562 STARTCALL 
-  563 APPLYFRAME 5     0         
-  564 TERM       District 0         
-  565 TERM       TowerHill 0         
-  566 FRAMEVAR   6         
-  567 NEWACTOR  
-  568 APPLY      3         
-  569 SETACTOR  
-  570 STARTCALL 
-  571 STARTCALL 
-  572 APPLYFRAME 5     0         
-  573 TERM       Central 0         
-  574 TERM       EalingBroadway 0         
-  575 FRAMEVAR   6         
-  576 NEWACTOR  
-  577 APPLY      3         
-  578 SETACTOR  
-  579 STARTCALL 
-  580 STARTCALL 
-  581 APPLYFRAME 5     0         
-  582 TERM       Central 0         
-  583 TERM       EalingBroadway 0         
-  584 FRAMEVAR   6         
-  585 NEWACTOR  
-  586 APPLY      3         
-  587 SETACTOR  
-  588 STARTCALL 
-  589 STARTCALL 
-  590 APPLYFRAME 5     0         
-  591 TERM       Central 0         
-  592 TERM       TottenhamCourtRoad 0         
-  593 FRAMEVAR   6         
-  594 NEWACTOR  
-  595 APPLY      3         
-  596 SETACTOR  
-  597 STARTCALL 
-  598 STARTCALL 
-  599 APPLYFRAME 5     0         
-  600 TERM       Central 0         
-  601 TERM       TottenhamCourtRoad 0         
-  602 FRAMEVAR   6         
-  603 NEWACTOR  
-  604 APPLY      3         
-  605 SETACTOR  
-  606 STARTCALL 
-  607 STARTCALL 
-  608 APPLYFRAME 5     0         
-  609 TERM       Piccadilly 0         
-  610 TERM       TurnhamGreen 0         
-  611 FRAMEVAR   6         
-  612 NEWACTOR  
-  613 APPLY      3         
-  614 SETACTOR  
-  615 STARTCALL 
-  616 STARTCALL 
-  617 APPLYFRAME 5     0         
-  618 TERM       Piccadilly 0         
-  619 TERM       Arsenal 0         
-  620 FRAMEVAR   6         
-  621 NEWACTOR  
-  622 APPLY      3         
-  623 SETACTOR  
-  624 STARTCALL 
-  625 STARTCALL 
-  626 APPLYFRAME 5     0         
-  627 TERM       Piccadilly 0         
-  628 TERM       Hammersmith 0         
-  629 FRAMEVAR   6         
-  630 NEWACTOR  
-  631 APPLY      3         
-  632 SETACTOR  
-  633 STARTCALL 
-  634 STARTCALL 
-  635 APPLYFRAME 5     0         
-  636 TERM       Piccadilly 0         
-  637 TERM       GreenPark 0         
-  638 FRAMEVAR   6         
-  639 NEWACTOR  
-  640 APPLY      3         
-  641 SETACTOR  
-  642 STARTCALL 
-  643 STARTCALL 
-  644 APPLYFRAME 5     0         
-  645 TERM       HammersmithAndCity 0         
-  646 TERM       LatimerRoad 0         
-  647 FRAMEVAR   6         
-  648 NEWACTOR  
-  649 APPLY      3         
-  650 SETACTOR  
-  651 LIST       11        
-  652 SETDYNAMIC 1         
-  653 POP       
-  654 STR        listener  
-  655 Fun(0)
-  656 SETDYNAMIC 0         
-  657 POP       
-  658 STR        main      
-  659 Fun(0)
-  660 SETFRAME   7         
-  661 POP       
-  662 FRAMEVAR   7         
-  663 FIELD      main      
-  664 RECORD     1         
-  665 POPDYNAMIC
-  666 POPDYNAMIC
-  667 POPDYNAMIC
+  544 INT        0         
+  545 SETDYNAMIC 2         
+  546 POP       
+  547 STR        newId     
+  548 Fun(0)
+  549 SETFRAME   5         
+  550 POP       
+  551 STR        traveller 
+  552 Fun(3)
+  553 SETFRAME   6         
+  554 POP       
+  555 STARTCALL 
+  556 STARTCALL 
+  557 APPLYFRAME 5     0         
+  558 TERM       District 0         
+  559 TERM       Westminster 0         
+  560 FRAMEVAR   6         
+  561 NEWACTOR  
+  562 APPLY      3         
+  563 SETACTOR  
+  564 STARTCALL 
+  565 STARTCALL 
+  566 APPLYFRAME 5     0         
+  567 TERM       District 0         
+  568 TERM       TowerHill 0         
+  569 FRAMEVAR   6         
+  570 NEWACTOR  
+  571 APPLY      3         
+  572 SETACTOR  
+  573 STARTCALL 
+  574 STARTCALL 
+  575 APPLYFRAME 5     0         
+  576 TERM       Central 0         
+  577 TERM       EalingBroadway 0         
+  578 FRAMEVAR   6         
+  579 NEWACTOR  
+  580 APPLY      3         
+  581 SETACTOR  
+  582 STARTCALL 
+  583 STARTCALL 
+  584 APPLYFRAME 5     0         
+  585 TERM       Central 0         
+  586 TERM       EalingBroadway 0         
+  587 FRAMEVAR   6         
+  588 NEWACTOR  
+  589 APPLY      3         
+  590 SETACTOR  
+  591 STARTCALL 
+  592 STARTCALL 
+  593 APPLYFRAME 5     0         
+  594 TERM       Central 0         
+  595 TERM       TottenhamCourtRoad 0         
+  596 FRAMEVAR   6         
+  597 NEWACTOR  
+  598 APPLY      3         
+  599 SETACTOR  
+  600 STARTCALL 
+  601 STARTCALL 
+  602 APPLYFRAME 5     0         
+  603 TERM       Central 0         
+  604 TERM       TottenhamCourtRoad 0         
+  605 FRAMEVAR   6         
+  606 NEWACTOR  
+  607 APPLY      3         
+  608 SETACTOR  
+  609 STARTCALL 
+  610 STARTCALL 
+  611 APPLYFRAME 5     0         
+  612 TERM       Piccadilly 0         
+  613 TERM       TurnhamGreen 0         
+  614 FRAMEVAR   6         
+  615 NEWACTOR  
+  616 APPLY      3         
+  617 SETACTOR  
+  618 STARTCALL 
+  619 STARTCALL 
+  620 APPLYFRAME 5     0         
+  621 TERM       Piccadilly 0         
+  622 TERM       Arsenal 0         
+  623 FRAMEVAR   6         
+  624 NEWACTOR  
+  625 APPLY      3         
+  626 SETACTOR  
+  627 STARTCALL 
+  628 STARTCALL 
+  629 APPLYFRAME 5     0         
+  630 TERM       Piccadilly 0         
+  631 TERM       Hammersmith 0         
+  632 FRAMEVAR   6         
+  633 NEWACTOR  
+  634 APPLY      3         
+  635 SETACTOR  
+  636 STARTCALL 
+  637 STARTCALL 
+  638 APPLYFRAME 5     0         
+  639 TERM       Piccadilly 0         
+  640 TERM       GreenPark 0         
+  641 FRAMEVAR   6         
+  642 NEWACTOR  
+  643 APPLY      3         
+  644 SETACTOR  
+  645 STARTCALL 
+  646 STARTCALL 
+  647 APPLYFRAME 5     0         
+  648 TERM       HammersmithAndCity 0         
+  649 TERM       LatimerRoad 0         
+  650 FRAMEVAR   6         
+  651 NEWACTOR  
+  652 APPLY      3         
+  653 SETACTOR  
+  654 LIST       11        
+  655 SETDYNAMIC 1         
+  656 POP       
+  657 STR        listener  
+  658 Fun(0)
+  659 SETDYNAMIC 0         
+  660 POP       
+  661 STR        main      
+  662 Fun(0)
+  663 SETFRAME   7         
+  664 POP       
+  665 FRAMEVAR   7         
+  666 FIELD      main      
+  667 RECORD     1         
   668 POPDYNAMIC
   669 POPDYNAMIC
   670 POPDYNAMIC
@@ -2171,12 +2408,12 @@ are removed from the game. Your task is to remove all the travellers by blowing 
   677 POPDYNAMIC
   678 POPDYNAMIC
   679 POPDYNAMIC
-  680 SETFRAME   0         
-  681 POP       
-  682 RECORD     0         
+  680 POPDYNAMIC
+  681 POPDYNAMIC
+  682 POPDYNAMIC
   683 SETFRAME   1         
   684 POP       
-  685 FRAMEVAR   0         
+  685 FRAMEVAR   1         
   686 POPDYNAMIC
   687 REF        [Key(main)]
   688 NEWACTOR  
@@ -2187,7 +2424,379 @@ are removed from the game. Your task is to remove all the travellers by blowing 
   693 SELF      
   694 APPDYNAMIC 5     1         
   695 RETURN    
-CodeBox(lambda377,2)
+CodeBox(lambda377,3)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        3     true      
+    4 ISTERM     Central 0          [1]       
+    5 STR        red       
+    6 SKIP       18        
+    7 TRY        3     false     
+    8 ISTERM     Piccadilly 0          [1]       
+    9 STR        blue      
+   10 SKIP       14        
+   11 TRY        3     false     
+   12 ISTERM     HammersmithAndCity 0          [1]       
+   13 STR        green     
+   14 SKIP       10        
+   15 TRY        3     false     
+   16 ISTERM     District 0          [1]       
+   17 STR        grey      
+   18 SKIP       6         
+   19 TRY        3     false     
+   20 SETFRAME   2     [1]       
+   21 STR        black     
+   22 SKIP       2         
+   23 CASEERROR 
+   24 RETURN    
+CodeBox(lambda376,7)
+    0 FRAMEVAR   0         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [2]       
+    5 LIST       0         
+    6 SKIP       54        
+    7 TRY        39    false     
+    8 ISCONS     [2]       
+    9 ISTERM     Link  3          [2].head()
+   10 SETFRAME   3     [2].head().ref(0)
+   11 SETFRAME   5     [2].head().ref(1)
+   12 SETFRAME   6     [2].head().ref(2)
+   13 SETFRAME   4     [2].tail()
+   14 STR        color     
+   15 STARTCALL 
+   16 FRAMEVAR   3         
+   17 APPDYNAMIC 7     1         
+   18 TERM       Prop  2         
+   19 STR        penwidth  
+   20 STR        3         
+   21 TERM       Prop  2         
+   22 STR        arrowhead 
+   23 STR        none      
+   24 TERM       Prop  2         
+   25 LIST       3         
+   26 STARTCALL 
+   27 FRAMEVAR   5         
+   28 FRAMEVAR   1         
+   29 REF        [Key(indexOf)]
+   30 APPLY      2         
+   31 ADD1      
+   32 STARTCALL 
+   33 FRAMEVAR   6         
+   34 FRAMEVAR   1         
+   35 REF        [Key(indexOf)]
+   36 APPLY      2         
+   37 ADD1      
+   38 STR                  
+   39 TERM       HTML  1         
+   40 TERM       Edge  4         
+   41 STARTCALL 
+   42 FRAMEVAR   4         
+   43 FRAMEVAR   1         
+   44 APPDYNAMIC 8     2         
+   45 CONS      
+   46 SKIP       14        
+   47 TRY        11    false     
+   48 ISCONS     [2]       
+   49 ISTERM     ChangeLine 3          [2].head()
+   50 SETFRAME   3     [2].head().ref(0)
+   51 SETFRAME   4     [2].head().ref(1)
+   52 SETFRAME   5     [2].head().ref(2)
+   53 SETFRAME   6     [2].tail()
+   54 STARTCALL 
+   55 FRAMEVAR   6         
+   56 FRAMEVAR   1         
+   57 APPDYNAMIC 8     2         
+   58 SKIP       2         
+   59 CASEERROR 
+   60 RETURN    
+CodeBox(lambda375,7)
+    0 FRAMEVAR   0         
+    1 SETFRAME   2         
+    2 POP       
+    3 TRY        3     true      
+    4 ISNIL      [2]       
+    5 FRAMEVAR   1         
+    6 SKIP       34        
+    7 TRY        19    false     
+    8 ISCONS     [2]       
+    9 ISTERM     Link  3          [2].head()
+   10 SETFRAME   3     [2].head().ref(0)
+   11 SETFRAME   5     [2].head().ref(1)
+   12 SETFRAME   6     [2].head().ref(2)
+   13 SETFRAME   4     [2].tail()
+   14 STARTCALL 
+   15 FRAMEVAR   4         
+   16 STARTCALL 
+   17 FRAMEVAR   5         
+   18 STARTCALL 
+   19 FRAMEVAR   6         
+   20 FRAMEVAR   1         
+   21 REF        [Key(adjoin)]
+   22 APPLY      2         
+   23 REF        [Key(adjoin)]
+   24 APPLY      2         
+   25 APPDYNAMIC 9     2         
+   26 SKIP       14        
+   27 TRY        11    false     
+   28 ISCONS     [2]       
+   29 ISTERM     ChangeLine 3          [2].head()
+   30 SETFRAME   3     [2].head().ref(0)
+   31 SETFRAME   4     [2].head().ref(1)
+   32 SETFRAME   5     [2].head().ref(2)
+   33 SETFRAME   6     [2].tail()
+   34 STARTCALL 
+   35 FRAMEVAR   6         
+   36 FRAMEVAR   1         
+   37 APPDYNAMIC 9     2         
+   38 SKIP       2         
+   39 CASEERROR 
+   40 RETURN    
+CodeBox(lambda374,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        31    true      
+    4 ISCONS     [1]       
+    5 SETFRAME   3     [1].head()
+    6 SETFRAME   2     [1].tail()
+    7 STR        shape     
+    8 STR        plain     
+    9 TERM       Prop  2         
+   10 STR        fontsize  
+   11 STR        18        
+   12 TERM       Prop  2         
+   13 STR        URL       
+   14 STR        edb:      
+   15 FRAMEVAR   3         
+   16 ADD       
+   17 TERM       Prop  2         
+   18 LIST       3         
+   19 STARTCALL 
+   20 FRAMEVAR   3         
+   21 DYNAMIC    2         
+   22 REF        [Key(indexOf)]
+   23 APPLY      2         
+   24 ADD1      
+   25 STARTCALL 
+   26 FRAMEVAR   3         
+   27 APPDYNAMIC 1     1         
+   28 TERM       HTML  1         
+   29 TERM       Node  3         
+   30 STARTCALL 
+   31 FRAMEVAR   2         
+   32 APPDYNAMIC 0     1         
+   33 CONS      
+   34 SKIP       6         
+   35 TRY        3     false     
+   36 ISNIL      [1]       
+   37 LIST       0         
+   38 SKIP       2         
+   39 CASEERROR 
+   40 RETURN    
+CodeBox(lambda373,4)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        9     true      
+    4 ISCONS     [1]       
+    5 SETFRAME   3     [1].head()
+    6 SETFRAME   2     [1].tail()
+    7 REF        [Key(id)] 
+    8 STARTCALL 
+    9 FRAMEVAR   2         
+   10 APPDYNAMIC 0     1         
+   11 CONS      
+   12 SKIP       6         
+   13 TRY        3     false     
+   14 ISNIL      [1]       
+   15 LIST       0         
+   16 SKIP       2         
+   17 CASEERROR 
+   18 RETURN    
+CodeBox(lambda372,5)
+    0 FRAMEVAR   0         
+    1 SETFRAME   1         
+    2 POP       
+    3 TRY        22    true      
+    4 ISCONS     [1]       
+    5 ISTERM     Loc   2          [1].head()
+    6 SETFRAME   4     [1].head().ref(0)
+    7 SETFRAME   2     [1].head().ref(1)
+    8 SETFRAME   3     [1].tail()
+    9 STARTCALL 
+   10 FRAMEVAR   2         
+   11 DYNAMIC    1         
+   12 EQL       
+   13 SKIPFALSE  5         
+   14 FRAMEVAR   4         
+   15 LIST       1         
+   16 LIST       1         
+   17 SKIP       2         
+   18 LIST       0         
+   19 REF        [Key(flatten)]
+   20 APPLY      1         
+   21 STARTCALL 
+   22 FRAMEVAR   3         
+   23 APPDYNAMIC 0     1         
+   24 CONS      
+   25 SKIP       6         
+   26 TRY        3     false     
+   27 ISNIL      [1]       
+   28 LIST       0         
+   29 SKIP       2         
+   30 CASEERROR 
+   31 RETURN    
+CodeBox(lambda371,4)
+    0 FRAMEVAR   0         
+    1 NEWDYNAMIC
+    2 STARTCALL 
+    3 DYNAMIC    0         
+    4 DYNAMIC    13        
+    5 REF        [Key(member)]
+    6 APPLY      2         
+    7 SKIPFALSE  3         
+    8 STR        &#128163; 
+    9 SKIP       46        
+   10 STARTCALL 
+   11 NULL      
+   12 NEWDYNAMIC
+   13 STR        map98     
+   14 Fun(1)
+   15 SETDYNAMIC 0         
+   16 POP       
+   17 STARTCALL 
+   18 DYNAMIC    15        
+   19 APPDYNAMIC 0     1         
+   20 POPDYNAMIC
+   21 REF        [Key(flatten)]
+   22 APPLY      1         
+   23 SETFRAME   1         
+   24 POP       
+   25 STARTCALL 
+   26 FRAMEVAR   1         
+   27 REF        [Key(length)]
+   28 APPLY      1         
+   29 IS0       
+   30 SKIPFALSE  7         
+   31 STR        <font face="consolas">
+   32 DYNAMIC    0         
+   33 STR        :[ ]</font>
+   34 ADD       
+   35 ADD       
+   36 SKIP       19        
+   37 STR        <font face="consolas" color="red">
+   38 DYNAMIC    0         
+   39 STR        :         
+   40 NULL      
+   41 NEWDYNAMIC
+   42 STR        map99     
+   43 Fun(1)
+   44 SETDYNAMIC 0         
+   45 POP       
+   46 STARTCALL 
+   47 FRAMEVAR   1         
+   48 APPDYNAMIC 0     1         
+   49 POPDYNAMIC
+   50 STR        </font>   
+   51 ADD       
+   52 ADD       
+   53 ADD       
+   54 ADD       
+   55 RETURN    
+CodeBox(lambda370,8)
+    0 instrs.query.data.NewLogicalVar@1dc99a0e
+    1 SETFRAME   1         
+    2 POP       
+    3 FRAMEVAR   1         
+    4 DYNAMIC    13        
+    5 NULL      
+    6 INT        -1        
+    7 Show(76,78,Clause($-show,1))
+         0 Local(0)
+         1 SetLocal(1)
+         2 StartCall()
+         3 Local(1)
+         4 Enter(Key(map),1)
+         5 Return()
+    8 FRAMEVAR   1         
+    9 instrs.query.QRecons@71176d6c
+   10 SETFRAME   1         
+   11 STARTCALL 
+   12 FRAMEVAR   1         
+   13 LIST       0         
+   14 APPDYNAMIC 9     2         
+   15 NEWDYNAMIC
+   16 STR        shape     
+   17 STR        plain     
+   18 TERM       Prop  2         
+   19 STR        fontsize  
+   20 STR        20        
+   21 TERM       Prop  2         
+   22 LIST       2         
+   23 INT        0         
+   24 STARTCALL 
+   25 FRAMEVAR   0         
+   26 APPDYNAMIC 5     1         
+   27 TERM       Node  3         
+   28 SETFRAME   2         
+   29 POP       
+   30 STR        label     
+   31 Fun(1)
+   32 NEWDYNAMIC
+   33 NULL      
+   34 NEWDYNAMIC
+   35 STR        map100    
+   36 Fun(1)
+   37 SETDYNAMIC 0         
+   38 POP       
+   39 STARTCALL 
+   40 DYNAMIC    2         
+   41 APPDYNAMIC 0     1         
+   42 POPDYNAMIC
+   43 SETFRAME   3         
+   44 POP       
+   45 STARTCALL 
+   46 FRAMEVAR   1         
+   47 DYNAMIC    1         
+   48 APPDYNAMIC 10    2         
+   49 SETFRAME   4         
+   50 POP       
+   51 STR        nodesep   
+   52 STR        0.001     
+   53 TERM       Prop  2         
+   54 STR        ranksep   
+   55 STR        0.001     
+   56 TERM       Prop  2         
+   57 STR        size      
+   58 STR        20,15     
+   59 TERM       Prop  2         
+   60 STR        rankdir   
+   61 STR        TB        
+   62 TERM       Prop  2         
+   63 STR        ratio     
+   64 STR        fill      
+   65 TERM       Prop  2         
+   66 STR        URL       
+   67 STR        edb:run1  
+   68 TERM       Prop  2         
+   69 LIST       6         
+   70 FRAMEVAR   3         
+   71 FRAMEVAR   4         
+   72 TERM       Graph 3         
+   73 POPDYNAMIC
+   74 POPDYNAMIC
+   75 GOTO       82        
+   76 NULL      
+   77 GOTO       82        
+   78 LIST       0         
+   79 LIST       0         
+   80 LIST       0         
+   81 TERM       Graph 3         
+   82 RETURN    
+CodeBox(lambda369,2)
     0 STARTCALL 
     1 FRAMEVAR   1         
     2 DYNAMIC    33        
@@ -2215,27 +2824,7 @@ CodeBox(lambda377,2)
    24 TAIL      
    25 APPDYNAMIC 0     2         
    26 RETURN    
-CodeBox(behaviour24,2)
-    0 FRAMEVAR   0         
-    1 TRY        4     true      
-    2 ISTERM     Time  1          [0]       
-    3 SETFRAME   1     [0].ref(0)
-    4 NULL      
-    5 SKIP       2         
-    6 CASEERROR 
-    7 RETURN    
-    8 STARTCALL 
-    9 DYNAMIC    0         
-   10 NEWACTOR  
-   11 APPLY      0         
-   12 SETACTOR  
-   13 DYNAMIC    23        
-   14 NAMEDSEND AddBrowserListener/1
-   15 POP       
-   16 DYNAMIC    3         
-   17 NAMEDSEND Show/0
-   18 POPFRAME  
-CodeBox(lambda376,2)
+CodeBox(lambda368,2)
     0 NULL      
     1 NEWDYNAMIC
     2 STR        pre       
@@ -2249,73 +2838,7 @@ CodeBox(lambda376,2)
    10 APPDYNAMIC 0     2         
    11 POPDYNAMIC
    12 RETURN    
-CodeBox(behaviour23,4)
-    0 FRAMEVAR   0         
-    1 TRY        5     true      
-    2 ISTERM     BrowserEvent 1          [0]       
-    3 ISSTR      [0].ref(0) run1      
-    4 DYNAMIC    3         
-    5 NAMEDSEND Step/0
-    6 SKIP       56        
-    7 TRY        53    false     
-    8 ISTERM     BrowserEvent 1          [0]       
-    9 SETFRAME   1     [0].ref(0)
-   10 DYNAMIC    14        
-   11 SETFRAME   2         
-   12 FRAMEVAR   2         
-   13 ISNIL     
-   14 SKIPTRUE   28        
-   15 FRAMEVAR   2         
-   16 HEAD      
-   17 SETFRAME   3         
-   18 POP       
-   19 FRAMEVAR   2         
-   20 TAIL      
-   21 SETFRAME   2         
-   22 POP       
-   23 FRAMEVAR   3         
-   24 STR                  
-   25 ADD       
-   26 FRAMEVAR   1         
-   27 EQL       
-   28 SKIPFALSE  11        
-   29 DYNAMIC    11        
-   30 FRAMEVAR   3         
-   31 LIST       1         
-   32 ADD       
-   33 STATE      blownUp -1        
-   34 SETDYNAMIC 11        
-   35 POP       
-   36 DYNAMIC    3         
-   37 NAMEDSEND Show/0
-   38 SKIP       2         
-   39 NULL      
-   40 POP       
-   41 GOTO       12        
-   42 NULL      
-   43 POP       
-   44 STARTCALL 
-   45 DYNAMIC    11        
-   46 REF        [Key(length)]
-   47 APPLY      1         
-   48 INT        3         
-   49 GRE       
-   50 SKIPFALSE  9         
-   51 DYNAMIC    11        
-   52 TAIL      
-   53 STATE      blownUp -1        
-   54 SETDYNAMIC 11        
-   55 POP       
-   56 DYNAMIC    3         
-   57 NAMEDSEND Show/0
-   58 SKIP       2         
-   59 NULL      
-   60 SKIP       2         
-   61 CASEERROR 
-   62 RETURN    
-   63 NULL      
-   64 POPFRAME  
-CodeBox(lambda375,5)
+CodeBox(lambda367,5)
     0 STARTCALL 
     1 FRAMEVAR   0         
     2 FRAMEVAR   1         
@@ -2336,122 +2859,7 @@ CodeBox(lambda375,5)
    17 SKIP       2         
    18 CASEERROR 
    19 RETURN    
-CodeBox(behaviour22,11)
-    0 FRAMEVAR   0         
-    1 TRY        6     true      
-    2 ISTERM     ChangeTo 1          [0]       
-    3 SETFRAME   1     [0].ref(0)
-    4 FRAMEVAR   1         
-    5 STATE      line  0         
-    6 SETDYNAMIC 3         
-    7 SKIP       74        
-    8 TRY        66    false     
-    9 ISTERM     GetPlan 1          [0]       
-   10 SETFRAME   1     [0].ref(0)
-   11 STARTCALL 
-   12 DYNAMIC    19        
-   13 STARTCALL 
-   14 STARTCALL 
-   15 DYNAMIC    19        
-   16 REF        [Key(length)]
-   17 APPLY      1         
-   18 APPDYNAMIC 23    1         
-   19 REF        [Key(nth)]
-   20 APPLY      2         
-   21 SETFRAME   2         
-   22 POP       
-   23 DYNAMIC    3         
-   24 DYNAMIC    2         
-   25 FRAMEVAR   2         
-   26 TERM       Planning 3         
-   27 STATE      state 0         
-   28 SETDYNAMIC 1         
-   29 POP       
-   30 instrs.query.data.NewLogicalVar@339fb75f
-   31 SETFRAME   3         
-   32 POP       
-   33 FRAMEVAR   2         
-   34 FRAMEVAR   3         
-   35 DYNAMIC    2         
-   36 DYNAMIC    3         
-   37 DYNAMIC    18        
-   38 NULL      
-   39 INT        75000     
-   40 Show(58,62,Clause($-show,4))
-         0 Local(0)
-         1 SetLocal(4)
-         2 Local(1)
-         3 SetLocal(5)
-         4 Local(2)
-         5 SetLocal(6)
-         6 Local(3)
-         7 SetLocal(7)
-         8 StartCall()
-         9 Local(4)
-        10 Local(5)
-        11 Local(7)
-        12 Local(6)
-        13 Enter(Key(route),4)
-        14 Return()
-   41 DYNAMIC    3         
-   42 instrs.query.QRecons@1cab384c
-   43 SETDYNAMIC 3         
-   44 DYNAMIC    2         
-   45 instrs.query.QRecons@4f7ef6b8
-   46 SETDYNAMIC 2         
-   47 FRAMEVAR   3         
-   48 instrs.query.QRecons@7c80fe9d
-   49 SETFRAME   3         
-   50 FRAMEVAR   2         
-   51 instrs.query.QRecons@32eb8b1d
-   52 SETFRAME   2         
-   53 FRAMEVAR   2         
-   54 TERM       Travelling 1         
-   55 STATE      state 0         
-   56 SETDYNAMIC 1         
-   57 POP       
-   58 FRAMEVAR   2         
-   59 STATE      station 0         
-   60 SETDYNAMIC 2         
-   61 POP       
-   62 SELF      
-   63 FRAMEVAR   3         
-   64 FRAMEVAR   1         
-   65 NAMEDSEND AddPlan/2
-   66 GOTO       74        
-   67 FRAMEVAR   1         
-   68 SELF      
-   69 NAMEDSEND GetPlan/1
-   70 GOTO       74        
-   71 FRAMEVAR   1         
-   72 SELF      
-   73 NAMEDSEND GetPlan/1
-   74 SKIP       7         
-   75 TRY        4     false     
-   76 ISTERM     Time  1          [0]       
-   77 SETFRAME   1     [0].ref(0)
-   78 NULL      
-   79 SKIP       2         
-   80 CASEERROR 
-   81 RETURN    
-   82 instrs.vars.PushDynamic@77c7ac54
-   83 instrs.control.Grab@4fb44f22
-   84 SELF      
-   85 DYNAMIC    2         
-   86 TERM       Loc   2         
-   87 DYNAMIC    17        
-   88 CONS      
-   89 STATE      locations -1        
-   90 SETDYNAMIC 17        
-   91 POP       
-   92 SELF      
-   93 LIST       0         
-   94 DYNAMIC    8         
-   95 NAMEDSEND AddPlan/2
-   96 instrs.vars.PushDynamic@343b245f
-   97 instrs.control.Release@5a66e2a6
-   98 POPFRAME  
-CodeBox(lambda374,2)
+CodeBox(lambda366,2)
     0 STARTCALL 
     1 FRAMEVAR   0         
     2 FRAMEVAR   1         
@@ -2460,81 +2868,7 @@ CodeBox(lambda374,2)
     5 NULL      
     6 NEQL      
     7 RETURN    
-CodeBox(behaviour21,10)
-    0 FRAMEVAR   0         
-    1 TRY        19    true      
-    2 ISTERM     AddPlan 2          [0]       
-    3 SETFRAME   1     [0].ref(0)
-    4 SETFRAME   2     [0].ref(1)
-    5 STARTCALL 
-    6 FRAMEVAR   1         
-    7 DYNAMIC    3         
-    8 REF        [Key(adjoin)]
-    9 APPLY      2         
-   10 STATE      travellers 0         
-   11 SETDYNAMIC 3         
-   12 POP       
-   13 FRAMEVAR   1         
-   14 FRAMEVAR   2         
-   15 TERM       Plan  2         
-   16 DYNAMIC    4         
-   17 CONS      
-   18 STATE      plans 0         
-   19 SETDYNAMIC 4         
-   20 SKIP       50        
-   21 TRY        33    false     
-   22 ISTERM     Step  0          [0]       
-   23 STARTCALL 
-   24 NULL      
-   25 NEWDYNAMIC
-   26 STR        map86     
-   27 Fun(1)
-   28 SETDYNAMIC 0         
-   29 POP       
-   30 STARTCALL 
-   31 DYNAMIC    5         
-   32 APPDYNAMIC 0     1         
-   33 POPDYNAMIC
-   34 REF        [Key(flatten)]
-   35 APPLY      1         
-   36 STATE      plans 0         
-   37 SETDYNAMIC 4         
-   38 POP       
-   39 STARTCALL 
-   40 DYNAMIC    3         
-   41 APPDYNAMIC 15    1         
-   42 SETFRAME   1         
-   43 POP       
-   44 STR        Underground
-   45 FRAMEVAR   1         
-   46 DYNAMIC    28        
-   47 NAMEDSEND Show/2
-   48 POP       
-   49 FRAMEVAR   1         
-   50 DYNAMIC    11        
-   51 CONS      
-   52 STATE      graphs -1        
-   53 SETDYNAMIC 11        
-   54 SKIP       16        
-   55 TRY        8     false     
-   56 ISTERM     Show  0          [0]       
-   57 STR        Underground
-   58 STARTCALL 
-   59 DYNAMIC    3         
-   60 APPDYNAMIC 15    1         
-   61 DYNAMIC    28        
-   62 NAMEDSEND Show/2
-   63 SKIP       7         
-   64 TRY        4     false     
-   65 ISTERM     Time  1          [0]       
-   66 SETFRAME   1     [0].ref(0)
-   67 NULL      
-   68 SKIP       2         
-   69 CASEERROR 
-   70 RETURN    
-   71 NULL      
-   72 POPFRAME  
-CodeBox(lambda373,6)
+CodeBox(lambda365,6)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -2564,7 +2898,7 @@ CodeBox(lambda373,6)
    26 SKIP       2         
    27 CASEERROR 
    28 RETURN    
-CodeBox(lambda372,4)
+CodeBox(lambda364,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -2589,155 +2923,25 @@ CodeBox(lambda372,4)
    21 SKIP       2         
    22 CASEERROR 
    23 RETURN    
-CodeBox(lambda371,2)
+CodeBox(lambda363,2)
     0 FRAMEVAR   0         
     1 FRAMEVAR   1         
     2 ADD       
     3 RETURN    
-CodeBox(lambda370,1)
+CodeBox(lambda362,1)
     0 STARTCALL 
     1 DYNAMIC    2         
-    2 STR        fun201    
+    2 STR        fun146    
     3 Fun(2)
     4 INT        0         
     5 FRAMEVAR   0         
     6 DYNAMIC    3         
     7 APPLY      4         
     8 RETURN    
-CodeBox(lambda406,1)
-    0 NULL      
-    1 RETURN    
-CodeBox(lambda405,1)
-    0 STR        main      
-    1 STR        Time      
-    2 Fun(1)
-    3 BEHAVIOUR 
-    4 RETURN    
-CodeBox(lambda404,3)
-    0 STR        listener  
-    1 BEHAVIOUR 
-    2 RETURN    
-CodeBox(lambda403,6)
-    0 STARTCALL 
-    1 DYNAMIC    19        
-    2 STARTCALL 
-    3 STARTCALL 
-    4 DYNAMIC    19        
-    5 REF        [Key(length)]
-    6 APPLY      1         
-    7 APPDYNAMIC 23    1         
-    8 REF        [Key(nth)]
-    9 APPLY      2         
-   10 SETFRAME   1         
-   11 POP       
-   12 DYNAMIC    3         
-   13 DYNAMIC    2         
-   14 FRAMEVAR   1         
-   15 TERM       Planning 3         
-   16 STATE      state 0         
-   17 SETDYNAMIC 1         
-   18 POP       
-   19 instrs.query.data.NewLogicalVar@100940b2
-   20 SETFRAME   2         
-   21 POP       
-   22 FRAMEVAR   1         
-   23 FRAMEVAR   2         
-   24 DYNAMIC    2         
-   25 DYNAMIC    3         
-   26 DYNAMIC    18        
-   27 NULL      
-   28 INT        75000     
-   29 Show(56,60,Clause($-show,4))
-         0 Local(0)
-         1 SetLocal(4)
-         2 Local(1)
-         3 SetLocal(5)
-         4 Local(2)
-         5 SetLocal(6)
-         6 Local(3)
-         7 SetLocal(7)
-         8 StartCall()
-         9 Local(4)
-        10 Local(5)
-        11 Local(7)
-        12 Local(6)
-        13 Enter(Key(route),4)
-        14 Return()
-   30 DYNAMIC    3         
-   31 instrs.query.QRecons@7d29c0ce
-   32 SETDYNAMIC 3         
-   33 DYNAMIC    2         
-   34 instrs.query.QRecons@105d0ae8
-   35 SETDYNAMIC 2         
-   36 FRAMEVAR   2         
-   37 instrs.query.QRecons@7d43a997
-   38 SETFRAME   2         
-   39 FRAMEVAR   1         
-   40 instrs.query.QRecons@27957a5d
-   41 SETFRAME   1         
-   42 FRAMEVAR   1         
-   43 TERM       Travelling 1         
-   44 STATE      state 0         
-   45 SETDYNAMIC 1         
-   46 POP       
-   47 FRAMEVAR   1         
-   48 STATE      station 0         
-   49 SETDYNAMIC 2         
-   50 POP       
-   51 SELF      
-   52 FRAMEVAR   2         
-   53 FRAMEVAR   0         
-   54 NAMEDSEND AddPlan/2
-   55 GOTO       63        
-   56 FRAMEVAR   0         
-   57 SELF      
-   58 NAMEDSEND GetPlan/1
-   59 GOTO       63        
-   60 FRAMEVAR   0         
-   61 SELF      
-   62 NAMEDSEND GetPlan/1
-   63 RETURN    
-CodeBox(lambda402,1)
-    0 NULL      
-    1 RETURN    
-CodeBox(lambda401,1)
-    0 FRAMEVAR   0         
-    1 STATE      line  0         
-    2 SETDYNAMIC 3         
-    3 RETURN    
-CodeBox(lambda400,13)
-    0 FRAMEVAR   0         
-    1 NEWDYNAMIC
-    2 FRAMEVAR   1         
-    3 NEWDYNAMIC
-    4 FRAMEVAR   2         
-    5 NEWDYNAMIC
-    6 NULL      
-    7 NEWDYNAMIC
-    8 NULL      
-    9 NEWDYNAMIC
-   10 DYNAMIC    2         
-   11 TERM       Arrived 1         
-   12 SETDYNAMIC 1         
-   13 POP       
-   14 DYNAMIC    4         
-   15 SETDYNAMIC 0         
-   16 POP       
-   17 STR        traveller 
-   18 STR        ChangeTo  
-   19 Fun(1)
-   20 STR        Time      
-   21 Fun(1)
-   22 STR        GetPlan   
-   23 Fun(1)
-   24 BEHAVIOUR 
-   25 POPDYNAMIC
-   26 POPDYNAMIC
-   27 RETURN    
-CodeBox(lambda369,1)
+CodeBox(lambda361,1)
     0 FRAMEVAR   0         
     1 RETURN    
-CodeBox(lambda368,7)
+CodeBox(lambda360,7)
     0 FRAMEVAR   3         
     1 SETFRAME   4         
     2 POP       
@@ -2764,7 +2968,7 @@ CodeBox(lambda368,7)
    23 SKIP       2         
    24 CASEERROR 
    25 RETURN    
-CodeBox(lambda367,5)
+CodeBox(lambda359,5)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -2796,7 +3000,7 @@ CodeBox(lambda367,5)
    28 SKIP       2         
    29 CASEERROR 
    30 RETURN    
-CodeBox(lambda366,5)
+CodeBox(lambda358,5)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -2831,7 +3035,7 @@ CodeBox(lambda366,5)
    31 SKIP       2         
    32 CASEERROR 
    33 RETURN    
-CodeBox(lambda365,4)
+CodeBox(lambda357,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -2858,7 +3062,7 @@ CodeBox(lambda365,4)
    23 SKIP       2         
    24 CASEERROR 
    25 RETURN    
-CodeBox(lambda364,4)
+CodeBox(lambda356,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -2884,7 +3088,7 @@ CodeBox(lambda364,4)
    22 SKIP       2         
    23 CASEERROR 
    24 RETURN    
-CodeBox(lambda363,5)
+CodeBox(lambda355,5)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -2920,7 +3124,7 @@ CodeBox(lambda363,5)
    32 SKIP       2         
    33 CASEERROR 
    34 RETURN    
-CodeBox(lambda362,5)
+CodeBox(lambda354,5)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -2953,7 +3157,7 @@ CodeBox(lambda362,5)
    29 SKIP       2         
    30 CASEERROR 
    31 RETURN    
-CodeBox(lambda361,6)
+CodeBox(lambda353,6)
     0 FRAMEVAR   0         
     1 SETFRAME   3         
     2 POP       
@@ -2990,7 +3194,7 @@ CodeBox(lambda361,6)
    33 SKIP       2         
    34 CASEERROR 
    35 RETURN    
-CodeBox(lambda360,7)
+CodeBox(lambda352,7)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -3039,7 +3243,7 @@ CodeBox(lambda360,7)
    45 SKIP       2         
    46 CASEERROR 
    47 RETURN    
-CodeBox(lambda359,7)
+CodeBox(lambda351,7)
     0 FRAMEVAR   1         
     1 SETFRAME   2         
     2 POP       
@@ -3088,7 +3292,7 @@ CodeBox(lambda359,7)
    45 SKIP       2         
    46 CASEERROR 
    47 RETURN    
-CodeBox(lambda358,4)
+CodeBox(lambda350,4)
     0 FRAMEVAR   0         
     1 SETFRAME   1         
     2 POP       
@@ -3110,207 +3314,3 @@ CodeBox(lambda358,4)
    18 SKIP       2         
    19 CASEERROR 
    20 RETURN    
-CodeBox(lambda357,5)
-    0 FRAMEVAR   1         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [2]       
-    5 FALSE     
-    6 SKIP       22        
-    7 TRY        9     false     
-    8 ISCONS     [2]       
-    9 SETFRAME   3     [2].head()
-   10 SETFRAME   4     [2].tail()
-   11 FRAMEVAR   3         
-   12 FRAMEVAR   0         
-   13 EQL       
-   14 FAILFALSE 
-   15 TRUE      
-   16 SKIP       12        
-   17 TRY        9     false     
-   18 ISCONS     [2]       
-   19 SETFRAME   3     [2].head()
-   20 SETFRAME   4     [2].tail()
-   21 STARTCALL 
-   22 FRAMEVAR   0         
-   23 FRAMEVAR   4         
-   24 DYNAMIC    14        
-   25 APPLY      2         
-   26 SKIP       2         
-   27 CASEERROR 
-   28 RETURN    
-CodeBox(lambda356,3)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [1]       
-    5 TRUE      
-    6 SKIP       6         
-    7 TRY        3     false     
-    8 SETFRAME   2     [1]       
-    9 FALSE     
-   10 SKIP       2         
-   11 CASEERROR 
-   12 RETURN    
-CodeBox(lambda355,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        5     true      
-    4 ISCONS     [1]       
-    5 SETFRAME   3     [1].head()
-    6 SETFRAME   2     [1].tail()
-    7 FRAMEVAR   2         
-    8 SKIP       7         
-    9 TRY        4     false     
-   10 ISNIL      [1]       
-   11 STR        cannot take the tail of []
-   12 THROW     
-   13 SKIP       2         
-   14 CASEERROR 
-   15 RETURN    
-CodeBox(lambda354,4)
-    0 FRAMEVAR   0         
-    1 SETFRAME   1         
-    2 POP       
-    3 TRY        5     true      
-    4 ISCONS     [1]       
-    5 SETFRAME   3     [1].head()
-    6 SETFRAME   2     [1].tail()
-    7 FRAMEVAR   3         
-    8 SKIP       7         
-    9 TRY        4     false     
-   10 ISNIL      [1]       
-   11 STR        cannot take the head of []
-   12 THROW     
-   13 SKIP       2         
-   14 CASEERROR 
-   15 RETURN    
-CodeBox(lambda353,6)
-    0 FRAMEVAR   2         
-    1 SETFRAME   3         
-    2 POP       
-    3 TRY        3     true      
-    4 ISNIL      [3]       
-    5 LIST       0         
-    6 SKIP       28        
-    7 TRY        25    false     
-    8 ISCONS     [3]       
-    9 SETFRAME   5     [3].head()
-   10 SETFRAME   4     [3].tail()
-   11 FRAMEVAR   5         
-   12 FRAMEVAR   1         
-   13 EQL       
-   14 SKIPFALSE  10        
-   15 FRAMEVAR   0         
-   16 STARTCALL 
-   17 FRAMEVAR   0         
-   18 FRAMEVAR   1         
-   19 FRAMEVAR   4         
-   20 DYNAMIC    17        
-   21 APPLY      3         
-   22 CONS      
-   23 SKIP       9         
-   24 FRAMEVAR   5         
-   25 STARTCALL 
-   26 FRAMEVAR   0         
-   27 FRAMEVAR   1         
-   28 FRAMEVAR   4         
-   29 DYNAMIC    17        
-   30 APPLY      3         
-   31 CONS      
-   32 SKIP       2         
-   33 CASEERROR 
-   34 RETURN    
-CodeBox(lambda352,5)
-    0 FRAMEVAR   1         
-    1 IS0       
-    2 SKIPFALSE  3         
-    3 FRAMEVAR   0         
-    4 SKIP       24        
-    5 FRAMEVAR   0         
-    6 SETFRAME   2         
-    7 POP       
-    8 TRY        11    true      
-    9 ISCONS     [2]       
-   10 SETFRAME   4     [2].head()
-   11 SETFRAME   3     [2].tail()
-   12 STARTCALL 
-   13 FRAMEVAR   3         
-   14 FRAMEVAR   1         
-   15 INT        1         
-   16 SUB       
-   17 DYNAMIC    18        
-   18 APPLY      2         
-   19 SKIP       9         
-   20 TRY        6     false     
-   21 ISNIL      [2]       
-   22 STR        cannot drop element 
-   23 FRAMEVAR   1         
-   24 ADD       
-   25 THROW     
-   26 SKIP       2         
-   27 CASEERROR 
-   28 RETURN    
-CodeBox(lambda351,5)
-    0 FRAMEVAR   1         
-    1 IS0       
-    2 SKIPFALSE  3         
-    3 LIST       0         
-    4 SKIP       26        
-    5 FRAMEVAR   0         
-    6 SETFRAME   2         
-    7 POP       
-    8 TRY        13    true      
-    9 ISCONS     [2]       
-   10 SETFRAME   4     [2].head()
-   11 SETFRAME   3     [2].tail()
-   12 FRAMEVAR   4         
-   13 STARTCALL 
-   14 FRAMEVAR   3         
-   15 FRAMEVAR   1         
-   16 INT        1         
-   17 SUB       
-   18 DYNAMIC    19        
-   19 APPLY      2         
-   20 CONS      
-   21 SKIP       9         
-   22 TRY        6     false     
-   23 ISNIL      [2]       
-   24 STR        cannot take element 
-   25 FRAMEVAR   1         
-   26 ADD       
-   27 THROW     
-   28 SKIP       2         
-   29 CASEERROR 
-   30 RETURN    
-CodeBox(lambda350,5)
-    0 FRAMEVAR   0         
-    1 SETFRAME   2         
-    2 POP       
-    3 TRY        16    true      
-    4 ISCONS     [2]       
-    5 SETFRAME   4     [2].head()
-    6 SETFRAME   3     [2].tail()
-    7 FRAMEVAR   1         
-    8 IS0       
-    9 SKIPFALSE  3         
-   10 FRAMEVAR   4         
-   11 SKIP       8         
-   12 STARTCALL 
-   13 FRAMEVAR   3         
-   14 FRAMEVAR   1         
-   15 INT        1         
-   16 SUB       
-   17 DYNAMIC    20        
-   18 APPLY      2         
-   19 SKIP       7         
-   20 TRY        4     false     
-   21 ISNIL      [2]       
-   22 STR        cannot take nth element.
-   23 THROW     
-   24 SKIP       2         
-   25 CASEERROR 
-   26 RETURN    

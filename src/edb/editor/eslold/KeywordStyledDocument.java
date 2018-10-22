@@ -1,4 +1,4 @@
-package edb.editor;
+package edb.editor.eslold;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
+import edb.editor.file.*;
 
 public class KeywordStyledDocument extends DefaultStyledDocument {
 

@@ -1,4 +1,4 @@
-package edb.editor;
+package edb.editor.eslold;
 
 public enum KeywordType {
 

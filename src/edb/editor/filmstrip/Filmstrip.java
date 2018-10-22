@@ -1,4 +1,4 @@
-package edb.editor;
+package edb.editor.filmstrip;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -19,22 +19,30 @@ import com.teamdev.jxbrowser.chromium.ContextMenuHandler;
 import com.teamdev.jxbrowser.chromium.ContextMenuParams;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 
-public class Filmstrip extends JPanel implements ChangeListener {
+import edb.tool.DelayedString;
 
-  private final int FAST    = 10;
-  private final int MEDIUM  = 100;
-  private final int SLOW    = 1000;
+public class Filmstrip extends JPanel implements ChangeListener, Runnable {
 
-  Vector<String>    filmstrip;
-  JSlider           slider;
-  Browser           browser = new Browser();
-  BrowserView       view    = new BrowserView(browser);
-  boolean           running = false;
+  private final int     FAST    = 1;
+  private final int     MEDIUM  = 100;
+  private final int     SLOW    = 1000;
 
-  public Filmstrip(Vector<String> filmstrip) {
+  Vector<DelayedString> filmstrip;
+  JSlider               slider;
+  Browser               browser = new Browser();
+  BrowserView           view    = new BrowserView(browser);
+  boolean               running = false;
+
+  public Filmstrip(Vector<DelayedString> filmstrip) {
     this.filmstrip = filmstrip;
     setSlider();
     setMenu();
+    new Thread(this).start();
+  }
+
+  public void run() {
+    for (DelayedString d : filmstrip)
+      d.getString();
   }
 
   private void setMenu() {
@@ -113,7 +121,7 @@ public class Filmstrip extends JPanel implements ChangeListener {
     if (!filmstrip.isEmpty()) {
       slider = new JSlider(JSlider.HORIZONTAL, 0, filmstrip.size() - 1, 0);
       setLayout(new BorderLayout());
-      browser.loadHTML(filmstrip.get(0));
+      browser.loadHTML(filmstrip.get(0).getString());
       add(view, BorderLayout.CENTER);
       add(slider, BorderLayout.SOUTH);
       slider.addChangeListener(this);
@@ -133,16 +141,16 @@ public class Filmstrip extends JPanel implements ChangeListener {
     else return new Font("Consolas", Font.PLAIN, 5);
   }
 
-  public Vector<String> getFilmstrip() {
+  public Vector<DelayedString> getFilmstrip() {
     return filmstrip;
   }
 
-  public void setFilmstrip(Vector<String> filmstrip) {
+  public void setFilmstrip(Vector<DelayedString> filmstrip) {
     this.filmstrip = filmstrip;
   }
 
   public void stateChanged(ChangeEvent e) {
-    Browser.invokeAndWaitFinishLoadingMainFrame(browser, (b) -> browser.loadHTML(filmstrip.get(slider.getValue())));
+    Browser.invokeAndWaitFinishLoadingMainFrame(browser, (b) -> browser.loadHTML(filmstrip.get(slider.getValue()).getString()));
   }
 
 }

@@ -16,9 +16,11 @@ import ast.types.Type;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import env.Env;
+import exp.BoaConstructor;
 import list.List;
 import runtime.functions.CodeBox;
 
+@BoaConstructor(fields = { })
 public class PNil extends Pattern {
 
   public void vars(HashSet<String> vars) {

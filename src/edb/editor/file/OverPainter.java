@@ -1,4 +1,4 @@
-package edb.editor;
+package edb.editor.file;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

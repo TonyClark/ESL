@@ -1,4 +1,4 @@
-package edb.editor;
+package edb.editor.query;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -32,6 +32,8 @@ import context.StringSource;
 import edb.actions.LoadAction;
 import edb.actions.RunAction;
 import edb.actions.TypeCheckAction;
+import edb.editor.file.FileEditor;
+import edb.tool.DelayedString;
 import edb.tool.EDB;
 import edb.tool.EDBState;
 import edb.tool.SVG;
@@ -105,10 +107,11 @@ public class QueryEditor extends FileEditor {
     if (value instanceof Cons) {
       Cons pair = (Cons) value;
       if (pair.isRealList()) {
-        Vector<String> strings = new Vector<String>();
+        Vector<DelayedString> strings = new Vector<DelayedString>();
         while (value instanceof Cons) {
           pair = (Cons) value;
-          strings.add(getHTML(pair.getHead()));
+          final Object head = pair.getHead();
+          strings.add(new DelayedString(()-> { return getHTML(head); }));
           value = pair.getTail();
         }
         edb.getFileEditors().showHTML(tag, strings, edb);

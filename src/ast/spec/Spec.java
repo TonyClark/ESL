@@ -17,9 +17,9 @@ public class Spec implements Located, TreeNode {
     return l;
   }
 
-  public State   state;
-  public Rule[]  rules;
-  public BRule[] behaviour;
+  public State   state = new State();
+  public Rule[]  rules = new Rule[0];
+  public BRule[] behaviour = new BRule[0];
 
   int            start = -1;
   int            end   = -1;

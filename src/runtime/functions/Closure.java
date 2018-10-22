@@ -22,7 +22,7 @@ public class Closure implements Fun {
   }
 
   public String toString() {
-    return name;
+    return name+"/"+arity;
   }
 
   public int getArity() {

@@ -263,7 +263,7 @@ public class Actor {
         Instr next = ((CodeBox) stack[frame + CODE]).code.get(i);
         instructions++;
         line = next.getLineStart();
-        // ESL.getDebugOut().println(this + ": " + next);
+        //ESL.getDebugOut().println(this + ": " + next);
         // printStack();
         switch (next.code) {
           // The following is the start of in-lining the instruction handlers...
@@ -387,7 +387,7 @@ public class Actor {
             pushStack(true);
             break;
           default: {
-            // ESL.getDebugOut().println(next);
+            //ESL.getDebugOut().println(next);
             next.perform(this);
           }
         }
@@ -980,7 +980,6 @@ public class Actor {
         MessageRecord message = messageQueue.addNewRecord(name, arity);
         for (int i = arity - 1; i >= 0; i--)
           message.getValues()[i] = source.popStack();
-        // messageListener.send(ESL.getTime(), source.getId(), getId(), name, message.getValues());
         messageQueue.notifyAll();
       }
     }

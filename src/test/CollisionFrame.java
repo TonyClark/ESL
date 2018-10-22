@@ -67,6 +67,7 @@ public class CollisionFrame extends JPanel implements JavaActor, TabbedActor {
 
   public CollisionFrame(Actor simulator) {
     try {
+    	System.err.println("Collision Frame");
       this.simulator = simulator;
       simulator.send(this, "SetGUI", new Object[] { this });
       JPanel panel = this;

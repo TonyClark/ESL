@@ -64,7 +64,7 @@ public class Record extends AST {
   private Binding[] substBindings(AST ast, String name) {
     Binding[] bs = new Binding[bindings.length];
     for (int i = 0; i < bindings.length; i++)
-      bs[i] = new Binding(getLineStart(), getLineEnd(), "", bindings[i].getName(), bindings[i].getType(), bindings[i].getValue().subst(ast, name));
+      bs[i] = new Binding(getLineStart(), getLineEnd(), "", bindings[i].getName(), bindings[i].getType(), bindings[i].getSourceType(),bindings[i].getValue().subst(ast, name));
     return bs;
   }
 

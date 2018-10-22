@@ -1,6 +1,5 @@
 package ast.types;
 
-import java.util.Arrays;
 import java.util.HashSet;
 
 import env.Env;
@@ -13,7 +12,7 @@ public class MessageType implements Located {
 
   public Type[] types;
   int           lineStart = -1;
-  int           lineEnd = -1;
+  int           lineEnd   = -1;
 
   public MessageType() {
   }
@@ -85,13 +84,14 @@ public class MessageType implements Located {
   }
 
   public void check(Env<String, Type> env) {
-    for(Type type : types)
+    for (Type type : types)
       type.check(env);
   }
 
   public void FV(HashSet<String> vars) {
-    for(Type type : types)
+    for (Type type : types)
       type.FV(vars);
   }
+
 
 }

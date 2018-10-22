@@ -118,7 +118,7 @@ public class Case extends AST {
         for (String v : armBV.get(i - 1)) {
           if (armDV.get(i - 1).contains(v)) {
             instrs.add(new PopDynamic(getLineStart()), locals, dynamics);
-            dynamics = dynamics.getTail();
+            //dynamics = dynamics.getTail();
           }
         }
       }
@@ -133,7 +133,7 @@ public class Case extends AST {
       for (String v : BV) {
         if (DV.contains(v)) {
           instrs.add(new PopDynamic(getLineStart()), locals, dynamics);
-          dynamics = dynamics.getTail();
+          //dynamics = dynamics.getTail();
         }
       }
       armCode.add(instrs);
@@ -271,13 +271,13 @@ public class Case extends AST {
       int lineStart = arm.patterns[0].getLineStart();
       int lineEnd = arm.patterns[0].getLineEnd();
       if (arm.patterns.length == exps.length) {
-        HandlerType handlerType = arm.type(env);
+        HandlerType handlerType =arm.type(env);
         for (int i = 0; i < exps.length; i++) {
           if (!Term.equals(handlerType.getTypes()[i], suppliedTypes[i], env)) { throw new TypeMatchError(lineStart, lineEnd, suppliedTypes[i], handlerType.getTypes()[i]); }
         }
         if (resultType == null)
           resultType = handlerType.getResult();
-        else if (!Type.equals(resultType, handlerType.getResult(), env)) throw new TypeError(lineStart, lineEnd, "incompatible case arm return types " + resultType + " and " + handlerType.getResult());
+        else if (!Type.equals(resultType, Type.eval(handlerType.getResult(),env), env)) throw new TypeError(lineStart, lineEnd, "incompatible case arm return types " + resultType + " and " + handlerType.getResult());
       } else throw new TypeError(lineStart, lineEnd, "incorrect number of arm patterns.");
     }
 

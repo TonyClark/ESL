@@ -38,6 +38,14 @@ public abstract class Env<Key,Value> implements Serializable {
 	protected abstract void ran0(Vector<Value> vector);
 	
 	public abstract Env<Key, Value> sub(Env<Key, Value> env);
+	
+	public Env<Key,Value> add(Env<Key,Value> env) {
+		Env<Key,Value> e = this;
+		for(Key k : env.dom()) {
+			e = e.bind(k, env.lookup(k));
+		}
+		return e;
+	}
 
 	public Env<Key, Value> bind(Key[] args, Value[] values) {
 		Env<Key,Value> env = this;

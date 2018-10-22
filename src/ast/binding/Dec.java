@@ -10,25 +10,28 @@ import ast.types.Typed;
 import env.Env;
 import exp.BoaConstructor;
 
-@BoaConstructor(fields = { "name", "declaredType" })
+@BoaConstructor(fields = { "name", "declaredType", "sourceType" })
 
 public class Dec implements DeclaringLocation, Typed, TreeNode {
 
 	public static Type generic(String[] names, Type type) {
 		if (names.length == 0)
 			return type;
-		else return new ast.types.Forall(type.getLineStart(), type.getLineEnd(), names, type);
+		else
+			return new ast.types.Forall(type.getLineStart(), type.getLineEnd(), names, type);
 	}
 
 	public static Type funType(String[] args, Type type) {
 		if (args.length == 0)
 			return type;
-		else return new TypeFun(type.getLineStart(), type.getLineEnd(), args, type);
+		else
+			return new TypeFun(type.getLineStart(), type.getLineEnd(), args, type);
 	}
 
 	public String	path;
 	public String	name;
 	public Type		declaredType;
+	public Type		sourceType;
 	private int		lineStart	= -1;
 	private int		lineEnd		= -1;
 	private Type	type;
@@ -37,16 +40,21 @@ public class Dec implements DeclaringLocation, Typed, TreeNode {
 	}
 
 	public Dec(int lineStart, int lineEnd, String path, String name, Type declaredType) {
+		this(lineStart, lineEnd, path, name, declaredType, declaredType);
+	}
+
+	public Dec(int lineStart, int lineEnd, String path, String name, Type declaredType, Type sourceType) {
 		super();
 		this.lineStart = lineStart;
 		this.lineEnd = lineEnd;
 		this.path = path;
 		this.name = name;
 		this.declaredType = declaredType;
+		this.sourceType = sourceType;
 	}
 
 	public Dec eval(Env<String, Type> env) {
-		return new Dec(getLineStart(), getLineEnd(), getPath(), getName(), getDeclaredType());
+		return new Dec(getLineStart(), getLineEnd(), getPath(), getName(), getDeclaredType(), sourceType);
 	}
 
 	public Type getDeclaredType() {
@@ -106,11 +114,15 @@ public class Dec implements DeclaringLocation, Typed, TreeNode {
 	}
 
 	public Dec substType(Type t, String n) {
-		return new Dec(getLineStart(), getLineEnd(), getPath(), getName(), getDeclaredType().substType(t, n));
+		return new Dec(getLineStart(), getLineEnd(), getPath(), getName(), getDeclaredType().substType(t, n), sourceType);
 	}
 
-  public void FV(HashSet<String> vars) {
-    declaredType.FV(vars);
-  }
+	public void FV(HashSet<String> vars) {
+		declaredType.FV(vars);
+	}
+
+	public Type getSourceType() {
+		return sourceType;
+	}
 
 }

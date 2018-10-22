@@ -8,7 +8,7 @@ import exp.BoaConstructor;
 @BoaConstructor(fields = {})
 public class Null extends Type {
 
-  public static final Type NULL = new Null();;
+  public static final Type NULL = new Null();
 
   public Null() {
   }

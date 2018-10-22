@@ -3,8 +3,9 @@ package ast.data;
 import java.util.HashSet;
 
 import ast.general.AST;
+import ast.types.Forall;
 import ast.types.Type;
-import ast.types.TypeMatchError;
+import ast.types.Var;
 import compiler.DynamicVar;
 import compiler.FrameVar;
 import env.Env;
@@ -14,6 +15,10 @@ import runtime.functions.CodeBox;
 
 @BoaConstructor(fields = {})
 public class Null extends AST {
+
+  private static final int POS  = Integer.MIN_VALUE;
+
+  public static final Type NULL = new Forall(POS, POS, new String[] { "T" }, new Var(POS, POS, "T", null));
 
   public Null() {
   }
@@ -44,7 +49,7 @@ public class Null extends AST {
   }
 
   public Type type(Env<String, Type> env) {
-    setType(ast.types.Null.NULL);
+    setType(NULL);
     return getType();
   }
 

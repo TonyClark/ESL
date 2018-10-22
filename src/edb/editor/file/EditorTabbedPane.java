@@ -1,7 +1,8 @@
-package edb.editor;
+package edb.editor.file;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
@@ -10,11 +11,15 @@ import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import edb.editor.TabbedActor;
+import edb.editor.eslold.ESLEditor;
 
 public class EditorTabbedPane extends JTabbedPane implements ChangeListener {
 
@@ -125,8 +130,10 @@ public class EditorTabbedPane extends JTabbedPane implements ChangeListener {
 
     public void mouseClicked(MouseEvent e) {
       if (e.getSource() instanceof JButton) {
-        JButton clickedButton = (JButton) e.getSource();
-        JTabbedPane tabbedPane = (JTabbedPane) clickedButton.getParent().getParent().getParent();
+        Container container = (Container) e.getSource();
+        while ((container != null) && !(container instanceof JTabbedPane))
+          container = container.getParent();
+        JTabbedPane tabbedPane = (JTabbedPane) container;
         int index = tabbedPane.getSelectedIndex();
         Component component = getComponentAt(index);
         if (component instanceof TabbedActor) {

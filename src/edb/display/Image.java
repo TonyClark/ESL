@@ -1,6 +1,7 @@
 package edb.display;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
@@ -9,14 +10,14 @@ import javax.imageio.ImageIO;
 
 public class Image extends Display {
 
-  private static Hashtable<String, java.awt.Image> cache = new Hashtable<String, java.awt.Image>();
+  private static Hashtable<String, BufferedImage> cache = new Hashtable<String, BufferedImage>();
 
-  int                                              xOffset;
-  int                                              yOffset;
-  String                                           file;
-  int                                              width;
-  int                                              height;
-  java.awt.Image                                   image;
+  int                                             xOffset;
+  int                                             yOffset;
+  String                                          file;
+  int                                             width;
+  int                                             height;
+  BufferedImage                                   image;
 
   public Image(int xOffset, int yOffset, int width, int height, String file) {
     super();
@@ -30,7 +31,7 @@ public class Image extends Display {
 
   private void loadImage() {
     try {
-      if (cache.contains(file))
+      if (cache.containsKey(file))
         image = cache.get(file);
       else {
         image = ImageIO.read(new File(file));

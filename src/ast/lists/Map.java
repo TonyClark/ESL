@@ -60,8 +60,8 @@ public class Map extends AST {
     BArm arm2 = new BArm(new Pattern[] { new PNil() }, Bool.TRUE, new ast.lists.List(), false);
     BArm arm1 = new BArm(new Pattern[] { new PCons(pattern, new PVar("$t", new ast.types.Void())) }, Bool.TRUE, new BinExp(getLineStart(), getLineEnd(), body, ":", new Apply(getLineStart(), getLineEnd(), "", new Var(getLineStart(), getLineEnd(), "$f", null, null), new Var(getLineStart(), getLineEnd(), "$t", null, null))), false);
     Case caseExp = new Case(getLineStart(), getLineEnd(), new Dec[] {}, new AST[] { new Var(getLineStart(), getLineEnd(), "l", null, null) }, new BArm[] { arm1, arm2 });
-    Fun fun = new Fun(getLineStart(), getLineEnd(), path, mapName(), new Dec[] { new Dec(getLineStart(), getLineEnd(), path, "l", ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp, false);
-    return new Letrec(getLineStart(), getLineEnd(), new Binding[] { new Binding(getLineStart(), getLineEnd(), path, "$f", new ast.types.Void(), fun) }, new Apply(getLineStart(), getLineEnd(), "", new Var(getLineStart(), getLineEnd(), "$f", null, null), list));
+    Fun fun = new Fun(getLineStart(), getLineEnd(), path, mapName(), new Dec[] { new Dec(getLineStart(), getLineEnd(), path, "l", ast.types.Void.VOID, ast.types.Void.VOID) }, ast.types.Void.VOID, caseExp, false);
+    return new Letrec(getLineStart(), getLineEnd(), new Binding[] { new Binding(getLineStart(), getLineEnd(), path, "$f", new ast.types.Void(), new ast.types.Void(), fun) }, new Apply(getLineStart(), getLineEnd(), "", new Var(getLineStart(), getLineEnd(), "$f", null, null), list));
   }
 
   private AST mapName() {

@@ -221,8 +221,8 @@ public class BinExp extends AST {
   }
 
   public Type type0(Env<String, Type> env) {
-    Type t1 = left.type(env);
-    Type t2 = right.type(env);
+    Type t1 = Type.eval(left.type(env),env);
+    Type t2 = Type.eval(right.type(env),env);
     if (op.equals("+")) {
 
       // Deal with cases arising from []::Forall t.[t] ...
@@ -243,6 +243,12 @@ public class BinExp extends AST {
 
       if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
         return ast.types.Int.INT;
+      else if (t1 instanceof ast.types.Float && t2 instanceof ast.types.Float)
+        return ast.types.Float.FLOAT;
+      else if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Float)
+        return ast.types.Float.FLOAT;
+      else if (t1 instanceof ast.types.Float && t2 instanceof ast.types.Int)
+        return ast.types.Float.FLOAT;
       else if (t1 instanceof ast.types.Str || t2 instanceof ast.types.Str)
         return ast.types.Str.STR;
       else if (t1 instanceof ast.types.List && t2 instanceof ast.types.List) {
@@ -265,11 +271,21 @@ public class BinExp extends AST {
         else throw new TypeError(getLineStart(), getLineEnd(), "+ expects two sets with the same element types: " + t1 + " and " + t2);
       } else throw new TypeError(getLineStart(), getLineEnd(), "+ expects numbers, bags, sets or lists: " + t1 + " and " + t2);
     } else if (op.equals("-")) {
-      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+    	if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
         return ast.types.Int.INT;
+      else if (t1 instanceof ast.types.Float && t2 instanceof ast.types.Float)
+        return ast.types.Float.FLOAT;
+      else if (t1 instanceof ast.types.Float && t2 instanceof ast.types.Int)
+        return ast.types.Float.FLOAT;
+      else if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Float)
+        return ast.types.Float.FLOAT;
       else throw new TypeError(getLineStart(), getLineEnd(), "- expects two integers: " + t1 + " and " + t2);
     } else if (op.equals("*")) {
       if (t1 instanceof ast.types.Float && t2 instanceof ast.types.Float)
+        return ast.types.Float.FLOAT;
+      else if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Float)
+        return ast.types.Float.FLOAT;
+      else if (t1 instanceof ast.types.Float && t2 instanceof ast.types.Int)
         return ast.types.Float.FLOAT;
       else if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
         return ast.types.Int.INT;
@@ -281,13 +297,13 @@ public class BinExp extends AST {
         return ast.types.Int.INT;
       else throw new TypeError(getLineStart(), getLineEnd(), "/ expects two integers: " + t1 + " and " + t2);
     } else if (op.equals(">")) {
-      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+      if (isNumType(t1) && isNumType(t2))
         return ast.types.Bool.BOOL;
-      else throw new TypeError(getLineStart(), getLineEnd(), "> expects two integers: " + t1 + " and " + t2);
+      else throw new TypeError(getLineStart(), getLineEnd(), "> expects two numbers: " + t1 + " and " + t2);
     } else if (op.equals("<")) {
-      if (t1 instanceof ast.types.Int && t2 instanceof ast.types.Int)
+      if (isNumType(t1) && isNumType(t2))
         return ast.types.Bool.BOOL;
-      else throw new TypeError(getLineStart(), getLineEnd(), "> expects two integers: " + t1 + " and " + t2);
+      else throw new TypeError(getLineStart(), getLineEnd(), "< expects two numbers: " + t1 + " and " + t2);
     } else if (op.equals("="))
       return ast.types.Bool.BOOL;
     else if (op.equals("and") || op.equals("andalso")) {
@@ -320,7 +336,11 @@ public class BinExp extends AST {
           return t2;
         else throw new TypeError(getLineStart(), getLineEnd(), ": incompatible element type: " + t1 + " and " + t2);
       } else throw new TypeError(getLineStart(), getLineEnd(), ": expects a list: " + t2);
-    } else throw new TypeError(getLineStart(), getLineEnd(), "unknown operator " + op);
+    } else throw new TypeError(getLineStart(), getLineEnd(), "unknown operator '" + op + "'");
   }
+
+	private boolean isNumType(Type t) {
+		return t instanceof ast.types.Int || t instanceof ast.types.Float;
+	}
 
 }

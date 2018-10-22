@@ -49,7 +49,7 @@ public class UnionRef extends Type {
 		if (t1 instanceof Union) {
 			Union union = (Union) t1;
 			if (!union.hasCnstr(name)) throw new TypeError(getLineStart(), getLineEnd(), "no field constructor named " + name);
-		} else throw new TypeError(getLineStart(), getLineEnd(), "expecting a union type.");
+		} else throw new TypeError(getLineStart(), getLineEnd(), "expecting a union type: " + t1);
 	}
 
   public void FV(HashSet<String> vars) {

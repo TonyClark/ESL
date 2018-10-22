@@ -45,7 +45,7 @@ public class PApplyType extends Pattern {
         Forall forall = (Forall) t;
         setType(forall.apply(types));
         cont.accept(env, getType());
-      } else throw new TypeError(getLineStart(), getLineEnd(), "expecting a generic type");
+      } else throw new TypeError(getLineStart(), getLineEnd(), "expecting a generic type: " + t);
     });
   }
 

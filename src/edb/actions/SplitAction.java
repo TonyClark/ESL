@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import edb.editor.FileEditor;
+import edb.editor.file.FileEditor;
 
 public class SplitAction extends AbstractAction {
 

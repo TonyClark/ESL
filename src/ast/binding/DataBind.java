@@ -27,7 +27,19 @@ public class DataBind extends TypeBind {
 	public Env<String, Type> bind(Env<String, Type> env) {
 		if (isSimple())
 			return bindSimple(env);
+		else if(isGeneric())
+			return bindGeneric(env);
 		else throw new TypeError(getLineStart(), getLineEnd(), "data only implemented for simple definitions.");
+	}
+
+	private Env<String, Type> bindGeneric(Env<String, Type> env) {
+		TypeFun fun = (TypeFun)getDeclaredType();
+		String[] args = fun.names;
+		Union union = (Union)fun.getType();
+		env = env.bind(getName(), fun);
+		for (Term t : union.getTerms())
+			env = env.bind(t.getName(), new TypeFun(getLineStart(),getLineEnd(),args,new UnionRef(getLineStart(), getLineEnd(), union, t.getName())));
+		return env;
 	}
 
 	private Env<String, Type> bindSimple(Env<String, Type> env) {

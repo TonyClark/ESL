@@ -32,8 +32,9 @@ public class VBox extends DisplayContainer {
         y += padding / pads;
       } else {
         if (isPacked()) {
-          d.draw(x, y, width, d.minHeight(g), g);
-          y += d.minHeight(g);
+          int dminHeight = d.minHeight(g);
+          d.draw(x, y, width,dminHeight , g);
+          y += dminHeight;
         } else {
           d.draw(x, y, width, cellHeight, g);
           y += cellHeight;

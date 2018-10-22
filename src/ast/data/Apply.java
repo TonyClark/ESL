@@ -17,7 +17,6 @@ import compiler.extensions.ApplyOp;
 import env.Env;
 import exp.BoaConstructor;
 import instrs.apply.StartCall;
-import instrs.tests.Is0;
 import list.List;
 import runtime.functions.CodeBox;
 
@@ -40,8 +39,14 @@ public class Apply extends AST {
     this.args = args;
   }
 
-  public String toString() {
-    return "Apply(" + op + "," + Arrays.toString(args) + ")";
+  private void checkArgTypes(ast.types.Fun funType, Env<String, Type> env) {
+    if (funType.getDomain().length == args.length) {
+      for (int i = 0; i < funType.getDomain().length; i++) {
+        Type suppliedType = args[i].type(env);
+        Type expectedType = Type.eval(funType.getDomain()[i],env);
+        if (!Type.equals(expectedType, suppliedType, env)) { throw new TypeMatchError(getLineStart(), getLineEnd(), suppliedType, Type.eval(expectedType, env)); }
+      }
+    } else throw new TypeError(getLineStart(), getLineEnd(), "expecting " + funType.getDomain().length + " args but supplied with " + args.length);
   }
 
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
@@ -49,6 +54,58 @@ public class Apply extends AST {
     if (!opName.isEmpty())
       getApplyOp().compile(op, locals, dynamics, code, isLast);
     else compileUntaggedFun(locals, dynamics, code, isLast);
+  }
+
+  private void compileApplyDynamic(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+    code.add(new StartCall(getLineStart()), locals, dynamics);
+    for (AST arg : args)
+      arg.compile(locals, dynamics, code, false);
+    Var v = (Var) op;
+    lookup(v.name, dynamics).apply(args.length, getLineStart(), code, locals, dynamics, isLast);
+  }
+
+  private void compileApplyFun(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+    code.add(new StartCall(getLineStart()), locals, dynamics);
+    for (AST arg : args)
+      arg.compile(locals, dynamics, code, false);
+    Fun fun = (Fun) op;
+    fun.compileApply(locals, dynamics, code, isLast);
+  }
+
+  private void compileApplyLocal(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+    code.add(new StartCall(getLineStart()), locals, dynamics);
+    for (AST arg : args)
+      arg.compile(locals, dynamics, code, false);
+    Var v = (Var) op;
+    lookup(v.name, locals).apply(args.length, getLineStart(), code, locals, dynamics, isLast);
+  }
+
+  private void compileUntaggedFun(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
+    if (isApplyLocal(locals))
+      compileApplyLocal(locals, dynamics, code, isLast);
+    else if (isApplyDynamic(dynamics))
+      compileApplyDynamic(locals, dynamics, code, isLast);
+    else if (isApplyFun())
+      compileApplyFun(locals, dynamics, code, isLast);
+    else {
+      code.add(new StartCall(getLineStart()), locals, dynamics);
+      for (AST arg : args)
+        arg.compile(locals, dynamics, code, false);
+      op.compile(locals, dynamics, code, false);
+      code.add(new instrs.apply.Apply(getLineStart(), args.length), locals, dynamics);
+    }
+  }
+
+  public void DV(HashSet<String> vars) {
+    op.DV(vars);
+    for (AST arg : args)
+      arg.DV(vars);
+  }
+
+  public void FV(HashSet<String> vars) {
+    op.FV(vars);
+    for (AST arg : args)
+      arg.FV(vars);
   }
 
   private ApplyOp getApplyOp() {
@@ -76,48 +133,20 @@ public class Apply extends AST {
     return null;
   }
 
-  private void compileUntaggedFun(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    if (isApplyLocal(locals))
-      compileApplyLocal(locals, dynamics, code, isLast);
-    else if (isApplyDynamic(dynamics))
-      compileApplyDynamic(locals, dynamics, code, isLast);
-    else if (isApplyFun())
-      compileApplyFun(locals, dynamics, code, isLast);
-    else {
-      code.add(new StartCall(getLineStart()), locals, dynamics);
-      for (AST arg : args)
-        arg.compile(locals, dynamics, code, false);
-      op.compile(locals, dynamics, code, false);
-      code.add(new instrs.apply.Apply(getLineStart(), args.length), locals, dynamics);
-    }
+  public AST[] getArgs() {
+    return args;
   }
 
-  private void compileApplyFun(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new StartCall(getLineStart()), locals, dynamics);
-    for (AST arg : args)
-      arg.compile(locals, dynamics, code, false);
-    Fun fun = (Fun) op;
-    fun.compileApply(locals, dynamics, code, isLast);
+  public String getLabel() {
+    return "apply :: " + getType();
   }
 
-  private boolean isApplyFun() {
-    return op instanceof Fun;
+  public AST getOp() {
+    return op;
   }
 
-  private void compileApplyLocal(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new StartCall(getLineStart()), locals, dynamics);
-    for (AST arg : args)
-      arg.compile(locals, dynamics, code, false);
-    Var v = (Var) op;
-    lookup(v.name, locals).apply(args.length, getLineStart(), code, locals, dynamics, isLast);
-  }
-
-  private void compileApplyDynamic(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
-    code.add(new StartCall(getLineStart()), locals, dynamics);
-    for (AST arg : args)
-      arg.compile(locals, dynamics, code, false);
-    Var v = (Var) op;
-    lookup(v.name, dynamics).apply(args.length, getLineStart(), code, locals, dynamics, isLast);
+  public String getOpName() {
+    return opName;
   }
 
   private boolean isApplyDynamic(List<DynamicVar> dynamics) {
@@ -129,6 +158,10 @@ public class Apply extends AST {
     } else return false;
   }
 
+  private boolean isApplyFun() {
+    return op instanceof Fun;
+  }
+
   private boolean isApplyLocal(List<FrameVar> locals) {
     if (op instanceof Var) {
       Var v = (Var) op;
@@ -138,32 +171,31 @@ public class Apply extends AST {
     } else return false;
   }
 
-  public void FV(HashSet<String> vars) {
-    op.FV(vars);
-    for (AST arg : args)
-      arg.FV(vars);
-  }
-
   public int maxLocals() {
     if (!opName.isEmpty())
       return getApplyOp().maxLocals();
     else return Math.max(op.maxLocals(), maxLocals(args));
   }
 
-  public void DV(HashSet<String> vars) {
-    op.DV(vars);
+  public void setPath(String path) {
+    op.setPath(path);
     for (AST arg : args)
-      arg.DV(vars);
+      arg.setPath(path);
+  }
+
+  private void setTypeLabel(Type t) {
+    if (t instanceof TaggedFun) {
+      TaggedFun tf = (TaggedFun) t;
+      opName = tf.getFunLabel();
+    }
   }
 
   public AST subst(AST ast, String name) {
     return new Apply(getLineStart(), getLineEnd(), opName, op.subst(ast, name), subst(args, ast, name));
   }
 
-  public void setPath(String path) {
-    op.setPath(path);
-    for (AST arg : args)
-      arg.setPath(path);
+  public String toString() {
+    return "Apply(" + op + "," + Arrays.toString(args) + ")";
   }
 
   public Type type(Env<String, Type> env) {
@@ -175,37 +207,5 @@ public class Apply extends AST {
     return getType();
   }
 
-  private void setTypeLabel(Type t) {
-    if (t instanceof TaggedFun) {
-      TaggedFun tf = (TaggedFun) t;
-      opName = tf.getFunLabel();
-    }
-  }
-
-  private void checkArgTypes(ast.types.Fun funType, Env<String, Type> env) {
-    if (funType.getDomain().length == args.length) {
-      for (int i = 0; i < funType.getDomain().length; i++) {
-        Type suppliedType = args[i].type(env);
-        Type expectedType = funType.getDomain()[i];
-        if (!Type.equals(expectedType, suppliedType, env)) { throw new TypeMatchError(getLineStart(), getLineEnd(), suppliedType, Type.eval(expectedType, env)); }
-      }
-    } else throw new TypeError(getLineStart(), getLineEnd(), "expecting " + funType.getDomain().length + " args but supplied with " + args.length);
-  }
-
-  public String getLabel() {
-    return "apply :: " + getType();
-  }
-
-  public AST getOp() {
-    return op;
-  }
-
-  public AST[] getArgs() {
-    return args;
-  }
-
-  public String getOpName() {
-    return opName;
-  }
 
 }

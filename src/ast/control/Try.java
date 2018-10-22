@@ -67,7 +67,7 @@ public class Try extends AST {
   }
 
   public AST desugarCatch() {
-    return new Fun(getLineStart(), getLineEnd(), path, catchName(), new Dec[] { new Dec(getLineStart(), getLineEnd(), path, "$1", ast.types.Void.VOID) }, ast.types.Void.VOID, new Case(getLineStart(), getLineEnd(), new Dec[] {}, new AST[] { new Var(getLineStart(), getLineEnd(), "$1", null, null) }, arms), false);
+    return new Fun(getLineStart(), getLineEnd(), path, catchName(), new Dec[] { new Dec(getLineStart(), getLineEnd(), path, "$1", ast.types.Void.VOID, ast.types.Void.VOID) }, ast.types.Void.VOID, new Case(getLineStart(), getLineEnd(), new Dec[] {}, new AST[] { new Var(getLineStart(), getLineEnd(), "$1", null, null) }, arms), false);
   }
 
   private AST catchName() {

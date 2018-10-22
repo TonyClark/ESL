@@ -18,7 +18,7 @@ public class HBox extends DisplayContainer {
   }
 
   public void draw(int x, int y, int width, int height, Graphics g) {
-
+    
     // (x,y) is the top-left origin.
     // (width,height) is the size of the surrounding box.
 
@@ -36,8 +36,9 @@ public class HBox extends DisplayContainer {
         x += padding / pads;
       } else {
         if (isPacked()) {
-          d.draw(x, y, d.minWidth(g), height, g);
-          x += d.minWidth(g);
+          int dminWidth = d.minWidth(g);
+          d.draw(x, y, dminWidth, height, g);
+          x += dminWidth;
         } else {
           d.draw(x, y, cellWidth, height, g);
           x += cellWidth;

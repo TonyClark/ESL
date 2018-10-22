@@ -34,6 +34,20 @@ public class If extends AST {
     this.alt = alt;
   }
 
+  public boolean alwaysTrue() {
+    if (test instanceof Bool) {
+      Bool b = (Bool) test;
+      return b.value;
+    } else return false;
+  }
+
+  public boolean alwaysFalse() {
+    if (test instanceof Bool) {
+      Bool b = (Bool) test;
+      return !b.value;
+    } else return false;
+  }
+
   public void compile(List<FrameVar> locals, List<DynamicVar> dynamics, CodeBox code, boolean isLast) {
     if (test instanceof Bool) {
       Bool b = (Bool) test;
@@ -93,10 +107,10 @@ public class If extends AST {
     Type testType = test.type(env);
     if (testType instanceof ast.types.Bool) {
       Type conseqType = conseq.type(env);
-      Type altType = alt.type(env);
+      Type altType = Type.eval(alt.type(env),env);
       if (altType instanceof ast.types.Void)
         return conseqType;
-      else if (Type.equals(conseqType,altType, env))
+      else if (Type.equals(conseqType, altType, env))
         return altType;
       else throw new TypeMatchError(conseq.getLineStart(), alt.getLineEnd(), conseqType, altType);
     } else throw new TypeError(test.getLineStart(), test.getLineEnd(), "expecting Bool, but found " + testType);

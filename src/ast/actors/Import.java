@@ -64,7 +64,7 @@ public class Import implements Located, DecContainer {
     for (String name : module.getExports().getStrings()) {
       for (Binding b : module.getDefs()) {
         if (b.getName().equals(name)) {
-          Dec dec = new Dec(getLineStart(), getLineEnd(), this.name, name, b.getDeclaredType());
+          Dec dec = new Dec(getLineStart(), getLineEnd(), this.name, name, b.getDeclaredType(),b.getSourceType());
           decs = AST.concatenate(decs, new DeclaringLocation[] { dec });
         }
       }

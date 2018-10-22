@@ -6,6 +6,7 @@ import java.util.HashSet;
 import ast.binding.Dec;
 import ast.binding.Var;
 import ast.general.AST;
+import ast.types.Forall;
 import ast.types.Type;
 import ast.types.TypeMatchError;
 import compiler.DynamicVar;
@@ -165,8 +166,8 @@ public class Fun extends AST {
       domain[i] = argType;
       args[i].setType(argType);
     }
-    Type dType = declaredType;
-    Type bType = new ast.types.Fun(declaredType.getLineStart(), declaredType.getLineEnd(), domain, body.type(env));
+    Type dType = Type.eval(declaredType,env);
+    Type bType = Type.eval(new ast.types.Fun(declaredType.getLineStart(), declaredType.getLineEnd(), domain, body.type(env)),env);
     if (Type.equals(dType, bType, env)) {
       // setType(bType);
       // Should retain the declared type.
@@ -183,5 +184,12 @@ public class Fun extends AST {
 
   public Dec[] getArgs() {
     return args;
+  }
+
+  private ast.types.Fun stripForall(Type type) {
+    if(type instanceof Forall) {
+      Forall forall = (Forall)type;
+      return (ast.types.Fun)forall.getType();
+    } else return (ast.types.Fun)type;
   }
 }

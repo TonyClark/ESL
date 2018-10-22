@@ -81,7 +81,7 @@ esl = {
   op              -> whitespace ('+' | '-' | '*' | '/' | 'andalso' | 'and' | 'orelse' | 'or' |':' | '<>' | '=' | '<' | '>' | '..' | '%');
   optActName      -> exp | { Str.strAt0(Act.newName()) };
   funName         -> exp | { Str.strAt0(Fun.newName()) };
-  simpleExp       -> var | numExp | strExp | bool | me | probably | now | nul
+  simpleExp       -> var | numExp | strExp | bool | me | probably | now | nul | monitor 
                   |  n=name becomes e=exp { Update(n,e) }
                   |  [[ 'act'     n=optActName lcurl es=exports s=spec bs = bindings i=actinit as=barms rcurl  { Act(n,[],es,s,bs,i,as) } ]]
                   |  [[ 'new'     s=string ! lsquare t=type rsquare (lparen ps=exps rparen { NewJava(s,t,ps) } | { NewJava(s,t,[]) }) ]]
@@ -113,6 +113,13 @@ esl = {
                   |  [[ 'become' n=simpleExp (lparen ps=exps rparen { Become(Apply(n,ps)) } | { Become(Apply(n,[])) }) ]]
                   |  [[ lcurl (e=exp es=(semi exp)* rcurl { Block(e:es) } | rcurl { Block([]) }) ]]
                   |  lparen e=exp rparen {e};
+                  
+  monitor         -> [[ 'monitor' lsquare t=type rsquare ! lcurl rs=mrule* rcurl ! { Monitor(t,rs) } ]];
+  mrule           -> [[ n=name ps=mpattern* arrow e=block ! { MRule(n,0,ps,MTrue(),e) } ]];
+  mpattern        -> mterm | [[ '!' lsquare t=mterm rsquare { MTerm('$NOT',[t]) } ]];
+  mterm           -> [[ n=Name (lparen vs=mvals rparen { MTerm(n,vs) } | { MTerm(n,[]) }) ]];
+  mvals           -> v=mval vs=(',' mval)* { v:vs };
+  mval            -> [[ mterm | i=int { MInt(i) } | s=string { MStr(s) } | n=name coloncolon t=type { MVar(n,t) } | 'true' { MBool(true) } | 'false' { MBool(false) } | lcurl e=exp rcurl { MExp(e) } ]];
       
   showBoundVars   -> lsquare vs=names rsquare {vs} | {[]}; 
   ruleImports     -> 'import' es=exps semi {es} | {[]};
@@ -154,6 +161,7 @@ esl = {
               |  [[ 'union' lcurl ts=cnstrTypes rcurl { TypeUnion(ts) } ]]
               |  [[ 'KB' lsquare t=Name rsquare { KBType(t) } ]]
               |  [[ 'Rules' lcurl ns=ruleTypeImports ts=ruleDecs rcurl { Rules(ns,ts) } ]]
+              |  [[ 'Monitor' lsquare t=type rsquare { MonitorType(t) } ]]
               |  [[ n=Name lparen ts = types rparen { TermType(n,ts) } ]]
               |  [[ n=Name lsquare ts = types rsquare { ApplyTypeFun(n,ts) } ]] 
               |  [[ n=Name { TypeVar(n) } ]];
@@ -200,7 +208,7 @@ esl = {
   bang        -> whitespace '!';
   at          -> whitespace '@';
   keyWord     -> key ! not([97,122] | [65,90]);
-  key         -> REGEXP('^(EOF|show|from|grab|cnstr|Bag|Set|act|fold|unfold|export|import|for|find|do|not|fun|letrec|let|in|new|true|false|case|become|self|probably|now|null|if|then|else|when|try|catch|throw|bag|set|kb|rules)');
+  key         -> REGEXP('^(EOF|show|from|grab|cnstr|Bag|Set|act|fold|unfold|export|import|for|find|do|not|fun|letrec|let|in|new|true|false|case|become|self|probably|now|null|if|then|else|when|try|catch|throw|bag|set|kb|rules|monitor)');
   name        -> whitespace not(keyWord) REGEXP('^[a-z][a-zA-Z0-9_]*');
   names       -> n=name ns=(comma name)* { n:ns } | {[]};
   Name        -> whitespace not(keyWord) REGEXP('^[A-Z][a-zA-Z0-9_]*');

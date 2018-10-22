@@ -7,7 +7,7 @@ import javax.swing.JDialog;
 
 import com.japisoft.findreplace.FindReplacePanel;
 
-import edb.editor.FileEditor;
+import edb.editor.file.FileEditor;
 
 public class FindReplaceAction extends AbstractAction {
 

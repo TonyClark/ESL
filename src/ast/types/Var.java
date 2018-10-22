@@ -52,7 +52,7 @@ public class Var extends Type implements ReferencingLocation {
 		return name;
 	}
 
-	public void check(Env<String, Type> env) {
+	public void check(Env<String, Type> env) { 
 	  if (!env.binds(name)) { throw new TypeError(getLineStart(), getLineEnd(), "unbound type variable " + name); }
 	}
 

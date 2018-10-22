@@ -7,13 +7,19 @@ import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Vector;
+
+import javax.swing.JFrame;
+
+import com.teamdev.jxbrowser.chromium.Browser;
+import com.teamdev.jxbrowser.chromium.BrowserType;
+import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 
 import runtime.actors.Actor;
 import runtime.actors.ActorState;
 import runtime.actors.JavaActor;
 import runtime.clients.ESLClient;
+import runtime.network.Network;
 
 public class ESL {
 
@@ -28,6 +34,7 @@ public class ESL {
   static PrintStream          debugOut   = System.err;
   private static final Object monitor    = new Object();              // Used by reactive Java-based applications.
   static JavaActor            EDB        = null;                      // We might not be running under EDB.
+  public static boolean              useXPL     = true;
 
   private static boolean allStrings(Constructor<?> cnstr) {
     for (Class<?> c : cnstr.getParameterTypes())
@@ -126,6 +133,7 @@ public class ESL {
 
   public static void reset() {
     ACTORS.clear();
+    Network.getNetwork().clear();
     ALL_ACTORS = 0;
   }
 

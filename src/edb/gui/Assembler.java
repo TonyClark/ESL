@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import javax.swing.JTextPane;
 
-import edb.editor.TextLineNumber;
+import edb.editor.file.TextLineNumber;
 import instrs.Instr;
 import runtime.functions.CodeBox;
 

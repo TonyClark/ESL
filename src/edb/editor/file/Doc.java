@@ -1,4 +1,4 @@
-package edb.editor;
+package edb.editor.file;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
@@ -10,7 +10,7 @@ public abstract class Doc extends DefaultStyledDocument {
 
   int          start         = -1;
   int          end           = -1;
-  StyleContext styleContext  = new StyleContext();
+  protected StyleContext styleContext  = new StyleContext();
   Style        selectedStyle = styleContext.addStyle("ConstantWidth", null);
 
   public Doc() {
@@ -33,7 +33,7 @@ public abstract class Doc extends DefaultStyledDocument {
     this.end = end;
   }
 
-  protected void refreshDocument() throws BadLocationException {
+  public void refreshDocument() throws BadLocationException {
     if (getStart() > -1 && getEnd() > -1) {
       setCharacterAttributes(getStart(), getEnd() - getStart(), selectedStyle, false);
     }

@@ -34,7 +34,7 @@ public class Cnstr extends Type {
   }
 
   public String toString() {
-    return type.toString();
+    return "<cnstr " + type.toString() + " " + union + ">";
   }
 
   public Type substType(Type t, String name) {

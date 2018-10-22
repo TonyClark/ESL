@@ -14,9 +14,9 @@ import exp.BoaConstructor;
 
 public class Parameters {
 
-  public Dec[]           decs;
-  public Configuration[] configs;
-  public Rule[]          rules;
+  public Dec[]           decs    = new Dec[0];;
+  public Configuration[] configs = new Configuration[0];
+  public Rule[]          rules   = new Rule[0];
 
   public void type(Env<String, Type> env, Binding[] typeBindings) {
     for (Binding b : typeBindings)
@@ -46,7 +46,7 @@ public class Parameters {
         Dec d = getDec(b.getName());
         if (d == null) throw new TypeError(start, end, "cannot find declaration for " + b.getName());
         String path = d.getPath();
-        defs[i] = new Binding(start, end, path, b.getName(), d.getDeclaredType(), b.getValue());
+        defs[i] = new Binding(start, end, path, b.getName(), d.getDeclaredType(), d.getSourceType(),b.getValue());
       }
       return defs;
     }

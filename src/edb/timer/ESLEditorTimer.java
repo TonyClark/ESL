@@ -1,6 +1,6 @@
 package edb.timer;
 
-import edb.editor.ESLEditor;
+import edb.editor.eslold.ESLEditor;
 
 public class ESLEditorTimer extends Timer {
 
@@ -13,11 +13,11 @@ public class ESLEditorTimer extends Timer {
 
   protected void action() {
     editor.setMessage(null);
-    if (editor.getEDB().isCheckSyntax() && editor.getEDB().isCheckTypes())
+    if (editor.getEDB().isCheckSyntax() && editor.getEDB().isCheckTypes()) {
       editor.concurrentlyTypeCheckText();
-    else if (editor.getEDB().isCheckSyntax())
+    } else if (editor.getEDB().isCheckSyntax()) {
       editor.parseText();
-    else editor.resetEditor();
+    } else editor.resetEditor();
   }
 
   protected void waiting() {

@@ -1,8 +1,10 @@
-package edb.editor;
+package edb.editor.file;
 
-class HiliteWord {
+import edb.editor.eslold.KeywordType;
 
-  String      _word;
+public class HiliteWord {
+
+  public String      _word;
   public int  _position;
   KeywordType key;
 

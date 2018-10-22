@@ -1,4 +1,4 @@
-package edb.editor;
+package edb.editor.query;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -14,6 +14,9 @@ import ast.query.TypeDec;
 import ast.query.body.Call;
 import ast.query.rules.Rule;
 import ast.types.Type;
+import edb.editor.eslold.KeywordType;
+import edb.editor.file.Doc;
+import edb.editor.file.HiliteWord;
 import runtime.data.Key;
 
 public class QueryDoc extends Doc {
@@ -172,7 +175,7 @@ public class QueryDoc extends Doc {
 		refreshDocument();
 	}
 
-	protected synchronized void refreshDocument() throws BadLocationException {
+	public synchronized void refreshDocument() throws BadLocationException {
 		String text = getText(0, getLength());
 		final List<HiliteWord> list = processWords(text);
 		setCharacterAttributes(0, text.length(), defaultStyle, true);

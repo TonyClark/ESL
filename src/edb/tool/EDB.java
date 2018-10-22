@@ -42,24 +42,22 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
-import com.apple.eawt.Application;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 
 import ast.actors.Act;
 import ast.actors.New;
 import ast.actors.Self;
-import ast.binding.Dec;
 import ast.binding.FunBind;
 import ast.binding.declarations.DeclaringLocation;
 import ast.control.Block;
 import ast.data.Ref;
 import ast.general.AST;
-import ast.general.WalkBindings;
 import ast.modules.Module;
 import ast.query.body.Call;
 import ast.query.machine.Machine;
@@ -71,10 +69,11 @@ import ast.types.TypeError;
 import ast.types.TypePatternError;
 import compiler.DynamicVar;
 import compiler.FrameVar;
+import context.ParseError;
 import edb.console.Console;
 import edb.console.ConsoleOutputStream;
-import edb.editor.FileEditor;
-import edb.editor.FileEditors;
+import edb.editor.file.FileEditor;
+import edb.editor.file.FileEditors;
 import edb.files.FileTree;
 import env.Empty;
 import env.Env;
@@ -104,7 +103,7 @@ import xpl.Interpreter;
 
 public class EDB extends JFrame implements ESLClient, JavaActor {
 
-  static final String     osFlag          = System.getProperty("os.name").replaceAll("\\s", "");;
+  static final String     OS              = System.getProperty("os.name").replaceAll("\\s", "");
   static final String     WEB             = "http://tonyclark.github.io/ESL/";
   static final int        WIDTH           = (int) (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width * 0.9);
   static final int        HEIGHT          = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -133,6 +132,7 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
   static boolean          checkSyntax     = true;
   static boolean          checkTypes      = true;
   static Machine          queryMachine    = null;
+  static int              parseDelay      = 0;
 
   public static void circlePos(Actor actor, int arity) {
     if (arity == 4) {
@@ -163,9 +163,13 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
   }
 
   public static String getOsflag() {
-    return osFlag;
+    return OS;
   }
-
+  
+  public static int getParseDelay() {
+    return parseDelay;
+  }
+  
   public static String getPathName(String path) {
     int i = path.lastIndexOf('/');
     path = i == -1 ? path : path.substring(i + 1);
@@ -174,20 +178,26 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     return path;
   }
 
+  public static boolean isMac() {
+    return OS.startsWith("Mac");
+  }
+
+  public static boolean isWindows() {
+    return OS.startsWith("Windows");
+  }
+
   public static void main(String[] args) {
     String EDBfiles = args[0];
     String historyFiles = args[1];
-    new EDB(EDBfiles, historyFiles);
+    String useXPL = args[2];
+    String parseDelay = args[3];
+    new EDB(EDBfiles, historyFiles, useXPL, parseDelay);
   }
 
   public static void nullSaveHistory(Actor actor, int arity) {
   }
 
   public static void nullSaveState(Actor actor, int arity) {
-  }
-
-  private static void saveActorState(Actor a, String name, Object value, int time) {
-    history.state(a, name, value, time);
   }
 
   private static void saveActorState(Actor a, int time) {
@@ -204,6 +214,10 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
       } else i++;
       dynamics = dynamics.getTail();
     }
+  }
+
+  private static void saveActorState(Actor a, String name, Object value, int time) {
+    history.state(a, name, value, time);
   }
 
   private static void saveActorStates(int time) {
@@ -232,6 +246,19 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     } else throw new Error("saveHistory expects " + 1 + " arg but supplied with " + arity);
   }
 
+  public static void saveState(Actor actor, int arity) {
+
+    // Saves a snapshot ...
+
+    if (arity == 1) {
+      actor.closeFrame(0, null, null, null);
+      String label = actor.getFrameVar(0).toString();
+      history.recordSnapshot(label, (int) ESL.getTime());
+      saveActorStates((int) ESL.getTime());
+      actor.returnValue(label);
+    } else throw new Error("saveState expects " + 1 + " arg but supplied with " + arity);
+  }
+
   public static void serialize(Actor actor, int arity) {
     if (arity == 2) {
       actor.closeFrame(0, null, null, null);
@@ -251,19 +278,6 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     } else throw new Error("serialize expects " + 2 + " args but supplied with " + arity);
   }
 
-  public static void saveState(Actor actor, int arity) {
-
-    // Saves a snapshot ...
-
-    if (arity == 1) {
-      actor.closeFrame(0, null, null, null);
-      String label = actor.getFrameVar(0).toString();
-      history.recordSnapshot(label, (int) ESL.getTime());
-      saveActorStates((int) ESL.getTime());
-      actor.returnValue(label);
-    } else throw new Error("saveState expects " + 1 + " arg but supplied with " + arity);
-  }
-
   public static void setHistoryFiles(String historyFiles) {
     EDB.historyFiles = historyFiles;
   }
@@ -277,7 +291,7 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
   Thread        VM               = null;
   Vector<Actor> browserListeners = new Vector<Actor>();
 
-  public EDB(String EDBfiles, String historyFiles) {
+  public EDB(String EDBfiles, String historyFiles, String useXPL, String parseDelay) {
     EDB.historyFiles = historyFiles;
     redirectIO();
     setLookAndFeel();
@@ -292,7 +306,7 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     setBehaviourListener(this);
     setUpdateListener(this);
     showTitle(EDBState.IDLE);
-    Application.getApplication().setDockIconImage(getIcon());
+    // Application.getApplication().setDockIconImage(getIcon());
     splash();
     pack();
     setSize(WIDTH, HEIGHT);
@@ -300,12 +314,9 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     setVisible(true);
     readESL();
     ESL.setEDB(this);
+    ESL.useXPL = Boolean.parseBoolean(useXPL);
+    EDB.parseDelay = Integer.parseInt(parseDelay);
     console.startInterpreter();
-  }
-
-  private Image getIcon() {
-    File file = new File("images/EDB.png");
-    return new ImageIcon(file.getAbsolutePath()).getImage();
   }
 
   public void action_run() {
@@ -530,6 +541,10 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     fileTree.selectDeclaration(path, dec);
   }
 
+  public void error(String path, int charPos, String error) {
+    fileEditors.error(path, charPos, error);
+  }
+
   public void fileDeleted(String path) {
     fileEditors.fileDeleted(path);
   }
@@ -561,10 +576,19 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     return fileEditors;
   }
 
+  private Image getIcon() {
+    File file = new File("images/EDB.png");
+    return new ImageIcon(file.getAbsolutePath()).getImage();
+  }
+
   public ImageIcon getImage(String file, int width, int height) {
     Image img = new ImageIcon(file).getImage();
     Image newImg = img.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
     return new ImageIcon(newImg);
+  }
+
+  public void handle(Throwable t) {
+    System.err.println("Caught " + t);
   }
 
   public boolean hasExport(Key name) {
@@ -680,7 +704,7 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
           block.compile(new Nil<FrameVar>(), Builtins.builtinDynamics(), codebox, true);
           codebox.add(new Return(-1), new Nil<FrameVar>(), new Nil<DynamicVar>());
 
-          String name = path.substring(path.lastIndexOf('/') + 1);
+          String name = path.substring(path.lastIndexOf(EDB.isMac() ? '/' : '\\') + 1);
           name = name.substring(0, name.indexOf('.'));
           System.out.println("[ write asm/" + name + ".asm ]");
           codebox.write("asm/" + name + ".asm");
@@ -688,7 +712,6 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
           actor.getBehaviour().setSelf(actor);
           actor.initSystem(codebox);
           actor.run();
-
           toolState = EDBState.LOADED;
           showTitle(EDBState.LOADED, path);
         } catch (FileNotFoundException fnf) {
@@ -715,6 +738,10 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     if (actor instanceof JPanel) fileEditors.openPanel((JPanel) actor);
   }
 
+  public void newActor(JPanel actor) {
+    fileEditors.openPanel(actor);
+  }
+
   public void openActor(Actor actor) {
   }
 
@@ -737,7 +764,7 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
 
   private void readESL() {
     // Causes the definition of ESL to be read and cached...
-    Interpreter.readLanguage("xpl/esl.xpl", "esl");
+    if (ESL.useXPL) Interpreter.readLanguage("xpl/esl.xpl", "esl");
   }
 
   private void redirectIO() {
@@ -808,13 +835,9 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     if (message instanceof Term) {
       Term term = (Term) message;
       if (term.getName() == SHOW && term.getValues().length == 2) {
-        SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            String label = term.getValues()[0].toString();
-            String html = SVG.html((Term) RuleBase.asTerm(term.getValues()[1]));
-            fileEditors.showHTML(label, html, EDB.this);
-          }
-        });
+        String label = term.getValues()[0].toString();
+        Term html = (Term) term.getValues()[1];
+        sendShow(label, html);
       }
       if (term.getName() == ADDBL && term.getValues().length == 1) {
         Actor listener = (Actor) term.getValues()[0];
@@ -823,16 +846,33 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
       if (term.getName() == FILMSTRIP && term.getValues().length == 2) {
         String label = term.getValues()[0].toString();
         List<?> value = (List<?>) term.getValues()[1];
-        Vector<String> strings = new Vector<String>();
-        while (!(value instanceof Nil<?>)) {
-          Cons<?> pair = (Cons<?>) value;
-          String html = SVG.html((Term) RuleBase.asTerm(pair.getHead()));
-          strings.add(html);
-          value = pair.getTail();
-        }
-        getFileEditors().showHTML(label, strings, this);
+        sendFilmstrip(label, value);
       }
     }
+  }
+
+  public void sendFilmstrip(String label, List<?> value) {
+    Vector<DelayedString> strings = new Vector<DelayedString>();
+    while (!(value instanceof Nil<?>)) {
+      Cons<?> pair = (Cons<?>) value;
+      strings.add(new DelayedString(() ->
+      {
+        Term display = (Term) RuleBase.asTerm(pair.getHead());
+        String html = SVG.html(display);
+        return html;
+      }));
+      value = pair.getTail();
+    }
+    getFileEditors().showHTML(label, strings, EDB.this);
+  }
+
+  public void sendShow(String label, Term term) {
+    String html = SVG.html((Term) RuleBase.asTerm(term));
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        fileEditors.showHTML(label, html, EDB.this);
+      }
+    });
   }
 
   public void setActor(Actor actor) {
@@ -941,6 +981,32 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
     // saveActorStates(time);
   }
 
+  public Vector<Act> tracedActs(String path) {
+    return fileEditors.tracedActs(path);
+  }
+
+  public Vector<FunBind> tracedFuns(String path) {
+    return fileEditors.tracedFuns(path);
+  }
+
+  public Vector<BArm> tracedMessages(String path) {
+    return fileEditors.tracedArms(path);
+  }
+
+  public void translate(String path, Vector<FunBind> tracedFuns, Vector<BArm> tracedMessages, Vector<Act> tracedActs) {
+    try {
+      Module.reset();
+      Module module;
+      module = Module.importModule(path);
+      module.resolve();
+      module.getModuleClass().write(EDB.isMac() ? "new_esl/java" : "new_esl\\java", true);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (ParseError e) {
+      e.printStackTrace();
+    }
+  }
+
   public void typeCheck(Module module) {
     try {
       module.type(Builtins.builtinTypes());
@@ -987,18 +1053,6 @@ public class EDB extends JFrame implements ESLClient, JavaActor {
       BrowserView view = (BrowserView) focus;
       view.getBrowser().zoomOut();
     }
-  }
-
-  public Vector<FunBind> tracedFuns(String path) {
-    return fileEditors.tracedFuns(path);
-  }
-
-  public Vector<BArm> tracedMessages(String path) {
-    return fileEditors.tracedArms(path);
-  }
-
-  public Vector<Act> tracedActs(String path) {
-    return fileEditors.tracedActs(path);
   }
 
 }

@@ -1,5 +1,6 @@
 package ast.types;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 import ast.binding.Dec;
@@ -56,13 +57,13 @@ public class Forall extends Type implements DecContainer {
       }
       return t;
     }
-    throw new TypeError(getLineStart(), getLineEnd(), "incorrect args supplied for generic type.");
+    throw new TypeError(getLineStart(), getLineEnd(), "incorrect args supplied for generic type: " + Arrays.toString(types) + " supplied for " + this);
   }
 
   public DeclaringLocation[] getContainedDecs() {
     DeclaringLocation[] decs = new DeclaringLocation[names.length];
     for (int i = 0; i < decs.length; i++)
-      decs[i] = new Dec(getLineStart(), getLineEnd(), "", names[i], this);
+      decs[i] = new Dec(getLineStart(), getLineEnd(), "", names[i], this, this);
     return decs;
   }
 

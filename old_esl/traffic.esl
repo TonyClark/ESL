@@ -259,7 +259,7 @@ act approach(id::Str,light::TrafficLight,probOfNewCar::Int)::Approach {
   
 };
 
-act monitor(left::Approach,right::Approach,lights::TrafficLights)::Monitor {
+act mon(left::Approach,right::Approach,lights::TrafficLights)::Monitor {
 
   queueRight()::Bool = right.getQueue() > 0;
   
@@ -277,7 +277,7 @@ act monitor(left::Approach,right::Approach,lights::TrafficLights)::Monitor {
       lights.right.change()
     } else {};
   
-  monitor()::Void = {
+  mon()::Void = {
   
     // The PriorityRight strategy will give the right-hand approach to the bottleneck
     // priority over the left unless the left has priority when the right does not.
@@ -309,7 +309,7 @@ act monitor(left::Approach,right::Approach,lights::TrafficLights)::Monitor {
     // both are given the opportunity to move, only one will succeed because of 
     // the traffic lights.
     
-    monitor()
+    mon()
   };
   
   Time(n::Int) -> {}
@@ -323,7 +323,7 @@ l2::TrafficLight = new light('GREEN');
 left::Approach = new approach('left',l1,40);
 right::Approach = new approach('right',l2,50);
 lights::TrafficLights = new trafficLights(l1,l2);
-m::Monitor = new monitor(left,right,lights);
+m::Monitor = new mon(left,right,lights);
 
 act main::Main {
 
@@ -341,6 +341,7 @@ act main::Main {
   Time(n::Int) -> {}
   
 }
+
 
 
 

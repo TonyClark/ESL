@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import edb.editor.FileEditor;
+import edb.editor.file.FileEditor;
 
 public class TypeCheckAction extends AbstractAction {
 
@@ -17,7 +17,11 @@ public class TypeCheckAction extends AbstractAction {
   public void actionPerformed(ActionEvent evt) {
     new Thread(new Runnable() {
       public void run() {
+        try {
         fileEditor.typeCheck();
+        } catch(Exception e) {
+          e.printStackTrace(System.err);
+        }
       }
     }).start();
   }

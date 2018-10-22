@@ -35,7 +35,7 @@ public class Var extends AST implements ReferencingLocation {
       lookup(name, locals).compile(getLineStart(), code, locals, dynamics);
     else if (lookup(name, dynamics) != null)
       lookup(name, dynamics).compile(getLineStart(), code, locals, dynamics);
-    else throw new java.lang.Error("cannot find declaration for variable " + name);
+    else throw new java.lang.Error("cannot find declaration for variable " + name + " in\nlocals = " + locals + "\n dynamics = " + dynamics);
   }
 
   public void DV(HashSet<String> vars) {
