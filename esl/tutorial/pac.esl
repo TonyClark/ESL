@@ -5,9 +5,7 @@ import 'esl/lists.esl', 'esl/util.esl';
 // This file implements a simple version of the game Pacman. Many simulations have a turn-based 
 // architecture where a collection of actors are autonomous, but must take their turn because
 // they access a shared state. Access to the shared state is granted exclusively to each actor
-// via a lock. The shared state is used by each actor to work out how to process messages (in
-// this case simple Time(n) messages). The strategies of the actors are implemented by a function
-// that can be replaced to make them more or less sophisticated.
+// via the maze. 
 
 data GhostInfo = Point(Ghost,Int,Int,Int); // Point(g,type,x,y)
 
@@ -53,6 +51,9 @@ Act Maze {
 
 Act Player {
 
+  // Player is an abstract behaviour type that defines the minimal
+  // information necessary to exist in the maze...
+
   export 
     getX::() -> Int;
     getY::() -> Int;
@@ -67,6 +68,8 @@ Act Player {
 }
  
 act player(x::Int,y::Int,maze::Maze)::Player {
+
+  // A basic implementation of the player interface...
   
   export getX,getY,setX,setY,moveTo,getMaze,move;
 
@@ -83,11 +86,17 @@ act player(x::Int,y::Int,maze::Maze)::Player {
 
 Act Ghost extends Player { 
 
+  // A ghost is a player that has a special value that
+  // indicates the type of ghost. The GUI uses this to
+  // change the displayed icon...
+
   export ghostType::Int;
   
 }
 
 Act Pacman extends Player {
+
+  // The pacman is just a player...
   
 }
 
@@ -110,6 +119,11 @@ bottomRightCorner::Int = 9;     // Code for a bottom-right corner.
 timeLimit::Int         = 50000; // How long to run the game.
 
 initArray(l::[[Int]])::Array[Array[Int]] =
+
+  // Currently ESL does not have a syntax construct for statically initialising
+  // arrays. This can be used to initialise an n*n array of integers from a
+  // list of nested lists of integer...
+  
   let a::Array[Array[Int]] = new Array[Array[Int]](length[[Int]](l));
   in {
     for y::Int in 0..length[[Int]](l) do {
@@ -125,6 +139,9 @@ initArray(l::[[Int]])::Array[Array[Int]] =
   }
 
 forallArray[T](p::(T)->Bool,a::Array[T],size::Int)::Bool = 
+
+  // The equivalent of forall, but for arrays...
+  
   let b::Bool = true;
   in {
     for i::Int in 0..size do {
@@ -137,19 +154,19 @@ forallArray[T](p::(T)->Bool,a::Array[T],size::Int)::Bool =
 
 act ghost(x::Int,y::Int,homeX::Int,homeY::Int,gType::Int,m::Maze)::Ghost extends player(x,y,m) {
 
-  // A ghost waits for the appropriate delay and then makes
-  // a move. The goal of a ghost is provided by the supplied
-  // strategy function. In order to make a move, a ghost must 
-  // grab the global-state monitor and thereby assure that it
-  // has exclusive access.
+  // A basic ghost must be supplied with its starting position, its home (used when scattering)
+  // its type (for display purposes) and the maze. A ghost uses simple planning to work out how
+  // to get to its current goal location. The goal location will depend on the current state of
+  // the ghost: if the state is Chase then the goal is the pacman location, otherwise the goal
+  // is the home location.
 
   export ghostType, move;
 
-  ghostType::Int = gType;
-  state::GhostState = Chase;
-  changeMode::Int = 15;
-  modeCount::Int = changeMode;
-  maxPlanLength::Int = 8;
+  ghostType::Int     = gType;        // The type of the ghost.
+  state::GhostState  = Chase;        // Current state, used for planning.
+  changeMode::Int    = 15;           // Change the state after this number of moves.
+  modeCount::Int     = changeMode;   // Current countdown to change state.
+  maxPlanLength::Int = 8;            // Select the best plan after this number of plan steps.
 
   move()::Void = 
     letrec 
@@ -217,6 +234,8 @@ act ghost(x::Int,y::Int,homeX::Int,homeY::Int,gType::Int,m::Maze)::Ghost extends
 
 }
 
+// Various types of ghost...
+
 act ghost1(x::Int,y::Int,m::Maze)::Ghost extends ghost(x,y,1,1,0,m) { }
 act ghost2(x::Int,y::Int,m::Maze)::Ghost extends ghost(x,y,1,maxHeight-2,1,m) { }
 act ghost3(x::Int,y::Int,m::Maze)::Ghost extends ghost(x,y,maxWidth-2,1,2,m) { }
@@ -271,22 +290,19 @@ act maze::Maze {
   
   export isWall,atHome,getPacman,legalPos,eat;
   
-  ghosts::[Ghost] = [];                              // In principle we can have any number of ghosts.
-  pacman::Pacman = null[Pacman];
+  ghosts::[Ghost]   = [];                                       // In principle we can have any number of ghosts.
+  pacman::Pacman    = null[Pacman];
   players::[Player] = [][Player];
   
   eaten()::Bool = exists[Ghost](isEatingPacman,ghosts);         // The player has been eaten.
-  is0(n::Int)::Bool = n=0; // Check for 0.
-  allEaten()::Bool = forallArray[Array[Int]](fun(row::Array[Int])::Bool forallArray[Int](is0,row,maxWidth),food,maxHeight);  // Player wins?
-  isEatingPacman(g::Ghost)::Bool =
-    // Is the supplied ghost co-located with the player?
+  is0(n::Int)::Bool = n=0;                                      // Check for 0.
+  allEaten()::Bool = 
+    forallArray[Array[Int]](fun(row::Array[Int])::Bool 
+      forallArray[Int](is0,row,maxWidth),food,maxHeight);       // Player wins?
+  isEatingPacman(g::Ghost)::Bool =                              // Is the supplied ghost co-located with the player?
     (g.getX() = pacman.getX()) and (g.getY() = pacman.getY());
   getPacman()::Pacman = pacman;
-  
-    
-    
-  eat(x::Int,y::Int)::Void =
-    // If the player is on food then eat it by removing it from the food list.
+  eat(x::Int,y::Int)::Void =                                    // If the player is on food then eat it by removing it from the food list.
     if food[y][x] = 1
     then food[y][x] := 0;
     else {}
@@ -342,14 +358,6 @@ act maze::Maze {
   }
   
 }
-
-opp(direction::Str)::Str =
-  case direction {
-    'NORTH' -> 'SOUTH';
-    'SOUTH' -> 'NORTH';
-    'EAST'  -> 'WEST';
-    'WEST'  -> 'EAST';
-  }
 
 tiles::Array[Array[Int]] = initArray([
 
