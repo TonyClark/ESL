@@ -12,7 +12,6 @@ import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
@@ -29,12 +28,11 @@ import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 
 import edb.editor.basic.MenuProvider;
-import edb.editor.esl.ESLParser;
 import edb.files.DynamicClassLoader;
 import edb.frame.EDBFrame;
 import edb.frame.EDBMenuProvider;
+import edb.frame.Writable;
 import edb.tool.EDB;
-import esl.lib.ESLVal;
 import esl.lib.Lib;
 
 public class JavaTab extends JavaEditor implements EDBMenuProvider {
@@ -56,7 +54,7 @@ public class JavaTab extends JavaEditor implements EDBMenuProvider {
 	}
 
 	public void addMenu(JMenuBar bar) {
-		JButton save = MenuProvider.getImageButton("icons/save.png", "save " + getFile().getName(),KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_MASK), () -> {
+		JButton save = MenuProvider.getImageButton("icons/save.png", "save " + getFile().getName(), KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_MASK), () -> {
 			save(false);
 		});
 		bar.add(save);
@@ -64,13 +62,14 @@ public class JavaTab extends JavaEditor implements EDBMenuProvider {
 			saveAs();
 		});
 		bar.add(saveAs);
-		JButton format =  MenuProvider.getImageButton("icons/format.png", "format " + getFile().getName(), KeyStroke.getKeyStroke(KeyEvent.VK_J, InputEvent.META_MASK),() -> {
+		JButton format = MenuProvider.getImageButton("icons/format.png", "format " + getFile().getName(), KeyStroke.getKeyStroke(KeyEvent.VK_J, InputEvent.META_MASK), () -> {
 			format();
 		});
 		bar.add(format);
-		JButton run = MenuProvider.getImageButton("icons/run.png", "run " + getFile().getName() + " on the Java VM",KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.META_MASK), () -> {
-			run();
-		});
+		JButton run = MenuProvider.getImageButton("icons/run.png", "run " + getFile().getName() + " on the Java VM", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.META_MASK),
+		    () -> {
+			    run();
+		    });
 		run.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (isDirty()) {
@@ -103,7 +102,7 @@ public class JavaTab extends JavaEditor implements EDBMenuProvider {
 		String path = getFile().getPath();
 		String[] names = (EDB.isWindows()) ? path.replace("\\", "/").split("/") : path.split("/");
 		String name = names[names.length - 1].replace(".java", "");
-		String packagePath = separateWith(Arrays.copyOfRange(names,1,names.length-1), ".");
+		String packagePath = separateWith(Arrays.copyOfRange(names, 1, names.length - 1), ".");
 		try {
 			Lib.reset();
 			ClassLoader parentClassLoader = Lib.class.getClassLoader();
@@ -158,12 +157,12 @@ public class JavaTab extends JavaEditor implements EDBMenuProvider {
 	}
 
 	public void parseCompleted(AbstractParser p) {
-		JavaParser parser = (JavaParser)p;
-		edbFrame.setErrors(getFile().getAbsolutePath(),parser.hasErrors());
+		JavaParser parser = (JavaParser) p;
+		edbFrame.setErrors(getFile().getAbsolutePath(), parser.hasErrors());
 	}
 
 	public void addButton(String label, JButton button) {
-		
+
 	}
 
 }

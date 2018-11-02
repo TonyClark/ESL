@@ -34,50 +34,49 @@ translateArms(as::[Arm])::[Arm] =
     BArm(l::Loc,ps::[Pattern],g::AST,e::AST):as::[Arm] -> LArm(l,ps,[][[TBind]],g,e):translateArms(as);
   }
 
-newVars(n::Int)::[Str] = if n=0 then []; else newVar():newVars(n-1); 
+newVars(n::Int)::[Str] = if n=0 then []; else newVar():newVars(n-1);
   
 translateCases(exp::AST)::AST = 
   case exp {
-    Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind]) -> 
-      Module(path,name,exports,imports,x,y,[ translateDef(d) | d::TBind <- defs]);
-    FunExp(l::Loc,n::AST,args::[TDec],t::Type,e::AST) -> 
-      FunExp(l,n,args,t,translateCases(e));
-    StrExp(l::Loc,v::Str) -> exp;
-    IntExp(l::Loc,v::Int) -> exp;
-    BoolExp(l::Loc,v::Bool) -> exp;
-    NullExp(l::Loc) -> exp;
-    FloatExp(l::Loc,f::Float) -> exp;
-    Term(l::Loc,n::Str,ts::[Type],es::[AST]) -> Term(l,n,ts,[ translateCases(e) | e::AST <- es]);
-    List(l::Loc,es::[AST]) -> List(l,[ translateCases(e) | e::AST <- es]);
-    Block(l::Loc,es::[AST]) -> Block(l,[ translateCases(e) | e::AST <- es]); 
-    Apply(l::Loc,op::AST,args::[AST]) -> Apply(l,translateCases(op),[ translateCases(e) | e::AST <- args]);
-    ApplyTypeExp(l::Loc,op::AST,args::[Type]) -> ApplyTypeExp(l,translateCases(op),args);
-    Case(l::Loc,ds::[TDec],es::[AST],as::[Arm]) -> compileCase(l,es,translateArms(as),CaseError(l));
-    BinExp(l::Loc,e1::AST,op::Str,e2::AST) -> BinExp(l,translateCases(e1),op,translateCases(e2));
-    For(l::Loc,p::Pattern,e1::AST,e2::AST) -> For(l,p,translateCases(e1),translateCases(e2));
-    Throw(l::Loc,t::Type,e::AST) -> Throw(l,t,translateCases(e));
-    Try(l::Loc,e::AST,as::[Arm]) -> Try(l,translateCases(e),[ translateArm(a) | a::Arm <- as]);
-    ActExp(l::Loc,n::AST,args::[TDec],x::[Str],spec::Str,locals::[TBind],init::AST,handlers::[Arm]) -> 
-      ActExp(l,n,args,x,spec,[ translateDef(b) | b::TBind <- locals],translateCases(init),[ translateArm(h) | h::Arm <- handlers]);
-    If(l::Loc,e1::AST,e2::AST,e3::AST) -> If(l,translateCases(e1),translateCases(e2),translateCases(e3));
-    Self(l::Loc) -> exp;
-    Update(l::Loc,n::Str,e::AST) -> Update(l,n,translateCases(e));
-    Ref(l::Loc,e::AST,n::Str) -> Ref(l,translateCases(e),n);
-    Var(l::Loc,n::Str) -> exp;
-    Send(l::Loc,target::AST,message::AST) -> Send(l,translateCases(target),translateCases(message));
-    Cmp(l::Loc,e::AST,qs::[Qualifier]) -> Cmp(l,translateCases(e),[ translateQual(q) | q::Qualifier <- qs]);
-    New(l::Loc,b::AST,args::[AST]) -> New(l,translateCases(b),[ translateCases(e) | e::AST <- args]);
-    NewJava(l::Loc,className::Str,t::Type,args::[AST]) -> NewJava(l,className,t,[ translateCases(e) | e::AST <- args ]);
-    Let(l::Loc,bs::[TBind],e::AST) -> Let(l,[ translateDef(b) | b::TBind <- bs],translateCases(e));
-    Letrec(l::Loc,bs::[TBind],e::AST) -> Letrec(l,[ translateDef(b) | b::TBind <- bs],translateCases(e));
-    Grab(l::Loc,rs::[DRef],e::AST) -> Grab(l,rs,translateCases(e));
-    Probably(l::Loc,p::AST,t::Type,e1::AST,e2::AST) -> Probably(l,translateCases(p),t,translateCases(e1),translateCases(e2));
-    Not(l::Loc,e::AST) -> Not(l,translateCases(e));
-    Fold(l::Loc,t::Type,e::AST) -> Fold(l,t,translateCases(e));
-    Unfold(l::Loc,t::Type,e::AST) -> Unfold(l,t,translateCases(e));
-    Now(l::Loc) -> exp;
-    Become(l::Loc,e::AST) -> Become(l,translateCases(e));
-    x::AST -> throw [AST]exp;
+    Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind])         -> Module(path,name,exports,imports,x,y,[ translateDef(d) | d::TBind <- defs]);
+    FunExp(l::Loc,n::AST,args::[TDec],t::Type,e::AST)                                               -> FunExp(l,n,args,t,translateCases(e));
+    StrExp(l::Loc,v::Str)                                                                           -> exp;
+    IntExp(l::Loc,v::Int)                                                                           -> exp;
+    BoolExp(l::Loc,v::Bool)                                                                         -> exp;
+    NullExp(l::Loc)                                                                                 -> exp;
+    FloatExp(l::Loc,f::Float)                                                                       -> exp;
+    Term(l::Loc,n::Str,ts::[Type],es::[AST])                                                        -> Term(l,n,ts,[ translateCases(e) | e::AST <- es]);
+    List(l::Loc,es::[AST])                                                                          -> List(l,[ translateCases(e) | e::AST <- es]);
+    Block(l::Loc,es::[AST])                                                                         -> Block(l,[ translateCases(e) | e::AST <- es]); 
+    Apply(l::Loc,op::AST,args::[AST])                                                               -> Apply(l,translateCases(op),[ translateCases(e) | e::AST <- args]);
+    ApplyTypeExp(l::Loc,op::AST,args::[Type])                                                       -> ApplyTypeExp(l,translateCases(op),args);
+    Case(l::Loc,ds::[TDec],es::[AST],as::[Arm])                                                     -> compileCase(l,es,translateArms(as),CaseError(l,List(l,es)));
+    BinExp(l::Loc,e1::AST,op::Str,e2::AST)                                                          -> BinExp(l,translateCases(e1),op,translateCases(e2));
+    For(l::Loc,p::Pattern,e1::AST,e2::AST)                                                          -> For(l,p,translateCases(e1),translateCases(e2));
+    Throw(l::Loc,t::Type,e::AST)                                                                    -> Throw(l,t,translateCases(e));
+    Try(l::Loc,e::AST,as::[Arm])                                                                    -> Try(l,translateCases(e),[ translateArm(a) | a::Arm <- as]);
+    ActExp(l::Loc,n::AST,args::[TDec],x::[Str],spec::Str,locals::[TBind],init::AST,handlers::[Arm]) -> ActExp(l,n,args,x,spec,[ translateDef(b) | b::TBind <- locals],translateCases(init),[ translateArm(h) | h::Arm <- handlers]);
+    If(l::Loc,e1::AST,e2::AST,e3::AST)                                                              -> If(l,translateCases(e1),translateCases(e2),translateCases(e3));
+    Self(l::Loc)                                                                                    -> exp;
+    Update(l::Loc,n::Str,e::AST)                                                                    -> Update(l,n,translateCases(e));
+    Ref(l::Loc,e::AST,n::Str)                                                                       -> Ref(l,translateCases(e),n);
+    Var(l::Loc,n::Str)                                                                              -> exp;
+    Send(l::Loc,target::AST,message::AST)                                                           -> Send(l,translateCases(target),translateCases(message));
+    SendTimeSuper(l::Loc)                                                                           -> SendTimeSuper(l);
+    SendSuper(l::Loc,e::AST)                                                                        -> SendSuper(l,translateCases(e));
+    Cmp(l::Loc,e::AST,qs::[Qualifier])                                                              -> Cmp(l,translateCases(e),[ translateQual(q) | q::Qualifier <- qs]);
+    New(l::Loc,b::AST,args::[AST])                                                                  -> New(l,translateCases(b),[ translateCases(e) | e::AST <- args]);
+    NewJava(l::Loc,className::Str,t::Type,args::[AST])                                              -> NewJava(l,className,t,[ translateCases(e) | e::AST <- args ]);
+    Let(l::Loc,bs::[TBind],e::AST)                                                                  -> Let(l,[ translateDef(b) | b::TBind <- bs],translateCases(e));
+    Letrec(l::Loc,bs::[TBind],e::AST)                                                               -> Letrec(l,[ translateDef(b) | b::TBind <- bs],translateCases(e));
+    Grab(l::Loc,rs::[DRef],e::AST)                                                                  -> Grab(l,rs,translateCases(e));
+    Probably(l::Loc,p::AST,t::Type,e1::AST,e2::AST)                                                 -> Probably(l,translateCases(p),t,translateCases(e1),translateCases(e2));
+    Not(l::Loc,e::AST)                                                                              -> Not(l,translateCases(e));
+    Fold(l::Loc,t::Type,e::AST)                                                                     -> Fold(l,t,translateCases(e));
+    Unfold(l::Loc,t::Type,e::AST)                                                                   -> Unfold(l,t,translateCases(e));
+    Now(l::Loc)                                                                                     -> exp;
+    Become(l::Loc,e::AST)                                                                           -> Become(l,translateCases(e));
+    x::AST                                                                                          -> throw [AST]exp;
   }
 
 armPatterns(arm::Arm)::[Pattern] =

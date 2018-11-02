@@ -8,7 +8,7 @@ type Agent = Act { export toString::()->Str; getX::()->Int; getY::()->Int; setX:
 
 type Grid = Act { SetColour(Int,Int,Str); Swap(Int,Int,Int,Int); Turn(Int,Int); } 
 
-type Population = Act { Move(Agent); Kill; } 
+type Population = Act { Move(Agent); Kill; }  
 
 data Loc = Coord(Int,Int);
 

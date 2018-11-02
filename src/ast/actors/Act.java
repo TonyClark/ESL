@@ -43,7 +43,7 @@ import list.Nil;
 import runtime.data.Key;
 import runtime.functions.CodeBox;
 
-@BoaConstructor(fields = { "name", "args", "exports", "spec", "bindings", "init", "arms" })
+@BoaConstructor(fields = { "name", "args", "exports", "parent", "bindings", "init", "arms" })
 
 public class Act extends AST implements DecContainer, RefContainer {
 
@@ -79,6 +79,7 @@ public class Act extends AST implements DecContainer, RefContainer {
 	String									path;
 	public AST							name;
 	public Dec[]						args;
+	public AST							parent;
 	public Export						exports;
 	public Spec							spec				= new Spec();
 	public Binding[]				bindings;
@@ -533,9 +534,8 @@ public class Act extends AST implements DecContainer, RefContainer {
 	}
 
 	public Binding getBinding(String name) {
-		for(Binding b : bindings) {
-			if(b.getName().equals(name))
-				return b;
+		for (Binding b : bindings) {
+			if (b.getName().equals(name)) return b;
 		}
 		return null;
 	}

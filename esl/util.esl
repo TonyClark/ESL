@@ -1,0 +1,17 @@
+export cache;
+
+cache[Arg,Key,Value](m::(Arg) -> Key,f::(Arg) -> Value)::(Arg) -> Value  =
+  let table::Hash[Key,Value] = new Hash[Key,Value];
+  in {
+    fun(a::Arg)::Value
+      let k::Key = m(a);
+      in if table.hasKey(k)
+         then table.get(k);
+         else
+           let v::Value = f(a);
+           in {
+             table.put(k,v);
+             v;
+           }
+         }
+  

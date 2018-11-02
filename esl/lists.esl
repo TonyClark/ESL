@@ -17,7 +17,7 @@ map[M,N](f::(M)->N,l::[M])::[N] =
     m::M;
     ms::[M];
     [][M] -> [][N];
-    m:ms -> (f(m)):map[M,N](f,ms);
+    m:ms -> (f(m)):map[M,N](f,ms); 
   }
   
 remove::Forall[T](T,[T])->[T] = builtin[Forall[T] (T,[T])->[T]]('runtime.actors.Builtins','remove',2);

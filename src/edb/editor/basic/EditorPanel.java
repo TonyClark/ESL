@@ -164,6 +164,7 @@ public class EditorPanel extends JPanel implements SearchListener, DocumentListe
 	private ReplaceDialog						replaceDialog;
 	private FindToolBar							findToolBar			= new FindToolBar(this);
 	private ReplaceToolBar					replaceToolBar	= new ReplaceToolBar(this);
+	private OutputToolBar						outputToolBar		= new OutputToolBar(this);
 	private JMenu										searchMenu			= new JMenu("Search");
 	private MenuProvider						menuProvider;
 	private RTextScrollPane					scrollPane			= null;
@@ -205,18 +206,26 @@ public class EditorPanel extends JPanel implements SearchListener, DocumentListe
 		int ctrl = getToolkit().getMenuShortcutKeyMask();
 		int shift = InputEvent.SHIFT_MASK;
 		int meta = InputEvent.META_MASK;
+
 		KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_F, meta);
 		Action a = csp.addBottomComponent(ks, findToolBar);
-		getInputMap(c).put(ks, "PRESS");
-		getActionMap().put("PRESS", a);
+		getInputMap(c).put(ks, "PRESS_F");
+		getActionMap().put("PRESS_F", a);
 		a.putValue(Action.NAME, "Show Find Search Bar");
 		searchMenu.add(new JMenuItem(a));
-		ks = KeyStroke.getKeyStroke(KeyEvent.VK_F, meta | shift);
+
+		ks = KeyStroke.getKeyStroke(KeyEvent.VK_G, meta);
 		a = csp.addBottomComponent(ks, replaceToolBar);
-		getInputMap(c).put(ks, "PRESS");
-		getActionMap().put("PRESS", a);
+		getInputMap(c).put(ks, "PRESS_G");
+		getActionMap().put("PRESS_G", a);
 		a.putValue(Action.NAME, "Show Replace Search Bar");
 		searchMenu.add(new JMenuItem(a));
+
+		ks = KeyStroke.getKeyStroke(KeyEvent.VK_O, meta);
+		a = csp.addBottomComponent(ks, outputToolBar);
+		getInputMap(c).put(ks, "PRESS_O");
+		getActionMap().put("PRESS_O", a);
+		a.putValue(Action.NAME, "Output");
 	}
 
 	public void changedUpdate(DocumentEvent e) {
@@ -417,6 +426,11 @@ public class EditorPanel extends JPanel implements SearchListener, DocumentListe
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void write(int b) {
+		csp.showBottomComponent(outputToolBar);
+		outputToolBar.append(b);
 	}
 
 }

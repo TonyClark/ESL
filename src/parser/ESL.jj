@@ -14,7 +14,7 @@ import java.lang.reflect.Array;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.Stack;
-import java.util.Vector; 
+import java.util.Vector;
 import ast.actors.*;
 import ast.actors.Act;
 import ast.modules.Module;
@@ -28,9 +28,10 @@ import ast.tests.*;
 import ast.patterns.*;
 import ast.types.Void;
 import ast.types.Field;
-import ast.data.BinExp;
+import ast.data.*;
 import ast.data.Not;
 import ast.data.NewArray;
+import ast.data.NewTable;
 import ast.data.ArrayUpdate;
 import ast.data.ArrayRef;
 import runtime.data.*;
@@ -45,6 +46,8 @@ import ast.data.Record;
 import ast.control.Block;
 import ast.data.ApplyType;
 import ast.data.Ref;
+import ast.data.RefSuper;
+import ast.actors.SendSuper;
 import ast.control.Now;
 import java.util.Hashtable;
 
@@ -132,7 +135,7 @@ public class ESL
 
   public String stripString(String s)
   {
-    return s.substring(1, s.length() - 1).replace("\\n","\n");
+    return s.substring(1, s.length() - 1).replace("\\n", "\n");
   }
 }
 
@@ -212,6 +215,7 @@ TOKEN : /* KEYWORDS */
 | < TRUE : "true" >
 | < FALSE : "false" >
 | < SELF : "self" >
+| < SUPER : "super" >
 | < NOW : "now" >
 | < NULL : "null" >
 | < TYPE : "type" >
@@ -219,6 +223,7 @@ TOKEN : /* KEYWORDS */
 | < FLOAT_T : "Float" >
 | < BOOL_T : "Bool" >
 | < ARRAY_T : "Array" >
+| < TABLE_T : "Hash" >
 | < STR_T : "Str" >
 | < NULL_T : "Null" >
 | < VOID_T : "Void" >
@@ -232,6 +237,7 @@ TOKEN : /* KEYWORDS */
 | < CNSTR : "cnstr" >
 | < PROBABLY : "probably" >
 | < BECOME : "become" >
+| < EXTENDS : "extends" >
 }
 
 TOKEN :
@@ -531,6 +537,7 @@ void actTypeBinding(Vector < Binding > bindings) :
   Dec [ ] decs = new Dec [ 0 ];
   String name;
   MessageType [ ] handlers = new MessageType [ 0 ];
+  Type type = null;
 }
 {
   < ACT_T >
@@ -538,22 +545,41 @@ void actTypeBinding(Vector < Binding > bindings) :
     start(token);
   }
   name = Name() 
+  [ < EXTENDS > type = type() ] 
   < LCURL > 
   [ decs = exportedDecs() ] 
   handlers = messageTypes() 
   < RCURL >
   {
-    ast.types.Act act = new ast.types.Act();
-    TypeBind bind = new TypeBind();
-    end(token, bind);
-    bind.name = name;
-    bind.declaredType = act;
-    bind.value = act;
-    bindings.add(bind);
-    act.decs = decs;
-    act.handlers = handlers;
-    act.setLineStart(bind.getLineStart());
-    act.setLineEnd(bind.getLineEnd());
+    if (type == null)
+    {
+      ast.types.Act act = new ast.types.Act();
+      TypeBind bind = new TypeBind();
+      end(token, bind);
+      bind.name = name;
+      bind.declaredType = act;
+      bind.value = act;
+      bindings.add(bind);
+      act.decs = decs;
+      act.handlers = handlers;
+      act.setLineStart(bind.getLineStart());
+      act.setLineEnd(bind.getLineEnd());
+    }
+    else
+    {
+      ast.types.ExtendedAct act = new ast.types.ExtendedAct();
+      TypeBind bind = new TypeBind();
+      end(token, bind);
+      bind.name = name;
+      bind.declaredType = act;
+      bind.value = act;
+      bindings.add(bind);
+      act.decs = decs;
+      act.handlers = handlers;
+      act.parent = type;
+      act.setLineStart(bind.getLineStart());
+      act.setLineEnd(bind.getLineEnd());
+    }
   }
 }
 
@@ -564,6 +590,7 @@ void actBinding(Vector < Binding > bindings) :
   Dec [ ] ps;
   Act act;
   Type type;
+  AST parent = null;
   Binding [ ] defs;
   Export exports;
   AST init;
@@ -584,6 +611,7 @@ void actBinding(Vector < Binding > bindings) :
     funType.range = type;
     type = Dec.generic(generics, funType);
   }
+  [ < EXTENDS > parent = actParent() ] 
   < LCURL > 
   exports = exports() 
   defs = bindings() 
@@ -599,6 +627,7 @@ void actBinding(Vector < Binding > bindings) :
     act.exports = exports;
     act.init = init;
     act.arms = arms;
+    act.parent = parent;
     ast.data.Fun f = new ast.data.Fun();
     f.name = ast.data.Str.strAt0(name);
     f.args = ps;
@@ -613,6 +642,27 @@ void actBinding(Vector < Binding > bindings) :
     binding.sourceType = type;
     binding.value = f;
     bindings.add(binding);
+  }
+}
+
+AST actParent() :
+{
+  AST exp;
+  AST [ ] args = new AST [ 0 ];
+}
+{
+  exp = basicExp()
+  [
+    LOOKAHEAD(2)
+    args = actuals()
+  ]
+  {
+    ast.data.Apply apply = new ast.data.Apply();
+    apply.setLineStart(exp.getLineStart());
+    apply.setLineEnd(exp.getLineEnd());
+    apply.op = exp;
+    apply.args = args;
+    return apply;
   }
 }
 
@@ -2296,6 +2346,7 @@ AST newExp() :
   (
     exp = javaNew()
   | exp = arrayNew()
+  | exp = tableNew()
   | exp = eslNew()
   )
   {
@@ -2371,6 +2422,30 @@ AST arrayNew() :
     newArray.type = type;
     newArray.length = length;
     return newArray;
+  }
+}
+
+AST tableNew() :
+{
+  Type keyType;
+  Type valueType;
+}
+{
+  < TABLE_T >
+  {
+    start(token);
+  }
+  < LSQUARE > 
+  keyType = type()
+  < COMMA >
+  valueType = type()
+  < RSQUARE > 
+  {
+    NewTable newTable = new NewTable();
+    end(token, newTable);
+    newTable.keyType = keyType;
+    newTable.valueType = valueType;
+    return newTable;
   }
 }
 
@@ -2614,6 +2689,42 @@ AST sendExp() :
   )
 }
 
+AST superExp() :
+{
+  AST exp;
+  AST arg;
+  String name;
+  RefSuper ref;
+}
+{
+  < SUPER >
+  {
+    start(token);
+  }
+  (
+    < LEFTARROW > 
+    arg = exp()
+    {
+      SendSuper send = new SendSuper();
+      end(token, send);
+      send.arg = arg;
+      return send;
+    }
+  | 
+    < DOT > 
+    name = name()
+    {
+      ref = new RefSuper();
+      end(token, ref);
+      ref.name = Key.getKey(name);
+    }
+    exp = postExp(ref)
+    {
+      return exp;
+    }
+  )
+}
+
 AST nullExp() :
 {
 }
@@ -2708,9 +2819,9 @@ AST numExp() :
     num.setLineEnd(getCharEnd(token));
     if (n.equals("space")) 
     num.value = ' ';
-    else if (n.equals("newline"))  
+    else if (n.equals("newline")) 
     num.value = '\n';
-    else if (n.equals("backslash"))  
+    else if (n.equals("backslash")) 
     num.value = '\\';
     else num.value = n.charAt(0);
     return num;
@@ -3046,6 +3157,10 @@ AST unaryExp() :
     not.exp = exp;
     return not;
   }
+| exp = superExp()
+  {
+    return exp;
+  }
 | exp = sendExp()
   {
     return exp;
@@ -3098,6 +3213,7 @@ Type type() :
   | t = bagType()
   | t = setType()
   | t = arrayType()
+  | t = hashType()
   | t = actType()
   | t = unionType()
   | t = unfoldType()
@@ -3523,6 +3639,30 @@ Type arrayType() :
     end(token, array);
     array.type = type;
     return array;
+  }
+}
+
+Type hashType() :
+{
+  Type key;
+  Type value;
+}
+{
+  < TABLE_T >
+  {
+    start(token);
+  }
+  < LSQUARE > 
+  key = type() 
+  < COMMA > 
+  value = type() 
+  < RSQUARE >
+  {
+    ast.types.Table table = new ast.types.Table();
+    end(token, table);
+    table.keyType = key;
+    table.valueType = value;
+    return table;
   }
 }
 

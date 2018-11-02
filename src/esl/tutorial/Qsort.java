@@ -8,9 +8,9 @@ public class Qsort {
   private static ESLVal nums = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal $qualArg = $args[0];
-  {ESLVal _v1 = $qualArg;
+  {ESLVal _v11 = $qualArg;
         
-        {ESLVal n = _v1;
+        {ESLVal n = _v11;
         
         return ESLVal.list(ESLVal.list(random.apply(new ESLVal(50))));
       }
@@ -22,17 +22,17 @@ public class Qsort {
       ESLVal l = $args[0];
   return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("qmain")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v2 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v10 = $m;
             
-            switch(_v2.termName) {
-            case "Sorted": {ESLVal $1 = _v2.termRef(0);
-              ESLVal $2 = _v2.termRef(1);
+            switch(_v10.termName) {
+            case "Sorted": {ESLVal $10 = _v10.termRef(0);
+              ESLVal $9 = _v10.termRef(1);
               
-              switch($2.termName) {
+              switch($9.termName) {
               case "Final": {
-                {ESLVal _v12 = $1;
+                {ESLVal _v15 = $10;
                 
-                {print.apply(_v12);
+                {print.apply(_v15);
               return stopAll.apply();}
               }
               }
@@ -74,22 +74,22 @@ public class Qsort {
               }
             });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v3 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v9 = $m;
             
-            switch(_v3.termName) {
-            case "Sorted": {ESLVal $3 = _v3.termRef(0);
-              ESLVal $4 = _v3.termRef(1);
+            switch(_v9.termName) {
+            case "Sorted": {ESLVal $8 = _v9.termRef(0);
+              ESLVal $7 = _v9.termRef(1);
               
-              switch($4.termName) {
+              switch($7.termName) {
               case "Left": {
-                {ESLVal l = $3;
+                {ESLVal l = $8;
                 
                 {left = l;
               return check.apply();}
               }
               }
             case "Right": {
-                {ESLVal l = $3;
+                {ESLVal l = $8;
                 
                 {right = l;
               return check.apply();}
@@ -123,15 +123,15 @@ public class Qsort {
   ESLVal dir = $args[2];
   return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("qsorter")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v7 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v8 = $m;
             
-            switch(_v7.termName) {
-            case "Sorted": {ESLVal $7 = _v7.termRef(0);
-              ESLVal $8 = _v7.termRef(1);
+            switch(_v8.termName) {
+            case "Sorted": {ESLVal $6 = _v8.termRef(0);
+              ESLVal $5 = _v8.termRef(1);
               
-              {ESLVal _v14 = $7;
+              {ESLVal _v14 = $6;
               
-              {ESLVal d = $8;
+              {ESLVal d = $5;
               
               return error(new ESLVal("error!"));
             }
@@ -151,22 +151,22 @@ public class Qsort {
         }
         public ESLVal init() {
             return ((Supplier<ESLVal>)() -> { 
-                {ESLVal _v4 = l;
+                {ESLVal _v5 = l;
                   
-                  if(_v4.isCons())
-                  {ESLVal $5 = _v4.head();
-                    ESLVal $6 = _v4.tail();
+                  if(_v5.isCons())
+                  {ESLVal $3 = _v5.head();
+                    ESLVal $4 = _v5.tail();
                     
-                    {ESLVal x = $5;
+                    {ESLVal x = $3;
                     
-                    {ESLVal _v13 = $6;
+                    {ESLVal _v13 = $4;
                     
                     {newActor(qsorter,new ESLVal(new Actor()),getSelf(),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
                     public ESLVal apply(ESLVal... $args) {
                       ESLVal $qualArg = $args[0];
-                  {ESLVal _v5 = $qualArg;
+                  {ESLVal _v7 = $qualArg;
                         
-                        {ESLVal n = _v5;
+                        {ESLVal n = _v7;
                         
                         return ESLVal.list((n.less(x).boolVal) ? (ESLVal.list(n)) : ($nil));
                       }
@@ -190,7 +190,7 @@ public class Qsort {
                   }
                   }
                   }
-                else if(_v4.isNil())
+                else if(_v5.isNil())
                   return Lib.send(parent,"Sorted",l,dir);
                 else return error(new ESLVal("case error at Pos(1380,2189)"));
                 }
@@ -203,7 +203,7 @@ public class Qsort {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v8 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v4 = $m;
             
             return error(new ESLVal("case error at Pos(0,0)"));
           }}
@@ -225,43 +225,43 @@ public class Qsort {
   private static ESLVal qsort = new ESLVal(new Function(new ESLVal("qsort"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
-  {ESLVal _v9 = l;
+  {ESLVal _v1 = l;
         
-        if(_v9.isCons())
-        {ESLVal $9 = _v9.head();
-          ESLVal $10 = _v9.tail();
+        if(_v1.isCons())
+        {ESLVal $1 = _v1.head();
+          ESLVal $2 = _v1.tail();
           
-          {ESLVal x = $9;
+          {ESLVal x = $1;
           
-          {ESLVal _v15 = $10;
+          {ESLVal _v12 = $2;
           
           return qsort.apply(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v10 = $qualArg;
+          {ESLVal _v2 = $qualArg;
                 
-                {ESLVal n = _v10;
+                {ESLVal n = _v2;
                 
                 return ESLVal.list((n.less(x).boolVal) ? (ESLVal.list(n)) : ($nil));
               }
               }
             }
-          }).map(_v15).flatten().flatten()).add(ESLVal.list(x).add(qsort.apply(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+          }).map(_v12).flatten().flatten()).add(ESLVal.list(x).add(qsort.apply(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v11 = $qualArg;
+          {ESLVal _v3 = $qualArg;
                 
-                {ESLVal n = _v11;
+                {ESLVal n = _v3;
                 
                 return ESLVal.list((n.gre(x).boolVal) ? (ESLVal.list(n)) : ($nil));
               }
               }
             }
-          }).map(_v15).flatten().flatten())));
+          }).map(_v12).flatten().flatten())));
         }
         }
         }
-      else if(_v9.isNil())
+      else if(_v1.isNil())
         return ESLVal.list();
       else return error(new ESLVal("case error at Pos(2441,2586)"));
       }

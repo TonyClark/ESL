@@ -279,8 +279,7 @@ public abstract class AST implements Located, Typed, TreeNode {
 					try {
 						Field f = value.getClass().getField(field);
 						Object fieldValue = f.get(value);
-						if (fieldValue == null) System.err.println(value + "." + field + " = " + null);
-						setDefs(fieldValue, env);
+						if (fieldValue != null) setDefs(fieldValue, env);
 					} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 						e.printStackTrace(System.err);
 					}
@@ -333,12 +332,14 @@ public abstract class AST implements Located, Typed, TreeNode {
 				if (value instanceof ast.types.Field) name = "FieldType";
 				if (value instanceof ast.types.Apply) name = "ApplyType";
 				if (value instanceof ast.types.Act) name = "ActType";
+				if (value instanceof ast.types.ExtendedAct) name = "ExtendedAct";
 				if (value instanceof ast.types.Int) name = "IntType";
 				if (value instanceof ast.types.Float) name = "FloatType";
 				if (value instanceof ast.types.Str) name = "StrType";
 				if (value instanceof ast.types.Bool) name = "BoolType";
 				if (value instanceof ast.types.Union) name = "UnionType";
 				if (value instanceof ast.types.Term) name = "TermType";
+				if (value instanceof ast.types.Table) name = "TableType";
 				if (value instanceof ast.types.Var) name = "VarType";
 				if (value instanceof ast.types.Rec) name = "RecType";
 				if (value instanceof ast.types.List) name = "ListType";
@@ -414,8 +415,8 @@ public abstract class AST implements Located, Typed, TreeNode {
 		int pre = f.n;
 		int post = f.m;
 		double d = Double.parseDouble(pre + "." + post);
-		Term loc = new Term(Key.getKey("Pos"), f.getLineStart(),f.getLineEnd());
-		return new Term("FloatExp",loc,d);
+		Term loc = new Term(Key.getKey("Pos"), f.getLineStart(), f.getLineEnd());
+		return new Term("FloatExp", loc, d);
 	}
 
 	public static AST makeInvisible(AST l) {

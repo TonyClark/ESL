@@ -1,13 +1,16 @@
+export main;
 
+Act Main {  }
 
-import 'esl/lists.esl';
-         
-splitBy(c::Int,s::Str)::[Str] = 
-  letrec 
-    splitter(chars::[Int])::[Str] = { 
-      case chars {
-        [][Int] -> [][Str]; 
-        chars::[Int] ->  ['XXXXX']; 
-      }
-    }
-  in splitter(s.explode); 
+t::Hash[Str,Int] = new Hash[Str,Int]; 
+
+act main::Main {
+  -> {
+    t.put('one',1);
+    t.put('two',2);
+    t.put('one',3);
+    print[Str]('keys ' + t.keys);
+    print[Str]('values ' + t.vals);
+    print[Str]('table ' + t);
+  }
+}

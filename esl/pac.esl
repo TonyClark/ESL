@@ -1,6 +1,6 @@
 export main;
 
-import 'new_esl/lists.esl';
+import 'esl/lists.esl';
 
 // This file implements a simple version of the game Pacman. Many simulations have a turn-based 
 // architecture where a collection of actors are autonomous, but must take their turn because
@@ -9,7 +9,7 @@ import 'new_esl/lists.esl';
 // this case simple Time(n) messages). The strategies of the actors are implemented by a function
 // that can be replaced to make them more or less sophisticated.
 
-type GhostInfo = Point(Ghost,Int,Int,Int); // Point(g,type,x,y)
+data GhostInfo = Point(Ghost,Int,Int,Int); // Point(g,type,x,y)
 
 type GUI = Act { 
 
@@ -100,7 +100,7 @@ act maze::Maze {
   eaten()::Bool = exists[GhostInfo](isEatingPlayer,ghosts);         // The player has been eaten.
   is0 :: (Int)[compiler.extensions.Is0] -> Bool = fun(n::Int)::Bool n=0; // Check for 0.
   allEaten()::Bool = forall[[Int]](fun(row::[Int])::Bool forall[Int](is0,row),food);  // Player wins?
-  isEatingPlayer(p::Point(Ghost,Int,Int,Int))::Bool =
+  isEatingPlayer(p::GhostInfo)::Bool =
     // Is the supplied ghost co-located with the player?
     (pointX(p) = playerX) and (pointY(p) = playerY);
   isGhostTurn(g::Ghost)::Bool =
@@ -146,7 +146,7 @@ act maze::Maze {
   ghostY(g::Ghost)::Int = pointY(getGhost(g,ghosts));
   ghostType(g::Ghost)::Int = pointType(getGhost(g,ghosts));
   
-  getGhost(g::Ghost,gs::[GhostInfo])::Point(Ghost,Int,Int,Int) = 
+  getGhost(g::Ghost,gs::[GhostInfo])::GhostInfo = 
     // Find the information in the ghost-list for the supplied ghost.
     case gs {
       Point(g1::Ghost,t::Int,x::Int,y::Int):gs::[GhostInfo] when g1 = g -> Point(g,t,x,y);
@@ -154,9 +154,9 @@ act maze::Maze {
     }
   
   // Accessors for a point structure...
-  pointX(Point(g::Ghost,t::Int,x::Int,y::Int))::Int = x;
-  pointY(Point(g::Ghost,t::Int,x::Int,y::Int))::Int = y;
-  pointType(Point(g::Ghost,t::Int,x::Int,y::Int))::Int = t;
+  pointX(g::GhostInfo)::Int = case g { Point(g::Ghost,t::Int,x::Int,y::Int) -> x; }
+  pointY(g::GhostInfo)::Int = case g { Point(g::Ghost,t::Int,x::Int,y::Int) -> y; }
+  pointType(g::GhostInfo)::Int = case g { Point(g::Ghost,t::Int,x::Int,y::Int) -> t; }
   
   legalPos(x::Int,y::Int)::Bool =
     // Position is legal when it can be occupied.
@@ -197,13 +197,16 @@ act maze::Maze {
       then {
         playerX := (playerX+mx)%maxWidth;
         playerY := playerY+my;
-      } else {}
+      } else if playerX + mx = 0 or playerX + mx < 0
+      then playerX := maxWidth -1;
+      else {}
       // Tell the gui that things (may) have changed.
       gui <- Player(playerX,playerY);
       // Check for food, and eat if available.
       eat();
       // Reset the trun counter so that the ghosts can move.
       turnCounter := 0;
+      wait(100);
     }
   }
   
@@ -363,10 +366,11 @@ food::[[Int]] = [
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ];
      
-gui::GUI = new 'test.pacman.Pacman'[GUI](tiles);   // Create the gui which is implemented in Java.
+gui::GUI = new 'esl.pacman.Pacman'[GUI](tiles);   // Create the gui which is implemented in Java.
 
 act main::Main {
-   -> 
+   -> {
+    edb.display[GUI]('Pacman',gui);
     let m::Maze = new maze; in
     let g1::Ghost = new ghost(m,defaultGhost('WEST'));
         g2::Ghost = new ghost(m,defaultGhost('NORTH'));
@@ -378,6 +382,7 @@ act main::Main {
       m <- RegisterGhost(g3,2,14,13);
       m <- RegisterGhost(g4,3,14,13);
     }
+   }
     
   Time(n::Int) when n > timeLimit ->  stopAll();
   

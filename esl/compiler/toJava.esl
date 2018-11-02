@@ -13,7 +13,7 @@ defToField(d::TBind)::JFieldDef = {
       let formals::[TDec] = [ Dec(l,n,t,st) | PVar(l::Loc,n::Str,t::Type) <- args ]; 
       in JField(n,null[JType],expToJExp(FunExp(l,StrExp(l,n),formals,t,e)));
     FunBind(l::Loc,n::Str,args::[Pattern],t::Type,st::Type,e::AST,g::AST) ->
-      let formals::[TDec] = [ Dec(l,n,t,st) | PVar(l::Loc,n::Str,t::Type) <- args ];  
+      let formals::[TDec] = [ Dec(l,n,t,st) | PVar(l::Loc,n::Str,t::Type) <- args ]; 
       in JField(n,null[JType],expToJExp(FunExp(l,StrExp(l,n),formals,t,If(l,g,e,Throw(l,t,StrExp(l,'guard failed for ' + n)))))); 
   }  
 } 
@@ -23,7 +23,7 @@ decToJDec(d::TDec)::JDeclaration =
     Dec(l::Loc,n::Str,t::Type,st::Type) -> JDec(n,null[JType]);
   }
 
-expsToJCommands(cs::[AST],isLast::Bool)::[JCommand] =
+expsToJCommands(cs::[AST],isLast::Bool)::[JCommand] = 
   case cs {
     [][AST] -> [][JCommand];
     [c::AST] -> [expToJCommand(c,isLast)];
@@ -32,29 +32,27 @@ expsToJCommands(cs::[AST],isLast::Bool)::[JCommand] =
  
 expToJCommand(c::AST,isLast::Bool)::JCommand = 
   case c {
-    Block(l::Loc,[][AST]) when isLast -> JReturn(JNull);
-    Block(l::Loc,[][AST]) -> JBlock([][JCommand]);
-    Block(l::Loc,[e::AST]) -> expToJCommand(e,isLast); 
-    Block(l::Loc,es::[AST]) -> JBlock([ expToJCommand(e,false) | e::AST <- butlast[AST](es) ] + [expToJCommand(last[AST](es),isLast)]);
-    Update(l::Loc,n::Str,e::AST) when isLast -> JBlock([JUpdate(n,expToJExp(e)),JReturn(JNull)]);
-    Update(l::Loc,n::Str,e::AST) -> JUpdate(n,expToJExp(e));
-    If(l::Loc,e1::AST,e2::AST,e3::AST) -> JIfCommand(expToJExp(e1),expToJCommand(e2,isLast),expToJCommand(e3,isLast));
-    CaseList(l::Loc,e::AST,cons::AST,nil::AST,alt::AST) -> JCaseList(expToJExp(e),expToJCommand(cons,isLast),expToJCommand(nil,isLast),expToJCommand(alt,isLast));
-    CaseTerm(l::Loc,e::AST,arms::[CaseTermArm],alt::AST) -> JCaseTerm(expToJExp(e),termArmsToJTermArms(arms,isLast),expToJCommand(alt,isLast));
-    CaseInt(l::Loc,e::AST,arms::[CaseIntsArm],alt::AST) -> JCaseInt(expToJExp(e),intArmsToJIntArms(arms,isLast),expToJCommand(alt,isLast));
-    CaseStr(l::Loc,e::AST,arms::[CaseStrsArm],alt::AST) -> JCaseStr(expToJExp(e),strArmsToJStrArms(arms,isLast),expToJCommand(alt,isLast));
-    CaseBool(l::Loc,e::AST,arms::[CaseBoolsArm],alt::AST) -> JCaseBool(expToJExp(e),boolArmsToJBoolArms(arms,isLast),expToJCommand(alt,isLast));
-    Let(l::Loc,bs::[TBind],e::AST) -> JLet([defToField(b) | b::TBind <- bs],expToJCommand(e,isLast));
-    Letrec(l::Loc,bs::[TBind],e::AST) -> JLetRec([defToField(b) | b::TBind <- bs],expToJCommand(e,true));
-    For(l::Loc,PVar(l::Loc,n::Str,t::Type),e::AST,b::AST) when isLast -> 
-      JBlock([JFor(newName(),n,expToJExp(e),expToJCommand(b,false)),JReturn(JNull)]); 
-    For(l::Loc,PVar(l::Loc,n::Str,t::Type),e::AST,b::AST) -> 
-      JFor(newName(),n,expToJExp(e),expToJCommand(b,false));
+    Block(l::Loc,[][AST]) when isLast                                   -> JReturn(JNull);
+    Block(l::Loc,[][AST])                                               -> JBlock([][JCommand]);
+    Block(l::Loc,[e::AST])                                              -> expToJCommand(e,isLast); 
+    Block(l::Loc,es::[AST])                                             -> JBlock([ expToJCommand(e,false) | e::AST <- butlast[AST](es) ] + [expToJCommand(last[AST](es),isLast)]);
+    Update(l::Loc,n::Str,e::AST) when isLast                            -> JBlock([JUpdate(n,expToJExp(e)),JReturn(JNull)]);
+    Update(l::Loc,n::Str,e::AST)                                        -> JUpdate(n,expToJExp(e));
+    If(l::Loc,e1::AST,e2::AST,e3::AST)                                  -> JIfCommand(expToJExp(e1),expToJCommand(e2,isLast),expToJCommand(e3,isLast));
+    CaseList(l::Loc,e::AST,cons::AST,nil::AST,alt::AST)                 -> JCaseList(expToJExp(e),expToJCommand(cons,isLast),expToJCommand(nil,isLast),expToJCommand(alt,isLast));
+    CaseTerm(l::Loc,e::AST,arms::[CaseTermArm],alt::AST)                -> JCaseTerm(expToJExp(e),termArmsToJTermArms(arms,isLast),expToJCommand(alt,isLast));
+    CaseInt(l::Loc,e::AST,arms::[CaseIntsArm],alt::AST)                 -> JCaseInt(expToJExp(e),intArmsToJIntArms(arms,isLast),expToJCommand(alt,isLast));
+    CaseStr(l::Loc,e::AST,arms::[CaseStrsArm],alt::AST)                 -> JCaseStr(expToJExp(e),strArmsToJStrArms(arms,isLast),expToJCommand(alt,isLast));
+    CaseBool(l::Loc,e::AST,arms::[CaseBoolsArm],alt::AST)               -> JCaseBool(expToJExp(e),boolArmsToJBoolArms(arms,isLast),expToJCommand(alt,isLast));
+    Let(l::Loc,bs::[TBind],e::AST)                                      -> JLet([defToField(b) | b::TBind <- bs],expToJCommand(e,isLast));
+    Letrec(l::Loc,bs::[TBind],e::AST)                                   -> JLetRec([defToField(b) | b::TBind <- bs],expToJCommand(e,true));
+    For(l1::Loc,PVar(l2::Loc,n::Str,t::Type),e::AST,b::AST) when isLast -> JBlock([JFor(newName(),n,expToJExp(e),expToJCommand(b,false)),JReturn(JNull)]); 
+    For(l1::Loc,PVar(l2::Loc,n::Str,t::Type),e::AST,b::AST)             -> JFor(newName(),n,expToJExp(e),expToJCommand(b,false));
     For(l::Loc,p::Pattern,e::AST,b::AST) -> 
       let opName::Str = newName(); varName::Str = newName();
       in expToJCommand(For(l,PVar(l,varName,null[Type]),e,Let(l,[Binding(l,opName,null[Type],null[Type],FunExp(l,StrExp(l,'forp'),[],null[Type],Case(l,[][TDec],[Var(l,varName)],[BArm(l,[p],BoolExp(l,true),b),BArm(l,[PVar(l,'$$$',null[Type])],BoolExp(l,true),Block(l,[]))])))],Apply(l,Var(l,opName),[]))),isLast);
-    e::AST when isLast -> JReturn(expToJExp(e));
-    e::AST -> JStatement(expToJExp(e)); 
+    e::AST when isLast                                                  -> JReturn(expToJExp(e));
+    e::AST                                                              -> JStatement(expToJExp(e)); 
   }
 
 expsToJExps(es::[AST])::[JExp] =
@@ -112,55 +110,59 @@ caseToJExp(l::Loc,es::[AST],arms::[Arm])::JExp =
 
 expToJExp(e::AST)::JExp =
   case e {
-    ArrayUpdate(l::Loc,a::AST,i::AST,v::AST) -> JArrayUpdate(expToJExp(a),expToJExp(i),expToJExp(v)); 
-    ArrayRef(l::Loc,a::AST,i::AST) -> JArrayRef(expToJExp(a),expToJExp(i));
-    IntExp(l::Loc,n::Int) -> JConstExp(JConstInt(n));
-    StrExp(l::Loc,s::Str) -> JConstExp(JConstStr(s));
-    BoolExp(l::Loc,b::Bool) -> JConstExp(JConstBool(b));
-    FloatExp(l::Loc,f::Float) ->  JConstExp(JConstDouble(f)); 
-    ApplyTypeExp(l1::Loc,List(l2::Loc,[][AST]),[t::Type]) -> JNil(null[JType]);
-    ApplyTypeExp(l1::Loc,NullExp(l2::Loc),[t::Type]) -> JNull;
-    List(l::Loc,es::[AST]) -> JList(null[JType],expsToJExps(es));
-    Term(l::Loc,n::Str,ts::[Type],es::[AST]) -> JTerm(n,expsToJExps(es)); 
-    Case(l::Loc,ds::[TDec],es::[AST],arms::[Arm]) -> caseToJExp(l,es,arms);
-    CaseList(l::Loc,list::AST,cons::AST,nil::AST,alt::AST) -> JCommandExp(expToJCommand(e,true),null[JType]);
-    CaseTerm(l::Loc,list::AST,arms::[CaseTermArm],alt::AST) -> JCommandExp(expToJCommand(e,true),null[JType]);
-    CaseStr(l::Loc,s::AST,arms::[CaseStrsArm],alt::AST) -> JCommandExp(expToJCommand(e,true),null[JType]);
-    CaseBool(l::Loc,s::AST,arms::[CaseBoolsArm],alt::AST) -> JCommandExp(expToJCommand(e,true),null[JType]);
-    Head(e::AST) -> JHead(expToJExp(e));
-    Tail(e::AST) -> JTail(expToJExp(e));
-    ApplyTypeExp(l::Loc,e::AST,ts::[Type]) -> expToJExp(e);
-    CaseError(l::Loc) -> JError(JConstExp(JConstStr('case error at ' + l)));
-    NullExp(l::Loc) -> JNull;
-    Var(l::Loc,n::Str) -> JVar(n,null[JType]); 
-    Let(l::Loc,bs::[TBind],body::AST) -> JCommandExp(expToJCommand(e,true),null[JType]);
-    Letrec(l::Loc,bs::[TBind],body::AST) -> JCommandExp(expToJCommand(e,true),null[JType]);
-    Throw(l::Loc,t::Type,e::AST) -> JError(expToJExp(e));
-    Apply(l::Loc,op::AST,args::[AST]) -> JApply(expToJExp(op),expsToJExps(args));
-    BinExp(l::Loc,e1::AST,op::Str,e2::AST) -> JBinExp(expToJExp(e1),opToJOp(op),expToJExp(e2));
-    Become(l::Loc,Apply(al::Loc,b::AST,args::[AST])) -> JBecome(expToJExp(b),expsToJExps(args));
-    Block(l::Loc,[][AST]) -> JNull;
-    Block(l::Loc,[e::AST]) -> expToJExp(e); 
-    Block(l::Loc,es::[AST]) -> JCommandExp(JBlock(expsToJCommands(es,true)),null[JType]); 
-    If(l::Loc,e1::AST,e2::AST,e3::AST) -> JCommandExp(JIfCommand(expToJExp(e1),expToJCommand(e2,true),expToJCommand(e3,true)),null[JType]);
-    FunExp(l::Loc,n::AST,args::[TDec],t::Type,body::AST) -> JFun(expToJExp(n),map[TDec,JDeclaration](fun(d::TDec)::JDeclaration decToJDec(d),args),JFunType([null[JType] | a::TDec <- args],null[JType]),expToJCommand(body,true));
-    TermRef(e::AST,i::Int) -> JTermRef(expToJExp(e),i);
-    Cmp(l::Loc,e::AST,qs::[Qualifier]) -> cmpToJExp(e,qs);
-    Not(l::Loc,e::AST) -> JNot(expToJExp(e)); 
-    New(l::Loc,b::AST,args::[AST]) -> JNew(expToJExp(b),expsToJExps(args));
-    NewArray(l::Loc,t::Type,i::AST) -> JNewArray(expToJExp(i)); 
-    NewJava(l::Loc,n::Str,t::Type,args::[AST]) -> JNewJava(n,expsToJExps(args));
-    Send(l::Loc,a::AST,Term(lt::Loc,n::Str,ts::[Type],es::[AST])) -> JSend(expToJExp(a),n,expsToJExps(es)); 
-    Self(l::Loc) -> JSelf;
-    Fold(l::Loc,t::Type,e::AST) -> expToJExp(e);
-    Now(l::Loc) -> JNow; 
-    Ref(l::Loc,e::AST,n::Str) -> JRef(expToJExp(e),n);
-    For(l::Loc,p::Pattern,l::AST,c::AST) -> JCommandExp(expToJCommand(e,true),null[JType]);
-    Grab(l::Loc,refs::[DRef],e::AST) -> JGrab(refsToJExps(refs),expToJExp(e));
-    Update(l::Loc,n::Str,v::AST) -> JCommandExp(expToJCommand(e,true),null[JType]);
-    Probably(l::Loc,e::AST,t::Type,e1::AST,e2::AST) -> JProbably(expToJExp(e),expToJExp(e1),expToJExp(e2));
-    Try(l::Loc,e::AST,arms::[Arm]) -> JTry(expToJExp(e),'$x',expToJCommand(Case(l,[][TDec],[Var(l,'$x')],arms),true)); 
-    ActExp(l::Loc,name::AST,decs::[TDec],exports::[Str],spec::Str,defs::[TBind],init::AST,arms::[Arm]) -> actToJava(name,decs,exports,spec,defs,init,arms);
+    ArrayUpdate(l::Loc,a::AST,i::AST,v::AST)                                                             -> JArrayUpdate(expToJExp(a),expToJExp(i),expToJExp(v)); 
+    ArrayRef(l::Loc,a::AST,i::AST)                                                                       -> JArrayRef(expToJExp(a),expToJExp(i));
+    IntExp(l::Loc,n::Int)                                                                                -> JConstExp(JConstInt(n));
+    StrExp(l::Loc,s::Str)                                                                                -> JConstExp(JConstStr(s));
+    BoolExp(l::Loc,b::Bool)                                                                              -> JConstExp(JConstBool(b));
+    FloatExp(l::Loc,f::Float)                                                                            -> JConstExp(JConstDouble(f)); 
+    ApplyTypeExp(l1::Loc,List(l2::Loc,[][AST]),[t::Type])                                                -> JNil(null[JType]);
+    ApplyTypeExp(l1::Loc,NullExp(l2::Loc),[t::Type])                                                     -> JNull;
+    List(l::Loc,es::[AST])                                                                               -> JList(null[JType],expsToJExps(es));
+    Term(l::Loc,n::Str,ts::[Type],es::[AST])                                                             -> JTerm(n,expsToJExps(es)); 
+    Case(l::Loc,ds::[TDec],es::[AST],arms::[Arm])                                                        -> caseToJExp(l,es,arms);
+    CaseList(l::Loc,list::AST,cons::AST,nil::AST,alt::AST)                                               -> JCommandExp(expToJCommand(e,true),null[JType]);
+    CaseTerm(l::Loc,list::AST,arms::[CaseTermArm],alt::AST)                                              -> JCommandExp(expToJCommand(e,true),null[JType]);
+    CaseStr(l::Loc,s::AST,arms::[CaseStrsArm],alt::AST)                                                  -> JCommandExp(expToJCommand(e,true),null[JType]);
+    CaseBool(l::Loc,s::AST,arms::[CaseBoolsArm],alt::AST)                                                -> JCommandExp(expToJCommand(e,true),null[JType]);
+    Head(e::AST)                                                                                         -> JHead(expToJExp(e));
+    Tail(e::AST)                                                                                         -> JTail(expToJExp(e));
+    ApplyTypeExp(l::Loc,e::AST,ts::[Type])                                                               -> expToJExp(e);
+    CaseError(l::Loc,e::AST)                                                                             -> JError(JBinExp(JConstExp(JConstStr('case error at ' + l)),'add',expToJExp(e)));
+    NullExp(l::Loc)                                                                                      -> JNull;
+    Var(l::Loc,n::Str)                                                                                   -> JVar(n,null[JType]); 
+    Let(l::Loc,bs::[TBind],body::AST)                                                                    -> JCommandExp(expToJCommand(e,true),null[JType]);
+    Letrec(l::Loc,bs::[TBind],body::AST)                                                                 -> JCommandExp(expToJCommand(e,true),null[JType]);
+    Throw(l::Loc,t::Type,e::AST)                                                                         -> JError(expToJExp(e));
+    Apply(l::Loc,op::AST,args::[AST])                                                                    -> JApply(expToJExp(op),expsToJExps(args));
+    BinExp(l::Loc,e1::AST,op::Str,e2::AST)                                                               -> JBinExp(expToJExp(e1),opToJOp(op),expToJExp(e2));
+    Become(l::Loc,Apply(al::Loc,b::AST,args::[AST]))                                                     -> JBecome(expToJExp(b),expsToJExps(args));
+    Block(l::Loc,[][AST])                                                                                -> JNull;
+    Block(l::Loc,[e::AST])                                                                               -> expToJExp(e); 
+    Block(l::Loc,es::[AST])                                                                              -> JCommandExp(JBlock(expsToJCommands(es,true)),null[JType]); 
+    If(l::Loc,e1::AST,e2::AST,e3::AST)                                                                   -> JCommandExp(JIfCommand(expToJExp(e1),expToJCommand(e2,true),expToJCommand(e3,true)),null[JType]);
+    FunExp(l::Loc,n::AST,args::[TDec],t::Type,body::AST)                                                 -> JFun(expToJExp(n),map[TDec,JDeclaration](fun(d::TDec)::JDeclaration decToJDec(d),args),JFunType([null[JType] | a::TDec <- args],null[JType]),expToJCommand(body,true));
+    TermRef(e::AST,i::Int)                                                                               -> JTermRef(expToJExp(e),i);
+    Cmp(l::Loc,e::AST,qs::[Qualifier])                                                                   -> cmpToJExp(e,qs);
+    Not(l::Loc,e::AST)                                                                                   -> JNot(expToJExp(e)); 
+    New(l::Loc,b::AST,args::[AST])                                                                       -> JNew(expToJExp(b),expsToJExps(args));
+    NewArray(l::Loc,t::Type,i::AST)                                                                      -> JNewArray(expToJExp(i)); 
+    NewJava(l::Loc,n::Str,t::Type,args::[AST])                                                           -> JNewJava(n,expsToJExps(args));
+    NewTable(l::Loc,key::Type,value::Type)                                                               -> JNewTable;
+    Send(l::Loc,a::AST,Term(lt::Loc,n::Str,ts::[Type],es::[AST]))                                        -> JSend(expToJExp(a),n,expsToJExps(es)); 
+    SendTimeSuper(l::Loc)                                                                                -> JSendTimeSuper;
+    SendSuper(l::Loc,e::AST)                                                                             -> JSendSuper(expToJExp(e)); 
+    Self(l::Loc)                                                                                         -> JSelf;
+    Fold(l::Loc,t::Type,e::AST)                                                                          -> expToJExp(e);
+    Now(l::Loc)                                                                                          -> JNow; 
+    Ref(l::Loc,e::AST,n::Str)                                                                            -> JRef(expToJExp(e),n);
+    RefSuper(l::Loc,n::Str)                                                                              -> JRefSuper(n);
+    For(l1::Loc,p::Pattern,l2::AST,c::AST)                                                               -> JCommandExp(expToJCommand(e,true),null[JType]);
+    Grab(l::Loc,refs::[DRef],e::AST)                                                                     -> JGrab(refsToJExps(refs),expToJExp(e));
+    Update(l::Loc,n::Str,v::AST)                                                                         -> JCommandExp(expToJCommand(e,true),null[JType]);
+    Probably(l::Loc,e::AST,t::Type,e1::AST,e2::AST)                                                      -> JProbably(expToJExp(e),expToJExp(e1),expToJExp(e2));
+    Try(l::Loc,e::AST,arms::[Arm])                                                                       -> JTry(expToJExp(e),'$x',expToJCommand(Case(l,[][TDec],[Var(l,'$x')],arms),true)); 
+    ActExp(l::Loc,name::AST,decs::[TDec],exports::[Str],parent::AST,defs::[TBind],init::AST,arms::[Arm]) -> actToJava(name,decs,exports,parent,defs,init,arms);
   }
 
 refsToJExps(refs::[DRef])::[JExp] = { 
@@ -171,12 +173,27 @@ refsToJExps(refs::[DRef])::[JExp] = {
   }
 }
 
-actToJava(name::AST,decs::[TDec],exports::[Str],spec::Str,defs::[TBind],init::AST,arms::[Arm])::JExp =
+actToJava(name::AST,decs::[TDec],exports::[Str],parent::AST,defs::[TBind],init::AST,arms::[Arm])::JExp = 
+  if parent = null[AST]
+  then simpleActToJava(name,decs,exports,defs,init,arms);
+  else extendedActToJava(name,decs,exports,parent,defs,init,arms);
+
+simpleActToJava(name::AST,decs::[TDec],exports::[Str],defs::[TBind],init::AST,arms::[Arm])::JExp = 
   let timeArms::[Arm] = select[Arm](isTimeArm,arms); in
   let nonTimeArms::[Arm] = reject[Arm](isTimeArm,arms); in
   let timeCommand::JCommand = if timeArms = [] then JBlock([]); else timeArmsToJCommand(timeArms); in
   let f::AST = FunExp(Pos(0,0),name,[Dec(Pos(0,0),'$m',null[Type],null[Type])],VoidType(Pos(0,0)),Case(Pos(0,0),[][TDec],[Var(Pos(0,0),'$m')],nonTimeArms));
   in JBehaviour(exports,[defToField(b) | b::TBind <- defs],expToJExp(init),expToJExp(f),timeCommand); 
+
+extendedActToJava(name::AST,decs::[TDec],exports::[Str],parent::AST,defs::[TBind],init::AST,arms::[Arm])::JExp = 
+  let p0::Loc = Pos(0,0); in
+  let timeSuper::Arm = BArm(p0,[PTerm(p0,'Time',[],[PVar(p0,'$',null[Type])])],BoolExp(p0,true),SendTimeSuper(p0)); in
+  let timeArms::[Arm] = select[Arm](isTimeArm,arms) + [timeSuper]; in
+  let messageSuper::Arm = BArm(p0,[PVar(p0,'$m',null[Type])],BoolExp(p0,true),Block(p0,[SendSuper(p0,Var(p0,'$m')),NullExp(p0)])); in
+  let nonTimeArms::[Arm] = reject[Arm](isTimeArm,arms) + [messageSuper]; in
+  let timeCommand::JCommand = if timeArms = [] then JBlock([]); else timeArmsToJCommand(timeArms); in
+  let f::AST = FunExp(Pos(0,0),name,[Dec(Pos(0,0),'$m',null[Type],null[Type])],VoidType(Pos(0,0)),Case(Pos(0,0),[][TDec],[Var(Pos(0,0),'$m')],nonTimeArms));
+  in JExtendedBehaviour(exports,expToJExp(parent),[defToField(b) | b::TBind <- defs],expToJExp(init),expToJExp(f),timeCommand); 
 
 isTimeArm(a::Arm)::Bool =
   case a {
@@ -185,6 +202,10 @@ isTimeArm(a::Arm)::Bool =
   }
 
 timeArmsToJCommand(arms::[Arm])::JCommand =
+
+  // The time arms are all expected to be in the form Time(p) so a sequence of them can be turned into a
+  // simple nested if...
+  
   case arms {
     [][Arm] -> JBlock([]);
     BArm(l::Loc,[PTerm(tl::Loc,'Time',[][Type],[PVar(vl::Loc,n::Str,t::Type)])],g::AST,e::AST):arms::[Arm] ->
@@ -210,13 +231,6 @@ moduleToJava(module::AST)::JMod =
     Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind]) -> 
       renameJVarsModule(JModule(name,exports,imports,[ defToField(d) | d::TBind <- defs,?(isBinding(d) or isFunBind(d)) ]));     
   }
-
-zipFields(fs::[JFieldDef],es::[JExp],ts::[JType])::[JFieldDef] =
-  case fs,es,ts {
-    [][JFieldDef],[][JExp],[][JType] -> [][JFieldDef];
-    JField(n::Str,t::JType,e::JExp):fs::[JFieldDef],e::JExp:es::[JExp],t::JType:ts::[JType] ->
-      JField(n,t,e):zipFields(fs,es,ts);
-  } 
 
 renameJVarsModule(m::JMod)::JMod  =
   case m {
@@ -288,14 +302,19 @@ renameJVarsExp(e::JExp,vars::[Str],env::Table[Str,Str])::JExp = {
     JNew(b::JExp,args::[JExp]) -> JNew(renameJVarsExp(b,vars,env),[ renameJVarsExp(a,vars,env) | a::JExp <- args ]);
     JNewArray(b::JExp) -> JNewArray(renameJVarsExp(b,vars,env));
     JNewJava(n::Str,args::[JExp]) -> JNewJava(n,[ renameJVarsExp(a,vars,env) | a::JExp <- args ]);
+    JNewTable -> JNewTable;
     JMapFun(f::JExp,l::JExp) -> JMapFun(renameJVarsExp(f,vars,env),renameJVarsExp(l,vars,env));
     JFlatten(e::JExp) -> JFlatten(renameJVarsExp(e,vars,env));
     JSend(e::JExp,n::Str,es::[JExp]) -> JSend(renameJVarsExp(e,vars,env),n,[ renameJVarsExp(e,vars,env) | e::JExp <- es ]);
+    JSendSuper(e::JExp) -> JSendSuper(renameJVarsExp(e,vars,env));
+    JSendTimeSuper -> JSendTimeSuper;
     JSelf -> JSelf;
     JRef(e::JExp,n::Str) -> JRef(renameJVarsExp(e,vars,env),n);
-    JBehaviour(es::[Str],fs::[JFieldDef],init::JExp,handler::JExp,time::JCommand) -> {
-    JBehaviour(es,[ JField(n,t,renameJVarsExp(e,vars,env)) | JField(n::Str,t::JType,e::JExp) <- fs ],renameJVarsExp(init,vars,env),renameJVarsExp(handler,vars,env),renameJVarsCommand(time,vars,env));
-    }
+    JRefSuper(n::Str) -> JRefSuper(n);
+    JBehaviour(es::[Str],fs::[JFieldDef],init::JExp,handler::JExp,time::JCommand) ->
+      JBehaviour(es,[ JField(n,t,renameJVarsExp(e,vars,env)) | JField(n::Str,t::JType,e::JExp) <- fs ],renameJVarsExp(init,vars,env),renameJVarsExp(handler,vars,env),renameJVarsCommand(time,vars,env));
+    JExtendedBehaviour(es::[Str],parent::JExp,fs::[JFieldDef],init::JExp,handler::JExp,time::JCommand) ->
+      JExtendedBehaviour(es,renameJVarsExp(parent,vars,env),[ JField(n,t,renameJVarsExp(e,vars,env)) | JField(n::Str,t::JType,e::JExp) <- fs ],renameJVarsExp(init,vars,env),renameJVarsExp(handler,vars,env),renameJVarsCommand(time,vars,env));
     JTry(e::JExp,n::Str,c::JCommand) -> JTry(renameJVarsExp(e,vars,env),n,renameJVarsCommand(c,vars,env));
     JProbably(e::JExp,e1::JExp,e2::JExp) -> JProbably(renameJVarsExp(e,vars,env),renameJVarsExp(e1,vars,env),renameJVarsExp(e2,vars,env));
     JGrab(es::[JExp],c::JExp) -> JGrab([ renameJVarsExp(e,vars,env) | e::JExp <- es ],renameJVarsExp(c,vars,env));
@@ -358,9 +377,10 @@ renameJVarsCommand(c::JCommand,vars::[Str],env::Table[Str,Str])::JCommand = { //
       }
     } 
     JStatement(e::JExp) -> JStatement(renameJVarsExp(e,vars,env));
-    JUpdate(v0::Str,v1::JExp) -> {
-      JUpdate(v0,renameJVarsExp(v1,vars,env));
+    JUpdate(name::Str,value::JExp) when hasEntry[Str,Str](name,env) -> {
+      JUpdate(lookup[Str,Str](name,env),renameJVarsExp(value,vars,env));
     }
+    JUpdate(v0::Str,v1::JExp) ->  JUpdate(v0,renameJVarsExp(v1,vars,env));
     JFor(l::Str,n::Str,e::JExp,c::JCommand) -> JFor(l,n,renameJVarsExp(e,vars,env),renameJVarsCommand(c,vars,env));
   }
 }

@@ -22,22 +22,22 @@ import
   'esl/compiler/types.esl',
   'esl/compiler/typeCheck.esl', 
   'esl/compiler/toJava.esl',
-  'esl/displays.esl',
+  //'esl/displays.esl',
   'esl/compiler/dynamicVars.esl',
   'esl/compiler/strings.esl';
 
 type Main = Act { Time(Int); }
 
-//data EditType =
-//  ESLSource(Str,Str)
-//| JavaSource(Str,Str,Str)
-//| RawText(Str);
+data EditType =
+  ESLSource(Str,Str)
+| JavaSource(Str,Str,Str)
+| RawText(Str);
 
 type EDB = Act {
   Edit(EditType);
 }
 
-//edb::EDB = null[EDB];
+edb::EDB = null[EDB];
 
 moduleImports(m::AST)::[Str] = 
   case m {

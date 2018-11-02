@@ -705,7 +705,7 @@ public class Module implements TreeNode, LocationContainer, DecContainer {
 			Env<String, Type> e = env;
 			resolve();
 			for (ExportedName n : exports.getNames()) {
-				if (getBinding(n.getName()) == null) throw new TypeError(exports.getLineStart(), exports.getLineEnd(), "cannot find binding for exported name: " + n.getName());
+				if (getBinding(n.getName()) == null) throw new TypeError(exports.getLineStart(), exports.getLineEnd(), "cannot find binding for exported name: " + n.getName() + " in " + getPath());
 			}
 			for (String name : imported.keySet()) {
 				imported.get(name).type(e);

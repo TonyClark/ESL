@@ -6,39 +6,39 @@ import static esl.compiler.PpExp.*;
 import static esl.compiler.Types.*;
 import static esl.compiler.TypeCheck.*;
 import static esl.compiler.ToJava.*;
-import static esl.Displays.*;
 import static esl.compiler.DynamicVars.*;
 import static esl.compiler.Strings.*;
 import java.util.function.Supplier;
 public class Compiler {
   public static ESLVal getSelf() { return $null; }
+  // static ESLVal edb = null;
   private static ESLVal moduleImports = new ESLVal(new Function(new ESLVal("moduleImports"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal m = $args[0];
-  {ESLVal _v1 = m;
+  {ESLVal _v4 = m;
         
-        switch(_v1.termName) {
-        case "Module": {ESLVal $1 = _v1.termRef(0);
-          ESLVal $2 = _v1.termRef(1);
-          ESLVal $3 = _v1.termRef(2);
-          ESLVal $4 = _v1.termRef(3);
-          ESLVal $5 = _v1.termRef(4);
-          ESLVal $6 = _v1.termRef(5);
-          ESLVal $7 = _v1.termRef(6);
+        switch(_v4.termName) {
+        case "Module": {ESLVal $7 = _v4.termRef(0);
+          ESLVal $6 = _v4.termRef(1);
+          ESLVal $5 = _v4.termRef(2);
+          ESLVal $4 = _v4.termRef(3);
+          ESLVal $3 = _v4.termRef(4);
+          ESLVal $2 = _v4.termRef(5);
+          ESLVal $1 = _v4.termRef(6);
           
-          {ESLVal path = $1;
+          {ESLVal path = $7;
           
-          {ESLVal name = $2;
+          {ESLVal name = $6;
           
-          {ESLVal exports = $3;
+          {ESLVal exports = $5;
           
           {ESLVal imports = $4;
           
-          {ESLVal x = $5;
+          {ESLVal x = $3;
           
-          {ESLVal y = $6;
+          {ESLVal y = $2;
           
-          {ESLVal defs = $7;
+          {ESLVal defs = $1;
           
           return imports;
         }
@@ -49,7 +49,7 @@ public class Compiler {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(2445,2569)"));
+        default: return error(new ESLVal("case error at Pos(2437,2561)").add(ESLVal.list(_v4)));
       }
       }
     }
@@ -125,9 +125,9 @@ public class Compiler {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v4 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)"));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
           }}
           public ESLVal get(String name) {
             switch(name) {

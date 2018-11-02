@@ -4,6 +4,8 @@ import java.util.ArrayDeque;
 
 public class DummyBehaviour implements Behaviour {
 
+	public static ESLVal DUMMY = new ESLVal(new DummyBehaviour());
+
 	public ESLVal get(String name) {
 		return null;
 	}
@@ -44,19 +46,22 @@ public class DummyBehaviour implements Behaviour {
 	}
 
 	public ESLVal handle(ESLVal message) {
-		return null;
+		throw new Error("Cannot handle message " + message);
 	}
 
-	@Override
 	public ArrayDeque<ESLVal> getQueue() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public void setQueue(ArrayDeque<ESLVal> queue) {
-		// TODO Auto-generated method stub
-		
+	}
+
+	public ESLVal getParent() {
+		return null;
+	}
+
+	public boolean hasParent() {
+		return false;
 	}
 
 }

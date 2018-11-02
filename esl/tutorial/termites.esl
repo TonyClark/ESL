@@ -11,7 +11,7 @@ background::Str              = 'white';
 grid::Grid                   = new 'esl.grid.Grid'[Grid](size,size,6); 
 isLegal(x::Int,y::Int)::Bool = (x = 0 or (x > 0 and x < size)) and (y = 0 or (y > 0 and y < size));
 
-Act Termite {
+Act Termite { 
   Search;
   Drop;
   FindSpace;

@@ -1,9 +1,64 @@
-export main;
+export main; 
+
+Act Empty {  }
 
 Act Main { }
 
+act empty::Act {} {}
+ 
+Act Point extends Empty { 
+  export 
+    getX::()->Int;
+    getY::()->Int; 
+  Move2D(Int,Int);
+  Show;
+}
+
+Act Point3D extends Point { 
+  export 
+    getZ::()->Int;
+  Move3D(Int,Int,Int);
+}
+
+act point(x::Int,y::Int)::Point {
+  
+  export getX, getY, setX, setY;
+
+  getX()::Int = x;
+  getY()::Int = y;
+  setX(nx::Int)::Void = x := nx;
+  setY(ny::Int)::Void = y := ny;
+  
+  Move2D(dx::Int,dy::Int) -> { 
+    setX(x + dx);
+    setY(y + dy);
+  }
+  Show -> {
+    print[Str]('(' + x + ',' + y + ')');
+  }
+}
+
+act point3D(x::Int,y::Int,z::Int)::Point3D extends point(x,y) {
+  
+  export getZ,setZ;
+
+  getZ()::Int = z;
+  setZ(nz::Int)::Void = z := nz;
+
+  Move3D(dx::Int,dy::Int,dz::Int) -> {
+    super <- Move2D(dx,dy);
+    setZ(z + dz);
+  }
+  Show -> {
+    print[Str]('(' + super.getX() + ',' + super.getY() + ',' + z + ')');
+  }
+  
+}
+
+/*
+
 data Tree = 
-  Branch(Tree,Tree)
+  Branch(Tree,Tree)  
 | Leaf(Int);
 
 x::Tree = Branch(Leaf(100),Leaf(300));
@@ -12,7 +67,7 @@ f[T](x::T,y::T)::T = x;
 
 test(x::Tree)::Int = 
  case x {
-   Branch(a,b) -> test(a) + test(b);
+   Branch(a,b) -> test(a) + test(b); 
    Leaf(x) -> x;
  }
 
@@ -21,7 +76,7 @@ testParBind(a::Int,b::Int)::Int =
       y::Int = 200;
   in x;
 
-g::(Int,Int) -> Int = fun(x::Int,y::Int)::Int x + y;
+g::(Int,Int) -> Int = fun(x::Int,y::Int)::Int x + y; 
 
 mkTree(n::Int)::Tree =
   case n {
@@ -29,13 +84,22 @@ mkTree(n::Int)::Tree =
     m -> Branch(mkTree(m-1),mkTree(m-1));
   }
 
+*/
+
 act main::Main { 
 
- f(x::Int)::Int = x;
+ //f(x::Int)::Int = x;
 
   -> { 
-    print[Int](test(mkTree(20))); 
-    stopAll(); 
+    //print[Int](test(mkTree(20))); 
+    let p::Point3D = new point3D(1,2,3);
+    in {
+      p <- Show;
+      p <- Move3D(10,10,10);
+      wait(1000);
+      p <- Show;
+      stopAll(); 
+    }
   }
   
 }

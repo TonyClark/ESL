@@ -23,15 +23,15 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.text.BadLocationException;
 
-import org.fife.ui.rsyntaxtextarea.LinkGenerator;
 import org.fife.ui.rsyntaxtextarea.folding.FoldParser;
 import org.jfree.ui.FontChooserDialog;
 
 import edb.diagrams.basic.ClipboardImage;
 import edb.frame.EDBFrame;
 import edb.frame.EDBMenuProvider;
+import edb.frame.Writable;
 
-public class Editor extends JPanel implements MenuProvider, KeyListener, MessageHandler, EDBMenuProvider {
+public class Editor extends JPanel implements MenuProvider, KeyListener, MessageHandler, EDBMenuProvider, Writable {
 
 	public static String readFile(File file) {
 		return readFile(file.getAbsolutePath());
@@ -247,6 +247,10 @@ public class Editor extends JPanel implements MenuProvider, KeyListener, Message
 
 	public void deselectRanges() {
 		editorPanel.deselectRanges();
+	}
+
+	public void write(int b) {
+		editorPanel.write(b);
 	}
 
 }

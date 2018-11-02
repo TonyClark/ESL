@@ -2,6 +2,7 @@ package esl.lib;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Hashtable;
 
 import list.List;
 import runtime.data.Key;
@@ -38,21 +39,22 @@ public class ESLVal {
 		return s + "]";
 	}
 
-	public ValState		state			= ValState.UNKNOWN;
-	public int				intVal		= 0;
-	public boolean		boolVal		= true;
-	public String			strVal		= "";
-	public double			doubleVal	= 0.0;
-	public String			termName	= null;
-	public ESLVal[]		termVals	= null;
-	public Function		funVal		= null;
-	public ESLVal			headVal		= null;
-	public ESLVal			tailVal		= null;
-	public Behaviour	behaviour	= null;
-	public Actor			actor			= null;
-	public AlienActor	javaActor	= null;
-	public Record			record		= null;
-	public ESLVal[]		array			= null;
+	public ValState										state			= ValState.UNKNOWN;
+	public int												intVal		= 0;
+	public boolean										boolVal		= true;
+	public String											strVal		= "";
+	public double											doubleVal	= 0.0;
+	public String											termName	= null;
+	public ESLVal[]										termVals	= null;
+	public Function										funVal		= null;
+	public ESLVal											headVal		= null;
+	public ESLVal											tailVal		= null;
+	public Behaviour									behaviour	= null;
+	public Actor											actor			= null;
+	public AlienActor									javaActor	= null;
+	public Record											record		= null;
+	public ESLVal[]										array			= null;
+	public Hashtable<ESLVal, ESLVal>	table			= null;
 
 	public ESLVal() {
 	}
@@ -96,6 +98,11 @@ public class ESLVal {
 	public ESLVal(Function f) {
 		funVal = f;
 		state = ValState.FUN;
+	}
+
+	public ESLVal(Hashtable<ESLVal, ESLVal> t) {
+		table = t;
+		state = ValState.TABLE;
 	}
 
 	public ESLVal(int i) {
@@ -264,6 +271,14 @@ public class ESLVal {
 					return Lib.$true;
 				} else
 					return Lib.$false;
+			case TABLE:
+				if (table.keySet().equals(other.table.keySet())) {
+					for (ESLVal k : table.keySet()) {
+						if (!table.get(k).equals(other.table.get(k))) return Lib.$false;
+					}
+					return Lib.$true;
+				} else
+					return Lib.$false;
 			default:
 				return Lib.$false;
 			}
@@ -286,6 +301,10 @@ public class ESLVal {
 		return asDouble() > n.asDouble() ? Lib.$true : Lib.$false;
 	}
 
+	public ESLVal greql(ESLVal n) {
+		return asDouble() >= n.asDouble() ? Lib.$true : Lib.$false;
+	}
+
 	public ESLVal head() {
 		if (state == ValState.CONS) {
 			return headVal;
@@ -303,6 +322,10 @@ public class ESLVal {
 
 	public ESLVal less(ESLVal n) {
 		return asDouble() < n.asDouble() ? Lib.$true : Lib.$false;
+	}
+
+	public ESLVal lesseql(ESLVal n) {
+		return asDouble() <= n.asDouble() ? Lib.$true : Lib.$false;
 	}
 
 	public ESLVal map(ESLVal l) {
@@ -415,9 +438,45 @@ public class ESLVal {
 		case CONS:
 		case NIL:
 			return refList(name);
+		case TABLE:
+			return refTable(name);
 		default:
 			throw new Error("REF not implemented " + this + "." + name);
 		}
+	}
+
+	private ESLVal refTable(String name) {
+		if (name.equals("hasKey")) { return new ESLVal(new Function(new ESLVal("hasKey"), this) {
+			public ESLVal apply(ESLVal... args) {
+				return table.containsKey(args[0]) ? Lib.$true : Lib.$false;
+			}
+		}); }
+		if (name.equals("get")) { return new ESLVal(new Function(new ESLVal("get"), this) {
+			public ESLVal apply(ESLVal... args) {
+				return table.get(args[0]);
+			}
+		}); }
+		if (name.equals("put")) { return new ESLVal(new Function(new ESLVal("put"), this) {
+			public ESLVal apply(ESLVal... args) {
+				table.put(args[0], args[1]);
+				return ESLVal.this;
+			}
+		}); }
+		if (name.equals("keys")) {
+			ESLVal keys = Lib.$nil;
+			for (ESLVal k : table.keySet()) {
+				keys = new ESLVal(k, keys);
+			}
+			return keys;
+		}
+		if (name.equals("vals")) {
+			ESLVal vals = Lib.$nil;
+			for (ESLVal v : table.values()) {
+				vals = new ESLVal(v, vals);
+			}
+			return vals;
+		}
+		throw new Error("unknown field for table " + name);
 	}
 
 	private ESLVal refList(String name) {
@@ -576,8 +635,41 @@ public class ESLVal {
 			return "<behaviour " + behaviour.getName() + ">";
 		case ARRAY:
 			return "Array" + Arrays.toString(array);
+		case TABLE:
+			return table.toString();
 		}
 		return "<?:" + state + ">";
+	}
+
+	public int hashCode() {
+		switch (state) {
+		case INT:
+			return intVal;
+		case STR:
+			return strVal.hashCode();
+		case DOUBLE:
+			return Double.valueOf(doubleVal).hashCode();
+		case BOOL:
+			return boolVal ? 1 : 0;
+		case NIL:
+		case CONS:
+			return headVal.hashCode();
+		case TERM:
+			return termName.hashCode();
+		case NULL:
+			return 0;
+		case FUN:
+			return funVal.hashCode();
+		case ACTOR:
+			return actor.hashCode();
+		case BEHAVIOUR:
+			return behaviour.hashCode();
+		case ARRAY:
+			return array.hashCode();
+		case TABLE:
+			return table.hashCode();
+		}
+		throw new Error("cannot caklculate hash code for : " + this);
 	}
 
 	public ESLVal take(int i) {
@@ -594,6 +686,14 @@ public class ESLVal {
 		else {
 			return tailVal.drop(i - 1);
 		}
+	}
+
+	public static void main(String[] args) {
+		Hashtable<ESLVal, ESLVal> t = new Hashtable<ESLVal, ESLVal>();
+		t.put(new ESLVal("xxx"), Lib.$nil);
+		t.put(new ESLVal("yyy"), Lib.$nil);
+		t.put(new ESLVal("xxx"), Lib.$one);
+		System.out.println(t);
 	}
 
 }

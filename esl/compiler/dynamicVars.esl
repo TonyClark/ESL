@@ -61,13 +61,24 @@ dynamicVarsJExp(x::JExp)::[Str] = { //print[Str]('dynamic exp = ' + x);
       dynamicVarsJExp(v3) +
       dynamicVarsJCommand(v4);
     }
+    JExtendedBehaviour(v0::[Str],parent::JExp,v1::[JFieldDef],v2::JExp,v3::JExp,v4::JCommand) -> {
+      dynamicVarsJExp(parent) +
+      flatten[Str](map[JFieldDef,[Str]](fun(d::JFieldDef)::[Str] dynamicVarsJFieldDef(d),v1)) +
+      dynamicVarsJExp(v2) +
+      dynamicVarsJExp(v3) +
+      dynamicVarsJCommand(v4);
+    }
     JNew(v0::JExp,v1::[JExp]) -> dynamicVarsJExp(v0) + flatten[Str](map[JExp,[Str]](fun(e::JExp)::[Str] dynamicVarsJExp(e),v1));
     JNewArray(v0::JExp) -> dynamicVarsJExp(v0);
     JNewJava(v0::Str,v1::[JExp]) -> flatten[Str](map[JExp,[Str]](fun(e::JExp)::[Str] dynamicVarsJExp(e),v1));
+    JNewTable -> [];
     JSend(v0::JExp,v1::Str,v2::[JExp]) -> dynamicVarsJExp(v0) + flatten[Str](map[JExp,[Str]](fun(e::JExp)::[Str] dynamicVarsJExp(e),v2));
+    JSendSuper(e::JExp) -> dynamicVarsJExp(e);
+    JSendTimeSuper -> [];
     JSelf -> [];
     JTry(e::JExp,n::Str,c::JCommand) -> dynamicVarsJExp(e) + dynamicVarsJCommand(c);
     JRef(v0::JExp,v1::Str) -> dynamicVarsJExp(v0);
+    JRefSuper(n::Str) -> [];
     JGrab(v0::[JExp],v1::JExp) -> flatten[Str](map[JExp,[Str]](fun(e::JExp)::[Str] dynamicVarsJExp(e),v0)) + dynamicVarsJExp(v1);
     JProbably(v0::JExp,v1::JExp,v2::JExp) -> dynamicVarsJExp(v0) + dynamicVarsJExp(v1) + dynamicVarsJExp(v2);
   }

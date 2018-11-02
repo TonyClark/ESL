@@ -22,7 +22,7 @@ import 'esl/lists.esl','esl/compiler/types.esl','esl/tables.esl';
 
 type Main = Act { }
 
-ppPattern(p::Pattern)::Str =
+ppPattern(p::Pattern)::Str = 
   case p { 
     PVar(l::Loc,n::Str,t::Type) -> n;
     PTerm(l::Loc,n::Str,[][Type],ps::[Pattern]) -> n + ppPatterns(ps);
@@ -39,6 +39,7 @@ ppPattern(p::Pattern)::Str =
 ppPatterns(ps::[Pattern])::[Str] = map[Pattern,Str](ppPattern,ps);
 
 p0::Loc = Pos(0,0);
+actType0::Type = ActType(p0,[],[]);
 
 contentType::Type = UnionType(p0,[TermType(p0,'RawText',[StrType(p0)]),TermType(p0,'ESLSource',[StrType(p0),StrType(p0)]),TermType(p0,'JavaSource',[StrType(p0),StrType(p0),StrType(p0)])]);
 
@@ -52,6 +53,7 @@ env0::TEnv = [
   Map('random',FunType(p0,[IntType(p0)],IntType(p0))),
   Map('wait',FunType(p0,[IntType(p0)],VoidType(p0))),
   Map('stopAll',FunType(p0,[],VoidType(p0))),
+  Map('isqrt',FunType(p0,[IntType(p0)],FloatType(p0))),
   Map('builtin',ForallType(p0,['T'],FunType(p0,[StrType(p0),StrType(p0),IntType(p0)],VarType(p0,'T'))))
 ];
 
@@ -86,7 +88,7 @@ getTypeName(t0::Type,env::TEnv)::Str =
     name;
   }
 
-ppType0(env::TEnv)::(Type) ->Str = fun(t::Type)::Str ppType(t,env);
+ppType0(env::TEnv)::(Type) ->Str = fun(t::Type)::Str ppType(t,env); 
 
 ppHandlers(handlers::[MType],env::TEnv)::Str =
   case handlers {
@@ -96,11 +98,12 @@ ppHandlers(handlers::[MType],env::TEnv)::Str =
   
 ppType(t::Type,env::TEnv)::Str = { if getTypeName(t,env) <> null[Str] then getTypeName(t,env); else
   case t {
-    ActType(l::Loc,decs::[TDec],handlers::[MType]) -> 'Act{ ' + ppHandlers(handlers,env) + ' }';
+    ActType(l::Loc,decs::[TDec],handlers::[MType]) -> 'Act { ' + ppHandlers(handlers,env) + ' }';
     ApplyType(l::Loc,n::Str,args::[Type]) -> n + map[Type,Str](ppType0(env),args);
     ApplyTypeFun(l::Loc,op::Type,args::[Type]) -> ppType(op,env) + map[Type,Str](ppType0(env),args);
     ArrayType(l::Loc,t::Type) -> 'Array[' + ppType(t,env) + ']';
     BoolType(l::Loc) -> 'Bool';
+    ExtendedAct(l::Loc,parent::Type,decs::[TDec],handlers::[MType]) -> 'Act extends ' + ppType(parent,env) + ' { ' + ppHandlers(handlers,env) + ' }';
     FloatType(l::Loc) -> 'Float';
     FieldType(l::Loc,n::Str,t::Type) -> n + '::' + ppType(t,env);
     ForallType(l::Loc,ns::[Str],t::Type) -> 'Forall' + ns + '.' + ppType(t,env);
@@ -112,6 +115,7 @@ ppType(t::Type,env::TEnv)::Str = { if getTypeName(t,env) <> null[Str] then getTy
     RecType(l::Loc,n::Str,t::Type) -> 'rec ' + n + '.' + ppType(t,env);
     RecordType(l::Loc,fs::[Type])  -> '{' + ppTypes(fs,env) + '}';
     StrType(l::Loc) -> 'Str';
+    TableType(l::Loc,k::Type,v::Type) -> 'Hash[' + ppType(k,env) + ',' + ppType(v,env) + ']';
     TermType(l::Loc,n::Str,ts::[Type]) -> n + map[Type,Str](ppType0(env),ts);
     TypeFun(l::Loc,ns::[Str],t::Type) -> 'Fun' + ns + '.' + ppType(t,env);
     UnfoldType(l::Loc,t::Type) -> 'unfold ' + ppType(t,env);
@@ -154,45 +158,6 @@ getConstructors(l::Loc,dataType::Type,t::Type)::TEnv = { //print[Str]('get const
       t -> throw[TEnv] TypeError(l,'cannot extract constructors from ' + ppType(t,[]));
   }}
 
-zipTypeEnv(ns::[Str],ts::[Type])::TEnv =
-  case ns,ts {
-    [][Str],[][Type] -> [][TMap];
-    n::Str:ns::[Str],t::Type:ts::[Type] -> Map(n,t):zipTypeEnv(ns,ts);
-  }
-  
-lookupType(name::Str,env::TEnv)::Type =
-  case env {
-    [][TMap] -> null[Type];
-    Map(n::Str,t::Type):e::TEnv when n = name -> t;
-    m::TMap:e::TEnv -> lookupType(name,e);
-  }
-  
-typeEnvDom(e::TEnv)::[Str] =
-  case e {
-    [][TMap] -> [][Str];
-    Map(n::Str,t::Type):x::TEnv -> n:typeEnvDom(x);
-  }
-  
-removeFromDom(e::TEnv,ns::[Str])::TEnv =
-  case e {
-    [][TMap] -> [][TMap];
-    Map(n::Str,t::Type):e::TEnv when member[Str](n,ns) -> removeFromDom(e,ns);
-    Map(n::Str,t::Type):e::TEnv -> Map(n,t):removeFromDom(e,ns);
-  }
-  
-restrictTypeEnv(e::TEnv,ns::[Str])::TEnv =
-  case e {
-    [][TMap] -> [][TMap];
-    Map(n::Str,t::Type):e::TEnv when not(member[Str](n,ns)) -> restrictTypeEnv(e,ns);
-    Map(n::Str,t::Type):e::TEnv -> Map(n,t):restrictTypeEnv(e,ns);
-  }
-  
-typeEnvRan(e::TEnv)::[Type] =
-  case e {
-    [][TMap] -> [][Type];
-    Map(n::Str,t::Type):x::TEnv -> t:typeEnvRan(x); 
-  }
-
 checkFreeTypes(e::TEnv)::Void =
 
   // Assumes that the types are all recursive and will throw an error
@@ -204,7 +169,7 @@ checkFreeTypes(e::TEnv)::Void =
   let freeNames::[Str] = removeAll[Str](dom,flatten[Str](map[Type,[Str]](typeFV,ran)));
   in if freeNames = [][Str]
      then null[Void];
-     else throw[Void]('Unbound Types: ' + freeNames);
+     else throw[Void] TypeError(Pos(0,0),'Unbound Types: ' + freeNames);
      
 checkSingletonTypes(e::TEnv)::Void =
   
@@ -214,7 +179,7 @@ checkSingletonTypes(e::TEnv)::Void =
     [][TMap] -> null[Void];
     Map(n::Str,t::Type):e::TEnv -> 
       if member[Str](n,typeEnvDom(e))
-      then throw[Void]('Duplicate type name: ' + n);
+      then throw[Void] TypeError(Pos(0,0),'Duplicate type name: ' + n);
       else checkSingletonTypes(e);
   }
      
@@ -260,8 +225,10 @@ data TRecord =
   Typed(AST,TEnv,TEnv,TEnv)
 | Undefined;
 
-typeCheckModule(path::Str)::Void =
+typeCheckModule(path::Str)::Void = {
+  print[Str]('[ type check ' + path + ']');
   typeCheckModuleInternal(path,emptyTable[Str,TRecord],fun(cache::Table[Str,TRecord],valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void null[Void]);
+}
  
 typeCheckModuleInternal(path::Str,cache::Table[Str,TRecord],handler::(Table[Str,TRecord],TEnv,TEnv,TEnv) ->Void)::Void =
   if hasEntry[Str,TRecord](path,cache)
@@ -360,151 +327,45 @@ checkPatterns(l::Loc,ps::[Pattern])::Void =
      else null[Void];
 
 typeCheckDef(def::TBind,selfType::Type,baseValueEnv::TEnv,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void =
+
+  // Type check any binding that could occur at the top level, in a behaviour definition, a let-binding, a let-rec-binding.
+  
   case def {
-              FunBind(l::Loc,n::Str,ps::[Pattern],t::Type,st::Type,b::AST,g::AST) -> {
-                checkPatterns(l,ps);
-                let argTypes::[Type] = map[Pattern,Type](fun(p::Pattern)::Type case p { PVar(l::Loc,n::Str,t::Type) -> substTypeEnv(typeEnv,t); },ps);
-                    argNames::[Str] = map[Pattern,Str](fun(p::Pattern)::Str case p { PVar(l::Loc,n::Str,t::Type) -> n; },ps);
-                in let bodyType::Type = guardedExpType(l,g,b,selfType,zipTypeEnv(argNames,argTypes) + baseValueEnv,cnstrEnv,typeEnv); in
-                   let fType::Type = case t { ForallType(l::Loc,ns::[Str],t::Type) -> genericize(l,FunType(l,argTypes,bodyType)); t::Type -> FunType(l,argTypes,bodyType); }
-                       dType::Type = substTypeEnv(typeEnv,t);
-                   in if typeEqual(fType,dType)
-                      then {} //print[Str](n + '::' + ppType(lookupType(n,valueEnv)) + ' = ' + ppType(bodyType));
-                      else throw[Void] TypeError(l,'type of ' + n + '::' + ppType(fType,typeEnv) + ' does not match declaration ' + ppType(dType,typeEnv));
-              }
-              Binding(l::Loc,n::Str,dt::Type,st::Type,e::AST) -> { //print[Str]('type check def ' + def);
-               let valueType::Type = expType(e,selfType,baseValueEnv,cnstrEnv,typeEnv); in
-               let valueFV::[Str] = typeFV(valueType);
-                   declaredType::Type = lookupType(n,valueEnv); in
-               let valueType::Type = if valueFV = [][Str] then valueType; else ForallType(l,valueFV,valueType);
-               in {
-                if typeEqual(valueType,declaredType)
-                then {} //print[Str](n + '::' + ppType(declaredType) + ' = ' + ppType(valueType));
-                else throw[Void] TypeError(l,'type of ' + n + ' ' + ppType(valueType,typeEnv) + ' does not match declared type = ' + ppType(declaredType,typeEnv));
-               }
-              }
-           }
-
-typeEqual(t1::Type,t2::Type)::Bool = {
-  let b::Bool = typeEqual1(t1,t2);
-  in {
-    //print[Str]('type equal ' + ppType(t1) + ' ' + ppType(t2) + ' = ' + b);
-    b;
-  }
-}
-
-typeEqual1(t1::Type,t2::Type)::Bool = { //print[Str]('type equal: ' + ppType(t1) + ' = ' + ppType(t2));
-  if t1 = t2
-  then true;
-  else case t1,t2 {
-    ArrayType(l1::Loc,t1::Type),ArrayType(l2::Loc,t2::Type) -> typeEqual(t1,t2);
-    ActType(l1::Loc,exports1::[TDec],handlers1::[MType]),ActType(l2::Loc,exports2::[TDec],handlers2::[MType]) -> actEqual(exports1,exports1,handlers1,handlers2);
-    ApplyTypeFun(l1::Loc,op1::Type,args1::[Type]),ApplyTypeFun(l2::Loc,op2::Type,args2::[Type]) -> typeEqual(op1,op2) and typesEqual(args1,args2);
-    ApplyTypeFun(l::Loc,op::Type,args::[Type]),t2::Type -> typeEqual(applyTypeFun(l,forceType(op),args),t2);
-    t1::Type,ApplyTypeFun(l::Loc,op::Type,args::[Type]) -> typeEqual(t1,applyTypeFun(l,forceType(op),args));
-    BoolType(l1::Loc),BoolType(l2::Loc) -> true;
-    FloatType(l1::Loc),FloatType(l2::Loc) -> true;
-    IntType(l1::Loc),IntType(l2::Loc) -> true;
-    ListType(l1::Loc,t1::Type),ListType(l2::Loc,t2::Type) -> typeEqual(t1,t2);
-    BagType(l1::Loc,t1::Type),BagType(l2::Loc,t2::Type) -> typeEqual(t1,t2);
-    SetType(l1::Loc,t1::Type),SetType(l2::Loc,t2::Type) -> typeEqual(t1,t2);
-    StrType(l1::Loc),StrType(l2::Loc) -> true;
-    VoidType(l1::Loc),t::Type -> true;
-    t::Type,VoidType(l1::Loc) -> true;
-    FieldType(l1::Loc,n1::Str,t1::Type),FieldType(l2::Loc,n2::Str,t2::Type) -> n1=n2 and typeEqual(t1,t2);
-    TermType(l1::Loc,n1::Str,args1::[Type]),TermType(l2::Loc,n2::Str,args2::[Type]) -> if n1=n2 then typesEqual(args1,args2); else false;
-    TermType(l1::Loc,n1::Str,args1::[Type]),t2::Type -> false;
-    t1::Type,TermType(l2::Loc,n2::Str,args2::[Type]) -> false;
-    FunType(l1::Loc,d1::[Type],r1::Type),FunType(l2::Loc,d2::[Type],r2::Type) -> typeEqual(r1,r2) and typesEqual(d1,d2);
-    TypeClosure(f::()->Type),t2::Type -> typeEqual(f(),t2);
-    t1::Type,TypeClosure(f::()->Type) -> typeEqual(t1,f());
-    RecordType(l1::Loc,fs1::[Type]),RecordType(l2::Loc,fs2::[Type]) -> recordTypeEqual(fs1,fs2);
-    RecType(l1::Loc,n1::Str,t1::Type),RecType(l2::Loc,n2::Str,t2::Type) when n1=n2 -> typeEqual(t1,t2);
-    RecType(l1::Loc,n1::Str,t1::Type),t2::Type -> typeEqual(substType(RecType(l1,n1,t1),n1,t1),t2);
-    t1::Type,RecType(l2::Loc,n2::Str,t2::Type) -> typeEqual(t1,substType(RecType(l2,n2,t2),n2,t2));
-    UnionType(l1::Loc,terms1::[Type]),UnionType(l2::Loc,terms2::[Type]) -> typeSetEqual(terms1,terms2);
-    VarType(l1::Loc,n1::Str),VarType(l2::Loc,n2::Str) -> n1 = n2;
-    ForallType(l1::Loc,ns1::[Str],t1::Type),ForallType(l2::Loc,ns2::[Str],t2::Type) -> ns1 = ns2 and typeEqual(t1,t2);
-    // Allow [] to be polymorphic...
-    ListType(l1::Loc,t1::Type),ForallType(l2::Loc,[v1::Str],ListType(l3::Loc,VarType(l4::Loc,v2::Str))) when v1=v2 -> true;
-    ForallType(l2::Loc,[v1::Str],ListType(l3::Loc,VarType(l4::Loc,v2::Str))),ListType(l1::Loc,t1::Type) when v1=v2 -> true;
-    // Assume that types are free...
-    ForallType(l1::Loc,ns1::[Str],t1::Type),t2::Type -> typeEqual(t1,t2);
-    t1::Type,ForallType(l1::Loc,ns2::[Str],t2::Type) -> typeEqual(t1,t2);
-    t1::Type,t2::Type -> false;
-  }}
-
-actEqual(exports1::[TDec],exports2::[TDec],handlers1::[MType],handlers2::[MType])::Bool =
-  forall[TDec](fun(d1::TDec)::Bool exists[TDec](fun(d2::TDec)::Bool equalDec(d1,d2),exports2),exports1) and
-  forall[TDec](fun(d1::TDec)::Bool exists[TDec](fun(d2::TDec)::Bool equalDec(d1,d2),exports1),exports2) and
-  forall[MType](fun(m1::MType)::Bool exists[MType](fun(m2::MType)::Bool equalMessage(m1,m2),handlers2),handlers1) and
-  forall[MType](fun(m1::MType)::Bool exists[MType](fun(m2::MType)::Bool equalMessage(m1,m2),handlers1),handlers2);
-
-equalDec(d1::TDec,d2::TDec)::Bool =
-  case d1,d2 {
-    Dec(l1::Loc,n1::Str,t1::Type,st1::Type),Dec(l2::Loc,n2::Str,t2::Type,st2::Type) -> n1=n2 and typeEqual(t1,t2);
-  }
-
-equalMessage(m1::MType,m2::MType)::Bool =
-  case m1,m2 {
-    MessageType(l1::Loc,ts1::[Type]),MessageType(l2::Loc,ts2::[Type]) -> typesEqual(ts1,ts2);
-  }
-
-recordTypeEqual(fields1::[Type],fields2::[Type])::Bool = 
-  forall[Type](fun(t1::Type)::Bool exists[Type](fun(t2::Type)::Bool typeEqual(t1,t2),fields2),fields1) and
-  forall[Type](fun(t1::Type)::Bool exists[Type](fun(t2::Type)::Bool typeEqual(t1,t2),fields1),fields2);
-
-applyTypeFun(l::Loc,op::Type,args::[Type])::Type =
-  case op {
-    RecType(lr::Loc,n::Str,t::Type) -> applyTypeFun(l,unfoldType(lr,n,t),args);
-    TypeFun(l::Loc,names::[Str],t::Type) ->
-      if length[Type](args) = length[Str](names)
-      then substTypeEnv(zipTypeEnv(names,args),t);
-      else throw[Type] TypeError(l,'type fun expects ' + length[Str](names) + ' args, but supplied with ' + length[Type](args));
-    op::Type -> throw[Type] TypeError(l,'expecting a type function: ' + ppType(op,[]));
-  }
-
-unfoldType(l::Loc,n::Str,t::Type)::Type = substType(RecType(l,n,t),n,t);
-
-forceType(t::Type)::Type =
-  case t {
-    TypeClosure(f::()->Type) -> forceType(f());
-    t::Type -> t;
-  }
-
-typesEqual(ts1::[Type],ts2::[Type])::Bool =
-  case ts1,ts2 {
-    [][Type],[][Type] -> true;
-    [][Type],ts2::[Type] -> false;
-    ts1::[Type],[][Type] -> false;
-    t1::Type:ts1::[Type],t2::Type:ts2::[Type] -> typeEqual(t1,t2) and typesEqual(ts1,ts2);
-  }
-
-typeSetEqual(types1::[Type],types2::[Type])::Bool =
-  typeSubset(types1,types2) and typeSubset(types2,types1);
-
-typeSubset(sub::[Type],sup::[Type])::Bool =
-  case sub {
-    [][Type] -> true;
-    t::Type:sub::[Type] -> typeMember(t,sup) and typeSubset(sub,sup);
-  }
-
-typeMember(t::Type,types::[Type])::Bool =
-  case types {
-    [][Type] -> false;
-    tt::Type:types::[Type] when typeEqual(t,tt) -> true;
-    tt::Type:types::[Type] -> typeMember(t,types);
+    FunBind(l::Loc,n::Str,ps::[Pattern],t::Type,st::Type,b::AST,g::AST) -> {
+      checkPatterns(l,ps);
+      let argTypes::[Type] = map[Pattern,Type](fun(p::Pattern)::Type case p { PVar(l::Loc,n::Str,t::Type) -> substTypeEnv(typeEnv,t); },ps);
+          argNames::[Str] = map[Pattern,Str](fun(p::Pattern)::Str case p { PVar(l::Loc,n::Str,t::Type) -> n; },ps);
+      in let bodyType::Type = guardedExpType(l,g,b,selfType,zipTypeEnv(argNames,argTypes) + baseValueEnv,cnstrEnv,typeEnv); in
+      let fType::Type = case t { ForallType(l::Loc,ns::[Str],t::Type) -> genericize(l,FunType(l,argTypes,bodyType)); t::Type -> FunType(l,argTypes,bodyType); }
+          dType::Type = substTypeEnv(typeEnv,t);
+      in { 
+        if subType(fType,dType) //typeEqual(fType,dType)
+        then {} //print[Str](n + '::' + ppType(lookupType(n,valueEnv)) + ' = ' + ppType(bodyType));
+        else throw[Void] TypeError(l,'type of ' + n + '::' + ppType(fType,typeEnv) + ' does not match declaration ' + ppType(dType,typeEnv));
+      }
+    }
+    Binding(l::Loc,n::Str,dt::Type,st::Type,e::AST) -> { //print[Str]('type check def ' + def);
+      let valueType::Type = expType(e,selfType,baseValueEnv,cnstrEnv,typeEnv); in
+      let valueFV::[Str] = typeFV(valueType);
+          declaredType::Type = lookupType(n,valueEnv); in
+      let valueType::Type = if valueFV = [][Str] then valueType; else ForallType(l,valueFV,valueType);
+      in { 
+        if subType(valueType,declaredType) //typeEqual(valueType,declaredType)
+        then {} //print[Str](n + '::' + ppType(declaredType) + ' = ' + ppType(valueType));
+        else throw[Void] TypeError(l,'type of ' + n + ' ' + ppType(valueType,typeEnv) + ' does not match declared type = ' + ppType(declaredType,typeEnv));
+      }
+    }
   }
 
 guardedExpType(l::Loc,g::AST,e::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = 
   let bt::Type = expType(g,selfType,valueEnv,cnstrEnv,typeEnv);
-  in if isBoolType(bt)
+  in if isBoolType(bt) 
      then expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
      else throw[Type] TypeError(l,'guarded expression requires a boolean value: ' + ppType(bt,typeEnv));
 
-expType(e::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = { //print[Str]('exp type: ' + e);
+expType(e::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = { //print[Str]('exp type: ' + e); 
   case e {
-    ActExp(l::Loc,n::AST,args::[TDec],exports::[Str],spec::Str,bindings::[TBind],init::AST,arms::[Arm]) -> actType(l,n,args,exports,bindings,init,arms,selfType,valueEnv,cnstrEnv,typeEnv);
+    ActExp(l::Loc,n::AST,args::[TDec],exports::[Str],parent::AST,bindings::[TBind],init::AST,arms::[Arm]) -> actType(l,n,args,parent,exports,bindings,init,arms,selfType,valueEnv,cnstrEnv,typeEnv);
     Apply(l::Loc,op::AST,args::[AST]) -> applyType(l,op,args,selfType,valueEnv,cnstrEnv,typeEnv);
     ApplyTypeExp(l::Loc,e::AST,ts::[Type]) -> applyTypeExp(l,e,ts,selfType,valueEnv,cnstrEnv,typeEnv);
     ArrayUpdate(l::Loc,a::AST,i::AST,v::AST) -> arrayUpdateType(l,a,i,v,selfType,valueEnv,cnstrEnv,typeEnv);
@@ -529,14 +390,18 @@ expType(e::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type
     Probably(l::Loc,p::AST,t::Type,e1::AST,e2::AST) -> probablyType(l,p,t,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
     Record(l::Loc,fields::[TBind]) -> recordType(l,fields,selfType,valueEnv,cnstrEnv,typeEnv);
     Ref(l::Loc,e::AST,n::Str) -> refType(l,e,n,selfType,valueEnv,cnstrEnv,typeEnv);
+    RefSuper(l::Loc,n::Str) -> refType(l,Var(l,'$super'),n,selfType,valueEnv,cnstrEnv,typeEnv);
     Self(l::Loc) -> selfType;
     Send(l::Loc,target::AST,Term(tl::Loc,n::Str,ts::[Type],args::[AST])) -> sendType(l,target,n,args,selfType,valueEnv,cnstrEnv,typeEnv);
+    SendTimeSuper(l::Loc) -> VoidType(l);
+    SendSuper(l::Loc,e::AST) -> VoidType(l);
     StrExp(l::Loc,s::Str) -> StrType(l);
     Term(l::Loc,n::Str,ts::[Type],es::[AST]) -> termType(l,n,ts,es,selfType,valueEnv,cnstrEnv,typeEnv);
     Throw(l::Loc,t::Type,e::AST) -> throwType(l,t,e,selfType,valueEnv,cnstrEnv,typeEnv);
     Try(l::Loc,e::AST,arms::[Arm]) -> tryType(l,e,arms,selfType,valueEnv,cnstrEnv,typeEnv);
     New(l::Loc,b::AST,args::[AST]) -> newType(l,b,args,selfType,valueEnv,cnstrEnv,typeEnv);
     NewArray(l::Loc,t::Type,i::AST) -> newArrayType(l,t,i,selfType,valueEnv,cnstrEnv,typeEnv);
+    NewTable(l::Loc,key::Type,value::Type) -> TableType(l,substTypeEnv(typeEnv,key),substTypeEnv(typeEnv,value));
     NewJava(l::Loc,path::Str,t::Type,args::[AST]) -> { for a::AST in args do expType(a,selfType,valueEnv,cnstrEnv,typeEnv); substTypeEnv(typeEnv,t); }
     Not(l::Loc,e::AST) -> notType(l,e,selfType,valueEnv,cnstrEnv,typeEnv);
     NullExp(l::Loc) -> ForallType(l,['T'],VarType(l,'T'));
@@ -622,7 +487,7 @@ sendType(l::Loc,target::AST,n::Str,args::[AST],selfType::Type,valueEnv::TEnv,cns
           let ts2::[Type] = expTypes(args,selfType,valueEnv,cnstrEnv,typeEnv);
           in if length[Type](ts1) = length[Type](ts2)
              then 
-               if typesEqual(ts1,ts2)
+               if subTypes(ts2,ts1)
                then {
                 expType(target,selfType,valueEnv,cnstrEnv,typeEnv);
                 VoidType(l);
@@ -633,7 +498,7 @@ sendType(l::Loc,target::AST,n::Str,args::[AST],selfType::Type,valueEnv::TEnv,cns
       }
   }
 
-actType(l::Loc,n::AST,args::[TDec],exports::[Str],bindings::[TBind],init::AST,arms::[Arm],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = 
+actType(l::Loc,n::AST,args::[TDec],parent::AST,exports::[Str],bindings::[TBind],init::AST,arms::[Arm],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = 
 
   // Create a behaviour type based on the exported bindings and the message types in the type body.
   // The values of the bindings, the initialiser and the bodies of the message handlers must be 
@@ -694,16 +559,39 @@ actType(l::Loc,n::AST,args::[TDec],exports::[Str],bindings::[TBind],init::AST,ar
             null[Void];
           }
       }
-  in let localEnv::TEnv = parBind(bindings,selfType,valueEnv,cnstrEnv,typeEnv); in
+  in let parentType::Type = if parent = null[AST] then actType0; else expType(parent,selfType,valueEnv,cnstrEnv,typeEnv);
+         localEnv::TEnv = parBind(bindings,selfType,valueEnv,cnstrEnv,typeEnv); in
      let exportedDecs::[TDec] = decs(exports); in
      let messageTypes::[MType] = getMessageTypes(arms); in
-     let selfType::Type = ActType(l,exportedDecs,messageTypes) ;
-     in {
-      typeCheckValues(valueDefs(bindings),selfType,localEnv + valueEnv,typeEnv,cnstrEnv);
-      expType(init,selfType,localEnv + valueEnv,cnstrEnv,typeEnv);
-      typeCheckArms(arms,selfType,localEnv+valueEnv);
+     let selfType::Type = ExtendedAct(l,parentType,exportedDecs,messageTypes);
+         superEnv::TEnv = [Map('$super',parentType)];
+     in { 
+      typeCheckExports(l,exportedDecs,bindings,selfType,localEnv + valueEnv,typeEnv,cnstrEnv);
+      typeCheckValues(valueDefs(bindings),selfType,superEnv + localEnv + valueEnv,typeEnv,cnstrEnv);
+      expType(init,selfType,superEnv + localEnv + valueEnv,cnstrEnv,typeEnv);
+      typeCheckArms(arms,selfType,superEnv + localEnv + valueEnv);
       selfType;
      }
+
+typeCheckExports(l::Loc,exports::[TDec],defs::[TBind],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void = {
+  
+  // Check that the behaviour definitions meet the exports in the behaviour type.
+  // Inheriting client names start with a $ which must be removed.
+  
+  for e::TDec in exports do {
+    if exists[TBind](fun(b::TBind)::Bool (bindingName(b) = decName(e)) and typeEqual(lookupType(decName(e),valueEnv),decType(e)),defs)
+    then {}
+    else throw[Void] TypeError(l,' cannot find export for ' + decName(e));
+  }
+}
+
+bTypeExports(t::Type)::[TDec] =
+  case t {
+    ExtendedAct(l::Loc,parent::Type,exports::[TDec],message::[MType]) -> bTypeExports(parent) + exports;
+    ActType(l::Loc,exports::[TDec],message::[MType])                  -> exports; 
+    TypeClosure(f::()->Type)                                          -> bTypeExports(f());
+    RecType(l::Loc,n::Str,t::Type)                                    -> bTypeExports(substType(RecType(l,n,t),n,t));
+  }
 
 cmpType(l::Loc,e::AST,qs::[Qualifier],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = 
   case qs {
@@ -814,9 +702,14 @@ refType(l::Loc,e::AST,n::Str,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEn
         FieldType(l::Loc,m::Str,t::Type):fs::[Type] when m=n -> t;
         t::Type:fs::[Type] -> findField(fs);
       }
-  in case t {
+  in case typeNF(t,typeEnv) {
     StrType(sl::Loc) when n = 'explode' -> ListType(sl,IntType(sl));
     StrType(sl::Loc) when n = 'writeDate' -> FloatType(sl);
+    TableType(l::Loc,k::Type,v::Type) when n = 'get' -> FunType(l,[k],v);
+    TableType(l::Loc,k::Type,v::Type) when n = 'put' -> FunType(l,[k,v],t);
+    TableType(l::Loc,k::Type,v::Type) when n = 'keys' -> ListType(l,k);
+    TableType(l::Loc,k::Type,v::Type) when n = 'vals' -> ListType(l,v);
+    TableType(l::Loc,k::Type,v::Type) when n = 'hasKey' -> FunType(l,[k],BoolType(l));
     ListType(ll::Loc,t::Type) when n = 'implode' -> StrType(ll);
     RecordType(rl::Loc,fs::[Type]) -> findField(fs);
     ActType(al::Loc,exports::[TDec],handlers::[MType]) ->
@@ -961,6 +854,11 @@ typeNF(t::Type,typeEnv::TEnv)::Type =
       }
     TypeClosure(f::()->Type) -> typeNF(f(),typeEnv);
     RecType(l::Loc,n::Str,t::Type) -> typeNF(substType(RecType(l,n,t),n,t),typeEnv);
+    ExtendedAct(l1::Loc,parent::Type,decs1::[TDec],ms1::[MType]) ->
+      case typeNF(parent,typeEnv) {
+        ActType(l2::Loc,decs2::[TDec],ms2::[MType]) ->
+          ActType(l1,decs2+decs1,ms2+ms1);
+      }
     t::Type -> t;
   }
 
@@ -1110,7 +1008,7 @@ consExpType(l::Loc,e1::AST,e2::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,
       t2::Type = typeNF(expType(e2,selfType,valueEnv,cnstrEnv,typeEnv),typeEnv);
   in case t2,t1 {
     ListType(l::Loc,elementType::Type),headType::Type ->
-      if typeEqual(headType,elementType)
+      if subType(headType,elementType)
       then t2;
       else throw[Type] TypeError(l,': expects head type ' + ppType(headType,typeEnv) + ' and element type ' + ppType(elementType,typeEnv) + ' to agree');
   }
@@ -1137,12 +1035,12 @@ mulExpType(l::Loc,e1::AST,e2::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,t
 
 subExpType(l::Loc,e1::AST,e2::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = 
   let t1::Type = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
-      t2::Type = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      t2::Type = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv); 
   in case t1,t2 {
     IntType(l1::Loc),IntType(l2::Loc) -> t1;
     FloatType(l1::Loc),FloatType(l2::Loc) -> t1;
     FloatType(l1::Loc),IntType(l2::Loc) -> t1;
-    IntType(l1::Loc),FloatType(l2::Loc) -> t2; 
+    IntType(l1::Loc),FloatType(l2::Loc) -> t2;
     t1::Type,t2::Type -> throw[Type] TypeError(l,'incomptible types for -: ' + ppType(t1,typeEnv) + ' and ' + ppType(t2,typeEnv));
   }
 
@@ -1175,12 +1073,12 @@ expTypes(es::[AST],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::
   map[AST,Type](fun(e::AST)::Type expType(e,selfType,valueEnv,cnstrEnv,typeEnv),es);
 
 applyType(l::Loc,op::AST,args::[AST],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = {
-  case expType(op,selfType,valueEnv,cnstrEnv,typeEnv) {
+  case typeNF(expType(op,selfType,valueEnv,cnstrEnv,typeEnv),typeEnv) {
     FunType(l1::Loc,domain::[Type],range::Type) -> {
       let supplied::[Type] = expTypes(args,selfType,valueEnv,cnstrEnv,typeEnv);
       in if length[Type](domain) = length[Type](supplied)
-         then {
-           if typesEqual(domain,supplied)
+         then { //print[Str](' apply subtypes = ' + subTypes(supplied,domain) + ' for ' + args + ' in ' + op); 
+           if subTypes(supplied,domain) //typesEqual(domain,supplied)
            then range; 
            else throw[Type] TypeError(l,'supplied argument types ' + ppTypes(supplied,typeEnv) + ' do not match function domain ' + ppTypes(domain,typeEnv));
          }
@@ -1216,9 +1114,12 @@ funType(l::Loc,n::AST,args::[TDec],t::Type,e::AST,selfType::Type,valueEnv::TEnv,
        let declaredType::Type = substTypeEnv(typeEnv,t);
        in decTypes(args,valueEnv,typeEnv,fun(domain::[Type],valueEnv::TEnv)::Type {
             let actualRange::Type = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
-            in if typeEqual(declaredType,FunType(l,domain,actualRange))
+            in { 
+              //print[Str]('fun type ' + subType(FunType(l,domain,actualRange),declaredType));
+              if subType(FunType(l,domain,actualRange),declaredType) //typeEqual(declaredType,FunType(l,domain,actualRange))
                then FunType(l,domain,actualRange);
                else throw[Type] TypeError(l,'function declared type ' + ppType(declaredType,typeEnv) + ' but is ' + ppType(FunType(l,domain,actualRange),typeEnv));
+            }
           });
      else throw[Type] TypeError(l,'expecting a string for a function name: ' + n);
 }
@@ -1232,32 +1133,7 @@ decTypes(decs::[TDec],valueEnv::TEnv,typeEnv::TEnv,consumer::([Type],TEnv)->Type
       }
   in processDecs(decs,[][TMap]);
 
-isStrType(t::Type)::Bool =
-  case t {
-    StrType(l::Loc) -> true;
-    t::Type -> false;
-  }
-
-isIntType(t::Type)::Bool =
-  case t {
-    IntType(l::Loc) -> true;
-    t::Type -> false;
-  }
-
-isNumType(t::Type)::Bool =
-  case t {
-    IntType(l::Loc) -> true;
-    FloatType(l::Loc) -> true;
-    t::Type -> false;
-  }
-
-isBoolType(t::Type)::Bool =
-  case t {
-    BoolType(l::Loc) -> true;
-    t::Type -> false;
-  }
-
-termType(l::Loc,n::Str,ts::[Type],es::[AST],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = { 
+termType(l::Loc,n::Str,ts::[Type],es::[AST],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = {
   let t0::Type = lookupType(n,cnstrEnv);
   in if t0 = null[Type]
      then throw[Type] TypeError(l,'cannot find cnstr ' + n);
@@ -1355,117 +1231,7 @@ listType(l::Loc,es::[AST],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::
     let ts::[Type] = map[AST,Type](fun(e::AST)::Type expType(e,selfType,valueEnv,cnstrEnv,typeEnv),es);
     in if allEqualTypes(head[Type](ts),tail[Type](ts))
        then ListType(l,head[Type](ts));
-       else throw[Type] TypeError(l,'lists should have elements of the same type: ' + es);
-
-allEqualTypes(t1::Type,ts::[Type])::Bool =
-  case ts {
-    [][Type] -> true;
-    t2::Type:ts::[Type] when typeEqual(t1,t2) -> allEqualTypes(t1,ts);
-    ts::[Type] -> false;
-  }
-    
-substDec(newType::Type,n::Str,d::TDec)::TDec =
-  case d {
-    Dec(l::Loc,name::Str,t::Type,st::Type) -> Dec(l,name,substType(newType,n,t),st);
-  }
-  
-substDecEnv(env::TEnv,d::TDec)::TDec =
-  case d {
-    Dec(l::Loc,name::Str,t::Type,st::Type) -> Dec(l,name,substTypeEnv(env,t),st);
-  }
-    
-substMType(newType::Type,n::Str,m::MType)::MType = 
-  case m {
-    MessageType(l::Loc,ts::[Type]) -> MessageType(l,[ substType(newType,n,t) | t::Type <- ts]);
-  }
-    
-substMTypeEnv(env::TEnv,m::MType)::MType = 
-  case m {
-    MessageType(l::Loc,ts::[Type]) -> MessageType(l,[ substTypeEnv(env,t) | t::Type <- ts]);
-  }
-  
-substTypes(newType::Type,n::Str,oldTypes::[Type])::[Type] = {
-  //print[Str]('substTypes ' + ppType(newType) + ' ' + n + ' ' + ppTypes(oldTypes));
-  case oldTypes {
-    [][Type] -> [][Type];
-    t::Type:ts::[Type] -> substType(newType,n,t):substTypes(newType,n,ts);
-  }}
-    
-substType(newType::Type,n::Str,oldType::Type)::Type = { 
-  //print[Str]('subst type: ' + ppType(newType) + ' ' + n + ' ' + ppType(oldType));
-  case oldType {
-    ApplyType(l::Loc,m::Str,types::[Type]) -> 
-      if m = n
-      then ApplyTypeFun(l,newType,substTypes(newType,n,types));
-      else ApplyType(l,m,substTypes(newType,n,types));
-    ApplyTypeFun(l::Loc,op::Type,args::[Type]) -> ApplyTypeFun(l,substType(newType,n,op),substTypes(newType,n,args));
-    ActType(l::Loc,decs::[TDec],handlers::[MType]) -> 
-      ActType(l,[substDec(newType,n,d) | d::TDec <- decs],[ substMType(newType,n,m) | m::MType <- handlers]);
-    ArrayType(l::Loc,t::Type) -> ArrayType(l,substType(newType,n,t));
-    BoolType(l::Loc) -> oldType;
-    FloatType(l::Loc) -> oldType;
-    ForallType(l::Loc,ns::[Str],t::Type) ->  if member[Str](n,ns) then oldType; else ForallType(l,ns,substType(newType,n,t));
-    FunType(l::Loc,d::[Type],r::Type) -> FunType(l,substTypes(newType,n,d),substType(newType,n,r));
-    IntType(l::Loc) -> oldType;
-    ListType(l::Loc,t::Type) -> ListType(l,substType(newType,n,t));
-    NullType(l::Loc) -> oldType;
-    RecordType(l::Loc,fs::[Type]) -> RecordType(l,substTypes(newType,n,fs));
-    RecType(l::Loc,a::Str,t::Type) ->  if n = a then oldType; else RecType(l,a,substType(newType,n,t));
-    StrType(l::Loc) -> oldType;
-    TermType(l::Loc,f::Str,ts::[Type]) -> TermType(l,f,substTypes(newType,n,ts));
-    TypeClosure(f::()->Type) -> oldType; // Type closures should not have free variables.
-    TypeFun(l::Loc,ns::[Str],t::Type) -> if member[Str](n,ns) then oldType; else TypeFun(l,ns,substType(newType,n,t));
-    UnfoldType(l::Loc,t::Type) -> UnfoldType(l,substType(newType,n,t));
-    UnionType(l::Loc,ts::[Type]) -> UnionType(l,substTypes(newType,n,ts));
-    VarType(l::Loc,name::Str) -> if name = n then newType; else oldType;
-    VoidType(l::Loc) -> oldType;
-    UnionRef(l::Loc,t::Type,name::Str) -> UnionRef(l,substType(newType,n,t),name); 
-    x::Type -> throw[Type]x;
-  }
-}
- 
-substTypesEnv(env::TEnv,types::[Type])::[Type] =
-  case types {
-    [][Type] -> [][Type];
-    t::Type:ts::[Type] -> substTypeEnv(env,t):substTypesEnv(env,ts);
-  }
-    
-substTypeEnv(env::TEnv,oldType::Type)::Type = { //print[Str]('subst type env: ' + oldType);
-  case oldType {
-    ApplyType(l::Loc,n::Str,types::[Type]) -> 
-      let op::Type = lookupType(n,env);
-      in if op = null[Type]
-         then ApplyType(l,n,substTypesEnv(env,types));
-         else ApplyTypeFun(l,op,substTypesEnv(env,types));
-    ApplyTypeFun(l::Loc,op::Type,args::[Type]) -> ApplyTypeFun(l,substTypeEnv(env,op),substTypesEnv(env,args));
-    ActType(l::Loc,decs::[TDec],handlers::[MType]) -> 
-      ActType(l,[substDecEnv(env,d) | d::TDec <- decs],[ substMTypeEnv(env,m) | m::MType <- handlers]);
-    ArrayType(l::Loc,t::Type) -> ArrayType(l,substTypeEnv(env,t)); 
-    BoolType(l::Loc) -> oldType;
-    FloatType(l::Loc) -> oldType;
-    ForallType(l::Loc,ns::[Str],t::Type) -> ForallType(l,ns,substTypeEnv(removeFromDom(env,ns),t));
-    FieldType(l::Loc,n::Str,t::Type) -> FieldType(l,n,substTypeEnv(env,t));
-    FunType(l::Loc,d::[Type],r::Type) -> FunType(l,[substTypeEnv(env,t) | t::Type <- d],substTypeEnv(env,r));
-    TaggedFunType(l::Loc,d::[Type],p::Str,r::Type) -> FunType(l,[substTypeEnv(env,t) | t::Type <- d],substTypeEnv(env,r));
-    IntType(l::Loc) -> oldType;
-    ListType(l::Loc,t::Type) -> ListType(l,substTypeEnv(env,t));
-    SetType(l::Loc,t::Type) -> SetType(l,substTypeEnv(env,t));
-    BagType(l::Loc,t::Type) -> BagType(l,substTypeEnv(env,t)); 
-    NullType(l::Loc) -> oldType;
-    RecType(l::Loc,a::Str,t::Type) ->  RecType(l,a,substTypeEnv(removeFromDom(env,[a]),t));
-    RecordType(l::Loc,fs::[Type]) -> RecordType(l,substTypesEnv(env,fs));
-    StrType(l::Loc) -> oldType;
-    TermType(l::Loc,f::Str,ts::[Type]) -> TermType(l,f,[substTypeEnv(env,t) | t::Type <- ts]);
-    TypeClosure(f::()->Type) -> oldType; //TypeClosure(fun['substTypeEnv_closure']()::Type substTypeEnv(env,f()));
-    TypeFun(l::Loc,ns::[Str],t::Type) -> TypeFun(l,ns,substTypeEnv(removeFromDom(env,ns),t));
-    UnfoldType(l::Loc,t::Type) -> UnfoldType(l,substTypeEnv(env,t));
-    UnionType(l::Loc,ts::[Type]) -> UnionType(l,[substTypeEnv(env,t) | t::Type <- ts]);
-    VarType(l::Loc,name::Str) -> if member[Str](name,typeEnvDom(env)) then lookupType(name,env); else oldType;
-    VoidType(l::Loc) -> oldType;
-    UnionRef(l::Loc,t::Type,name::Str) -> UnionRef(l,substTypeEnv(env,t),name); 
-    x::Type -> throw[Type]oldType;
-  }
-}
+       else throw[Type] TypeError(l,'lists should have elements of the same type: ' + es); 
     
 recTypes(env::TEnv)::TEnv =
   letrec
@@ -1475,7 +1241,6 @@ recTypes(env::TEnv)::TEnv =
       in let fenv::TEnv = [ Map(n,TypeClosure(fun['lookup: ' + n]()::Type lookupType(n,e))) | t::Type <- typeEnvRan(env), n::Str <- typeFV(t) ];
          in let env1::TEnv = substOnce(env,fenv);
             in { e := env1; env1; }
-    
    
     introduceRecTypes(env::TEnv)::TEnv = {
       case env {
@@ -1486,13 +1251,6 @@ recTypes(env::TEnv)::TEnv =
           else Map(n,t):introduceRecTypes(e);
       }
     }
-    substOnceOld(env::TEnv,getType::(Str)->Type)::TEnv = 
-      let
-        map1(m::TMap)::TMap =
-          case m {
-            Map(n::Str,t::Type) -> Map(n,substTypeEnv([ Map(n,getType(n)) | n::Str <- typeFV(t) ],t));
-          }
-      in map[TMap,TMap](map1,env);
       
     substOnce(env::TEnv,fenv::TEnv)::TEnv = 
       let 
@@ -1552,6 +1310,7 @@ typeFV1(t::Type,fv::[Type])::[Type] = { //print[Str]('FV ' + t);
   case t {
     ArrayType(l::Loc,t::Type) -> typeFV1(t,fv);
     ActType(l::Loc,decs::[TDec],handlers::[MType]) -> tdecsFV1(decs,handlersFV1(handlers,fv));
+    ExtendedAct(l::Loc,parent::Type,decs::[TDec],handlers::[MType]) -> tdecsFV1(decs,handlersFV1(handlers,typeFV1(parent,fv)));
     ApplyType(l::Loc,n::Str,types::[Type]) -> typesFV1(types,VarType(l,n):fv);
     ApplyTypeFun(l::Loc,op::Type,args::[Type]) -> typesFV1(args,typeFV1(op,fv));
     BoolType(l::Loc) -> fv;
@@ -1567,6 +1326,7 @@ typeFV1(t::Type,fv::[Type])::[Type] = { //print[Str]('FV ' + t);
     RecordType(l::Loc,fs::[Type]) -> typesFV1(fs,fv); 
     RecType(l::Loc,a::Str,t::Type) -> filter[Type](fun(t::Type)::Bool case t { VarType(l::Loc,n::Str) -> not(n = a); },typeFV1(t,[][Type])) + fv;
     StrType(l::Loc) -> fv;
+    TableType(l::Loc,k::Type,v::Type) -> typeFV1(k,typeFV1(v,fv));
     TypeClosure(f::()->Type) -> [][Type];
     TermType(l::Loc,n::Str,ts::[Type]) -> typesFV1(ts,fv);
     TypeFun(l::Loc,ns::[Str],t::Type) -> filter[Type](fun(t::Type)::Bool case t { VarType(l::Loc,n::Str) -> not(member[Str](n,ns)); },typeFV1(t,[][Type])) + fv;
@@ -1583,10 +1343,6 @@ act main::Main {
   -> {
    try {
     typeCheckModule('esl/compiler/test1.esl'); 
-    //typeCheckModule(parse[AST]('new_esl/tmp/lists.esl'),fun(valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void null[Void]);
-    //typeCheckModule(parse[AST]('new_esl/tmp/test5.esl'),fun(valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void null[Void]);
-    //typeCheckModule(parse[AST]('new_esl/tmp/collisions.esl'),fun(valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void null[Void]);
-    //typeCheckModule(parse[AST]('new_esl/tmp/test6.esl'),fun(valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void null[Void]);
    }
    catch {
       message::Str ->  print[Str]('Type Error: ' + message); 

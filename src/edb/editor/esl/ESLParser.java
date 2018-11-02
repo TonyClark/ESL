@@ -144,6 +144,7 @@ public class ESLParser extends EDBParser {
 			if (module != null) {
 				module.setPath(file.getAbsolutePath());
 				module.setDefs();
+				module.resolve();
 			}
 		} catch (TokenMgrError e) {
 			setHasErrors(true);
@@ -169,6 +170,8 @@ public class ESLParser extends EDBParser {
 			int length = end - start;
 			e.printStackTrace();
 			parseResult.add(this, new Exception(e), getLine(text, start), start, e.getMessage(), length);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -256,6 +259,12 @@ public class ESLParser extends EDBParser {
 				default:
 					parseResult.add(this, new Exception(e), 0, 0, value.toString(), 10);
 				}
+			} catch (TypeError e) {
+				setHasErrors(true);
+				int start = e.getLineStart();
+				int end = e.getLineEnd();
+				int length = end - start;
+				parseResult.add(this, new Exception(e), getLine(text, start), start, e.getMessage(), length);
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {

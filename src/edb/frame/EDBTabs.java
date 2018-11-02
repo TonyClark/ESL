@@ -353,4 +353,12 @@ public class EDBTabs extends JTabbedPane {
 		}
 	}
 
+	public void write(int b) {
+		Component c = this.getSelectedComponent();
+		if(c instanceof Writable) {
+			Writable writable = (Writable)c;
+			writable.write(b);
+		} else System.err.write(b);
+	}
+
 }

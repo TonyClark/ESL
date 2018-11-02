@@ -152,7 +152,7 @@ public class Lib {
 																													switch (l.state) {
 																													case CONS:
 																														if (pred.apply(l.headVal).boolVal)
-																															return reject.apply(args[0],l.tailVal);
+																															return reject.apply(args[0], l.tailVal);
 																														else
 																															return new ESLVal(l.headVal, reject.apply(args[0], l.tailVal));
 																													case NIL:
@@ -231,6 +231,23 @@ public class Lib {
 																												}
 																											});
 
+	public static ESLVal										subst				= new ESLVal(new Function(new ESLVal("subst"), null) {
+
+																												public ESLVal apply(ESLVal... args) {
+																													ESLVal new_ = args[0];
+																													ESLVal old = args[1];
+																													ESLVal list = args[2];
+																													if (list.isNil()) {
+																														return list;
+																													} else {
+																														if (list.headVal.equals(old))
+																															return new ESLVal(new_, subst.apply(new_, old, list.tailVal));
+																														else
+																															return new ESLVal(list.headVal, subst.apply(new_, old, list.tailVal));
+																													}
+																												}
+																											});
+
 	public static ESLVal										takeWhile		= new ESLVal(new Function(new ESLVal("takeWhile"), null) {
 
 																												public ESLVal apply(ESLVal... args) {
@@ -285,6 +302,13 @@ public class Lib {
 																													default:
 																														throw new Error("unknown type for round: " + args[0]);
 																													}
+																												}
+																											});
+
+	public static ESLVal										isqrt				= new ESLVal(new Function(new ESLVal("isqrt"), null) {
+
+																												public ESLVal apply(ESLVal... args) {
+																													return new ESLVal(Math.sqrt(args[0].intVal));
 																												}
 																											});
 
@@ -551,12 +575,8 @@ public class Lib {
 		// release the lock and try again.
 		T value = null;
 		lock(objects);
-		// System.err.println("Locked " + Thread.currentThread() + " " +
-		// Arrays.toString(getLocks(objects)));
 		value = (T) action.apply();
 		unlock(objects);
-		// System.err.println("Unlocked " + Thread.currentThread() + " " +
-		// Arrays.toString(getLocks(objects)));
 		return value;
 	}
 
@@ -590,6 +610,10 @@ public class Lib {
 		actor.actor.setBehaviour(b);
 		actor.actor.start();
 		return actor;
+	}
+
+	public static ESLVal newTable() {
+		return new ESLVal(new Hashtable<ESLVal, ESLVal>());
 	}
 
 	public static ESLVal newArray(int length) {
@@ -680,6 +704,13 @@ public class Lib {
 			throw new Error("cannot send " + message + " to " + actor);
 		}
 		return actor;
+	}
+	
+	public static ESLVal getParent(ESLVal self,ESLVal parentFun,ESLVal...args) {
+		// The parent of a behaviour must set the self in the creation function
+		// before the behaviour function is applied to the arguments...
+		parentFun.funVal.setSelf(self);
+		return parentFun.funVal.apply(args);
 	}
 
 	private static void startTimer() {

@@ -15,7 +15,7 @@ indentStr(indent::Int)::Str =
   then '';
   else ' ' + indentStr(indent-1);
 
-nl(indent::Int)::Str = '\n' + indentStr(indent);
+nl(indent::Int)::Str = '\n' + indentStr(indent); 
 
 ppJoin(indent::Int,ss::[Str])::Str =
   case ss {
@@ -53,6 +53,7 @@ ppType(t::Type)::Str =
     RecType(l::Loc,n::Str,t::Type) -> 'rec ' + n + '.' + ppType(t);
     RecordType(l::Loc,fs::[Type])  -> '{' + ppTypes(fs) + '}';
     StrType(l::Loc) -> 'Str';
+    TableType(l::Loc,k::Type,v::Type) -> 'Hash[' + ppType(k) + ',' + ppType(v) + ']';
     TermType(l::Loc,n::Str,ts::[Type]) -> n + map[Type,Str](ppType,ts);
     TypeFun(l::Loc,ns::[Str],t::Type) -> 'Fun' + ns + '.' + ppType(t);
     UnfoldType(l::Loc,t::Type) -> 'unfold ' + ppType(t);
@@ -141,7 +142,7 @@ ppExp(indent::Int,exp::AST)::Str = {
          nl(indent+2) + ppJoin(indent+2,map[CaseBoolsArm,Str](fun(a::CaseBoolsArm)::Str ppCaseBoolsArm(indent+2,a),arms)) + nl(indent+2) +
          'else ' + ppExp(indent+4,alt) + nl(indent) +  
        '}';
-    CaseError(l::Loc) -> 'caseError()';
+    CaseError(l::Loc,e::AST) -> 'caseError()';
     Head(e::AST) -> 'head(' + ppExp(indent,e) + ')';
     Tail(e::AST) -> 'tail(' + ppExp(indent,e) + ')';
     Cons(h::AST,t::AST) -> 'cons(' + ppExp(indent,h) + ',' + ppExp(indent,t) + ')';
@@ -169,7 +170,7 @@ ppExp(indent::Int,exp::AST)::Str = {
     TermRef(e::AST,n::Int) -> 
       'termRef(' + ppExp(indent,e) + ',' + n + ')';
     BinExp(l::Loc,e1::AST,op::Str,e2::AST) -> {
-      ppExp(indent,e1) + op + ppExp(indent,e2);
+      ppExp(indent,e1) + op + ppExp(indent,e2); 
     }
     Update(l::Loc,n::Str,e::AST) -> n + ' := ' + ppExp(indent,e);
     NewArray(l::Loc,t::Type,n::AST) -> 'new Array[' + ppType(t) + '](' + ppExp(indent,n) + ')';
@@ -180,7 +181,7 @@ ppExp(indent::Int,exp::AST)::Str = {
          nl(indent+2) + ppJoin(indent+2,map[Arm,Str](fun(a::Arm)::Str ppArm(indent,a),as)) + nl(indent) + 
        '}';
     }
-    ActExp(l::Loc,n::AST,args::[TDec],x::[Str],spec::Str,locals::[TBind],init::AST,handlers::[Arm]) -> {
+    ActExp(l::Loc,n::AST,args::[TDec],x::[Str],parent::AST,locals::[TBind],init::AST,handlers::[Arm]) -> { 
       'act ' + ppExp(indent,n) + '(' + ppDecs(indent,args) + ') {' + nl(indent+2) + ppBinds(indent+5,locals) + nl(indent+2) +
         '-> ' + ppExp(indent+4,init) + nl(indent+2) +
         ppJoin(indent+2,map[Arm,Str](fun(a::Arm)::Str ppArm(indent,a),handlers)) + nl(indent) + 
@@ -383,8 +384,7 @@ ppJExp(indent::Int,dynamics::[Str],e::JExp)::Str = { //print[Str]('ppJExp ' + e)
     JFlatten(ls::JExp) -> ppJExp(indent,dynamics,ls) + '.flatten()';
     JBehaviour(es::[Str],fs::[JFieldDef],init::JExp,JFun(n::JExp,args::[JDeclaration],t::JType,body::JCommand),time::JCommand) ->
       'new ESLVal(new BehaviourAdapter(' + (if time = JBlock([]) then 'false' else 'true') + ',getSelf(),' + ppJExp(indent,dynamics,n) + ') {' + nl(indent+2) +
-        //'ESLVal self = getSelf();' + nl(indent+2) + 
-        ppJFields(indent+2,dynamics,fs) + nl(indent+2) + //'{ handler = ' + ppJExp(indent+2,dynamics,handler) + '; }' + nl(indent+2) +
+        ppJFields(indent+2,dynamics,fs) + nl(indent+2) + 
         'public ESLVal handle(ESLVal $m) {' + ppJCommand(indent+2,dynamics,body) + '}' + nl(indent+2) +
         'public ESLVal get(String name) {' + nl(indent+4) +
            'switch(name) {' + nl(indent+6) +
@@ -399,15 +399,38 @@ ppJExp(indent::Int,dynamics::[Str],e::JExp)::Str = { //print[Str]('ppJExp ' + e)
           'return ' + ppJExp(indent+6,dynamics,init) + ';' + nl(indent+2) +
         '}' + nl(indent) +
       '})';
+    JExtendedBehaviour(es::[Str],parent::JExp,fs::[JFieldDef],init::JExp,JFun(n::JExp,args::[JDeclaration],t::JType,body::JCommand),time::JCommand) ->
+      'new ESLVal(new BehaviourAdapter(' + ppBehaviourParent(indent,dynamics,parent) + ',' + (if time = JBlock([]) then 'false' else 'true') + ',getSelf(),' + ppJExp(indent,dynamics,n) + ') {' + nl(indent+2) +
+        ppJFields(indent+2,dynamics,fs) + nl(indent+2) + 
+        'public ESLVal handle(ESLVal $m) {' + 
+          ppJCommand(indent+2,dynamics,body) + 
+        '}' + nl(indent+2) +
+        'public ESLVal get(String name) {' + nl(indent+4) +
+           'switch(name) {' + nl(indent+6) +
+             ppJoin(indent+6,[ 'case "' + n + '": return ' + n + ';' | n::Str <- es ]) + nl(indent+6) +
+             'default: return refSuper(name);' + nl(indent + 4) + 
+           '}' + nl(indent+2) +
+        '}' + nl(indent) +
+        'public void handleTime(ESLVal $t) {' + nl(indent + 2) +
+           ppJCommand(indent+2,dynamics,time) + nl(indent) +
+        '}' + nl(indent) + 
+        'public ESLVal init() {' + nl(indent+4) + 
+          'return ' + ppJExp(indent+6,dynamics,init) + ';' + nl(indent+2) +
+        '}' + nl(indent) +
+      '})';
     JNew(b::JExp,[][JExp]) ->  'newActor(' + ppJExp(indent,dynamics,b) + ',new ESLVal(new Actor()))';
     JNew(b::JExp,args::[JExp]) ->  'newActor(' + ppJExp(indent,dynamics,b) + ',new ESLVal(new Actor()),' +  ppJExps(indent,dynamics,args,',') + ')';
     JNewArray(i::JExp) -> 'newArray(' + ppJExp(indent,dynamics,i) + '.intVal)';
+    JNewTable -> 'newTable()';
     JNewJava(n::Str,[][JExp]) ->  'newJavaActor("' + n + '")';
     JNewJava(n::Str,args::[JExp]) ->  'newJavaActor("' + n + '",' + ppJExps(indent,dynamics,args,',') + ')'; 
     JSend(e::JExp,m::Str,[][JExp]) -> 'Lib.send(' + ppJExp(indent,dynamics,e) + ',"' + m + '")';
     JSend(e::JExp,m::Str,args::[JExp]) -> 'Lib.send(' + ppJExp(indent,dynamics,e) + ',"' + m + '",' + ppJExps(indent,dynamics,args,',') + ')';
+    JSendSuper(e::JExp) -> 'sendSuper(' + ppJExp(indent,dynamics,e) + ')';
+    JSendTimeSuper -> 'sendTimeSuper($t)';
     JSelf -> 'getSelf()';
     JRef(e::JExp,n::Str) -> ppJExp(indent,dynamics,e) + '.ref("' + n + '")';
+    JRefSuper(n::Str) -> 'refSuper("' + n + '")';
     JGrab(es::[JExp],c::JExp) -> 'lock(new Function(new ESLVal("grab"),getSelf()) {' + nl(indent+2) +
       'public ESLVal apply(ESLVal ...args) { ' + nl(indent+4) +
         'return ' + ppJExp(indent,dynamics,c) + ';' + nl(indent+2) +
@@ -427,6 +450,12 @@ ppJExp(indent::Int,dynamics::[Str],e::JExp)::Str = { //print[Str]('ppJExp ' + e)
   }
 }
 
+ppBehaviourParent(indent::Int,dynamics::[Str],e::JExp)::Str =
+  case e {
+    JApply(op::JExp,args::[JExp]) -> 'getParent(getSelf(),' + ppJExp(indent,dynamics,op) + ',' + ppJExps(indent,dynamics,args,',') + ')';
+    e -> ppJExp(indent,dynamics,e);
+  }
+
 probFun(e::JExp)::JExp = JFun(JConstExp(JConstStr('probFun')),[],null[JType],JReturn(e));
 
 ppJFun(indent::Int,dynamics::[Str],n::JExp,args::[JDeclaration],t::JType,body::JCommand)::Str = {
@@ -435,12 +464,14 @@ ppJFun(indent::Int,dynamics::[Str],n::JExp,args::[JDeclaration],t::JType,body::J
   let boundDynamics::[Str] = [ d | d::Str <- argNames, ?(member[Str](d,freeDynamics)) ]; in
   let dom::[JType] = [ t | JDec(n::Str,t::JType) <- args ];
       ran::JType = t; 
-  in  'new ESLVal(new Function(' + ppJExp(indent,dynamics,n) + ',getSelf()) {' + nl(indent+2) +
+  in  {
+    'new ESLVal(new Function(' + ppJExp(indent,dynamics,n) + ',getSelf()) {' + nl(indent+2) +
         'public ESLVal apply(ESLVal... $args) {' + nl(indent+4) + 
            ppFunArgs(indent,0,args,boundDynamics) + 
            ppJCommand(indent+4,boundDynamics + [ d | d::Str <- dynamics, ?(not(member[Str](d,argNames))) ],body) + nl(indent+2) + 
          '}' + nl(indent) +
       '})';
+  }
 }
 
 ppFunArgs(indent::Int,i::Int,args::[JDeclaration],dynamicArgs::[Str])::Str =

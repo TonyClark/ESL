@@ -21,6 +21,7 @@ public class ESLTokens extends org.fife.ui.rsyntaxtextarea.modes.JavaTokenMaker 
 		tokenMap.put("if", Token.RESERVED_WORD);
 		tokenMap.put("then", Token.RESERVED_WORD);
 		tokenMap.put("else", Token.RESERVED_WORD);
+		tokenMap.put("extends", Token.RESERVED_WORD);
 		tokenMap.put("grab", Token.RESERVED_WORD);
 		tokenMap.put("act", Token.RESERVED_WORD);
 		tokenMap.put("import", Token.RESERVED_WORD);
@@ -33,6 +34,7 @@ public class ESLTokens extends org.fife.ui.rsyntaxtextarea.modes.JavaTokenMaker 
 		tokenMap.put("new", Token.RESERVED_WORD);
 		tokenMap.put("become", Token.RESERVED_WORD);
 		tokenMap.put("self", Token.RESERVED_WORD);
+		tokenMap.put("super", Token.RESERVED_WORD);
 		tokenMap.put("probably", Token.RESERVED_WORD);
 		tokenMap.put("now", Token.RESERVED_WORD);
 		tokenMap.put("null", Token.RESERVED_WORD);

@@ -9,16 +9,23 @@ public abstract class BehaviourAdapter implements Behaviour {
 	}
 
 	private ArrayDeque<ESLVal>	queue				= new ArrayDeque<ESLVal>();
+	private ESLVal							parent			= null;
 	private boolean							active			= true;
 	private boolean							busy				= false;
 	private boolean							handlesTime	= true;
 	private ESLVal							name				= null;
 	public ESLVal								self				= null;
 
-	public BehaviourAdapter(boolean handlesTime, ESLVal self, ESLVal name) {
+	public BehaviourAdapter(ESLVal parent, boolean handlesTime, ESLVal self, ESLVal name) {
+		this.parent = parent;
 		this.handlesTime = handlesTime;
 		this.self = self;
 		this.name = name;
+		parent.behaviour.setSelf(self);
+	}
+
+	public BehaviourAdapter(boolean handlesTime, ESLVal self, ESLVal name) {
+		this(DummyBehaviour.DUMMY, handlesTime, self, name);
 	}
 
 	public abstract ESLVal get(String name);
@@ -60,6 +67,14 @@ public abstract class BehaviourAdapter implements Behaviour {
 	public ESLVal getSelf() {
 		return self;
 	}
+	
+	public boolean hasParent() {
+		return (parent != DummyBehaviour.DUMMY);
+	}
+	
+	public ESLVal getParent() {
+		return parent;
+	}
 
 	public abstract ESLVal init();
 
@@ -69,6 +84,24 @@ public abstract class BehaviourAdapter implements Behaviour {
 
 	public void processTime(Actor self, int time) {
 		handleTime(new ESLVal(Lib.getTime()));
+	}
+	
+	public void sendTimeSuper(ESLVal time) {
+		if(parent != null) {
+			parent.behaviour.handleTime(time);
+		}
+	}
+	
+	public void sendSuper(ESLVal message) {
+		if(parent != null) {
+			parent.behaviour.handle(message);
+		}
+	}
+	
+	public ESLVal refSuper(String name) {
+		if(parent != null) {
+			return parent.behaviour.get(name);
+		} else throw new Error("super." + name + " is not defined");
 	}
 
 	public Actor send(Actor self, ESLVal message) {
@@ -95,6 +128,9 @@ public abstract class BehaviourAdapter implements Behaviour {
 
 	public void setSelf(ESLVal actor) {
 		this.self = actor;
+		if(parent != null) {
+			parent.behaviour.setSelf(actor);
+		}
 	}
 
 	public Actor start(Actor self) {

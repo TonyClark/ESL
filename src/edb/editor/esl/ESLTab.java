@@ -22,6 +22,7 @@ import edb.editor.basic.MenuProvider;
 import edb.files.DynamicClassLoader;
 import edb.frame.EDBFrame;
 import edb.frame.EDBMenuProvider;
+import edb.frame.Writable;
 import esl.lib.ESLVal;
 import esl.lib.Lib;
 

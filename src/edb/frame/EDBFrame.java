@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Vector;
@@ -63,6 +64,7 @@ public class EDBFrame extends JFrame implements EDBMenuProvider, AlienActor, Jav
 	private static final Key		DISPLAY						= Key.getKey("display");
 	private static final Key		SHOW							= Key.getKey("Show");
 	private static ESLVal				math							= getMath();
+	private static PrintStream	stdout						= System.out;
 	private static Builtin			message						= new Builtin("message", (actor, n) -> {
 																									printMessage(actor.peek().toString());
 																								});
@@ -158,6 +160,7 @@ public class EDBFrame extends JFrame implements EDBMenuProvider, AlienActor, Jav
 		fileChooser.setCurrentDirectory(new File(eslDir));
 		addWindowListener(this);
 		readState();
+		//System.setOut(new PrintStream(new EDBOutputStream(this)));
 	}
 
 	public void addButton(String label, JButton button) {
@@ -602,6 +605,10 @@ public class EDBFrame extends JFrame implements EDBMenuProvider, AlienActor, Jav
 	}
 
 	public void windowOpened(WindowEvent e) {
+	}
+
+	public void write(int b) {
+		tabs.write(b);
 	}
 
 }

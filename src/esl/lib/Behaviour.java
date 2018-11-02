@@ -27,5 +27,9 @@ public interface Behaviour {
 	public ArrayDeque<ESLVal> getQueue();
 
 	public void setQueue(ArrayDeque<ESLVal> queue);
+	
+	public ESLVal getParent();
+	
+	public boolean hasParent();
 
 }

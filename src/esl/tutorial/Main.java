@@ -9,7 +9,10 @@ public class Main {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {return error(new ESLVal("case error at Pos(0,0)"));}
+          public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
+            
+            return error(new ESLVal("case error at Pos(0,0)"));
+          }}
           public ESLVal get(String name) {
             switch(name) {
               
@@ -22,10 +25,10 @@ public class Main {
             if(n.gre(new ESLVal(1000)).boolVal)
             stopAll.apply();
             else
-              {ESLVal _v1 = $t;
+              {ESLVal _v2 = $t;
                 
                 if($true.boolVal)
-                {print.apply(new ESLVal("time = ").add(_v1));
+                {print.apply(new ESLVal("time = ").add(_v2));
                 wait.apply($one);}
                 else
                   {}
