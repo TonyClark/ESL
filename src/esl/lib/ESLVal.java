@@ -6,23 +6,40 @@ import java.util.Hashtable;
 
 import list.List;
 import runtime.data.Key;
-import runtime.data.Record;
 import runtime.data.Term;
+
+import static esl.lib.Lib.*;
 
 public class ESLVal {
 
 	private static ESLVal eqls(ESLVal[] vs1, ESLVal[] vs2) {
 		if (vs1.length == vs2.length) {
 			for (int i = 0; i < vs1.length; i++) {
-				if (!vs1[i].eql(vs2[i]).boolVal) return Lib.$false;
+				if (!vs1[i].eql(vs2[i]).boolVal) return $false;
 			}
-			return Lib.$true;
+			return $true;
 		} else
-			return Lib.$false;
+			return $false;
 	}
 
 	public static ESLVal list(ESLVal... values) {
-		ESLVal l = Lib.$nil;
+		ESLVal l = $nil;
+		for (int i = values.length - 1; i >= 0; i--) {
+			l = new ESLVal(values[i], l);
+		}
+		return l;
+	}
+
+	public static ESLVal set(ESLVal... values) {
+		ESLVal l = $emptyset;
+		for (int i = values.length - 1; i >= 0; i--) {
+			l = new ESLVal(values[i], l);
+		}
+		return l;
+	}
+
+	public static ESLVal bag(ESLVal... values) {
+		ESLVal l = $emptybag;
 		for (int i = values.length - 1; i >= 0; i--) {
 			l = new ESLVal(values[i], l);
 		}
@@ -37,6 +54,16 @@ public class ESLVal {
 			if (!(l.isNil())) s = s + ",";
 		}
 		return s + "]";
+	}
+
+	public static String setToString(ESLVal l) {
+		String s = "set{";
+		while (!(l.isEmptySet())) {
+			s = s + l.head();
+			l = l.tail();
+			if (!(l.isEmptySet())) s = s + ",";
+		}
+		return s + "}";
 	}
 
 	public ValState										state			= ValState.UNKNOWN;
@@ -92,7 +119,13 @@ public class ESLVal {
 	public ESLVal(ESLVal head, ESLVal tail) {
 		headVal = head;
 		tailVal = tail;
-		state = ValState.CONS;
+		if (tail.isNil() || tail.isCons())
+			state = ValState.CONS;
+		else if (tail.isEmptySet() || tail.isSetCons()) {
+			state = ValState.SETCONS;
+			if (tailVal.member(headVal).boolVal) tailVal = tailVal.remove(headVal);
+		} else
+			throw new Error("unknown type for cons: " + tail);
 	}
 
 	public ESLVal(Function f) {
@@ -134,14 +167,16 @@ public class ESLVal {
 			return new ESLVal(intVal + v.doubleVal);
 		else if (state == ValState.STR || v.state == ValState.STR)
 			return new ESLVal(toString() + v.toString());
-		else if (Lib.isList(state) && Lib.isList(v.state)) {
+		else if (isList(state) && isList(v.state)) {
+			return append(v);
+		} else if (isSet(state) && isSet(v.state)) {
 			return append(v);
 		} else
 			throw new Error("unknown args for +: " + this + " " + v);
 	}
 
 	public ESLVal and(ESLVal n) {
-		return boolVal && n.boolVal ? Lib.$true : Lib.$false;
+		return boolVal && n.boolVal ? $true : $false;
 	}
 
 	public ESLVal andalso(ESLVal n) {
@@ -151,9 +186,12 @@ public class ESLVal {
 	public ESLVal append(ESLVal l) {
 		switch (state) {
 		case NIL:
+		case EMPTYSET:
 			return l;
 		case CONS:
-			return tailVal.append(l).cons(headVal);
+			return new ESLVal(headVal, tailVal.append(l));
+		case SETCONS:
+			return new ESLVal(headVal, tailVal.append(l));
 		default:
 			throw new Error("expecting a list: " + this);
 		}
@@ -216,6 +254,8 @@ public class ESLVal {
 		switch (state) {
 		case NIL:
 		case CONS:
+		case EMPTYSET:
+		case SETCONS:
 			return new ESLVal(v, this);
 		default:
 			throw new Error("type error: cannot cons " + v + " on value of type " + state);
@@ -239,51 +279,74 @@ public class ESLVal {
 
 	public ESLVal eql(ESLVal other) {
 		if (this == other)
-			return Lib.$true;
+			return $true;
 		else if (state == other.state) {
 			switch (state) {
 			case INT:
-				return (intVal == other.intVal) ? Lib.$true : Lib.$false;
+				return (intVal == other.intVal) ? $true : $false;
 			case BOOL:
-				return boolVal == other.boolVal ? Lib.$true : Lib.$false;
+				return boolVal == other.boolVal ? $true : $false;
 			case STR:
-				return strVal.equals(other.strVal) ? Lib.$true : Lib.$false;
+				return strVal.equals(other.strVal) ? $true : $false;
 			case DOUBLE:
-				return doubleVal == other.doubleVal ? Lib.$true : Lib.$false;
+				return doubleVal == other.doubleVal ? $true : $false;
 			case NIL:
-				return other.state == ValState.NIL ? Lib.$true : Lib.$false;
+				return other.state == ValState.NIL ? $true : $false;
+			case EMPTYSET:
+				return $true;
 			case CONS:
-				return (headVal.eql(other.headVal).boolVal && tailVal.eql(other.tailVal).boolVal) ? Lib.$true : Lib.$false;
+				return (headVal.eql(other.headVal).boolVal && tailVal.eql(other.tailVal).boolVal) ? $true : $false;
+			case SETCONS:
+				return subset(other) && other.subset(this) ? $true : $false;
 			case FUN:
-				return funVal == other.funVal ? Lib.$true : Lib.$false;
+				return funVal == other.funVal ? $true : $false;
 			case TERM:
 				if (termName.equals(other.termName))
 					return eqls(termVals, other.termVals);
 				else
-					return Lib.$false;
+					return $false;
 			case NULL:
-				return Lib.$true;
+				return $true;
 			case ARRAY:
 				if (array.length == other.array.length) {
 					for (int i = 0; i < array.length; i++) {
-						if (!(array[i].eql(other.array[i]).boolVal)) return Lib.$false;
+						if (!(array[i].eql(other.array[i]).boolVal)) return $false;
 					}
-					return Lib.$true;
+					return $true;
 				} else
-					return Lib.$false;
+					return $false;
 			case TABLE:
 				if (table.keySet().equals(other.table.keySet())) {
 					for (ESLVal k : table.keySet()) {
-						if (!table.get(k).equals(other.table.get(k))) return Lib.$false;
+						if (!table.get(k).equals(other.table.get(k))) return $false;
 					}
-					return Lib.$true;
+					return $true;
 				} else
-					return Lib.$false;
+					return $false;
+			case RECORD:
+				for (String name : record.keySet()) {
+					if (!other.record.containsKey(name) || !record.get(name).equals(other.record.get(name))) return $false;
+				}
+				for (String name : other.record.keySet()) {
+					if (!record.containsKey(name) || !record.get(name).equals(other.record.get(name))) return $false;
+				}
+				return $true;
 			default:
-				return Lib.$false;
+				return $false;
 			}
 		} else
-			return Lib.$false;
+			return $false;
+	}
+
+	private boolean subset(ESLVal set) {
+		ESLVal s = this;
+		while (!s.isEmptySet()) {
+			if (!set.member(s.head()).boolVal)
+				return false;
+			else
+				s = s.tail();
+		}
+		return true;
 	}
 
 	public ESLVal flatten() {
@@ -298,15 +361,15 @@ public class ESLVal {
 	}
 
 	public ESLVal gre(ESLVal n) {
-		return asDouble() > n.asDouble() ? Lib.$true : Lib.$false;
+		return asDouble() > n.asDouble() ? $true : $false;
 	}
 
 	public ESLVal greql(ESLVal n) {
-		return asDouble() >= n.asDouble() ? Lib.$true : Lib.$false;
+		return asDouble() >= n.asDouble() ? $true : $false;
 	}
 
 	public ESLVal head() {
-		if (state == ValState.CONS) {
+		if (state == ValState.CONS || state == ValState.SETCONS) {
 			return headVal;
 		} else
 			throw new Error("head: " + this);
@@ -320,12 +383,20 @@ public class ESLVal {
 		return state == ValState.NIL;
 	}
 
+	public boolean isEmptySet() {
+		return state == ValState.EMPTYSET;
+	}
+
+	public boolean isSetCons() {
+		return state == ValState.SETCONS;
+	}
+
 	public ESLVal less(ESLVal n) {
-		return asDouble() < n.asDouble() ? Lib.$true : Lib.$false;
+		return asDouble() < n.asDouble() ? $true : $false;
 	}
 
 	public ESLVal lesseql(ESLVal n) {
-		return asDouble() <= n.asDouble() ? Lib.$true : Lib.$false;
+		return asDouble() <= n.asDouble() ? $true : $false;
 	}
 
 	public ESLVal map(ESLVal l) {
@@ -342,10 +413,12 @@ public class ESLVal {
 	public ESLVal member(ESLVal v) {
 		switch (state) {
 		case NIL:
-			return Lib.$false;
+		case EMPTYSET:
+			return $false;
 		case CONS:
+		case SETCONS:
 			if (headVal.equals(v))
-				return Lib.$true;
+				return $true;
 			else
 				return tailVal.member(v);
 		default:
@@ -380,26 +453,28 @@ public class ESLVal {
 
 	public ESLVal neql(ESLVal other) {
 		if (eql(other).boolVal)
-			return Lib.$false;
+			return $false;
 		else
-			return Lib.$true;
+			return $true;
 	}
 
 	public ESLVal not() {
-		return boolVal ? Lib.$false : Lib.$true;
+		return boolVal ? $false : $true;
 	}
 
 	public ESLVal nth(int i) {
 		switch (state) {
+		case EMPTYSET:
 		case NIL:
 			throw new Error("nth out of elements: " + i);
+		case SETCONS:
 		case CONS:
 			if (i == 0)
 				return headVal;
 			else
 				return tailVal.nth(i - 1);
 		default:
-			throw new Error("expecting a list: " + this);
+			throw new Error("expecting a list or a set: " + this);
 		}
 	}
 
@@ -418,7 +493,7 @@ public class ESLVal {
 	}
 
 	public ESLVal or(ESLVal n) {
-		return boolVal || n.boolVal ? Lib.$true : Lib.$false;
+		return boolVal || n.boolVal ? $true : $false;
 	}
 
 	public ESLVal orelse(ESLVal n) {
@@ -432,7 +507,7 @@ public class ESLVal {
 		case ACTOR:
 			return actor.get(name);
 		case RECORD:
-			return (ESLVal) record.getField(Key.getKey(name)).getValue();
+			return record.get(name);
 		case STR:
 			return refString(name);
 		case CONS:
@@ -448,7 +523,7 @@ public class ESLVal {
 	private ESLVal refTable(String name) {
 		if (name.equals("hasKey")) { return new ESLVal(new Function(new ESLVal("hasKey"), this) {
 			public ESLVal apply(ESLVal... args) {
-				return table.containsKey(args[0]) ? Lib.$true : Lib.$false;
+				return table.containsKey(args[0]) ? $true : $false;
 			}
 		}); }
 		if (name.equals("get")) { return new ESLVal(new Function(new ESLVal("get"), this) {
@@ -463,14 +538,14 @@ public class ESLVal {
 			}
 		}); }
 		if (name.equals("keys")) {
-			ESLVal keys = Lib.$nil;
+			ESLVal keys = $nil;
 			for (ESLVal k : table.keySet()) {
 				keys = new ESLVal(k, keys);
 			}
 			return keys;
 		}
 		if (name.equals("vals")) {
-			ESLVal vals = Lib.$nil;
+			ESLVal vals = $nil;
 			for (ESLVal v : table.values()) {
 				vals = new ESLVal(v, vals);
 			}
@@ -510,7 +585,7 @@ public class ESLVal {
 	}
 
 	private static ESLVal explode(String s) {
-		ESLVal l = Lib.$nil;
+		ESLVal l = $nil;
 		for (int i = s.length() - 1; i >= 0; i--) {
 			l = new ESLVal(new ESLVal(s.charAt(i)), l);
 		}
@@ -519,13 +594,15 @@ public class ESLVal {
 
 	public ESLVal remove(ESLVal v) {
 		switch (state) {
+		case EMPTYSET:
 		case NIL:
 			return this;
+		case SETCONS:
 		case CONS:
 			if (headVal.equals(v))
 				return tailVal.remove(v);
 			else
-				return tailVal.remove(v).cons(headVal);
+				return new ESLVal(headVal, tailVal.remove(v));
 		default:
 			throw new Error("expecting a list: " + this);
 		}
@@ -548,7 +625,7 @@ public class ESLVal {
 		case NIL:
 			return this;
 		case CONS:
-			return tailVal.reverse().append(Lib.$nil.cons(headVal));
+			return tailVal.reverse().append($nil.cons(headVal));
 		default:
 			throw new Error("expecting a list: " + this);
 		}
@@ -590,7 +667,7 @@ public class ESLVal {
 	}
 
 	public ESLVal tail() {
-		if (state == ValState.CONS) {
+		if (state == ValState.CONS || state == ValState.SETCONS) {
 			return tailVal;
 		} else
 			throw new Error("tail: " + this);
@@ -602,7 +679,7 @@ public class ESLVal {
 
 	public ESLVal to(ESLVal m) {
 		if (intVal >= m.intVal)
-			return Lib.$nil;
+			return $nil;
 		else
 			return new ESLVal(intVal + 1).to(m).cons(this);
 	}
@@ -620,6 +697,9 @@ public class ESLVal {
 		case NIL:
 		case CONS:
 			return listToString(this);
+		case EMPTYSET:
+		case SETCONS:
+			return setToString(this);
 		case TERM:
 			if (termVals.length == 0)
 				return termName;
@@ -637,6 +717,8 @@ public class ESLVal {
 			return "Array" + Arrays.toString(array);
 		case TABLE:
 			return table.toString();
+		case RECORD:
+			return record.toString();
 		}
 		return "<?:" + state + ">";
 	}
@@ -652,7 +734,10 @@ public class ESLVal {
 		case BOOL:
 			return boolVal ? 1 : 0;
 		case NIL:
+		case EMPTYSET:
+			return super.hashCode();
 		case CONS:
+		case SETCONS:
 			return headVal.hashCode();
 		case TERM:
 			return termName.hashCode();
@@ -668,19 +753,21 @@ public class ESLVal {
 			return array.hashCode();
 		case TABLE:
 			return table.hashCode();
+		case RECORD:
+			return record.hashCode();
 		}
 		throw new Error("cannot caklculate hash code for : " + this);
 	}
 
 	public ESLVal take(int i) {
-		if (i == 0)
-			return Lib.$nil;
+		if (i <= 0)
+			return $nil;
 		else {
 			return new ESLVal(headVal, tailVal.take(i - 1));
 		}
 	}
 
-	public ESLVal drop(int i) {
+	public ESLVal drop(int i) { 
 		if (i == 0)
 			return this;
 		else {
@@ -690,10 +777,28 @@ public class ESLVal {
 
 	public static void main(String[] args) {
 		Hashtable<ESLVal, ESLVal> t = new Hashtable<ESLVal, ESLVal>();
-		t.put(new ESLVal("xxx"), Lib.$nil);
-		t.put(new ESLVal("yyy"), Lib.$nil);
-		t.put(new ESLVal("xxx"), Lib.$one);
+		t.put(new ESLVal("xxx"), $nil);
+		t.put(new ESLVal("yyy"), $nil);
+		t.put(new ESLVal("xxx"), $one);
 		System.out.println(t);
+	}
+
+	public ESLVal last() {
+		if (isNil())
+			throw new Error("no last element");
+		else if (tailVal.isNil())
+			return headVal;
+		else
+			return tailVal.last();
+	}
+
+	public ESLVal butlast() {
+		if (isNil())
+			return this;
+		else if (tailVal.isNil())
+			return $nil;
+		else
+			return new ESLVal(headVal, tailVal.butlast());
 	}
 
 }

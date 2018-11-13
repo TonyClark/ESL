@@ -23,7 +23,7 @@ public class MapReduce {
               return Lib.send(g,"Store",f.apply(x));
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v11)));
           }
           }}
           public ESLVal get(String name) {
@@ -102,12 +102,12 @@ public class MapReduce {
                     }
                   else if(_v8.isNil())
                     return ESLVal.list(new ESLVal("Key",i,ESLVal.list(v)));
-                  else return error(new ESLVal("case error at Pos(2589,2831)"));
+                  else return error(new ESLVal("case error at Pos(2587,2829)").add(ESLVal.list(_v8)));
                   }
                   }
                   }
                   }
-                  default: return error(new ESLVal("case error at Pos(2317,2837)"));
+                  default: return error(new ESLVal("case error at Pos(2315,2835)").add(ESLVal.list(_v7)));
                 }
                 }
               }
@@ -139,7 +139,7 @@ public class MapReduce {
                 }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v9)));
           }
           }}
           public ESLVal get(String name) {
@@ -197,12 +197,12 @@ public class MapReduce {
               }
               }
               }
-              default: return error(new ESLVal("case error at Pos(4388,4477)"));
+              default: return error(new ESLVal("case error at Pos(4386,4475)").add(ESLVal.list(_v5)));
             }
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v4)));
           }
           }}
           public ESLVal get(String name) {
@@ -259,12 +259,12 @@ public class MapReduce {
               }
               }
               }
-              default: return error(new ESLVal("case error at Pos(5132,5248)"));
+              default: return error(new ESLVal("case error at Pos(5130,5246)").add(ESLVal.list(_v3)));
             }
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v2)));
           }
           }}
           public ESLVal get(String name) {
@@ -302,7 +302,7 @@ public class MapReduce {
           
           public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)"));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
           }}
           public ESLVal get(String name) {
             switch(name) {

@@ -37,14 +37,13 @@ import edb.tool.SVG;
 import esl.lib.AlienActor;
 import esl.lib.ESLVal;
 import esl.lib.Function;
+import esl.lib.Record;
 import list.Cons;
 import list.List;
 import list.Nil;
 import runtime.ESL;
 import runtime.actors.JavaActor;
-import runtime.data.Field;
 import runtime.data.Key;
-import runtime.data.Record;
 import runtime.data.Term;
 import runtime.functions.Builtin;
 
@@ -85,9 +84,9 @@ public class EDBFrame extends JFrame implements EDBMenuProvider, AlienActor, Jav
 				return new ESLVal("Point", new ESLVal(posX), new ESLVal(posY));
 			}
 		};
-		Field field = new Field(Key.getKey("circlePos"), new ESLVal(circlePos));
-		Field[] fields = new Field[] { field };
-		return new ESLVal(new Record(fields));
+		Record math = new Record();
+		math.put("circlePos", new ESLVal(circlePos));
+		return new ESLVal(math);
 	}
 
 	public static void main(String[] args) {

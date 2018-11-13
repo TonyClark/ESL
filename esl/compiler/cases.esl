@@ -37,12 +37,17 @@ translateArms(as::[Arm])::[Arm] =
 newVars(n::Int)::[Str] = if n=0 then []; else newVar():newVars(n-1);
   
 translateCases(exp::AST)::AST = 
+
+  // Walk the expression and produce a new expression where all of the case expressions have 
+  // been expanded into simple switches on data...
+  
   case exp {
     Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind])         -> Module(path,name,exports,imports,x,y,[ translateDef(d) | d::TBind <- defs]);
     FunExp(l::Loc,n::AST,args::[TDec],t::Type,e::AST)                                               -> FunExp(l,n,args,t,translateCases(e));
     StrExp(l::Loc,v::Str)                                                                           -> exp;
     IntExp(l::Loc,v::Int)                                                                           -> exp;
     BoolExp(l::Loc,v::Bool)                                                                         -> exp;
+    BagExp(l::Loc,es::[AST])                                                                        -> BagExp(l,[ translateCases(e) | e::AST <- es ]);
     NullExp(l::Loc)                                                                                 -> exp;
     FloatExp(l::Loc,f::Float)                                                                       -> exp;
     Term(l::Loc,n::Str,ts::[Type],es::[AST])                                                        -> Term(l,n,ts,[ translateCases(e) | e::AST <- es]);
@@ -64,6 +69,7 @@ translateCases(exp::AST)::AST =
     Send(l::Loc,target::AST,message::AST)                                                           -> Send(l,translateCases(target),translateCases(message));
     SendTimeSuper(l::Loc)                                                                           -> SendTimeSuper(l);
     SendSuper(l::Loc,e::AST)                                                                        -> SendSuper(l,translateCases(e));
+    SetExp(l::Loc,es::[AST])                                                                        -> SetExp(l,[ translateCases(e) | e::AST <- es ]);
     Cmp(l::Loc,e::AST,qs::[Qualifier])                                                              -> Cmp(l,translateCases(e),[ translateQual(q) | q::Qualifier <- qs]);
     New(l::Loc,b::AST,args::[AST])                                                                  -> New(l,translateCases(b),[ translateCases(e) | e::AST <- args]);
     NewJava(l::Loc,className::Str,t::Type,args::[AST])                                              -> NewJava(l,className,t,[ translateCases(e) | e::AST <- args ]);
@@ -78,6 +84,8 @@ translateCases(exp::AST)::AST =
     Become(l::Loc,e::AST)                                                                           -> Become(l,translateCases(e));
     x::AST                                                                                          -> throw [AST]exp;
   }
+
+// Accessors and updaters on arms...
 
 armPatterns(arm::Arm)::[Pattern] =
   case arm {
@@ -108,6 +116,8 @@ addArmBindings(arm::Arm,newBS::[TBind])::Arm =
   case arm {
     LArm(l::Loc,ps::[Pattern],bs::[[TBind]],g::AST,e::AST) -> LArm(l,ps,bs + [newBS],g,e);
   }
+
+// Predicates on patterns...
 
 isPVar(p::Pattern)::Bool = 
   case p {
@@ -154,6 +164,30 @@ isPNil(p::Pattern)::Bool =
 
 isPList(p::Pattern)::Bool = isPCons(p) or isPNil(p);
 
+isPNonDetList(p::Pattern)::Bool = isPAdd(p);
+
+isPSetCons(p::Pattern)::Bool = 
+  case p {
+    PSetCons(l,p1,p2) -> true;
+    p                 -> false;
+  }
+
+isPEmptySet(p::Pattern)::Bool =
+  case p {
+    PEmptySet(l) -> true;
+    p            -> false;
+  }
+
+isPAdd(p::Pattern)::Bool =
+  case p {
+    PAdd(l,p1,p2) -> true;
+    p             -> false;
+  }
+
+isPSet(p::Pattern)::Bool = isPSetCons(p) or isPEmptySet(p);
+
+// Pattern accessors...
+
 pTermName(p::Pattern)::Str = 
   case p {
     PTerm(l::Loc,n::Str,ts::[Type],ps::[Pattern]) -> n;
@@ -179,6 +213,26 @@ pConsTail(p::Pattern)::Pattern =
     PCons(l::Loc,h::Pattern,t::Pattern) -> t;
   }
 
+pSetConsHead(p::Pattern)::Pattern = 
+  case p {
+    PSetCons(l::Loc,h::Pattern,t::Pattern) -> h;
+  }
+
+pSetConsTail(p::Pattern)::Pattern = 
+  case p {
+    PSetCons(l::Loc,h::Pattern,t::Pattern) -> t;
+  }
+
+pAddLeft(p::Pattern)::Pattern =
+  case p {
+    PAdd(l::Loc,left::Pattern,right::Pattern) -> left;
+  }
+
+pAddRight(p::Pattern)::Pattern =
+  case p {
+    PAdd(l::Loc,left::Pattern,right::Pattern) -> right;
+  }
+
 pIntValue(p::Pattern)::Int = 
   case p {
     PInt(l::Loc,n::Int) -> n;
@@ -194,6 +248,11 @@ pBoolValue(p::Pattern)::Bool =
     PBool(l::Loc,b::Bool) -> b; 
   }
 
+// The case translation rules work by detecting when the first pattern in all arms are all the same type.
+// Then the first patterns are stripped out and the case is translated into a type-specific case that
+// dispatches on the specific type. The following predicates are used to detect the situation where
+// all the head patterns are of particular types...
+
 isEmptyPatterns(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool length[Pattern](armPatterns(a)) = 0,arms);
 
 isFirstColumnVars(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool isPVar(head[Pattern](armPatterns(a))),arms);
@@ -205,6 +264,10 @@ isFirstColumnStrs(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool isPStr(head
 isFirstColumnBools(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool isPBool(head[Pattern](armPatterns(a))),arms);
 
 isFirstColumnCnstrs(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool isPTerm(head[Pattern](armPatterns(a))),arms);
+
+isFirstColumnSets(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool isPSet(head[Pattern](armPatterns(a))),arms);
+
+isFirstColumnNonDetLists(arms::[Arm])::Bool = forall[Arm](fun(a::Arm)::Bool isPNonDetList(head[Pattern](armPatterns(a))),arms);
 
 isFirstColumnLists(arms::[Arm])::Bool = 
   let isList(a::Arm)::Bool = isPCons(head[Pattern](armPatterns(a))) or isPNil(head[Pattern](armPatterns(a))); 
@@ -254,6 +317,12 @@ explodeCnstr(a::Arm)::Arm =
 explodeCons(a::Arm)::Arm =
   setArmPatterns(a,[pConsHead(head[Pattern](armPatterns(a))),pConsTail(head[Pattern](armPatterns(a)))] + tail[Pattern](armPatterns(a)));
 
+explodeSetCons(a::Arm)::Arm =
+  setArmPatterns(a,[pSetConsHead(head[Pattern](armPatterns(a))),pSetConsTail(head[Pattern](armPatterns(a)))] + tail[Pattern](armPatterns(a)));
+  
+explodeAdd(a::Arm)::Arm =
+  setArmPatterns(a,[pAddLeft(head[Pattern](armPatterns(a))),pAddRight(head[Pattern](armPatterns(a)))] + tail[Pattern](armPatterns(a)));
+
 cnstrArm(l::Loc,e::AST,es::[AST],arms::[Arm],alt::AST)::AST = { 
   let names::[Str] = newVars(length[Pattern](pTermArgs(head[Pattern](armPatterns(head[Arm](arms))))));
   in {
@@ -293,6 +362,68 @@ processLists(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = {
   }
 }
 
+processSetArms(l::Loc,es::[AST],arm::Arm)::AST =
+  case head[Pattern](armPatterns(arm)) {
+    PEmptySet(pl::Loc) -> 
+      let fail::Str = newVar(); 
+      in Term(l,'$empty',[],[FunExp(l,StrExp(l,'emptyset'),[Dec(l,fail,null[Type],null[Type])],null[Type],compileCase(l,es,[dropPattern(arm)],Apply(l,Var(l,fail),[])))]);
+    PSetCons(pl::Loc,p1::Pattern,p2::Pattern) ->
+      let fail::Str = newVar();
+          element::Str = newVar();
+          rest::Str = newVar();
+      in Term(l,'$cons',[],[FunExp(l,StrExp(l,'setcons'),[Dec(l,element,null[Type],null[Type]),Dec(l,rest,null[Type],null[Type]),Dec(l,fail,null[Type],null[Type])],null[Type],
+           compileCase(l,[Var(l,element),Var(l,rest)]+es,[explodeSetCons(arm)],Apply(l,Var(l,fail),[])))]);
+    PAdd(pl::Loc,p1::Pattern,p2::Pattern) ->
+      let fail::Str = newVar();
+          left::Str = newVar();
+          right::Str = newVar();
+      in Term(l,'$add',[],[FunExp(l,StrExp(l,'setadd'),[Dec(l,left,null[Type],null[Type]),Dec(l,right,null[Type],null[Type]),Dec(l,fail,null[Type],null[Type])],null[Type],
+           compileCase(l,[Var(l,left),Var(l,right)]+es,[explodeAdd(arm)],Apply(l,Var(l,fail),[])))]);
+  }
+  
+processNonDetListArms(l::Loc,es::[AST],arm::Arm)::AST =
+  case head[Pattern](armPatterns(arm)) {
+    PNil(pl::Loc) -> 
+      let fail::Str = newVar(); 
+      in Term(l,'$empty',[],[FunExp(l,StrExp(l,'nil'),[Dec(l,fail,null[Type],null[Type])],null[Type],compileCase(l,es,[dropPattern(arm)],Apply(l,Var(l,fail),[])))]);
+    PCons(pl::Loc,p1::Pattern,p2::Pattern) ->
+      let fail::Str = newVar();
+          element::Str = newVar();
+          rest::Str = newVar();
+      in Term(l,'$cons',[],[FunExp(l,StrExp(l,'cons'),[Dec(l,element,null[Type],null[Type]),Dec(l,rest,null[Type],null[Type]),Dec(l,fail,null[Type],null[Type])],null[Type],
+           compileCase(l,[Var(l,element),Var(l,rest)]+es,[explodeCons(arm)],Apply(l,Var(l,fail),[])))]);
+    PAdd(l1,PCons(l2,p1,PNil(l3)),p2) ->
+      let fail::Str = newVar();
+          left::Str = newVar();
+          right::Str = newVar();
+          newArm::Arm = setArmPatterns(arm,[p1,p2]+tail[Pattern](armPatterns(arm)));
+      in Term(l,'$selectLeft',[],[FunExp(l,StrExp(l,'add'),[Dec(l,left,null[Type],null[Type]),Dec(l,right,null[Type],null[Type]),Dec(l,fail,null[Type],null[Type])],null[Type],
+           compileCase(l,[Var(l,left),Var(l,right)]+es,[newArm],Apply(l,Var(l,fail),[])))]);
+    PAdd(l1,p1,PCons(l2,p2,PNil(l3))) ->
+      let fail::Str = newVar();
+          left::Str = newVar();
+          right::Str = newVar();
+          newArm::Arm = setArmPatterns(arm,[p1,p2]+tail[Pattern](armPatterns(arm)));
+      in Term(l,'$selectRight',[],[FunExp(l,StrExp(l,'add'),[Dec(l,left,null[Type],null[Type]),Dec(l,right,null[Type],null[Type]),Dec(l,fail,null[Type],null[Type])],null[Type],
+           compileCase(l,[Var(l,left),Var(l,right)]+es,[newArm],Apply(l,Var(l,fail),[])))]);
+    PAdd(l1,p1,PAdd(l2,PCons(l3,p2,PNil(l4)),p3)) ->
+      let fail::Str = newVar();
+          left::Str = newVar();
+          mid::Str = newVar();
+          right::Str = newVar();
+          newArm::Arm = setArmPatterns(arm,[p1,p2,p3]+tail[Pattern](armPatterns(arm)));
+      in Term(l,'$selectMid',[],[FunExp(l,StrExp(l,'add'),[Dec(l,left,null[Type],null[Type]),Dec(l,mid,null[Type],null[Type]),Dec(l,right,null[Type],null[Type]),Dec(l,fail,null[Type],null[Type])],null[Type],
+           compileCase(l,[Var(l,left),Var(l,mid),Var(l,right)]+es,[newArm],Apply(l,Var(l,fail),[])))]);
+    PAdd(l1,PAdd(l2,p1,PCons(l3,p2,PNil(l4))),p3) ->
+      let fail::Str = newVar();
+          left::Str = newVar();
+          mid::Str = newVar();
+          right::Str = newVar();
+          newArm::Arm = setArmPatterns(arm,[p1,p2,p3]+armPatterns(arm));
+      in Term(l,'$selectMid',[],[FunExp(l,StrExp(l,'add'),[Dec(l,left,null[Type],null[Type]),Dec(l,mid,null[Type],null[Type]),Dec(l,right,null[Type],null[Type]),Dec(l,fail,null[Type],null[Type])],null[Type],
+           compileCase(l,[Var(l,left),Var(l,mid),Var(l,right)]+es,[newArm],Apply(l,Var(l,fail),[])))]);
+  }
+  
 processInts(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
   let ints::[Int] = removeDups[Int](map[Pattern,Int](pIntValue,map[[Pattern],Pattern](head[Pattern],map[Arm,[Pattern]](armPatterns,arms)))); in
   let armss::[[Arm]] = map[Int,[Arm]](fun(c::Int)::[Arm] intArms(c,arms),ints);
@@ -308,6 +439,15 @@ processBools(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
   let armss::[[Arm]] = map[Bool,[Arm]](fun(c::Bool)::[Arm] boolArms(c,arms),bools);
   in CaseBool(l,head[AST](es),[BoolArm(sharedBool(as),compileCase(l,tail[AST](es),[dropPattern(a) | a::Arm <- as],alt)) | as::[Arm] <- armss],alt); 
 
+processSets(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = 
+  let f::AST = FunExp(l,StrExp(l,'setFail'),[],null[Type],alt);
+  in CaseSet(l,head[AST](es),List(l,[ processSetArms(l,tail[AST](es),a) | a::Arm <- arms ]),f); 
+
+processNonDetLists(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = { print[Str]('process nondet lists ' + es + ' ' + arms);
+  let f::AST = FunExp(l,StrExp(l,'listFail'),[],null[Type],alt);
+  in CaseAdd(l,head[AST](es),List(l,[ processNonDetListArms(l,tail[AST](es),a) | a::Arm <- arms ]),f);
+}
+
 splitTerms(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = 
   compileCase(l,es,select[Arm](fun(a::Arm)::Bool isPTerm(head[Pattern](armPatterns(a))),arms),
     compileCase(l,es,reject[Arm](fun(a::Arm)::Bool isPTerm(head[Pattern](armPatterns(a))),arms),alt));
@@ -315,6 +455,16 @@ splitTerms(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
 splitLists(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = { 
   compileCase(l,es,select[Arm](fun(a::Arm)::Bool isPList(head[Pattern](armPatterns(a))),arms),
     compileCase(l,es,reject[Arm](fun(a::Arm)::Bool isPList(head[Pattern](armPatterns(a))),arms),alt));
+}
+ 
+splitAdd(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = { 
+  compileCase(l,es,select[Arm](fun(a::Arm)::Bool isPAdd(head[Pattern](armPatterns(a))),arms),
+    compileCase(l,es,reject[Arm](fun(a::Arm)::Bool isPAdd(head[Pattern](armPatterns(a))),arms),alt));
+}
+ 
+splitSets(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = { 
+  compileCase(l,es,select[Arm](fun(a::Arm)::Bool isPSet(head[Pattern](armPatterns(a))),arms),
+    compileCase(l,es,reject[Arm](fun(a::Arm)::Bool isPSet(head[Pattern](armPatterns(a))),arms),alt));
 }
     
 splitInts(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
@@ -344,6 +494,8 @@ splitCase(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
     then splitTerms(l,es,arms,alt);
     else if isPList(head[Pattern](nonVarPatterns))
     then splitLists(l,es,arms,alt);
+    else if isPSet(head[Pattern](nonVarPatterns))
+    then splitSets(l,es,arms,alt);
     else if isPInt(head[Pattern](nonVarPatterns))
     then splitInts(l,es,arms,alt);
     else if isPStr(head[Pattern](nonVarPatterns))
@@ -352,6 +504,8 @@ splitCase(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST =
     then splitBools(l,es,arms,alt);
     else if isPVar(head[Pattern](firstPatterns))
     then splitVars(l,es,arms,alt);
+    else if isPAdd(head[Pattern](firstPatterns))
+    then splitAdd(l,es,arms,alt);
     else throw[AST]('unknown split case: ' + arms);
   }
 
@@ -372,6 +526,10 @@ compileCase(l::Loc,es::[AST],arms::[Arm],alt::AST)::AST = {
   then processBools(l,es,arms,alt);
   else if isFirstColumnStrs(arms)
   then processStrs(l,es,arms,alt);
+  else if isFirstColumnSets(arms)
+  then processSets(l,es,arms,alt);
+  else if isFirstColumnNonDetLists(arms)
+  then processNonDetLists(l,es,arms,alt);
   else splitCase(l,es,arms,alt);
 }
 

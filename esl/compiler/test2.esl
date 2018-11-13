@@ -1,16 +1,74 @@
 export main;
 
+import 'esl/sets.esl';
+
 Act Main {  }
 
-t::Hash[Str,Int] = new Hash[Str,Int]; 
+type P = {x::Int; y::Int };
+
+data T =
+  Branch(T,T)
+| Leaf(Set{Int});
+
+mkPoint(x::Int,y::Int)::P = {x->x;y->y}; 
+
+select(s::Set{Set{Int}})::[Int] = 
+  case s {
+    set{set{x | rest1},set{y | rest2} | rest3} when x + y = 100 -> [x,y]; 
+    set{set{x | set{x2 | rest1}},set{y | set{y2 | rest2}} | rest3} when x + y = 20 and x2= y2 -> [x,y,x2,y2];
+  }
+
+member(x::Int,l::[Int])::Bool = { 
+  case l {
+    [y] + l when x = y -> true;
+    l1 + [y] + l2 when x = y -> true;
+    l -> false;
+  }
+}
+
+f(t::T)::Int =
+  case t {
+    Branch(Branch(Leaf(set{x1|s1}),Leaf(set{x2|s2})),Leaf(set{x3|s3})) when x1 = x2 and x2 = x3 -> x1;
+    t -> 0;
+  }
+  
+duplicate(s1::Set{Int},s2::Set{Int},notFound::Int)::Int =
+  case s1,s2 {
+    set{x | p}, set{y | q} when x = y -> x;
+    s1,s2                             -> notFound;
+  }
+
+listMem(l::[Int],n::Int)::Bool =
+  case l {
+    [x] + l when x = n -> true;
+    l1 + [x] + l2 when x = n -> true; 
+    l + [x] when x = n -> true;
+    l -> false;
+  }
+
+g()::Void = {};
+
+t::Hash[Str,Int] = new Hash[Str,Int];
 
 act main::Main {
   -> {
     t.put('one',1);
     t.put('two',2);
     t.put('one',3);
+    /*
     print[Str]('keys ' + t.keys);
     print[Str]('values ' + t.vals);
     print[Str]('table ' + t);
+    print[P](mkPoint(100,20));
+    print[Int](mkPoint(100,20).y);
+    print[[Int]](select(set{set{1,2},set{3,4,5},set{3,2,1},set{2,3,4,13,5,60}}));
+    print[Int](setSize[Set{Int}](power[Int](set{1,2,3}))); 
+    print[Bool](setContains[Set{Int}](power[Int](set{1,2,3,4}),set{2,4,4,1,4,2,1,1,1}));
+    print[Bool](subset[Int](set{1,2,3},set{3,2,1,4}));
+    print[Int](f(Branch(Branch(Leaf(set{1,2,3,4}),Leaf(set{2,3,4,5})),Leaf(set{5,6}))));
+    print[Int](duplicate(set{1,2,3,4,5,6,7,8},set{0,0,0,0,0,1},0));
+    print[Int](setSize[Int](set{0,0,0,0,0,1})); */
+    print[Bool](member(10000,0..10000));
+    stopAll();
   }
 }

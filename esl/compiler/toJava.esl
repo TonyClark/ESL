@@ -119,12 +119,16 @@ expToJExp(e::AST)::JExp =
     ApplyTypeExp(l1::Loc,List(l2::Loc,[][AST]),[t::Type])                                                -> JNil(null[JType]);
     ApplyTypeExp(l1::Loc,NullExp(l2::Loc),[t::Type])                                                     -> JNull;
     List(l::Loc,es::[AST])                                                                               -> JList(null[JType],expsToJExps(es));
+    SetExp(l::Loc,es::[AST])                                                                             -> JSet(null[JType],expsToJExps(es));
+    BagExp(l::Loc,es::[AST])                                                                             -> JBag(null[JType],expsToJExps(es));
     Term(l::Loc,n::Str,ts::[Type],es::[AST])                                                             -> JTerm(n,expsToJExps(es)); 
     Case(l::Loc,ds::[TDec],es::[AST],arms::[Arm])                                                        -> caseToJExp(l,es,arms);
+    CaseAdd(l::Loc,s::AST,handler::AST,fail::AST)                                                        -> expToJExp(Apply(l,Var(l,'$ndCase'),[s,handler,fail]));
     CaseList(l::Loc,list::AST,cons::AST,nil::AST,alt::AST)                                               -> JCommandExp(expToJCommand(e,true),null[JType]);
     CaseTerm(l::Loc,list::AST,arms::[CaseTermArm],alt::AST)                                              -> JCommandExp(expToJCommand(e,true),null[JType]);
     CaseStr(l::Loc,s::AST,arms::[CaseStrsArm],alt::AST)                                                  -> JCommandExp(expToJCommand(e,true),null[JType]);
     CaseBool(l::Loc,s::AST,arms::[CaseBoolsArm],alt::AST)                                                -> JCommandExp(expToJCommand(e,true),null[JType]);
+    CaseSet(l::Loc,s::AST,handler::AST,fail::AST)                                                        -> expToJExp(Apply(l,Var(l,'$ndCase'),[s,handler,fail]));
     Head(e::AST)                                                                                         -> JHead(expToJExp(e));
     Tail(e::AST)                                                                                         -> JTail(expToJExp(e));
     ApplyTypeExp(l::Loc,e::AST,ts::[Type])                                                               -> expToJExp(e);
@@ -149,6 +153,7 @@ expToJExp(e::AST)::JExp =
     NewArray(l::Loc,t::Type,i::AST)                                                                      -> JNewArray(expToJExp(i)); 
     NewJava(l::Loc,n::Str,t::Type,args::[AST])                                                           -> JNewJava(n,expsToJExps(args));
     NewTable(l::Loc,key::Type,value::Type)                                                               -> JNewTable;
+    Record(l::Loc,fs::[TBind])                                                                           -> JRecord([ JField(n,null[JType],expToJExp(e)) | Binding(bl::Loc,n::Str,t::Type,dt::Type,e::AST) <- fs ]);
     Send(l::Loc,a::AST,Term(lt::Loc,n::Str,ts::[Type],es::[AST]))                                        -> JSend(expToJExp(a),n,expsToJExps(es)); 
     SendTimeSuper(l::Loc)                                                                                -> JSendTimeSuper;
     SendSuper(l::Loc,e::AST)                                                                             -> JSendSuper(expToJExp(e)); 
@@ -277,6 +282,12 @@ renameJVarsExp(e::JExp,vars::[Str],env::Table[Str,Str])::JExp = {
     JList(v0::JType,v1::[JExp]) -> {
       JList(v0,[ renameJVarsExp(v,vars,env) | v::JExp <- v1 ]);
     }
+    JSet(v0::JType,v1::[JExp]) -> {
+      JSet(v0,[ renameJVarsExp(v,vars,env) | v::JExp <- v1 ]);
+    }
+    JBag(v0::JType,v1::[JExp]) -> {
+      JBag(v0,[ renameJVarsExp(v,vars,env) | v::JExp <- v1 ]);
+    }
     JNil(v0::JType) -> e;
     JNow -> e;
     JVar(v0::Str,v1::JType) -> { 
@@ -304,6 +315,7 @@ renameJVarsExp(e::JExp,vars::[Str],env::Table[Str,Str])::JExp = {
     JNewJava(n::Str,args::[JExp]) -> JNewJava(n,[ renameJVarsExp(a,vars,env) | a::JExp <- args ]);
     JNewTable -> JNewTable;
     JMapFun(f::JExp,l::JExp) -> JMapFun(renameJVarsExp(f,vars,env),renameJVarsExp(l,vars,env));
+    JRecord(fs::[JFieldDef]) -> JRecord([ JField(n,t,renameJVarsExp(e,vars,env)) | JField(n,t,e) <- fs ]);
     JFlatten(e::JExp) -> JFlatten(renameJVarsExp(e,vars,env));
     JSend(e::JExp,n::Str,es::[JExp]) -> JSend(renameJVarsExp(e,vars,env),n,[ renameJVarsExp(e,vars,env) | e::JExp <- es ]);
     JSendSuper(e::JExp) -> JSendSuper(renameJVarsExp(e,vars,env));

@@ -2048,7 +2048,7 @@ AST caseExp() :
   }
   values = exps() 
   < LCURL > 
-  [ decs = decs() ] 
+  //[ decs = decs() ] 
   arms = arms() 
   < RCURL >
   {

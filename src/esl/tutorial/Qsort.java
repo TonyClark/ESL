@@ -36,10 +36,10 @@ public class Qsort {
               return stopAll.apply();}
               }
               }
-              default: return error(new ESLVal("case error at Pos(0,0)"));
+              default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v10)));
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v10)));
           }
           }}
           public ESLVal get(String name) {
@@ -95,10 +95,10 @@ public class Qsort {
               return check.apply();}
               }
               }
-              default: return error(new ESLVal("case error at Pos(0,0)"));
+              default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v9)));
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v9)));
           }
           }}
           public ESLVal get(String name) {
@@ -137,7 +137,7 @@ public class Qsort {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v8)));
           }
           }}
           public ESLVal get(String name) {
@@ -192,7 +192,7 @@ public class Qsort {
                   }
                 else if(_v5.isNil())
                   return Lib.send(parent,"Sorted",l,dir);
-                else return error(new ESLVal("case error at Pos(1380,2189)"));
+                else return error(new ESLVal("case error at Pos(1380,2189)").add(ESLVal.list(_v5)));
                 }
               }).get();
           }
@@ -205,7 +205,7 @@ public class Qsort {
           
           public ESLVal handle(ESLVal $m) {{ESLVal _v4 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)"));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v4)));
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -263,7 +263,7 @@ public class Qsort {
         }
       else if(_v1.isNil())
         return ESLVal.list();
-      else return error(new ESLVal("case error at Pos(2441,2586)"));
+      else return error(new ESLVal("case error at Pos(2441,2586)").add(ESLVal.list(_v1)));
       }
     }
   });

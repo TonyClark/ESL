@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 public class Philosophers {
   public static ESLVal getSelf() { return $null; }
   private static ESLVal timeLimit = new ESLVal(5000);
-  private static ESLVal canDeadlock = $false;
+  private static ESLVal canDeadlock = $true;
   private static ESLVal numberOfPhilosophers = new ESLVal(10);
   private static ESLVal eatTime = new ESLVal(50);
   private static ESLVal thinkTime = new ESLVal(50);
@@ -29,77 +29,89 @@ public class Philosophers {
   private static ESLVal pointX = new ESLVal(new Function(new ESLVal("pointX"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal p = $args[0];
-  switch(p.termName) {
-        case "Point": {ESLVal $1 = p.termRef(0);
-          ESLVal $2 = p.termRef(1);
+  {ESLVal _v19 = p;
+        
+        switch(_v19.termName) {
+        case "Point": {ESLVal $37 = _v19.termRef(0);
+          ESLVal $36 = _v19.termRef(1);
           
-          {ESLVal x = $1;
+          {ESLVal x = $37;
           
-          {ESLVal y = $2;
+          {ESLVal y = $36;
           
           return x;
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(4336,4379)"));
+        default: return error(new ESLVal("case error at Pos(4334,4377)").add(ESLVal.list(_v19)));
+      }
       }
     }
   });
   private static ESLVal pointY = new ESLVal(new Function(new ESLVal("pointY"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal p = $args[0];
-  switch(p.termName) {
-        case "Point": {ESLVal $3 = p.termRef(0);
-          ESLVal $4 = p.termRef(1);
+  {ESLVal _v18 = p;
+        
+        switch(_v18.termName) {
+        case "Point": {ESLVal $35 = _v18.termRef(0);
+          ESLVal $34 = _v18.termRef(1);
           
-          {ESLVal x = $3;
+          {ESLVal x = $35;
           
-          {ESLVal y = $4;
+          {ESLVal y = $34;
           
           return y;
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(4460,4503)"));
+        default: return error(new ESLVal("case error at Pos(4458,4501)").add(ESLVal.list(_v18)));
+      }
       }
     }
   });
   private static ESLVal toPictures = new ESLVal(new Function(new ESLVal("toPictures"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
-      ESLVal filmstrip = $args[0];
-  if(filmstrip.isCons())
-        {ESLVal $5 = filmstrip.head();
-          ESLVal $6 = filmstrip.tail();
+      ESLVal _v33 = $args[0];
+  {ESLVal _v17 = _v33;
+        
+        if(_v17.isCons())
+        {ESLVal $32 = _v17.head();
+          ESLVal $33 = _v17.tail();
           
-          {ESLVal s = $5;
+          {ESLVal s = $32;
           
-          {ESLVal fs = $6;
+          {ESLVal fs = $33;
           
           return toPictures.apply(fs).cons(toPicture.apply(s));
         }
         }
         }
-      else if(filmstrip.isNil())
+      else if(_v17.isNil())
         return ESLVal.list();
-      else return error(new ESLVal("case error at Pos(4632,4729)"));
+      else return error(new ESLVal("case error at Pos(4630,4727)").add(ESLVal.list(_v17)));
+      }
     }
   });
   private static ESLVal toPicture = new ESLVal(new Function(new ESLVal("toPicture"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal s = $args[0];
-  switch(s.termName) {
-        case "Snapshot": {ESLVal $7 = s.termRef(0);
-          ESLVal $8 = s.termRef(1);
+  {ESLVal _v16 = s;
+        
+        switch(_v16.termName) {
+        case "Snapshot": {ESLVal $31 = _v16.termRef(0);
+          ESLVal $30 = _v16.termRef(1);
           
-          {ESLVal holds = $7;
+          {ESLVal holds = $31;
           
-          {ESLVal free = $8;
+          {ESLVal free = $30;
           
           return new ESLVal("Picture",pictureWidth,pictureHeight,toCircles.apply($zero,chopsticks,holds,free).add(toPhils.apply($zero,holds)));
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(4768,4927)"));
+        default: return error(new ESLVal("case error at Pos(4766,4925)").add(ESLVal.list(_v16)));
+      }
       }
     }
   });
@@ -162,69 +174,75 @@ public class Philosophers {
     public ESLVal apply(ESLVal... $args) {
       ESLVal i = $args[0];
   ESLVal holds = $args[1];
-  if(holds.isCons())
-        {ESLVal $9 = holds.head();
-          ESLVal $10 = holds.tail();
+  {ESLVal _v15 = holds;
+        
+        if(_v15.isCons())
+        {ESLVal $26 = _v15.head();
+          ESLVal $27 = _v15.tail();
           
-          switch($9.termName) {
-          case "Holds": {ESLVal $11 = $9.termRef(0);
-            ESLVal $12 = $9.termRef(1);
+          switch($26.termName) {
+          case "Holds": {ESLVal $29 = $26.termRef(0);
+            ESLVal $28 = $26.termRef(1);
             
-            {ESLVal i1 = $11;
+            {ESLVal i1 = $29;
             
-            {ESLVal cs = $12;
+            {ESLVal cs = $28;
             
-            {ESLVal hs = $10;
+            {ESLVal hs = $27;
             
             if(i1.eql(i).boolVal)
             return cs;
             else
-              {ESLVal h = $9;
+              {ESLVal h = $26;
                 
-                {ESLVal _v1 = $10;
+                {ESLVal _v32 = $27;
                 
-                return getHolding.apply(i,_v1);
+                return getHolding.apply(i,_v32);
               }
               }
           }
           }
           }
           }
-          default: {ESLVal h = $9;
+          default: {ESLVal h = $26;
             
-            {ESLVal hs = $10;
+            {ESLVal hs = $27;
             
             return getHolding.apply(i,hs);
           }
           }
         }
         }
-      else if(holds.isNil())
+      else if(_v15.isNil())
         return ESLVal.list();
-      else return error(new ESLVal("case error at Pos(7163,7320)"));
+      else return error(new ESLVal("case error at Pos(7161,7318)").add(ESLVal.list(_v15)));
+      }
     }
   });
   private static ESLVal toCircles = new ESLVal(new Function(new ESLVal("toCircles"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
-      ESLVal i = $args[0];
-  ESLVal chopsticks = $args[1];
-  ESLVal holds = $args[2];
-  ESLVal free = $args[3];
-  if(chopsticks.isCons())
-        {ESLVal $13 = chopsticks.head();
-          ESLVal $14 = chopsticks.tail();
+      ESLVal _v31 = $args[0];
+  ESLVal _v30 = $args[1];
+  ESLVal _v29 = $args[2];
+  ESLVal _v28 = $args[3];
+  {ESLVal _v14 = _v30;
+        
+        if(_v14.isCons())
+        {ESLVal $24 = _v14.head();
+          ESLVal $25 = _v14.tail();
           
-          {ESLVal c = $13;
+          {ESLVal c = $24;
           
-          {ESLVal cs = $14;
+          {ESLVal cs = $25;
           
-          return toCircles.apply(i.add($one),cs,holds,free).cons(toCircle.apply(i,c,holds,free));
+          return toCircles.apply(_v31.add($one),cs,_v29,_v28).cons(toCircle.apply(_v31,c,_v29,_v28));
         }
         }
         }
-      else if(chopsticks.isNil())
+      else if(_v14.isNil())
         return ESLVal.list();
-      else return error(new ESLVal("case error at Pos(7459,7585)"));
+      else return error(new ESLVal("case error at Pos(7457,7583)").add(ESLVal.list(_v14)));
+      }
     }
   });
   private static ESLVal toCircle = new ESLVal(new Function(new ESLVal("toCircle"),getSelf()) {
@@ -233,43 +251,48 @@ public class Philosophers {
   ESLVal c = $args[1];
   ESLVal holds = $args[2];
   ESLVal free = $args[3];
-  switch(edb.ref("math").ref("circlePos").apply(centreX,centreY,chopstickRadius,new ESLVal(360).div(numberOfPhilosophers).mul(i)).termName) {
-        case "Point": {ESLVal $15 = edb.ref("math").ref("circlePos").apply(centreX,centreY,chopstickRadius,new ESLVal(360).div(numberOfPhilosophers).mul(i)).termRef(0);
-          ESLVal $16 = edb.ref("math").ref("circlePos").apply(centreX,centreY,chopstickRadius,new ESLVal(360).div(numberOfPhilosophers).mul(i)).termRef(1);
+  {ESLVal _v13 = edb.ref("math").ref("circlePos").apply(centreX,centreY,chopstickRadius,new ESLVal(360).div(numberOfPhilosophers).mul(i));
+        
+        switch(_v13.termName) {
+        case "Point": {ESLVal $23 = _v13.termRef(0);
+          ESLVal $22 = _v13.termRef(1);
           
-          {ESLVal x = $15;
+          {ESLVal x = $23;
           
-          {ESLVal y = $16;
+          {ESLVal y = $22;
           
           if(member.apply(c,free).boolVal)
           return new ESLVal("Circle",x,y,new ESLVal(10),unfilled);
           else
-            {ESLVal _v2 = $15;
+            {ESLVal _v26 = $23;
               
-              {ESLVal _v3 = $16;
+              {ESLVal _v27 = $22;
               
-              return new ESLVal("Circle",_v2,_v3,new ESLVal(10),filled);
+              return new ESLVal("Circle",_v26,_v27,new ESLVal(10),filled);
             }
             }
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(7825,8067)"));
+        default: return error(new ESLVal("case error at Pos(7823,8065)").add(ESLVal.list(_v13)));
+      }
       }
     }
   });
   private static ESLVal filmstrip = new ESLVal(new Function(new ESLVal("filmstrip"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
-      ESLVal history = $args[0];
-  if(history.isCons())
-        {ESLVal $17 = history.head();
-          ESLVal $18 = history.tail();
+      ESLVal _v25 = $args[0];
+  {ESLVal _v12 = _v25;
+        
+        if(_v12.isCons())
+        {ESLVal $17 = _v12.head();
+          ESLVal $18 = _v12.tail();
           
           switch($17.termName) {
-          case "Grab": {ESLVal $19 = $17.termRef(0);
+          case "Grab": {ESLVal $21 = $17.termRef(0);
             ESLVal $20 = $17.termRef(1);
             
-            {ESLVal p = $19;
+            {ESLVal p = $21;
             
             {ESLVal c = $20;
             
@@ -280,9 +303,9 @@ public class Philosophers {
           }
           }
           }
-        case "Release": {ESLVal $21 = $17.termRef(0);
+        case "Release": {ESLVal $19 = $17.termRef(0);
             
-            {ESLVal c = $21;
+            {ESLVal c = $19;
             
             {ESLVal h = $18;
             
@@ -290,12 +313,13 @@ public class Philosophers {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(8247,8463)"));
+          default: return error(new ESLVal("case error at Pos(8245,8461)").add(ESLVal.list(_v12)));
         }
         }
-      else if(history.isNil())
+      else if(_v12.isNil())
         return ESLVal.list(new ESLVal("Snapshot",$nil,chopsticks));
-      else return error(new ESLVal("case error at Pos(8247,8463)"));
+      else return error(new ESLVal("case error at Pos(8245,8461)").add(ESLVal.list(_v12)));
+      }
     }
   });
   private static ESLVal extendFilmstrip = new ESLVal(new Function(new ESLVal("extendFilmstrip"),getSelf()) {
@@ -303,62 +327,68 @@ public class Philosophers {
       ESLVal p = $args[0];
   ESLVal c = $args[1];
   ESLVal fs = $args[2];
-  if(fs.isCons())
-        {ESLVal $22 = fs.head();
-          ESLVal $23 = fs.tail();
+  {ESLVal _v11 = fs;
+        
+        if(_v11.isCons())
+        {ESLVal $13 = _v11.head();
+          ESLVal $14 = _v11.tail();
           
-          switch($22.termName) {
-          case "Snapshot": {ESLVal $24 = $22.termRef(0);
-            ESLVal $25 = $22.termRef(1);
+          switch($13.termName) {
+          case "Snapshot": {ESLVal $16 = $13.termRef(0);
+            ESLVal $15 = $13.termRef(1);
             
-            {ESLVal holds = $24;
+            {ESLVal holds = $16;
             
-            {ESLVal free = $25;
+            {ESLVal free = $15;
             
-            {ESLVal _v4 = $23;
+            {ESLVal _v24 = $14;
             
-            return _v4.cons(new ESLVal("Snapshot",holds,free)).cons(new ESLVal("Snapshot",extendHolds.apply(p,c,holds),remove.apply(c,free)));
+            return _v24.cons(new ESLVal("Snapshot",holds,free)).cons(new ESLVal("Snapshot",extendHolds.apply(p,c,holds),remove.apply(c,free)));
           }
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(8649,8812)"));
+          default: return error(new ESLVal("case error at Pos(8647,8810)").add(ESLVal.list(_v11)));
         }
         }
-      else if(fs.isNil())
-        return error(new ESLVal("case error at Pos(8649,8812)"));
-      else return error(new ESLVal("case error at Pos(8649,8812)"));
+      else if(_v11.isNil())
+        return error(new ESLVal("case error at Pos(8647,8810)").add(ESLVal.list(_v11)));
+      else return error(new ESLVal("case error at Pos(8647,8810)").add(ESLVal.list(_v11)));
+      }
     }
   });
   private static ESLVal reduceFilmstrip = new ESLVal(new Function(new ESLVal("reduceFilmstrip"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal c = $args[0];
   ESLVal fs = $args[1];
-  if(fs.isCons())
-        {ESLVal $26 = fs.head();
-          ESLVal $27 = fs.tail();
+  {ESLVal _v10 = fs;
+        
+        if(_v10.isCons())
+        {ESLVal $9 = _v10.head();
+          ESLVal $10 = _v10.tail();
           
-          switch($26.termName) {
-          case "Snapshot": {ESLVal $28 = $26.termRef(0);
-            ESLVal $29 = $26.termRef(1);
+          switch($9.termName) {
+          case "Snapshot": {ESLVal $12 = $9.termRef(0);
+            ESLVal $11 = $9.termRef(1);
             
-            {ESLVal holds = $28;
+            {ESLVal holds = $12;
             
-            {ESLVal free = $29;
+            {ESLVal free = $11;
             
-            {ESLVal _v5 = $27;
+            {ESLVal _v23 = $10;
             
-            return _v5.cons(new ESLVal("Snapshot",holds,free)).cons(new ESLVal("Snapshot",reduceHolds.apply(c,holds),free.cons(c)));
+            return _v23.cons(new ESLVal("Snapshot",holds,free)).cons(new ESLVal("Snapshot",reduceHolds.apply(c,holds),free.cons(c)));
           }
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(8978,9120)"));
+          default: return error(new ESLVal("case error at Pos(8976,9118)").add(ESLVal.list(_v10)));
         }
         }
-      else if(fs.isNil())
-        return error(new ESLVal("case error at Pos(8978,9120)"));
-      else return error(new ESLVal("case error at Pos(8978,9120)"));
+      else if(_v10.isNil())
+        return error(new ESLVal("case error at Pos(8976,9118)").add(ESLVal.list(_v10)));
+      else return error(new ESLVal("case error at Pos(8976,9118)").add(ESLVal.list(_v10)));
+      }
     }
   });
   private static ESLVal extendHolds = new ESLVal(new Function(new ESLVal("extendHolds"),getSelf()) {
@@ -366,19 +396,21 @@ public class Philosophers {
       ESLVal p = $args[0];
   ESLVal c = $args[1];
   ESLVal holds = $args[2];
-  if(holds.isCons())
-        {ESLVal $30 = holds.head();
-          ESLVal $31 = holds.tail();
+  {ESLVal _v9 = holds;
+        
+        if(_v9.isCons())
+        {ESLVal $5 = _v9.head();
+          ESLVal $6 = _v9.tail();
           
-          switch($30.termName) {
-          case "Holds": {ESLVal $32 = $30.termRef(0);
-            ESLVal $33 = $30.termRef(1);
+          switch($5.termName) {
+          case "Holds": {ESLVal $8 = $5.termRef(0);
+            ESLVal $7 = $5.termRef(1);
             
-            {ESLVal p1 = $32;
+            {ESLVal p1 = $8;
             
-            {ESLVal cs = $33;
+            {ESLVal cs = $7;
             
-            {ESLVal hs = $31;
+            {ESLVal hs = $6;
             
             if(p.eql(p1).boolVal)
             return hs.cons(new ESLVal("Holds",p,cs.cons(c)));
@@ -388,31 +420,34 @@ public class Philosophers {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(9256,9436)"));
+          default: return error(new ESLVal("case error at Pos(9254,9434)").add(ESLVal.list(_v9)));
         }
         }
-      else if(holds.isNil())
+      else if(_v9.isNil())
         return ESLVal.list(new ESLVal("Holds",p,ESLVal.list(c)));
-      else return error(new ESLVal("case error at Pos(9256,9436)"));
+      else return error(new ESLVal("case error at Pos(9254,9434)").add(ESLVal.list(_v9)));
+      }
     }
   });
   private static ESLVal reduceHolds = new ESLVal(new Function(new ESLVal("reduceHolds"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal c = $args[0];
   ESLVal holds = $args[1];
-  if(holds.isCons())
-        {ESLVal $34 = holds.head();
-          ESLVal $35 = holds.tail();
+  {ESLVal _v8 = holds;
+        
+        if(_v8.isCons())
+        {ESLVal $1 = _v8.head();
+          ESLVal $2 = _v8.tail();
           
-          switch($34.termName) {
-          case "Holds": {ESLVal $36 = $34.termRef(0);
-            ESLVal $37 = $34.termRef(1);
+          switch($1.termName) {
+          case "Holds": {ESLVal $4 = $1.termRef(0);
+            ESLVal $3 = $1.termRef(1);
             
-            {ESLVal p = $36;
+            {ESLVal p = $4;
             
-            {ESLVal cs = $37;
+            {ESLVal cs = $3;
             
-            {ESLVal hs = $35;
+            {ESLVal hs = $2;
             
             if(member.apply(c,cs).boolVal)
             return hs.cons(new ESLVal("Holds",p,remove.apply(c,cs)));
@@ -422,12 +457,13 @@ public class Philosophers {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(9543,9747)"));
+          default: return error(new ESLVal("case error at Pos(9541,9745)").add(ESLVal.list(_v8)));
         }
         }
-      else if(holds.isNil())
+      else if(_v8.isNil())
         return holds;
-      else return error(new ESLVal("case error at Pos(9543,9747)"));
+      else return error(new ESLVal("case error at Pos(9541,9745)").add(ESLVal.list(_v8)));
+      }
     }
   });
   private static ESLVal eat = new ESLVal(new Function(new ESLVal("eat"),getSelf()) {
@@ -447,7 +483,10 @@ public class Philosophers {
   ESLVal right = $args[2];
   return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("philosopher1")) {
           
-          public ESLVal handle(ESLVal $m) {return error(new ESLVal("case error at Pos(0,0)"));}
+          public ESLVal handle(ESLVal $m) {{ESLVal _v7 = $m;
+            
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v7)));
+          }}
           public ESLVal get(String name) {
             switch(name) {
               
@@ -480,7 +519,7 @@ public class Philosophers {
             }).get();
               }},left,right);}
             else
-              {ESLVal _v6 = $t;
+              {ESLVal _v22 = $t;
                 
                 if($true.boolVal)
                 {}
@@ -502,7 +541,10 @@ public class Philosophers {
   ESLVal right = $args[2];
   return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("philosopher2")) {
           
-          public ESLVal handle(ESLVal $m) {return error(new ESLVal("case error at Pos(0,0)"));}
+          public ESLVal handle(ESLVal $m) {{ESLVal _v6 = $m;
+            
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v6)));
+          }}
           public ESLVal get(String name) {
             switch(name) {
               
@@ -542,7 +584,7 @@ public class Philosophers {
               }},left);
             history = history.cons(new ESLVal("Release",right)).cons(new ESLVal("Release",left));}
             else
-              {ESLVal _v7 = $t;
+              {ESLVal _v21 = $t;
                 
                 if($true.boolVal)
                 {}
@@ -561,7 +603,10 @@ public class Philosophers {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("chopstick")) {
           
-          public ESLVal handle(ESLVal $m) {return error(new ESLVal("case error at Pos(0,0)"));}
+          public ESLVal handle(ESLVal $m) {{ESLVal _v5 = $m;
+            
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v5)));
+          }}
           public ESLVal get(String name) {
             switch(name) {
               
@@ -580,9 +625,12 @@ public class Philosophers {
   private static ESLVal chopsticks = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal $qualArg = $args[0];
-  {ESLVal i = $qualArg;
+  {ESLVal _v4 = $qualArg;
+        
+        {ESLVal i = _v4;
         
         return ESLVal.list(ESLVal.list(newActor(chopstick,new ESLVal(new Actor()))));
+      }
       }
     }
   }).map($zero.to(numberOfPhilosophers)).flatten().flatten();
@@ -591,9 +639,12 @@ public class Philosophers {
       return new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal $qualArg = $args[0];
-        {ESLVal i = $qualArg;
+        {ESLVal _v2 = $qualArg;
+              
+              {ESLVal i = _v2;
               
               return ESLVal.list(ESLVal.list(newActor(philosopher2,new ESLVal(new Actor()),i,nth.apply(chopsticks,i),nth.apply(chopsticks,i.add($one).mod(numberOfPhilosophers)))));
+            }
             }
           }
         }).map($zero.to(numberOfPhilosophers)).flatten().flatten();
@@ -601,9 +652,12 @@ public class Philosophers {
         return new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal i = $qualArg;
+          {ESLVal _v3 = $qualArg;
+                
+                {ESLVal i = _v3;
                 
                 return ESLVal.list(ESLVal.list(newActor(philosopher1,new ESLVal(new Actor()),i,nth.apply(chopsticks,i),nth.apply(chopsticks,i.add($one).mod(numberOfPhilosophers)))));
+              }
               }
             }
           }).map($zero.to(numberOfPhilosophers)).flatten().flatten();
@@ -612,7 +666,10 @@ public class Philosophers {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {return error(new ESLVal("case error at Pos(0,0)"));}
+          public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
+            
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
+          }}
           public ESLVal get(String name) {
             switch(name) {
               
@@ -626,7 +683,7 @@ public class Philosophers {
             {Lib.send(edb,"Filmstrip",new ESLVal("Philosophers"),reverse.apply(toPictures.apply(filmstrip.apply(history))));
             stopAll.apply();}
             else
-              {ESLVal _v8 = $t;
+              {ESLVal _v20 = $t;
                 
                 if($true.boolVal)
                 {}

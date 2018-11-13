@@ -23,6 +23,7 @@ import edb.files.DynamicClassLoader;
 import edb.frame.EDBFrame;
 import edb.frame.EDBMenuProvider;
 import edb.frame.Writable;
+import edb.tool.EDB;
 import esl.lib.ESLVal;
 import esl.lib.Lib;
 
@@ -84,7 +85,7 @@ public class ESLTab extends ESLEditor implements EDBMenuProvider {
 				Class<?> compiler = classLoader.loadClass("esl.compiler.Compiler");
 				Field compileFile = compiler.getField("compileFile");
 				ESLVal compileFileFunction = (ESLVal) compileFile.get(null);
-				compileFileFunction.funVal.apply(new ESLVal(pathRelative.toString()));
+				compileFileFunction.funVal.apply(new ESLVal(EDB.isWindows() ? pathRelative.toString().replace("\\","/") : pathRelative.toString())); 
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

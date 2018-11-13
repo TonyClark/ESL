@@ -1,11 +1,11 @@
 export main;
 
-Act Main       {                   } 
+Act Main       {                   }
 Act Searcher   { Time(Int);        }   // Hunting for the *
 Act Controller { Time(Int); Found; }   // Informed when * is found.
 
 size::Int                = 1000;                          // The size of the square board.
-numOfSearchers::Int      = 353;                            // The number of searcher actors.
+numOfSearchers::Int      = 1000;                            // The number of searcher actors.
 board::Array[Array[Str]] = new Array[Array[Str]](size);   // A board is an array of arrays.
 max(a::Int,b::Int)::Int  = if a > b then a; else b;       // Retun the max of a and b..
 

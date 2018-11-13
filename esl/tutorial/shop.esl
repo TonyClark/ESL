@@ -5,7 +5,7 @@ import 'esl/lists.esl';
 data Property = Prop(Str,Str);
 type Props = [Property];
 
-type PictureElement = union { 
+type PictureElement = union {
 
   // Shapes, images and text with absolute positions...
   

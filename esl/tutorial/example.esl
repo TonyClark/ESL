@@ -5,9 +5,10 @@ Act Main {
 }
 
 act main::Main {
-  Time(n::Int) when n > 100 -> stopAll();
-  Time(n::Int) -> {
+  Time(n::Int) when n > 10000 -> stopAll(); 
+  Time(n::Int) when n % 100 = 0 -> {
     print[Str]('time = ' + n);
-    wait(1);
+    wait(10);
   }
+  Timw(n::Int) -> {} 
 }

@@ -11,7 +11,7 @@ public class Main {
           
           public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)"));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
           }}
           public ESLVal get(String name) {
             switch(name) {

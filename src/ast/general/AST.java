@@ -357,9 +357,14 @@ public abstract class AST implements Located, Typed, TreeNode {
 				if (value instanceof ast.data.Int) name = "IntExp";
 				if (value instanceof ast.data.Float) { return floatValue((ast.data.Float) value); }
 				if (value instanceof ast.data.Str) name = "StrExp";
+				if (value instanceof ast.lists.Set) name = "SetExp";
+				if (value instanceof ast.lists.Bag) name = "BagExp";
 				if (value instanceof ast.data.Bool) name = "BoolExp";
 				if (value instanceof ast.actors.Act) name = "ActExp";
-				if (value instanceof Key) {
+				if (value instanceof ast.types.Field) {
+					ast.types.Field field = (ast.types.Field) value;
+					return asESLValue(field.asDec());
+				} else if (value instanceof Key) {
 					Key k = (Key) value;
 					return k.getString();
 				} else if (value instanceof Spec) {

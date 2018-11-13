@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 public class Search {
   public static ESLVal getSelf() { return $null; }
   private static ESLVal size = new ESLVal(1000);
-  private static ESLVal numOfSearchers = new ESLVal(353);
+  private static ESLVal numOfSearchers = new ESLVal(1000);
   private static ESLVal board = newArray(size.intVal);
   private static ESLVal max = new ESLVal(new Function(new ESLVal("max"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
@@ -23,12 +23,15 @@ public class Search {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("controller")) {
           ESLVal count = $zero;
           
-          public ESLVal handle(ESLVal $m) {switch($m.termName) {
+          public ESLVal handle(ESLVal $m) {{ESLVal _v6 = $m;
+            
+            switch(_v6.termName) {
             case "Found": {
               {print.apply(new ESLVal("Found in ").add(count.add(new ESLVal(" steps"))));
             return stopAll.apply();}
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v6)));
+          }
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -64,7 +67,10 @@ public class Search {
               }
             });
           
-          public ESLVal handle(ESLVal $m) {return error(new ESLVal("case error at Pos(0,0)"));}
+          public ESLVal handle(ESLVal $m) {{ESLVal _v5 = $m;
+            
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v5)));
+          }}
           public ESLVal get(String name) {
             switch(name) {
               
@@ -94,7 +100,10 @@ public class Search {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {return error(new ESLVal("case error at Pos(0,0)"));}
+          public ESLVal handle(ESLVal $m) {{ESLVal _v4 = $m;
+            
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v4)));
+          }}
           public ESLVal get(String name) {
             switch(name) {
               
@@ -107,70 +116,28 @@ public class Search {
         public ESLVal init() {
             return ((Supplier<ESLVal>)() -> { 
                 {{
-                  ESLVal _v1 = $zero.to(size);
-                  while(_v1.isCons()) {
-                    if(_v1.isCons())
-                      {ESLVal $1 = _v1.head();
-                        ESLVal $2 = _v1.tail();
-                        
-                        {ESLVal x = $1;
-                        
-                        {ESLVal _v2 = $2;
-                        
-                        {_v1 = _v2;
-                      {board.array[x.intVal] = newArray(size.intVal);
-                      {
-                        ESLVal _v3 = $zero.to(size);
-                        while(_v3.isCons()) {
-                          if(_v3.isCons())
-                            {ESLVal $3 = _v3.head();
-                              ESLVal $4 = _v3.tail();
-                              
-                              {ESLVal y = $3;
-                              
-                              {ESLVal _v4 = $4;
-                              
-                              {_v3 = _v4;
-                            board.array[x.intVal].array[y.intVal] = new ESLVal("");}
-                            }
-                            }
-                            }
-                          else if(_v3.isNil())
-                            error(new ESLVal("case error at Pos(1872,1986)"));
-                          else error(new ESLVal("case error at Pos(1872,1986)"));
-                          }
-                      }}}
-                      }
-                      }
-                      }
-                    else if(_v1.isNil())
-                      error(new ESLVal("case error at Pos(1704,2061)"));
-                    else error(new ESLVal("case error at Pos(1704,2061)"));
-                    }
+                  ESLVal _v2 = $zero.to(size);
+                  while(_v2.isCons()) {
+                    ESLVal x = _v2.headVal;
+                    {board.array[x.intVal] = newArray(size.intVal);
+                    {
+                      ESLVal _v3 = $zero.to(size);
+                      while(_v3.isCons()) {
+                        ESLVal y = _v3.headVal;
+                        board.array[x.intVal].array[y.intVal] = new ESLVal("");
+                        _v3 = _v3.tailVal;}
+                    }}
+                    _v2 = _v2.tailVal;}
                 }
                 board.array[random.apply(size).intVal].array[random.apply(size).intVal] = new ESLVal("*");
                 {ESLVal control = newActor(controller,new ESLVal(new Actor()));
                   
                   {{
-                  ESLVal _v5 = $zero.to(numOfSearchers);
-                  while(_v5.isCons()) {
-                    if(_v5.isCons())
-                      {ESLVal $5 = _v5.head();
-                        ESLVal $6 = _v5.tail();
-                        
-                        {ESLVal i = $5;
-                        
-                        {ESLVal _v6 = $6;
-                        
-                        {_v5 = _v6;
-                      newActor(searcher,new ESLVal(new Actor()),control);}
-                      }
-                      }
-                      }
-                    else if(_v5.isNil())
-                      error(new ESLVal("case error at Pos(2231,2288)"));
-                    else error(new ESLVal("case error at Pos(2231,2288)"));
-                    }
+                  ESLVal _v1 = $zero.to(numOfSearchers);
+                  while(_v1.isCons()) {
+                    ESLVal i = _v1.headVal;
+                    newActor(searcher,new ESLVal(new Actor()),control);
+                    _v1 = _v1.tailVal;}
                 }
                 return $null;}
                 }}

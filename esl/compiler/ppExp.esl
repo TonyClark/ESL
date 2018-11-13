@@ -51,7 +51,7 @@ ppType(t::Type)::Str =
     ListType(l::Loc,t::Type) -> '[' + ppType(t) + ']';
     NullType(l::Loc) -> 'Null';
     RecType(l::Loc,n::Str,t::Type) -> 'rec ' + n + '.' + ppType(t);
-    RecordType(l::Loc,fs::[Type])  -> '{' + ppTypes(fs) + '}';
+    RecordType(l::Loc,fs::[TDec])  -> '{' + fs + '}';
     StrType(l::Loc) -> 'Str';
     TableType(l::Loc,k::Type,v::Type) -> 'Hash[' + ppType(k) + ',' + ppType(v) + ']';
     TermType(l::Loc,n::Str,ts::[Type]) -> n + map[Type,Str](ppType,ts);
@@ -361,6 +361,8 @@ ppJExp(indent::Int,dynamics::[Str],e::JExp)::Str = { //print[Str]('ppJExp ' + e)
     JNot(e::JExp) -> ppJExp(indent,dynamics,e) + '.not()';
     JNil(t::JType) -> '$nil';
     JList(t::JType,es::[JExp]) -> ppJListExp(indent,dynamics,t,es);
+    JSet(t::JType,es::[JExp]) -> ppJSetExp(indent,dynamics,t,es);
+    JBag(t::JType,es::[JExp]) -> ppJBagExp(indent,dynamics,t,es);
     JTerm(n::Str,[][JExp]) ->  'new ESLVal("' + n + '",new ESLVal[]{})'; 
     JTerm(n::Str,es::[JExp]) -> 'new ESLVal("' + n +  '",' + ppJExps(indent,dynamics,es,',') + ')';
     JFun(n::JExp,args::[JDeclaration],t::JType,body::JCommand) -> ppJFun(indent,dynamics,n,args,t,body);
@@ -424,6 +426,7 @@ ppJExp(indent::Int,dynamics::[Str],e::JExp)::Str = { //print[Str]('ppJExp ' + e)
     JNewTable -> 'newTable()';
     JNewJava(n::Str,[][JExp]) ->  'newJavaActor("' + n + '")';
     JNewJava(n::Str,args::[JExp]) ->  'newJavaActor("' + n + '",' + ppJExps(indent,dynamics,args,',') + ')'; 
+    JRecord(fs::[JFieldDef]) -> 'newRecord(new ESLVal[]{' + ppJExps(indent,dynamics,[ JConstExp(JConstStr(n)) | JField(n,t,e) <- fs ],',') + '},' + ppJExps(indent,dynamics,[ e | JField(n,t,e) <- fs ],',') + ')';
     JSend(e::JExp,m::Str,[][JExp]) -> 'Lib.send(' + ppJExp(indent,dynamics,e) + ',"' + m + '")';
     JSend(e::JExp,m::Str,args::[JExp]) -> 'Lib.send(' + ppJExp(indent,dynamics,e) + ',"' + m + '",' + ppJExps(indent,dynamics,args,',') + ')';
     JSendSuper(e::JExp) -> 'sendSuper(' + ppJExp(indent,dynamics,e) + ')';
@@ -571,6 +574,10 @@ ppJTerm(indent::Int,dynamics::[Str],n::Str,es::[JExp])::Str =
 
 ppJListExp(indent::Int,dynamics::[Str],t::JType,es::[JExp])::Str =
   'ESLVal.list(' + ppJExps(indent,dynamics,es,',') + ')';
+ppJSetExp(indent::Int,dynamics::[Str],t::JType,es::[JExp])::Str =
+  'ESLVal.set(' + ppJExps(indent,dynamics,es,',') + ')';
+ppJBagExp(indent::Int,dynamics::[Str],t::JType,es::[JExp])::Str =
+  'ESLVal.bag(' + ppJExps(indent,dynamics,es,',') + ')';
  
 act main::Main { 
   Time(t::Int) -> {

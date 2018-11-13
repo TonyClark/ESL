@@ -45,7 +45,7 @@ public class Termites {
                   _v4 = _v4.tailVal;}
               }
               edb.ref("display").apply(new ESLVal("Termites"),grid);
-              edb.ref("button").apply(new ESLVal("Termites"),new ESLVal("stop"),new ESLVal("icons/stop.png"),new ESLVal("stop application"),new ESLVal(new Function(new ESLVal("fun3621"),getSelf()) {
+              edb.ref("button").apply(new ESLVal("Termites"),new ESLVal("stop"),new ESLVal("icons/stop.png"),new ESLVal("stop application"),new ESLVal(new Function(new ESLVal("fun75"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   return stopAll.apply();
                 }
@@ -198,7 +198,7 @@ public class Termites {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v6)));
           }
           }}
           public ESLVal get(String name) {
@@ -292,7 +292,7 @@ public class Termites {
               }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v2)));
           }
           }}
           public ESLVal get(String name) {
@@ -317,7 +317,7 @@ public class Termites {
           
           public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)"));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
           }}
           public ESLVal get(String name) {
             switch(name) {

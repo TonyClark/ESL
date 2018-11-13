@@ -22,7 +22,7 @@ public class Segregation {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(364,401)"));
+        default: return error(new ESLVal("case error at Pos(363,400)").add(ESLVal.list(_v14)));
       }
       }
     }
@@ -44,7 +44,7 @@ public class Segregation {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(425,462)"));
+        default: return error(new ESLVal("case error at Pos(424,461)").add(ESLVal.list(_v13)));
       }
       }
     }
@@ -90,7 +90,7 @@ public class Segregation {
             case "Die": {
               return kill.apply(getSelf());
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v12)));
           }
           }}
           public ESLVal get(String name) {
@@ -382,7 +382,7 @@ public class Segregation {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v9)));
           }
           }}
           public ESLVal get(String name) {
@@ -408,7 +408,7 @@ public class Segregation {
           
           public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)"));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -422,7 +422,7 @@ public class Segregation {
         public ESLVal init() {
             return ((Supplier<ESLVal>)() -> { 
                 {edb.ref("display").apply(new ESLVal("Segregation"),grid);
-                return edb.ref("button").apply(new ESLVal("Segregation"),new ESLVal("stop"),new ESLVal("icons/stop.png"),new ESLVal("stop application"),new ESLVal(new Function(new ESLVal("fun3611"),getSelf()) {
+                return edb.ref("button").apply(new ESLVal("Segregation"),new ESLVal("stop"),new ESLVal("icons/stop.png"),new ESLVal("stop application"),new ESLVal(new Function(new ESLVal("fun27"),getSelf()) {
                     public ESLVal apply(ESLVal... $args) {
                       return stopAll.apply();
                     }

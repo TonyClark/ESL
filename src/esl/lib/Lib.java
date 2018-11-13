@@ -2,6 +2,7 @@ package esl.lib;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,6 +29,8 @@ public class Lib {
 	public static ESLVal										$false			= new ESLVal(false);
 	public static ESLVal										$null				= new Null();
 	public static ESLVal										$nil				= new Nil();
+	public static ESLVal										$emptyset		= new EmptySet();
+	public static ESLVal										$emptybag		= new EmptyBag();
 
 	public static ESLVal										wait				= new ESLVal(new Function(new ESLVal("wait"), null) {
 
@@ -37,7 +40,7 @@ public class Lib {
 																															Thread.currentThread().wait(args[0].intVal);
 																														}
 																													} catch (InterruptedException e) {
-																														e.printStackTrace();
+																														// Might happen if the system stops during a wait.
 																													}
 																													return Lib.$null;
 																												}
@@ -141,6 +144,16 @@ public class Lib {
 																														l = l.tailVal;
 																													}
 																													return $true;
+																												}
+																											});
+
+	public static ESLVal										$ndCase			= new ESLVal(new Function(new ESLVal("$ndCase"), null) {
+
+																												public ESLVal apply(ESLVal... args) {
+																													ESLVal set = args[0];
+																													ESLVal arms = args[1];
+																													ESLVal fail = args[2];
+																													return ndCase(set, arms, fail);
 																												}
 																											});
 
@@ -432,6 +445,13 @@ public class Lib {
 																												}
 																											});
 
+	public static ESLVal										id					= new ESLVal(new Function(new ESLVal("id"), null) {
+
+																												public ESLVal apply(ESLVal... args) {
+																													return args[0];
+																												}
+																											});
+
 	public static ESLVal										head				= new ESLVal(new Function(new ESLVal("head"), null) {
 
 																												public ESLVal apply(ESLVal... args) {
@@ -542,6 +562,13 @@ public class Lib {
 		return locks;
 	}
 
+	public static ESLVal getParent(ESLVal self, ESLVal parentFun, ESLVal... args) {
+		// The parent of a behaviour must set the self in the creation function
+		// before the behaviour function is applied to the arguments...
+		parentFun.funVal.setSelf(self);
+		return parentFun.funVal.apply(args);
+	}
+
 	public static ESLVal getSelf() {
 		return null;
 	}
@@ -560,6 +587,16 @@ public class Lib {
 		}
 	}
 
+	public static boolean isSet(ValState state) {
+		switch (state) {
+		case EMPTYSET:
+		case SETCONS:
+			return true;
+		default:
+			return false;
+		}
+	}
+
 	protected static int length() {
 		Actor a = actor;
 		int length = 0;
@@ -568,6 +605,19 @@ public class Lib {
 			a = a.getNext();
 		} while (a != actor);
 		return length;
+	}
+
+	private static int length(ESLVal l) {
+		switch (l.state) {
+		case EMPTYSET:
+		case NIL:
+			return 0;
+		case SETCONS:
+		case CONS:
+			return length(l.tailVal) + 1;
+		default:
+			throw new Error("length requires a list or set: " + l);
+		}
 	}
 
 	public static <T> T lock(Function action, Object... objects) {
@@ -602,6 +652,127 @@ public class Lib {
 		}
 	}
 
+	private static ESLVal ndAdd(ESLVal collection, ESLVal succ, ESLVal fail) {
+		switch (collection.state) {
+		case NIL:
+		case CONS:
+			return ndListAdd(collection, succ, fail);
+		case EMPTYSET:
+		case SETCONS:
+			return ndSetAdd(collection, succ, fail);
+		default:
+			throw new Error("unknown nd value: " + collection);
+		}
+	}
+
+	private static ESLVal ndAdd1(ESLVal pairs, ESLVal succ, ESLVal fail) {
+		if (pairs.isNil())
+			return fail.apply();
+		else {
+			ESLVal pair = pairs.head();
+			ESLVal left = pair.nth(0);
+			ESLVal right = pair.nth(1);
+			return succ.apply(left, right, new ESLVal(new Function(new ESLVal("setAdd"), null) {
+				public ESLVal apply(ESLVal... args) {
+					return ndAdd1(pairs.tail(), succ, fail);
+				}
+			}));
+		}
+	}
+
+	protected static ESLVal ndCase(ESLVal set, ESLVal arms, ESLVal fail) {
+		if (arms.isNil())
+			return fail.apply();
+		else {
+			return ndCaseArm(set, arms.head(), new ESLVal(new Function(new ESLVal("setCaseArm"), null) {
+				public ESLVal apply(ESLVal... args) {
+					return ndCase(set, arms.tail(), fail);
+				}
+			}));
+		}
+	}
+
+	private static ESLVal ndCaseArm(ESLVal collection, ESLVal term, ESLVal fail) {
+		switch (term.termName) {
+		case "$empty":
+			if (collection.isEmptySet() || collection.isNil())
+				return term.termVals[0].apply(fail);
+			else
+				return fail.apply();
+		case "$cons":
+			return ndCons(collection, 0, term.termVals[0], fail);
+		case "$selectLeft":
+			return ndSelectLeft(collection, term.termVals[0], fail);
+		case "$selectMid":
+			return ndSelectMid(collection, 0, term.termVals[0], fail);
+		case "$selectRight":
+			return ndSelectRight(collection, term.termVals[0], fail);
+		default:
+			throw new Error("illegal case arm: " + term);
+		}
+	}
+
+	private static ESLVal ndSelectMid(ESLVal list, int index, ESLVal succ, ESLVal fail) {
+		if (length(list) == index) {
+			return fail.apply();
+		} else {
+			ESLVal x = list.nth(index);
+			ESLVal pre = list.take(index);
+			ESLVal post = list.drop(index + 1);
+			return succ.apply(pre, x, post, new ESLVal(new Function(new ESLVal("ndSelectMid"), null) {
+				public ESLVal apply(ESLVal... args) {
+					return ndSelectMid(list, index + 1, succ, fail);
+				}
+			}));
+		}
+	}
+
+	private static ESLVal ndSelectLeft(ESLVal list, ESLVal succ, ESLVal fail) {
+		if (list.isNil())
+			return fail.apply();
+		else {
+			ESLVal x = list.head();
+			ESLVal l = list.tail();
+			return succ.apply(x, l, fail);
+		}
+	}
+
+	private static ESLVal ndSelectRight(ESLVal list, ESLVal succ, ESLVal fail) {
+		if (list.isNil())
+			return fail.apply();
+		else {
+			ESLVal x = list.last();
+			ESLVal l = list.butlast();
+			return succ.apply(l, x, fail);
+		}
+	}
+
+	private static ESLVal ndCons(ESLVal collection, int index, ESLVal succ, ESLVal fail) {
+		if (index == Lib.length(collection))
+			return fail.apply();
+		else {
+			ESLVal element = collection.nth(index);
+			ESLVal rest = collection.remove(element);
+			return succ.apply(element, rest, new ESLVal(new Function(new ESLVal("cons"), null) {
+				public ESLVal apply(ESLVal... args) {
+					return ndCons(collection, index + 1, succ, fail);
+				}
+			}));
+		}
+	}
+
+	private static ESLVal ndListAdd(ESLVal list, ESLVal succ, ESLVal fail) {
+		ESLVal power = powerList(list);
+		ESLVal pairs = starList(power, power);
+		return ndAdd1(pairs, succ, fail);
+	}
+
+	private static ESLVal ndSetAdd(ESLVal set, ESLVal succ, ESLVal fail) {
+		ESLVal power = power(set);
+		ESLVal pairs = star(power, power);
+		return ndAdd1(pairs, succ, fail);
+	}
+
 	public static ESLVal newActor(ESLVal fun, ESLVal actor, ESLVal... args) {
 		fun.funVal.setSelf(actor);
 		ESLVal v = fun.apply(args);
@@ -610,10 +781,6 @@ public class Lib {
 		actor.actor.setBehaviour(b);
 		actor.actor.start();
 		return actor;
-	}
-
-	public static ESLVal newTable() {
-		return new ESLVal(new Hashtable<ESLVal, ESLVal>());
 	}
 
 	public static ESLVal newArray(int length) {
@@ -649,8 +816,54 @@ public class Lib {
 		return null;
 	}
 
+	public static ESLVal newRecord(ESLVal[] names, ESLVal... vals) {
+		Record r = new Record();
+		for (int i = 0; i < names.length; i++) {
+			r.put(names[i].strVal, vals[i]);
+		}
+		return new ESLVal(r);
+	}
+
+	public static ESLVal newTable() {
+		return new ESLVal(new Hashtable<ESLVal, ESLVal>());
+	}
+
 	public static ESLVal now() {
 		return new ESLVal(getTime());
+	}
+
+	private static ESLVal power(ESLVal set) {
+		ESLVal power = new ESLVal($emptyset, $emptyset);
+		while (!set.isEmptySet()) {
+			ESLVal v = set.head();
+			set = set.tail();
+			ESLVal S = $emptyset;
+			ESLVal oldPower = power;
+			while (!power.isEmptySet()) {
+				S = new ESLVal(new ESLVal(v, power.head()), S);
+				power = power.tail();
+			}
+			S = S.append(oldPower);
+			power = S;
+		}
+		return power;
+	}
+
+	private static ESLVal powerList(ESLVal list) {
+		ESLVal power = new ESLVal($nil, $nil);
+		while (!list.isNil()) {
+			ESLVal v = list.head();
+			list = list.tail();
+			ESLVal S = $nil;
+			ESLVal oldPower = power;
+			while (!power.isNil()) {
+				S = new ESLVal(new ESLVal(v, power.head()), S);
+				power = power.tail();
+			}
+			S = S.append(oldPower);
+			power = S;
+		}
+		return power;
 	}
 
 	public static void printActors() {
@@ -705,12 +918,35 @@ public class Lib {
 		}
 		return actor;
 	}
-	
-	public static ESLVal getParent(ESLVal self,ESLVal parentFun,ESLVal...args) {
-		// The parent of a behaviour must set the self in the creation function
-		// before the behaviour function is applied to the arguments...
-		parentFun.funVal.setSelf(self);
-		return parentFun.funVal.apply(args);
+
+	private static ESLVal star(ESLVal S1, ESLVal S2) {
+		ESLVal star = $nil;
+		while (!S1.isEmptySet()) {
+			ESLVal s1 = S1.head();
+			ESLVal S3 = S2;
+			while (!S3.isEmptySet()) {
+				ESLVal s2 = S3.head();
+				star = new ESLVal(new ESLVal(s1, new ESLVal(s2, $nil)), star);
+				S3 = S3.tail();
+			}
+			S1 = S1.tail();
+		}
+		return star;
+	}
+
+	private static ESLVal starList(ESLVal S1, ESLVal S2) {
+		ESLVal star = $nil;
+		while (!S1.isNil()) {
+			ESLVal s1 = S1.head();
+			ESLVal S3 = S2;
+			while (!S3.isNil()) {
+				ESLVal s2 = S3.head();
+				star = new ESLVal(new ESLVal(s1, new ESLVal(s2, $nil)), star);
+				S3 = S3.tail();
+			}
+			S1 = S1.tail();
+		}
+		return star;
 	}
 
 	private static void startTimer() {

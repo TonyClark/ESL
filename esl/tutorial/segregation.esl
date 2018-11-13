@@ -2,7 +2,7 @@ export main;
 
 import 'esl/lists.esl';
 
-type Main = Act { } 
+type Main = Act { }
 
 type Agent = Act { export toString::()->Str; getX::()->Int; getY::()->Int; setX::(Int)->Void; setY::(Int)->Void; Die; }
 
@@ -109,7 +109,6 @@ act pop::Population {
   vacancies::Array[Loc] = createVacancies();
   
   popSet(x::Int,y::Int,c::Int)::Void = { 
-    //population := replaceNth[[Int]](population,y,replaceNth[Int](nth[[Int]](population,y),x,c));
     population[x][y] := c;
     {}
   }

@@ -40,28 +40,30 @@ public class Shop {
                   ESLVal rows = new ESLVal(new Function(new ESLVal("rows"),getSelf()) {
                       public ESLVal apply(ESLVal... $args) {
                         ESLVal cs = $args[0];
-                    if(cs.isCons())
-                          {ESLVal $19 = cs.head();
-                            ESLVal $20 = cs.tail();
+                    {ESLVal _v26 = cs;
+                          
+                          if(_v26.isCons())
+                          {ESLVal $102 = _v26.head();
+                            ESLVal $103 = _v26.tail();
                             
-                            switch($19.termName) {
-                            case "C": {ESLVal $21 = $19.termRef(0);
-                              ESLVal $22 = $19.termRef(1);
-                              ESLVal $23 = $19.termRef(2);
-                              ESLVal $24 = $19.termRef(3);
-                              ESLVal $25 = $19.termRef(4);
+                            switch($102.termName) {
+                            case "C": {ESLVal $108 = $102.termRef(0);
+                              ESLVal $107 = $102.termRef(1);
+                              ESLVal $106 = $102.termRef(2);
+                              ESLVal $105 = $102.termRef(3);
+                              ESLVal $104 = $102.termRef(4);
                               
-                              {ESLVal c = $21;
+                              {ESLVal c = $108;
                               
-                              {ESLVal s = $22;
+                              {ESLVal s = $107;
                               
-                              {ESLVal ss = $23;
+                              {ESLVal ss = $106;
                               
-                              {ESLVal sales = $24;
+                              {ESLVal sales = $105;
                               
-                              {ESLVal walkouts = $25;
+                              {ESLVal walkouts = $104;
                               
-                              {ESLVal rest = $20;
+                              {ESLVal rest = $103;
                               
                               return ESLVal.list(row.apply(ESLVal.list(bdata.apply(new ESLVal("HTML",new ESLVal("Customer-").add(c)))).add(states.apply(s,ss).add(ESLVal.list(tdata.apply(new ESLVal("HTML",new ESLVal("Sales = ").add(sales))),tdata.apply(new ESLVal("HTML",new ESLVal("Walkouts = ").add(walkouts)))))))).add(rows.apply(rest));
                             }
@@ -71,42 +73,46 @@ public class Shop {
                             }
                             }
                             }
-                            default: return error(new ESLVal("case error at Pos(4082,4446)"));
+                            default: return error(new ESLVal("case error at Pos(4081,4445)").add(ESLVal.list(_v26)));
                           }
                           }
-                        else if(cs.isNil())
+                        else if(_v26.isNil())
                           return ESLVal.list();
-                        else return error(new ESLVal("case error at Pos(4082,4446)"));
+                        else return error(new ESLVal("case error at Pos(4081,4445)").add(ESLVal.list(_v26)));
+                        }
                       }
                     });
                   ESLVal states = new ESLVal(new Function(new ESLVal("states"),getSelf()) {
                       public ESLVal apply(ESLVal... $args) {
                         ESLVal current = $args[0];
                     ESLVal allStates = $args[1];
-                    if(allStates.isCons())
-                          {ESLVal $26 = allStates.head();
-                            ESLVal $27 = allStates.tail();
+                    {ESLVal _v25 = allStates;
+                          
+                          if(_v25.isCons())
+                          {ESLVal $100 = _v25.head();
+                            ESLVal $101 = _v25.tail();
                             
-                            {ESLVal state = $26;
+                            {ESLVal state = $100;
                             
-                            {ESLVal ss = $27;
+                            {ESLVal ss = $101;
                             
                             if(state.eql(current).boolVal)
                             return ESLVal.list(rdata.apply(new ESLVal("HTML",state.add(new ESLVal(""))))).add(states.apply(current,ss));
                             else
-                              {ESLVal _v17 = $26;
+                              {ESLVal _v69 = $100;
                                 
-                                {ESLVal _v18 = $27;
+                                {ESLVal _v70 = $101;
                                 
-                                return ESLVal.list(tdata.apply(new ESLVal("HTML",_v17.add(new ESLVal(""))))).add(states.apply(current,_v18));
+                                return ESLVal.list(tdata.apply(new ESLVal("HTML",_v69.add(new ESLVal(""))))).add(states.apply(current,_v70));
                               }
                               }
                           }
                           }
                           }
-                        else if(allStates.isNil())
+                        else if(_v25.isNil())
                           return ESLVal.list();
-                        else return error(new ESLVal("case error at Pos(4529,4791)"));
+                        else return error(new ESLVal("case error at Pos(4528,4790)").add(ESLVal.list(_v25)));
+                        }
                       }
                     });
                   
@@ -133,37 +139,39 @@ public class Shop {
                 ESLVal c = $args[0];
             ESLVal s = $args[1];
             ESLVal cs = $args[2];
-            if(cs.isCons())
-                  {ESLVal $28 = cs.head();
-                    ESLVal $29 = cs.tail();
+            {ESLVal _v24 = cs;
+                  
+                  if(_v24.isCons())
+                  {ESLVal $93 = _v24.head();
+                    ESLVal $94 = _v24.tail();
                     
-                    switch($28.termName) {
-                    case "C": {ESLVal $30 = $28.termRef(0);
-                      ESLVal $31 = $28.termRef(1);
-                      ESLVal $32 = $28.termRef(2);
-                      ESLVal $33 = $28.termRef(3);
-                      ESLVal $34 = $28.termRef(4);
+                    switch($93.termName) {
+                    case "C": {ESLVal $99 = $93.termRef(0);
+                      ESLVal $98 = $93.termRef(1);
+                      ESLVal $97 = $93.termRef(2);
+                      ESLVal $96 = $93.termRef(3);
+                      ESLVal $95 = $93.termRef(4);
                       
-                      {ESLVal c1 = $30;
+                      {ESLVal c1 = $99;
                       
-                      {ESLVal s1 = $31;
+                      {ESLVal s1 = $98;
                       
-                      {ESLVal ss = $32;
+                      {ESLVal ss = $97;
                       
-                      {ESLVal sales = $33;
+                      {ESLVal sales = $96;
                       
-                      {ESLVal walkouts = $34;
+                      {ESLVal walkouts = $95;
                       
-                      {ESLVal rest = $29;
+                      {ESLVal rest = $94;
                       
                       if(c1.eql(c).boolVal)
                       return rest.cons(new ESLVal("C",c,s,ss,sales,walkouts));
                       else
-                        {ESLVal _v19 = $28;
+                        {ESLVal _v67 = $93;
                           
-                          {ESLVal _v20 = $29;
+                          {ESLVal _v68 = $94;
                           
-                          return changeState.apply(c,s,_v20).cons(_v19);
+                          return changeState.apply(c,s,_v68).cons(_v67);
                         }
                         }
                     }
@@ -173,45 +181,48 @@ public class Shop {
                     }
                     }
                     }
-                    default: {ESLVal c1 = $28;
+                    default: {ESLVal c1 = $93;
                       
-                      {ESLVal rest = $29;
+                      {ESLVal rest = $94;
                       
                       return changeState.apply(c,s,rest).cons(c1);
                     }
                     }
                   }
                   }
-                else if(cs.isNil())
+                else if(_v24.isNil())
                   return cs;
-                else return error(new ESLVal("case error at Pos(5212,5457)"));
+                else return error(new ESLVal("case error at Pos(5211,5456)").add(ESLVal.list(_v24)));
+                }
               }
             });
           ESLVal getSales = new ESLVal(new Function(new ESLVal("getSales"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal cs = $args[0];
-            if(cs.isCons())
-                  {ESLVal $35 = cs.head();
-                    ESLVal $36 = cs.tail();
+            {ESLVal _v23 = cs;
+                  
+                  if(_v23.isCons())
+                  {ESLVal $86 = _v23.head();
+                    ESLVal $87 = _v23.tail();
                     
-                    switch($35.termName) {
-                    case "C": {ESLVal $37 = $35.termRef(0);
-                      ESLVal $38 = $35.termRef(1);
-                      ESLVal $39 = $35.termRef(2);
-                      ESLVal $40 = $35.termRef(3);
-                      ESLVal $41 = $35.termRef(4);
+                    switch($86.termName) {
+                    case "C": {ESLVal $92 = $86.termRef(0);
+                      ESLVal $91 = $86.termRef(1);
+                      ESLVal $90 = $86.termRef(2);
+                      ESLVal $89 = $86.termRef(3);
+                      ESLVal $88 = $86.termRef(4);
                       
-                      {ESLVal c1 = $37;
+                      {ESLVal c1 = $92;
                       
-                      {ESLVal s1 = $38;
+                      {ESLVal s1 = $91;
                       
-                      {ESLVal ss = $39;
+                      {ESLVal ss = $90;
                       
-                      {ESLVal sales = $40;
+                      {ESLVal sales = $89;
                       
-                      {ESLVal walkouts = $41;
+                      {ESLVal walkouts = $88;
                       
-                      {ESLVal rest = $36;
+                      {ESLVal rest = $87;
                       
                       return sales.add(getSales.apply(rest));
                     }
@@ -221,39 +232,42 @@ public class Shop {
                     }
                     }
                     }
-                    default: return error(new ESLVal("case error at Pos(5503,5644)"));
+                    default: return error(new ESLVal("case error at Pos(5502,5643)").add(ESLVal.list(_v23)));
                   }
                   }
-                else if(cs.isNil())
+                else if(_v23.isNil())
                   return $zero;
-                else return error(new ESLVal("case error at Pos(5503,5644)"));
+                else return error(new ESLVal("case error at Pos(5502,5643)").add(ESLVal.list(_v23)));
+                }
               }
             });
           ESLVal getWalkouts = new ESLVal(new Function(new ESLVal("getWalkouts"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal cs = $args[0];
-            if(cs.isCons())
-                  {ESLVal $42 = cs.head();
-                    ESLVal $43 = cs.tail();
+            {ESLVal _v22 = cs;
+                  
+                  if(_v22.isCons())
+                  {ESLVal $79 = _v22.head();
+                    ESLVal $80 = _v22.tail();
                     
-                    switch($42.termName) {
-                    case "C": {ESLVal $44 = $42.termRef(0);
-                      ESLVal $45 = $42.termRef(1);
-                      ESLVal $46 = $42.termRef(2);
-                      ESLVal $47 = $42.termRef(3);
-                      ESLVal $48 = $42.termRef(4);
+                    switch($79.termName) {
+                    case "C": {ESLVal $85 = $79.termRef(0);
+                      ESLVal $84 = $79.termRef(1);
+                      ESLVal $83 = $79.termRef(2);
+                      ESLVal $82 = $79.termRef(3);
+                      ESLVal $81 = $79.termRef(4);
                       
-                      {ESLVal c1 = $44;
+                      {ESLVal c1 = $85;
                       
-                      {ESLVal s1 = $45;
+                      {ESLVal s1 = $84;
                       
-                      {ESLVal ss = $46;
+                      {ESLVal ss = $83;
                       
-                      {ESLVal sales = $47;
+                      {ESLVal sales = $82;
                       
-                      {ESLVal walkouts = $48;
+                      {ESLVal walkouts = $81;
                       
-                      {ESLVal rest = $43;
+                      {ESLVal rest = $80;
                       
                       return walkouts.add(getWalkouts.apply(rest));
                     }
@@ -263,39 +277,42 @@ public class Shop {
                     }
                     }
                     }
-                    default: return error(new ESLVal("case error at Pos(5693,5840)"));
+                    default: return error(new ESLVal("case error at Pos(5692,5839)").add(ESLVal.list(_v22)));
                   }
                   }
-                else if(cs.isNil())
+                else if(_v22.isNil())
                   return $zero;
-                else return error(new ESLVal("case error at Pos(5693,5840)"));
+                else return error(new ESLVal("case error at Pos(5692,5839)").add(ESLVal.list(_v22)));
+                }
               }
             });
           ESLVal getEvents = new ESLVal(new Function(new ESLVal("getEvents"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal cs = $args[0];
-            if(cs.isCons())
-                  {ESLVal $49 = cs.head();
-                    ESLVal $50 = cs.tail();
+            {ESLVal _v21 = cs;
+                  
+                  if(_v21.isCons())
+                  {ESLVal $72 = _v21.head();
+                    ESLVal $73 = _v21.tail();
                     
-                    switch($49.termName) {
-                    case "C": {ESLVal $51 = $49.termRef(0);
-                      ESLVal $52 = $49.termRef(1);
-                      ESLVal $53 = $49.termRef(2);
-                      ESLVal $54 = $49.termRef(3);
-                      ESLVal $55 = $49.termRef(4);
+                    switch($72.termName) {
+                    case "C": {ESLVal $78 = $72.termRef(0);
+                      ESLVal $77 = $72.termRef(1);
+                      ESLVal $76 = $72.termRef(2);
+                      ESLVal $75 = $72.termRef(3);
+                      ESLVal $74 = $72.termRef(4);
                       
-                      {ESLVal c1 = $51;
+                      {ESLVal c1 = $78;
                       
-                      {ESLVal s1 = $52;
+                      {ESLVal s1 = $77;
                       
-                      {ESLVal ss = $53;
+                      {ESLVal ss = $76;
                       
-                      {ESLVal sales = $54;
+                      {ESLVal sales = $75;
                       
-                      {ESLVal walkouts = $55;
+                      {ESLVal walkouts = $74;
                       
-                      {ESLVal rest = $50;
+                      {ESLVal rest = $73;
                       
                       return walkouts.add(sales.add(getEvents.apply(rest)));
                     }
@@ -305,49 +322,52 @@ public class Shop {
                     }
                     }
                     }
-                    default: return error(new ESLVal("case error at Pos(5887,6040)"));
+                    default: return error(new ESLVal("case error at Pos(5886,6039)").add(ESLVal.list(_v21)));
                   }
                   }
-                else if(cs.isNil())
+                else if(_v21.isNil())
                   return $zero;
-                else return error(new ESLVal("case error at Pos(5887,6040)"));
+                else return error(new ESLVal("case error at Pos(5886,6039)").add(ESLVal.list(_v21)));
+                }
               }
             });
           ESLVal sale = new ESLVal(new Function(new ESLVal("sale"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                ESLVal customer = $args[0];
-            ESLVal customers = $args[1];
-            if(customers.isCons())
-                  {ESLVal $56 = customers.head();
-                    ESLVal $57 = customers.tail();
+                ESLVal _v64 = $args[0];
+            ESLVal _v63 = $args[1];
+            {ESLVal _v20 = _v63;
+                  
+                  if(_v20.isCons())
+                  {ESLVal $65 = _v20.head();
+                    ESLVal $66 = _v20.tail();
                     
-                    switch($56.termName) {
-                    case "C": {ESLVal $58 = $56.termRef(0);
-                      ESLVal $59 = $56.termRef(1);
-                      ESLVal $60 = $56.termRef(2);
-                      ESLVal $61 = $56.termRef(3);
-                      ESLVal $62 = $56.termRef(4);
+                    switch($65.termName) {
+                    case "C": {ESLVal $71 = $65.termRef(0);
+                      ESLVal $70 = $65.termRef(1);
+                      ESLVal $69 = $65.termRef(2);
+                      ESLVal $68 = $65.termRef(3);
+                      ESLVal $67 = $65.termRef(4);
                       
-                      {ESLVal c1 = $58;
+                      {ESLVal c1 = $71;
                       
-                      {ESLVal s1 = $59;
+                      {ESLVal s1 = $70;
                       
-                      {ESLVal ss = $60;
+                      {ESLVal ss = $69;
                       
-                      {ESLVal sales = $61;
+                      {ESLVal sales = $68;
                       
-                      {ESLVal walkouts = $62;
+                      {ESLVal walkouts = $67;
                       
-                      {ESLVal rest = $57;
+                      {ESLVal rest = $66;
                       
-                      if(c1.eql(customer).boolVal)
+                      if(c1.eql(_v64).boolVal)
                       return rest.cons(new ESLVal("C",c1,s1,ss,sales.add($one),walkouts));
                       else
-                        {ESLVal _v21 = $56;
+                        {ESLVal _v65 = $65;
                           
-                          {ESLVal _v22 = $57;
+                          {ESLVal _v66 = $66;
                           
-                          return sale.apply(customer,_v22).cons(_v21);
+                          return sale.apply(_v64,_v66).cons(_v65);
                         }
                         }
                     }
@@ -357,55 +377,58 @@ public class Shop {
                     }
                     }
                     }
-                    default: {ESLVal c1 = $56;
+                    default: {ESLVal c1 = $65;
                       
-                      {ESLVal rest = $57;
+                      {ESLVal rest = $66;
                       
-                      return sale.apply(customer,rest).cons(c1);
+                      return sale.apply(_v64,rest).cons(c1);
                     }
                     }
                   }
                   }
-                else if(customers.isNil())
-                  return customers;
-                else return error(new ESLVal("case error at Pos(6117,6386)"));
+                else if(_v20.isNil())
+                  return _v63;
+                else return error(new ESLVal("case error at Pos(6116,6385)").add(ESLVal.list(_v20)));
+                }
               }
             });
           ESLVal timeout = new ESLVal(new Function(new ESLVal("timeout"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                ESLVal customer = $args[0];
-            ESLVal customers = $args[1];
-            if(customers.isCons())
-                  {ESLVal $63 = customers.head();
-                    ESLVal $64 = customers.tail();
+                ESLVal _v60 = $args[0];
+            ESLVal _v59 = $args[1];
+            {ESLVal _v19 = _v59;
+                  
+                  if(_v19.isCons())
+                  {ESLVal $58 = _v19.head();
+                    ESLVal $59 = _v19.tail();
                     
-                    switch($63.termName) {
-                    case "C": {ESLVal $65 = $63.termRef(0);
-                      ESLVal $66 = $63.termRef(1);
-                      ESLVal $67 = $63.termRef(2);
-                      ESLVal $68 = $63.termRef(3);
-                      ESLVal $69 = $63.termRef(4);
+                    switch($58.termName) {
+                    case "C": {ESLVal $64 = $58.termRef(0);
+                      ESLVal $63 = $58.termRef(1);
+                      ESLVal $62 = $58.termRef(2);
+                      ESLVal $61 = $58.termRef(3);
+                      ESLVal $60 = $58.termRef(4);
                       
-                      {ESLVal c1 = $65;
+                      {ESLVal c1 = $64;
                       
-                      {ESLVal s1 = $66;
+                      {ESLVal s1 = $63;
                       
-                      {ESLVal ss = $67;
+                      {ESLVal ss = $62;
                       
-                      {ESLVal sales = $68;
+                      {ESLVal sales = $61;
                       
-                      {ESLVal walkouts = $69;
+                      {ESLVal walkouts = $60;
                       
-                      {ESLVal rest = $64;
+                      {ESLVal rest = $59;
                       
-                      if(c1.eql(customer).boolVal)
+                      if(c1.eql(_v60).boolVal)
                       return rest.cons(new ESLVal("C",c1,s1,ss,sales,walkouts.add($one)));
                       else
-                        {ESLVal _v23 = $63;
+                        {ESLVal _v61 = $58;
                           
-                          {ESLVal _v24 = $64;
+                          {ESLVal _v62 = $59;
                           
-                          return timeout.apply(customer,_v24).cons(_v23);
+                          return timeout.apply(_v60,_v62).cons(_v61);
                         }
                         }
                     }
@@ -415,37 +438,40 @@ public class Shop {
                     }
                     }
                     }
-                    default: {ESLVal c1 = $63;
+                    default: {ESLVal c1 = $58;
                       
-                      {ESLVal rest = $64;
+                      {ESLVal rest = $59;
                       
-                      return timeout.apply(customer,rest).cons(c1);
+                      return timeout.apply(_v60,rest).cons(c1);
                     }
                     }
                   }
                   }
-                else if(customers.isNil())
-                  return customers;
-                else return error(new ESLVal("case error at Pos(6466,6737)"));
+                else if(_v19.isNil())
+                  return _v59;
+                else return error(new ESLVal("case error at Pos(6465,6736)").add(ESLVal.list(_v19)));
+                }
               }
             });
           
-          public ESLVal handle(ESLVal $m) {switch($m.termName) {
-            case "ChangeState": {ESLVal $70 = $m.termRef(0);
-              ESLVal $71 = $m.termRef(1);
+          public ESLVal handle(ESLVal $m) {{ESLVal _v27 = $m;
+            
+            switch(_v27.termName) {
+            case "ChangeState": {ESLVal $115 = _v27.termRef(0);
+              ESLVal $114 = _v27.termRef(1);
               
-              {ESLVal c = $70;
+              {ESLVal c = $115;
               
-              {ESLVal s = $71;
+              {ESLVal s = $114;
               
               {customers = changeState.apply(c,s,customers);
-            {ESLVal events = getEvents.apply(customers);
+            {ESLVal[] events = new ESLVal[]{getEvents.apply(customers)};
               
               {ESLVal sales = getSales.apply(customers);
               ESLVal walkouts = getWalkouts.apply(customers);
               
-              {if(events.eql($zero).boolVal)
-              events = $one;
+              {if(events[0].eql($zero).boolVal)
+              events[0] = $one;
               else
                 {}
             return Lib.send(edb,"Show",new ESLVal("customers"),new ESLVal("Table",ESLVal.list(),ESLVal.list(new ESLVal("Row",ESLVal.list(),ESLVal.list(new ESLVal("Data",ESLVal.list(),asTable.apply()))))));}
@@ -454,31 +480,31 @@ public class Shop {
             }
             }
             }
-          case "Sale": {ESLVal $72 = $m.termRef(0);
+          case "Sale": {ESLVal $113 = _v27.termRef(0);
               
-              {ESLVal c = $72;
+              {ESLVal c = $113;
               
               {customers = sale.apply(c,customers);
             return $null;}
             }
             }
-          case "TimeOut": {ESLVal $73 = $m.termRef(0);
+          case "TimeOut": {ESLVal $112 = _v27.termRef(0);
               
-              {ESLVal c = $73;
+              {ESLVal c = $112;
               
               {customers = timeout.apply(c,customers);
             return $null;}
             }
             }
-          case "RegisterCustomer": {ESLVal $74 = $m.termRef(0);
-              ESLVal $75 = $m.termRef(1);
-              ESLVal $76 = $m.termRef(2);
+          case "RegisterCustomer": {ESLVal $111 = _v27.termRef(0);
+              ESLVal $110 = _v27.termRef(1);
+              ESLVal $109 = _v27.termRef(2);
               
-              {ESLVal c = $74;
+              {ESLVal c = $111;
               
-              {ESLVal state = $75;
+              {ESLVal state = $110;
               
-              {ESLVal states = $76;
+              {ESLVal states = $109;
               
               {customers = customers.add(ESLVal.list(new ESLVal("C",c,state,states,$zero,$zero)));
             return Lib.send(edb,"Show",new ESLVal("customers"),asTable.apply());}
@@ -486,7 +512,8 @@ public class Shop {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v27)));
+          }
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -510,7 +537,9 @@ public class Shop {
           ESLVal state = new ESLVal("OnFloor",new ESLVal[]{});
           ESLVal hasNoticed = new ESLVal(75);
           
-          public ESLVal handle(ESLVal $m) {switch($m.termName) {
+          public ESLVal handle(ESLVal $m) {{ESLVal _v18 = $m;
+            
+            switch(_v18.termName) {
             case "CompletedHelp": {
               {state = new ESLVal("OnFloor",new ESLVal[]{});
             return $null;}
@@ -551,7 +580,8 @@ public class Shop {
               else
                 return $null;
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v18)));
+          }
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -583,37 +613,40 @@ public class Shop {
           ESLVal assistantWaitingToHelp = new ESLVal(new Function(new ESLVal("assistantWaitingToHelp"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal h = $args[0];
-            if(h.isCons())
-                  {ESLVal $77 = h.head();
-                    ESLVal $78 = h.tail();
+            {ESLVal _v15 = h;
+                  
+                  if(_v15.isCons())
+                  {ESLVal $52 = _v15.head();
+                    ESLVal $53 = _v15.tail();
                     
-                    switch($77.termName) {
-                    case "WaitingToHelp": {ESLVal $79 = $77.termRef(0);
-                      ESLVal $80 = $77.termRef(1);
+                    switch($52.termName) {
+                    case "WaitingToHelp": {ESLVal $55 = $52.termRef(0);
+                      ESLVal $54 = $52.termRef(1);
                       
-                      {ESLVal a = $79;
+                      {ESLVal a = $55;
                       
-                      {ESLVal n = $80;
+                      {ESLVal n = $54;
                       
-                      {ESLVal _v25 = $78;
+                      {ESLVal _v57 = $53;
                       
                       return $true;
                     }
                     }
                     }
                     }
-                    default: {ESLVal x = $77;
+                    default: {ESLVal x = $52;
                       
-                      {ESLVal _v26 = $78;
+                      {ESLVal _v58 = $53;
                       
-                      return assistantWaitingToHelp.apply(_v26);
+                      return assistantWaitingToHelp.apply(_v58);
                     }
                     }
                   }
                   }
-                else if(h.isNil())
+                else if(_v15.isNil())
                   return $false;
-                else return error(new ESLVal("case error at Pos(8789,8942)"));
+                else return error(new ESLVal("case error at Pos(8788,8941)").add(ESLVal.list(_v15)));
+                }
               }
             });
           ESLVal startHelp = new ESLVal(new Function(new ESLVal("startHelp"),getSelf()) {
@@ -621,38 +654,41 @@ public class Shop {
                 ESLVal c = $args[0];
             ESLVal n = $args[1];
             ESLVal h = $args[2];
-            if(h.isCons())
-                  {ESLVal $81 = h.head();
-                    ESLVal $82 = h.tail();
+            {ESLVal _v14 = h;
+                  
+                  if(_v14.isCons())
+                  {ESLVal $48 = _v14.head();
+                    ESLVal $49 = _v14.tail();
                     
-                    switch($81.termName) {
-                    case "WaitingToHelp": {ESLVal $83 = $81.termRef(0);
-                      ESLVal $84 = $81.termRef(1);
+                    switch($48.termName) {
+                    case "WaitingToHelp": {ESLVal $51 = $48.termRef(0);
+                      ESLVal $50 = $48.termRef(1);
                       
-                      {ESLVal a = $83;
+                      {ESLVal a = $51;
                       
-                      {ESLVal m = $84;
+                      {ESLVal m = $50;
                       
-                      {ESLVal _v27 = $82;
+                      {ESLVal _v55 = $49;
                       
                       {Lib.send(display,"ChangeState",c.ref("getId").apply(),new ESLVal("GettingHelp"));
-                    return process.apply(_v27).cons(new ESLVal("Helping",a,c,random.apply(maxHelpTime)));}
+                    return process.apply(_v55).cons(new ESLVal("Helping",a,c,random.apply(maxHelpTime)));}
                     }
                     }
                     }
                     }
-                    default: {ESLVal x = $81;
+                    default: {ESLVal x = $48;
                       
-                      {ESLVal _v28 = $82;
+                      {ESLVal _v56 = $49;
                       
-                      return startHelp.apply(c,n,_v28).cons(x);
+                      return startHelp.apply(c,n,_v56).cons(x);
                     }
                     }
                   }
                   }
-                else if(h.isNil())
+                else if(_v14.isNil())
                   return ESLVal.list(new ESLVal("WaitingForHelp",c,n.sub($one)));
-                else return error(new ESLVal("case error at Pos(8999,9328)"));
+                else return error(new ESLVal("case error at Pos(8998,9327)").add(ESLVal.list(_v14)));
+                }
               }
             });
           ESLVal tryToHelp = new ESLVal(new Function(new ESLVal("tryToHelp"),getSelf()) {
@@ -660,141 +696,149 @@ public class Shop {
                 ESLVal a = $args[0];
             ESLVal n = $args[1];
             ESLVal h = $args[2];
-            if(h.isCons())
-                  {ESLVal $85 = h.head();
-                    ESLVal $86 = h.tail();
+            {ESLVal _v13 = h;
+                  
+                  if(_v13.isCons())
+                  {ESLVal $44 = _v13.head();
+                    ESLVal $45 = _v13.tail();
                     
-                    switch($85.termName) {
-                    case "WaitingForHelp": {ESLVal $87 = $85.termRef(0);
-                      ESLVal $88 = $85.termRef(1);
+                    switch($44.termName) {
+                    case "WaitingForHelp": {ESLVal $47 = $44.termRef(0);
+                      ESLVal $46 = $44.termRef(1);
                       
-                      {ESLVal c = $87;
+                      {ESLVal c = $47;
                       
-                      {ESLVal m = $88;
+                      {ESLVal m = $46;
                       
-                      {ESLVal _v29 = $86;
+                      {ESLVal _v53 = $45;
                       
                       {Lib.send(display,"ChangeState",c.ref("getId").apply(),new ESLVal("GettingHelp"));
-                    return process.apply(_v29).cons(new ESLVal("Helping",a,c,random.apply(maxHelpTime)));}
+                    return process.apply(_v53).cons(new ESLVal("Helping",a,c,random.apply(maxHelpTime)));}
                     }
                     }
                     }
                     }
-                    default: {ESLVal x = $85;
+                    default: {ESLVal x = $44;
                       
-                      {ESLVal _v30 = $86;
+                      {ESLVal _v54 = $45;
                       
-                      return tryToHelp.apply(a,n,_v30).cons(x);
+                      return tryToHelp.apply(a,n,_v54).cons(x);
                     }
                     }
                   }
                   }
-                else if(h.isNil())
+                else if(_v13.isNil())
                   return ESLVal.list(new ESLVal("WaitingToHelp",a,n.sub($one)));
-                else return error(new ESLVal("case error at Pos(9386,9714)"));
+                else return error(new ESLVal("case error at Pos(9385,9713)").add(ESLVal.list(_v13)));
+                }
               }
             });
           ESLVal process = new ESLVal(new Function(new ESLVal("process"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal s = $args[0];
-            if(s.isCons())
-                  {ESLVal $89 = s.head();
-                    ESLVal $90 = s.tail();
+            {ESLVal _v12 = s;
+                  
+                  if(_v12.isCons())
+                  {ESLVal $35 = _v12.head();
+                    ESLVal $36 = _v12.tail();
                     
-                    switch($89.termName) {
-                    case "Helping": {ESLVal $91 = $89.termRef(0);
-                      ESLVal $92 = $89.termRef(1);
-                      ESLVal $93 = $89.termRef(2);
+                    switch($35.termName) {
+                    case "Helping": {ESLVal $43 = $35.termRef(0);
+                      ESLVal $42 = $35.termRef(1);
+                      ESLVal $41 = $35.termRef(2);
                       
-                      switch($93.intVal) {
-                      case 0: {ESLVal a = $91;
+                      switch($41.intVal) {
+                      case 0: {ESLVal a = $43;
                         
-                        {ESLVal c = $92;
+                        {ESLVal c = $42;
                         
-                        {ESLVal _v31 = $90;
+                        {ESLVal _v51 = $36;
                         
                         {Lib.send(a,"CompletedHelp");
                       Lib.send(c,"Helped");
-                      return process.apply(_v31);}
+                      return process.apply(_v51);}
                       }
                       }
                       }
-                      default: {ESLVal a = $91;
+                      default: {ESLVal a = $43;
                         
-                        {ESLVal c = $92;
+                        {ESLVal c = $42;
                         
-                        {ESLVal n = $93;
+                        {ESLVal n = $41;
                         
-                        {ESLVal _v32 = $90;
+                        {ESLVal _v52 = $36;
                         
-                        return process.apply(_v32).cons(new ESLVal("Helping",a,c,n.sub($one)));
+                        return process.apply(_v52).cons(new ESLVal("Helping",a,c,n.sub($one)));
                       }
                       }
                       }
                       }
                     }
                     }
-                  case "WaitingForHelp": {ESLVal $94 = $89.termRef(0);
-                      ESLVal $95 = $89.termRef(1);
+                  case "WaitingForHelp": {ESLVal $40 = $35.termRef(0);
+                      ESLVal $39 = $35.termRef(1);
                       
-                      switch($95.intVal) {
-                      case 0: {ESLVal c = $94;
+                      switch($39.intVal) {
+                      case 0: {ESLVal c = $40;
                         
-                        {ESLVal _v33 = $90;
+                        {ESLVal _v49 = $36;
                         
                         {Lib.send(c,"TimeOut");
-                      return process.apply(_v33);}
+                      return process.apply(_v49);}
                       }
                       }
-                      default: {ESLVal c = $94;
+                      default: {ESLVal c = $40;
                         
-                        {ESLVal n = $95;
+                        {ESLVal n = $39;
                         
-                        {ESLVal _v34 = $90;
+                        {ESLVal _v50 = $36;
                         
-                        return startHelp.apply(c,n,_v34);
+                        return startHelp.apply(c,n,_v50);
                       }
                       }
                       }
                     }
                     }
-                  case "WaitingToHelp": {ESLVal $96 = $89.termRef(0);
-                      ESLVal $97 = $89.termRef(1);
+                  case "WaitingToHelp": {ESLVal $38 = $35.termRef(0);
+                      ESLVal $37 = $35.termRef(1);
                       
-                      switch($97.intVal) {
-                      case 0: {ESLVal a = $96;
+                      switch($37.intVal) {
+                      case 0: {ESLVal a = $38;
                         
-                        {ESLVal _v35 = $90;
+                        {ESLVal _v47 = $36;
                         
                         {Lib.send(a,"CompletedHelp");
-                      return process.apply(_v35);}
+                      return process.apply(_v47);}
                       }
                       }
-                      default: {ESLVal a = $96;
+                      default: {ESLVal a = $38;
                         
-                        {ESLVal n = $97;
+                        {ESLVal n = $37;
                         
-                        {ESLVal _v36 = $90;
+                        {ESLVal _v48 = $36;
                         
-                        return tryToHelp.apply(a,n,_v36);
+                        return tryToHelp.apply(a,n,_v48);
                       }
                       }
                       }
                     }
                     }
-                    default: return error(new ESLVal("case error at Pos(9750,10500)"));
+                    default: return error(new ESLVal("case error at Pos(9749,10499)").add(ESLVal.list(_v12)));
                   }
                   }
-                else if(s.isNil())
+                else if(_v12.isNil())
                   return s;
-                else return error(new ESLVal("case error at Pos(9750,10500)"));
+                else return error(new ESLVal("case error at Pos(9749,10499)").add(ESLVal.list(_v12)));
+                }
               }
             });
           
-          public ESLVal handle(ESLVal $m) {switch($m.termName) {
-            case "NeedsHelp": {ESLVal $98 = $m.termRef(0);
+          public ESLVal handle(ESLVal $m) {{ESLVal _v16 = $m;
+            
+            switch(_v16.termName) {
+            case "NeedsHelp": {ESLVal $57 = _v16.termRef(0);
               
-              {ESLVal c = $98;
+              {ESLVal c = $57;
               
               if(assistantWaitingToHelp.apply(state).boolVal)
               {state = state.cons(new ESLVal("WaitingForHelp",c,maxWaitTime));
@@ -802,38 +846,25 @@ public class Shop {
               else
                 {state = state.cons(new ESLVal("WaitingForHelp",c,maxWaitTime));
                 {{
-                  ESLVal _v9 = assistants;
-                  while(_v9.isCons()) {
-                    if(_v9.isCons())
-                      {ESLVal $100 = _v9.head();
-                        ESLVal $101 = _v9.tail();
-                        
-                        {ESLVal a = $100;
-                        
-                        {ESLVal _v10 = $101;
-                        
-                        {_v9 = _v10;
-                      Lib.send(a,"CustomerNeedsHelp");}
-                      }
-                      }
-                      }
-                    else if(_v9.isNil())
-                      error(new ESLVal("case error at Pos(10691,10748)"));
-                    else error(new ESLVal("case error at Pos(10691,10748)"));
-                    }
+                  ESLVal _v17 = assistants;
+                  while(_v17.isCons()) {
+                    ESLVal a = _v17.headVal;
+                    Lib.send(a,"CustomerNeedsHelp");
+                    _v17 = _v17.tailVal;}
                 }
                 return $null;}}
             }
             }
-          case "Available": {ESLVal $99 = $m.termRef(0);
+          case "Available": {ESLVal $56 = _v16.termRef(0);
               
-              {ESLVal a = $99;
+              {ESLVal a = $56;
               
               {state = state.cons(new ESLVal("WaitingToHelp",a,maxWaitTime));
             return $null;}
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v16)));
+          }
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -866,22 +897,24 @@ public class Shop {
           ESLVal findBusyTill = new ESLVal(new Function(new ESLVal("findBusyTill"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal s = $args[0];
-            if(s.isCons())
-                  {ESLVal $102 = s.head();
-                    ESLVal $103 = s.tail();
+            {ESLVal _v9 = s;
+                  
+                  if(_v9.isCons())
+                  {ESLVal $28 = _v9.head();
+                    ESLVal $29 = _v9.tail();
                     
-                    switch($102.termName) {
-                    case "TillQueue": {ESLVal $104 = $102.termRef(0);
-                      ESLVal $105 = $102.termRef(1);
-                      ESLVal $106 = $102.termRef(2);
+                    switch($28.termName) {
+                    case "TillQueue": {ESLVal $32 = $28.termRef(0);
+                      ESLVal $31 = $28.termRef(1);
+                      ESLVal $30 = $28.termRef(2);
                       
-                      {ESLVal c = $104;
+                      {ESLVal c = $32;
                       
-                      {ESLVal till = $105;
+                      {ESLVal till = $31;
                       
-                      {ESLVal n = $106;
+                      {ESLVal n = $30;
                       
-                      {ESLVal _v37 = $103;
+                      {ESLVal _v45 = $29;
                       
                       return till;
                     }
@@ -889,39 +922,42 @@ public class Shop {
                     }
                     }
                     }
-                    default: {ESLVal x = $102;
+                    default: {ESLVal x = $28;
                       
-                      {ESLVal _v38 = $103;
+                      {ESLVal _v46 = $29;
                       
-                      return findBusyTill.apply(_v38);
+                      return findBusyTill.apply(_v46);
                     }
                     }
                   }
                   }
-                else if(s.isNil())
+                else if(_v9.isNil())
                   return $zero.sub($one);
-                else return error(new ESLVal("case error at Pos(11145,11295)"));
+                else return error(new ESLVal("case error at Pos(11144,11294)").add(ESLVal.list(_v9)));
+                }
               }
             });
           ESLVal findServicedTill = new ESLVal(new Function(new ESLVal("findServicedTill"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal s = $args[0];
-            if(s.isCons())
-                  {ESLVal $107 = s.head();
-                    ESLVal $108 = s.tail();
+            {ESLVal _v8 = s;
+                  
+                  if(_v8.isCons())
+                  {ESLVal $23 = _v8.head();
+                    ESLVal $24 = _v8.tail();
                     
-                    switch($107.termName) {
-                    case "TillReady": {ESLVal $109 = $107.termRef(0);
-                      ESLVal $110 = $107.termRef(1);
-                      ESLVal $111 = $107.termRef(2);
+                    switch($23.termName) {
+                    case "TillReady": {ESLVal $27 = $23.termRef(0);
+                      ESLVal $26 = $23.termRef(1);
+                      ESLVal $25 = $23.termRef(2);
                       
-                      {ESLVal a = $109;
+                      {ESLVal a = $27;
                       
-                      {ESLVal till = $110;
+                      {ESLVal till = $26;
                       
-                      {ESLVal n = $111;
+                      {ESLVal n = $25;
                       
-                      {ESLVal _v39 = $108;
+                      {ESLVal _v43 = $24;
                       
                       return till;
                     }
@@ -929,18 +965,19 @@ public class Shop {
                     }
                     }
                     }
-                    default: {ESLVal x = $107;
+                    default: {ESLVal x = $23;
                       
-                      {ESLVal _v40 = $108;
+                      {ESLVal _v44 = $24;
                       
-                      return findServicedTill.apply(_v40);
+                      return findServicedTill.apply(_v44);
                     }
                     }
                   }
                   }
-                else if(s.isNil())
+                else if(_v8.isNil())
                   return $zero.sub($one);
-                else return error(new ESLVal("case error at Pos(11339,11494)"));
+                else return error(new ESLVal("case error at Pos(11338,11493)").add(ESLVal.list(_v8)));
+                }
               }
             });
           ESLVal startServe = new ESLVal(new Function(new ESLVal("startServe"),getSelf()) {
@@ -949,32 +986,34 @@ public class Shop {
             ESLVal till = $args[1];
             ESLVal n = $args[2];
             ESLVal h = $args[3];
-            if(h.isCons())
-                  {ESLVal $112 = h.head();
-                    ESLVal $113 = h.tail();
+            {ESLVal _v7 = h;
+                  
+                  if(_v7.isCons())
+                  {ESLVal $18 = _v7.head();
+                    ESLVal $19 = _v7.tail();
                     
-                    switch($112.termName) {
-                    case "TillReady": {ESLVal $114 = $112.termRef(0);
-                      ESLVal $115 = $112.termRef(1);
-                      ESLVal $116 = $112.termRef(2);
+                    switch($18.termName) {
+                    case "TillReady": {ESLVal $22 = $18.termRef(0);
+                      ESLVal $21 = $18.termRef(1);
+                      ESLVal $20 = $18.termRef(2);
                       
-                      {ESLVal a = $114;
+                      {ESLVal a = $22;
                       
-                      {ESLVal atill = $115;
+                      {ESLVal atill = $21;
                       
-                      {ESLVal m = $116;
+                      {ESLVal m = $20;
                       
-                      {ESLVal _v41 = $113;
+                      {ESLVal _v40 = $19;
                       
                       if(atill.eql(till).boolVal)
                       {Lib.send(display,"ChangeState",c.ref("getId").apply(),new ESLVal("Buying"));
-                      return process.apply(_v41).cons(new ESLVal("TillService",a,c,till,random.apply(maxServeTime)));}
+                      return process.apply(_v40).cons(new ESLVal("TillService",a,c,till,random.apply(maxServeTime)));}
                       else
-                        {ESLVal x = $112;
+                        {ESLVal x = $18;
                           
-                          {ESLVal _v42 = $113;
+                          {ESLVal _v41 = $19;
                           
-                          return startServe.apply(c,till,n,_v42).cons(x);
+                          return startServe.apply(c,till,n,_v41).cons(x);
                         }
                         }
                     }
@@ -982,18 +1021,19 @@ public class Shop {
                     }
                     }
                     }
-                    default: {ESLVal x = $112;
+                    default: {ESLVal x = $18;
                       
-                      {ESLVal _v43 = $113;
+                      {ESLVal _v42 = $19;
                       
-                      return startServe.apply(c,till,n,_v43).cons(x);
+                      return startServe.apply(c,till,n,_v42).cons(x);
                     }
                     }
                   }
                   }
-                else if(h.isNil())
+                else if(_v7.isNil())
                   return ESLVal.list(new ESLVal("TillQueue",c,till,n.sub($one)));
-                else return error(new ESLVal("case error at Pos(11564,11955)"));
+                else return error(new ESLVal("case error at Pos(11563,11954)").add(ESLVal.list(_v7)));
+                }
               }
             });
           ESLVal tryToServe = new ESLVal(new Function(new ESLVal("tryToServe"),getSelf()) {
@@ -1002,32 +1042,34 @@ public class Shop {
             ESLVal till = $args[1];
             ESLVal n = $args[2];
             ESLVal h = $args[3];
-            if(h.isCons())
-                  {ESLVal $117 = h.head();
-                    ESLVal $118 = h.tail();
+            {ESLVal _v6 = h;
+                  
+                  if(_v6.isCons())
+                  {ESLVal $13 = _v6.head();
+                    ESLVal $14 = _v6.tail();
                     
-                    switch($117.termName) {
-                    case "TillQueue": {ESLVal $119 = $117.termRef(0);
-                      ESLVal $120 = $117.termRef(1);
-                      ESLVal $121 = $117.termRef(2);
+                    switch($13.termName) {
+                    case "TillQueue": {ESLVal $17 = $13.termRef(0);
+                      ESLVal $16 = $13.termRef(1);
+                      ESLVal $15 = $13.termRef(2);
                       
-                      {ESLVal c = $119;
+                      {ESLVal c = $17;
                       
-                      {ESLVal atill = $120;
+                      {ESLVal atill = $16;
                       
-                      {ESLVal m = $121;
+                      {ESLVal m = $15;
                       
-                      {ESLVal _v44 = $118;
+                      {ESLVal _v37 = $14;
                       
                       if(till.eql(atill).boolVal)
                       {Lib.send(display,"ChangeState",c.ref("getId").apply(),new ESLVal("Buying"));
-                      return process.apply(_v44).cons(new ESLVal("TillService",a,c,till,random.apply(maxServeTime)));}
+                      return process.apply(_v37).cons(new ESLVal("TillService",a,c,till,random.apply(maxServeTime)));}
                       else
-                        {ESLVal x = $117;
+                        {ESLVal x = $13;
                           
-                          {ESLVal _v45 = $118;
+                          {ESLVal _v38 = $14;
                           
-                          return tryToServe.apply(a,till,n,_v45).cons(x);
+                          return tryToServe.apply(a,till,n,_v38).cons(x);
                         }
                         }
                     }
@@ -1035,61 +1077,64 @@ public class Shop {
                     }
                     }
                     }
-                    default: {ESLVal x = $117;
+                    default: {ESLVal x = $13;
                       
-                      {ESLVal _v46 = $118;
+                      {ESLVal _v39 = $14;
                       
-                      return tryToServe.apply(a,till,n,_v46).cons(x);
+                      return tryToServe.apply(a,till,n,_v39).cons(x);
                     }
                     }
                   }
                   }
-                else if(h.isNil())
+                else if(_v6.isNil())
                   return ESLVal.list(new ESLVal("TillReady",a,till,n.sub($one)));
-                else return error(new ESLVal("case error at Pos(12026,12397)"));
+                else return error(new ESLVal("case error at Pos(12025,12396)").add(ESLVal.list(_v6)));
+                }
               }
             });
           ESLVal process = new ESLVal(new Function(new ESLVal("process"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal s = $args[0];
-            if(s.isCons())
-                  {ESLVal $122 = s.head();
-                    ESLVal $123 = s.tail();
+            {ESLVal _v5 = s;
+                  
+                  if(_v5.isCons())
+                  {ESLVal $1 = _v5.head();
+                    ESLVal $2 = _v5.tail();
                     
-                    switch($122.termName) {
-                    case "TillService": {ESLVal $124 = $122.termRef(0);
-                      ESLVal $125 = $122.termRef(1);
-                      ESLVal $126 = $122.termRef(2);
-                      ESLVal $127 = $122.termRef(3);
+                    switch($1.termName) {
+                    case "TillService": {ESLVal $12 = $1.termRef(0);
+                      ESLVal $11 = $1.termRef(1);
+                      ESLVal $10 = $1.termRef(2);
+                      ESLVal $9 = $1.termRef(3);
                       
-                      switch($127.intVal) {
-                      case 0: {ESLVal a = $124;
+                      switch($9.intVal) {
+                      case 0: {ESLVal a = $12;
                         
-                        {ESLVal c = $125;
+                        {ESLVal c = $11;
                         
-                        {ESLVal till = $126;
+                        {ESLVal till = $10;
                         
-                        {ESLVal _v47 = $123;
+                        {ESLVal _v35 = $2;
                         
                         {Lib.send(display,"Sale",c.ref("getId").apply());
                       Lib.send(c,"Leave");
                       Lib.send(getSelf(),"Serve",a);
-                      return process.apply(_v47);}
+                      return process.apply(_v35);}
                       }
                       }
                       }
                       }
-                      default: {ESLVal a = $124;
+                      default: {ESLVal a = $12;
                         
-                        {ESLVal c = $125;
+                        {ESLVal c = $11;
                         
-                        {ESLVal till = $126;
+                        {ESLVal till = $10;
                         
-                        {ESLVal n = $127;
+                        {ESLVal n = $9;
                         
-                        {ESLVal _v48 = $123;
+                        {ESLVal _v36 = $2;
                         
-                        return process.apply(_v48).cons(new ESLVal("TillService",a,c,till,n.sub($one)));
+                        return process.apply(_v36).cons(new ESLVal("TillService",a,c,till,n.sub($one)));
                       }
                       }
                       }
@@ -1097,81 +1142,84 @@ public class Shop {
                       }
                     }
                     }
-                  case "TillQueue": {ESLVal $128 = $122.termRef(0);
-                      ESLVal $129 = $122.termRef(1);
-                      ESLVal $130 = $122.termRef(2);
+                  case "TillQueue": {ESLVal $8 = $1.termRef(0);
+                      ESLVal $7 = $1.termRef(1);
+                      ESLVal $6 = $1.termRef(2);
                       
-                      switch($130.intVal) {
-                      case 0: {ESLVal c = $128;
+                      switch($6.intVal) {
+                      case 0: {ESLVal c = $8;
                         
-                        {ESLVal till = $129;
+                        {ESLVal till = $7;
                         
-                        {ESLVal _v49 = $123;
+                        {ESLVal _v33 = $2;
                         
                         {Lib.send(c,"TimeOut");
-                      return process.apply(_v49);}
+                      return process.apply(_v33);}
                       }
                       }
                       }
-                      default: {ESLVal c = $128;
+                      default: {ESLVal c = $8;
                         
-                        {ESLVal till = $129;
+                        {ESLVal till = $7;
                         
-                        {ESLVal n = $130;
+                        {ESLVal n = $6;
                         
-                        {ESLVal _v50 = $123;
+                        {ESLVal _v34 = $2;
                         
-                        return startServe.apply(c,till,n,_v50);
+                        return startServe.apply(c,till,n,_v34);
                       }
                       }
                       }
                       }
                     }
                     }
-                  case "TillReady": {ESLVal $131 = $122.termRef(0);
-                      ESLVal $132 = $122.termRef(1);
-                      ESLVal $133 = $122.termRef(2);
+                  case "TillReady": {ESLVal $5 = $1.termRef(0);
+                      ESLVal $4 = $1.termRef(1);
+                      ESLVal $3 = $1.termRef(2);
                       
-                      switch($133.intVal) {
-                      case 0: {ESLVal a = $131;
+                      switch($3.intVal) {
+                      case 0: {ESLVal a = $5;
                         
-                        {ESLVal till = $132;
+                        {ESLVal till = $4;
                         
-                        {ESLVal _v51 = $123;
+                        {ESLVal _v31 = $2;
                         
                         {Lib.send(a,"CompletedTill");
-                      return process.apply(_v51);}
+                      return process.apply(_v31);}
                       }
                       }
                       }
-                      default: {ESLVal a = $131;
+                      default: {ESLVal a = $5;
                         
-                        {ESLVal till = $132;
+                        {ESLVal till = $4;
                         
-                        {ESLVal n = $133;
+                        {ESLVal n = $3;
                         
-                        {ESLVal _v52 = $123;
+                        {ESLVal _v32 = $2;
                         
-                        return tryToServe.apply(a,till,n,_v52);
+                        return tryToServe.apply(a,till,n,_v32);
                       }
                       }
                       }
                       }
                     }
                     }
-                    default: return error(new ESLVal("case error at Pos(12436,13364)"));
+                    default: return error(new ESLVal("case error at Pos(12435,13363)").add(ESLVal.list(_v5)));
                   }
                   }
-                else if(s.isNil())
+                else if(_v5.isNil())
                   return s;
-                else return error(new ESLVal("case error at Pos(12436,13364)"));
+                else return error(new ESLVal("case error at Pos(12435,13363)").add(ESLVal.list(_v5)));
+                }
               }
             });
           
-          public ESLVal handle(ESLVal $m) {switch($m.termName) {
-            case "Queue": {ESLVal $134 = $m.termRef(0);
+          public ESLVal handle(ESLVal $m) {{ESLVal _v10 = $m;
+            
+            switch(_v10.termName) {
+            case "Queue": {ESLVal $34 = _v10.termRef(0);
               
-              {ESLVal c = $134;
+              {ESLVal c = $34;
               
               {ESLVal till = findServicedTill.apply(state);
               
@@ -1180,23 +1228,9 @@ public class Shop {
               {{
                 ESLVal _v11 = assistants;
                 while(_v11.isCons()) {
-                  if(_v11.isCons())
-                    {ESLVal $136 = _v11.head();
-                      ESLVal $137 = _v11.tail();
-                      
-                      {ESLVal a = $136;
-                      
-                      {ESLVal _v12 = $137;
-                      
-                      {_v11 = _v12;
-                    Lib.send(a,"CustomerAtTill");}
-                    }
-                    }
-                    }
-                  else if(_v11.isNil())
-                    error(new ESLVal("case error at Pos(13546,13600)"));
-                  else error(new ESLVal("case error at Pos(13546,13600)"));
-                  }
+                  ESLVal a = _v11.headVal;
+                  Lib.send(a,"CustomerAtTill");
+                  _v11 = _v11.tailVal;}
               }
               return $null;}}
               else
@@ -1205,9 +1239,9 @@ public class Shop {
             }
             }
             }
-          case "Serve": {ESLVal $135 = $m.termRef(0);
+          case "Serve": {ESLVal $33 = _v10.termRef(0);
               
-              {ESLVal a = $135;
+              {ESLVal a = $33;
               
               {ESLVal till = findBusyTill.apply(state);
               
@@ -1219,7 +1253,8 @@ public class Shop {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v10)));
+          }
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -1264,7 +1299,9 @@ public class Shop {
               }
             });
           
-          public ESLVal handle(ESLVal $m) {switch($m.termName) {
+          public ESLVal handle(ESLVal $m) {{ESLVal _v4 = $m;
+            
+            switch(_v4.termName) {
             case "TimeOut": {
               {Lib.send(display,"TimeOut",id);
             Lib.send(display,"ChangeState",id,new ESLVal("NotInShop"));
@@ -1281,7 +1318,8 @@ public class Shop {
             {state = new ESLVal("NotInShop",new ESLVal[]{});
             return $null;}}
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v4)));
+          }
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -1305,7 +1343,7 @@ public class Shop {
               }
             }));
             else
-              {ESLVal _v53 = $t;
+              {ESLVal _v29 = $t;
                 
                 if(state.eql(new ESLVal("Browsing",new ESLVal[]{})).boolVal)
                 probably(probOfSeekingHelp,new ESLVal(new Function(new ESLVal("probFun"),getSelf()) {
@@ -1331,7 +1369,7 @@ public class Shop {
                   }
                 }));
                 else
-                  {ESLVal _v54 = $t;
+                  {ESLVal _v30 = $t;
                     
                     if($true.boolVal)
                     {}
@@ -1351,7 +1389,10 @@ public class Shop {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {return error(new ESLVal("case error at Pos(0,0)"));}
+          public ESLVal handle(ESLVal $m) {{ESLVal _v3 = $m;
+            
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v3)));
+          }}
           public ESLVal get(String name) {
             switch(name) {
               
@@ -1364,7 +1405,7 @@ public class Shop {
             if(n.gre(numOfSteps).boolVal)
             stopAll.apply();
             else
-              {ESLVal _v55 = $t;
+              {ESLVal _v28 = $t;
                 
                 if($true.boolVal)
                 {}
@@ -1376,47 +1417,19 @@ public class Shop {
         public ESLVal init() {
             return ((Supplier<ESLVal>)() -> { 
                 {{
-                  ESLVal _v13 = $zero.to(numOfCustomers);
-                  while(_v13.isCons()) {
-                    if(_v13.isCons())
-                      {ESLVal $138 = _v13.head();
-                        ESLVal $139 = _v13.tail();
-                        
-                        {ESLVal n = $138;
-                        
-                        {ESLVal _v14 = $139;
-                        
-                        {_v13 = _v14;
-                      {customers = customers.cons(newActor(customer,new ESLVal(new Actor()),n));
-                      Lib.send(display,"RegisterCustomer",n,new ESLVal("NotInShop"),ESLVal.list(new ESLVal("NotInShop"),new ESLVal("Queueing"),new ESLVal("Browsing"),new ESLVal("SeekingHelp"),new ESLVal("GettingHelp"),new ESLVal("Buying")));}}
-                      }
-                      }
-                      }
-                    else if(_v13.isNil())
-                      error(new ESLVal("case error at Pos(15461,15675)"));
-                    else error(new ESLVal("case error at Pos(15461,15675)"));
-                    }
+                  ESLVal _v2 = $zero.to(numOfCustomers);
+                  while(_v2.isCons()) {
+                    ESLVal n = _v2.headVal;
+                    {customers = customers.cons(newActor(customer,new ESLVal(new Actor()),n));
+                    Lib.send(display,"RegisterCustomer",n,new ESLVal("NotInShop"),ESLVal.list(new ESLVal("NotInShop"),new ESLVal("Queueing"),new ESLVal("Browsing"),new ESLVal("SeekingHelp"),new ESLVal("GettingHelp"),new ESLVal("Buying")));}
+                    _v2 = _v2.tailVal;}
                 }
                 {{
-                  ESLVal _v15 = $zero.to(numOfAssistants);
-                  while(_v15.isCons()) {
-                    if(_v15.isCons())
-                      {ESLVal $140 = _v15.head();
-                        ESLVal $141 = _v15.tail();
-                        
-                        {ESLVal n = $140;
-                        
-                        {ESLVal _v16 = $141;
-                        
-                        {_v15 = _v16;
-                      assistants = assistants.cons(newActor(assistant,new ESLVal(new Actor())));}
-                      }
-                      }
-                      }
-                    else if(_v15.isNil())
-                      error(new ESLVal("case error at Pos(15680,15771)"));
-                    else error(new ESLVal("case error at Pos(15680,15771)"));
-                    }
+                  ESLVal _v1 = $zero.to(numOfAssistants);
+                  while(_v1.isCons()) {
+                    ESLVal n = _v1.headVal;
+                    assistants = assistants.cons(newActor(assistant,new ESLVal(new Actor())));
+                    _v1 = _v1.tailVal;}
                 }
                 return $null;}}
               }).get();

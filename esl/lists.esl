@@ -14,8 +14,6 @@ select1[T](l::[T],d::T,p::(T)->Bool)::T =
 
 map[M,N](f::(M)->N,l::[M])::[N] =
   case l {
-    m::M;
-    ms::[M];
     [][M] -> [][N];
     m:ms -> (f(m)):map[M,N](f,ms); 
   }
@@ -24,8 +22,6 @@ remove::Forall[T](T,[T])->[T] = builtin[Forall[T] (T,[T])->[T]]('runtime.actors.
 
 removeSemantics[T](v::T,l::[T])::[T] =
   case l {
-    h::T;
-    t::[T];
     h:t when (h=v) -> remove[T](v,t);
     h:t        -> h:remove[T](v,t);
     []         -> [][T];
@@ -33,8 +29,6 @@ removeSemantics[T](v::T,l::[T])::[T] =
 
 remove1[T](v::T,l::[T])::[T] =
   case l {
-    h::T;
-    t::[T];
     h:t when (h=v) -> t;
     h:t        -> h:remove1[T](v,t);
     []         -> [][T];
@@ -44,8 +38,6 @@ length::Forall[T]([T])->Int = builtin[Forall[T] ([T])->Int]('runtime.actors.Buil
 
 lengthSemantics[T](l::[T])::Int = 
   case l {
-    h::T;
-    t::[T];
     h:t -> 1 + length[T](t);
     [] -> 0;
   }
@@ -76,26 +68,18 @@ flatten::Forall[T]([[T]])->[T] = builtin[Forall[T] ([[T]])->[T]]('runtime.actors
       
 flattenSemantics[T](lists::[[T]])::[T] =
   case lists {
-    h::[T];
-    t::[[T]];
     h:t -> h+flatten[T](t);
     [][[T]] -> [][T];
   }
         
 count[T](x::T,l::[T])::Int =
   case l {
-    h::T;
-    t::[T];
     h:t -> if h = x then 1+count[T](x,t); else count[T](x,t);
     []  -> 0;
   }
   
 hasPrefix[T](list::[T],prefix::[T])::Bool =
   case list,prefix {
-    x::T;
-    y::T;
-    l1::[T];
-    l2::[T];
     l1,[][T] -> true;
     x:list,y:prefix when x=y -> hasPrefix[T](list,prefix);
     l1,l2 -> false;
@@ -105,8 +89,6 @@ nth::Forall[T] ([T],Int)->T = builtin[Forall[T] ([T],Int)->T]('runtime.actors.Bu
 
 nthSemantics[T](l::[T],n::Int)::T =
   case l {
-    h::T;
-    t::[T];
     h:t    -> if n = 0 then h; else nth[T](t,n-1);
     [][T]  -> throw[T]('cannot take nth element.');
   }
@@ -116,8 +98,6 @@ take[T](l::[T],n::Int)::[T] =
   then [][T];
   else 
     case l {
-      h::T;
-      t::[T];
       h:t -> h:(take[T](t,n-1));
       [][T] -> throw[[T]]('cannot take element ' + n);
     }
@@ -127,32 +107,24 @@ drop[T](l::[T],n::Int)::[T] =
   then l;
   else 
     case l {
-      h::T;
-      t::[T];
       h:t -> drop[T](t,n-1);
       [] -> throw[[T]]('cannot drop element ' + n);
     }
     
 subst[T](n::T,o::T,l::[T])::[T] =
   case l {
-    h::T;
-    t::[T];
     [][T] -> [][T];
     h:t -> if h = o then n:(subst[T](n,o,t)); else h:(subst[T](n,o,t));
   }
   
 head::Forall[T]([T])[compiler.extensions.Head]->T = fun(l::[T])::T
   case l {
-    h::T;
-    t::[T];
     h:t -> h;
     [][T] -> throw[T]('cannot take the head of []');
   }
   
 tail::Forall[T]([T])[compiler.extensions.Tail]->[T] = fun(l::[T])::[T]
   case l {
-    h::T;
-    t::[T];
     h:t -> t;
     [][T] -> throw[[T]]('cannot take the tail of []');
   }

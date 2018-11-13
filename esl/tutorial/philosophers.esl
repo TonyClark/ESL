@@ -9,10 +9,10 @@ import 'esl/displays.esl', 'esl/lists.esl';
 // Since all actors operate concurrently, there is a danger that deadlock can occur if access to the
 // chopsticks is not co-ordinated appropriately.
 
-// The simulation is controlled by the following variables... 
+// The simulation is controlled by the following variables...
 
 timeLimit::Int            = 5000;    // The length of time to run the simulation.
-canDeadlock::Bool         = false;   // Select the strategy for co-ordination.
+canDeadlock::Bool         = true;   // Select the strategy for co-ordination.
 numberOfPhilosophers::Int = 10;      // The number of philosophers (and therefore chopsticks).
 eatTime::Int              = 50;      // Limit on random delay for eating.     
 thinkTime::Int            = 50;      // Limit on random delay for thinking.     

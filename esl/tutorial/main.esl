@@ -16,7 +16,7 @@ act main::Main {
   // message handlers...
   Time(n::Int) when n > 1000 -> stopAll();
   Time(n::Int) -> {
-    print[Str]('time = ' + n);
+    print[Str]('time = ' + n); 
     wait(1);
   }
 }

@@ -21,7 +21,7 @@
  *                                                                                                                              *
  ********************************************************************************************************************************/
 
-export JNewTable,NewTable,TableType,JRefSuper,RefSuper,decType,JSendSuper,JSendTimeSuper,SendSuper,SendTimeSuper,JExtendedBehaviour,subType,subTypes,ExtendedAct,AST,ActExp,ActType,ActorDynamicRef,ActorDynamicRef,Apply,ApplyType,ApplyTypeExp,ApplyTypeFun,Arm,ArrayRef,ArrayType,ArrayUpdate,BArm,BArm,BQual,BQual,BagType,Become,BinExp,Binding,Binding,Block,BoolArm,BoolArm,BoolExp,BoolType,Case,CaseBool,CaseBoolsArm,CaseError,CaseInt,CaseIntsArm,CaseList,CaseStr,CaseStrsArm,CaseTerm,CaseTermArm,Cmp,CnstrBind,CnstrBind,Cons,DRef,DataBind,DataBind,Dec,Dec,Error,FieldType,FloatExp,FloatType,Fold,For,ForallType,FunBind,FunBind,FunExp,FunType,Grab,Head,IArm,IArm,If,IntExp,IntType,JActorType,JApply,JArrayRef,JArrayUpdate,JBArm,JBArm,JBecome,JBehaviour,JBinExp,JBlock,JBoolArm,JBooleanType,JCase,JCaseBool,JCaseInt,JCaseList,JCaseOf,JCaseOf,JCaseStr,JCaseTerm,JCast,JCastp,JCommand,JCommandExp,JConst,JConstBool,JConstBool,JConstDouble,JConstDouble,JConstExp,JConstInt,JConstInt,JConstStr,JConstStr,JDec,JDec,JDeclaration,JDoubleType,JEnv,JError,JExp,JField,JField,JFieldDef,JFlatten,JFor,JFun,JFunType,JGrab,JHead,JIArm,JIArm,JIfCommand,JIfExp,JIntArm,JIntegerType,JLet,JLetRec,JList,JListType,JMap,JMap,JMapFun,JMod,JModule,JModule,JNew,JNewArray,JNewJava,JNil,JNot,JNow,JNull,JNullType,JObject,JProbably,JRef,JReturn,JSArm,JSArm,JSelf,JSend,JStatement,JStrArm,JStringType,JSwitch,JSwitchList,JTArm,JTArm,JTMap,JTail,JTerm,JTermArm,JTermRef,JTermType,JTry,JType,JUnknown,JUpdate,JVar,LArm,LArm,Let,Letrec,List,ListType,Loc,MType,Map,Map,MessageType,MessageType,Module,New,NewArray,NewJava,Not,Now,NullExp,NullType,PApplyType,PBagCons,PBool,PCons,PEmptyBag,PEmptySet,PInt,PNil,PNull,PQual,PQual,PSetCons,PStr,PTerm,PVar,Pattern,Pos,Pos,Probably,Qualifier,RecType,Record,RecordType,Ref,SArm,SArm,Self,Send,SetType,StrExp,StrType,TArm,TArm,TBind,TDec,TEnv,TMap,TVar,TaggedFunType,Tail,Term,TermRef,TermType,Throw,Try,Type,TypeBind,TypeBind,TypeClosure,TypeError,TypeError,TypeFun,Unfold,UnfoldType,UnionRef,UnionType,Update,V,V,Var,VarDynamicRef,VarDynamicRef,VarType,VoidType,actEqual,allEqualTypes,applyTypeFun,bindingLoc,bindingName,decLoc,decName,equalDec,equalMessage,forceType,isBinding,isBoolType,isFunBind,isIntType,isNumType,isStrType,lookupType,patternNames,recordTypeEqual,removeFromDom,restrictTypeEnv,substDec,substDecEnv,substMType,substMTypeEnv,substType,substTypeEnv,substTypes,substTypesEnv,typeEnvDom,typeEnvRan,typeEqual,typeEqual1,typeMember,typeSetEqual,typeSubset,typesEqual,unfoldType,zipTypeEnv;
+export PAdd,JSet,JBag,SetExp,BagExp,CaseSet,CaseAdd,JRecord,JNewTable,NewTable,TableType,JRefSuper,RefSuper,decType,JSendSuper,JSendTimeSuper,SendSuper,SendTimeSuper,JExtendedBehaviour,subType,subTypes,ExtendedAct,AST,ActExp,ActType,ActorDynamicRef,ActorDynamicRef,Apply,ApplyType,ApplyTypeExp,ApplyTypeFun,Arm,ArrayRef,ArrayType,ArrayUpdate,BArm,BArm,BQual,BQual,BagType,Become,BinExp,Binding,Binding,Block,BoolArm,BoolArm,BoolExp,BoolType,Case,CaseBool,CaseBoolsArm,CaseError,CaseInt,CaseIntsArm,CaseList,CaseStr,CaseStrsArm,CaseTerm,CaseTermArm,Cmp,CnstrBind,CnstrBind,Cons,DRef,DataBind,DataBind,Dec,Dec,Error,FieldType,FloatExp,FloatType,Fold,For,ForallType,FunBind,FunBind,FunExp,FunType,Grab,Head,IArm,IArm,If,IntExp,IntType,JActorType,JApply,JArrayRef,JArrayUpdate,JBArm,JBArm,JBecome,JBehaviour,JBinExp,JBlock,JBoolArm,JBooleanType,JCase,JCaseBool,JCaseInt,JCaseList,JCaseOf,JCaseOf,JCaseStr,JCaseTerm,JCast,JCastp,JCommand,JCommandExp,JConst,JConstBool,JConstBool,JConstDouble,JConstDouble,JConstExp,JConstInt,JConstInt,JConstStr,JConstStr,JDec,JDec,JDeclaration,JDoubleType,JEnv,JError,JExp,JField,JField,JFieldDef,JFlatten,JFor,JFun,JFunType,JGrab,JHead,JIArm,JIArm,JIfCommand,JIfExp,JIntArm,JIntegerType,JLet,JLetRec,JList,JListType,JMap,JMap,JMapFun,JMod,JModule,JModule,JNew,JNewArray,JNewJava,JNil,JNot,JNow,JNull,JNullType,JObject,JProbably,JRef,JReturn,JSArm,JSArm,JSelf,JSend,JStatement,JStrArm,JStringType,JSwitch,JSwitchList,JTArm,JTArm,JTMap,JTail,JTerm,JTermArm,JTermRef,JTermType,JTry,JType,JUnknown,JUpdate,JVar,LArm,LArm,Let,Letrec,List,ListType,Loc,MType,Map,Map,MessageType,MessageType,Module,New,NewArray,NewJava,Not,Now,NullExp,NullType,PApplyType,PBagCons,PBool,PCons,PEmptyBag,PEmptySet,PInt,PNil,PNull,PQual,PQual,PSetCons,PStr,PTerm,PVar,Pattern,Pos,Pos,Probably,Qualifier,RecType,Record,RecordType,Ref,SArm,SArm,Self,Send,SetType,StrExp,StrType,TArm,TArm,TBind,TDec,TEnv,TMap,TVar,TaggedFunType,Tail,Term,TermRef,TermType,Throw,Try,Type,TypeBind,TypeBind,TypeClosure,TypeError,TypeError,TypeFun,Unfold,UnfoldType,UnionRef,UnionType,Update,V,V,Var,VarDynamicRef,VarDynamicRef,VarType,VoidType,actEqual,allEqualTypes,applyTypeFun,bindingLoc,bindingName,decLoc,decName,equalDec,equalMessage,forceType,isBinding,isBoolType,isFunBind,isIntType,isNumType,isStrType,lookupType,patternNames,recordTypeEqual,removeFromDom,restrictTypeEnv,substDec,substDecEnv,substMType,substMTypeEnv,substType,substTypeEnv,substTypes,substTypesEnv,typeEnvDom,typeEnvRan,typeEqual,typeEqual1,typeMember,typeSetEqual,typeSubset,typesEqual,unfoldType,zipTypeEnv;
 
 import 'esl/lists.esl';
 
@@ -89,7 +89,7 @@ type Type  = rec T. union {                                   // The abstract sy
   TermType(Loc,Str,[T]),
   VarType(Loc,Str),
   RecType(Loc,Str,T),
-  RecordType(Loc,[T]),
+  RecordType(Loc,[TDec]),
   FieldType(Loc,Str,T),
   ListType(Loc,T),
   BagType(Loc,T),
@@ -171,7 +171,7 @@ typeEqual1(t1::Type,t2::Type)::Bool = { //print[Str]('type equal: ' + t1 + ' = '
     FunType(l1::Loc,d1::[Type],r1::Type),FunType(l2::Loc,d2::[Type],r2::Type)                                      -> typeEqual(r1,r2) and typesEqual(d1,d2);
     TypeClosure(f::()->Type),t2::Type                                                                              -> typeEqual(f(),t2);
     t1::Type,TypeClosure(f::()->Type)                                                                              -> typeEqual(t1,f());
-    RecordType(l1::Loc,fs1::[Type]),RecordType(l2::Loc,fs2::[Type])                                                -> recordTypeEqual(fs1,fs2);
+    RecordType(l1::Loc,fs1::[TDec]),RecordType(l2::Loc,fs2::[TDec])                                                -> recordTypeEqual(fs1,fs2);
     RecType(l1::Loc,n1::Str,t1::Type),RecType(l2::Loc,n2::Str,t2::Type) when n1=n2                                 -> typeEqual(t1,t2);
     RecType(l1::Loc,n1::Str,t1::Type),t2::Type                                                                     -> typeEqual(substType(RecType(l1,n1,t1),n1,t1),t2);
     t1::Type,RecType(l2::Loc,n2::Str,t2::Type)                                                                     -> typeEqual(t1,substType(RecType(l2,n2,t2),n2,t2));
@@ -181,6 +181,9 @@ typeEqual1(t1::Type,t2::Type)::Bool = { //print[Str]('type equal: ' + t1 + ' = '
     // Allow [] to be polymorphic...
     ListType(l1::Loc,t1::Type),ForallType(l2::Loc,[v1::Str],ListType(l3::Loc,VarType(l4::Loc,v2::Str))) when v1=v2 -> true;
     ForallType(l2::Loc,[v1::Str],ListType(l3::Loc,VarType(l4::Loc,v2::Str))),ListType(l1::Loc,t1::Type) when v1=v2 -> true;
+    // Allow Set{} to be polymorphic...
+    SetType(l1::Loc,t1::Type),ForallType(l2::Loc,[v1::Str],SetType(l3::Loc,VarType(l4::Loc,v2::Str))) when v1=v2   -> true;
+    ForallType(l2::Loc,[v1::Str],SetType(l3::Loc,VarType(l4::Loc,v2::Str))),SetType(l1::Loc,t1::Type) when v1=v2   -> true;
     // Assume that types are free...
     ForallType(l1::Loc,ns1::[Str],t1::Type),t2::Type                                                               -> typeEqual(t1,t2);
     t1::Type,ForallType(l1::Loc,ns2::[Str],t2::Type)                                                               -> typeEqual(t1,t2);
@@ -201,15 +204,17 @@ subType(sub::Type,parent::Type)::Bool = { //print[Str]('sub = ' + sub); print[St
     FunType(l1::Loc,d1::[Type],r1::Type),FunType(l2::Loc,d2::[Type],r2::Type)                                      -> subType(r1,r2) and subTypes(d2,d1);
     TypeClosure(f::()->Type),t2::Type                                                                              -> subType(f(),t2);
     t1::Type,TypeClosure(f::()->Type)                                                                              -> subType(t1,f());
-    RecordType(l1::Loc,fs1::[Type]),RecordType(l2::Loc,fs2::[Type])                                                -> recordSubType(fs1,fs2);
+    RecordType(l1::Loc,fs1::[TDec]),RecordType(l2::Loc,fs2::[TDec])                                                -> recordSubType(fs1,fs2);
     RecType(l1::Loc,n1::Str,t1::Type),RecType(l2::Loc,n2::Str,t2::Type) when n1=n2                                 -> subType(t1,t2);
     RecType(l1::Loc,n1::Str,t1::Type),t2::Type                                                                     -> subType(substType(RecType(l1,n1,t1),n1,t1),t2);
     t1::Type,RecType(l2::Loc,n2::Str,t2::Type)                                                                     -> subType(t1,substType(RecType(l2,n2,t2),n2,t2));
     UnionType(l1::Loc,terms1::[Type]),UnionType(l2::Loc,terms2::[Type])                                            -> subTypes(terms1,terms2);
     VarType(l1::Loc,n1::Str),VarType(l2::Loc,n2::Str)                                                              -> n1 = n2;
     ForallType(l1::Loc,ns1::[Str],t1::Type),ForallType(l2::Loc,ns2::[Str],t2::Type)                                -> ns1 = ns2 and subType(t1,t2);
-    ListType(l1::Loc,t1::Type),ForallType(l2::Loc,[v1::Str],ListType(l3::Loc,VarType(l4::Loc,v2::Str))) when v1=v2 -> true;
+    ListType(l1::Loc,t1::Type),ForallType(l2::Loc,[v1::Str],ListType(l3::Loc,VarType(l4::Loc,v2::Str))) when v1=v2 -> true; // Should these be subtypes...
     ForallType(l2::Loc,[v1::Str],ListType(l3::Loc,VarType(l4::Loc,v2::Str))),ListType(l1::Loc,t1::Type) when v1=v2 -> true;
+    SetType(l1::Loc,t1::Type),ForallType(l2::Loc,[v1::Str],SetType(l3::Loc,VarType(l4::Loc,v2::Str))) when v1=v2   -> true;
+    ForallType(l2::Loc,[v1::Str],SetType(l3::Loc,VarType(l4::Loc,v2::Str))),SetType(l1::Loc,t1::Type) when v1=v2   -> true;
     ForallType(l1::Loc,ns1::[Str],t1::Type),t2::Type                                                               -> subType(t1,t2);
     t1::Type,ForallType(l1::Loc,ns2::[Str],t2::Type)                                                               -> subType(t1,t2);
     t1::Type,t2::Type                                                                                              -> typeEqual(t1,t2);
@@ -256,12 +261,12 @@ messSubType(m1::MType,m2::MType)::Bool =
     MessageType(l1::Loc,ts1::[Type]),MessageType(l2::Loc,ts2::[Type]) -> subTypes(ts1,ts2);
   }
 
-recordTypeEqual(fields1::[Type],fields2::[Type])::Bool = 
-  forall[Type](fun(t1::Type)::Bool exists[Type](fun(t2::Type)::Bool typeEqual(t1,t2),fields2),fields1) and
-  forall[Type](fun(t1::Type)::Bool exists[Type](fun(t2::Type)::Bool typeEqual(t1,t2),fields1),fields2);
+recordTypeEqual(fields1::[TDec],fields2::[TDec])::Bool = 
+  forall[TDec](fun(t1::TDec)::Bool exists[TDec](fun(t2::TDec)::Bool decName(t1) = decName(t2) and typeEqual(decType(t1),decType(t2)),fields2),fields1) and
+  forall[TDec](fun(t1::TDec)::Bool exists[TDec](fun(t2::TDec)::Bool decName(t1) = decName(t2) and typeEqual(decType(t1),decType(t2)),fields1),fields2);
 
-recordSubType(fields1::[Type],fields2::[Type])::Bool = 
-  forall[Type](fun(t2::Type)::Bool exists[Type](fun(t1::Type)::Bool subType(t1,t2),fields1),fields2);
+recordSubType(fields1::[TDec],fields2::[TDec])::Bool = 
+  forall[TDec](fun(t2::TDec)::Bool exists[TDec](fun(t1::TDec)::Bool decName(t1) = decName(t2) and subType(decType(t1),decType(t2)),fields1),fields2);
 
 applyTypeFun(l::Loc,op::Type,args::[Type])::Type =
   case op {
@@ -341,8 +346,9 @@ substType(newType::Type,n::Str,oldType::Type)::Type = {
     IntType(l::Loc) -> oldType;
     ListType(l::Loc,t::Type) -> ListType(l,substType(newType,n,t));
     NullType(l::Loc) -> oldType;
-    RecordType(l::Loc,fs::[Type]) -> RecordType(l,substTypes(newType,n,fs));
+    RecordType(l::Loc,fs::[TDec]) -> RecordType(l,[ Dec(dl,n,substType(newType,n,t),dt) | Dec(dl::Dec,n::Str,t::Type,dt::Type) <- fs ]);
     RecType(l::Loc,a::Str,t::Type) ->  if n = a then oldType; else RecType(l,a,substType(newType,n,t));
+    SetType(l::Loc,t::Type) -> SetType(l,substType(newType,n,t));
     StrType(l::Loc) -> oldType;
     TableType(l::Loc,k::Type,v::Type) -> TableType(l,substType(newType,n,k),substType(newType,n,v));
     TermType(l::Loc,f::Str,ts::[Type]) -> TermType(l,f,substTypes(newType,n,ts));
@@ -388,7 +394,7 @@ substTypeEnv(env::TEnv,oldType::Type)::Type = { //print[Str]('subst type env: ' 
     BagType(l::Loc,t::Type) -> BagType(l,substTypeEnv(env,t)); 
     NullType(l::Loc) -> oldType;
     RecType(l::Loc,a::Str,t::Type) ->  RecType(l,a,substTypeEnv(removeFromDom(env,[a]),t));
-    RecordType(l::Loc,fs::[Type]) -> RecordType(l,substTypesEnv(env,fs));
+    RecordType(l::Loc,fs::[TDec]) -> RecordType(l,[ Dec(dl,n,substTypeEnv(env,t),dt) | Dec(dl::Dec,n::Str,t::Type,dt::Type) <- fs ]);
     StrType(l::Loc) -> oldType;
     TableType(l::Loc,k::Type,v::Type) -> TableType(l,substTypeEnv(env,k),substTypeEnv(env,v));
     TermType(l::Loc,f::Str,ts::[Type]) -> TermType(l,f,[substTypeEnv(env,t) | t::Type <- ts]);
@@ -471,6 +477,7 @@ substMTypeEnv(env::TEnv,m::MType)::MType =
   }
  
 type Pattern = rec P. union {
+  PAdd(Loc,P,P),
   PVar(Loc,Str,Type),
   PTerm(Loc,Str,[Type],[P]),
   PApplyType(Loc,P,[Type]),
@@ -488,6 +495,7 @@ type Pattern = rec P. union {
 
 patternNames(x::Pattern)::[Str] = {
   case x {
+    PAdd(l::Loc,p1::Pattern,p2::Pattern) -> patternNames(p1) + patternNames(p2);
     PVar(v0::Loc,v1::Str,v2::Type) -> [v1];
     PTerm(v0::Loc,v1::Str,v2::[Type],v3::[Pattern]) -> [ n | p::Pattern <- v3, n::Str <- patternNames(p) ];
     PApplyType(v0::Loc,v1::Pattern,v2::[Type]) -> patternNames(v1);
@@ -568,6 +576,7 @@ type AST = rec A. union {
   TermRef(A,Int),
   List(Loc,[A]),
   NullExp(Loc),
+  BagExp(Loc,[A]),
   CaseError(Loc,A),
   Case(Loc,[TDec],[A],[Arm]),
   CaseTerm(Loc,A,[CaseTermArm],A),
@@ -575,6 +584,8 @@ type AST = rec A. union {
   CaseInt(Loc,A,[CaseIntsArm],A),
   CaseStr(Loc,A,[CaseStrsArm],A),
   CaseBool(Loc,A,[CaseBoolsArm],A),
+  CaseAdd(Loc,A,A,A),
+  CaseSet(Loc,A,A,A),
   Var(Loc,Str),
   Block(Loc,[A]),
   Apply(Loc,A,[A]),
@@ -611,7 +622,8 @@ type AST = rec A. union {
   Record(Loc,[TBind]),
   RefSuper(Loc,Str),
   SendSuper(Loc,A),
-  SendTimeSuper(Loc)
+  SendTimeSuper(Loc),
+  SetExp(Loc,[A])
 }
 
 data TVar = V(Int);
@@ -655,6 +667,8 @@ type JExp = rec E. union {
   JTerm(Str,[E]),
   JTermRef(E,Int),
   JList(JType,[E]),
+  JSet(JType,[E]),
+  JBag(JType,[E]),
   JNil(JType),
   JVar(Str,JType),
   JNull,
@@ -677,6 +691,7 @@ type JExp = rec E. union {
   JSendSuper(E),
   JSendTimeSuper,
   JSelf,
+  JRecord([JFieldDef]),
   JRef(E,Str),
   JRefSuper(Str),
   JGrab([E],E),

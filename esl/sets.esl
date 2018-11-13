@@ -1,0 +1,40 @@
+export power, setContains, setToList, setSize, subset;
+
+power[T](s::Set{T})::Set{Set{T}} =
+  letrec 
+    mkPower(sets::Set{Set{T}},s::Set{T})::Set{Set{T}} =
+      case s {
+        set{p | s} -> mkPower(add(p,sets) + sets,s);
+        set{}      -> sets;
+      }
+    add(e::T,sets::Set{Set{T}})::Set{Set{T}} =
+      case sets {
+        set{p | sets} -> set{set{e|p} | add(e,sets)}
+        set{}         -> set{}
+      }
+  in mkPower(set{set{}},s);
+
+setContains[T](s::Set{T},x::T)::Bool =
+  case s {
+    set{y | s} when x = y -> true;
+    s                     -> false;
+  }
+
+setToList[T](s::Set{T})::[T] =
+  case s {
+    set{x | s} -> x:setToList[T](s);
+    set{}      -> [];
+  }
+
+setSize[T](s::Set{T})::Int =
+  case s {
+    set{x|s} -> 1 + setSize[T](s);
+    set{}    -> 0;
+  }
+
+subset[T](s1::Set{T},s2::Set{T})::Bool = 
+  case s1 {
+    set{} -> true;
+    set{x | s1} when setContains[T](s2,x) -> subset[T](s1,s2);
+    s1 -> false;
+  }

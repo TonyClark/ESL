@@ -24,15 +24,20 @@ type Main = Act { }
 
 ppPattern(p::Pattern)::Str = 
   case p { 
+    PAdd(l::Loc,p1::Pattern,p2::Pattern) -> ppPattern(p1) + ' + ' + ppPattern(p2);
     PVar(l::Loc,n::Str,t::Type) -> n;
     PTerm(l::Loc,n::Str,[][Type],ps::[Pattern]) -> n + ppPatterns(ps);
     PTerm(l::Loc,n::Str,ts::[Type],ps::[Pattern]) -> n + ppTypes(ts,[]) + '' + ppPatterns(ps); 
     PApplyType(l::Loc,p::Pattern,ts::[Type]) -> ppPattern(p) + ppTypes(ts,[]);
     PNil(l::Loc) -> '[]';
+    PEmptySet(l::Loc) -> 'Set{}';
+    PEmptyBag(l::Loc) -> 'Bag{}';
     PInt(l::Loc,n::Int) -> ''+n;
     PBool(l::Loc,b::Bool) -> ''+b;
     PStr(l::Loc,s::Str) -> s;
     PCons(l::Loc,h::Pattern,t::Pattern) -> ppPattern(h) + ':' + ppPattern(t);
+    PSetCons(l::Loc,p1::Pattern,p2::Pattern) -> 'Set{' + ppPattern(p1) + ' | ' + ppPattern(p2) + '}';
+    PBagCons(l::Loc,p1::Pattern,p2::Pattern) -> 'Bag{' + ppPattern(p1) + ' | ' + ppPattern(p2) + '}';
     p::Pattern -> '<unknown: ' + p + '>';
   }
 
@@ -102,6 +107,7 @@ ppType(t::Type,env::TEnv)::Str = { if getTypeName(t,env) <> null[Str] then getTy
     ApplyType(l::Loc,n::Str,args::[Type]) -> n + map[Type,Str](ppType0(env),args);
     ApplyTypeFun(l::Loc,op::Type,args::[Type]) -> ppType(op,env) + map[Type,Str](ppType0(env),args);
     ArrayType(l::Loc,t::Type) -> 'Array[' + ppType(t,env) + ']';
+    BagType(l::Loc,t::Type) -> 'Set{'+ ppType(t,env) + '}';
     BoolType(l::Loc) -> 'Bool';
     ExtendedAct(l::Loc,parent::Type,decs::[TDec],handlers::[MType]) -> 'Act extends ' + ppType(parent,env) + ' { ' + ppHandlers(handlers,env) + ' }';
     FloatType(l::Loc) -> 'Float';
@@ -113,7 +119,8 @@ ppType(t::Type,env::TEnv)::Str = { if getTypeName(t,env) <> null[Str] then getTy
     ListType(l::Loc,t::Type) -> '[' + ppType(t,env) + ']';
     NullType(l::Loc) -> 'Null';
     RecType(l::Loc,n::Str,t::Type) -> 'rec ' + n + '.' + ppType(t,env);
-    RecordType(l::Loc,fs::[Type])  -> '{' + ppTypes(fs,env) + '}';
+    RecordType(l::Loc,fs::[TDec])  -> '{' + fs + '}';
+    SetType(l::Loc,t::Type) -> 'Set{'+ ppType(t,env) + '}';
     StrType(l::Loc) -> 'Str';
     TableType(l::Loc,k::Type,v::Type) -> 'Hash[' + ppType(k,env) + ',' + ppType(v,env) + ']';
     TermType(l::Loc,n::Str,ts::[Type]) -> n + map[Type,Str](ppType0(env),ts);
@@ -370,6 +377,7 @@ expType(e::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type
     ApplyTypeExp(l::Loc,e::AST,ts::[Type]) -> applyTypeExp(l,e,ts,selfType,valueEnv,cnstrEnv,typeEnv);
     ArrayUpdate(l::Loc,a::AST,i::AST,v::AST) -> arrayUpdateType(l,a,i,v,selfType,valueEnv,cnstrEnv,typeEnv);
     ArrayRef(l::Loc,a::AST,i::AST) -> arrayRefType(l,a,i,selfType,valueEnv,cnstrEnv,typeEnv);
+    BagExp(l::Loc,es::[AST]) -> bagType(l,es,selfType,valueEnv,cnstrEnv,typeEnv);
     Become(l::Loc,e::AST) -> becomeType(l,e,selfType,valueEnv,cnstrEnv,typeEnv);
     BinExp(l::Loc,e1::AST,op::Str,e2::AST) -> binExpType(l,e1,op,e2,selfType,valueEnv,cnstrEnv,typeEnv);
     Block(l::Loc,es::[AST]) -> blockType(l,es,selfType,valueEnv,cnstrEnv,typeEnv);
@@ -395,6 +403,7 @@ expType(e::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type
     Send(l::Loc,target::AST,Term(tl::Loc,n::Str,ts::[Type],args::[AST])) -> sendType(l,target,n,args,selfType,valueEnv,cnstrEnv,typeEnv);
     SendTimeSuper(l::Loc) -> VoidType(l);
     SendSuper(l::Loc,e::AST) -> VoidType(l);
+    SetExp(l::Loc,es::[AST]) -> setType(l,es,selfType,valueEnv,cnstrEnv,typeEnv);
     StrExp(l::Loc,s::Str) -> StrType(l);
     Term(l::Loc,n::Str,ts::[Type],es::[AST]) -> termType(l,n,ts,es,selfType,valueEnv,cnstrEnv,typeEnv);
     Throw(l::Loc,t::Type,e::AST) -> throwType(l,t,e,selfType,valueEnv,cnstrEnv,typeEnv);
@@ -696,11 +705,11 @@ refType(l::Loc,e::AST,n::Str,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEn
         Dec(l::Loc,m::Str,t::Type,st::Type):decs::[TDec] when m=n -> t;
         d::TDec:decs::[TDec] -> findExport(decs);
       }
-    findField(fs::[Type])::Type =
+    findField(fs::[TDec])::Type =
       case fs {
-        [][Type] -> throw[Type] TypeError(l,'cannot find field name ' + n);
-        FieldType(l::Loc,m::Str,t::Type):fs::[Type] when m=n -> t;
-        t::Type:fs::[Type] -> findField(fs);
+        [][TDec] -> throw[Type] TypeError(l,'cannot find field name ' + n);
+        Dec(l::Loc,m::Str,t::Type,ds::Type):fs::[Type] when m=n -> t;
+        t::TDec:fs::[TDec] -> findField(fs);
       }
   in case typeNF(t,typeEnv) {
     StrType(sl::Loc) when n = 'explode' -> ListType(sl,IntType(sl));
@@ -711,7 +720,7 @@ refType(l::Loc,e::AST,n::Str,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEn
     TableType(l::Loc,k::Type,v::Type) when n = 'vals' -> ListType(l,v);
     TableType(l::Loc,k::Type,v::Type) when n = 'hasKey' -> FunType(l,[k],BoolType(l));
     ListType(ll::Loc,t::Type) when n = 'implode' -> StrType(ll);
-    RecordType(rl::Loc,fs::[Type]) -> findField(fs);
+    RecordType(rl::Loc,fs::[TDec]) -> findField(fs);
     ActType(al::Loc,exports::[TDec],handlers::[MType]) ->
       let t::Type = findExport(exports);
       in if t = null[Type]
@@ -728,12 +737,13 @@ derefType(t::Type)::Type =
 
 recordType(l::Loc,fields::[TBind],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type =
   letrec
-    fieldTypes(fields::[TBind])::[Type] =
+    fieldTypes(fields::[TBind])::[TDec] =
       case fields {
-        [][TBind] -> [][Type];
+        [][TBind] -> [][TDec];
         Binding(l::Loc,n::Str,t::Type,st::Type,e::AST):fields::[TBind] ->
-          FieldType(l,n,expType(e,selfType,valueEnv,cnstrEnv,typeEnv)):fieldTypes(fields);
-        fields::[TBind] -> throw[[Type]] TypeError(l,'unknown field representation: ' + fields);
+          let t::Type = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+          in Dec(l,n,t,t):fieldTypes(fields);
+        fields::[TBind] -> throw[[TDec]] TypeError(l,'unknown field representation: ' + fields);
       }
   in RecordType(l,fieldTypes(fields));
   
@@ -780,6 +790,7 @@ getPatternType(l::Loc,p::Pattern,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,ty
 patternType(l::Loc,p::Pattern,t::Type,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv,f::(Type,TEnv)->Type)::Type = {
   //print[Str]('patternType ' + ppPattern(p) + ' ' + ppType(t));
   case p {
+    PAdd(l::Loc,p1::Pattern,p2::Pattern) -> addPatternType(l,p1,p2,t,selfType,valueEnv,cnstrEnv,typeEnv,f);
     PApplyType(l::Loc,p::Pattern,args::[Type]) -> applyTypePatternType(l,p,substTypesEnv(typeEnv,args),t,selfType,valueEnv,cnstrEnv,typeEnv,f);
     PBool(l::Loc,b::Bool) -> if isBoolType(t) then f(BoolType(l),valueEnv); else throw[Type] TypeError(l,'type mismatch: Bool and ' + ppType(t,typeEnv));
     PBagCons(l::Loc,hd::Pattern,tl::Pattern) -> bagConsPatternType(l,hd,tl,t,selfType,valueEnv,cnstrEnv,typeEnv,fun(elementType::Type,valueEnv::TEnv)::Type f(ListType(l,elementType),valueEnv));
@@ -795,6 +806,22 @@ patternType(l::Loc,p::Pattern,t::Type,selfType::Type,valueEnv::TEnv,cnstrEnv::TE
     PTerm(l::Loc,n::Str,ts::[Type],ps::[Pattern]) -> termPatternType(l,n,substTypesEnv(typeEnv,ts),ps,t,selfType,valueEnv,cnstrEnv,typeEnv,f);
     p::Pattern -> throw[Type] TypeError(l,'unknown type of pattern: ' +p);
   }}
+
+addPatternType(l::Loc,p1::Pattern,p2::Pattern,valueType::Type,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv,f::(Type,TEnv)->Type)::Type = 
+  patternType(l,p1,valueType,selfType,valueEnv,cnstrEnv,typeEnv,fun(leftType::Type,valueEnv::TEnv)::Type 
+     patternType(l,p2,valueType,selfType,valueEnv,cnstrEnv,typeEnv,fun(rightType::Type,valueEnv::TEnv)::Type 
+       case valueType {
+         ListType(tl::Loc,t::Type) -> 
+           case p1,p2 {
+            PCons(l1,p,PNil(l3)),PVar(l4,n2,t2) -> f(valueType,valueEnv);
+            PVar(l1,n,t),PCons(l2,p,PNil(l3)) -> f(valueType,valueEnv);
+            PAdd(l1,PVar(l2,n1,t1),PCons(l3,p,PNil(l5))),PVar(l6,n3,t3) -> f(valueType,valueEnv);
+            PVar(l1,n1,t1),PAdd(l2,PCons(l3,p,PNil(l5)),PVar(l6,n3,t3)) -> f(valueType,valueEnv);
+            p1,p2 -> throw[Type] TypeError(l,'patterns must be [p] + p, p + [p] + p, or p + [p]');
+           }
+         TypeClosure(g) -> addPatternType(l,p1,p2,g(),selfType,valueEnv,cnstrEnv,typeEnv,f);
+         t -> throw[Type] TypeError(l,'+ expects lists: ' + ppType(valueType,typeEnv));
+       }));
 
 applyTypePatternType(l::Loc,p::Pattern,args::[Type],valueType::Type,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv,f::(Type,TEnv)->Type)::Type = {
   patternType(l,p,valueType,selfType,valueEnv,cnstrEnv,typeEnv,fun(pType::Type,valueEnv::TEnv)::Type { 
@@ -887,6 +914,7 @@ getGenericTermPatternType(l::Loc,t::Type,genericArgs::[Type],selfType::Type,valu
 nilType(l::Loc,listType::Type,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv,f::(Type,TEnv)->Type)::Type = 
   case listType {
     ListType(ltl::Loc,et::Type) -> f(ForallType(l,['T'],ListType(l,VarType(l,'T'))),valueEnv);
+    TypeClosure(g) -> nilType(l,g(),selfType,valueEnv,cnstrEnv,typeEnv,f);
     listType::Type -> throw[Type] TypeError(l,'expecting a list type: ' + ppType(listType,typeEnv));
   }  
 
@@ -909,6 +937,7 @@ consPatternType(l::Loc,h::Pattern,t::Pattern,listType::Type,selfType::Type,value
         patternType(l,t,listType,selfType,valueEnv,cnstrEnv,typeEnv,fun(tt::Type,valueEnv::TEnv)::Type {
           f(headType,valueEnv);
         }));
+    TypeClosure(g) -> consPatternType(l,h,t,g(),selfType,valueEnv,cnstrEnv,typeEnv,f);
     listType::Type -> throw[Type] TypeError(l,'expecting a list type: ' + ppType(listType,typeEnv));
   }  
 
@@ -1053,6 +1082,7 @@ plusExpType(l::Loc,e1::AST,e2::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,
     IntType(l1::Loc),IntType(l2::Loc) -> t1;
     FloatType(l1::Loc),FloatType(l2::Loc) -> t1;
     ListType(l1::Loc,t1::Type),ListType(l2::Loc,t2::Type) when typeEqual(t1,t2) -> ListType(l1,t1);
+    SetType(l1::Loc,t1::Type),SetType(l2::Loc,t2::Type) when typeEqual(t1,t2) -> SetType(l1,t1);
     t1::Type,t2::Type -> throw[Type] TypeError(l,'incomptible types for +: ' + ppType(t1,typeEnv) + ' and ' + ppType(t2,typeEnv));
   }
 
@@ -1079,7 +1109,7 @@ applyType(l::Loc,op::AST,args::[AST],selfType::Type,valueEnv::TEnv,cnstrEnv::TEn
       in if length[Type](domain) = length[Type](supplied)
          then { //print[Str](' apply subtypes = ' + subTypes(supplied,domain) + ' for ' + args + ' in ' + op); 
            if subTypes(supplied,domain) //typesEqual(domain,supplied)
-           then range; 
+           then range;
            else throw[Type] TypeError(l,'supplied argument types ' + ppTypes(supplied,typeEnv) + ' do not match function domain ' + ppTypes(domain,typeEnv));
          }
          else throw[Type] TypeError(l,'expecting ' + length[Type](domain) + ' args, but supplied with ' + length[Type](supplied)); }
@@ -1231,7 +1261,25 @@ listType(l::Loc,es::[AST],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::
     let ts::[Type] = map[AST,Type](fun(e::AST)::Type expType(e,selfType,valueEnv,cnstrEnv,typeEnv),es);
     in if allEqualTypes(head[Type](ts),tail[Type](ts))
        then ListType(l,head[Type](ts));
-       else throw[Type] TypeError(l,'lists should have elements of the same type: ' + es); 
+       else throw[Type] TypeError(l,'lists should have elements of the same type: ' + es);   
+
+setType(l::Loc,es::[AST],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type =
+  if es = [][AST]
+  then ForallType(l,['T'],SetType(l,VarType(l,'T')));
+  else
+    let ts::[Type] = map[AST,Type](fun(e::AST)::Type expType(e,selfType,valueEnv,cnstrEnv,typeEnv),es);
+    in if allEqualTypes(head[Type](ts),tail[Type](ts))
+       then SetType(l,head[Type](ts));
+       else throw[Type] TypeError(l,'sets should have elements of the same type: ' + es);   
+
+bagType(l::Loc,es::[AST],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type =
+  if es = [][AST]
+  then ForallType(l,['T'],BagType(l,VarType(l,'T')));
+  else
+    let ts::[Type] = map[AST,Type](fun(e::AST)::Type expType(e,selfType,valueEnv,cnstrEnv,typeEnv),es);
+    in if allEqualTypes(head[Type](ts),tail[Type](ts))
+       then BagType(l,head[Type](ts));
+       else throw[Type] TypeError(l,'bags should have elements of the same type: ' + es); 
     
 recTypes(env::TEnv)::TEnv =
   letrec
@@ -1323,7 +1371,7 @@ typeFV1(t::Type,fv::[Type])::[Type] = { //print[Str]('FV ' + t);
     BagType(l::Loc,t::Type) -> typeFV1(t,fv);
     SetType(l::Loc,t::Type) -> typeFV1(t,fv);
     NullType(l::Loc) -> fv; 
-    RecordType(l::Loc,fs::[Type]) -> typesFV1(fs,fv); 
+    RecordType(l::Loc,fs::[TDec]) -> typesFV1([ t | Dec(l,n,t,dt) <- fs ],fv); 
     RecType(l::Loc,a::Str,t::Type) -> filter[Type](fun(t::Type)::Bool case t { VarType(l::Loc,n::Str) -> not(n = a); },typeFV1(t,[][Type])) + fv;
     StrType(l::Loc) -> fv;
     TableType(l::Loc,k::Type,v::Type) -> typeFV1(k,typeFV1(v,fv));

@@ -28,60 +28,60 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal ss = $args[1];
-  {ESLVal _v46 = ss;
+  {ESLVal _v48 = ss;
         
-        if(_v46.isCons())
-        {ESLVal $453 = _v46.head();
-          ESLVal $454 = _v46.tail();
+        if(_v48.isCons())
+        {ESLVal $464 = _v48.head();
+          ESLVal $465 = _v48.tail();
           
-          if($454.isCons())
-          {ESLVal $455 = $454.head();
-            ESLVal $456 = $454.tail();
+          if($465.isCons())
+          {ESLVal $466 = $465.head();
+            ESLVal $467 = $465.tail();
             
-            if($456.isCons())
-            {ESLVal $457 = $456.head();
-              ESLVal $458 = $456.tail();
+            if($467.isCons())
+            {ESLVal $468 = $467.head();
+              ESLVal $469 = $467.tail();
               
-              {ESLVal s = $453;
+              {ESLVal s = $464;
               
-              {ESLVal _v110 = $454;
+              {ESLVal _v114 = $465;
               
-              return s.add(nl.apply(indent).add(ppJoin.apply(indent,_v110)));
+              return s.add(nl.apply(indent).add(ppJoin.apply(indent,_v114)));
             }
             }
             }
-          else if($456.isNil())
-            {ESLVal s1 = $453;
+          else if($467.isNil())
+            {ESLVal s1 = $464;
               
-              {ESLVal s2 = $455;
+              {ESLVal s2 = $466;
               
               return s1.add(nl.apply(indent).add(s2));
             }
             }
-          else {ESLVal s = $453;
+          else {ESLVal s = $464;
               
-              {ESLVal _v111 = $454;
+              {ESLVal _v115 = $465;
               
-              return s.add(nl.apply(indent).add(ppJoin.apply(indent,_v111)));
+              return s.add(nl.apply(indent).add(ppJoin.apply(indent,_v115)));
             }
             }
           }
-        else if($454.isNil())
-          {ESLVal s = $453;
+        else if($465.isNil())
+          {ESLVal s = $464;
             
             return s;
           }
-        else {ESLVal s = $453;
+        else {ESLVal s = $464;
             
-            {ESLVal _v112 = $454;
+            {ESLVal _v116 = $465;
             
-            return s.add(nl.apply(indent).add(ppJoin.apply(indent,_v112)));
+            return s.add(nl.apply(indent).add(ppJoin.apply(indent,_v116)));
           }
           }
         }
-      else if(_v46.isNil())
+      else if(_v48.isNil())
         return new ESLVal("");
-      else return error(new ESLVal("case error at Pos(440,598)").add(ESLVal.list(_v46)));
+      else return error(new ESLVal("case error at Pos(440,598)").add(ESLVal.list(_v48)));
       }
     }
   });
@@ -91,27 +91,27 @@ public class PpExp {
   {ESLVal[] s = new ESLVal[]{new ESLVal("[")};
         
         {{
-        ESLVal _v44 = env;
-        while(_v44.isCons()) {
-          ESLVal _v43 = _v44.headVal;
-          {ESLVal _v42 = new ESLVal(new Function(new ESLVal("forp"),getSelf()) {
+        ESLVal _v46 = env;
+        while(_v46.isCons()) {
+          ESLVal _v45 = _v46.headVal;
+          {ESLVal _v44 = new ESLVal(new Function(new ESLVal("forp"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
-                  {ESLVal _v45 = _v43;
+                  {ESLVal _v47 = _v45;
                     
-                    switch(_v45.termName) {
-                    case "Map": {ESLVal $452 = _v45.termRef(0);
-                      ESLVal $451 = _v45.termRef(1);
+                    switch(_v47.termName) {
+                    case "Map": {ESLVal $463 = _v47.termRef(0);
+                      ESLVal $462 = _v47.termRef(1);
                       
-                      {ESLVal n = $452;
+                      {ESLVal n = $463;
                       
-                      {ESLVal t = $451;
+                      {ESLVal t = $462;
                       
                       {s[0] = s[0].add(n.add(new ESLVal("->").add(ppType.apply(t).add(new ESLVal(",")))));
                     return $null;}
                     }
                     }
                     }
-                    default: {ESLVal $$$ = _v45;
+                    default: {ESLVal $$$ = _v47;
                       
                       return $null;
                     }
@@ -120,9 +120,9 @@ public class PpExp {
                 }
               });
             
-            _v42.apply();
+            _v44.apply();
           }
-          _v44 = _v44.tailVal;}
+          _v46 = _v46.tailVal;}
       }
       return s[0].add(new ESLVal("]"));}
       }
@@ -137,136 +137,136 @@ public class PpExp {
   public static ESLVal ppType = new ESLVal(new Function(new ESLVal("ppType"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal t = $args[0];
-  {ESLVal _v41 = t;
+  {ESLVal _v43 = t;
         
-        switch(_v41.termName) {
-        case "ActType": {ESLVal $450 = _v41.termRef(0);
-          ESLVal $449 = _v41.termRef(1);
-          ESLVal $448 = _v41.termRef(2);
+        switch(_v43.termName) {
+        case "ActType": {ESLVal $461 = _v43.termRef(0);
+          ESLVal $460 = _v43.termRef(1);
+          ESLVal $459 = _v43.termRef(2);
           
-          {ESLVal l = $450;
+          {ESLVal l = $461;
           
-          {ESLVal decs = $449;
+          {ESLVal decs = $460;
           
-          {ESLVal handlers = $448;
+          {ESLVal handlers = $459;
           
           return new ESLVal("").add(t);
         }
         }
         }
         }
-      case "ApplyType": {ESLVal $447 = _v41.termRef(0);
-          ESLVal $446 = _v41.termRef(1);
-          ESLVal $445 = _v41.termRef(2);
+      case "ApplyType": {ESLVal $458 = _v43.termRef(0);
+          ESLVal $457 = _v43.termRef(1);
+          ESLVal $456 = _v43.termRef(2);
           
-          {ESLVal l = $447;
+          {ESLVal l = $458;
           
-          {ESLVal n = $446;
+          {ESLVal n = $457;
           
-          {ESLVal args = $445;
+          {ESLVal args = $456;
           
           return n.add(map.apply(ppType,args));
         }
         }
         }
         }
-      case "ApplyTypeFun": {ESLVal $444 = _v41.termRef(0);
-          ESLVal $443 = _v41.termRef(1);
-          ESLVal $442 = _v41.termRef(2);
+      case "ApplyTypeFun": {ESLVal $455 = _v43.termRef(0);
+          ESLVal $454 = _v43.termRef(1);
+          ESLVal $453 = _v43.termRef(2);
           
-          {ESLVal l = $444;
+          {ESLVal l = $455;
           
-          {ESLVal op = $443;
+          {ESLVal op = $454;
           
-          {ESLVal args = $442;
+          {ESLVal args = $453;
           
           return ppType.apply(op).add(map.apply(ppType,args));
         }
         }
         }
         }
-      case "ArrayType": {ESLVal $441 = _v41.termRef(0);
-          ESLVal $440 = _v41.termRef(1);
+      case "ArrayType": {ESLVal $452 = _v43.termRef(0);
+          ESLVal $451 = _v43.termRef(1);
           
-          {ESLVal l = $441;
+          {ESLVal l = $452;
           
-          {ESLVal _v109 = $440;
+          {ESLVal _v113 = $451;
           
-          return new ESLVal("Array[").add(ppType.apply(_v109).add(new ESLVal("]")));
+          return new ESLVal("Array[").add(ppType.apply(_v113).add(new ESLVal("]")));
         }
         }
         }
-      case "BoolType": {ESLVal $439 = _v41.termRef(0);
+      case "BoolType": {ESLVal $450 = _v43.termRef(0);
           
-          {ESLVal l = $439;
+          {ESLVal l = $450;
           
           return new ESLVal("Bool");
         }
         }
-      case "FloatType": {ESLVal $438 = _v41.termRef(0);
+      case "FloatType": {ESLVal $449 = _v43.termRef(0);
           
-          {ESLVal l = $438;
+          {ESLVal l = $449;
           
           return new ESLVal("Float");
         }
         }
-      case "FieldType": {ESLVal $437 = _v41.termRef(0);
-          ESLVal $436 = _v41.termRef(1);
-          ESLVal $435 = _v41.termRef(2);
+      case "FieldType": {ESLVal $448 = _v43.termRef(0);
+          ESLVal $447 = _v43.termRef(1);
+          ESLVal $446 = _v43.termRef(2);
           
-          {ESLVal l = $437;
+          {ESLVal l = $448;
           
-          {ESLVal n = $436;
+          {ESLVal n = $447;
           
-          {ESLVal _v108 = $435;
+          {ESLVal _v112 = $446;
           
-          return n.add(new ESLVal("::").add(ppType.apply(_v108)));
+          return n.add(new ESLVal("::").add(ppType.apply(_v112)));
         }
         }
         }
         }
-      case "ForallType": {ESLVal $434 = _v41.termRef(0);
-          ESLVal $433 = _v41.termRef(1);
-          ESLVal $432 = _v41.termRef(2);
+      case "ForallType": {ESLVal $445 = _v43.termRef(0);
+          ESLVal $444 = _v43.termRef(1);
+          ESLVal $443 = _v43.termRef(2);
           
-          {ESLVal l = $434;
+          {ESLVal l = $445;
           
-          {ESLVal ns = $433;
+          {ESLVal ns = $444;
           
-          {ESLVal _v107 = $432;
+          {ESLVal _v111 = $443;
           
-          return new ESLVal("Forall").add(ns.add(new ESLVal(".").add(ppType.apply(_v107))));
+          return new ESLVal("Forall").add(ns.add(new ESLVal(".").add(ppType.apply(_v111))));
         }
         }
         }
         }
-      case "FunType": {ESLVal $431 = _v41.termRef(0);
-          ESLVal $430 = _v41.termRef(1);
-          ESLVal $429 = _v41.termRef(2);
+      case "FunType": {ESLVal $442 = _v43.termRef(0);
+          ESLVal $441 = _v43.termRef(1);
+          ESLVal $440 = _v43.termRef(2);
           
-          {ESLVal l = $431;
+          {ESLVal l = $442;
           
-          {ESLVal d = $430;
+          {ESLVal d = $441;
           
-          {ESLVal r = $429;
+          {ESLVal r = $440;
           
           return map.apply(ppType,d).add(new ESLVal("->").add(ppType.apply(r)));
         }
         }
         }
         }
-      case "TaggedFunType": {ESLVal $428 = _v41.termRef(0);
-          ESLVal $427 = _v41.termRef(1);
-          ESLVal $426 = _v41.termRef(2);
-          ESLVal $425 = _v41.termRef(3);
+      case "TaggedFunType": {ESLVal $439 = _v43.termRef(0);
+          ESLVal $438 = _v43.termRef(1);
+          ESLVal $437 = _v43.termRef(2);
+          ESLVal $436 = _v43.termRef(3);
           
-          {ESLVal l = $428;
+          {ESLVal l = $439;
           
-          {ESLVal d = $427;
+          {ESLVal d = $438;
           
-          {ESLVal p = $426;
+          {ESLVal p = $437;
           
-          {ESLVal r = $425;
+          {ESLVal r = $436;
           
           return map.apply(ppType,d).add(new ESLVal("->").add(ppType.apply(r)));
         }
@@ -274,172 +274,172 @@ public class PpExp {
         }
         }
         }
-      case "IntType": {ESLVal $424 = _v41.termRef(0);
+      case "IntType": {ESLVal $435 = _v43.termRef(0);
           
-          {ESLVal l = $424;
+          {ESLVal l = $435;
           
           return new ESLVal("Int");
         }
         }
-      case "ListType": {ESLVal $423 = _v41.termRef(0);
-          ESLVal $422 = _v41.termRef(1);
+      case "ListType": {ESLVal $434 = _v43.termRef(0);
+          ESLVal $433 = _v43.termRef(1);
           
-          {ESLVal l = $423;
+          {ESLVal l = $434;
           
-          {ESLVal _v106 = $422;
+          {ESLVal _v110 = $433;
           
-          return new ESLVal("[").add(ppType.apply(_v106).add(new ESLVal("]")));
+          return new ESLVal("[").add(ppType.apply(_v110).add(new ESLVal("]")));
         }
         }
         }
-      case "NullType": {ESLVal $421 = _v41.termRef(0);
+      case "NullType": {ESLVal $432 = _v43.termRef(0);
           
-          {ESLVal l = $421;
+          {ESLVal l = $432;
           
           return new ESLVal("Null");
         }
         }
-      case "RecType": {ESLVal $420 = _v41.termRef(0);
-          ESLVal $419 = _v41.termRef(1);
-          ESLVal $418 = _v41.termRef(2);
+      case "RecType": {ESLVal $431 = _v43.termRef(0);
+          ESLVal $430 = _v43.termRef(1);
+          ESLVal $429 = _v43.termRef(2);
           
-          {ESLVal l = $420;
+          {ESLVal l = $431;
           
-          {ESLVal n = $419;
+          {ESLVal n = $430;
           
-          {ESLVal _v105 = $418;
+          {ESLVal _v109 = $429;
           
-          return new ESLVal("rec ").add(n.add(new ESLVal(".").add(ppType.apply(_v105))));
+          return new ESLVal("rec ").add(n.add(new ESLVal(".").add(ppType.apply(_v109))));
         }
         }
         }
         }
-      case "RecordType": {ESLVal $417 = _v41.termRef(0);
-          ESLVal $416 = _v41.termRef(1);
+      case "RecordType": {ESLVal $428 = _v43.termRef(0);
+          ESLVal $427 = _v43.termRef(1);
           
-          {ESLVal l = $417;
+          {ESLVal l = $428;
           
-          {ESLVal fs = $416;
+          {ESLVal fs = $427;
           
-          return new ESLVal("{").add(ppTypes.apply(fs).add(new ESLVal("}")));
+          return new ESLVal("{").add(fs.add(new ESLVal("}")));
         }
         }
         }
-      case "StrType": {ESLVal $415 = _v41.termRef(0);
+      case "StrType": {ESLVal $426 = _v43.termRef(0);
           
-          {ESLVal l = $415;
+          {ESLVal l = $426;
           
           return new ESLVal("Str");
         }
         }
-      case "TableType": {ESLVal $414 = _v41.termRef(0);
-          ESLVal $413 = _v41.termRef(1);
-          ESLVal $412 = _v41.termRef(2);
+      case "TableType": {ESLVal $425 = _v43.termRef(0);
+          ESLVal $424 = _v43.termRef(1);
+          ESLVal $423 = _v43.termRef(2);
           
-          {ESLVal l = $414;
+          {ESLVal l = $425;
           
-          {ESLVal k = $413;
+          {ESLVal k = $424;
           
-          {ESLVal v = $412;
+          {ESLVal v = $423;
           
           return new ESLVal("Hash[").add(ppType.apply(k).add(new ESLVal(",").add(ppType.apply(v).add(new ESLVal("]")))));
         }
         }
         }
         }
-      case "TermType": {ESLVal $411 = _v41.termRef(0);
-          ESLVal $410 = _v41.termRef(1);
-          ESLVal $409 = _v41.termRef(2);
+      case "TermType": {ESLVal $422 = _v43.termRef(0);
+          ESLVal $421 = _v43.termRef(1);
+          ESLVal $420 = _v43.termRef(2);
           
-          {ESLVal l = $411;
+          {ESLVal l = $422;
           
-          {ESLVal n = $410;
+          {ESLVal n = $421;
           
-          {ESLVal ts = $409;
+          {ESLVal ts = $420;
           
           return n.add(map.apply(ppType,ts));
         }
         }
         }
         }
-      case "TypeFun": {ESLVal $408 = _v41.termRef(0);
-          ESLVal $407 = _v41.termRef(1);
-          ESLVal $406 = _v41.termRef(2);
+      case "TypeFun": {ESLVal $419 = _v43.termRef(0);
+          ESLVal $418 = _v43.termRef(1);
+          ESLVal $417 = _v43.termRef(2);
           
-          {ESLVal l = $408;
+          {ESLVal l = $419;
           
-          {ESLVal ns = $407;
+          {ESLVal ns = $418;
           
-          {ESLVal _v104 = $406;
+          {ESLVal _v108 = $417;
           
-          return new ESLVal("Fun").add(ns.add(new ESLVal(".").add(ppType.apply(_v104))));
+          return new ESLVal("Fun").add(ns.add(new ESLVal(".").add(ppType.apply(_v108))));
         }
         }
         }
         }
-      case "UnfoldType": {ESLVal $405 = _v41.termRef(0);
-          ESLVal $404 = _v41.termRef(1);
+      case "UnfoldType": {ESLVal $416 = _v43.termRef(0);
+          ESLVal $415 = _v43.termRef(1);
           
-          {ESLVal l = $405;
+          {ESLVal l = $416;
           
-          {ESLVal _v103 = $404;
+          {ESLVal _v107 = $415;
           
-          return new ESLVal("unfold ").add(ppType.apply(_v103));
+          return new ESLVal("unfold ").add(ppType.apply(_v107));
         }
         }
         }
-      case "UnionType": {ESLVal $403 = _v41.termRef(0);
-          ESLVal $402 = _v41.termRef(1);
+      case "UnionType": {ESLVal $414 = _v43.termRef(0);
+          ESLVal $413 = _v43.termRef(1);
           
-          {ESLVal l = $403;
+          {ESLVal l = $414;
           
-          {ESLVal ts = $402;
+          {ESLVal ts = $413;
           
           return new ESLVal("union ").add(map.apply(ppType,ts));
         }
         }
         }
-      case "VarType": {ESLVal $401 = _v41.termRef(0);
-          ESLVal $400 = _v41.termRef(1);
+      case "VarType": {ESLVal $412 = _v43.termRef(0);
+          ESLVal $411 = _v43.termRef(1);
           
-          {ESLVal l = $401;
+          {ESLVal l = $412;
           
-          {ESLVal n = $400;
+          {ESLVal n = $411;
           
           return n;
         }
         }
         }
-      case "VoidType": {ESLVal $399 = _v41.termRef(0);
+      case "VoidType": {ESLVal $410 = _v43.termRef(0);
           
-          {ESLVal l = $399;
+          {ESLVal l = $410;
           
           return new ESLVal("Void");
         }
         }
-      case "UnionRef": {ESLVal $398 = _v41.termRef(0);
-          ESLVal $397 = _v41.termRef(1);
-          ESLVal $396 = _v41.termRef(2);
+      case "UnionRef": {ESLVal $409 = _v43.termRef(0);
+          ESLVal $408 = _v43.termRef(1);
+          ESLVal $407 = _v43.termRef(2);
           
-          {ESLVal l = $398;
+          {ESLVal l = $409;
           
-          {ESLVal _v102 = $397;
+          {ESLVal _v106 = $408;
           
-          {ESLVal n = $396;
+          {ESLVal n = $407;
           
-          return ppType.apply(_v102).add(new ESLVal(".").add(n));
+          return ppType.apply(_v106).add(new ESLVal(".").add(n));
         }
         }
         }
         }
-      case "TypeClosure": {ESLVal $395 = _v41.termRef(0);
+      case "TypeClosure": {ESLVal $406 = _v43.termRef(0);
           
-          {ESLVal f = $395;
+          {ESLVal f = $406;
           
           return f.add(new ESLVal(""));
         }
         }
-        default: {ESLVal x = _v41;
+        default: {ESLVal x = _v43;
           
           return new ESLVal("<unknown ").add(x.add(new ESLVal(">")));
         }
@@ -452,77 +452,77 @@ public class PpExp {
       ESLVal indent = $args[0];
   ESLVal exps = $args[1];
   ESLVal sep = $args[2];
-  {ESLVal _v40 = exps;
+  {ESLVal _v42 = exps;
         
-        if(_v40.isCons())
-        {ESLVal $391 = _v40.head();
-          ESLVal $392 = _v40.tail();
+        if(_v42.isCons())
+        {ESLVal $402 = _v42.head();
+          ESLVal $403 = _v42.tail();
           
-          if($392.isCons())
-          {ESLVal $393 = $392.head();
-            ESLVal $394 = $392.tail();
+          if($403.isCons())
+          {ESLVal $404 = $403.head();
+            ESLVal $405 = $403.tail();
             
-            {ESLVal e1 = $391;
+            {ESLVal e1 = $402;
             
-            {ESLVal e2 = $393;
+            {ESLVal e2 = $404;
             
-            {ESLVal es = $394;
+            {ESLVal es = $405;
             
             return ppExp.apply(indent,e1).add(sep.add(ppExps.apply(indent,es.cons(e2),sep)));
           }
           }
           }
           }
-        else if($392.isNil())
-          {ESLVal e = $391;
+        else if($403.isNil())
+          {ESLVal e = $402;
             
             return ppExp.apply(indent,e);
           }
-        else return error(new ESLVal("case error at Pos(2420,2578)").add(ESLVal.list(_v40)));
+        else return error(new ESLVal("case error at Pos(2411,2569)").add(ESLVal.list(_v42)));
         }
-      else if(_v40.isNil())
+      else if(_v42.isNil())
         return new ESLVal("");
-      else return error(new ESLVal("case error at Pos(2420,2578)").add(ESLVal.list(_v40)));
+      else return error(new ESLVal("case error at Pos(2411,2569)").add(ESLVal.list(_v42)));
       }
     }
   });
   private static ESLVal ppPattern = new ESLVal(new Function(new ESLVal("ppPattern"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal p = $args[0];
-  {ESLVal _v39 = p;
+  {ESLVal _v41 = p;
         
-        switch(_v39.termName) {
-        case "PVar": {ESLVal $390 = _v39.termRef(0);
-          ESLVal $389 = _v39.termRef(1);
-          ESLVal $388 = _v39.termRef(2);
+        switch(_v41.termName) {
+        case "PVar": {ESLVal $401 = _v41.termRef(0);
+          ESLVal $400 = _v41.termRef(1);
+          ESLVal $399 = _v41.termRef(2);
           
-          {ESLVal l = $390;
+          {ESLVal l = $401;
           
-          {ESLVal n = $389;
+          {ESLVal n = $400;
           
-          {ESLVal t = $388;
+          {ESLVal t = $399;
           
           return n;
         }
         }
         }
         }
-      case "PTerm": {ESLVal $385 = _v39.termRef(0);
-          ESLVal $384 = _v39.termRef(1);
-          ESLVal $383 = _v39.termRef(2);
-          ESLVal $382 = _v39.termRef(3);
+      case "PTerm": {ESLVal $396 = _v41.termRef(0);
+          ESLVal $395 = _v41.termRef(1);
+          ESLVal $394 = _v41.termRef(2);
+          ESLVal $393 = _v41.termRef(3);
           
-          if($383.isCons())
-          {ESLVal $386 = $383.head();
-            ESLVal $387 = $383.tail();
+          if($394.isCons())
+          {ESLVal $397 = $394.head();
+            ESLVal $398 = $394.tail();
             
-            {ESLVal l = $385;
+            {ESLVal l = $396;
             
-            {ESLVal n = $384;
+            {ESLVal n = $395;
             
-            {ESLVal ts = $383;
+            {ESLVal ts = $394;
             
-            {ESLVal ps = $382;
+            {ESLVal ps = $393;
             
             return n.add(ppPatterns.apply(ps));
           }
@@ -530,104 +530,104 @@ public class PpExp {
           }
           }
           }
-        else if($383.isNil())
-          {ESLVal l = $385;
+        else if($394.isNil())
+          {ESLVal l = $396;
             
-            {ESLVal n = $384;
+            {ESLVal n = $395;
             
-            {ESLVal ps = $382;
-            
-            return n.add(ppPatterns.apply(ps));
-          }
-          }
-          }
-        else {ESLVal l = $385;
-            
-            {ESLVal n = $384;
-            
-            {ESLVal ts = $383;
-            
-            {ESLVal ps = $382;
+            {ESLVal ps = $393;
             
             return n.add(ppPatterns.apply(ps));
           }
           }
           }
+        else {ESLVal l = $396;
+            
+            {ESLVal n = $395;
+            
+            {ESLVal ts = $394;
+            
+            {ESLVal ps = $393;
+            
+            return n.add(ppPatterns.apply(ps));
+          }
+          }
+          }
           }
         }
-      case "PApplyType": {ESLVal $381 = _v39.termRef(0);
-          ESLVal $380 = _v39.termRef(1);
-          ESLVal $379 = _v39.termRef(2);
+      case "PApplyType": {ESLVal $392 = _v41.termRef(0);
+          ESLVal $391 = _v41.termRef(1);
+          ESLVal $390 = _v41.termRef(2);
           
-          {ESLVal l = $381;
+          {ESLVal l = $392;
           
-          {ESLVal _v100 = $380;
+          {ESLVal _v104 = $391;
           
-          {ESLVal ts = $379;
+          {ESLVal ts = $390;
           
-          return ppPattern.apply(_v100);
+          return ppPattern.apply(_v104);
         }
         }
         }
         }
-      case "PNil": {ESLVal $378 = _v39.termRef(0);
+      case "PNil": {ESLVal $389 = _v41.termRef(0);
           
-          {ESLVal l = $378;
+          {ESLVal l = $389;
           
           return new ESLVal("[]");
         }
         }
-      case "PInt": {ESLVal $377 = _v39.termRef(0);
-          ESLVal $376 = _v39.termRef(1);
+      case "PInt": {ESLVal $388 = _v41.termRef(0);
+          ESLVal $387 = _v41.termRef(1);
           
-          {ESLVal l = $377;
+          {ESLVal l = $388;
           
-          {ESLVal n = $376;
+          {ESLVal n = $387;
           
           return new ESLVal("").add(n);
         }
         }
         }
-      case "PBool": {ESLVal $375 = _v39.termRef(0);
-          ESLVal $374 = _v39.termRef(1);
+      case "PBool": {ESLVal $386 = _v41.termRef(0);
+          ESLVal $385 = _v41.termRef(1);
           
-          {ESLVal l = $375;
+          {ESLVal l = $386;
           
-          {ESLVal b = $374;
+          {ESLVal b = $385;
           
           return new ESLVal("").add(b);
         }
         }
         }
-      case "PStr": {ESLVal $373 = _v39.termRef(0);
-          ESLVal $372 = _v39.termRef(1);
+      case "PStr": {ESLVal $384 = _v41.termRef(0);
+          ESLVal $383 = _v41.termRef(1);
           
-          {ESLVal l = $373;
+          {ESLVal l = $384;
           
-          {ESLVal s = $372;
+          {ESLVal s = $383;
           
           return new ESLVal("\'").add(s.add(new ESLVal("\'")));
         }
         }
         }
-      case "PCons": {ESLVal $371 = _v39.termRef(0);
-          ESLVal $370 = _v39.termRef(1);
-          ESLVal $369 = _v39.termRef(2);
+      case "PCons": {ESLVal $382 = _v41.termRef(0);
+          ESLVal $381 = _v41.termRef(1);
+          ESLVal $380 = _v41.termRef(2);
           
-          {ESLVal l = $371;
+          {ESLVal l = $382;
           
-          {ESLVal h = $370;
+          {ESLVal h = $381;
           
-          {ESLVal t = $369;
+          {ESLVal t = $380;
           
           return ppPattern.apply(h).add(new ESLVal(":").add(ppPattern.apply(t)));
         }
         }
         }
         }
-        default: {ESLVal _v101 = _v39;
+        default: {ESLVal _v105 = _v41;
           
-          return new ESLVal("<unknown: ").add(_v101.add(new ESLVal(">")));
+          return new ESLVal("<unknown: ").add(_v105.add(new ESLVal(">")));
         }
       }
       }
@@ -643,30 +643,30 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal exp = $args[1];
-  {ESLVal _v38 = exp;
+  {ESLVal _v40 = exp;
         
-        switch(_v38.termName) {
-        case "Module": {ESLVal $368 = _v38.termRef(0);
-          ESLVal $367 = _v38.termRef(1);
-          ESLVal $366 = _v38.termRef(2);
-          ESLVal $365 = _v38.termRef(3);
-          ESLVal $364 = _v38.termRef(4);
-          ESLVal $363 = _v38.termRef(5);
-          ESLVal $362 = _v38.termRef(6);
+        switch(_v40.termName) {
+        case "Module": {ESLVal $379 = _v40.termRef(0);
+          ESLVal $378 = _v40.termRef(1);
+          ESLVal $377 = _v40.termRef(2);
+          ESLVal $376 = _v40.termRef(3);
+          ESLVal $375 = _v40.termRef(4);
+          ESLVal $374 = _v40.termRef(5);
+          ESLVal $373 = _v40.termRef(6);
           
-          {ESLVal path = $368;
+          {ESLVal path = $379;
           
-          {ESLVal name = $367;
+          {ESLVal name = $378;
           
-          {ESLVal exports = $366;
+          {ESLVal exports = $377;
           
-          {ESLVal imports = $365;
+          {ESLVal imports = $376;
           
-          {ESLVal x = $364;
+          {ESLVal x = $375;
           
-          {ESLVal y = $363;
+          {ESLVal y = $374;
           
-          {ESLVal defs = $362;
+          {ESLVal defs = $373;
           
           return new ESLVal("module ").add(name.add(new ESLVal("{").add(nl.apply(indent.add(new ESLVal(2))).add(ppBinds.apply(indent.add(new ESLVal(2)),defs).add(nl.apply(indent).add(new ESLVal("}")))))));
         }
@@ -677,123 +677,123 @@ public class PpExp {
         }
         }
         }
-      case "Var": {ESLVal $361 = _v38.termRef(0);
-          ESLVal $360 = _v38.termRef(1);
+      case "Var": {ESLVal $372 = _v40.termRef(0);
+          ESLVal $371 = _v40.termRef(1);
           
-          {ESLVal l = $361;
+          {ESLVal l = $372;
           
-          {ESLVal n = $360;
+          {ESLVal n = $371;
           
           return n;
         }
         }
         }
-      case "StrExp": {ESLVal $359 = _v38.termRef(0);
-          ESLVal $358 = _v38.termRef(1);
+      case "StrExp": {ESLVal $370 = _v40.termRef(0);
+          ESLVal $369 = _v40.termRef(1);
           
-          {ESLVal l = $359;
+          {ESLVal l = $370;
           
-          {ESLVal v = $358;
+          {ESLVal v = $369;
           
           return new ESLVal("\'").add(v.add(new ESLVal("\'")));
         }
         }
         }
-      case "IntExp": {ESLVal $357 = _v38.termRef(0);
-          ESLVal $356 = _v38.termRef(1);
+      case "IntExp": {ESLVal $368 = _v40.termRef(0);
+          ESLVal $367 = _v40.termRef(1);
           
-          {ESLVal l = $357;
+          {ESLVal l = $368;
           
-          {ESLVal v = $356;
-          
-          return v.add(new ESLVal(""));
-        }
-        }
-        }
-      case "BoolExp": {ESLVal $355 = _v38.termRef(0);
-          ESLVal $354 = _v38.termRef(1);
-          
-          {ESLVal l = $355;
-          
-          {ESLVal v = $354;
+          {ESLVal v = $367;
           
           return v.add(new ESLVal(""));
         }
         }
         }
-      case "NullExp": {ESLVal $353 = _v38.termRef(0);
+      case "BoolExp": {ESLVal $366 = _v40.termRef(0);
+          ESLVal $365 = _v40.termRef(1);
           
-          {ESLVal l = $353;
+          {ESLVal l = $366;
+          
+          {ESLVal v = $365;
+          
+          return v.add(new ESLVal(""));
+        }
+        }
+        }
+      case "NullExp": {ESLVal $364 = _v40.termRef(0);
+          
+          {ESLVal l = $364;
           
           return new ESLVal("null");
         }
         }
-      case "FloatExp": {ESLVal $352 = _v38.termRef(0);
-          ESLVal $351 = _v38.termRef(1);
+      case "FloatExp": {ESLVal $363 = _v40.termRef(0);
+          ESLVal $362 = _v40.termRef(1);
           
-          {ESLVal l = $352;
+          {ESLVal l = $363;
           
-          {ESLVal f = $351;
+          {ESLVal f = $362;
           
           return f.add(new ESLVal(""));
         }
         }
         }
-      case "Apply": {ESLVal $350 = _v38.termRef(0);
-          ESLVal $349 = _v38.termRef(1);
-          ESLVal $348 = _v38.termRef(2);
+      case "Apply": {ESLVal $361 = _v40.termRef(0);
+          ESLVal $360 = _v40.termRef(1);
+          ESLVal $359 = _v40.termRef(2);
           
-          {ESLVal l = $350;
+          {ESLVal l = $361;
           
-          {ESLVal op = $349;
+          {ESLVal op = $360;
           
-          {ESLVal args = $348;
+          {ESLVal args = $359;
           
           return ppExp.apply(indent,op).add(new ESLVal("(").add(ppExps.apply(indent,args,new ESLVal(",")).add(new ESLVal(")"))));
         }
         }
         }
         }
-      case "ApplyTypeExp": {ESLVal $347 = _v38.termRef(0);
-          ESLVal $346 = _v38.termRef(1);
-          ESLVal $345 = _v38.termRef(2);
+      case "ApplyTypeExp": {ESLVal $358 = _v40.termRef(0);
+          ESLVal $357 = _v40.termRef(1);
+          ESLVal $356 = _v40.termRef(2);
           
-          {ESLVal l = $347;
+          {ESLVal l = $358;
           
-          {ESLVal op = $346;
+          {ESLVal op = $357;
           
-          {ESLVal args = $345;
+          {ESLVal args = $356;
           
           return ppExp.apply(indent,op);
         }
         }
         }
         }
-      case "Block": {ESLVal $344 = _v38.termRef(0);
-          ESLVal $343 = _v38.termRef(1);
+      case "Block": {ESLVal $355 = _v40.termRef(0);
+          ESLVal $354 = _v40.termRef(1);
           
-          {ESLVal l = $344;
+          {ESLVal l = $355;
           
-          {ESLVal es = $343;
+          {ESLVal es = $354;
           
           return new ESLVal("{").add(nl.apply(indent.add(new ESLVal(2))).add(ppExps.apply(indent.add(new ESLVal(2)),es,new ESLVal(";")).add(nl.apply(indent).add(new ESLVal("}")))));
         }
         }
         }
-      case "Case": {ESLVal $342 = _v38.termRef(0);
-          ESLVal $341 = _v38.termRef(1);
-          ESLVal $340 = _v38.termRef(2);
-          ESLVal $339 = _v38.termRef(3);
+      case "Case": {ESLVal $353 = _v40.termRef(0);
+          ESLVal $352 = _v40.termRef(1);
+          ESLVal $351 = _v40.termRef(2);
+          ESLVal $350 = _v40.termRef(3);
           
-          {ESLVal l = $342;
+          {ESLVal l = $353;
           
-          {ESLVal ds = $341;
+          {ESLVal ds = $352;
           
-          {ESLVal es = $340;
+          {ESLVal es = $351;
           
-          {ESLVal as = $339;
+          {ESLVal as = $350;
           
-          return new ESLVal("case ").add(ppExps.apply(indent,es,new ESLVal(",")).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun3391"),getSelf()) {
+          return new ESLVal("case ").add(ppExps.apply(indent,es,new ESLVal(",")).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun5171"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal a = $args[0];
           return ppArm.apply(indent,a);
@@ -804,20 +804,20 @@ public class PpExp {
         }
         }
         }
-      case "CaseTerm": {ESLVal $338 = _v38.termRef(0);
-          ESLVal $337 = _v38.termRef(1);
-          ESLVal $336 = _v38.termRef(2);
-          ESLVal $335 = _v38.termRef(3);
+      case "CaseTerm": {ESLVal $349 = _v40.termRef(0);
+          ESLVal $348 = _v40.termRef(1);
+          ESLVal $347 = _v40.termRef(2);
+          ESLVal $346 = _v40.termRef(3);
           
-          {ESLVal l = $338;
+          {ESLVal l = $349;
           
-          {ESLVal e = $337;
+          {ESLVal e = $348;
           
-          {ESLVal arms = $336;
+          {ESLVal arms = $347;
           
-          {ESLVal alt = $335;
+          {ESLVal alt = $346;
           
-          return new ESLVal("caseTerm ").add(ppExp.apply(indent,e).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun3392"),getSelf()) {
+          return new ESLVal("caseTerm ").add(ppExp.apply(indent,e).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun5172"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal a = $args[0];
           return ppCaseTermArm.apply(indent.add(new ESLVal(2)),a);
@@ -828,21 +828,21 @@ public class PpExp {
         }
         }
         }
-      case "CaseList": {ESLVal $334 = _v38.termRef(0);
-          ESLVal $333 = _v38.termRef(1);
-          ESLVal $332 = _v38.termRef(2);
-          ESLVal $331 = _v38.termRef(3);
-          ESLVal $330 = _v38.termRef(4);
+      case "CaseList": {ESLVal $345 = _v40.termRef(0);
+          ESLVal $344 = _v40.termRef(1);
+          ESLVal $343 = _v40.termRef(2);
+          ESLVal $342 = _v40.termRef(3);
+          ESLVal $341 = _v40.termRef(4);
           
-          {ESLVal l = $334;
+          {ESLVal l = $345;
           
-          {ESLVal e = $333;
+          {ESLVal e = $344;
           
-          {ESLVal cons = $332;
+          {ESLVal cons = $343;
           
-          {ESLVal nil = $331;
+          {ESLVal nil = $342;
           
-          {ESLVal alt = $330;
+          {ESLVal alt = $341;
           
           return new ESLVal("caseList ").add(ppExp.apply(indent,e).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("CONS ->").add(nl.apply(indent.add(new ESLVal(4))).add(ppExp.apply(indent.add(new ESLVal(4)),cons).add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("NIL ->").add(nl.apply(indent.add(new ESLVal(4))).add(ppExp.apply(indent.add(new ESLVal(4)),nil).add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("else ").add(ppExp.apply(indent.add(new ESLVal(4)),alt).add(nl.apply(indent).add(new ESLVal("}"))))))))))))))));
         }
@@ -851,20 +851,20 @@ public class PpExp {
         }
         }
         }
-      case "CaseInt": {ESLVal $329 = _v38.termRef(0);
-          ESLVal $328 = _v38.termRef(1);
-          ESLVal $327 = _v38.termRef(2);
-          ESLVal $326 = _v38.termRef(3);
+      case "CaseInt": {ESLVal $340 = _v40.termRef(0);
+          ESLVal $339 = _v40.termRef(1);
+          ESLVal $338 = _v40.termRef(2);
+          ESLVal $337 = _v40.termRef(3);
           
-          {ESLVal l = $329;
+          {ESLVal l = $340;
           
-          {ESLVal e = $328;
+          {ESLVal e = $339;
           
-          {ESLVal arms = $327;
+          {ESLVal arms = $338;
           
-          {ESLVal alt = $326;
+          {ESLVal alt = $337;
           
-          return new ESLVal("caseInt ").add(ppExp.apply(indent,e).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun3393"),getSelf()) {
+          return new ESLVal("caseInt ").add(ppExp.apply(indent,e).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun5173"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal a = $args[0];
           return ppCaseIntsArm.apply(indent.add(new ESLVal(2)),a);
@@ -875,20 +875,20 @@ public class PpExp {
         }
         }
         }
-      case "CaseStr": {ESLVal $325 = _v38.termRef(0);
-          ESLVal $324 = _v38.termRef(1);
-          ESLVal $323 = _v38.termRef(2);
-          ESLVal $322 = _v38.termRef(3);
+      case "CaseStr": {ESLVal $336 = _v40.termRef(0);
+          ESLVal $335 = _v40.termRef(1);
+          ESLVal $334 = _v40.termRef(2);
+          ESLVal $333 = _v40.termRef(3);
           
-          {ESLVal l = $325;
+          {ESLVal l = $336;
           
-          {ESLVal e = $324;
+          {ESLVal e = $335;
           
-          {ESLVal arms = $323;
+          {ESLVal arms = $334;
           
-          {ESLVal alt = $322;
+          {ESLVal alt = $333;
           
-          return new ESLVal("caseStr ").add(ppExp.apply(indent,e).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun3394"),getSelf()) {
+          return new ESLVal("caseStr ").add(ppExp.apply(indent,e).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun5174"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal a = $args[0];
           return ppCaseStrsArm.apply(indent.add(new ESLVal(2)),a);
@@ -899,20 +899,20 @@ public class PpExp {
         }
         }
         }
-      case "CaseBool": {ESLVal $321 = _v38.termRef(0);
-          ESLVal $320 = _v38.termRef(1);
-          ESLVal $319 = _v38.termRef(2);
-          ESLVal $318 = _v38.termRef(3);
+      case "CaseBool": {ESLVal $332 = _v40.termRef(0);
+          ESLVal $331 = _v40.termRef(1);
+          ESLVal $330 = _v40.termRef(2);
+          ESLVal $329 = _v40.termRef(3);
           
-          {ESLVal l = $321;
+          {ESLVal l = $332;
           
-          {ESLVal e = $320;
+          {ESLVal e = $331;
           
-          {ESLVal arms = $319;
+          {ESLVal arms = $330;
           
-          {ESLVal alt = $318;
+          {ESLVal alt = $329;
           
-          return new ESLVal("caseBool ").add(ppExp.apply(indent,e).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun3395"),getSelf()) {
+          return new ESLVal("caseBool ").add(ppExp.apply(indent,e).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun5175"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal a = $args[0];
           return ppCaseBoolsArm.apply(indent.add(new ESLVal(2)),a);
@@ -923,54 +923,54 @@ public class PpExp {
         }
         }
         }
-      case "CaseError": {ESLVal $317 = _v38.termRef(0);
-          ESLVal $316 = _v38.termRef(1);
+      case "CaseError": {ESLVal $328 = _v40.termRef(0);
+          ESLVal $327 = _v40.termRef(1);
           
-          {ESLVal l = $317;
+          {ESLVal l = $328;
           
-          {ESLVal e = $316;
+          {ESLVal e = $327;
           
           return new ESLVal("caseError()");
         }
         }
         }
-      case "Head": {ESLVal $315 = _v38.termRef(0);
+      case "Head": {ESLVal $326 = _v40.termRef(0);
           
-          {ESLVal e = $315;
+          {ESLVal e = $326;
           
           return new ESLVal("head(").add(ppExp.apply(indent,e).add(new ESLVal(")")));
         }
         }
-      case "Tail": {ESLVal $314 = _v38.termRef(0);
+      case "Tail": {ESLVal $325 = _v40.termRef(0);
           
-          {ESLVal e = $314;
+          {ESLVal e = $325;
           
           return new ESLVal("tail(").add(ppExp.apply(indent,e).add(new ESLVal(")")));
         }
         }
-      case "Cons": {ESLVal $313 = _v38.termRef(0);
-          ESLVal $312 = _v38.termRef(1);
+      case "Cons": {ESLVal $324 = _v40.termRef(0);
+          ESLVal $323 = _v40.termRef(1);
           
-          {ESLVal h = $313;
+          {ESLVal h = $324;
           
-          {ESLVal t = $312;
+          {ESLVal t = $323;
           
           return new ESLVal("cons(").add(ppExp.apply(indent,h).add(new ESLVal(",").add(ppExp.apply(indent,t).add(new ESLVal(")")))));
         }
         }
         }
-      case "If": {ESLVal $311 = _v38.termRef(0);
-          ESLVal $310 = _v38.termRef(1);
-          ESLVal $309 = _v38.termRef(2);
-          ESLVal $308 = _v38.termRef(3);
+      case "If": {ESLVal $322 = _v40.termRef(0);
+          ESLVal $321 = _v40.termRef(1);
+          ESLVal $320 = _v40.termRef(2);
+          ESLVal $319 = _v40.termRef(3);
           
-          {ESLVal l = $311;
+          {ESLVal l = $322;
           
-          {ESLVal e1 = $310;
+          {ESLVal e1 = $321;
           
-          {ESLVal e2 = $309;
+          {ESLVal e2 = $320;
           
-          {ESLVal e3 = $308;
+          {ESLVal e3 = $319;
           
           return new ESLVal("if ").add(ppExp.apply(indent,e1).add(nl.apply(indent).add(new ESLVal("then").add(nl.apply(indent.add(new ESLVal(2))).add(ppExp.apply(indent.add(new ESLVal(2)),e2).add(nl.apply(indent).add(new ESLVal("else").add(nl.apply(indent.add(new ESLVal(2))).add(ppExp.apply(indent.add(new ESLVal(2)),e3))))))))));
         }
@@ -978,21 +978,21 @@ public class PpExp {
         }
         }
         }
-      case "FunExp": {ESLVal $307 = _v38.termRef(0);
-          ESLVal $306 = _v38.termRef(1);
-          ESLVal $305 = _v38.termRef(2);
-          ESLVal $304 = _v38.termRef(3);
-          ESLVal $303 = _v38.termRef(4);
+      case "FunExp": {ESLVal $318 = _v40.termRef(0);
+          ESLVal $317 = _v40.termRef(1);
+          ESLVal $316 = _v40.termRef(2);
+          ESLVal $315 = _v40.termRef(3);
+          ESLVal $314 = _v40.termRef(4);
           
-          {ESLVal l = $307;
+          {ESLVal l = $318;
           
-          {ESLVal n = $306;
+          {ESLVal n = $317;
           
-          {ESLVal args = $305;
+          {ESLVal args = $316;
           
-          {ESLVal t = $304;
+          {ESLVal t = $315;
           
-          {ESLVal e = $303;
+          {ESLVal e = $314;
           
           return new ESLVal("fun(").add(ppDecs.apply(indent,args).add(new ESLVal(")::").add(ppType.apply(t).add(new ESLVal(" ").add(ppExp.apply(indent.add(new ESLVal(2)),e))))));
         }
@@ -1001,74 +1001,74 @@ public class PpExp {
         }
         }
         }
-      case "Let": {ESLVal $302 = _v38.termRef(0);
-          ESLVal $301 = _v38.termRef(1);
-          ESLVal $300 = _v38.termRef(2);
+      case "Let": {ESLVal $313 = _v40.termRef(0);
+          ESLVal $312 = _v40.termRef(1);
+          ESLVal $311 = _v40.termRef(2);
           
-          {ESLVal l = $302;
+          {ESLVal l = $313;
           
-          {ESLVal bs = $301;
+          {ESLVal bs = $312;
           
-          {ESLVal e = $300;
+          {ESLVal e = $311;
           
           return new ESLVal("let ").add(ppBinds.apply(indent.add(new ESLVal(4)),bs).add(nl.apply(indent).add(new ESLVal("in ").add(ppExp.apply(indent.add(new ESLVal(3)),e)))));
         }
         }
         }
         }
-      case "Letrec": {ESLVal $299 = _v38.termRef(0);
-          ESLVal $298 = _v38.termRef(1);
-          ESLVal $297 = _v38.termRef(2);
+      case "Letrec": {ESLVal $310 = _v40.termRef(0);
+          ESLVal $309 = _v40.termRef(1);
+          ESLVal $308 = _v40.termRef(2);
           
-          {ESLVal l = $299;
+          {ESLVal l = $310;
           
-          {ESLVal bs = $298;
+          {ESLVal bs = $309;
           
-          {ESLVal e = $297;
+          {ESLVal e = $308;
           
           return new ESLVal("letrec ").add(ppBinds.apply(indent.add(new ESLVal(7)),bs).add(nl.apply(indent).add(new ESLVal("in ").add(ppExp.apply(indent.add(new ESLVal(3)),e)))));
         }
         }
         }
         }
-      case "List": {ESLVal $296 = _v38.termRef(0);
-          ESLVal $295 = _v38.termRef(1);
+      case "List": {ESLVal $307 = _v40.termRef(0);
+          ESLVal $306 = _v40.termRef(1);
           
-          {ESLVal l = $296;
+          {ESLVal l = $307;
           
-          {ESLVal es = $295;
+          {ESLVal es = $306;
           
           return new ESLVal("[").add(ppExps.apply(indent,es,new ESLVal(",")).add(new ESLVal("]")));
         }
         }
         }
-      case "Throw": {ESLVal $294 = _v38.termRef(0);
-          ESLVal $293 = _v38.termRef(1);
-          ESLVal $292 = _v38.termRef(2);
+      case "Throw": {ESLVal $305 = _v40.termRef(0);
+          ESLVal $304 = _v40.termRef(1);
+          ESLVal $303 = _v40.termRef(2);
           
-          {ESLVal l = $294;
+          {ESLVal l = $305;
           
-          {ESLVal t = $293;
+          {ESLVal t = $304;
           
-          {ESLVal e = $292;
+          {ESLVal e = $303;
           
           return new ESLVal("throw ").add(ppExp.apply(indent,e));
         }
         }
         }
         }
-      case "Term": {ESLVal $291 = _v38.termRef(0);
-          ESLVal $290 = _v38.termRef(1);
-          ESLVal $289 = _v38.termRef(2);
-          ESLVal $288 = _v38.termRef(3);
+      case "Term": {ESLVal $302 = _v40.termRef(0);
+          ESLVal $301 = _v40.termRef(1);
+          ESLVal $300 = _v40.termRef(2);
+          ESLVal $299 = _v40.termRef(3);
           
-          {ESLVal l = $291;
+          {ESLVal l = $302;
           
-          {ESLVal n = $290;
+          {ESLVal n = $301;
           
-          {ESLVal ts = $289;
+          {ESLVal ts = $300;
           
-          {ESLVal es = $288;
+          {ESLVal es = $299;
           
           return n.add(new ESLVal("(").add(ppExps.apply(indent,es,new ESLVal(",")).add(new ESLVal(")"))));
         }
@@ -1076,29 +1076,29 @@ public class PpExp {
         }
         }
         }
-      case "TermRef": {ESLVal $287 = _v38.termRef(0);
-          ESLVal $286 = _v38.termRef(1);
+      case "TermRef": {ESLVal $298 = _v40.termRef(0);
+          ESLVal $297 = _v40.termRef(1);
           
-          {ESLVal e = $287;
+          {ESLVal e = $298;
           
-          {ESLVal n = $286;
+          {ESLVal n = $297;
           
           return new ESLVal("termRef(").add(ppExp.apply(indent,e).add(new ESLVal(",").add(n.add(new ESLVal(")")))));
         }
         }
         }
-      case "BinExp": {ESLVal $285 = _v38.termRef(0);
-          ESLVal $284 = _v38.termRef(1);
-          ESLVal $283 = _v38.termRef(2);
-          ESLVal $282 = _v38.termRef(3);
+      case "BinExp": {ESLVal $296 = _v40.termRef(0);
+          ESLVal $295 = _v40.termRef(1);
+          ESLVal $294 = _v40.termRef(2);
+          ESLVal $293 = _v40.termRef(3);
           
-          {ESLVal l = $285;
+          {ESLVal l = $296;
           
-          {ESLVal e1 = $284;
+          {ESLVal e1 = $295;
           
-          {ESLVal op = $283;
+          {ESLVal op = $294;
           
-          {ESLVal e2 = $282;
+          {ESLVal e2 = $293;
           
           return ppExp.apply(indent,e1).add(op.add(ppExp.apply(indent,e2)));
         }
@@ -1106,48 +1106,48 @@ public class PpExp {
         }
         }
         }
-      case "Update": {ESLVal $281 = _v38.termRef(0);
-          ESLVal $280 = _v38.termRef(1);
-          ESLVal $279 = _v38.termRef(2);
+      case "Update": {ESLVal $292 = _v40.termRef(0);
+          ESLVal $291 = _v40.termRef(1);
+          ESLVal $290 = _v40.termRef(2);
           
-          {ESLVal l = $281;
+          {ESLVal l = $292;
           
-          {ESLVal n = $280;
+          {ESLVal n = $291;
           
-          {ESLVal e = $279;
+          {ESLVal e = $290;
           
           return n.add(new ESLVal(" := ").add(ppExp.apply(indent,e)));
         }
         }
         }
         }
-      case "NewArray": {ESLVal $278 = _v38.termRef(0);
-          ESLVal $277 = _v38.termRef(1);
-          ESLVal $276 = _v38.termRef(2);
+      case "NewArray": {ESLVal $289 = _v40.termRef(0);
+          ESLVal $288 = _v40.termRef(1);
+          ESLVal $287 = _v40.termRef(2);
           
-          {ESLVal l = $278;
+          {ESLVal l = $289;
           
-          {ESLVal t = $277;
+          {ESLVal t = $288;
           
-          {ESLVal n = $276;
+          {ESLVal n = $287;
           
           return new ESLVal("new Array[").add(ppType.apply(t).add(new ESLVal("](").add(ppExp.apply(indent,n).add(new ESLVal(")")))));
         }
         }
         }
         }
-      case "For": {ESLVal $275 = _v38.termRef(0);
-          ESLVal $274 = _v38.termRef(1);
-          ESLVal $273 = _v38.termRef(2);
-          ESLVal $272 = _v38.termRef(3);
+      case "For": {ESLVal $286 = _v40.termRef(0);
+          ESLVal $285 = _v40.termRef(1);
+          ESLVal $284 = _v40.termRef(2);
+          ESLVal $283 = _v40.termRef(3);
           
-          {ESLVal l = $275;
+          {ESLVal l = $286;
           
-          {ESLVal p = $274;
+          {ESLVal p = $285;
           
-          {ESLVal e1 = $273;
+          {ESLVal e1 = $284;
           
-          {ESLVal e2 = $272;
+          {ESLVal e2 = $283;
           
           return new ESLVal("for ").add(ppPattern.apply(p).add(new ESLVal(" in ").add(ppExp.apply(indent,e1).add(new ESLVal(" do {").add(nl.apply(indent.add(new ESLVal(2))).add(ppExp.apply(indent.add(new ESLVal(2)),e2).add(new ESLVal("}"))))))));
         }
@@ -1155,17 +1155,17 @@ public class PpExp {
         }
         }
         }
-      case "Try": {ESLVal $271 = _v38.termRef(0);
-          ESLVal $270 = _v38.termRef(1);
-          ESLVal $269 = _v38.termRef(2);
+      case "Try": {ESLVal $282 = _v40.termRef(0);
+          ESLVal $281 = _v40.termRef(1);
+          ESLVal $280 = _v40.termRef(2);
           
-          {ESLVal l = $271;
+          {ESLVal l = $282;
           
-          {ESLVal e = $270;
+          {ESLVal e = $281;
           
-          {ESLVal as = $269;
+          {ESLVal as = $280;
           
-          return new ESLVal("try ").add(ppExp.apply(indent,e).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun3396"),getSelf()) {
+          return new ESLVal("try ").add(ppExp.apply(indent,e).add(new ESLVal(" {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun5176"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal a = $args[0];
           return ppArm.apply(indent,a);
@@ -1175,32 +1175,32 @@ public class PpExp {
         }
         }
         }
-      case "ActExp": {ESLVal $268 = _v38.termRef(0);
-          ESLVal $267 = _v38.termRef(1);
-          ESLVal $266 = _v38.termRef(2);
-          ESLVal $265 = _v38.termRef(3);
-          ESLVal $264 = _v38.termRef(4);
-          ESLVal $263 = _v38.termRef(5);
-          ESLVal $262 = _v38.termRef(6);
-          ESLVal $261 = _v38.termRef(7);
+      case "ActExp": {ESLVal $279 = _v40.termRef(0);
+          ESLVal $278 = _v40.termRef(1);
+          ESLVal $277 = _v40.termRef(2);
+          ESLVal $276 = _v40.termRef(3);
+          ESLVal $275 = _v40.termRef(4);
+          ESLVal $274 = _v40.termRef(5);
+          ESLVal $273 = _v40.termRef(6);
+          ESLVal $272 = _v40.termRef(7);
           
-          {ESLVal l = $268;
+          {ESLVal l = $279;
           
-          {ESLVal n = $267;
+          {ESLVal n = $278;
           
-          {ESLVal args = $266;
+          {ESLVal args = $277;
           
-          {ESLVal x = $265;
+          {ESLVal x = $276;
           
-          {ESLVal parent = $264;
+          {ESLVal parent = $275;
           
-          {ESLVal locals = $263;
+          {ESLVal locals = $274;
           
-          {ESLVal init = $262;
+          {ESLVal init = $273;
           
-          {ESLVal handlers = $261;
+          {ESLVal handlers = $272;
           
-          return new ESLVal("act ").add(ppExp.apply(indent,n).add(new ESLVal("(").add(ppDecs.apply(indent,args).add(new ESLVal(") {").add(nl.apply(indent.add(new ESLVal(2))).add(ppBinds.apply(indent.add(new ESLVal(5)),locals).add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("-> ").add(ppExp.apply(indent.add(new ESLVal(4)),init).add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun3397"),getSelf()) {
+          return new ESLVal("act ").add(ppExp.apply(indent,n).add(new ESLVal("(").add(ppDecs.apply(indent,args).add(new ESLVal(") {").add(nl.apply(indent.add(new ESLVal(2))).add(ppBinds.apply(indent.add(new ESLVal(5)),locals).add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("-> ").add(ppExp.apply(indent.add(new ESLVal(4)),init).add(nl.apply(indent.add(new ESLVal(2))).add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun5177"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal a = $args[0];
           return ppArm.apply(indent,a);
@@ -1215,54 +1215,54 @@ public class PpExp {
         }
         }
         }
-      case "Self": {ESLVal $260 = _v38.termRef(0);
+      case "Self": {ESLVal $271 = _v40.termRef(0);
           
-          {ESLVal l = $260;
+          {ESLVal l = $271;
           
           return new ESLVal("self");
         }
         }
-      case "Ref": {ESLVal $259 = _v38.termRef(0);
-          ESLVal $258 = _v38.termRef(1);
-          ESLVal $257 = _v38.termRef(2);
+      case "Ref": {ESLVal $270 = _v40.termRef(0);
+          ESLVal $269 = _v40.termRef(1);
+          ESLVal $268 = _v40.termRef(2);
           
-          {ESLVal l = $259;
+          {ESLVal l = $270;
           
-          {ESLVal e = $258;
+          {ESLVal e = $269;
           
-          {ESLVal n = $257;
+          {ESLVal n = $268;
           
           return ppExp.apply(indent,e).add(new ESLVal(".").add(n));
         }
         }
         }
         }
-      case "Send": {ESLVal $256 = _v38.termRef(0);
-          ESLVal $255 = _v38.termRef(1);
-          ESLVal $254 = _v38.termRef(2);
+      case "Send": {ESLVal $267 = _v40.termRef(0);
+          ESLVal $266 = _v40.termRef(1);
+          ESLVal $265 = _v40.termRef(2);
           
-          {ESLVal l = $256;
+          {ESLVal l = $267;
           
-          {ESLVal target = $255;
+          {ESLVal target = $266;
           
-          {ESLVal message = $254;
+          {ESLVal message = $265;
           
           return ppExp.apply(indent,target).add(new ESLVal(" <- ").add(ppExp.apply(indent,message)));
         }
         }
         }
         }
-      case "Cmp": {ESLVal $253 = _v38.termRef(0);
-          ESLVal $252 = _v38.termRef(1);
-          ESLVal $251 = _v38.termRef(2);
+      case "Cmp": {ESLVal $264 = _v40.termRef(0);
+          ESLVal $263 = _v40.termRef(1);
+          ESLVal $262 = _v40.termRef(2);
           
-          {ESLVal l = $253;
+          {ESLVal l = $264;
           
-          {ESLVal e = $252;
+          {ESLVal e = $263;
           
-          {ESLVal qs = $251;
+          {ESLVal qs = $262;
           
-          return new ESLVal("[").add(ppExp.apply(indent,e).add(new ESLVal(" | ").add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun3398"),getSelf()) {
+          return new ESLVal("[").add(ppExp.apply(indent,e).add(new ESLVal(" | ").add(ppJoin.apply(indent.add(new ESLVal(2)),map.apply(new ESLVal(new Function(new ESLVal("fun5178"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal q = $args[0];
           return ppQual.apply(indent,q);
@@ -1272,33 +1272,33 @@ public class PpExp {
         }
         }
         }
-      case "New": {ESLVal $250 = _v38.termRef(0);
-          ESLVal $249 = _v38.termRef(1);
-          ESLVal $248 = _v38.termRef(2);
+      case "New": {ESLVal $261 = _v40.termRef(0);
+          ESLVal $260 = _v40.termRef(1);
+          ESLVal $259 = _v40.termRef(2);
           
-          {ESLVal l = $250;
+          {ESLVal l = $261;
           
-          {ESLVal b = $249;
+          {ESLVal b = $260;
           
-          {ESLVal args = $248;
+          {ESLVal args = $259;
           
           return new ESLVal("new ").add(ppExp.apply(indent,b).add(new ESLVal("(").add(ppExps.apply(indent,args,new ESLVal(",")).add(new ESLVal(")")))));
         }
         }
         }
         }
-      case "NewJava": {ESLVal $247 = _v38.termRef(0);
-          ESLVal $246 = _v38.termRef(1);
-          ESLVal $245 = _v38.termRef(2);
-          ESLVal $244 = _v38.termRef(3);
+      case "NewJava": {ESLVal $258 = _v40.termRef(0);
+          ESLVal $257 = _v40.termRef(1);
+          ESLVal $256 = _v40.termRef(2);
+          ESLVal $255 = _v40.termRef(3);
           
-          {ESLVal l = $247;
+          {ESLVal l = $258;
           
-          {ESLVal className = $246;
+          {ESLVal className = $257;
           
-          {ESLVal t = $245;
+          {ESLVal t = $256;
           
-          {ESLVal args = $244;
+          {ESLVal args = $255;
           
           return new ESLVal("javaNew[").add(ppType.apply(t).add(new ESLVal("](\' + className + ").add(ppExps.apply(indent,args,new ESLVal(",")).add(new ESLVal(")")))));
         }
@@ -1306,36 +1306,36 @@ public class PpExp {
         }
         }
         }
-      case "Grab": {ESLVal $243 = _v38.termRef(0);
-          ESLVal $242 = _v38.termRef(1);
-          ESLVal $241 = _v38.termRef(2);
+      case "Grab": {ESLVal $254 = _v40.termRef(0);
+          ESLVal $253 = _v40.termRef(1);
+          ESLVal $252 = _v40.termRef(2);
           
-          {ESLVal l = $243;
+          {ESLVal l = $254;
           
-          {ESLVal rs = $242;
+          {ESLVal rs = $253;
           
-          {ESLVal e = $241;
+          {ESLVal e = $252;
           
           return new ESLVal("*********grab");
         }
         }
         }
         }
-      case "Probably": {ESLVal $240 = _v38.termRef(0);
-          ESLVal $239 = _v38.termRef(1);
-          ESLVal $238 = _v38.termRef(2);
-          ESLVal $237 = _v38.termRef(3);
-          ESLVal $236 = _v38.termRef(4);
+      case "Probably": {ESLVal $251 = _v40.termRef(0);
+          ESLVal $250 = _v40.termRef(1);
+          ESLVal $249 = _v40.termRef(2);
+          ESLVal $248 = _v40.termRef(3);
+          ESLVal $247 = _v40.termRef(4);
           
-          {ESLVal l = $240;
+          {ESLVal l = $251;
           
-          {ESLVal p = $239;
+          {ESLVal p = $250;
           
-          {ESLVal t = $238;
+          {ESLVal t = $249;
           
-          {ESLVal e1 = $237;
+          {ESLVal e1 = $248;
           
-          {ESLVal e2 = $236;
+          {ESLVal e2 = $247;
           
           return new ESLVal("**** probably");
         }
@@ -1344,92 +1344,92 @@ public class PpExp {
         }
         }
         }
-      case "Not": {ESLVal $235 = _v38.termRef(0);
-          ESLVal $234 = _v38.termRef(1);
+      case "Not": {ESLVal $246 = _v40.termRef(0);
+          ESLVal $245 = _v40.termRef(1);
           
-          {ESLVal l = $235;
+          {ESLVal l = $246;
           
-          {ESLVal e = $234;
+          {ESLVal e = $245;
           
           return new ESLVal("not(").add(ppExp.apply(indent,e).add(new ESLVal(")")));
         }
         }
         }
-      case "Fold": {ESLVal $233 = _v38.termRef(0);
-          ESLVal $232 = _v38.termRef(1);
-          ESLVal $231 = _v38.termRef(2);
+      case "Fold": {ESLVal $244 = _v40.termRef(0);
+          ESLVal $243 = _v40.termRef(1);
+          ESLVal $242 = _v40.termRef(2);
           
-          {ESLVal l = $233;
+          {ESLVal l = $244;
           
-          {ESLVal t = $232;
+          {ESLVal t = $243;
           
-          {ESLVal e = $231;
+          {ESLVal e = $242;
           
           return new ESLVal("******** fold");
         }
         }
         }
         }
-      case "Unfold": {ESLVal $230 = _v38.termRef(0);
-          ESLVal $229 = _v38.termRef(1);
-          ESLVal $228 = _v38.termRef(2);
+      case "Unfold": {ESLVal $241 = _v40.termRef(0);
+          ESLVal $240 = _v40.termRef(1);
+          ESLVal $239 = _v40.termRef(2);
           
-          {ESLVal l = $230;
+          {ESLVal l = $241;
           
-          {ESLVal t = $229;
+          {ESLVal t = $240;
           
-          {ESLVal e = $228;
+          {ESLVal e = $239;
           
           return new ESLVal("******unfold");
         }
         }
         }
         }
-      case "Now": {ESLVal $227 = _v38.termRef(0);
+      case "Now": {ESLVal $238 = _v40.termRef(0);
           
-          {ESLVal l = $227;
+          {ESLVal l = $238;
           
           return new ESLVal("now");
         }
         }
-      case "Become": {ESLVal $226 = _v38.termRef(0);
-          ESLVal $225 = _v38.termRef(1);
+      case "Become": {ESLVal $237 = _v40.termRef(0);
+          ESLVal $236 = _v40.termRef(1);
           
-          {ESLVal l = $226;
+          {ESLVal l = $237;
           
-          {ESLVal e = $225;
+          {ESLVal e = $236;
           
           return new ESLVal("become ").add(ppExp.apply(indent,e));
         }
         }
         }
-      case "ArrayRef": {ESLVal $224 = _v38.termRef(0);
-          ESLVal $223 = _v38.termRef(1);
-          ESLVal $222 = _v38.termRef(2);
+      case "ArrayRef": {ESLVal $235 = _v40.termRef(0);
+          ESLVal $234 = _v40.termRef(1);
+          ESLVal $233 = _v40.termRef(2);
           
-          {ESLVal l = $224;
+          {ESLVal l = $235;
           
-          {ESLVal a = $223;
+          {ESLVal a = $234;
           
-          {ESLVal i = $222;
+          {ESLVal i = $233;
           
           return ppExp.apply(indent,a).add(new ESLVal("[").add(ppExp.apply(indent,i).add(new ESLVal("]"))));
         }
         }
         }
         }
-      case "ArrayUpdate": {ESLVal $221 = _v38.termRef(0);
-          ESLVal $220 = _v38.termRef(1);
-          ESLVal $219 = _v38.termRef(2);
-          ESLVal $218 = _v38.termRef(3);
+      case "ArrayUpdate": {ESLVal $232 = _v40.termRef(0);
+          ESLVal $231 = _v40.termRef(1);
+          ESLVal $230 = _v40.termRef(2);
+          ESLVal $229 = _v40.termRef(3);
           
-          {ESLVal l = $221;
+          {ESLVal l = $232;
           
-          {ESLVal a = $220;
+          {ESLVal a = $231;
           
-          {ESLVal i = $219;
+          {ESLVal i = $230;
           
-          {ESLVal v = $218;
+          {ESLVal v = $229;
           
           return ppExp.apply(indent,a).add(new ESLVal("[").add(ppExp.apply(indent,i).add(new ESLVal("] := ").add(ppExp.apply(indent,v)))));
         }
@@ -1437,7 +1437,7 @@ public class PpExp {
         }
         }
         }
-        default: {ESLVal x = _v38;
+        default: {ESLVal x = _v40;
           
           return error(new ESLVal("ppExp: ").add(x));
         }
@@ -1456,7 +1456,7 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal bs = $args[1];
-  return ppJoin.apply(indent,map.apply(new ESLVal(new Function(new ESLVal("fun3399"),getSelf()) {
+  return ppJoin.apply(indent,map.apply(new ESLVal(new Function(new ESLVal("fun5179"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal b = $args[0];
         return ppDec.apply(indent,b);
@@ -1468,21 +1468,21 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal d = $args[1];
-  {ESLVal _v37 = d;
+  {ESLVal _v39 = d;
         
-        switch(_v37.termName) {
-        case "Dec": {ESLVal $217 = _v37.termRef(0);
-          ESLVal $216 = _v37.termRef(1);
-          ESLVal $215 = _v37.termRef(2);
-          ESLVal $214 = _v37.termRef(3);
+        switch(_v39.termName) {
+        case "Dec": {ESLVal $228 = _v39.termRef(0);
+          ESLVal $227 = _v39.termRef(1);
+          ESLVal $226 = _v39.termRef(2);
+          ESLVal $225 = _v39.termRef(3);
           
-          {ESLVal l = $217;
+          {ESLVal l = $228;
           
-          {ESLVal n = $216;
+          {ESLVal n = $227;
           
-          {ESLVal dt = $215;
+          {ESLVal dt = $226;
           
-          {ESLVal t = $214;
+          {ESLVal t = $225;
           
           return n.add(new ESLVal("::").add(ppType.apply(t)));
         }
@@ -1490,7 +1490,7 @@ public class PpExp {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(9566,9643)").add(ESLVal.list(_v37)));
+        default: return error(new ESLVal("case error at Pos(9557,9634)").add(ESLVal.list(_v39)));
       }
       }
     }
@@ -1499,7 +1499,7 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal bs = $args[1];
-  return ppJoin.apply(indent,map.apply(new ESLVal(new Function(new ESLVal("fun3400"),getSelf()) {
+  return ppJoin.apply(indent,map.apply(new ESLVal(new Function(new ESLVal("fun5180"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal b = $args[0];
         return ppBind.apply(indent,b);
@@ -1511,24 +1511,24 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal b = $args[1];
-  {ESLVal _v36 = b;
+  {ESLVal _v38 = b;
         
-        switch(_v36.termName) {
-        case "Binding": {ESLVal $213 = _v36.termRef(0);
-          ESLVal $212 = _v36.termRef(1);
-          ESLVal $211 = _v36.termRef(2);
-          ESLVal $210 = _v36.termRef(3);
-          ESLVal $209 = _v36.termRef(4);
+        switch(_v38.termName) {
+        case "Binding": {ESLVal $224 = _v38.termRef(0);
+          ESLVal $223 = _v38.termRef(1);
+          ESLVal $222 = _v38.termRef(2);
+          ESLVal $221 = _v38.termRef(3);
+          ESLVal $220 = _v38.termRef(4);
           
-          {ESLVal l = $213;
+          {ESLVal l = $224;
           
-          {ESLVal name = $212;
+          {ESLVal name = $223;
           
-          {ESLVal t = $211;
+          {ESLVal t = $222;
           
-          {ESLVal st = $210;
+          {ESLVal st = $221;
           
-          {ESLVal value = $209;
+          {ESLVal value = $220;
           
           return name.add(new ESLVal("=").add(ppExp.apply(indent,value).add(new ESLVal(";"))));
         }
@@ -1537,18 +1537,18 @@ public class PpExp {
         }
         }
         }
-      case "TypeBind": {ESLVal $208 = _v36.termRef(0);
-          ESLVal $207 = _v36.termRef(1);
-          ESLVal $206 = _v36.termRef(2);
-          ESLVal $205 = _v36.termRef(3);
+      case "TypeBind": {ESLVal $219 = _v38.termRef(0);
+          ESLVal $218 = _v38.termRef(1);
+          ESLVal $217 = _v38.termRef(2);
+          ESLVal $216 = _v38.termRef(3);
           
-          {ESLVal l = $208;
+          {ESLVal l = $219;
           
-          {ESLVal name = $207;
+          {ESLVal name = $218;
           
-          {ESLVal t = $206;
+          {ESLVal t = $217;
           
-          {ESLVal ignore = $205;
+          {ESLVal ignore = $216;
           
           return new ESLVal("type ").add(name);
         }
@@ -1556,18 +1556,18 @@ public class PpExp {
         }
         }
         }
-      case "DataBind": {ESLVal $204 = _v36.termRef(0);
-          ESLVal $203 = _v36.termRef(1);
-          ESLVal $202 = _v36.termRef(2);
-          ESLVal $201 = _v36.termRef(3);
+      case "DataBind": {ESLVal $215 = _v38.termRef(0);
+          ESLVal $214 = _v38.termRef(1);
+          ESLVal $213 = _v38.termRef(2);
+          ESLVal $212 = _v38.termRef(3);
           
-          {ESLVal l = $204;
+          {ESLVal l = $215;
           
-          {ESLVal name = $203;
+          {ESLVal name = $214;
           
-          {ESLVal t = $202;
+          {ESLVal t = $213;
           
-          {ESLVal ignore = $201;
+          {ESLVal ignore = $212;
           
           return new ESLVal("data ").add(name);
         }
@@ -1575,27 +1575,27 @@ public class PpExp {
         }
         }
         }
-      case "FunBind": {ESLVal $200 = _v36.termRef(0);
-          ESLVal $199 = _v36.termRef(1);
-          ESLVal $198 = _v36.termRef(2);
-          ESLVal $197 = _v36.termRef(3);
-          ESLVal $196 = _v36.termRef(4);
-          ESLVal $195 = _v36.termRef(5);
-          ESLVal $194 = _v36.termRef(6);
+      case "FunBind": {ESLVal $211 = _v38.termRef(0);
+          ESLVal $210 = _v38.termRef(1);
+          ESLVal $209 = _v38.termRef(2);
+          ESLVal $208 = _v38.termRef(3);
+          ESLVal $207 = _v38.termRef(4);
+          ESLVal $206 = _v38.termRef(5);
+          ESLVal $205 = _v38.termRef(6);
           
-          {ESLVal l = $200;
+          {ESLVal l = $211;
           
-          {ESLVal name = $199;
+          {ESLVal name = $210;
           
-          {ESLVal args = $198;
+          {ESLVal args = $209;
           
-          {ESLVal t = $197;
+          {ESLVal t = $208;
           
-          {ESLVal st = $196;
+          {ESLVal st = $207;
           
-          {ESLVal body = $195;
+          {ESLVal body = $206;
           
-          {ESLVal guard = $194;
+          {ESLVal guard = $205;
           
           return name.add(new ESLVal("(").add(ppPatterns.apply(args).add(new ESLVal(") = ").add(nl.apply(indent.add(new ESLVal(2))).add(ppExp.apply(indent.add(new ESLVal(2)),body))))));
         }
@@ -1606,18 +1606,18 @@ public class PpExp {
         }
         }
         }
-      case "CnstrBind": {ESLVal $193 = _v36.termRef(0);
-          ESLVal $192 = _v36.termRef(1);
-          ESLVal $191 = _v36.termRef(2);
-          ESLVal $190 = _v36.termRef(3);
+      case "CnstrBind": {ESLVal $204 = _v38.termRef(0);
+          ESLVal $203 = _v38.termRef(1);
+          ESLVal $202 = _v38.termRef(2);
+          ESLVal $201 = _v38.termRef(3);
           
-          {ESLVal l = $193;
+          {ESLVal l = $204;
           
-          {ESLVal name = $192;
+          {ESLVal name = $203;
           
-          {ESLVal t = $191;
+          {ESLVal t = $202;
           
-          {ESLVal ignore = $190;
+          {ESLVal ignore = $201;
           
           return name;
         }
@@ -1625,7 +1625,7 @@ public class PpExp {
         }
         }
         }
-        default: {ESLVal x = _v36;
+        default: {ESLVal x = _v38;
           
           return error(new ESLVal("ppBind: ").add(x));
         }
@@ -1637,21 +1637,21 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal a = $args[1];
-  {ESLVal _v35 = a;
+  {ESLVal _v37 = a;
         
-        switch(_v35.termName) {
-        case "BArm": {ESLVal $189 = _v35.termRef(0);
-          ESLVal $188 = _v35.termRef(1);
-          ESLVal $187 = _v35.termRef(2);
-          ESLVal $186 = _v35.termRef(3);
+        switch(_v37.termName) {
+        case "BArm": {ESLVal $200 = _v37.termRef(0);
+          ESLVal $199 = _v37.termRef(1);
+          ESLVal $198 = _v37.termRef(2);
+          ESLVal $197 = _v37.termRef(3);
           
-          {ESLVal l = $189;
+          {ESLVal l = $200;
           
-          {ESLVal ps = $188;
+          {ESLVal ps = $199;
           
-          {ESLVal guard = $187;
+          {ESLVal guard = $198;
           
-          {ESLVal e = $186;
+          {ESLVal e = $197;
           
           return ppPatterns.apply(ps).add(new ESLVal(" -> ").add(nl.apply(indent.add(new ESLVal(2))).add(ppExp.apply(indent.add(new ESLVal(2)),e))));
         }
@@ -1659,7 +1659,7 @@ public class PpExp {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(10428,10566)").add(ESLVal.list(_v35)));
+        default: return error(new ESLVal("case error at Pos(10419,10557)").add(ESLVal.list(_v37)));
       }
       }
     }
@@ -1668,7 +1668,7 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal arms = $args[1];
-  return ppJoin.apply(indent,map.apply(new ESLVal(new Function(new ESLVal("fun3401"),getSelf()) {
+  return ppJoin.apply(indent,map.apply(new ESLVal(new Function(new ESLVal("fun5181"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal a = $args[0];
         return ppArm.apply(indent,a);
@@ -1680,21 +1680,21 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal a = $args[1];
-  {ESLVal _v34 = a;
+  {ESLVal _v36 = a;
         
-        switch(_v34.termName) {
-        case "TArm": {ESLVal $185 = _v34.termRef(0);
-          ESLVal $184 = _v34.termRef(1);
+        switch(_v36.termName) {
+        case "TArm": {ESLVal $196 = _v36.termRef(0);
+          ESLVal $195 = _v36.termRef(1);
           
-          {ESLVal n = $185;
+          {ESLVal n = $196;
           
-          {ESLVal e = $184;
+          {ESLVal e = $195;
           
           return n.add(new ESLVal(" -> ").add(nl.apply(indent.add(new ESLVal(2))).add(ppExp.apply(indent.add(new ESLVal(2)),e))));
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(10728,10828)").add(ESLVal.list(_v34)));
+        default: return error(new ESLVal("case error at Pos(10719,10819)").add(ESLVal.list(_v36)));
       }
       }
     }
@@ -1703,21 +1703,21 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal a = $args[1];
-  {ESLVal _v33 = a;
+  {ESLVal _v35 = a;
         
-        switch(_v33.termName) {
-        case "IArm": {ESLVal $183 = _v33.termRef(0);
-          ESLVal $182 = _v33.termRef(1);
+        switch(_v35.termName) {
+        case "IArm": {ESLVal $194 = _v35.termRef(0);
+          ESLVal $193 = _v35.termRef(1);
           
-          {ESLVal n = $183;
+          {ESLVal n = $194;
           
-          {ESLVal e = $182;
+          {ESLVal e = $193;
           
           return n.add(new ESLVal(" -> ").add(nl.apply(indent.add(new ESLVal(2))).add(ppExp.apply(indent.add(new ESLVal(2)),e))));
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(10884,10984)").add(ESLVal.list(_v33)));
+        default: return error(new ESLVal("case error at Pos(10875,10975)").add(ESLVal.list(_v35)));
       }
       }
     }
@@ -1726,21 +1726,21 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal a = $args[1];
-  {ESLVal _v32 = a;
+  {ESLVal _v34 = a;
         
-        switch(_v32.termName) {
-        case "SArm": {ESLVal $181 = _v32.termRef(0);
-          ESLVal $180 = _v32.termRef(1);
+        switch(_v34.termName) {
+        case "SArm": {ESLVal $192 = _v34.termRef(0);
+          ESLVal $191 = _v34.termRef(1);
           
-          {ESLVal n = $181;
+          {ESLVal n = $192;
           
-          {ESLVal e = $180;
+          {ESLVal e = $191;
           
           return new ESLVal("\'").add(n.add(new ESLVal("\'").add(new ESLVal(" -> ").add(nl.apply(indent.add(new ESLVal(2))).add(ppExp.apply(indent.add(new ESLVal(2)),e))))));
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(11040,11154)").add(ESLVal.list(_v32)));
+        default: return error(new ESLVal("case error at Pos(11031,11145)").add(ESLVal.list(_v34)));
       }
       }
     }
@@ -1749,21 +1749,21 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal a = $args[1];
-  {ESLVal _v31 = a;
+  {ESLVal _v33 = a;
         
-        switch(_v31.termName) {
-        case "BoolArm": {ESLVal $179 = _v31.termRef(0);
-          ESLVal $178 = _v31.termRef(1);
+        switch(_v33.termName) {
+        case "BoolArm": {ESLVal $190 = _v33.termRef(0);
+          ESLVal $189 = _v33.termRef(1);
           
-          {ESLVal b = $179;
+          {ESLVal b = $190;
           
-          {ESLVal e = $178;
+          {ESLVal e = $189;
           
           return b.add(new ESLVal(" -> ").add(nl.apply(indent.add(new ESLVal(2))).add(ppExp.apply(indent.add(new ESLVal(2)),e))));
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(11212,11316)").add(ESLVal.list(_v31)));
+        default: return error(new ESLVal("case error at Pos(11203,11307)").add(ESLVal.list(_v33)));
       }
       }
     }
@@ -1776,11 +1776,11 @@ public class PpExp {
         {ESLVal p = pathToJavaPackage.apply(path);
         ESLVal className = pathToJavaClassName.apply(path);
         
-        {ESLVal _v30 = sourceFile;
+        {ESLVal _v32 = sourceFile;
         
-        switch(_v30.strVal) {
+        switch(_v32.strVal) {
         case "esl/lists.esl": return new ESLVal("// import static ").add(p.add(new ESLVal(".").add(className.add(new ESLVal(".*;")))));
-        default: {ESLVal x = _v30;
+        default: {ESLVal x = _v32;
           
           return new ESLVal("import static ").add(p.add(new ESLVal(".").add(className.add(new ESLVal(".*;")))));
         }
@@ -1795,34 +1795,34 @@ public class PpExp {
       ESLVal name = $args[0];
   ESLVal p = $args[1];
   ESLVal m = $args[2];
-  {ESLVal _v28 = m;
+  {ESLVal _v30 = m;
         
-        switch(_v28.termName) {
-        case "JModule": {ESLVal $177 = _v28.termRef(0);
-          ESLVal $176 = _v28.termRef(1);
-          ESLVal $175 = _v28.termRef(2);
-          ESLVal $174 = _v28.termRef(3);
+        switch(_v30.termName) {
+        case "JModule": {ESLVal $188 = _v30.termRef(0);
+          ESLVal $187 = _v30.termRef(1);
+          ESLVal $186 = _v30.termRef(2);
+          ESLVal $185 = _v30.termRef(3);
           
-          {ESLVal n = $177;
+          {ESLVal n = $188;
           
-          {ESLVal exports = $176;
+          {ESLVal exports = $187;
           
-          {ESLVal imports = $175;
+          {ESLVal imports = $186;
           
-          {ESLVal fields = $174;
+          {ESLVal fields = $185;
           
           return new ESLVal("package ").add(p.add(new ESLVal(";").add(nl.apply($zero).add(new ESLVal("import esl.lib.*;").add(nl.apply($zero).add(new ESLVal("import static esl.lib.Lib.*;").add(nl.apply($zero).add(ppJoin.apply($zero,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v29 = $qualArg;
+          {ESLVal _v31 = $qualArg;
                 
-                {ESLVal i = _v29;
+                {ESLVal i = _v31;
                 
                 return ESLVal.list(ESLVal.list(getImport.apply(i)));
               }
               }
             }
-          }).map(imports).flatten().flatten()).add(nl.apply($zero).add(new ESLVal("import java.util.function.Supplier;").add(nl.apply($zero).add(new ESLVal("public class ").add(name.add(new ESLVal(" {").add(nl.apply(new ESLVal(2)).add(new ESLVal("public static ESLVal getSelf() { return $null; }").add(nl.apply(new ESLVal(2)).add(ppJoin.apply(new ESLVal(2),map.apply(new ESLVal(new Function(new ESLVal("fun3402"),getSelf()) {
+          }).map(imports).flatten().flatten()).add(nl.apply($zero).add(new ESLVal("import java.util.function.Supplier;").add(nl.apply($zero).add(new ESLVal("public class ").add(name.add(new ESLVal(" {").add(nl.apply(new ESLVal(2)).add(new ESLVal("public static ESLVal getSelf() { return $null; }").add(nl.apply(new ESLVal(2)).add(ppJoin.apply(new ESLVal(2),map.apply(new ESLVal(new Function(new ESLVal("fun5182"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal f = $args[0];
           return ppJModuleField.apply(new ESLVal(2),exports,f);
@@ -1838,7 +1838,7 @@ public class PpExp {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(11711,12473)").add(ESLVal.list(_v28)));
+        default: return error(new ESLVal("case error at Pos(11702,12464)").add(ESLVal.list(_v30)));
       }
       }
     }
@@ -1848,26 +1848,26 @@ public class PpExp {
       ESLVal indent = $args[0];
   ESLVal exports = $args[1];
   ESLVal f = $args[2];
-  {ESLVal _v27 = f;
+  {ESLVal _v29 = f;
         
-        switch(_v27.termName) {
-        case "JField": {ESLVal $173 = _v27.termRef(0);
-          ESLVal $172 = _v27.termRef(1);
-          ESLVal $171 = _v27.termRef(2);
+        switch(_v29.termName) {
+        case "JField": {ESLVal $184 = _v29.termRef(0);
+          ESLVal $183 = _v29.termRef(1);
+          ESLVal $182 = _v29.termRef(2);
           
-          switch($173.strVal) {
-          case "edb": switch($171.termName) {
+          switch($184.strVal) {
+          case "edb": switch($182.termName) {
             case "JNull": {
-              {ESLVal t = $172;
+              {ESLVal t = $183;
               
               return new ESLVal("// static ESLVal edb = null;");
             }
             }
-            default: {ESLVal n = $173;
+            default: {ESLVal n = $184;
               
-              {ESLVal t = $172;
+              {ESLVal t = $183;
               
-              {ESLVal e = $171;
+              {ESLVal e = $182;
               
               return ((Supplier<ESLVal>)() -> { 
                 if(member.apply(n,exports).boolVal)
@@ -1879,11 +1879,11 @@ public class PpExp {
             }
             }
           }
-          default: {ESLVal n = $173;
+          default: {ESLVal n = $184;
             
-            {ESLVal t = $172;
+            {ESLVal t = $183;
             
-            {ESLVal e = $171;
+            {ESLVal e = $182;
             
             return ((Supplier<ESLVal>)() -> { 
               if(member.apply(n,exports).boolVal)
@@ -1896,7 +1896,7 @@ public class PpExp {
           }
         }
         }
-        default: return error(new ESLVal("case error at Pos(12542,12792)").add(ESLVal.list(_v27)));
+        default: return error(new ESLVal("case error at Pos(12533,12783)").add(ESLVal.list(_v29)));
       }
       }
     }
@@ -1907,37 +1907,37 @@ public class PpExp {
   ESLVal dynamics = $args[1];
   ESLVal exps = $args[2];
   ESLVal sep = $args[3];
-  {ESLVal _v26 = exps;
+  {ESLVal _v28 = exps;
         
-        if(_v26.isCons())
-        {ESLVal $167 = _v26.head();
-          ESLVal $168 = _v26.tail();
+        if(_v28.isCons())
+        {ESLVal $178 = _v28.head();
+          ESLVal $179 = _v28.tail();
           
-          if($168.isCons())
-          {ESLVal $169 = $168.head();
-            ESLVal $170 = $168.tail();
+          if($179.isCons())
+          {ESLVal $180 = $179.head();
+            ESLVal $181 = $179.tail();
             
-            {ESLVal e1 = $167;
+            {ESLVal e1 = $178;
             
-            {ESLVal e2 = $169;
+            {ESLVal e2 = $180;
             
-            {ESLVal es = $170;
+            {ESLVal es = $181;
             
             return ppJExp.apply(indent,dynamics,e1).add(sep.add(ppJExps.apply(indent,dynamics,es.cons(e2),sep)));
           }
           }
           }
           }
-        else if($168.isNil())
-          {ESLVal e = $167;
+        else if($179.isNil())
+          {ESLVal e = $178;
             
             return ppJExp.apply(indent,dynamics,e);
           }
-        else return error(new ESLVal("case error at Pos(12862,13056)").add(ESLVal.list(_v26)));
+        else return error(new ESLVal("case error at Pos(12853,13047)").add(ESLVal.list(_v28)));
         }
-      else if(_v26.isNil())
+      else if(_v28.isNil())
         return new ESLVal("");
-      else return error(new ESLVal("case error at Pos(12862,13056)").add(ESLVal.list(_v26)));
+      else return error(new ESLVal("case error at Pos(12853,13047)").add(ESLVal.list(_v28)));
       }
     }
   });
@@ -1946,37 +1946,37 @@ public class PpExp {
       ESLVal indent = $args[0];
   ESLVal decs = $args[1];
   ESLVal sep = $args[2];
-  {ESLVal _v25 = decs;
+  {ESLVal _v27 = decs;
         
-        if(_v25.isCons())
-        {ESLVal $163 = _v25.head();
-          ESLVal $164 = _v25.tail();
+        if(_v27.isCons())
+        {ESLVal $174 = _v27.head();
+          ESLVal $175 = _v27.tail();
           
-          if($164.isCons())
-          {ESLVal $165 = $164.head();
-            ESLVal $166 = $164.tail();
+          if($175.isCons())
+          {ESLVal $176 = $175.head();
+            ESLVal $177 = $175.tail();
             
-            {ESLVal e1 = $163;
+            {ESLVal e1 = $174;
             
-            {ESLVal e2 = $165;
+            {ESLVal e2 = $176;
             
-            {ESLVal es = $166;
+            {ESLVal es = $177;
             
             return pJDec.apply(indent,e1).add(sep.add(ppJDecs.apply(indent,es.cons(e2),sep)));
           }
           }
           }
           }
-        else if($164.isNil())
-          {ESLVal e = $163;
+        else if($175.isNil())
+          {ESLVal e = $174;
             
             return pJDec.apply(indent,e);
           }
-        else return error(new ESLVal("case error at Pos(13118,13330)").add(ESLVal.list(_v25)));
+        else return error(new ESLVal("case error at Pos(13109,13321)").add(ESLVal.list(_v27)));
         }
-      else if(_v25.isNil())
+      else if(_v27.isNil())
         return new ESLVal("");
-      else return error(new ESLVal("case error at Pos(13118,13330)").add(ESLVal.list(_v25)));
+      else return error(new ESLVal("case error at Pos(13109,13321)").add(ESLVal.list(_v27)));
       }
     }
   });
@@ -1984,21 +1984,21 @@ public class PpExp {
     public ESLVal apply(ESLVal... $args) {
       ESLVal indent = $args[0];
   ESLVal d = $args[1];
-  {ESLVal _v24 = d;
+  {ESLVal _v26 = d;
         
-        switch(_v24.termName) {
-        case "JDec": {ESLVal $162 = _v24.termRef(0);
-          ESLVal $161 = _v24.termRef(1);
+        switch(_v26.termName) {
+        case "JDec": {ESLVal $173 = _v26.termRef(0);
+          ESLVal $172 = _v26.termRef(1);
           
-          {ESLVal n = $162;
+          {ESLVal n = $173;
           
-          {ESLVal t = $161;
+          {ESLVal t = $172;
           
           return new ESLVal("ESLVal ").add(n);
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(13376,13432)").add(ESLVal.list(_v24)));
+        default: return error(new ESLVal("case error at Pos(13367,13423)").add(ESLVal.list(_v26)));
       }
       }
     }
@@ -2011,170 +2011,192 @@ public class PpExp {
   {ESLVal _v21 = e;
         
         switch(_v21.termName) {
-        case "JArrayRef": {ESLVal $160 = _v21.termRef(0);
-          ESLVal $159 = _v21.termRef(1);
+        case "JArrayRef": {ESLVal $165 = _v21.termRef(0);
+          ESLVal $164 = _v21.termRef(1);
           
-          {ESLVal a = $160;
+          {ESLVal a = $165;
           
-          {ESLVal i = $159;
+          {ESLVal i = $164;
           
           return ppJExp.apply(indent,dynamics,a).add(new ESLVal(".array[").add(ppJExp.apply(indent,dynamics,i).add(new ESLVal(".intVal]"))));
         }
         }
         }
-      case "JArrayUpdate": {ESLVal $158 = _v21.termRef(0);
-          ESLVal $157 = _v21.termRef(1);
-          ESLVal $156 = _v21.termRef(2);
+      case "JArrayUpdate": {ESLVal $163 = _v21.termRef(0);
+          ESLVal $162 = _v21.termRef(1);
+          ESLVal $161 = _v21.termRef(2);
           
-          {ESLVal a = $158;
+          {ESLVal a = $163;
           
-          {ESLVal i = $157;
+          {ESLVal i = $162;
           
-          {ESLVal v = $156;
+          {ESLVal v = $161;
           
           return ppJExp.apply(indent,dynamics,a).add(new ESLVal(".array[").add(ppJExp.apply(indent,dynamics,i).add(new ESLVal(".intVal] = ").add(ppJExp.apply(indent,dynamics,v)))));
         }
         }
         }
         }
-      case "JBecome": {ESLVal $153 = _v21.termRef(0);
-          ESLVal $152 = _v21.termRef(1);
+      case "JBecome": {ESLVal $158 = _v21.termRef(0);
+          ESLVal $157 = _v21.termRef(1);
           
-          if($152.isCons())
-          {ESLVal $154 = $152.head();
-            ESLVal $155 = $152.tail();
+          if($157.isCons())
+          {ESLVal $159 = $157.head();
+            ESLVal $160 = $157.tail();
             
-            {ESLVal _v96 = $153;
+            {ESLVal _v100 = $158;
             
-            {ESLVal es = $152;
+            {ESLVal es = $157;
             
-            return new ESLVal("become(").add(ppJExp.apply(indent.add(new ESLVal(2)),dynamics,_v96).add(new ESLVal(",getSelf(),").add(ppJExps.apply(indent,dynamics,es,new ESLVal(",")).add(new ESLVal(")")))));
+            return new ESLVal("become(").add(ppJExp.apply(indent.add(new ESLVal(2)),dynamics,_v100).add(new ESLVal(",getSelf(),").add(ppJExps.apply(indent,dynamics,es,new ESLVal(",")).add(new ESLVal(")")))));
           }
           }
           }
-        else if($152.isNil())
-          {ESLVal _v97 = $153;
+        else if($157.isNil())
+          {ESLVal _v101 = $158;
             
-            return new ESLVal("become(").add(ppJExp.apply(indent.add(new ESLVal(2)),dynamics,_v97).add(new ESLVal(",getSelf())")));
+            return new ESLVal("become(").add(ppJExp.apply(indent.add(new ESLVal(2)),dynamics,_v101).add(new ESLVal(",getSelf())")));
           }
-        else {ESLVal _v98 = $153;
+        else {ESLVal _v102 = $158;
             
-            {ESLVal es = $152;
+            {ESLVal es = $157;
             
-            return new ESLVal("become(").add(ppJExp.apply(indent.add(new ESLVal(2)),dynamics,_v98).add(new ESLVal(",getSelf(),").add(ppJExps.apply(indent,dynamics,es,new ESLVal(",")).add(new ESLVal(")")))));
+            return new ESLVal("become(").add(ppJExp.apply(indent.add(new ESLVal(2)),dynamics,_v102).add(new ESLVal(",getSelf(),").add(ppJExps.apply(indent,dynamics,es,new ESLVal(",")).add(new ESLVal(")")))));
           }
           }
         }
-      case "JConstExp": {ESLVal $147 = _v21.termRef(0);
+      case "JConstExp": {ESLVal $152 = _v21.termRef(0);
           
-          switch($147.termName) {
-          case "JConstInt": {ESLVal $151 = $147.termRef(0);
+          switch($152.termName) {
+          case "JConstInt": {ESLVal $156 = $152.termRef(0);
             
-            switch($151.intVal) {
+            switch($156.intVal) {
             case 0: return new ESLVal("$zero");
           case 1: return new ESLVal("$one");
-            default: {ESLVal n = $151;
+            default: {ESLVal n = $156;
               
               return new ESLVal("new ESLVal(").add(n.add(new ESLVal(")")));
             }
           }
           }
-        case "JConstBool": {ESLVal $150 = $147.termRef(0);
+        case "JConstBool": {ESLVal $155 = $152.termRef(0);
             
-            switch($150.boolVal ? 1 : 0) {
+            switch($155.boolVal ? 1 : 0) {
             case 1: return new ESLVal("$true");
           case 0: return new ESLVal("$false");
-            default: {ESLVal _v94 = _v21;
+            default: {ESLVal _v98 = _v21;
               
-              return new ESLVal("********** unknown expression: ").add(_v94);
+              return new ESLVal("********** unknown expression: ").add(_v98);
             }
           }
           }
-        case "JConstStr": {ESLVal $149 = $147.termRef(0);
+        case "JConstStr": {ESLVal $154 = $152.termRef(0);
             
-            {ESLVal s = $149;
+            {ESLVal s = $154;
             
             return new ESLVal("new ESLVal(\"").add(javaString.apply(s).add(new ESLVal("\")")));
           }
           }
-        case "JConstDouble": {ESLVal $148 = $147.termRef(0);
+        case "JConstDouble": {ESLVal $153 = $152.termRef(0);
             
-            {ESLVal d = $148;
+            {ESLVal d = $153;
             
             return new ESLVal("new ESLVal(").add(d.add(new ESLVal(")")));
           }
           }
-          default: {ESLVal _v95 = _v21;
+          default: {ESLVal _v99 = _v21;
             
-            return new ESLVal("********** unknown expression: ").add(_v95);
+            return new ESLVal("********** unknown expression: ").add(_v99);
           }
         }
         }
-      case "JNot": {ESLVal $146 = _v21.termRef(0);
+      case "JNot": {ESLVal $151 = _v21.termRef(0);
           
-          {ESLVal _v93 = $146;
+          {ESLVal _v97 = $151;
           
-          return ppJExp.apply(indent,dynamics,_v93).add(new ESLVal(".not()"));
+          return ppJExp.apply(indent,dynamics,_v97).add(new ESLVal(".not()"));
         }
         }
-      case "JNil": {ESLVal $145 = _v21.termRef(0);
+      case "JNil": {ESLVal $150 = _v21.termRef(0);
           
-          {ESLVal t = $145;
+          {ESLVal t = $150;
           
           return new ESLVal("$nil");
         }
         }
-      case "JList": {ESLVal $144 = _v21.termRef(0);
-          ESLVal $143 = _v21.termRef(1);
+      case "JList": {ESLVal $149 = _v21.termRef(0);
+          ESLVal $148 = _v21.termRef(1);
           
-          {ESLVal t = $144;
+          {ESLVal t = $149;
           
-          {ESLVal es = $143;
+          {ESLVal es = $148;
           
           return ppJListExp.apply(indent,dynamics,t,es);
         }
         }
         }
-      case "JTerm": {ESLVal $140 = _v21.termRef(0);
-          ESLVal $139 = _v21.termRef(1);
+      case "JSet": {ESLVal $147 = _v21.termRef(0);
+          ESLVal $146 = _v21.termRef(1);
           
-          if($139.isCons())
-          {ESLVal $141 = $139.head();
-            ESLVal $142 = $139.tail();
+          {ESLVal t = $147;
+          
+          {ESLVal es = $146;
+          
+          return ppJSetExp.apply(indent,dynamics,t,es);
+        }
+        }
+        }
+      case "JBag": {ESLVal $145 = _v21.termRef(0);
+          ESLVal $144 = _v21.termRef(1);
+          
+          {ESLVal t = $145;
+          
+          {ESLVal es = $144;
+          
+          return ppJBagExp.apply(indent,dynamics,t,es);
+        }
+        }
+        }
+      case "JTerm": {ESLVal $141 = _v21.termRef(0);
+          ESLVal $140 = _v21.termRef(1);
+          
+          if($140.isCons())
+          {ESLVal $142 = $140.head();
+            ESLVal $143 = $140.tail();
             
-            {ESLVal n = $140;
+            {ESLVal n = $141;
             
-            {ESLVal es = $139;
+            {ESLVal es = $140;
             
             return new ESLVal("new ESLVal(\"").add(n.add(new ESLVal("\",").add(ppJExps.apply(indent,dynamics,es,new ESLVal(",")).add(new ESLVal(")")))));
           }
           }
           }
-        else if($139.isNil())
-          {ESLVal n = $140;
+        else if($140.isNil())
+          {ESLVal n = $141;
             
             return new ESLVal("new ESLVal(\"").add(n.add(new ESLVal("\",new ESLVal[]{})")));
           }
-        else {ESLVal n = $140;
+        else {ESLVal n = $141;
             
-            {ESLVal es = $139;
+            {ESLVal es = $140;
             
             return new ESLVal("new ESLVal(\"").add(n.add(new ESLVal("\",").add(ppJExps.apply(indent,dynamics,es,new ESLVal(",")).add(new ESLVal(")")))));
           }
           }
         }
-      case "JFun": {ESLVal $138 = _v21.termRef(0);
-          ESLVal $137 = _v21.termRef(1);
-          ESLVal $136 = _v21.termRef(2);
-          ESLVal $135 = _v21.termRef(3);
+      case "JFun": {ESLVal $139 = _v21.termRef(0);
+          ESLVal $138 = _v21.termRef(1);
+          ESLVal $137 = _v21.termRef(2);
+          ESLVal $136 = _v21.termRef(3);
           
-          {ESLVal n = $138;
+          {ESLVal n = $139;
           
-          {ESLVal args = $137;
+          {ESLVal args = $138;
           
-          {ESLVal t = $136;
+          {ESLVal t = $137;
           
-          {ESLVal body = $135;
+          {ESLVal body = $136;
           
           return ppJFun.apply(indent,dynamics,n,args,t,body);
         }
@@ -2182,30 +2204,30 @@ public class PpExp {
         }
         }
         }
-      case "JBinExp": {ESLVal $134 = _v21.termRef(0);
-          ESLVal $133 = _v21.termRef(1);
-          ESLVal $132 = _v21.termRef(2);
+      case "JBinExp": {ESLVal $135 = _v21.termRef(0);
+          ESLVal $134 = _v21.termRef(1);
+          ESLVal $133 = _v21.termRef(2);
           
-          switch($133.strVal) {
-          case "==": {ESLVal e1 = $134;
+          switch($134.strVal) {
+          case "==": {ESLVal e1 = $135;
             
-            {ESLVal e2 = $132;
+            {ESLVal e2 = $133;
             
             return ppJExp.apply(indent,dynamics,e1).add(new ESLVal(".equals(").add(ppJExp.apply(indent,dynamics,e2).add(new ESLVal(")"))));
           }
           }
-        case "cons": {ESLVal e1 = $134;
+        case "cons": {ESLVal e1 = $135;
             
-            {ESLVal e2 = $132;
+            {ESLVal e2 = $133;
             
             return ppJExp.apply(indent,dynamics,e2).add(new ESLVal(".cons(").add(ppJExp.apply(indent,dynamics,e1).add(new ESLVal(")"))));
           }
           }
-          default: {ESLVal e1 = $134;
+          default: {ESLVal e1 = $135;
             
-            {ESLVal op = $133;
+            {ESLVal op = $134;
             
-            {ESLVal e2 = $132;
+            {ESLVal e2 = $133;
             
             return ppJExp.apply(indent,dynamics,e1).add(new ESLVal(".").add(op.add(new ESLVal("(").add(ppJExp.apply(indent,dynamics,e2).add(new ESLVal(")"))))));
           }
@@ -2219,140 +2241,140 @@ public class PpExp {
       case "JNow": {
           return new ESLVal("now()");
         }
-      case "JVar": {ESLVal $131 = _v21.termRef(0);
-          ESLVal $130 = _v21.termRef(1);
+      case "JVar": {ESLVal $132 = _v21.termRef(0);
+          ESLVal $131 = _v21.termRef(1);
           
-          {ESLVal n = $131;
+          {ESLVal n = $132;
           
-          {ESLVal t = $130;
+          {ESLVal t = $131;
           
           if(member.apply(n,dynamics).boolVal)
           return n.add(new ESLVal("[0]"));
           else
-            {ESLVal _v91 = $131;
+            {ESLVal _v95 = $132;
               
-              {ESLVal _v92 = $130;
+              {ESLVal _v96 = $131;
               
-              return _v91;
+              return _v95;
             }
             }
         }
         }
         }
-      case "JError": {ESLVal $129 = _v21.termRef(0);
+      case "JError": {ESLVal $130 = _v21.termRef(0);
           
-          {ESLVal _v90 = $129;
+          {ESLVal _v94 = $130;
           
-          return new ESLVal("error(").add(ppJExp.apply(indent,dynamics,_v90).add(new ESLVal(")")));
+          return new ESLVal("error(").add(ppJExp.apply(indent,dynamics,_v94).add(new ESLVal(")")));
         }
         }
-      case "JApply": {ESLVal $128 = _v21.termRef(0);
-          ESLVal $127 = _v21.termRef(1);
+      case "JApply": {ESLVal $129 = _v21.termRef(0);
+          ESLVal $128 = _v21.termRef(1);
           
-          {ESLVal _v89 = $128;
+          {ESLVal _v93 = $129;
           
-          {ESLVal es = $127;
+          {ESLVal es = $128;
           
-          return ppJExp.apply(indent,dynamics,_v89).add(new ESLVal(".apply(").add(ppJExps.apply(indent,dynamics,es,new ESLVal(",")).add(new ESLVal(")"))));
+          return ppJExp.apply(indent,dynamics,_v93).add(new ESLVal(".apply(").add(ppJExps.apply(indent,dynamics,es,new ESLVal(",")).add(new ESLVal(")"))));
         }
         }
         }
-      case "JCommandExp": {ESLVal $126 = _v21.termRef(0);
-          ESLVal $125 = _v21.termRef(1);
+      case "JCommandExp": {ESLVal $127 = _v21.termRef(0);
+          ESLVal $126 = _v21.termRef(1);
           
-          {ESLVal c = $126;
+          {ESLVal c = $127;
           
-          {ESLVal t = $125;
+          {ESLVal t = $126;
           
           return new ESLVal("((Supplier<ESLVal>)() -> { ").add(nl.apply(indent.add(new ESLVal(2))).add(ppJCommand.apply(indent.add(new ESLVal(2)),dynamics,c).add(nl.apply(indent).add(new ESLVal("}).get()")))));
         }
         }
         }
-      case "JIfExp": {ESLVal $124 = _v21.termRef(0);
-          ESLVal $123 = _v21.termRef(1);
-          ESLVal $122 = _v21.termRef(2);
+      case "JIfExp": {ESLVal $125 = _v21.termRef(0);
+          ESLVal $124 = _v21.termRef(1);
+          ESLVal $123 = _v21.termRef(2);
           
-          {ESLVal _v88 = $124;
+          {ESLVal _v92 = $125;
           
-          {ESLVal e1 = $123;
+          {ESLVal e1 = $124;
           
-          {ESLVal e2 = $122;
+          {ESLVal e2 = $123;
           
-          return new ESLVal("(").add(ppJExp.apply(indent,dynamics,_v88).add(new ESLVal(".boolVal) ? (").add(ppJExp.apply(indent,dynamics,e1).add(new ESLVal(") : (").add(ppJExp.apply(indent,dynamics,e2).add(new ESLVal(")")))))));
+          return new ESLVal("(").add(ppJExp.apply(indent,dynamics,_v92).add(new ESLVal(".boolVal) ? (").add(ppJExp.apply(indent,dynamics,e1).add(new ESLVal(") : (").add(ppJExp.apply(indent,dynamics,e2).add(new ESLVal(")")))))));
         }
         }
         }
         }
-      case "JHead": {ESLVal $121 = _v21.termRef(0);
+      case "JHead": {ESLVal $122 = _v21.termRef(0);
           
-          {ESLVal _v87 = $121;
+          {ESLVal _v91 = $122;
           
-          return ppJExp.apply(indent,dynamics,_v87).add(new ESLVal(".head()"));
+          return ppJExp.apply(indent,dynamics,_v91).add(new ESLVal(".head()"));
         }
         }
-      case "JTail": {ESLVal $120 = _v21.termRef(0);
+      case "JTail": {ESLVal $121 = _v21.termRef(0);
           
-          {ESLVal _v86 = $120;
+          {ESLVal _v90 = $121;
           
-          return ppJExp.apply(indent,dynamics,_v86).add(new ESLVal(".tail()"));
+          return ppJExp.apply(indent,dynamics,_v90).add(new ESLVal(".tail()"));
         }
         }
-      case "JTermRef": {ESLVal $119 = _v21.termRef(0);
-          ESLVal $118 = _v21.termRef(1);
+      case "JTermRef": {ESLVal $120 = _v21.termRef(0);
+          ESLVal $119 = _v21.termRef(1);
           
-          {ESLVal _v85 = $119;
+          {ESLVal _v89 = $120;
           
-          {ESLVal n = $118;
+          {ESLVal n = $119;
           
-          return ppJExp.apply(indent,dynamics,_v85).add(new ESLVal(".termRef(").add(n.add(new ESLVal(")"))));
+          return ppJExp.apply(indent,dynamics,_v89).add(new ESLVal(".termRef(").add(n.add(new ESLVal(")"))));
         }
         }
         }
-      case "JMapFun": {ESLVal $117 = _v21.termRef(0);
-          ESLVal $116 = _v21.termRef(1);
+      case "JMapFun": {ESLVal $118 = _v21.termRef(0);
+          ESLVal $117 = _v21.termRef(1);
           
-          {ESLVal f = $117;
+          {ESLVal f = $118;
           
-          {ESLVal l = $116;
+          {ESLVal l = $117;
           
           return ppJExp.apply(indent,dynamics,f).add(new ESLVal(".map(").add(ppJExp.apply(indent,dynamics,l).add(new ESLVal(")"))));
         }
         }
         }
-      case "JFlatten": {ESLVal $115 = _v21.termRef(0);
+      case "JFlatten": {ESLVal $116 = _v21.termRef(0);
           
-          {ESLVal ls = $115;
+          {ESLVal ls = $116;
           
           return ppJExp.apply(indent,dynamics,ls).add(new ESLVal(".flatten()"));
         }
         }
-      case "JBehaviour": {ESLVal $110 = _v21.termRef(0);
-          ESLVal $109 = _v21.termRef(1);
-          ESLVal $108 = _v21.termRef(2);
-          ESLVal $107 = _v21.termRef(3);
-          ESLVal $106 = _v21.termRef(4);
+      case "JBehaviour": {ESLVal $111 = _v21.termRef(0);
+          ESLVal $110 = _v21.termRef(1);
+          ESLVal $109 = _v21.termRef(2);
+          ESLVal $108 = _v21.termRef(3);
+          ESLVal $107 = _v21.termRef(4);
           
-          switch($107.termName) {
-          case "JFun": {ESLVal $114 = $107.termRef(0);
-            ESLVal $113 = $107.termRef(1);
-            ESLVal $112 = $107.termRef(2);
-            ESLVal $111 = $107.termRef(3);
+          switch($108.termName) {
+          case "JFun": {ESLVal $115 = $108.termRef(0);
+            ESLVal $114 = $108.termRef(1);
+            ESLVal $113 = $108.termRef(2);
+            ESLVal $112 = $108.termRef(3);
             
-            {ESLVal es = $110;
+            {ESLVal es = $111;
             
-            {ESLVal fs = $109;
+            {ESLVal fs = $110;
             
-            {ESLVal init = $108;
+            {ESLVal init = $109;
             
-            {ESLVal n = $114;
+            {ESLVal n = $115;
             
-            {ESLVal args = $113;
+            {ESLVal args = $114;
             
-            {ESLVal t = $112;
+            {ESLVal t = $113;
             
-            {ESLVal body = $111;
+            {ESLVal body = $112;
             
-            {ESLVal time = $106;
+            {ESLVal time = $107;
             
             return new ESLVal("new ESLVal(new BehaviourAdapter(").add(((Supplier<ESLVal>)() -> { 
               if(time.eql(new ESLVal("JBlock",ESLVal.list())).boolVal)
@@ -2362,11 +2384,11 @@ public class PpExp {
             }).get().add(new ESLVal(",getSelf(),").add(ppJExp.apply(indent,dynamics,n).add(new ESLVal(") {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJFields.apply(indent.add(new ESLVal(2)),dynamics,fs).add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("public ESLVal handle(ESLVal $m) {").add(ppJCommand.apply(indent.add(new ESLVal(2)),dynamics,body).add(new ESLVal("}").add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("public ESLVal get(String name) {").add(nl.apply(indent.add(new ESLVal(4))).add(new ESLVal("switch(name) {").add(nl.apply(indent.add(new ESLVal(6))).add(ppJoin.apply(indent.add(new ESLVal(6)),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal $qualArg = $args[0];
-            {ESLVal _v23 = $qualArg;
+            {ESLVal _v25 = $qualArg;
                   
-                  {ESLVal _v83 = _v23;
+                  {ESLVal _v87 = _v25;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("case \"").add(_v83.add(new ESLVal("\": return ").add(_v83.add(new ESLVal(";")))))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("case \"").add(_v87.add(new ESLVal("\": return ").add(_v87.add(new ESLVal(";")))))));
                 }
                 }
               }
@@ -2380,42 +2402,42 @@ public class PpExp {
           }
           }
           }
-          default: {ESLVal _v84 = _v21;
+          default: {ESLVal _v88 = _v21;
             
-            return new ESLVal("********** unknown expression: ").add(_v84);
+            return new ESLVal("********** unknown expression: ").add(_v88);
           }
         }
         }
-      case "JExtendedBehaviour": {ESLVal $101 = _v21.termRef(0);
-          ESLVal $100 = _v21.termRef(1);
-          ESLVal $99 = _v21.termRef(2);
-          ESLVal $98 = _v21.termRef(3);
-          ESLVal $97 = _v21.termRef(4);
-          ESLVal $96 = _v21.termRef(5);
+      case "JExtendedBehaviour": {ESLVal $102 = _v21.termRef(0);
+          ESLVal $101 = _v21.termRef(1);
+          ESLVal $100 = _v21.termRef(2);
+          ESLVal $99 = _v21.termRef(3);
+          ESLVal $98 = _v21.termRef(4);
+          ESLVal $97 = _v21.termRef(5);
           
-          switch($97.termName) {
-          case "JFun": {ESLVal $105 = $97.termRef(0);
-            ESLVal $104 = $97.termRef(1);
-            ESLVal $103 = $97.termRef(2);
-            ESLVal $102 = $97.termRef(3);
+          switch($98.termName) {
+          case "JFun": {ESLVal $106 = $98.termRef(0);
+            ESLVal $105 = $98.termRef(1);
+            ESLVal $104 = $98.termRef(2);
+            ESLVal $103 = $98.termRef(3);
             
-            {ESLVal es = $101;
+            {ESLVal es = $102;
             
-            {ESLVal parent = $100;
+            {ESLVal parent = $101;
             
-            {ESLVal fs = $99;
+            {ESLVal fs = $100;
             
-            {ESLVal init = $98;
+            {ESLVal init = $99;
             
-            {ESLVal n = $105;
+            {ESLVal n = $106;
             
-            {ESLVal args = $104;
+            {ESLVal args = $105;
             
-            {ESLVal t = $103;
+            {ESLVal t = $104;
             
-            {ESLVal body = $102;
+            {ESLVal body = $103;
             
-            {ESLVal time = $96;
+            {ESLVal time = $97;
             
             return new ESLVal("new ESLVal(new BehaviourAdapter(").add(ppBehaviourParent.apply(indent,dynamics,parent).add(new ESLVal(",").add(((Supplier<ESLVal>)() -> { 
               if(time.eql(new ESLVal("JBlock",ESLVal.list())).boolVal)
@@ -2425,11 +2447,11 @@ public class PpExp {
             }).get().add(new ESLVal(",getSelf(),").add(ppJExp.apply(indent,dynamics,n).add(new ESLVal(") {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJFields.apply(indent.add(new ESLVal(2)),dynamics,fs).add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("public ESLVal handle(ESLVal $m) {").add(ppJCommand.apply(indent.add(new ESLVal(2)),dynamics,body).add(new ESLVal("}").add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("public ESLVal get(String name) {").add(nl.apply(indent.add(new ESLVal(4))).add(new ESLVal("switch(name) {").add(nl.apply(indent.add(new ESLVal(6))).add(ppJoin.apply(indent.add(new ESLVal(6)),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal $qualArg = $args[0];
-            {ESLVal _v22 = $qualArg;
+            {ESLVal _v24 = $qualArg;
                   
-                  {ESLVal _v81 = _v22;
+                  {ESLVal _v85 = _v24;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("case \"").add(_v81.add(new ESLVal("\": return ").add(_v81.add(new ESLVal(";")))))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("case \"").add(_v85.add(new ESLVal("\": return ").add(_v85.add(new ESLVal(";")))))));
                 }
                 }
               }
@@ -2444,43 +2466,43 @@ public class PpExp {
           }
           }
           }
-          default: {ESLVal _v82 = _v21;
+          default: {ESLVal _v86 = _v21;
             
-            return new ESLVal("********** unknown expression: ").add(_v82);
+            return new ESLVal("********** unknown expression: ").add(_v86);
           }
         }
         }
-      case "JNew": {ESLVal $93 = _v21.termRef(0);
-          ESLVal $92 = _v21.termRef(1);
+      case "JNew": {ESLVal $94 = _v21.termRef(0);
+          ESLVal $93 = _v21.termRef(1);
           
-          if($92.isCons())
-          {ESLVal $94 = $92.head();
-            ESLVal $95 = $92.tail();
+          if($93.isCons())
+          {ESLVal $95 = $93.head();
+            ESLVal $96 = $93.tail();
             
-            {ESLVal b = $93;
+            {ESLVal b = $94;
             
-            {ESLVal args = $92;
+            {ESLVal args = $93;
             
             return new ESLVal("newActor(").add(ppJExp.apply(indent,dynamics,b).add(new ESLVal(",new ESLVal(new Actor()),").add(ppJExps.apply(indent,dynamics,args,new ESLVal(",")).add(new ESLVal(")")))));
           }
           }
           }
-        else if($92.isNil())
-          {ESLVal b = $93;
+        else if($93.isNil())
+          {ESLVal b = $94;
             
             return new ESLVal("newActor(").add(ppJExp.apply(indent,dynamics,b).add(new ESLVal(",new ESLVal(new Actor()))")));
           }
-        else {ESLVal b = $93;
+        else {ESLVal b = $94;
             
-            {ESLVal args = $92;
+            {ESLVal args = $93;
             
             return new ESLVal("newActor(").add(ppJExp.apply(indent,dynamics,b).add(new ESLVal(",new ESLVal(new Actor()),").add(ppJExps.apply(indent,dynamics,args,new ESLVal(",")).add(new ESLVal(")")))));
           }
           }
         }
-      case "JNewArray": {ESLVal $91 = _v21.termRef(0);
+      case "JNewArray": {ESLVal $92 = _v21.termRef(0);
           
-          {ESLVal i = $91;
+          {ESLVal i = $92;
           
           return new ESLVal("newArray(").add(ppJExp.apply(indent,dynamics,i).add(new ESLVal(".intVal)")));
         }
@@ -2488,33 +2510,96 @@ public class PpExp {
       case "JNewTable": {
           return new ESLVal("newTable()");
         }
-      case "JNewJava": {ESLVal $88 = _v21.termRef(0);
-          ESLVal $87 = _v21.termRef(1);
+      case "JNewJava": {ESLVal $89 = _v21.termRef(0);
+          ESLVal $88 = _v21.termRef(1);
           
-          if($87.isCons())
-          {ESLVal $89 = $87.head();
-            ESLVal $90 = $87.tail();
+          if($88.isCons())
+          {ESLVal $90 = $88.head();
+            ESLVal $91 = $88.tail();
             
-            {ESLVal n = $88;
+            {ESLVal n = $89;
             
-            {ESLVal args = $87;
+            {ESLVal args = $88;
             
             return new ESLVal("newJavaActor(\"").add(n.add(new ESLVal("\",").add(ppJExps.apply(indent,dynamics,args,new ESLVal(",")).add(new ESLVal(")")))));
           }
           }
           }
-        else if($87.isNil())
-          {ESLVal n = $88;
+        else if($88.isNil())
+          {ESLVal n = $89;
             
             return new ESLVal("newJavaActor(\"").add(n.add(new ESLVal("\")")));
           }
-        else {ESLVal n = $88;
+        else {ESLVal n = $89;
             
-            {ESLVal args = $87;
+            {ESLVal args = $88;
             
             return new ESLVal("newJavaActor(\"").add(n.add(new ESLVal("\",").add(ppJExps.apply(indent,dynamics,args,new ESLVal(",")).add(new ESLVal(")")))));
           }
           }
+        }
+      case "JRecord": {ESLVal $87 = _v21.termRef(0);
+          
+          {ESLVal fs = $87;
+          
+          return new ESLVal("newRecord(new ESLVal[]{").add(ppJExps.apply(indent,dynamics,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal $qualArg = $args[0];
+          {ESLVal _v22 = $qualArg;
+                
+                switch(_v22.termName) {
+                case "JField": {ESLVal $168 = _v22.termRef(0);
+                  ESLVal $167 = _v22.termRef(1);
+                  ESLVal $166 = _v22.termRef(2);
+                  
+                  {ESLVal n = $168;
+                  
+                  {ESLVal t = $167;
+                  
+                  {ESLVal _v83 = $166;
+                  
+                  return ESLVal.list(ESLVal.list(new ESLVal("JConstExp",new ESLVal("JConstStr",n))));
+                }
+                }
+                }
+                }
+                default: {ESLVal _0 = _v22;
+                  
+                  return ESLVal.list();
+                }
+              }
+              }
+            }
+          }).map(fs).flatten().flatten(),new ESLVal(",")).add(new ESLVal("},").add(ppJExps.apply(indent,dynamics,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal $qualArg = $args[0];
+          {ESLVal _v23 = $qualArg;
+                
+                switch(_v23.termName) {
+                case "JField": {ESLVal $171 = _v23.termRef(0);
+                  ESLVal $170 = _v23.termRef(1);
+                  ESLVal $169 = _v23.termRef(2);
+                  
+                  {ESLVal n = $171;
+                  
+                  {ESLVal t = $170;
+                  
+                  {ESLVal _v84 = $169;
+                  
+                  return ESLVal.list(ESLVal.list(_v84));
+                }
+                }
+                }
+                }
+                default: {ESLVal _0 = _v23;
+                  
+                  return ESLVal.list();
+                }
+              }
+              }
+            }
+          }).map(fs).flatten().flatten(),new ESLVal(",")).add(new ESLVal(")")))));
+        }
         }
       case "JSend": {ESLVal $84 = _v21.termRef(0);
           ESLVal $83 = _v21.termRef(1);
@@ -2524,26 +2609,7 @@ public class PpExp {
           {ESLVal $85 = $82.head();
             ESLVal $86 = $82.tail();
             
-            {ESLVal _v78 = $84;
-            
-            {ESLVal m = $83;
-            
-            {ESLVal args = $82;
-            
-            return new ESLVal("Lib.send(").add(ppJExp.apply(indent,dynamics,_v78).add(new ESLVal(",\"").add(m.add(new ESLVal("\",").add(ppJExps.apply(indent,dynamics,args,new ESLVal(",")).add(new ESLVal(")")))))));
-          }
-          }
-          }
-          }
-        else if($82.isNil())
-          {ESLVal _v79 = $84;
-            
-            {ESLVal m = $83;
-            
-            return new ESLVal("Lib.send(").add(ppJExp.apply(indent,dynamics,_v79).add(new ESLVal(",\"").add(m.add(new ESLVal("\")")))));
-          }
-          }
-        else {ESLVal _v80 = $84;
+            {ESLVal _v80 = $84;
             
             {ESLVal m = $83;
             
@@ -2553,12 +2619,31 @@ public class PpExp {
           }
           }
           }
+          }
+        else if($82.isNil())
+          {ESLVal _v81 = $84;
+            
+            {ESLVal m = $83;
+            
+            return new ESLVal("Lib.send(").add(ppJExp.apply(indent,dynamics,_v81).add(new ESLVal(",\"").add(m.add(new ESLVal("\")")))));
+          }
+          }
+        else {ESLVal _v82 = $84;
+            
+            {ESLVal m = $83;
+            
+            {ESLVal args = $82;
+            
+            return new ESLVal("Lib.send(").add(ppJExp.apply(indent,dynamics,_v82).add(new ESLVal(",\"").add(m.add(new ESLVal("\",").add(ppJExps.apply(indent,dynamics,args,new ESLVal(",")).add(new ESLVal(")")))))));
+          }
+          }
+          }
         }
       case "JSendSuper": {ESLVal $81 = _v21.termRef(0);
           
-          {ESLVal _v77 = $81;
+          {ESLVal _v79 = $81;
           
-          return new ESLVal("sendSuper(").add(ppJExp.apply(indent,dynamics,_v77).add(new ESLVal(")")));
+          return new ESLVal("sendSuper(").add(ppJExp.apply(indent,dynamics,_v79).add(new ESLVal(")")));
         }
         }
       case "JSendTimeSuper": {
@@ -2570,11 +2655,11 @@ public class PpExp {
       case "JRef": {ESLVal $80 = _v21.termRef(0);
           ESLVal $79 = _v21.termRef(1);
           
-          {ESLVal _v76 = $80;
+          {ESLVal _v78 = $80;
           
           {ESLVal n = $79;
           
-          return ppJExp.apply(indent,dynamics,_v76).add(new ESLVal(".ref(\"").add(n.add(new ESLVal("\")"))));
+          return ppJExp.apply(indent,dynamics,_v78).add(new ESLVal(".ref(\"").add(n.add(new ESLVal("\")"))));
         }
         }
         }
@@ -2600,13 +2685,13 @@ public class PpExp {
           ESLVal $74 = _v21.termRef(1);
           ESLVal $73 = _v21.termRef(2);
           
-          {ESLVal _v75 = $75;
+          {ESLVal _v77 = $75;
           
           {ESLVal n = $74;
           
           {ESLVal c = $73;
           
-          return new ESLVal("new Function(new ESLVal(\"try\"),getSelf()) {").add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("public ESLVal apply(ESLVal... args) { ").add(nl.apply(indent.add(new ESLVal(4))).add(new ESLVal("try { ").add(nl.apply(indent.add(new ESLVal(6))).add(new ESLVal("return ").add(ppJExp.apply(indent.add(new ESLVal(4)),dynamics,_v75).add(new ESLVal(";").add(nl.apply(indent.add(new ESLVal(4))).add(new ESLVal("} catch(ESLError $exception) {").add(nl.apply(indent.add(new ESLVal(6))).add(new ESLVal("ESLVal ").add(n.add(new ESLVal(" = $exception.value;").add(nl.apply(indent.add(new ESLVal(6))).add(ppJCommand.apply(indent,dynamics,c).add(nl.apply(indent.add(new ESLVal(4))).add(new ESLVal("}").add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("}").add(nl.apply(indent).add(new ESLVal("}.apply()")))))))))))))))))))))));
+          return new ESLVal("new Function(new ESLVal(\"try\"),getSelf()) {").add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("public ESLVal apply(ESLVal... args) { ").add(nl.apply(indent.add(new ESLVal(4))).add(new ESLVal("try { ").add(nl.apply(indent.add(new ESLVal(6))).add(new ESLVal("return ").add(ppJExp.apply(indent.add(new ESLVal(4)),dynamics,_v77).add(new ESLVal(";").add(nl.apply(indent.add(new ESLVal(4))).add(new ESLVal("} catch(ESLError $exception) {").add(nl.apply(indent.add(new ESLVal(6))).add(new ESLVal("ESLVal ").add(n.add(new ESLVal(" = $exception.value;").add(nl.apply(indent.add(new ESLVal(6))).add(ppJCommand.apply(indent,dynamics,c).add(nl.apply(indent.add(new ESLVal(4))).add(new ESLVal("}").add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("}").add(nl.apply(indent).add(new ESLVal("}.apply()")))))))))))))))))))))));
         }
         }
         }
@@ -2615,20 +2700,20 @@ public class PpExp {
           ESLVal $71 = _v21.termRef(1);
           ESLVal $70 = _v21.termRef(2);
           
-          {ESLVal _v74 = $72;
+          {ESLVal _v76 = $72;
           
           {ESLVal e1 = $71;
           
           {ESLVal e2 = $70;
           
-          return new ESLVal("probably(").add(ppJExp.apply(indent,dynamics,_v74).add(new ESLVal(",").add(ppJExp.apply(indent,dynamics,probFun.apply(e1)).add(new ESLVal(",").add(ppJExp.apply(indent,dynamics,probFun.apply(e2)).add(new ESLVal(")")))))));
+          return new ESLVal("probably(").add(ppJExp.apply(indent,dynamics,_v76).add(new ESLVal(",").add(ppJExp.apply(indent,dynamics,probFun.apply(e1)).add(new ESLVal(",").add(ppJExp.apply(indent,dynamics,probFun.apply(e2)).add(new ESLVal(")")))))));
         }
         }
         }
         }
-        default: {ESLVal _v99 = _v21;
+        default: {ESLVal _v103 = _v21;
           
-          return new ESLVal("********** unknown expression: ").add(_v99);
+          return new ESLVal("********** unknown expression: ").add(_v103);
         }
       }
       }
@@ -2653,9 +2738,9 @@ public class PpExp {
         }
         }
         }
-        default: {ESLVal _v73 = _v20;
+        default: {ESLVal _v75 = _v20;
           
-          return ppJExp.apply(indent,dynamics,_v73);
+          return ppJExp.apply(indent,dynamics,_v75);
         }
       }
       }
@@ -2685,11 +2770,11 @@ public class PpExp {
                 case "JDec": {ESLVal $65 = _v16.termRef(0);
                   ESLVal $64 = _v16.termRef(1);
                   
-                  {ESLVal _v69 = $65;
+                  {ESLVal _v71 = $65;
                   
-                  {ESLVal _v70 = $64;
+                  {ESLVal _v72 = $64;
                   
-                  return ESLVal.list(ESLVal.list(_v69));
+                  return ESLVal.list(ESLVal.list(_v71));
                 }
                 }
                 }
@@ -2724,11 +2809,11 @@ public class PpExp {
                 case "JDec": {ESLVal $67 = _v18.termRef(0);
                   ESLVal $66 = _v18.termRef(1);
                   
-                  {ESLVal _v71 = $67;
+                  {ESLVal _v73 = $67;
                   
-                  {ESLVal _v72 = $66;
+                  {ESLVal _v74 = $66;
                   
-                  return ESLVal.list(ESLVal.list(_v72));
+                  return ESLVal.list(ESLVal.list(_v74));
                 }
                 }
                 }
@@ -2779,18 +2864,18 @@ public class PpExp {
             
             {ESLVal t = $62;
             
-            {ESLVal _v65 = $61;
+            {ESLVal _v67 = $61;
             
             if(member.apply(n,dynamicArgs).boolVal)
-            return new ESLVal("ESLVal[] ").add(n.add(new ESLVal(" = new ESLVal[]{$args[").add(i.add(new ESLVal("]};").add(nl.apply(indent).add(ppFunArgs.apply(indent,i.add($one),_v65,dynamicArgs)))))));
+            return new ESLVal("ESLVal[] ").add(n.add(new ESLVal(" = new ESLVal[]{$args[").add(i.add(new ESLVal("]};").add(nl.apply(indent).add(ppFunArgs.apply(indent,i.add($one),_v67,dynamicArgs)))))));
             else
-              {ESLVal _v66 = $63;
+              {ESLVal _v68 = $63;
                 
-                {ESLVal _v67 = $62;
+                {ESLVal _v69 = $62;
                 
-                {ESLVal _v68 = $61;
+                {ESLVal _v70 = $61;
                 
-                return new ESLVal("ESLVal ").add(_v66.add(new ESLVal(" = $args[").add(i.add(new ESLVal("];").add(nl.apply(indent).add(ppFunArgs.apply(indent,i.add($one),_v68,dynamicArgs)))))));
+                return new ESLVal("ESLVal ").add(_v68.add(new ESLVal(" = $args[").add(i.add(new ESLVal("];").add(nl.apply(indent).add(ppFunArgs.apply(indent,i.add($one),_v70,dynamicArgs)))))));
               }
               }
               }
@@ -2798,12 +2883,12 @@ public class PpExp {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(21851,22245)").add(ESLVal.list(_v15)));
+          default: return error(new ESLVal("case error at Pos(22186,22580)").add(ESLVal.list(_v15)));
         }
         }
       else if(_v15.isNil())
         return new ESLVal("");
-      else return error(new ESLVal("case error at Pos(21851,22245)").add(ESLVal.list(_v15)));
+      else return error(new ESLVal("case error at Pos(22186,22580)").add(ESLVal.list(_v15)));
       }
     }
   });
@@ -2836,11 +2921,11 @@ public class PpExp {
           case "JCommandExp": {ESLVal $38 = $36.termRef(0);
             ESLVal $37 = $36.termRef(1);
             
-            {ESLVal _v63 = $38;
+            {ESLVal _v65 = $38;
             
             {ESLVal t = $37;
             
-            return ppJCommand.apply(indent,dynamics,_v63);
+            return ppJCommand.apply(indent,dynamics,_v65);
           }
           }
           }
@@ -2893,9 +2978,9 @@ public class PpExp {
                   
                   {ESLVal i = $58;
                   
-                  {ESLVal _v62 = $57;
+                  {ESLVal _v64 = $57;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("case \"").add(n.add(new ESLVal("\": ").add(ppJCommand.apply(indent.add(new ESLVal(2)),dynamics,_v62))))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("case \"").add(n.add(new ESLVal("\": ").add(ppJCommand.apply(indent.add(new ESLVal(2)),dynamics,_v64))))));
                 }
                 }
                 }
@@ -2933,9 +3018,9 @@ public class PpExp {
                   
                   {ESLVal n = $56;
                   
-                  {ESLVal _v61 = $55;
+                  {ESLVal _v63 = $55;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("case ").add(n.add(new ESLVal(": ").add(ppJCommand.apply(indent.add(new ESLVal(2)),dynamics,_v61))))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("case ").add(n.add(new ESLVal(": ").add(ppJCommand.apply(indent.add(new ESLVal(2)),dynamics,_v63))))));
                 }
                 }
                 }
@@ -2972,9 +3057,9 @@ public class PpExp {
                   
                   {ESLVal s = $54;
                   
-                  {ESLVal _v60 = $53;
+                  {ESLVal _v62 = $53;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("case \"").add(s.add(new ESLVal("\": ").add(ppJCommand.apply(indent.add(new ESLVal(2)),dynamics,_v60))))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("case \"").add(s.add(new ESLVal("\": ").add(ppJCommand.apply(indent.add(new ESLVal(2)),dynamics,_v62))))));
                 }
                 }
                 }
@@ -3011,14 +3096,14 @@ public class PpExp {
                   
                   {ESLVal b = $52;
                   
-                  {ESLVal _v59 = $51;
+                  {ESLVal _v61 = $51;
                   
                   return ESLVal.list(ESLVal.list(new ESLVal("case ").add(((Supplier<ESLVal>)() -> { 
                     if(b.boolVal)
                       return $one;
                       else
                         return $zero;
-                  }).get().add(new ESLVal(": ").add(ppJCommand.apply(indent.add(new ESLVal(2)),dynamics,_v59))))));
+                  }).get().add(new ESLVal(": ").add(ppJCommand.apply(indent.add(new ESLVal(2)),dynamics,_v61))))));
                 }
                 }
                 }
@@ -3039,7 +3124,7 @@ public class PpExp {
           
           {ESLVal bs = $19;
           
-          {ESLVal _v58 = $18;
+          {ESLVal _v60 = $18;
           
           {ESLVal boundVars = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
@@ -3070,16 +3155,16 @@ public class PpExp {
                 }
               }
             }).map(bs).flatten().flatten();
-          ESLVal dynamicVars = dynamicVarsJCommand.apply(_v58);
+          ESLVal dynamicVars = dynamicVarsJCommand.apply(_v60);
           
-          {ESLVal boundDynamicVars = filter.apply(new ESLVal(new Function(new ESLVal("fun3403"),getSelf()) {
+          {ESLVal boundDynamicVars = filter.apply(new ESLVal(new Function(new ESLVal("fun5183"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal s = $args[0];
             return member.apply(s,dynamicVars);
               }
             }),boundVars);
           
-          return new ESLVal("{").add(ppJFields.apply(indent.add(new ESLVal(2)),dynamics.add(boundDynamicVars),bs).add(nl.apply(indent.add(new ESLVal(2))).add(ppJCommand.apply(indent,dynamics.add(boundDynamicVars),_v58).add(nl.apply(indent).add(new ESLVal("}"))))));
+          return new ESLVal("{").add(ppJFields.apply(indent.add(new ESLVal(2)),dynamics.add(boundDynamicVars),bs).add(nl.apply(indent.add(new ESLVal(2))).add(ppJCommand.apply(indent,dynamics.add(boundDynamicVars),_v60).add(nl.apply(indent).add(new ESLVal("}"))))));
         }
         }
         }
@@ -3090,7 +3175,7 @@ public class PpExp {
           
           {ESLVal bs = $17;
           
-          {ESLVal _v57 = $16;
+          {ESLVal _v59 = $16;
           
           return new ESLVal("LetRec letrec = new LetRec() {").add(nl.apply(indent.add(new ESLVal(2))).add(ppJFields.apply(indent.add(new ESLVal(2)),dynamics,bs).add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("public ESLVal get(String name) {").add(nl.apply(indent.add(new ESLVal(4))).add(new ESLVal("switch(name) {").add(nl.apply(indent.add(new ESLVal(6))).add(ppJoin.apply(indent.add(new ESLVal(6)),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
@@ -3148,7 +3233,7 @@ public class PpExp {
               }
               }
             }
-          }).map(bs).flatten().flatten()).add(nl.apply(indent.add(new ESLVal(2))).add(ppJCommand.apply(indent,dynamics,_v57).add(nl.apply(indent))))))))))))))))))))));
+          }).map(bs).flatten().flatten()).add(nl.apply(indent.add(new ESLVal(2))).add(ppJCommand.apply(indent,dynamics,_v59).add(nl.apply(indent))))))))))))))))))))));
         }
         }
         }
@@ -3161,9 +3246,9 @@ public class PpExp {
               ESLVal $qualArg = $args[0];
           {ESLVal _v7 = $qualArg;
                 
-                {ESLVal _v56 = _v7;
+                {ESLVal _v58 = _v7;
                 
-                return ESLVal.list(ESLVal.list(ppJCommand.apply(indent,dynamics,_v56)));
+                return ESLVal.list(ESLVal.list(ppJCommand.apply(indent,dynamics,_v58)));
               }
               }
             }
@@ -3180,11 +3265,11 @@ public class PpExp {
           if(member.apply(n,dynamics).boolVal)
           return n.add(new ESLVal("[0] = ").add(ppJExp.apply(indent,dynamics,e).add(new ESLVal(";"))));
           else
-            {ESLVal _v54 = $14;
+            {ESLVal _v56 = $14;
               
-              {ESLVal _v55 = $13;
+              {ESLVal _v57 = $13;
               
-              return _v54.add(new ESLVal(" = ").add(ppJExp.apply(indent,dynamics,_v55).add(new ESLVal(";"))));
+              return _v56.add(new ESLVal(" = ").add(ppJExp.apply(indent,dynamics,_v57).add(new ESLVal(";"))));
             }
             }
         }
@@ -3201,9 +3286,9 @@ public class PpExp {
           
           {ESLVal e = $10;
           
-          {ESLVal _v53 = $9;
+          {ESLVal _v55 = $9;
           
-          return new ESLVal("{").add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("ESLVal ").add(listName.add(new ESLVal(" = ").add(ppJExp.apply(indent.add(new ESLVal(2)),dynamics,e).add(new ESLVal(";").add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("while(").add(listName.add(new ESLVal(".isCons()) {").add(nl.apply(indent.add(new ESLVal(4))).add(new ESLVal("ESLVal ").add(varName.add(new ESLVal(" = ").add(listName.add(new ESLVal(".headVal;").add(nl.apply(indent.add(new ESLVal(4))).add(ppJCommand.apply(indent.add(new ESLVal(4)),dynamics,_v53).add(nl.apply(indent.add(new ESLVal(4))).add(listName.add(new ESLVal(" = ").add(listName.add(new ESLVal(".tailVal;").add(new ESLVal("}").add(nl.apply(indent).add(new ESLVal("}")))))))))))))))))))))))))));
+          return new ESLVal("{").add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("ESLVal ").add(listName.add(new ESLVal(" = ").add(ppJExp.apply(indent.add(new ESLVal(2)),dynamics,e).add(new ESLVal(";").add(nl.apply(indent.add(new ESLVal(2))).add(new ESLVal("while(").add(listName.add(new ESLVal(".isCons()) {").add(nl.apply(indent.add(new ESLVal(4))).add(new ESLVal("ESLVal ").add(varName.add(new ESLVal(" = ").add(listName.add(new ESLVal(".headVal;").add(nl.apply(indent.add(new ESLVal(4))).add(ppJCommand.apply(indent.add(new ESLVal(4)),dynamics,_v55).add(nl.apply(indent.add(new ESLVal(4))).add(listName.add(new ESLVal(" = ").add(listName.add(new ESLVal(".tailVal;").add(new ESLVal("}").add(nl.apply(indent).add(new ESLVal("}")))))))))))))))))))))))))));
         }
         }
         }
@@ -3216,9 +3301,9 @@ public class PpExp {
           return ppJExp.apply(indent,dynamics,e).add(new ESLVal(";"));
         }
         }
-        default: {ESLVal _v64 = _v6;
+        default: {ESLVal _v66 = _v6;
           
-          return new ESLVal("******* unknown command: ").add(_v64);
+          return new ESLVal("******* unknown command: ").add(_v66);
         }
       }
       }
@@ -3237,15 +3322,15 @@ public class PpExp {
           
           {ESLVal f = $6;
           
-          {ESLVal _v52 = $7;
+          {ESLVal _v54 = $7;
           
-          return ppFieldDef.apply(indent,dynamics,f).add(nl.apply(indent).add(ppJFields.apply(indent,dynamics,_v52)));
+          return ppFieldDef.apply(indent,dynamics,f).add(nl.apply(indent).add(ppJFields.apply(indent,dynamics,_v54)));
         }
         }
         }
       else if(_v5.isNil())
         return new ESLVal("");
-      else return error(new ESLVal("case error at Pos(26769,26919)").add(ESLVal.list(_v5)));
+      else return error(new ESLVal("case error at Pos(27104,27254)").add(ESLVal.list(_v5)));
       }
     }
   });
@@ -3270,13 +3355,13 @@ public class PpExp {
           if(member.apply(n,dynamics).boolVal)
           return new ESLVal("ESLVal[] ").add(n.add(new ESLVal(" = new ESLVal[]{").add(ppJExp.apply(indent.add(new ESLVal(2)),dynamics,e).add(new ESLVal("};")))));
           else
-            {ESLVal _v49 = $5;
+            {ESLVal _v51 = $5;
               
-              {ESLVal _v50 = $4;
+              {ESLVal _v52 = $4;
               
-              {ESLVal _v51 = $3;
+              {ESLVal _v53 = $3;
               
-              return new ESLVal("ESLVal ").add(_v49.add(new ESLVal(" = ").add(ppJExp.apply(indent.add(new ESLVal(2)),dynamics,_v51).add(new ESLVal(";")))));
+              return new ESLVal("ESLVal ").add(_v51.add(new ESLVal(" = ").add(ppJExp.apply(indent.add(new ESLVal(2)),dynamics,_v53).add(new ESLVal(";")))));
             }
             }
             }
@@ -3284,7 +3369,7 @@ public class PpExp {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(26983,27237)").add(ESLVal.list(_v4)));
+        default: return error(new ESLVal("case error at Pos(27318,27572)").add(ESLVal.list(_v4)));
       }
       }
     }
@@ -3301,16 +3386,16 @@ public class PpExp {
         {ESLVal $1 = _v3.head();
           ESLVal $2 = _v3.tail();
           
-          {ESLVal _v47 = _v3;
+          {ESLVal _v49 = _v3;
           
-          return new ESLVal("new Term(\"").add(n.add(new ESLVal("\",").add(ppJExps.apply(indent,dynamics,_v47,new ESLVal(",")).add(new ESLVal(")")))));
+          return new ESLVal("new Term(\"").add(n.add(new ESLVal("\",").add(ppJExps.apply(indent,dynamics,_v49,new ESLVal(",")).add(new ESLVal(")")))));
         }
         }
       else if(_v3.isNil())
         return new ESLVal("new Term(\"").add(n.add(new ESLVal("\")")));
-      else {ESLVal _v48 = _v3;
+      else {ESLVal _v50 = _v3;
           
-          return new ESLVal("new Term(\"").add(n.add(new ESLVal("\",").add(ppJExps.apply(indent,dynamics,_v48,new ESLVal(",")).add(new ESLVal(")")))));
+          return new ESLVal("new Term(\"").add(n.add(new ESLVal("\",").add(ppJExps.apply(indent,dynamics,_v50,new ESLVal(",")).add(new ESLVal(")")))));
         }
       }
     }
@@ -3322,6 +3407,24 @@ public class PpExp {
   ESLVal t = $args[2];
   ESLVal es = $args[3];
   return new ESLVal("ESLVal.list(").add(ppJExps.apply(indent,dynamics,es,new ESLVal(",")).add(new ESLVal(")")));
+    }
+  });
+  private static ESLVal ppJSetExp = new ESLVal(new Function(new ESLVal("ppJSetExp"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal indent = $args[0];
+  ESLVal dynamics = $args[1];
+  ESLVal t = $args[2];
+  ESLVal es = $args[3];
+  return new ESLVal("ESLVal.set(").add(ppJExps.apply(indent,dynamics,es,new ESLVal(",")).add(new ESLVal(")")));
+    }
+  });
+  private static ESLVal ppJBagExp = new ESLVal(new Function(new ESLVal("ppJBagExp"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal indent = $args[0];
+  ESLVal dynamics = $args[1];
+  ESLVal t = $args[2];
+  ESLVal es = $args[3];
+  return new ESLVal("ESLVal.bag(").add(ppJExps.apply(indent,dynamics,es,new ESLVal(",")).add(new ESLVal(")")));
     }
   });
   public static ESLVal main = new ESLVal(new Function(new ESLVal("main"),getSelf()) {
