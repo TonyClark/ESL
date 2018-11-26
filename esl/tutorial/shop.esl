@@ -1,91 +1,6 @@
 export main;
 
-import 'esl/lists.esl';
-
-data Property = Prop(Str,Str);
-type Props = [Property];
-
-type PictureElement = union {
-
-  // Shapes, images and text with absolute positions...
-  
-  Rectangle(Int,Int,Int,Int,Str), 
-  Circle(Int,Int,Int,Str), 
-  Line(Int,Int,Int,Int,Str),
-  Image(Int,Int,Int,Int,Str),
-  Text(Int,Int,Str,Str) 
-}
-
-type TreeElement = union {
-
-  // Horizontal and vertical layout with elastic padding... 
-  
-  TreeNode(PictureElement),
-  VBox(Props,[TreeElement]),
-  HBox(Props,[TreeElement]),
-  Padding(Props),
-  LabelledTree(Str,TreeElement)
-}
-
-data LinePoint = LPoint(Props,Int,Int);
-data TRow[T]   = Row(Props,[TData[T]]);
-data TData[T]  = Data(Props,T);
-data PSlice    = Slice(Props,Str,Int);
-data LGLine    = GLine(Props,Str,[LinePoint]);
-data SMessage  = Message(Int,Int,Int,Str);
-data SActor    = Actor(Int,Int,Int,Str);
-data GNode[T]  = Node(Props,Int,T);
-data GEdge[T]  = Edge(Props,Int,Int,T);
-
-type EDBDisplay = rec T. union { 
-                                                   // Types of EDB display element.
-  HTML(Str),                                       // Raw HTML.
-  Table(Props,[TRow[T]]),                          // A table of display elements.
-  Pie(Props,Str,Int,Int,[PSlice]),                 // A pie chart.
-  LineGraph(Props,Str,Str,Str,Int,Int,[LGLine]),   // A line graph.
-  Picture(Int,Int,[PictureElement]),               // Absolute positions.
-  Sequence([SActor],[SMessage]),                   // Sequence diagram.
-  Graph(Props,[GNode[T]],[GEdge[T]]),              // Graph.
-  Tree(Int,Int,TreeElement)                        // Recursive horizontal and vertical layout.
-}
-
-data EditType =
-  ESLSource(Str,Str)
-| JavaSource(Str,Str,Str)
-| RawText(Str);
-
-type Math = {
-  circlePos::(Int,Int,Int,Int) -> Point
-};
-
-type BrowserListener = Act {
-  BrowserEvent(Str);
-}
-
-type EDB = Act {
-
-  export 
-    math::Math;
-    message::Forall[T] (T)->T; 
-    display::Forall[T] (Str,T)->Void; 
-    button::(Str,Str,Str,Str,()->Void)->Void; 
-  
-  Show(Str,EDBDisplay);
-  Filmstrip(Str,[EDBDisplay]);
-  AddBrowserListener(BrowserListener);
-  Edit(EditType);
-}
-
-type ESL = {
-  edb::EDB;
-  parse::Forall[T](Str)->T;
-  wait::(Int)->Void;
-  builtin::Forall[T] (Str,Str,Int)->T;
-  randon::(Int)->Int;
-  kill::Forall[T](T)->Void;
-  stopAll::()->Void;
-  print::Forall[T](T)->T
-};
+import 'esl/lists.esl', 'esl/displays.esl';
 
 edb::EDB = null[EDB];
 
@@ -124,7 +39,7 @@ type Assistant = Act {
 
 // ************************* START OF DISPLAY CODE ********************************
 
-Act Display { 
+Act ShopDisplay { 
   RegisterCustomer(Int,Str,[Str]); 
   ChangeState(Int,Str); 
   Sale(Int); 
@@ -133,16 +48,16 @@ Act Display {
 
 data CustomerDisplay = C(Int,Str,[Str],Int,Int);
 
-row(ds::[TData[EDBDisplay]])::TRow[EDBDisplay] = Row[EDBDisplay]([Prop('style','border: 1px solid black;')],ds);
-tdata(d::EDBDisplay)::TData[EDBDisplay] = Data[EDBDisplay]([Prop('style','font-size: 5px;border: 1px solid black;')],d);
-rdata(d::EDBDisplay)::TData[EDBDisplay] = Data[EDBDisplay]([Prop('style','font-size: 5px;border: 1px solid black;background-color:red;')],d);
-bdata(d::EDBDisplay)::TData[EDBDisplay] = Data[EDBDisplay]([Prop('style','font-size: 5px;border: 1px solid black;background-color:lightblue;')],d);
+row(ds::[Data])::Row = Row([Prop('style','border: 1px solid black;')],ds);
+tdata(d::Display)::Data = Data([Prop('style','font-size: 5px;border: 1px solid black;')],d);
+rdata(d::Display)::Data = Data([Prop('style','font-size: 5px;border: 1px solid black;background-color:red;')],d);
+bdata(d::Display)::Data = Data([Prop('style','font-size: 5px;border: 1px solid black;background-color:lightblue;')],d);
 
-act displayB::Display {
+act displayB::ShopDisplay {
   customers::[CustomerDisplay] = [];
-  asTable()::EDBDisplay =
+  asTable()::Display =
     letrec
-      rows(cs::[CustomerDisplay])::[TRow[EDBDisplay]] =
+      rows(cs::[CustomerDisplay])::[Row] =
         case cs {
           [] -> [];
             C(c::Int,s::Str,ss::[Str],sales::Int,walkouts::Int):rest::[CustomerDisplay] -> 
@@ -153,13 +68,11 @@ act displayB::Display {
               ] + rows(rest);
         }
       
-      states(current::Str,allStates::[Str])::[TData[EDBDisplay]] =
+      states(current::Str,allStates::[Str])::[Data] =
         case allStates {
-          state::Str;
-          ss::[Str];
           [] -> [];
           state:ss when state = current -> [rdata(HTML(state+''))] + states(current,ss);
-          state:ss -> [tdata(fold[EDBDisplay]HTML(state+''))] + states(current,ss);
+          state:ss -> [tdata(HTML(state+''))] + states(current,ss);
         }
     in Table([][Property],[row([
          tdata(Table([][Property],rows(take[CustomerDisplay](customers,length[CustomerDisplay](customers)/2)))),
@@ -205,13 +118,13 @@ act displayB::Display {
         walkouts::Int = getWalkouts(customers);
     in {
       if events = 0 then events := 1; else {}
-      edb <-Show('customers',fold[EDBDisplay]Table([],[
-        Row[EDBDisplay]([],[
-          Data[EDBDisplay]([],asTable())/* ,
-      //    Data[EDBDisplay]([],Pie([][Property],'Satisfaction',500,300,[
+      edb <-Show('customers',Table([],[
+        Row([],[
+          Data([],asTable())
+      //    Data([],Pie([][Property],'Satisfaction',500,300,[
       //      Slice([],'satisfied',(sales * 100)/events),
       //      Slice([],'unsatisfied',(walkouts * 100)/events)
-      //    ])) */
+      //    ]))
         ])
       ]));
     }
@@ -226,7 +139,7 @@ act displayB::Display {
   } 
 }
 
-display::Display = new displayB;
+display::ShopDisplay = new displayB;
  
 // **************************** END OF DISPLAY CODE ************************************************
 

@@ -8,11 +8,11 @@ public class Segregation {
   private static ESLVal coordX = new ESLVal(new Function(new ESLVal("coordX"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal p = $args[0];
-  {ESLVal _v14 = p;
+  {ESLVal _v10 = p;
         
-        switch(_v14.termName) {
-        case "Coord": {ESLVal $5 = _v14.termRef(0);
-          ESLVal $4 = _v14.termRef(1);
+        switch(_v10.termName) {
+        case "Coord": {ESLVal $5 = _v10.termRef(0);
+          ESLVal $4 = _v10.termRef(1);
           
           {ESLVal x = $5;
           
@@ -22,7 +22,7 @@ public class Segregation {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(363,400)").add(ESLVal.list(_v14)));
+        default: return error(new ESLVal("case error at Pos(337,374)").add(ESLVal.list(_v10)));
       }
       }
     }
@@ -30,11 +30,11 @@ public class Segregation {
   private static ESLVal coordY = new ESLVal(new Function(new ESLVal("coordY"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal p = $args[0];
-  {ESLVal _v13 = p;
+  {ESLVal _v9 = p;
         
-        switch(_v13.termName) {
-        case "Coord": {ESLVal $3 = _v13.termRef(0);
-          ESLVal $2 = _v13.termRef(1);
+        switch(_v9.termName) {
+        case "Coord": {ESLVal $3 = _v9.termRef(0);
+          ESLVal $2 = _v9.termRef(1);
           
           {ESLVal x = $3;
           
@@ -44,7 +44,7 @@ public class Segregation {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(424,461)").add(ESLVal.list(_v13)));
+        default: return error(new ESLVal("case error at Pos(398,435)").add(ESLVal.list(_v9)));
       }
       }
     }
@@ -84,14 +84,9 @@ public class Segregation {
               }
             });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v12 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v8 = $m;
             
-            switch(_v12.termName) {
-            case "Die": {
-              return kill.apply(getSelf());
-            }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v12)));
-          }
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v8)));
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -186,14 +181,14 @@ public class Segregation {
               {ESLVal a = newArray(width.intVal);
                 
                 {{
-                ESLVal _v7 = $zero.to(width);
-                while(_v7.isCons()) {
-                  ESLVal w = _v7.headVal;
+                ESLVal _v5 = $zero.to(width);
+                while(_v5.isCons()) {
+                  ESLVal w = _v5.headVal;
                   {a.array[w.intVal] = newArray(height.intVal);
                   {
-                    ESLVal _v8 = $zero.to(height);
-                    while(_v8.isCons()) {
-                      ESLVal h = _v8.headVal;
+                    ESLVal _v6 = $zero.to(height);
+                    while(_v6.isCons()) {
+                      ESLVal h = _v6.headVal;
                       a.array[w.intVal].array[h.intVal] = probably(new ESLVal(100).sub(emptypc),new ESLVal(new Function(new ESLVal("probFun"),getSelf()) {
                         public ESLVal apply(ESLVal... $args) {
                           return probably(redpc,new ESLVal(new Function(new ESLVal("probFun"),getSelf()) {
@@ -211,9 +206,9 @@ public class Segregation {
                           return empty;
                         }
                       }));
-                      _v8 = _v8.tailVal;}
+                      _v6 = _v6.tailVal;}
                   }}
-                  _v7 = _v7.tailVal;}
+                  _v5 = _v5.tailVal;}
               }
               return a;}
               }
@@ -222,23 +217,23 @@ public class Segregation {
               {ESLVal a = newArray(width.intVal);
                 
                 {{
-                ESLVal _v5 = $zero.to(width);
-                while(_v5.isCons()) {
-                  ESLVal x = _v5.headVal;
+                ESLVal _v3 = $zero.to(width);
+                while(_v3.isCons()) {
+                  ESLVal x = _v3.headVal;
                   {a.array[x.intVal] = newArray(height.intVal);
                   {
-                    ESLVal _v6 = $zero.to(height);
-                    while(_v6.isCons()) {
-                      ESLVal y = _v6.headVal;
+                    ESLVal _v4 = $zero.to(height);
+                    while(_v4.isCons()) {
+                      ESLVal y = _v4.headVal;
                       a.array[x.intVal].array[y.intVal] = ((Supplier<ESLVal>)() -> { 
                         if(popEl.apply(x,y).neql(empty).boolVal)
                           return createAgent.apply(x,y);
                           else
                             return $null;
                       }).get();
-                      _v6 = _v6.tailVal;}
+                      _v4 = _v4.tailVal;}
                   }}
-                  _v5 = _v5.tailVal;}
+                  _v3 = _v3.tailVal;}
               }
               return a;}
               }
@@ -246,39 +241,34 @@ public class Segregation {
           ESLVal vLength = $zero;
           ESLVal createVacancies = new ESLVal(new Function(new ESLVal("createVacancies"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                {ESLVal vacancies = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                      public ESLVal apply(ESLVal... $args) {
-                        ESLVal $qualArg = $args[0];
-                    {ESLVal _v2 = $qualArg;
-                          
-                          {ESLVal x = _v2;
-                          
-                          return ESLVal.list(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                            public ESLVal apply(ESLVal... $args) {
-                              ESLVal _v17 = $args[0];
-                          {ESLVal _v3 = _v17;
-                                
-                                {ESLVal y = _v3;
-                                
-                                return ESLVal.list((popEl.apply(x,y).eql(empty).boolVal) ? (ESLVal.list(createVacancy.apply(x,y))) : ($nil));
-                              }
-                              }
-                            }
-                          }).map($zero.to(height)).flatten().flatten());
-                        }
-                        }
+                {ESLVal vacancies = new java.util.function.Function<ESLVal,ESLVal>() {
+                      public ESLVal apply(ESLVal $l0) {
+                        ESLVal $a = $nil;
+                        java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                        while(!$l0.isNil()) { 
+                          ESLVal x = $l0.head();
+                          $l0 = $l0.tail();
+                          ESLVal $l1 = $zero.to(height);
+                    while(!$l1.isNil()) {
+                      ESLVal y = $l1.head();
+                      $l1 = $l1.tail();
+                      if(popEl.apply(x,y).eql(empty).boolVal) {$v.add(createVacancy.apply(x,y));
                       }
-                    }).map($zero.to(width)).flatten().flatten();
+                    }
+                        }
+                        for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                        return $a;
+                      }}.apply($zero.to(width));
                   
                   {vLength = length.apply(vacancies);
                 {ESLVal v = newArray(vLength.intVal);
                   
                   {{
-                  ESLVal _v4 = $zero.to(vLength);
-                  while(_v4.isCons()) {
-                    ESLVal i = _v4.headVal;
+                  ESLVal _v2 = $zero.to(vLength);
+                  while(_v2.isCons()) {
+                    ESLVal i = _v2.headVal;
                     v.array[i.intVal] = nth.apply(vacancies,i);
-                    _v4 = _v4.tailVal;}
+                    _v2 = _v2.tailVal;}
                 }
                 return v;}
                 }}
@@ -300,22 +290,27 @@ public class Segregation {
                 ESLVal x = $args[0];
             ESLVal y = $args[1];
             ESLVal c = $args[2];
-            {ESLVal legalCell = new ESLVal(new Function(new ESLVal("legalCell"),getSelf()) {
-                      public ESLVal apply(ESLVal... $args) {
-                        ESLVal _v16 = $args[0];
-                    ESLVal _v15 = $args[1];
-                    if(legalx.apply(_v16).and(legaly.apply(_v15)).boolVal)
-                          if(popEl.apply(_v16,_v15).eql(c).boolVal)
-                            return $one;
-                            else
-                              return $zero;
-                          else
-                            return $zero;
+            return length.apply(new java.util.function.Function<ESLVal,ESLVal>() {
+                    public ESLVal apply(ESLVal $l0) {
+                      ESLVal $a = $nil;
+                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                      while(!$l0.isNil()) { 
+                        ESLVal dx = $l0.head();
+                        $l0 = $l0.tail();
+                        ESLVal $l1 = ESLVal.list(new ESLVal(-1),$zero,$one);
+                  while(!$l1.isNil()) {
+                    ESLVal dy = $l1.head();
+                    $l1 = $l1.tail();
+                    if(dx.eql($zero).and(dy.eql($zero)).not().boolVal) {if(legalx.apply(x.add(dx)).boolVal) {if(legaly.apply(y.add(dy)).boolVal) {if(popEl.apply(x.add(dx),y.add(dy)).eql(c).boolVal) {$v.add($one);
+                    }
+                    }
+                    }
+                    }
+                  }
                       }
-                    });
-                  
-                  return legalCell.apply(x.sub($one),y).add(legalCell.apply(x.add($one),y).add(legalCell.apply(x,y.add($one)).add(legalCell.apply(x,y.sub($one)).add(legalCell.apply(x.sub($one),y.sub($one)).add(legalCell.apply(x.sub($one),y.add($one)).add(legalCell.apply(x.add($one),y.add($one)).add(legalCell.apply(x.add($one),y.sub($one)))))))));
-                }
+                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                      return $a;
+                    }}.apply(ESLVal.list(new ESLVal(-1),$zero,$one)));
               }
             });
           ESLVal diffpc = new ESLVal(new Function(new ESLVal("diffpc"),getSelf()) {
@@ -326,33 +321,10 @@ public class Segregation {
               }
             });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v9 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v7 = $m;
             
-            switch(_v9.termName) {
-            case "Kill": {
-              {kill.apply(getSelf());
-            {{
-              ESLVal _v10 = $zero.to(width);
-              while(_v10.isCons()) {
-                ESLVal x = _v10.headVal;
-                {
-                  ESLVal _v11 = $zero.to(height);
-                  while(_v11.isCons()) {
-                    ESLVal y = _v11.headVal;
-                    {ESLVal a = agents.array[x.intVal].array[y.intVal];
-                      
-                      if(a.neql($null).boolVal)
-                      Lib.send(a,"Die");
-                      else
-                        {}
-                    }
-                    _v11 = _v11.tailVal;}
-                }
-                _v10 = _v10.tailVal;}
-            }
-            return $null;}}
-            }
-          case "Move": {ESLVal $1 = _v9.termRef(0);
+            switch(_v7.termName) {
+            case "Move": {ESLVal $1 = _v7.termRef(0);
               
               {ESLVal a = $1;
               
@@ -382,7 +354,7 @@ public class Segregation {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v9)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v7)));
           }
           }}
           public ESLVal get(String name) {
@@ -420,14 +392,7 @@ public class Segregation {
           {}
         }
         public ESLVal init() {
-            return ((Supplier<ESLVal>)() -> { 
-                {edb.ref("display").apply(new ESLVal("Segregation"),grid);
-                return edb.ref("button").apply(new ESLVal("Segregation"),new ESLVal("stop"),new ESLVal("icons/stop.png"),new ESLVal("stop application"),new ESLVal(new Function(new ESLVal("fun27"),getSelf()) {
-                    public ESLVal apply(ESLVal... $args) {
-                      return stopAll.apply();
-                    }
-                  }));}
-              }).get();
+            return edb.ref("display").apply(new ESLVal("Segregation"),grid);
           }
         });
     }

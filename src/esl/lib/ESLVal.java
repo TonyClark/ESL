@@ -1,6 +1,7 @@
 package esl.lib;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Hashtable;
 
@@ -10,7 +11,7 @@ import runtime.data.Term;
 
 import static esl.lib.Lib.*;
 
-public class ESLVal {
+public class ESLVal implements Serializable {
 
 	private static ESLVal eqls(ESLVal[] vs1, ESLVal[] vs2) {
 		if (vs1.length == vs2.length) {
@@ -201,6 +202,10 @@ public class ESLVal {
 		return funVal.apply(args);
 	}
 
+	public ESLVal reverseInPlace() {
+		return reverse();
+	}
+
 	private double asDouble() {
 		switch (state) {
 		case INT:
@@ -230,7 +235,7 @@ public class ESLVal {
 				l = l.cons(v.headVal.asTerm());
 				v = v.tailVal;
 			}
-			return l;
+			return l.reverse();
 		case TERM:
 			Object[] vals = new Object[termVals.length];
 			for (int i = 0; i < termVals.length; i++) {
@@ -767,7 +772,7 @@ public class ESLVal {
 		}
 	}
 
-	public ESLVal drop(int i) { 
+	public ESLVal drop(int i) {
 		if (i == 0)
 			return this;
 		else {

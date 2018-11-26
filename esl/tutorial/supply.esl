@@ -1,0 +1,144 @@
+export main;
+
+import 'esl/tables.esl', 'esl/lists.esl';
+
+data Chain =
+  Seq(Chain,Chain)           // Perform in sequence.
+| Or(Chain,Chain)            // Alternative routes.
+| Processor(Str,Int,Int,Int) // A named processor, expected processing time, max jobs, and % fail.
+| Let(Str,Chain,Chain)       // A way of sharing a named chain.
+| Var(Str);                  // Referencing a named chain.
+
+data Path =
+  Name(Str)
+| Then(Path,Path)
+| And(Path,Path)
+| Join(Path)
+| End;
+
+data Job = Job(Int,Path,Int,Int);      // Id, processing path, minimum time and actual time.
+data Active = Active(Job,Int); // Job and length of time active.
+
+jobId(j::Job)::Int =
+  case j {
+    Job(id,p,minTime,actualTime) -> id;
+  }
+
+chain1::Chain =
+  Seq(Processor('A',100,5,1),
+   Seq(
+     Or(Processor('B',100,5,1),Processor('C',50,5,1)),
+     Processor('D',20,5,1)));
+
+Act Node {
+  Time(Int);
+  Process(Job);
+}
+
+Act Main {}
+
+act node(name::Str,successor::Node,processingTime::Int,maxJobs::Int,failureRate::Int)::Node {
+  queue::[Active] = [];
+  waiting::[Job] = [];
+  forwardCompletedJobs(as::[Active])::[Active] =
+    case as {
+      [] -> [];
+      Active(j,0):as -> {
+        successor <- Process(j);
+        forwardCompletedJobs(as);
+      }
+      a:as -> a:forwardCompletedJobs(as);
+    }
+  addWait(j::Job,jobs::[Job])::[Job] =
+    case jobs {
+      [] -> [j];
+      Job(id,p,minTime,actualTime):jobs when id = jobId(j) -> {
+        process(j,End);
+        jobs;
+      }
+      jj:jobs -> jj:addWait(j,jobs);
+    }
+  process(j::Job,rest::Path)::Void =
+    case j {
+      Job(id,Name(n),m1,m2) when n = name -> { queue := Active(Job(id,rest,m1+processingTime,m2),processingTime):queue; {}}
+      Job(id,Name(n),m1,m2)             -> {}
+      Job(id,Then(p1,p2),m,n)           -> process(Job(id,p1,m,n),Then(p2,rest));
+      Job(id,And(p1,p2),m,n)            -> {
+        self <- Process(Job(id,Then(p1,Join(rest)),m,n));
+        self <- Process(Job(id,Then(p2,Join(rest)),m,n));
+      }
+      Job(id,Join(p),m,n)               -> {
+        waiting := addWait(Job(id,p,m,n),waiting);
+      }
+    }
+
+  getMaxJobs(queue::[Active],max::Int)::[Active] =
+    if max = 0
+    then [];
+    else if queue = []
+    then [];
+    else head[Active](queue):getMaxJobs(tail[Active](queue),max-1);
+
+  dropMaxJobs(queue::[Active],max::Int)::[Active] =
+    if max = 0
+    then queue;
+    else if queue = []
+    then [];
+    else dropMaxJobs(tail[Active](queue),max-1);
+
+  Process(j) -> {
+    process(j,End);
+  }
+  
+  Time(n::Int) -> {
+    queue := forwardCompletedJobs([ Active(Job(id,path,min,process+1),p-1) | Active(Job(id,path,min,process),p) <- getMaxJobs(queue,maxJobs) ] + 
+             [ Active(Job(id,path,min,process+1),p) | Active(Job(id,path,min,process),p) <- dropMaxJobs(queue,maxJobs) ]);
+    waiting := [ Job(id,path,min,process+1) | Job(id,path,min,process) <- waiting ];
+  }
+}
+
+act alt(left::Node,right::Node)::Node {
+  Time(n::Int) -> {}
+  Process(j::Job) -> {
+    left <- Process(j);
+    right <- Process(j);
+  }
+}
+
+act sink(totalJobs::Int)::Node {
+  jobs::[Job] = [];
+  Time(n::Int) -> {}
+  Process(j::Job) -> {
+    jobs := j:jobs;
+    if length[Job](jobs) = totalJobs
+    then {
+      print[Str]('done');
+      for job::Job in jobs do {
+        print[Job](job);
+      }
+      stopAll();
+    } else {}
+  }
+}
+
+createSupplyChain(c::Chain,successor::Node,env::Table[Str,(Node) -> Node])::Node =
+  case c {
+    Seq(c1,c2) -> createSupplyChain(c1,createSupplyChain(c2,successor,env),env);
+    Or(c1,c2) -> new alt(createSupplyChain(c1,successor,env),createSupplyChain(c2,successor,env));
+    Processor(n,processingTime,maxJobs,failureRate) -> new node(n,successor,processingTime,maxJobs,failureRate);
+    Let(n,c1,c2) ->
+      let f(successor::Node)::Node = createSupplyChain(c1,successor,env);
+      in createSupplyChain(c2,successor,addEntry[Str,(Node)->Node](n,f,env));
+    Var(n) -> (lookup[Str,(Node)->Node](n,env))(successor);
+  }
+
+act main::Main {
+  -> {
+    let n::Node = createSupplyChain(chain1,new sink(1000),emptyTable[Str,(Node)->Node]);
+    in {
+      for i in 0..1000 do {
+        n <- Process(Job(i,Then(Name('A'),Then(And(Name('B'),Name('C')),Then(Name('D'),End))),0,0));
+      }
+    }
+  }
+}

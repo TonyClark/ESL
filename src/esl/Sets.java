@@ -11,31 +11,31 @@ public class Sets {
   LetRec letrec = new LetRec() {
         ESLVal mkPower = new ESLVal(new Function(new ESLVal("mkPower"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
-              ESLVal _v15 = $args[0];
-          ESLVal _v14 = $args[1];
-          {ESLVal _v6 = _v14;
+              ESLVal _v36 = $args[0];
+          ESLVal _v35 = $args[1];
+          {ESLVal _v27 = _v35;
                 
-                return $ndCase.apply(_v6,ESLVal.list(new ESLVal("$cons",new ESLVal(new Function(new ESLVal("setcons"),getSelf()) {
+                return $ndCase.apply(_v27,ESLVal.list(new ESLVal("$cons",new ESLVal(new Function(new ESLVal("setcons"),getSelf()) {
                   public ESLVal apply(ESLVal... $args) {
-                    ESLVal $22 = $args[0];
-                ESLVal $23 = $args[1];
-                ESLVal $21 = $args[2];
-                {ESLVal p = $22;
+                    ESLVal $87 = $args[0];
+                ESLVal $88 = $args[1];
+                ESLVal $86 = $args[2];
+                {ESLVal p = $87;
                       
-                      {ESLVal _v16 = $23;
+                      {ESLVal _v37 = $88;
                       
-                      return mkPower.apply(add.apply(p,_v15).add(_v15),_v16);
+                      return mkPower.apply(add.apply(p,_v36).add(_v36),_v37);
                     }
                     }
                   }
                 })),new ESLVal("$empty",new ESLVal(new Function(new ESLVal("emptyset"),getSelf()) {
                   public ESLVal apply(ESLVal... $args) {
-                    ESLVal $20 = $args[0];
-                return _v15;
+                    ESLVal $85 = $args[0];
+                return _v36;
                   }
                 }))),new ESLVal(new Function(new ESLVal("setFail"),getSelf()) {
                   public ESLVal apply(ESLVal... $args) {
-                    return error(new ESLVal("case error at Pos(163,260)").add(ESLVal.list(_v6)));
+                    return error(new ESLVal("case error at Pos(163,260)").add(ESLVal.list(_v27)));
                   }
                 }));
               }
@@ -45,29 +45,29 @@ public class Sets {
             public ESLVal apply(ESLVal... $args) {
               ESLVal e = $args[0];
           ESLVal sets = $args[1];
-          {ESLVal _v5 = sets;
+          {ESLVal _v26 = sets;
                 
-                return $ndCase.apply(_v5,ESLVal.list(new ESLVal("$cons",new ESLVal(new Function(new ESLVal("setcons"),getSelf()) {
+                return $ndCase.apply(_v26,ESLVal.list(new ESLVal("$cons",new ESLVal(new Function(new ESLVal("setcons"),getSelf()) {
                   public ESLVal apply(ESLVal... $args) {
-                    ESLVal $18 = $args[0];
-                ESLVal $19 = $args[1];
-                ESLVal $17 = $args[2];
-                {ESLVal p = $18;
+                    ESLVal $83 = $args[0];
+                ESLVal $84 = $args[1];
+                ESLVal $82 = $args[2];
+                {ESLVal p = $83;
                       
-                      {ESLVal _v13 = $19;
+                      {ESLVal _v34 = $84;
                       
-                      return ESLVal.set(ESLVal.set(e).add(p)).add(add.apply(e,_v13));
+                      return ESLVal.set(ESLVal.set(e).add(p)).add(add.apply(e,_v34));
                     }
                     }
                   }
                 })),new ESLVal("$empty",new ESLVal(new Function(new ESLVal("emptyset"),getSelf()) {
                   public ESLVal apply(ESLVal... $args) {
-                    ESLVal $16 = $args[0];
+                    ESLVal $81 = $args[0];
                 return ESLVal.set();
                   }
                 }))),new ESLVal(new Function(new ESLVal("setFail"),getSelf()) {
                   public ESLVal apply(ESLVal... $args) {
-                    return error(new ESLVal("case error at Pos(314,417)").add(ESLVal.list(_v5)));
+                    return error(new ESLVal("case error at Pos(314,417)").add(ESLVal.list(_v26)));
                   }
                 }));
               }
@@ -96,27 +96,27 @@ public class Sets {
     public ESLVal apply(ESLVal... $args) {
       ESLVal s = $args[0];
   ESLVal x = $args[1];
-  {ESLVal _v4 = s;
+  {ESLVal _v25 = s;
         
-        return $ndCase.apply(_v4,ESLVal.list(new ESLVal("$cons",new ESLVal(new Function(new ESLVal("setcons"),getSelf()) {
+        return $ndCase.apply(_v25,ESLVal.list(new ESLVal("$cons",new ESLVal(new Function(new ESLVal("setcons"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            ESLVal $14 = $args[0];
-        ESLVal $15 = $args[1];
-        ESLVal $13 = $args[2];
-        {ESLVal y = $14;
+            ESLVal $79 = $args[0];
+        ESLVal $80 = $args[1];
+        ESLVal $78 = $args[2];
+        {ESLVal y = $79;
               
-              {ESLVal _v12 = $15;
+              {ESLVal _v33 = $80;
               
               if(x.eql(y).boolVal)
               return $true;
               else
-                return $13.apply();
+                return $78.apply();
             }
             }
           }
         }))),new ESLVal(new Function(new ESLVal("setFail"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            {ESLVal _v11 = _v4;
+            {ESLVal _v32 = _v25;
               
               return $false;
             }
@@ -128,29 +128,29 @@ public class Sets {
   public static ESLVal setToList = new ESLVal(new Function(new ESLVal("setToList"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal s = $args[0];
-  {ESLVal _v3 = s;
+  {ESLVal _v24 = s;
         
-        return $ndCase.apply(_v3,ESLVal.list(new ESLVal("$cons",new ESLVal(new Function(new ESLVal("setcons"),getSelf()) {
+        return $ndCase.apply(_v24,ESLVal.list(new ESLVal("$cons",new ESLVal(new Function(new ESLVal("setcons"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            ESLVal $11 = $args[0];
-        ESLVal $12 = $args[1];
-        ESLVal $10 = $args[2];
-        {ESLVal x = $11;
+            ESLVal $76 = $args[0];
+        ESLVal $77 = $args[1];
+        ESLVal $75 = $args[2];
+        {ESLVal x = $76;
               
-              {ESLVal _v10 = $12;
+              {ESLVal _v31 = $77;
               
-              return setToList.apply(_v10).cons(x);
+              return setToList.apply(_v31).cons(x);
             }
             }
           }
         })),new ESLVal("$empty",new ESLVal(new Function(new ESLVal("emptyset"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            ESLVal $9 = $args[0];
+            ESLVal $74 = $args[0];
         return ESLVal.list();
           }
         }))),new ESLVal(new Function(new ESLVal("setFail"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            return error(new ESLVal("case error at Pos(606,677)").add(ESLVal.list(_v3)));
+            return error(new ESLVal("case error at Pos(606,677)").add(ESLVal.list(_v24)));
           }
         }));
       }
@@ -159,29 +159,29 @@ public class Sets {
   public static ESLVal setSize = new ESLVal(new Function(new ESLVal("setSize"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal s = $args[0];
-  {ESLVal _v2 = s;
+  {ESLVal _v23 = s;
         
-        return $ndCase.apply(_v2,ESLVal.list(new ESLVal("$cons",new ESLVal(new Function(new ESLVal("setcons"),getSelf()) {
+        return $ndCase.apply(_v23,ESLVal.list(new ESLVal("$cons",new ESLVal(new Function(new ESLVal("setcons"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            ESLVal $7 = $args[0];
-        ESLVal $8 = $args[1];
-        ESLVal $6 = $args[2];
-        {ESLVal x = $7;
+            ESLVal $72 = $args[0];
+        ESLVal $73 = $args[1];
+        ESLVal $71 = $args[2];
+        {ESLVal x = $72;
               
-              {ESLVal _v9 = $8;
+              {ESLVal _v30 = $73;
               
-              return $one.add(setSize.apply(_v9));
+              return $one.add(setSize.apply(_v30));
             }
             }
           }
         })),new ESLVal("$empty",new ESLVal(new Function(new ESLVal("emptyset"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            ESLVal $5 = $args[0];
+            ESLVal $70 = $args[0];
         return $zero;
           }
         }))),new ESLVal(new Function(new ESLVal("setFail"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            return error(new ESLVal("case error at Pos(710,776)").add(ESLVal.list(_v2)));
+            return error(new ESLVal("case error at Pos(710,776)").add(ESLVal.list(_v23)));
           }
         }));
       }
@@ -191,32 +191,32 @@ public class Sets {
     public ESLVal apply(ESLVal... $args) {
       ESLVal s1 = $args[0];
   ESLVal s2 = $args[1];
-  {ESLVal _v1 = s1;
+  {ESLVal _v22 = s1;
         
-        return $ndCase.apply(_v1,ESLVal.list(new ESLVal("$empty",new ESLVal(new Function(new ESLVal("emptyset"),getSelf()) {
+        return $ndCase.apply(_v22,ESLVal.list(new ESLVal("$empty",new ESLVal(new Function(new ESLVal("emptyset"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            ESLVal $4 = $args[0];
+            ESLVal $69 = $args[0];
         return $true;
           }
         })),new ESLVal("$cons",new ESLVal(new Function(new ESLVal("setcons"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            ESLVal $2 = $args[0];
-        ESLVal $3 = $args[1];
-        ESLVal $1 = $args[2];
-        {ESLVal x = $2;
+            ESLVal $67 = $args[0];
+        ESLVal $68 = $args[1];
+        ESLVal $66 = $args[2];
+        {ESLVal x = $67;
               
-              {ESLVal _v8 = $3;
+              {ESLVal _v29 = $68;
               
               if(setContains.apply(s2,x).boolVal)
-              return subset.apply(_v8,s2);
+              return subset.apply(_v29,s2);
               else
-                return $1.apply();
+                return $66.apply();
             }
             }
           }
         }))),new ESLVal(new Function(new ESLVal("setFail"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            {ESLVal _v7 = _v1;
+            {ESLVal _v28 = _v22;
               
               return $false;
             }

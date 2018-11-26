@@ -11,24 +11,24 @@ public class ToJava {
   private static ESLVal defToField = new ESLVal(new Function(new ESLVal("defToField"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal d = $args[0];
-  {ESLVal _v63 = d;
+  {ESLVal _v2010 = d;
         
-        switch(_v63.termName) {
-        case "Binding": {ESLVal $508 = _v63.termRef(0);
-          ESLVal $507 = _v63.termRef(1);
-          ESLVal $506 = _v63.termRef(2);
-          ESLVal $505 = _v63.termRef(3);
-          ESLVal $504 = _v63.termRef(4);
+        switch(_v2010.termName) {
+        case "Binding": {ESLVal $2865 = _v2010.termRef(0);
+          ESLVal $2864 = _v2010.termRef(1);
+          ESLVal $2863 = _v2010.termRef(2);
+          ESLVal $2862 = _v2010.termRef(3);
+          ESLVal $2861 = _v2010.termRef(4);
           
-          {ESLVal l = $508;
+          {ESLVal l = $2865;
           
-          {ESLVal n = $507;
+          {ESLVal n = $2864;
           
-          {ESLVal t = $506;
+          {ESLVal t = $2863;
           
-          {ESLVal st = $505;
+          {ESLVal st = $2862;
           
-          {ESLVal e = $504;
+          {ESLVal e = $2861;
           
           return new ESLVal("JField",n,$null,expToJExp.apply(e));
         }
@@ -37,55 +37,55 @@ public class ToJava {
         }
         }
         }
-      case "FunBind": {ESLVal $501 = _v63.termRef(0);
-          ESLVal $500 = _v63.termRef(1);
-          ESLVal $499 = _v63.termRef(2);
-          ESLVal $498 = _v63.termRef(3);
-          ESLVal $497 = _v63.termRef(4);
-          ESLVal $496 = _v63.termRef(5);
-          ESLVal $495 = _v63.termRef(6);
+      case "FunBind": {ESLVal $2858 = _v2010.termRef(0);
+          ESLVal $2857 = _v2010.termRef(1);
+          ESLVal $2856 = _v2010.termRef(2);
+          ESLVal $2855 = _v2010.termRef(3);
+          ESLVal $2854 = _v2010.termRef(4);
+          ESLVal $2853 = _v2010.termRef(5);
+          ESLVal $2852 = _v2010.termRef(6);
           
-          switch($495.termName) {
-          case "BoolExp": {ESLVal $503 = $495.termRef(0);
-            ESLVal $502 = $495.termRef(1);
+          switch($2852.termName) {
+          case "BoolExp": {ESLVal $2860 = $2852.termRef(0);
+            ESLVal $2859 = $2852.termRef(1);
             
-            switch($502.boolVal ? 1 : 0) {
-            case 1: {ESLVal l = $501;
+            switch($2859.boolVal ? 1 : 0) {
+            case 1: {ESLVal l = $2858;
               
-              {ESLVal n = $500;
+              {ESLVal n = $2857;
               
-              {ESLVal args = $499;
+              {ESLVal args = $2856;
               
-              {ESLVal t = $498;
+              {ESLVal t = $2855;
               
-              {ESLVal st = $497;
+              {ESLVal st = $2854;
               
-              {ESLVal e = $496;
+              {ESLVal e = $2853;
               
-              {ESLVal bl = $503;
+              {ESLVal bl = $2860;
               
               {ESLVal formals = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
                   public ESLVal apply(ESLVal... $args) {
                     ESLVal $qualArg = $args[0];
-                {ESLVal _v64 = $qualArg;
+                {ESLVal _v2011 = $qualArg;
                       
-                      switch(_v64.termName) {
-                      case "PVar": {ESLVal $511 = _v64.termRef(0);
-                        ESLVal $510 = _v64.termRef(1);
-                        ESLVal $509 = _v64.termRef(2);
+                      switch(_v2011.termName) {
+                      case "PVar": {ESLVal $2868 = _v2011.termRef(0);
+                        ESLVal $2867 = _v2011.termRef(1);
+                        ESLVal $2866 = _v2011.termRef(2);
                         
-                        {ESLVal _v144 = $511;
+                        {ESLVal _v2108 = $2868;
                         
-                        {ESLVal _v145 = $510;
+                        {ESLVal _v2109 = $2867;
                         
-                        {ESLVal _v146 = $509;
+                        {ESLVal _v2110 = $2866;
                         
-                        return ESLVal.list(ESLVal.list(new ESLVal("Dec",_v144,_v145,_v146,st)));
+                        return ESLVal.list(ESLVal.list(new ESLVal("Dec",_v2108,_v2109,_v2110,st)));
                       }
                       }
                       }
                       }
-                      default: {ESLVal _0 = _v64;
+                      default: {ESLVal _0 = _v2011;
                         
                         return ESLVal.list();
                       }
@@ -103,42 +103,42 @@ public class ToJava {
             }
             }
             }
-            default: {ESLVal l = $501;
+            default: {ESLVal l = $2858;
               
-              {ESLVal n = $500;
+              {ESLVal n = $2857;
               
-              {ESLVal args = $499;
+              {ESLVal args = $2856;
               
-              {ESLVal t = $498;
+              {ESLVal t = $2855;
               
-              {ESLVal st = $497;
+              {ESLVal st = $2854;
               
-              {ESLVal e = $496;
+              {ESLVal e = $2853;
               
-              {ESLVal g = $495;
+              {ESLVal g = $2852;
               
               {ESLVal formals = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
                   public ESLVal apply(ESLVal... $args) {
                     ESLVal $qualArg = $args[0];
-                {ESLVal _v65 = $qualArg;
+                {ESLVal _v2012 = $qualArg;
                       
-                      switch(_v65.termName) {
-                      case "PVar": {ESLVal $514 = _v65.termRef(0);
-                        ESLVal $513 = _v65.termRef(1);
-                        ESLVal $512 = _v65.termRef(2);
+                      switch(_v2012.termName) {
+                      case "PVar": {ESLVal $2871 = _v2012.termRef(0);
+                        ESLVal $2870 = _v2012.termRef(1);
+                        ESLVal $2869 = _v2012.termRef(2);
                         
-                        {ESLVal _v147 = $514;
+                        {ESLVal _v2111 = $2871;
                         
-                        {ESLVal _v148 = $513;
+                        {ESLVal _v2112 = $2870;
                         
-                        {ESLVal _v149 = $512;
+                        {ESLVal _v2113 = $2869;
                         
-                        return ESLVal.list(ESLVal.list(new ESLVal("Dec",_v147,_v148,_v149,st)));
+                        return ESLVal.list(ESLVal.list(new ESLVal("Dec",_v2111,_v2112,_v2113,st)));
                       }
                       }
                       }
                       }
-                      default: {ESLVal _0 = _v65;
+                      default: {ESLVal _0 = _v2012;
                         
                         return ESLVal.list();
                       }
@@ -158,42 +158,42 @@ public class ToJava {
             }
           }
           }
-          default: {ESLVal l = $501;
+          default: {ESLVal l = $2858;
             
-            {ESLVal n = $500;
+            {ESLVal n = $2857;
             
-            {ESLVal args = $499;
+            {ESLVal args = $2856;
             
-            {ESLVal t = $498;
+            {ESLVal t = $2855;
             
-            {ESLVal st = $497;
+            {ESLVal st = $2854;
             
-            {ESLVal e = $496;
+            {ESLVal e = $2853;
             
-            {ESLVal g = $495;
+            {ESLVal g = $2852;
             
             {ESLVal formals = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal $qualArg = $args[0];
-              {ESLVal _v66 = $qualArg;
+              {ESLVal _v2013 = $qualArg;
                     
-                    switch(_v66.termName) {
-                    case "PVar": {ESLVal $517 = _v66.termRef(0);
-                      ESLVal $516 = _v66.termRef(1);
-                      ESLVal $515 = _v66.termRef(2);
+                    switch(_v2013.termName) {
+                    case "PVar": {ESLVal $2874 = _v2013.termRef(0);
+                      ESLVal $2873 = _v2013.termRef(1);
+                      ESLVal $2872 = _v2013.termRef(2);
                       
-                      {ESLVal _v150 = $517;
+                      {ESLVal _v2114 = $2874;
                       
-                      {ESLVal _v151 = $516;
+                      {ESLVal _v2115 = $2873;
                       
-                      {ESLVal _v152 = $515;
+                      {ESLVal _v2116 = $2872;
                       
-                      return ESLVal.list(ESLVal.list(new ESLVal("Dec",_v150,_v151,_v152,st)));
+                      return ESLVal.list(ESLVal.list(new ESLVal("Dec",_v2114,_v2115,_v2116,st)));
                     }
                     }
                     }
                     }
-                    default: {ESLVal _0 = _v66;
+                    default: {ESLVal _0 = _v2013;
                       
                       return ESLVal.list();
                     }
@@ -213,7 +213,7 @@ public class ToJava {
           }
         }
         }
-        default: return error(new ESLVal("case error at Pos(172,825)").add(ESLVal.list(_v63)));
+        default: return error(new ESLVal("case error at Pos(172,825)").add(ESLVal.list(_v2010)));
       }
       }
     }
@@ -221,21 +221,21 @@ public class ToJava {
   private static ESLVal decToJDec = new ESLVal(new Function(new ESLVal("decToJDec"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal d = $args[0];
-  {ESLVal _v62 = d;
+  {ESLVal _v2009 = d;
         
-        switch(_v62.termName) {
-        case "Dec": {ESLVal $494 = _v62.termRef(0);
-          ESLVal $493 = _v62.termRef(1);
-          ESLVal $492 = _v62.termRef(2);
-          ESLVal $491 = _v62.termRef(3);
+        switch(_v2009.termName) {
+        case "Dec": {ESLVal $2851 = _v2009.termRef(0);
+          ESLVal $2850 = _v2009.termRef(1);
+          ESLVal $2849 = _v2009.termRef(2);
+          ESLVal $2848 = _v2009.termRef(3);
           
-          {ESLVal l = $494;
+          {ESLVal l = $2851;
           
-          {ESLVal n = $493;
+          {ESLVal n = $2850;
           
-          {ESLVal t = $492;
+          {ESLVal t = $2849;
           
-          {ESLVal st = $491;
+          {ESLVal st = $2848;
           
           return new ESLVal("JDec",n,$null);
         }
@@ -243,7 +243,7 @@ public class ToJava {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(869,945)").add(ESLVal.list(_v62)));
+        default: return error(new ESLVal("case error at Pos(869,945)").add(ESLVal.list(_v2009)));
       }
       }
     }
@@ -252,40 +252,40 @@ public class ToJava {
     public ESLVal apply(ESLVal... $args) {
       ESLVal cs = $args[0];
   ESLVal isLast = $args[1];
-  {ESLVal _v61 = cs;
+  {ESLVal _v2008 = cs;
         
-        if(_v61.isCons())
-        {ESLVal $487 = _v61.head();
-          ESLVal $488 = _v61.tail();
+        if(_v2008.isCons())
+        {ESLVal $2844 = _v2008.head();
+          ESLVal $2845 = _v2008.tail();
           
-          if($488.isCons())
-          {ESLVal $489 = $488.head();
-            ESLVal $490 = $488.tail();
+          if($2845.isCons())
+          {ESLVal $2846 = $2845.head();
+            ESLVal $2847 = $2845.tail();
             
-            {ESLVal c = $487;
+            {ESLVal c = $2844;
             
-            {ESLVal _v142 = $488;
+            {ESLVal _v2106 = $2845;
             
-            return expsToJCommands.apply(_v142,isLast).cons(expToJCommand.apply(c,$false));
+            return expsToJCommands.apply(_v2106,isLast).cons(expToJCommand.apply(c,$false));
           }
           }
           }
-        else if($488.isNil())
-          {ESLVal c = $487;
+        else if($2845.isNil())
+          {ESLVal c = $2844;
             
             return ESLVal.list(expToJCommand.apply(c,isLast));
           }
-        else {ESLVal c = $487;
+        else {ESLVal c = $2844;
             
-            {ESLVal _v143 = $488;
+            {ESLVal _v2107 = $2845;
             
-            return expsToJCommands.apply(_v143,isLast).cons(expToJCommand.apply(c,$false));
+            return expsToJCommands.apply(_v2107,isLast).cons(expToJCommand.apply(c,$false));
           }
           }
         }
-      else if(_v61.isNil())
+      else if(_v2008.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(1004,1164)").add(ESLVal.list(_v61)));
+      else return error(new ESLVal("case error at Pos(1004,1164)").add(ESLVal.list(_v2008)));
       }
     }
   });
@@ -293,30 +293,30 @@ public class ToJava {
     public ESLVal apply(ESLVal... $args) {
       ESLVal c = $args[0];
   ESLVal isLast = $args[1];
-  {ESLVal _v55 = c;
+  {ESLVal _v2001 = c;
         
-        switch(_v55.termName) {
-        case "Block": {ESLVal $482 = _v55.termRef(0);
-          ESLVal $481 = _v55.termRef(1);
+        switch(_v2001.termName) {
+        case "Block": {ESLVal $2839 = _v2001.termRef(0);
+          ESLVal $2838 = _v2001.termRef(1);
           
-          if($481.isCons())
-          {ESLVal $483 = $481.head();
-            ESLVal $484 = $481.tail();
+          if($2838.isCons())
+          {ESLVal $2840 = $2838.head();
+            ESLVal $2841 = $2838.tail();
             
-            if($484.isCons())
-            {ESLVal $485 = $484.head();
-              ESLVal $486 = $484.tail();
+            if($2841.isCons())
+            {ESLVal $2842 = $2841.head();
+              ESLVal $2843 = $2841.tail();
               
-              {ESLVal l = $482;
+              {ESLVal l = $2839;
               
-              {ESLVal es = $481;
+              {ESLVal es = $2838;
               
               return new ESLVal("JBlock",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal $qualArg = $args[0];
-              {ESLVal _v58 = $qualArg;
+              {ESLVal _v2005 = $qualArg;
                     
-                    {ESLVal e = _v58;
+                    {ESLVal e = _v2005;
                     
                     return ESLVal.list(ESLVal.list(expToJCommand.apply(e,$false)));
                   }
@@ -326,24 +326,24 @@ public class ToJava {
             }
             }
             }
-          else if($484.isNil())
-            {ESLVal l = $482;
+          else if($2841.isNil())
+            {ESLVal l = $2839;
               
-              {ESLVal e = $483;
+              {ESLVal e = $2840;
               
               return expToJCommand.apply(e,isLast);
             }
             }
-          else {ESLVal l = $482;
+          else {ESLVal l = $2839;
               
-              {ESLVal es = $481;
+              {ESLVal es = $2838;
               
               return new ESLVal("JBlock",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal $qualArg = $args[0];
-              {ESLVal _v59 = $qualArg;
+              {ESLVal _v2006 = $qualArg;
                     
-                    {ESLVal e = _v59;
+                    {ESLVal e = _v2006;
                     
                     return ESLVal.list(ESLVal.list(expToJCommand.apply(e,$false)));
                   }
@@ -353,27 +353,27 @@ public class ToJava {
             }
             }
           }
-        else if($481.isNil())
-          {ESLVal l = $482;
+        else if($2838.isNil())
+          {ESLVal l = $2839;
             
             if(isLast.boolVal)
             return new ESLVal("JReturn",new ESLVal("JNull",new ESLVal[]{}));
             else
-              {ESLVal _v140 = $482;
+              {ESLVal _v2104 = $2839;
                 
                 return new ESLVal("JBlock",$nil);
               }
           }
-        else {ESLVal l = $482;
+        else {ESLVal l = $2839;
             
-            {ESLVal es = $481;
+            {ESLVal es = $2838;
             
             return new ESLVal("JBlock",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal $qualArg = $args[0];
-            {ESLVal _v60 = $qualArg;
+            {ESLVal _v2007 = $qualArg;
                   
-                  {ESLVal e = _v60;
+                  {ESLVal e = _v2007;
                   
                   return ESLVal.list(ESLVal.list(expToJCommand.apply(e,$false)));
                 }
@@ -383,26 +383,26 @@ public class ToJava {
           }
           }
         }
-      case "Update": {ESLVal $480 = _v55.termRef(0);
-          ESLVal $479 = _v55.termRef(1);
-          ESLVal $478 = _v55.termRef(2);
+      case "Update": {ESLVal $2837 = _v2001.termRef(0);
+          ESLVal $2836 = _v2001.termRef(1);
+          ESLVal $2835 = _v2001.termRef(2);
           
-          {ESLVal l = $480;
+          {ESLVal l = $2837;
           
-          {ESLVal n = $479;
+          {ESLVal n = $2836;
           
-          {ESLVal e = $478;
+          {ESLVal e = $2835;
           
           if(isLast.boolVal)
           return new ESLVal("JBlock",ESLVal.list(new ESLVal("JUpdate",n,expToJExp.apply(e)),new ESLVal("JReturn",new ESLVal("JNull",new ESLVal[]{}))));
           else
-            {ESLVal _v137 = $480;
+            {ESLVal _v2101 = $2837;
               
-              {ESLVal _v138 = $479;
+              {ESLVal _v2102 = $2836;
               
-              {ESLVal _v139 = $478;
+              {ESLVal _v2103 = $2835;
               
-              return new ESLVal("JUpdate",_v138,expToJExp.apply(_v139));
+              return new ESLVal("JUpdate",_v2102,expToJExp.apply(_v2103));
             }
             }
             }
@@ -410,18 +410,18 @@ public class ToJava {
         }
         }
         }
-      case "If": {ESLVal $477 = _v55.termRef(0);
-          ESLVal $476 = _v55.termRef(1);
-          ESLVal $475 = _v55.termRef(2);
-          ESLVal $474 = _v55.termRef(3);
+      case "If": {ESLVal $2834 = _v2001.termRef(0);
+          ESLVal $2833 = _v2001.termRef(1);
+          ESLVal $2832 = _v2001.termRef(2);
+          ESLVal $2831 = _v2001.termRef(3);
           
-          {ESLVal l = $477;
+          {ESLVal l = $2834;
           
-          {ESLVal e1 = $476;
+          {ESLVal e1 = $2833;
           
-          {ESLVal e2 = $475;
+          {ESLVal e2 = $2832;
           
-          {ESLVal e3 = $474;
+          {ESLVal e3 = $2831;
           
           return new ESLVal("JIfCommand",expToJExp.apply(e1),expToJCommand.apply(e2,isLast),expToJCommand.apply(e3,isLast));
         }
@@ -429,21 +429,21 @@ public class ToJava {
         }
         }
         }
-      case "CaseList": {ESLVal $473 = _v55.termRef(0);
-          ESLVal $472 = _v55.termRef(1);
-          ESLVal $471 = _v55.termRef(2);
-          ESLVal $470 = _v55.termRef(3);
-          ESLVal $469 = _v55.termRef(4);
+      case "CaseList": {ESLVal $2830 = _v2001.termRef(0);
+          ESLVal $2829 = _v2001.termRef(1);
+          ESLVal $2828 = _v2001.termRef(2);
+          ESLVal $2827 = _v2001.termRef(3);
+          ESLVal $2826 = _v2001.termRef(4);
           
-          {ESLVal l = $473;
+          {ESLVal l = $2830;
           
-          {ESLVal e = $472;
+          {ESLVal e = $2829;
           
-          {ESLVal cons = $471;
+          {ESLVal cons = $2828;
           
-          {ESLVal nil = $470;
+          {ESLVal nil = $2827;
           
-          {ESLVal alt = $469;
+          {ESLVal alt = $2826;
           
           return new ESLVal("JCaseList",expToJExp.apply(e),expToJCommand.apply(cons,isLast),expToJCommand.apply(nil,isLast),expToJCommand.apply(alt,isLast));
         }
@@ -452,18 +452,18 @@ public class ToJava {
         }
         }
         }
-      case "CaseTerm": {ESLVal $468 = _v55.termRef(0);
-          ESLVal $467 = _v55.termRef(1);
-          ESLVal $466 = _v55.termRef(2);
-          ESLVal $465 = _v55.termRef(3);
+      case "CaseTerm": {ESLVal $2825 = _v2001.termRef(0);
+          ESLVal $2824 = _v2001.termRef(1);
+          ESLVal $2823 = _v2001.termRef(2);
+          ESLVal $2822 = _v2001.termRef(3);
           
-          {ESLVal l = $468;
+          {ESLVal l = $2825;
           
-          {ESLVal e = $467;
+          {ESLVal e = $2824;
           
-          {ESLVal arms = $466;
+          {ESLVal arms = $2823;
           
-          {ESLVal alt = $465;
+          {ESLVal alt = $2822;
           
           return new ESLVal("JCaseTerm",expToJExp.apply(e),termArmsToJTermArms.apply(arms,isLast),expToJCommand.apply(alt,isLast));
         }
@@ -471,18 +471,18 @@ public class ToJava {
         }
         }
         }
-      case "CaseInt": {ESLVal $464 = _v55.termRef(0);
-          ESLVal $463 = _v55.termRef(1);
-          ESLVal $462 = _v55.termRef(2);
-          ESLVal $461 = _v55.termRef(3);
+      case "CaseInt": {ESLVal $2821 = _v2001.termRef(0);
+          ESLVal $2820 = _v2001.termRef(1);
+          ESLVal $2819 = _v2001.termRef(2);
+          ESLVal $2818 = _v2001.termRef(3);
           
-          {ESLVal l = $464;
+          {ESLVal l = $2821;
           
-          {ESLVal e = $463;
+          {ESLVal e = $2820;
           
-          {ESLVal arms = $462;
+          {ESLVal arms = $2819;
           
-          {ESLVal alt = $461;
+          {ESLVal alt = $2818;
           
           return new ESLVal("JCaseInt",expToJExp.apply(e),intArmsToJIntArms.apply(arms,isLast),expToJCommand.apply(alt,isLast));
         }
@@ -490,18 +490,18 @@ public class ToJava {
         }
         }
         }
-      case "CaseStr": {ESLVal $460 = _v55.termRef(0);
-          ESLVal $459 = _v55.termRef(1);
-          ESLVal $458 = _v55.termRef(2);
-          ESLVal $457 = _v55.termRef(3);
+      case "CaseStr": {ESLVal $2817 = _v2001.termRef(0);
+          ESLVal $2816 = _v2001.termRef(1);
+          ESLVal $2815 = _v2001.termRef(2);
+          ESLVal $2814 = _v2001.termRef(3);
           
-          {ESLVal l = $460;
+          {ESLVal l = $2817;
           
-          {ESLVal e = $459;
+          {ESLVal e = $2816;
           
-          {ESLVal arms = $458;
+          {ESLVal arms = $2815;
           
-          {ESLVal alt = $457;
+          {ESLVal alt = $2814;
           
           return new ESLVal("JCaseStr",expToJExp.apply(e),strArmsToJStrArms.apply(arms,isLast),expToJCommand.apply(alt,isLast));
         }
@@ -509,18 +509,18 @@ public class ToJava {
         }
         }
         }
-      case "CaseBool": {ESLVal $456 = _v55.termRef(0);
-          ESLVal $455 = _v55.termRef(1);
-          ESLVal $454 = _v55.termRef(2);
-          ESLVal $453 = _v55.termRef(3);
+      case "CaseBool": {ESLVal $2813 = _v2001.termRef(0);
+          ESLVal $2812 = _v2001.termRef(1);
+          ESLVal $2811 = _v2001.termRef(2);
+          ESLVal $2810 = _v2001.termRef(3);
           
-          {ESLVal l = $456;
+          {ESLVal l = $2813;
           
-          {ESLVal e = $455;
+          {ESLVal e = $2812;
           
-          {ESLVal arms = $454;
+          {ESLVal arms = $2811;
           
-          {ESLVal alt = $453;
+          {ESLVal alt = $2810;
           
           return new ESLVal("JCaseBool",expToJExp.apply(e),boolArmsToJBoolArms.apply(arms,isLast),expToJCommand.apply(alt,isLast));
         }
@@ -528,22 +528,22 @@ public class ToJava {
         }
         }
         }
-      case "Let": {ESLVal $452 = _v55.termRef(0);
-          ESLVal $451 = _v55.termRef(1);
-          ESLVal $450 = _v55.termRef(2);
+      case "Let": {ESLVal $2809 = _v2001.termRef(0);
+          ESLVal $2808 = _v2001.termRef(1);
+          ESLVal $2807 = _v2001.termRef(2);
           
-          {ESLVal l = $452;
+          {ESLVal l = $2809;
           
-          {ESLVal bs = $451;
+          {ESLVal bs = $2808;
           
-          {ESLVal e = $450;
+          {ESLVal e = $2807;
           
           return new ESLVal("JLet",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v57 = $qualArg;
+          {ESLVal _v2004 = $qualArg;
                 
-                {ESLVal b = _v57;
+                {ESLVal b = _v2004;
                 
                 return ESLVal.list(ESLVal.list(defToField.apply(b)));
               }
@@ -554,22 +554,22 @@ public class ToJava {
         }
         }
         }
-      case "Letrec": {ESLVal $449 = _v55.termRef(0);
-          ESLVal $448 = _v55.termRef(1);
-          ESLVal $447 = _v55.termRef(2);
+      case "Letrec": {ESLVal $2806 = _v2001.termRef(0);
+          ESLVal $2805 = _v2001.termRef(1);
+          ESLVal $2804 = _v2001.termRef(2);
           
-          {ESLVal l = $449;
+          {ESLVal l = $2806;
           
-          {ESLVal bs = $448;
+          {ESLVal bs = $2805;
           
-          {ESLVal e = $447;
+          {ESLVal e = $2804;
           
           return new ESLVal("JLetRec",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v56 = $qualArg;
+          {ESLVal _v2003 = $qualArg;
                 
-                {ESLVal b = _v56;
+                {ESLVal b = _v2003;
                 
                 return ESLVal.list(ESLVal.list(defToField.apply(b)));
               }
@@ -580,44 +580,44 @@ public class ToJava {
         }
         }
         }
-      case "For": {ESLVal $443 = _v55.termRef(0);
-          ESLVal $442 = _v55.termRef(1);
-          ESLVal $441 = _v55.termRef(2);
-          ESLVal $440 = _v55.termRef(3);
+      case "For": {ESLVal $2800 = _v2001.termRef(0);
+          ESLVal $2799 = _v2001.termRef(1);
+          ESLVal $2798 = _v2001.termRef(2);
+          ESLVal $2797 = _v2001.termRef(3);
           
-          switch($442.termName) {
-          case "PVar": {ESLVal $446 = $442.termRef(0);
-            ESLVal $445 = $442.termRef(1);
-            ESLVal $444 = $442.termRef(2);
+          switch($2799.termName) {
+          case "PVar": {ESLVal $2803 = $2799.termRef(0);
+            ESLVal $2802 = $2799.termRef(1);
+            ESLVal $2801 = $2799.termRef(2);
             
-            {ESLVal l1 = $443;
+            {ESLVal l1 = $2800;
             
-            {ESLVal l2 = $446;
+            {ESLVal l2 = $2803;
             
-            {ESLVal n = $445;
+            {ESLVal n = $2802;
             
-            {ESLVal t = $444;
+            {ESLVal t = $2801;
             
-            {ESLVal e = $441;
+            {ESLVal e = $2798;
             
-            {ESLVal b = $440;
+            {ESLVal b = $2797;
             
             if(isLast.boolVal)
             return new ESLVal("JBlock",ESLVal.list(new ESLVal("JFor",newName.apply(),n,expToJExp.apply(e),expToJCommand.apply(b,$false)),new ESLVal("JReturn",new ESLVal("JNull",new ESLVal[]{}))));
             else
-              {ESLVal _v131 = $443;
+              {ESLVal _v2095 = $2800;
                 
-                {ESLVal _v132 = $446;
+                {ESLVal _v2096 = $2803;
                 
-                {ESLVal _v133 = $445;
+                {ESLVal _v2097 = $2802;
                 
-                {ESLVal _v134 = $444;
+                {ESLVal _v2098 = $2801;
                 
-                {ESLVal _v135 = $441;
+                {ESLVal _v2099 = $2798;
                 
-                {ESLVal _v136 = $440;
+                {ESLVal _v2100 = $2797;
                 
-                return new ESLVal("JFor",newName.apply(),_v133,expToJExp.apply(_v135),expToJCommand.apply(_v136,$false));
+                return new ESLVal("JFor",newName.apply(),_v2097,expToJExp.apply(_v2099),expToJCommand.apply(_v2100,$false));
               }
               }
               }
@@ -631,13 +631,13 @@ public class ToJava {
           }
           }
           }
-          default: {ESLVal l = $443;
+          default: {ESLVal l = $2800;
             
-            {ESLVal p = $442;
+            {ESLVal p = $2799;
             
-            {ESLVal e = $441;
+            {ESLVal e = $2798;
             
-            {ESLVal b = $440;
+            {ESLVal b = $2797;
             
             {ESLVal opName = newName.apply();
             ESLVal varName = newName.apply();
@@ -650,14 +650,40 @@ public class ToJava {
           }
         }
         }
-        default: {ESLVal e = _v55;
+      case "PLet": {ESLVal $2796 = _v2001.termRef(0);
+          ESLVal $2795 = _v2001.termRef(1);
+          ESLVal $2794 = _v2001.termRef(2);
+          
+          {ESLVal l = $2796;
+          
+          {ESLVal bs = $2795;
+          
+          {ESLVal e = $2794;
+          
+          return new ESLVal("JPLet",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal $qualArg = $args[0];
+          {ESLVal _v2002 = $qualArg;
+                
+                {ESLVal b = _v2002;
+                
+                return ESLVal.list(ESLVal.list(defToField.apply(b)));
+              }
+              }
+            }
+          }).map(bs).flatten().flatten(),expToJCommand.apply(e,isLast));
+        }
+        }
+        }
+        }
+        default: {ESLVal e = _v2001;
           
           if(isLast.boolVal)
           return new ESLVal("JReturn",expToJExp.apply(e));
           else
-            {ESLVal _v141 = _v55;
+            {ESLVal _v2105 = _v2001;
               
-              return new ESLVal("JStatement",expToJExp.apply(_v141));
+              return new ESLVal("JStatement",expToJExp.apply(_v2105));
             }
         }
       }
@@ -667,7 +693,7 @@ public class ToJava {
   private static ESLVal expsToJExps = new ESLVal(new Function(new ESLVal("expsToJExps"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal es = $args[0];
-  return map.apply(new ESLVal(new Function(new ESLVal("fun698"),getSelf()) {
+  return map.apply(new ESLVal(new Function(new ESLVal("fun823"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal e = $args[0];
         return expToJExp.apply(e);
@@ -679,33 +705,33 @@ public class ToJava {
     public ESLVal apply(ESLVal... $args) {
       ESLVal arms = $args[0];
   ESLVal isLast = $args[1];
-  {ESLVal _v54 = arms;
+  {ESLVal _v2000 = arms;
         
-        if(_v54.isCons())
-        {ESLVal $436 = _v54.head();
-          ESLVal $437 = _v54.tail();
+        if(_v2000.isCons())
+        {ESLVal $2790 = _v2000.head();
+          ESLVal $2791 = _v2000.tail();
           
-          switch($436.termName) {
-          case "TArm": {ESLVal $439 = $436.termRef(0);
-            ESLVal $438 = $436.termRef(1);
+          switch($2790.termName) {
+          case "TArm": {ESLVal $2793 = $2790.termRef(0);
+            ESLVal $2792 = $2790.termRef(1);
             
-            {ESLVal n = $439;
+            {ESLVal n = $2793;
             
-            {ESLVal e = $438;
+            {ESLVal e = $2792;
             
-            {ESLVal _v130 = $437;
+            {ESLVal _v2094 = $2791;
             
-            return termArmsToJTermArms.apply(_v130,isLast).cons(new ESLVal("JTArm",n,$zero,expToJCommand.apply(e,isLast)));
+            return termArmsToJTermArms.apply(_v2094,isLast).cons(new ESLVal("JTArm",n,$zero,expToJCommand.apply(e,isLast)));
           }
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(4226,4395)").add(ESLVal.list(_v54)));
+          default: return error(new ESLVal("case error at Pos(4366,4535)").add(ESLVal.list(_v2000)));
         }
         }
-      else if(_v54.isNil())
+      else if(_v2000.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(4226,4395)").add(ESLVal.list(_v54)));
+      else return error(new ESLVal("case error at Pos(4366,4535)").add(ESLVal.list(_v2000)));
       }
     }
   });
@@ -713,33 +739,33 @@ public class ToJava {
     public ESLVal apply(ESLVal... $args) {
       ESLVal arms = $args[0];
   ESLVal isLast = $args[1];
-  {ESLVal _v53 = arms;
+  {ESLVal _v1999 = arms;
         
-        if(_v53.isCons())
-        {ESLVal $432 = _v53.head();
-          ESLVal $433 = _v53.tail();
+        if(_v1999.isCons())
+        {ESLVal $2786 = _v1999.head();
+          ESLVal $2787 = _v1999.tail();
           
-          switch($432.termName) {
-          case "IArm": {ESLVal $435 = $432.termRef(0);
-            ESLVal $434 = $432.termRef(1);
+          switch($2786.termName) {
+          case "IArm": {ESLVal $2789 = $2786.termRef(0);
+            ESLVal $2788 = $2786.termRef(1);
             
-            {ESLVal n = $435;
+            {ESLVal n = $2789;
             
-            {ESLVal e = $434;
+            {ESLVal e = $2788;
             
-            {ESLVal _v129 = $433;
+            {ESLVal _v2093 = $2787;
             
-            return intArmsToJIntArms.apply(_v129,isLast).cons(new ESLVal("JIArm",n,expToJCommand.apply(e,isLast)));
+            return intArmsToJIntArms.apply(_v2093,isLast).cons(new ESLVal("JIArm",n,expToJCommand.apply(e,isLast)));
           }
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(4464,4628)").add(ESLVal.list(_v53)));
+          default: return error(new ESLVal("case error at Pos(4604,4768)").add(ESLVal.list(_v1999)));
         }
         }
-      else if(_v53.isNil())
+      else if(_v1999.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(4464,4628)").add(ESLVal.list(_v53)));
+      else return error(new ESLVal("case error at Pos(4604,4768)").add(ESLVal.list(_v1999)));
       }
     }
   });
@@ -747,33 +773,33 @@ public class ToJava {
     public ESLVal apply(ESLVal... $args) {
       ESLVal arms = $args[0];
   ESLVal isLast = $args[1];
-  {ESLVal _v52 = arms;
+  {ESLVal _v1998 = arms;
         
-        if(_v52.isCons())
-        {ESLVal $428 = _v52.head();
-          ESLVal $429 = _v52.tail();
+        if(_v1998.isCons())
+        {ESLVal $2782 = _v1998.head();
+          ESLVal $2783 = _v1998.tail();
           
-          switch($428.termName) {
-          case "SArm": {ESLVal $431 = $428.termRef(0);
-            ESLVal $430 = $428.termRef(1);
+          switch($2782.termName) {
+          case "SArm": {ESLVal $2785 = $2782.termRef(0);
+            ESLVal $2784 = $2782.termRef(1);
             
-            {ESLVal s = $431;
+            {ESLVal s = $2785;
             
-            {ESLVal e = $430;
+            {ESLVal e = $2784;
             
-            {ESLVal _v128 = $429;
+            {ESLVal _v2092 = $2783;
             
-            return strArmsToJStrArms.apply(_v128,isLast).cons(new ESLVal("JSArm",s,expToJCommand.apply(e,isLast)));
+            return strArmsToJStrArms.apply(_v2092,isLast).cons(new ESLVal("JSArm",s,expToJCommand.apply(e,isLast)));
           }
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(4697,4861)").add(ESLVal.list(_v52)));
+          default: return error(new ESLVal("case error at Pos(4837,5001)").add(ESLVal.list(_v1998)));
         }
         }
-      else if(_v52.isNil())
+      else if(_v1998.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(4697,4861)").add(ESLVal.list(_v52)));
+      else return error(new ESLVal("case error at Pos(4837,5001)").add(ESLVal.list(_v1998)));
       }
     }
   });
@@ -781,43 +807,44 @@ public class ToJava {
     public ESLVal apply(ESLVal... $args) {
       ESLVal arms = $args[0];
   ESLVal isLast = $args[1];
-  {ESLVal _v51 = arms;
+  {ESLVal _v1997 = arms;
         
-        if(_v51.isCons())
-        {ESLVal $424 = _v51.head();
-          ESLVal $425 = _v51.tail();
+        if(_v1997.isCons())
+        {ESLVal $2778 = _v1997.head();
+          ESLVal $2779 = _v1997.tail();
           
-          switch($424.termName) {
-          case "BoolArm": {ESLVal $427 = $424.termRef(0);
-            ESLVal $426 = $424.termRef(1);
+          switch($2778.termName) {
+          case "BoolArm": {ESLVal $2781 = $2778.termRef(0);
+            ESLVal $2780 = $2778.termRef(1);
             
-            {ESLVal b = $427;
+            {ESLVal b = $2781;
             
-            {ESLVal e = $426;
+            {ESLVal e = $2780;
             
-            {ESLVal _v127 = $425;
+            {ESLVal _v2091 = $2779;
             
-            return boolArmsToJBoolArms.apply(_v127,isLast).cons(new ESLVal("JBArm",b,expToJCommand.apply(e,isLast)));
+            return boolArmsToJBoolArms.apply(_v2091,isLast).cons(new ESLVal("JBArm",b,expToJCommand.apply(e,isLast)));
           }
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(4936,5109)").add(ESLVal.list(_v51)));
+          default: return error(new ESLVal("case error at Pos(5076,5249)").add(ESLVal.list(_v1997)));
         }
         }
-      else if(_v51.isNil())
+      else if(_v1997.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(4936,5109)").add(ESLVal.list(_v51)));
+      else return error(new ESLVal("case error at Pos(5076,5249)").add(ESLVal.list(_v1997)));
       }
     }
   });
   private static ESLVal opToJOp = new ESLVal(new Function(new ESLVal("opToJOp"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal op = $args[0];
-  {ESLVal _v50 = op;
+  {ESLVal _v1996 = op;
         
-        switch(_v50.strVal) {
-        case "+": return new ESLVal("add");
+        switch(_v1996.strVal) {
+        case "@": return new ESLVal("at");
+      case "+": return new ESLVal("add");
       case "-": return new ESLVal("sub");
       case "*": return new ESLVal("mul");
       case "/": return new ESLVal("div");
@@ -834,7 +861,7 @@ public class ToJava {
       case "and": return new ESLVal("and");
       case "andalso": return new ESLVal("andalso");
       case "orelse": return new ESLVal("orelse");
-        default: return error(new ESLVal("case error at Pos(5137,5489)").add(ESLVal.list(_v50)));
+        default: return error(new ESLVal("case error at Pos(5277,5646)").add(ESLVal.list(_v1996)));
       }
       }
     }
@@ -847,9 +874,9 @@ public class ToJava {
   {ESLVal bindings = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v47 = $qualArg;
+          {ESLVal _v1993 = $qualArg;
                 
-                {ESLVal e = _v47;
+                {ESLVal e = _v1993;
                 
                 return ESLVal.list(ESLVal.list(new ESLVal("Binding",l,newName.apply(),$null,$null,e)));
               }
@@ -860,24 +887,24 @@ public class ToJava {
         {ESLVal names = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v48 = $qualArg;
+          {ESLVal _v1994 = $qualArg;
                 
-                switch(_v48.termName) {
-                case "Binding": {ESLVal $423 = _v48.termRef(0);
-                  ESLVal $422 = _v48.termRef(1);
-                  ESLVal $421 = _v48.termRef(2);
-                  ESLVal $420 = _v48.termRef(3);
-                  ESLVal $419 = _v48.termRef(4);
+                switch(_v1994.termName) {
+                case "Binding": {ESLVal $2777 = _v1994.termRef(0);
+                  ESLVal $2776 = _v1994.termRef(1);
+                  ESLVal $2775 = _v1994.termRef(2);
+                  ESLVal $2774 = _v1994.termRef(3);
+                  ESLVal $2773 = _v1994.termRef(4);
                   
-                  {ESLVal _v126 = $423;
+                  {ESLVal _v2090 = $2777;
                   
-                  {ESLVal n = $422;
+                  {ESLVal n = $2776;
                   
-                  {ESLVal dt = $421;
+                  {ESLVal dt = $2775;
                   
-                  {ESLVal t = $420;
+                  {ESLVal t = $2774;
                   
-                  {ESLVal e = $419;
+                  {ESLVal e = $2773;
                   
                   return ESLVal.list(ESLVal.list(n));
                 }
@@ -886,7 +913,7 @@ public class ToJava {
                 }
                 }
                 }
-                default: {ESLVal _0 = _v48;
+                default: {ESLVal _0 = _v1994;
                   
                   return ESLVal.list();
                 }
@@ -898,9 +925,9 @@ public class ToJava {
         return expToJExp.apply(new ESLVal("Let",l,bindings,translateCases.apply(new ESLVal("Case",l,ESLVal.list(),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal $qualArg = $args[0];
-        {ESLVal _v49 = $qualArg;
+        {ESLVal _v1995 = $qualArg;
               
-              {ESLVal n = _v49;
+              {ESLVal n = _v1995;
               
               return ESLVal.list(ESLVal.list(new ESLVal("Var",l,n)));
             }
@@ -914,21 +941,36 @@ public class ToJava {
   private static ESLVal expToJExp = new ESLVal(new Function(new ESLVal("expToJExp"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal e = $args[0];
-  {ESLVal _v44 = e;
+  {ESLVal _v1990 = e;
         
-        switch(_v44.termName) {
-        case "ArrayUpdate": {ESLVal $413 = _v44.termRef(0);
-          ESLVal $412 = _v44.termRef(1);
-          ESLVal $411 = _v44.termRef(2);
-          ESLVal $410 = _v44.termRef(3);
+        switch(_v1990.termName) {
+        case "Apply": {ESLVal $2767 = _v1990.termRef(0);
+          ESLVal $2766 = _v1990.termRef(1);
+          ESLVal $2765 = _v1990.termRef(2);
           
-          {ESLVal l = $413;
+          {ESLVal l = $2767;
           
-          {ESLVal a = $412;
+          {ESLVal op = $2766;
           
-          {ESLVal i = $411;
+          {ESLVal args = $2765;
           
-          {ESLVal v = $410;
+          return new ESLVal("JApply",expToJExp.apply(op),expsToJExps.apply(args));
+        }
+        }
+        }
+        }
+      case "ArrayUpdate": {ESLVal $2764 = _v1990.termRef(0);
+          ESLVal $2763 = _v1990.termRef(1);
+          ESLVal $2762 = _v1990.termRef(2);
+          ESLVal $2761 = _v1990.termRef(3);
+          
+          {ESLVal l = $2764;
+          
+          {ESLVal a = $2763;
+          
+          {ESLVal i = $2762;
+          
+          {ESLVal v = $2761;
           
           return new ESLVal("JArrayUpdate",expToJExp.apply(a),expToJExp.apply(i),expToJExp.apply(v));
         }
@@ -936,284 +978,284 @@ public class ToJava {
         }
         }
         }
-      case "ArrayRef": {ESLVal $409 = _v44.termRef(0);
-          ESLVal $408 = _v44.termRef(1);
-          ESLVal $407 = _v44.termRef(2);
+      case "ArrayRef": {ESLVal $2760 = _v1990.termRef(0);
+          ESLVal $2759 = _v1990.termRef(1);
+          ESLVal $2758 = _v1990.termRef(2);
           
-          {ESLVal l = $409;
+          {ESLVal l = $2760;
           
-          {ESLVal a = $408;
+          {ESLVal a = $2759;
           
-          {ESLVal i = $407;
+          {ESLVal i = $2758;
           
           return new ESLVal("JArrayRef",expToJExp.apply(a),expToJExp.apply(i));
         }
         }
         }
         }
-      case "IntExp": {ESLVal $406 = _v44.termRef(0);
-          ESLVal $405 = _v44.termRef(1);
+      case "IntExp": {ESLVal $2757 = _v1990.termRef(0);
+          ESLVal $2756 = _v1990.termRef(1);
           
-          {ESLVal l = $406;
+          {ESLVal l = $2757;
           
-          {ESLVal n = $405;
+          {ESLVal n = $2756;
           
           return new ESLVal("JConstExp",new ESLVal("JConstInt",n));
         }
         }
         }
-      case "StrExp": {ESLVal $404 = _v44.termRef(0);
-          ESLVal $403 = _v44.termRef(1);
+      case "StrExp": {ESLVal $2755 = _v1990.termRef(0);
+          ESLVal $2754 = _v1990.termRef(1);
           
-          {ESLVal l = $404;
+          {ESLVal l = $2755;
           
-          {ESLVal s = $403;
+          {ESLVal s = $2754;
           
           return new ESLVal("JConstExp",new ESLVal("JConstStr",s));
         }
         }
         }
-      case "BoolExp": {ESLVal $402 = _v44.termRef(0);
-          ESLVal $401 = _v44.termRef(1);
+      case "BoolExp": {ESLVal $2753 = _v1990.termRef(0);
+          ESLVal $2752 = _v1990.termRef(1);
           
-          {ESLVal l = $402;
+          {ESLVal l = $2753;
           
-          {ESLVal b = $401;
+          {ESLVal b = $2752;
           
           return new ESLVal("JConstExp",new ESLVal("JConstBool",b));
         }
         }
         }
-      case "FloatExp": {ESLVal $400 = _v44.termRef(0);
-          ESLVal $399 = _v44.termRef(1);
+      case "FloatExp": {ESLVal $2751 = _v1990.termRef(0);
+          ESLVal $2750 = _v1990.termRef(1);
           
-          {ESLVal l = $400;
+          {ESLVal l = $2751;
           
-          {ESLVal f = $399;
+          {ESLVal f = $2750;
           
           return new ESLVal("JConstExp",new ESLVal("JConstDouble",f));
         }
         }
         }
-      case "ApplyTypeExp": {ESLVal $385 = _v44.termRef(0);
-          ESLVal $384 = _v44.termRef(1);
-          ESLVal $383 = _v44.termRef(2);
+      case "ApplyTypeExp": {ESLVal $2736 = _v1990.termRef(0);
+          ESLVal $2735 = _v1990.termRef(1);
+          ESLVal $2734 = _v1990.termRef(2);
           
-          switch($384.termName) {
-          case "List": {ESLVal $392 = $384.termRef(0);
-            ESLVal $391 = $384.termRef(1);
+          switch($2735.termName) {
+          case "List": {ESLVal $2743 = $2735.termRef(0);
+            ESLVal $2742 = $2735.termRef(1);
             
-            if($391.isCons())
-            {ESLVal $393 = $391.head();
-              ESLVal $394 = $391.tail();
+            if($2742.isCons())
+            {ESLVal $2744 = $2742.head();
+              ESLVal $2745 = $2742.tail();
               
-              {ESLVal l = $385;
+              {ESLVal l = $2736;
               
-              {ESLVal _v119 = $384;
+              {ESLVal _v2083 = $2735;
               
-              {ESLVal ts = $383;
+              {ESLVal ts = $2734;
               
-              return expToJExp.apply(_v119);
+              return expToJExp.apply(_v2083);
             }
             }
             }
             }
-          else if($391.isNil())
-            if($383.isCons())
-              {ESLVal $395 = $383.head();
-                ESLVal $396 = $383.tail();
+          else if($2742.isNil())
+            if($2734.isCons())
+              {ESLVal $2746 = $2734.head();
+                ESLVal $2747 = $2734.tail();
                 
-                if($396.isCons())
-                {ESLVal $397 = $396.head();
-                  ESLVal $398 = $396.tail();
+                if($2747.isCons())
+                {ESLVal $2748 = $2747.head();
+                  ESLVal $2749 = $2747.tail();
                   
-                  {ESLVal l = $385;
+                  {ESLVal l = $2736;
                   
-                  {ESLVal _v120 = $384;
+                  {ESLVal _v2084 = $2735;
                   
-                  {ESLVal ts = $383;
+                  {ESLVal ts = $2734;
                   
-                  return expToJExp.apply(_v120);
+                  return expToJExp.apply(_v2084);
                 }
                 }
                 }
                 }
-              else if($396.isNil())
-                {ESLVal l1 = $385;
+              else if($2747.isNil())
+                {ESLVal l1 = $2736;
                   
-                  {ESLVal l2 = $392;
+                  {ESLVal l2 = $2743;
                   
-                  {ESLVal t = $395;
+                  {ESLVal t = $2746;
                   
                   return new ESLVal("JNil",$null);
                 }
                 }
                 }
-              else {ESLVal l = $385;
+              else {ESLVal l = $2736;
                   
-                  {ESLVal _v121 = $384;
+                  {ESLVal _v2085 = $2735;
                   
-                  {ESLVal ts = $383;
+                  {ESLVal ts = $2734;
                   
-                  return expToJExp.apply(_v121);
+                  return expToJExp.apply(_v2085);
                 }
                 }
                 }
               }
-            else if($383.isNil())
-              {ESLVal l = $385;
+            else if($2734.isNil())
+              {ESLVal l = $2736;
                 
-                {ESLVal _v122 = $384;
+                {ESLVal _v2086 = $2735;
                 
-                {ESLVal ts = $383;
+                {ESLVal ts = $2734;
                 
-                return expToJExp.apply(_v122);
+                return expToJExp.apply(_v2086);
               }
               }
               }
-            else {ESLVal l = $385;
+            else {ESLVal l = $2736;
                 
-                {ESLVal _v123 = $384;
+                {ESLVal _v2087 = $2735;
                 
-                {ESLVal ts = $383;
+                {ESLVal ts = $2734;
                 
-                return expToJExp.apply(_v123);
+                return expToJExp.apply(_v2087);
               }
               }
               }
-          else {ESLVal l = $385;
+          else {ESLVal l = $2736;
               
-              {ESLVal _v124 = $384;
+              {ESLVal _v2088 = $2735;
               
-              {ESLVal ts = $383;
+              {ESLVal ts = $2734;
               
-              return expToJExp.apply(_v124);
+              return expToJExp.apply(_v2088);
             }
             }
             }
           }
-        case "NullExp": {ESLVal $386 = $384.termRef(0);
+        case "NullExp": {ESLVal $2737 = $2735.termRef(0);
             
-            if($383.isCons())
-            {ESLVal $387 = $383.head();
-              ESLVal $388 = $383.tail();
+            if($2734.isCons())
+            {ESLVal $2738 = $2734.head();
+              ESLVal $2739 = $2734.tail();
               
-              if($388.isCons())
-              {ESLVal $389 = $388.head();
-                ESLVal $390 = $388.tail();
+              if($2739.isCons())
+              {ESLVal $2740 = $2739.head();
+                ESLVal $2741 = $2739.tail();
                 
-                {ESLVal l = $385;
+                {ESLVal l = $2736;
                 
-                {ESLVal _v115 = $384;
+                {ESLVal _v2079 = $2735;
                 
-                {ESLVal ts = $383;
+                {ESLVal ts = $2734;
                 
-                return expToJExp.apply(_v115);
+                return expToJExp.apply(_v2079);
               }
               }
               }
               }
-            else if($388.isNil())
-              {ESLVal l1 = $385;
+            else if($2739.isNil())
+              {ESLVal l1 = $2736;
                 
-                {ESLVal l2 = $386;
+                {ESLVal l2 = $2737;
                 
-                {ESLVal t = $387;
+                {ESLVal t = $2738;
                 
                 return new ESLVal("JNull",new ESLVal[]{});
               }
               }
               }
-            else {ESLVal l = $385;
+            else {ESLVal l = $2736;
                 
-                {ESLVal _v116 = $384;
+                {ESLVal _v2080 = $2735;
                 
-                {ESLVal ts = $383;
+                {ESLVal ts = $2734;
                 
-                return expToJExp.apply(_v116);
+                return expToJExp.apply(_v2080);
               }
               }
               }
             }
-          else if($383.isNil())
-            {ESLVal l = $385;
+          else if($2734.isNil())
+            {ESLVal l = $2736;
               
-              {ESLVal _v117 = $384;
+              {ESLVal _v2081 = $2735;
               
-              {ESLVal ts = $383;
+              {ESLVal ts = $2734;
               
-              return expToJExp.apply(_v117);
+              return expToJExp.apply(_v2081);
             }
             }
             }
-          else {ESLVal l = $385;
+          else {ESLVal l = $2736;
               
-              {ESLVal _v118 = $384;
+              {ESLVal _v2082 = $2735;
               
-              {ESLVal ts = $383;
+              {ESLVal ts = $2734;
               
-              return expToJExp.apply(_v118);
+              return expToJExp.apply(_v2082);
             }
             }
             }
           }
-          default: {ESLVal l = $385;
+          default: {ESLVal l = $2736;
             
-            {ESLVal _v125 = $384;
+            {ESLVal _v2089 = $2735;
             
-            {ESLVal ts = $383;
+            {ESLVal ts = $2734;
             
-            return expToJExp.apply(_v125);
+            return expToJExp.apply(_v2089);
           }
           }
           }
         }
         }
-      case "List": {ESLVal $382 = _v44.termRef(0);
-          ESLVal $381 = _v44.termRef(1);
+      case "List": {ESLVal $2733 = _v1990.termRef(0);
+          ESLVal $2732 = _v1990.termRef(1);
           
-          {ESLVal l = $382;
+          {ESLVal l = $2733;
           
-          {ESLVal es = $381;
+          {ESLVal es = $2732;
           
           return new ESLVal("JList",$null,expsToJExps.apply(es));
         }
         }
         }
-      case "SetExp": {ESLVal $380 = _v44.termRef(0);
-          ESLVal $379 = _v44.termRef(1);
+      case "SetExp": {ESLVal $2731 = _v1990.termRef(0);
+          ESLVal $2730 = _v1990.termRef(1);
           
-          {ESLVal l = $380;
+          {ESLVal l = $2731;
           
-          {ESLVal es = $379;
+          {ESLVal es = $2730;
           
           return new ESLVal("JSet",$null,expsToJExps.apply(es));
         }
         }
         }
-      case "BagExp": {ESLVal $378 = _v44.termRef(0);
-          ESLVal $377 = _v44.termRef(1);
+      case "BagExp": {ESLVal $2729 = _v1990.termRef(0);
+          ESLVal $2728 = _v1990.termRef(1);
           
-          {ESLVal l = $378;
+          {ESLVal l = $2729;
           
-          {ESLVal es = $377;
+          {ESLVal es = $2728;
           
           return new ESLVal("JBag",$null,expsToJExps.apply(es));
         }
         }
         }
-      case "Term": {ESLVal $376 = _v44.termRef(0);
-          ESLVal $375 = _v44.termRef(1);
-          ESLVal $374 = _v44.termRef(2);
-          ESLVal $373 = _v44.termRef(3);
+      case "Term": {ESLVal $2727 = _v1990.termRef(0);
+          ESLVal $2726 = _v1990.termRef(1);
+          ESLVal $2725 = _v1990.termRef(2);
+          ESLVal $2724 = _v1990.termRef(3);
           
-          {ESLVal l = $376;
+          {ESLVal l = $2727;
           
-          {ESLVal n = $375;
+          {ESLVal n = $2726;
           
-          {ESLVal ts = $374;
+          {ESLVal ts = $2725;
           
-          {ESLVal es = $373;
+          {ESLVal es = $2724;
           
           return new ESLVal("JTerm",n,expsToJExps.apply(es));
         }
@@ -1221,18 +1263,18 @@ public class ToJava {
         }
         }
         }
-      case "Case": {ESLVal $372 = _v44.termRef(0);
-          ESLVal $371 = _v44.termRef(1);
-          ESLVal $370 = _v44.termRef(2);
-          ESLVal $369 = _v44.termRef(3);
+      case "Case": {ESLVal $2723 = _v1990.termRef(0);
+          ESLVal $2722 = _v1990.termRef(1);
+          ESLVal $2721 = _v1990.termRef(2);
+          ESLVal $2720 = _v1990.termRef(3);
           
-          {ESLVal l = $372;
+          {ESLVal l = $2723;
           
-          {ESLVal ds = $371;
+          {ESLVal ds = $2722;
           
-          {ESLVal es = $370;
+          {ESLVal es = $2721;
           
-          {ESLVal arms = $369;
+          {ESLVal arms = $2720;
           
           return caseToJExp.apply(l,es,arms);
         }
@@ -1240,117 +1282,18 @@ public class ToJava {
         }
         }
         }
-      case "CaseAdd": {ESLVal $368 = _v44.termRef(0);
-          ESLVal $367 = _v44.termRef(1);
-          ESLVal $366 = _v44.termRef(2);
-          ESLVal $365 = _v44.termRef(3);
+      case "CaseAdd": {ESLVal $2719 = _v1990.termRef(0);
+          ESLVal $2718 = _v1990.termRef(1);
+          ESLVal $2717 = _v1990.termRef(2);
+          ESLVal $2716 = _v1990.termRef(3);
           
-          {ESLVal l = $368;
+          {ESLVal l = $2719;
           
-          {ESLVal s = $367;
+          {ESLVal s = $2718;
           
-          {ESLVal handler = $366;
+          {ESLVal handler = $2717;
           
-          {ESLVal fail = $365;
-          
-          return expToJExp.apply(new ESLVal("Apply",l,new ESLVal("Var",l,new ESLVal("$ndCase")),ESLVal.list(s,handler,fail)));
-        }
-        }
-        }
-        }
-        }
-      case "CaseList": {ESLVal $364 = _v44.termRef(0);
-          ESLVal $363 = _v44.termRef(1);
-          ESLVal $362 = _v44.termRef(2);
-          ESLVal $361 = _v44.termRef(3);
-          ESLVal $360 = _v44.termRef(4);
-          
-          {ESLVal l = $364;
-          
-          {ESLVal list = $363;
-          
-          {ESLVal cons = $362;
-          
-          {ESLVal nil = $361;
-          
-          {ESLVal alt = $360;
-          
-          return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
-        }
-        }
-        }
-        }
-        }
-        }
-      case "CaseTerm": {ESLVal $359 = _v44.termRef(0);
-          ESLVal $358 = _v44.termRef(1);
-          ESLVal $357 = _v44.termRef(2);
-          ESLVal $356 = _v44.termRef(3);
-          
-          {ESLVal l = $359;
-          
-          {ESLVal list = $358;
-          
-          {ESLVal arms = $357;
-          
-          {ESLVal alt = $356;
-          
-          return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
-        }
-        }
-        }
-        }
-        }
-      case "CaseStr": {ESLVal $355 = _v44.termRef(0);
-          ESLVal $354 = _v44.termRef(1);
-          ESLVal $353 = _v44.termRef(2);
-          ESLVal $352 = _v44.termRef(3);
-          
-          {ESLVal l = $355;
-          
-          {ESLVal s = $354;
-          
-          {ESLVal arms = $353;
-          
-          {ESLVal alt = $352;
-          
-          return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
-        }
-        }
-        }
-        }
-        }
-      case "CaseBool": {ESLVal $351 = _v44.termRef(0);
-          ESLVal $350 = _v44.termRef(1);
-          ESLVal $349 = _v44.termRef(2);
-          ESLVal $348 = _v44.termRef(3);
-          
-          {ESLVal l = $351;
-          
-          {ESLVal s = $350;
-          
-          {ESLVal arms = $349;
-          
-          {ESLVal alt = $348;
-          
-          return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
-        }
-        }
-        }
-        }
-        }
-      case "CaseSet": {ESLVal $347 = _v44.termRef(0);
-          ESLVal $346 = _v44.termRef(1);
-          ESLVal $345 = _v44.termRef(2);
-          ESLVal $344 = _v44.termRef(3);
-          
-          {ESLVal l = $347;
-          
-          {ESLVal s = $346;
-          
-          {ESLVal handler = $345;
-          
-          {ESLVal fail = $344;
+          {ESLVal fail = $2716;
           
           return expToJExp.apply(new ESLVal("Apply",l,new ESLVal("Var",l,new ESLVal("$ndCase")),ESLVal.list(s,handler,fail)));
         }
@@ -1358,121 +1301,205 @@ public class ToJava {
         }
         }
         }
-      case "Head": {ESLVal $343 = _v44.termRef(0);
+      case "CaseList": {ESLVal $2715 = _v1990.termRef(0);
+          ESLVal $2714 = _v1990.termRef(1);
+          ESLVal $2713 = _v1990.termRef(2);
+          ESLVal $2712 = _v1990.termRef(3);
+          ESLVal $2711 = _v1990.termRef(4);
           
-          {ESLVal _v114 = $343;
+          {ESLVal l = $2715;
           
-          return new ESLVal("JHead",expToJExp.apply(_v114));
-        }
-        }
-      case "Tail": {ESLVal $342 = _v44.termRef(0);
+          {ESLVal list = $2714;
           
-          {ESLVal _v113 = $342;
+          {ESLVal cons = $2713;
           
-          return new ESLVal("JTail",expToJExp.apply(_v113));
-        }
-        }
-      case "CaseError": {ESLVal $341 = _v44.termRef(0);
-          ESLVal $340 = _v44.termRef(1);
+          {ESLVal nil = $2712;
           
-          {ESLVal l = $341;
+          {ESLVal alt = $2711;
           
-          {ESLVal _v112 = $340;
-          
-          return new ESLVal("JError",new ESLVal("JBinExp",new ESLVal("JConstExp",new ESLVal("JConstStr",new ESLVal("case error at ").add(l))),new ESLVal("add"),expToJExp.apply(_v112)));
+          return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
         }
         }
         }
-      case "NullExp": {ESLVal $339 = _v44.termRef(0);
+        }
+        }
+        }
+      case "CaseTerm": {ESLVal $2710 = _v1990.termRef(0);
+          ESLVal $2709 = _v1990.termRef(1);
+          ESLVal $2708 = _v1990.termRef(2);
+          ESLVal $2707 = _v1990.termRef(3);
           
-          {ESLVal l = $339;
+          {ESLVal l = $2710;
+          
+          {ESLVal list = $2709;
+          
+          {ESLVal arms = $2708;
+          
+          {ESLVal alt = $2707;
+          
+          return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
+        }
+        }
+        }
+        }
+        }
+      case "CaseStr": {ESLVal $2706 = _v1990.termRef(0);
+          ESLVal $2705 = _v1990.termRef(1);
+          ESLVal $2704 = _v1990.termRef(2);
+          ESLVal $2703 = _v1990.termRef(3);
+          
+          {ESLVal l = $2706;
+          
+          {ESLVal s = $2705;
+          
+          {ESLVal arms = $2704;
+          
+          {ESLVal alt = $2703;
+          
+          return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
+        }
+        }
+        }
+        }
+        }
+      case "CaseBool": {ESLVal $2702 = _v1990.termRef(0);
+          ESLVal $2701 = _v1990.termRef(1);
+          ESLVal $2700 = _v1990.termRef(2);
+          ESLVal $2699 = _v1990.termRef(3);
+          
+          {ESLVal l = $2702;
+          
+          {ESLVal s = $2701;
+          
+          {ESLVal arms = $2700;
+          
+          {ESLVal alt = $2699;
+          
+          return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
+        }
+        }
+        }
+        }
+        }
+      case "CaseSet": {ESLVal $2698 = _v1990.termRef(0);
+          ESLVal $2697 = _v1990.termRef(1);
+          ESLVal $2696 = _v1990.termRef(2);
+          ESLVal $2695 = _v1990.termRef(3);
+          
+          {ESLVal l = $2698;
+          
+          {ESLVal s = $2697;
+          
+          {ESLVal handler = $2696;
+          
+          {ESLVal fail = $2695;
+          
+          return expToJExp.apply(new ESLVal("Apply",l,new ESLVal("Var",l,new ESLVal("$ndCase")),ESLVal.list(s,handler,fail)));
+        }
+        }
+        }
+        }
+        }
+      case "Head": {ESLVal $2694 = _v1990.termRef(0);
+          
+          {ESLVal _v2078 = $2694;
+          
+          return new ESLVal("JHead",expToJExp.apply(_v2078));
+        }
+        }
+      case "Tail": {ESLVal $2693 = _v1990.termRef(0);
+          
+          {ESLVal _v2077 = $2693;
+          
+          return new ESLVal("JTail",expToJExp.apply(_v2077));
+        }
+        }
+      case "CaseError": {ESLVal $2692 = _v1990.termRef(0);
+          ESLVal $2691 = _v1990.termRef(1);
+          
+          {ESLVal l = $2692;
+          
+          {ESLVal _v2076 = $2691;
+          
+          return new ESLVal("JError",new ESLVal("JBinExp",new ESLVal("JConstExp",new ESLVal("JConstStr",new ESLVal("case error at ").add(l))),new ESLVal("add"),expToJExp.apply(_v2076)));
+        }
+        }
+        }
+      case "NullExp": {ESLVal $2690 = _v1990.termRef(0);
+          
+          {ESLVal l = $2690;
           
           return new ESLVal("JNull",new ESLVal[]{});
         }
         }
-      case "Var": {ESLVal $338 = _v44.termRef(0);
-          ESLVal $337 = _v44.termRef(1);
+      case "Var": {ESLVal $2689 = _v1990.termRef(0);
+          ESLVal $2688 = _v1990.termRef(1);
           
-          {ESLVal l = $338;
+          {ESLVal l = $2689;
           
-          {ESLVal n = $337;
+          {ESLVal n = $2688;
           
           return new ESLVal("JVar",n,$null);
         }
         }
         }
-      case "Let": {ESLVal $336 = _v44.termRef(0);
-          ESLVal $335 = _v44.termRef(1);
-          ESLVal $334 = _v44.termRef(2);
+      case "Let": {ESLVal $2687 = _v1990.termRef(0);
+          ESLVal $2686 = _v1990.termRef(1);
+          ESLVal $2685 = _v1990.termRef(2);
           
-          {ESLVal l = $336;
+          {ESLVal l = $2687;
           
-          {ESLVal bs = $335;
+          {ESLVal bs = $2686;
           
-          {ESLVal body = $334;
-          
-          return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
-        }
-        }
-        }
-        }
-      case "Letrec": {ESLVal $333 = _v44.termRef(0);
-          ESLVal $332 = _v44.termRef(1);
-          ESLVal $331 = _v44.termRef(2);
-          
-          {ESLVal l = $333;
-          
-          {ESLVal bs = $332;
-          
-          {ESLVal body = $331;
+          {ESLVal body = $2685;
           
           return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
         }
         }
         }
         }
-      case "Throw": {ESLVal $330 = _v44.termRef(0);
-          ESLVal $329 = _v44.termRef(1);
-          ESLVal $328 = _v44.termRef(2);
+      case "Letrec": {ESLVal $2684 = _v1990.termRef(0);
+          ESLVal $2683 = _v1990.termRef(1);
+          ESLVal $2682 = _v1990.termRef(2);
           
-          {ESLVal l = $330;
+          {ESLVal l = $2684;
           
-          {ESLVal t = $329;
+          {ESLVal bs = $2683;
           
-          {ESLVal _v111 = $328;
+          {ESLVal body = $2682;
           
-          return new ESLVal("JError",expToJExp.apply(_v111));
+          return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
         }
         }
         }
         }
-      case "Apply": {ESLVal $327 = _v44.termRef(0);
-          ESLVal $326 = _v44.termRef(1);
-          ESLVal $325 = _v44.termRef(2);
+      case "Throw": {ESLVal $2681 = _v1990.termRef(0);
+          ESLVal $2680 = _v1990.termRef(1);
+          ESLVal $2679 = _v1990.termRef(2);
           
-          {ESLVal l = $327;
+          {ESLVal l = $2681;
           
-          {ESLVal op = $326;
+          {ESLVal t = $2680;
           
-          {ESLVal args = $325;
+          {ESLVal _v2075 = $2679;
           
-          return new ESLVal("JApply",expToJExp.apply(op),expsToJExps.apply(args));
+          return new ESLVal("JError",expToJExp.apply(_v2075));
         }
         }
         }
         }
-      case "BinExp": {ESLVal $324 = _v44.termRef(0);
-          ESLVal $323 = _v44.termRef(1);
-          ESLVal $322 = _v44.termRef(2);
-          ESLVal $321 = _v44.termRef(3);
+      case "BinExp": {ESLVal $2678 = _v1990.termRef(0);
+          ESLVal $2677 = _v1990.termRef(1);
+          ESLVal $2676 = _v1990.termRef(2);
+          ESLVal $2675 = _v1990.termRef(3);
           
-          {ESLVal l = $324;
+          {ESLVal l = $2678;
           
-          {ESLVal e1 = $323;
+          {ESLVal e1 = $2677;
           
-          {ESLVal op = $322;
+          {ESLVal op = $2676;
           
-          {ESLVal e2 = $321;
+          {ESLVal e2 = $2675;
           
           return new ESLVal("JBinExp",expToJExp.apply(e1),opToJOp.apply(op),expToJExp.apply(e2));
         }
@@ -1480,21 +1507,21 @@ public class ToJava {
         }
         }
         }
-      case "Become": {ESLVal $317 = _v44.termRef(0);
-          ESLVal $316 = _v44.termRef(1);
+      case "Become": {ESLVal $2671 = _v1990.termRef(0);
+          ESLVal $2670 = _v1990.termRef(1);
           
-          switch($316.termName) {
-          case "Apply": {ESLVal $320 = $316.termRef(0);
-            ESLVal $319 = $316.termRef(1);
-            ESLVal $318 = $316.termRef(2);
+          switch($2670.termName) {
+          case "Apply": {ESLVal $2674 = $2670.termRef(0);
+            ESLVal $2673 = $2670.termRef(1);
+            ESLVal $2672 = $2670.termRef(2);
             
-            {ESLVal l = $317;
+            {ESLVal l = $2671;
             
-            {ESLVal al = $320;
+            {ESLVal al = $2674;
             
-            {ESLVal b = $319;
+            {ESLVal b = $2673;
             
-            {ESLVal args = $318;
+            {ESLVal args = $2672;
             
             return new ESLVal("JBecome",expToJExp.apply(b),expsToJExps.apply(args));
           }
@@ -1502,69 +1529,69 @@ public class ToJava {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(5847,14312)").add(ESLVal.list(_v44)));
+          default: return error(new ESLVal("case error at Pos(6004,14628)").add(ESLVal.list(_v1990)));
         }
         }
-      case "Block": {ESLVal $311 = _v44.termRef(0);
-          ESLVal $310 = _v44.termRef(1);
+      case "Block": {ESLVal $2665 = _v1990.termRef(0);
+          ESLVal $2664 = _v1990.termRef(1);
           
-          if($310.isCons())
-          {ESLVal $312 = $310.head();
-            ESLVal $313 = $310.tail();
+          if($2664.isCons())
+          {ESLVal $2666 = $2664.head();
+            ESLVal $2667 = $2664.tail();
             
-            if($313.isCons())
-            {ESLVal $314 = $313.head();
-              ESLVal $315 = $313.tail();
+            if($2667.isCons())
+            {ESLVal $2668 = $2667.head();
+              ESLVal $2669 = $2667.tail();
               
-              {ESLVal l = $311;
+              {ESLVal l = $2665;
               
-              {ESLVal es = $310;
+              {ESLVal es = $2664;
               
               return new ESLVal("JCommandExp",new ESLVal("JBlock",expsToJCommands.apply(es,$true)),$null);
             }
             }
             }
-          else if($313.isNil())
-            {ESLVal l = $311;
+          else if($2667.isNil())
+            {ESLVal l = $2665;
               
-              {ESLVal _v110 = $312;
+              {ESLVal _v2074 = $2666;
               
-              return expToJExp.apply(_v110);
+              return expToJExp.apply(_v2074);
             }
             }
-          else {ESLVal l = $311;
+          else {ESLVal l = $2665;
               
-              {ESLVal es = $310;
+              {ESLVal es = $2664;
               
               return new ESLVal("JCommandExp",new ESLVal("JBlock",expsToJCommands.apply(es,$true)),$null);
             }
             }
           }
-        else if($310.isNil())
-          {ESLVal l = $311;
+        else if($2664.isNil())
+          {ESLVal l = $2665;
             
             return new ESLVal("JNull",new ESLVal[]{});
           }
-        else {ESLVal l = $311;
+        else {ESLVal l = $2665;
             
-            {ESLVal es = $310;
+            {ESLVal es = $2664;
             
             return new ESLVal("JCommandExp",new ESLVal("JBlock",expsToJCommands.apply(es,$true)),$null);
           }
           }
         }
-      case "If": {ESLVal $309 = _v44.termRef(0);
-          ESLVal $308 = _v44.termRef(1);
-          ESLVal $307 = _v44.termRef(2);
-          ESLVal $306 = _v44.termRef(3);
+      case "If": {ESLVal $2663 = _v1990.termRef(0);
+          ESLVal $2662 = _v1990.termRef(1);
+          ESLVal $2661 = _v1990.termRef(2);
+          ESLVal $2660 = _v1990.termRef(3);
           
-          {ESLVal l = $309;
+          {ESLVal l = $2663;
           
-          {ESLVal e1 = $308;
+          {ESLVal e1 = $2662;
           
-          {ESLVal e2 = $307;
+          {ESLVal e2 = $2661;
           
-          {ESLVal e3 = $306;
+          {ESLVal e3 = $2660;
           
           return new ESLVal("JCommandExp",new ESLVal("JIfCommand",expToJExp.apply(e1),expToJCommand.apply(e2,$true),expToJCommand.apply(e3,$true)),$null);
         }
@@ -1572,23 +1599,23 @@ public class ToJava {
         }
         }
         }
-      case "FunExp": {ESLVal $305 = _v44.termRef(0);
-          ESLVal $304 = _v44.termRef(1);
-          ESLVal $303 = _v44.termRef(2);
-          ESLVal $302 = _v44.termRef(3);
-          ESLVal $301 = _v44.termRef(4);
+      case "FunExp": {ESLVal $2659 = _v1990.termRef(0);
+          ESLVal $2658 = _v1990.termRef(1);
+          ESLVal $2657 = _v1990.termRef(2);
+          ESLVal $2656 = _v1990.termRef(3);
+          ESLVal $2655 = _v1990.termRef(4);
           
-          {ESLVal l = $305;
+          {ESLVal l = $2659;
           
-          {ESLVal n = $304;
+          {ESLVal n = $2658;
           
-          {ESLVal args = $303;
+          {ESLVal args = $2657;
           
-          {ESLVal t = $302;
+          {ESLVal t = $2656;
           
-          {ESLVal body = $301;
+          {ESLVal body = $2655;
           
-          return new ESLVal("JFun",expToJExp.apply(n),map.apply(new ESLVal(new Function(new ESLVal("fun699"),getSelf()) {
+          return new ESLVal("JFun",expToJExp.apply(n),map.apply(new ESLVal(new Function(new ESLVal("fun824"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal d = $args[0];
           return decToJDec.apply(d);
@@ -1596,9 +1623,9 @@ public class ToJava {
           }),args),new ESLVal("JFunType",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v46 = $qualArg;
+          {ESLVal _v1992 = $qualArg;
                 
-                {ESLVal a = _v46;
+                {ESLVal a = _v1992;
                 
                 return ESLVal.list(ESLVal.list($null));
               }
@@ -1611,85 +1638,97 @@ public class ToJava {
         }
         }
         }
-      case "TermRef": {ESLVal $300 = _v44.termRef(0);
-          ESLVal $299 = _v44.termRef(1);
+      case "TermRef": {ESLVal $2654 = _v1990.termRef(0);
+          ESLVal $2653 = _v1990.termRef(1);
           
-          {ESLVal _v109 = $300;
+          {ESLVal _v2073 = $2654;
           
-          {ESLVal i = $299;
+          {ESLVal i = $2653;
           
-          return new ESLVal("JTermRef",expToJExp.apply(_v109),i);
+          return new ESLVal("JTermRef",expToJExp.apply(_v2073),i);
         }
         }
         }
-      case "Cmp": {ESLVal $298 = _v44.termRef(0);
-          ESLVal $297 = _v44.termRef(1);
-          ESLVal $296 = _v44.termRef(2);
+      case "Cmp": {ESLVal $2652 = _v1990.termRef(0);
+          ESLVal $2651 = _v1990.termRef(1);
+          ESLVal $2650 = _v1990.termRef(2);
           
-          {ESLVal l = $298;
+          {ESLVal l = $2652;
           
-          {ESLVal _v108 = $297;
+          {ESLVal _v2069 = $2651;
           
-          {ESLVal qs = $296;
+          {ESLVal qs = $2650;
           
-          return cmpToJExp.apply(_v108,qs);
+          if(exists.apply(isBindingQualifier,qs).and(forall.apply(isSimpleQualifier,qs)).boolVal)
+          return new ESLVal("JCmpExp",cmpToJCmp.apply(_v2069,qs));
+          else
+            {ESLVal _v2070 = $2652;
+              
+              {ESLVal _v2071 = $2651;
+              
+              {ESLVal _v2072 = $2650;
+              
+              return cmpToJExp.apply(_v2071,_v2072);
+            }
+            }
+            }
         }
         }
         }
         }
-      case "Not": {ESLVal $295 = _v44.termRef(0);
-          ESLVal $294 = _v44.termRef(1);
+      case "Not": {ESLVal $2649 = _v1990.termRef(0);
+          ESLVal $2648 = _v1990.termRef(1);
           
-          {ESLVal l = $295;
+          {ESLVal l = $2649;
           
-          {ESLVal _v107 = $294;
+          {ESLVal _v2068 = $2648;
           
-          return new ESLVal("JNot",expToJExp.apply(_v107));
+          return new ESLVal("JNot",expToJExp.apply(_v2068));
         }
         }
         }
-      case "New": {ESLVal $293 = _v44.termRef(0);
-          ESLVal $292 = _v44.termRef(1);
-          ESLVal $291 = _v44.termRef(2);
+      case "New": {ESLVal $2647 = _v1990.termRef(0);
+          ESLVal $2646 = _v1990.termRef(1);
+          ESLVal $2645 = _v1990.termRef(2);
           
-          {ESLVal l = $293;
+          {ESLVal l = $2647;
           
-          {ESLVal b = $292;
+          {ESLVal b = $2646;
           
-          {ESLVal args = $291;
+          {ESLVal args = $2645;
           
           return new ESLVal("JNew",expToJExp.apply(b),expsToJExps.apply(args));
         }
         }
         }
         }
-      case "NewArray": {ESLVal $290 = _v44.termRef(0);
-          ESLVal $289 = _v44.termRef(1);
-          ESLVal $288 = _v44.termRef(2);
+      case "NewArray": {ESLVal $2644 = _v1990.termRef(0);
+          ESLVal $2643 = _v1990.termRef(1);
+          ESLVal $2642 = _v1990.termRef(2);
           
-          {ESLVal l = $290;
+          {ESLVal l = $2644;
           
-          {ESLVal t = $289;
+          {ESLVal t = $2643;
           
-          {ESLVal i = $288;
+          {ESLVal i = $2642;
           
           return new ESLVal("JNewArray",expToJExp.apply(i));
         }
         }
         }
         }
-      case "NewJava": {ESLVal $287 = _v44.termRef(0);
-          ESLVal $286 = _v44.termRef(1);
-          ESLVal $285 = _v44.termRef(2);
-          ESLVal $284 = _v44.termRef(3);
+      case "NewJava": {ESLVal $2641 = _v1990.termRef(0);
+          ESLVal $2640 = _v1990.termRef(1);
+          ESLVal $2639 = _v1990.termRef(2);
+          ESLVal $2638 = _v1990.termRef(3);
           
-          {ESLVal l = $287;
+          {ESLVal l = $2641;
           
-          {ESLVal n = $286;
+          {ESLVal n = $2640;
           
-          {ESLVal t = $285;
+          {ESLVal t = $2639;
           
-          {ESLVal args = $284;
+          {ESLVal args = $2638;
           
           return new ESLVal("JNewJava",n,expsToJExps.apply(args));
         }
@@ -1697,58 +1736,58 @@ public class ToJava {
         }
         }
         }
-      case "NewTable": {ESLVal $283 = _v44.termRef(0);
-          ESLVal $282 = _v44.termRef(1);
-          ESLVal $281 = _v44.termRef(2);
+      case "NewTable": {ESLVal $2637 = _v1990.termRef(0);
+          ESLVal $2636 = _v1990.termRef(1);
+          ESLVal $2635 = _v1990.termRef(2);
           
-          {ESLVal l = $283;
+          {ESLVal l = $2637;
           
-          {ESLVal key = $282;
+          {ESLVal key = $2636;
           
-          {ESLVal value = $281;
+          {ESLVal value = $2635;
           
           return new ESLVal("JNewTable",new ESLVal[]{});
         }
         }
         }
         }
-      case "Record": {ESLVal $280 = _v44.termRef(0);
-          ESLVal $279 = _v44.termRef(1);
+      case "Record": {ESLVal $2634 = _v1990.termRef(0);
+          ESLVal $2633 = _v1990.termRef(1);
           
-          {ESLVal l = $280;
+          {ESLVal l = $2634;
           
-          {ESLVal fs = $279;
+          {ESLVal fs = $2633;
           
           return new ESLVal("JRecord",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v45 = $qualArg;
+          {ESLVal _v1991 = $qualArg;
                 
-                switch(_v45.termName) {
-                case "Binding": {ESLVal $418 = _v45.termRef(0);
-                  ESLVal $417 = _v45.termRef(1);
-                  ESLVal $416 = _v45.termRef(2);
-                  ESLVal $415 = _v45.termRef(3);
-                  ESLVal $414 = _v45.termRef(4);
+                switch(_v1991.termName) {
+                case "Binding": {ESLVal $2772 = _v1991.termRef(0);
+                  ESLVal $2771 = _v1991.termRef(1);
+                  ESLVal $2770 = _v1991.termRef(2);
+                  ESLVal $2769 = _v1991.termRef(3);
+                  ESLVal $2768 = _v1991.termRef(4);
                   
-                  {ESLVal bl = $418;
+                  {ESLVal bl = $2772;
                   
-                  {ESLVal n = $417;
+                  {ESLVal n = $2771;
                   
-                  {ESLVal t = $416;
+                  {ESLVal t = $2770;
                   
-                  {ESLVal dt = $415;
+                  {ESLVal dt = $2769;
                   
-                  {ESLVal _v106 = $414;
+                  {ESLVal _v2067 = $2768;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("JField",n,$null,expToJExp.apply(_v106))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("JField",n,$null,expToJExp.apply(_v2067))));
                 }
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _0 = _v45;
+                default: {ESLVal _0 = _v1991;
                   
                   return ESLVal.list();
                 }
@@ -1759,27 +1798,27 @@ public class ToJava {
         }
         }
         }
-      case "Send": {ESLVal $274 = _v44.termRef(0);
-          ESLVal $273 = _v44.termRef(1);
-          ESLVal $272 = _v44.termRef(2);
+      case "Send": {ESLVal $2628 = _v1990.termRef(0);
+          ESLVal $2627 = _v1990.termRef(1);
+          ESLVal $2626 = _v1990.termRef(2);
           
-          switch($272.termName) {
-          case "Term": {ESLVal $278 = $272.termRef(0);
-            ESLVal $277 = $272.termRef(1);
-            ESLVal $276 = $272.termRef(2);
-            ESLVal $275 = $272.termRef(3);
+          switch($2626.termName) {
+          case "Term": {ESLVal $2632 = $2626.termRef(0);
+            ESLVal $2631 = $2626.termRef(1);
+            ESLVal $2630 = $2626.termRef(2);
+            ESLVal $2629 = $2626.termRef(3);
             
-            {ESLVal l = $274;
+            {ESLVal l = $2628;
             
-            {ESLVal a = $273;
+            {ESLVal a = $2627;
             
-            {ESLVal lt = $278;
+            {ESLVal lt = $2632;
             
-            {ESLVal n = $277;
+            {ESLVal n = $2631;
             
-            {ESLVal ts = $276;
+            {ESLVal ts = $2630;
             
-            {ESLVal es = $275;
+            {ESLVal es = $2629;
             
             return new ESLVal("JSend",expToJExp.apply(a),n,expsToJExps.apply(es));
           }
@@ -1789,193 +1828,193 @@ public class ToJava {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(5847,14312)").add(ESLVal.list(_v44)));
+          default: return error(new ESLVal("case error at Pos(6004,14628)").add(ESLVal.list(_v1990)));
         }
         }
-      case "SendTimeSuper": {ESLVal $271 = _v44.termRef(0);
+      case "SendTimeSuper": {ESLVal $2625 = _v1990.termRef(0);
           
-          {ESLVal l = $271;
+          {ESLVal l = $2625;
           
           return new ESLVal("JSendTimeSuper",new ESLVal[]{});
         }
         }
-      case "SendSuper": {ESLVal $270 = _v44.termRef(0);
-          ESLVal $269 = _v44.termRef(1);
+      case "SendSuper": {ESLVal $2624 = _v1990.termRef(0);
+          ESLVal $2623 = _v1990.termRef(1);
           
-          {ESLVal l = $270;
+          {ESLVal l = $2624;
           
-          {ESLVal _v105 = $269;
+          {ESLVal _v2066 = $2623;
           
-          return new ESLVal("JSendSuper",expToJExp.apply(_v105));
+          return new ESLVal("JSendSuper",expToJExp.apply(_v2066));
         }
         }
         }
-      case "Self": {ESLVal $268 = _v44.termRef(0);
+      case "Self": {ESLVal $2622 = _v1990.termRef(0);
           
-          {ESLVal l = $268;
+          {ESLVal l = $2622;
           
           return new ESLVal("JSelf",new ESLVal[]{});
         }
         }
-      case "Fold": {ESLVal $267 = _v44.termRef(0);
-          ESLVal $266 = _v44.termRef(1);
-          ESLVal $265 = _v44.termRef(2);
+      case "Fold": {ESLVal $2621 = _v1990.termRef(0);
+          ESLVal $2620 = _v1990.termRef(1);
+          ESLVal $2619 = _v1990.termRef(2);
           
-          {ESLVal l = $267;
+          {ESLVal l = $2621;
           
-          {ESLVal t = $266;
+          {ESLVal t = $2620;
           
-          {ESLVal _v104 = $265;
+          {ESLVal _v2065 = $2619;
           
-          return expToJExp.apply(_v104);
+          return expToJExp.apply(_v2065);
         }
         }
         }
         }
-      case "Now": {ESLVal $264 = _v44.termRef(0);
+      case "Now": {ESLVal $2618 = _v1990.termRef(0);
           
-          {ESLVal l = $264;
+          {ESLVal l = $2618;
           
           return new ESLVal("JNow",new ESLVal[]{});
         }
         }
-      case "Ref": {ESLVal $263 = _v44.termRef(0);
-          ESLVal $262 = _v44.termRef(1);
-          ESLVal $261 = _v44.termRef(2);
+      case "Ref": {ESLVal $2617 = _v1990.termRef(0);
+          ESLVal $2616 = _v1990.termRef(1);
+          ESLVal $2615 = _v1990.termRef(2);
           
-          {ESLVal l = $263;
+          {ESLVal l = $2617;
           
-          {ESLVal _v103 = $262;
+          {ESLVal _v2064 = $2616;
           
-          {ESLVal n = $261;
+          {ESLVal n = $2615;
           
-          return new ESLVal("JRef",expToJExp.apply(_v103),n);
+          return new ESLVal("JRef",expToJExp.apply(_v2064),n);
         }
         }
         }
         }
-      case "RefSuper": {ESLVal $260 = _v44.termRef(0);
-          ESLVal $259 = _v44.termRef(1);
+      case "RefSuper": {ESLVal $2614 = _v1990.termRef(0);
+          ESLVal $2613 = _v1990.termRef(1);
           
-          {ESLVal l = $260;
+          {ESLVal l = $2614;
           
-          {ESLVal n = $259;
+          {ESLVal n = $2613;
           
           return new ESLVal("JRefSuper",n);
         }
         }
         }
-      case "For": {ESLVal $258 = _v44.termRef(0);
-          ESLVal $257 = _v44.termRef(1);
-          ESLVal $256 = _v44.termRef(2);
-          ESLVal $255 = _v44.termRef(3);
+      case "For": {ESLVal $2612 = _v1990.termRef(0);
+          ESLVal $2611 = _v1990.termRef(1);
+          ESLVal $2610 = _v1990.termRef(2);
+          ESLVal $2609 = _v1990.termRef(3);
           
-          {ESLVal l1 = $258;
+          {ESLVal l1 = $2612;
           
-          {ESLVal p = $257;
+          {ESLVal p = $2611;
           
-          {ESLVal l2 = $256;
+          {ESLVal l2 = $2610;
           
-          {ESLVal c = $255;
-          
-          return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
-        }
-        }
-        }
-        }
-        }
-      case "Grab": {ESLVal $254 = _v44.termRef(0);
-          ESLVal $253 = _v44.termRef(1);
-          ESLVal $252 = _v44.termRef(2);
-          
-          {ESLVal l = $254;
-          
-          {ESLVal refs = $253;
-          
-          {ESLVal _v102 = $252;
-          
-          return new ESLVal("JGrab",refsToJExps.apply(refs),expToJExp.apply(_v102));
-        }
-        }
-        }
-        }
-      case "Update": {ESLVal $251 = _v44.termRef(0);
-          ESLVal $250 = _v44.termRef(1);
-          ESLVal $249 = _v44.termRef(2);
-          
-          {ESLVal l = $251;
-          
-          {ESLVal n = $250;
-          
-          {ESLVal v = $249;
+          {ESLVal c = $2609;
           
           return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
         }
         }
         }
         }
-      case "Probably": {ESLVal $248 = _v44.termRef(0);
-          ESLVal $247 = _v44.termRef(1);
-          ESLVal $246 = _v44.termRef(2);
-          ESLVal $245 = _v44.termRef(3);
-          ESLVal $244 = _v44.termRef(4);
+        }
+      case "Grab": {ESLVal $2608 = _v1990.termRef(0);
+          ESLVal $2607 = _v1990.termRef(1);
+          ESLVal $2606 = _v1990.termRef(2);
           
-          {ESLVal l = $248;
+          {ESLVal l = $2608;
           
-          {ESLVal _v101 = $247;
+          {ESLVal refs = $2607;
           
-          {ESLVal t = $246;
+          {ESLVal _v2063 = $2606;
           
-          {ESLVal e1 = $245;
+          return new ESLVal("JGrab",refsToJExps.apply(refs),expToJExp.apply(_v2063));
+        }
+        }
+        }
+        }
+      case "Update": {ESLVal $2605 = _v1990.termRef(0);
+          ESLVal $2604 = _v1990.termRef(1);
+          ESLVal $2603 = _v1990.termRef(2);
           
-          {ESLVal e2 = $244;
+          {ESLVal l = $2605;
           
-          return new ESLVal("JProbably",expToJExp.apply(_v101),expToJExp.apply(e1),expToJExp.apply(e2));
+          {ESLVal n = $2604;
+          
+          {ESLVal v = $2603;
+          
+          return new ESLVal("JCommandExp",expToJCommand.apply(e,$true),$null);
+        }
+        }
+        }
+        }
+      case "Probably": {ESLVal $2602 = _v1990.termRef(0);
+          ESLVal $2601 = _v1990.termRef(1);
+          ESLVal $2600 = _v1990.termRef(2);
+          ESLVal $2599 = _v1990.termRef(3);
+          ESLVal $2598 = _v1990.termRef(4);
+          
+          {ESLVal l = $2602;
+          
+          {ESLVal _v2062 = $2601;
+          
+          {ESLVal t = $2600;
+          
+          {ESLVal e1 = $2599;
+          
+          {ESLVal e2 = $2598;
+          
+          return new ESLVal("JProbably",expToJExp.apply(_v2062),expToJExp.apply(e1),expToJExp.apply(e2));
         }
         }
         }
         }
         }
         }
-      case "Try": {ESLVal $243 = _v44.termRef(0);
-          ESLVal $242 = _v44.termRef(1);
-          ESLVal $241 = _v44.termRef(2);
+      case "Try": {ESLVal $2597 = _v1990.termRef(0);
+          ESLVal $2596 = _v1990.termRef(1);
+          ESLVal $2595 = _v1990.termRef(2);
           
-          {ESLVal l = $243;
+          {ESLVal l = $2597;
           
-          {ESLVal _v100 = $242;
+          {ESLVal _v2061 = $2596;
           
-          {ESLVal arms = $241;
+          {ESLVal arms = $2595;
           
-          return new ESLVal("JTry",expToJExp.apply(_v100),new ESLVal("$x"),expToJCommand.apply(new ESLVal("Case",l,$nil,ESLVal.list(new ESLVal("Var",l,new ESLVal("$x"))),arms),$true));
+          return new ESLVal("JTry",expToJExp.apply(_v2061),new ESLVal("$x"),expToJCommand.apply(new ESLVal("Case",l,$nil,ESLVal.list(new ESLVal("Var",l,new ESLVal("$x"))),arms),$true));
         }
         }
         }
         }
-      case "ActExp": {ESLVal $240 = _v44.termRef(0);
-          ESLVal $239 = _v44.termRef(1);
-          ESLVal $238 = _v44.termRef(2);
-          ESLVal $237 = _v44.termRef(3);
-          ESLVal $236 = _v44.termRef(4);
-          ESLVal $235 = _v44.termRef(5);
-          ESLVal $234 = _v44.termRef(6);
-          ESLVal $233 = _v44.termRef(7);
+      case "ActExp": {ESLVal $2594 = _v1990.termRef(0);
+          ESLVal $2593 = _v1990.termRef(1);
+          ESLVal $2592 = _v1990.termRef(2);
+          ESLVal $2591 = _v1990.termRef(3);
+          ESLVal $2590 = _v1990.termRef(4);
+          ESLVal $2589 = _v1990.termRef(5);
+          ESLVal $2588 = _v1990.termRef(6);
+          ESLVal $2587 = _v1990.termRef(7);
           
-          {ESLVal l = $240;
+          {ESLVal l = $2594;
           
-          {ESLVal name = $239;
+          {ESLVal name = $2593;
           
-          {ESLVal decs = $238;
+          {ESLVal decs = $2592;
           
-          {ESLVal exports = $237;
+          {ESLVal exports = $2591;
           
-          {ESLVal parent = $236;
+          {ESLVal parent = $2590;
           
-          {ESLVal defs = $235;
+          {ESLVal defs = $2589;
           
-          {ESLVal init = $234;
+          {ESLVal init = $2588;
           
-          {ESLVal arms = $233;
+          {ESLVal arms = $2587;
           
           return actToJava.apply(name,decs,exports,parent,defs,init,arms);
         }
@@ -1987,69 +2026,294 @@ public class ToJava {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(5847,14312)").add(ESLVal.list(_v44)));
+        default: return error(new ESLVal("case error at Pos(6004,14628)").add(ESLVal.list(_v1990)));
       }
       }
+    }
+  });
+  private static ESLVal isSimpleQualifier = new ESLVal(new Function(new ESLVal("isSimpleQualifier"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal q = $args[0];
+  {ESLVal _v1989 = q;
+        
+        switch(_v1989.termName) {
+        case "BQual": {ESLVal $2583 = _v1989.termRef(0);
+          ESLVal $2582 = _v1989.termRef(1);
+          ESLVal $2581 = _v1989.termRef(2);
+          
+          switch($2582.termName) {
+          case "PVar": {ESLVal $2586 = $2582.termRef(0);
+            ESLVal $2585 = $2582.termRef(1);
+            ESLVal $2584 = $2582.termRef(2);
+            
+            {ESLVal l = $2583;
+            
+            {ESLVal vl = $2586;
+            
+            {ESLVal n = $2585;
+            
+            {ESLVal t = $2584;
+            
+            {ESLVal e = $2581;
+            
+            return $true;
+          }
+          }
+          }
+          }
+          }
+          }
+          default: {ESLVal l = $2583;
+            
+            {ESLVal p = $2582;
+            
+            {ESLVal e = $2581;
+            
+            return $false;
+          }
+          }
+          }
+        }
+        }
+        default: {ESLVal _v2060 = _v1989;
+          
+          return $true;
+        }
+      }
+      }
+    }
+  });
+  private static ESLVal isBindingQualifier = new ESLVal(new Function(new ESLVal("isBindingQualifier"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal q = $args[0];
+  {ESLVal _v1988 = q;
+        
+        switch(_v1988.termName) {
+        case "BQual": {ESLVal $2580 = _v1988.termRef(0);
+          ESLVal $2579 = _v1988.termRef(1);
+          ESLVal $2578 = _v1988.termRef(2);
+          
+          {ESLVal l = $2580;
+          
+          {ESLVal p = $2579;
+          
+          {ESLVal e = $2578;
+          
+          return $true;
+        }
+        }
+        }
+        }
+        default: {ESLVal _v2059 = _v1988;
+          
+          return $false;
+        }
+      }
+      }
+    }
+  });
+  private static ESLVal cmpToJCmp = new ESLVal(new Function(new ESLVal("cmpToJCmp"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal e = $args[0];
+  ESLVal qs = $args[1];
+  LetRec letrec = new LetRec() {
+        ESLVal inner = new ESLVal(new Function(new ESLVal("inner"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal _v2054 = $args[0];
+          {ESLVal _v1986 = _v2054;
+                
+                if(_v1986.isCons())
+                {ESLVal $2558 = _v1986.head();
+                  ESLVal $2559 = _v1986.tail();
+                  
+                  switch($2558.termName) {
+                  case "BQual": {ESLVal $2564 = $2558.termRef(0);
+                    ESLVal $2563 = $2558.termRef(1);
+                    ESLVal $2562 = $2558.termRef(2);
+                    
+                    switch($2563.termName) {
+                    case "PVar": {ESLVal $2567 = $2563.termRef(0);
+                      ESLVal $2566 = $2563.termRef(1);
+                      ESLVal $2565 = $2563.termRef(2);
+                      
+                      {ESLVal l = $2564;
+                      
+                      {ESLVal vl = $2567;
+                      
+                      {ESLVal n = $2566;
+                      
+                      {ESLVal t = $2565;
+                      
+                      {ESLVal listExp = $2562;
+                      
+                      {ESLVal _v2056 = $2559;
+                      
+                      return new ESLVal("JCmpBind",n,expToJExp.apply(listExp),inner.apply(_v2056));
+                    }
+                    }
+                    }
+                    }
+                    }
+                    }
+                    }
+                    default: return error(new ESLVal("case error at Pos(15031,15229)").add(ESLVal.list(_v1986)));
+                  }
+                  }
+                case "PQual": {ESLVal $2561 = $2558.termRef(0);
+                    ESLVal $2560 = $2558.termRef(1);
+                    
+                    {ESLVal l = $2561;
+                    
+                    {ESLVal p = $2560;
+                    
+                    {ESLVal _v2055 = $2559;
+                    
+                    return new ESLVal("JCmpIf",expToJExp.apply(p),inner.apply(_v2055));
+                  }
+                  }
+                  }
+                  }
+                  default: return error(new ESLVal("case error at Pos(15031,15229)").add(ESLVal.list(_v1986)));
+                }
+                }
+              else if(_v1986.isNil())
+                return new ESLVal("JCmpList",expToJExp.apply(e));
+              else return error(new ESLVal("case error at Pos(15031,15229)").add(ESLVal.list(_v1986)));
+              }
+            }
+          });
+        
+        public ESLVal get(String name) {
+          switch(name) {
+            case "inner": return inner;
+            
+            default: throw new Error("cannot find letrec binding");
+          }
+          }
+        };
+      ESLVal inner = letrec.get("inner");
+      
+        {ESLVal _v1987 = qs;
+        
+        if(_v1987.isCons())
+        {ESLVal $2568 = _v1987.head();
+          ESLVal $2569 = _v1987.tail();
+          
+          switch($2568.termName) {
+          case "BQual": {ESLVal $2574 = $2568.termRef(0);
+            ESLVal $2573 = $2568.termRef(1);
+            ESLVal $2572 = $2568.termRef(2);
+            
+            switch($2573.termName) {
+            case "PVar": {ESLVal $2577 = $2573.termRef(0);
+              ESLVal $2576 = $2573.termRef(1);
+              ESLVal $2575 = $2573.termRef(2);
+              
+              {ESLVal l = $2574;
+              
+              {ESLVal vl = $2577;
+              
+              {ESLVal n = $2576;
+              
+              {ESLVal t = $2575;
+              
+              {ESLVal listExp = $2572;
+              
+              {ESLVal _v2058 = $2569;
+              
+              return new ESLVal("JCmpOuter",n,expToJExp.apply(listExp),inner.apply(_v2058));
+            }
+            }
+            }
+            }
+            }
+            }
+            }
+            default: return error(new ESLVal("case error at Pos(15241,15438)").add(ESLVal.list(_v1987)));
+          }
+          }
+        case "PQual": {ESLVal $2571 = $2568.termRef(0);
+            ESLVal $2570 = $2568.termRef(1);
+            
+            {ESLVal l = $2571;
+            
+            {ESLVal p = $2570;
+            
+            {ESLVal _v2057 = $2569;
+            
+            return new ESLVal("JCmpIf",expToJExp.apply(p),cmpToJCmp.apply(e,_v2057));
+          }
+          }
+          }
+          }
+          default: return error(new ESLVal("case error at Pos(15241,15438)").add(ESLVal.list(_v1987)));
+        }
+        }
+      else if(_v1987.isNil())
+        return new ESLVal("JCmpList",expToJExp.apply(e));
+      else return error(new ESLVal("case error at Pos(15241,15438)").add(ESLVal.list(_v1987)));
+      }
+      
     }
   });
   private static ESLVal refsToJExps = new ESLVal(new Function(new ESLVal("refsToJExps"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal refs = $args[0];
-  {ESLVal _v43 = refs;
+  {ESLVal _v1985 = refs;
         
-        if(_v43.isCons())
-        {ESLVal $224 = _v43.head();
-          ESLVal $225 = _v43.tail();
+        if(_v1985.isCons())
+        {ESLVal $2549 = _v1985.head();
+          ESLVal $2550 = _v1985.tail();
           
-          switch($224.termName) {
-          case "VarDynamicRef": {ESLVal $230 = $224.termRef(0);
-            ESLVal $229 = $224.termRef(1);
+          switch($2549.termName) {
+          case "VarDynamicRef": {ESLVal $2555 = $2549.termRef(0);
+            ESLVal $2554 = $2549.termRef(1);
             
-            switch($229.termName) {
-            case "Var": {ESLVal $232 = $229.termRef(0);
-              ESLVal $231 = $229.termRef(1);
+            switch($2554.termName) {
+            case "Var": {ESLVal $2557 = $2554.termRef(0);
+              ESLVal $2556 = $2554.termRef(1);
               
-              {ESLVal l = $230;
+              {ESLVal l = $2555;
               
-              {ESLVal vl = $232;
+              {ESLVal vl = $2557;
               
-              {ESLVal n = $231;
+              {ESLVal n = $2556;
               
-              {ESLVal _v99 = $225;
+              {ESLVal _v2053 = $2550;
               
-              return refsToJExps.apply(_v99).cons(new ESLVal("JVar",n,$null));
+              return refsToJExps.apply(_v2053).cons(new ESLVal("JVar",n,$null));
             }
             }
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(14355,14596)").add(ESLVal.list(_v43)));
+            default: return error(new ESLVal("case error at Pos(15485,15726)").add(ESLVal.list(_v1985)));
           }
           }
-        case "ActorDynamicRef": {ESLVal $228 = $224.termRef(0);
-            ESLVal $227 = $224.termRef(1);
-            ESLVal $226 = $224.termRef(2);
+        case "ActorDynamicRef": {ESLVal $2553 = $2549.termRef(0);
+            ESLVal $2552 = $2549.termRef(1);
+            ESLVal $2551 = $2549.termRef(2);
             
-            {ESLVal l = $228;
+            {ESLVal l = $2553;
             
-            {ESLVal e = $227;
+            {ESLVal e = $2552;
             
-            {ESLVal n = $226;
+            {ESLVal n = $2551;
             
-            {ESLVal _v98 = $225;
+            {ESLVal _v2052 = $2550;
             
-            return refsToJExps.apply(_v98).cons(new ESLVal("JRef",expToJExp.apply(e),n));
+            return refsToJExps.apply(_v2052).cons(new ESLVal("JRef",expToJExp.apply(e),n));
           }
           }
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(14355,14596)").add(ESLVal.list(_v43)));
+          default: return error(new ESLVal("case error at Pos(15485,15726)").add(ESLVal.list(_v1985)));
         }
         }
-      else if(_v43.isNil())
+      else if(_v1985.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(14355,14596)").add(ESLVal.list(_v43)));
+      else return error(new ESLVal("case error at Pos(15485,15726)").add(ESLVal.list(_v1985)));
       }
     }
   });
@@ -2092,9 +2356,9 @@ public class ToJava {
         return new ESLVal("JBehaviour",exports,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal $qualArg = $args[0];
-        {ESLVal _v42 = $qualArg;
+        {ESLVal _v1984 = $qualArg;
               
-              {ESLVal b = _v42;
+              {ESLVal b = _v1984;
               
               return ESLVal.list(ESLVal.list(defToField.apply(b)));
             }
@@ -2138,9 +2402,9 @@ public class ToJava {
         return new ESLVal("JExtendedBehaviour",exports,expToJExp.apply(parent),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal $qualArg = $args[0];
-        {ESLVal _v41 = $qualArg;
+        {ESLVal _v1983 = $qualArg;
               
-              {ESLVal b = _v41;
+              {ESLVal b = _v1983;
               
               return ESLVal.list(ESLVal.list(defToField.apply(b)));
             }
@@ -2159,46 +2423,46 @@ public class ToJava {
   private static ESLVal isTimeArm = new ESLVal(new Function(new ESLVal("isTimeArm"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal a = $args[0];
-  {ESLVal _v40 = a;
+  {ESLVal _v1982 = a;
         
-        switch(_v40.termName) {
-        case "BArm": {ESLVal $215 = _v40.termRef(0);
-          ESLVal $214 = _v40.termRef(1);
-          ESLVal $213 = _v40.termRef(2);
-          ESLVal $212 = _v40.termRef(3);
+        switch(_v1982.termName) {
+        case "BArm": {ESLVal $2540 = _v1982.termRef(0);
+          ESLVal $2539 = _v1982.termRef(1);
+          ESLVal $2538 = _v1982.termRef(2);
+          ESLVal $2537 = _v1982.termRef(3);
           
-          if($214.isCons())
-          {ESLVal $216 = $214.head();
-            ESLVal $217 = $214.tail();
+          if($2539.isCons())
+          {ESLVal $2541 = $2539.head();
+            ESLVal $2542 = $2539.tail();
             
-            switch($216.termName) {
-            case "PTerm": {ESLVal $221 = $216.termRef(0);
-              ESLVal $220 = $216.termRef(1);
-              ESLVal $219 = $216.termRef(2);
-              ESLVal $218 = $216.termRef(3);
+            switch($2541.termName) {
+            case "PTerm": {ESLVal $2546 = $2541.termRef(0);
+              ESLVal $2545 = $2541.termRef(1);
+              ESLVal $2544 = $2541.termRef(2);
+              ESLVal $2543 = $2541.termRef(3);
               
-              switch($220.strVal) {
-              case "Time": if($217.isCons())
-                {ESLVal $222 = $217.head();
-                  ESLVal $223 = $217.tail();
+              switch($2545.strVal) {
+              case "Time": if($2542.isCons())
+                {ESLVal $2547 = $2542.head();
+                  ESLVal $2548 = $2542.tail();
                   
-                  {ESLVal _v91 = _v40;
+                  {ESLVal _v2045 = _v1982;
                   
                   return $false;
                 }
                 }
-              else if($217.isNil())
-                {ESLVal l = $215;
+              else if($2542.isNil())
+                {ESLVal l = $2540;
                   
-                  {ESLVal pl = $221;
+                  {ESLVal pl = $2546;
                   
-                  {ESLVal ts = $219;
+                  {ESLVal ts = $2544;
                   
-                  {ESLVal ps = $218;
+                  {ESLVal ps = $2543;
                   
-                  {ESLVal g = $213;
+                  {ESLVal g = $2538;
                   
-                  {ESLVal e = $212;
+                  {ESLVal e = $2537;
                   
                   return $true;
                 }
@@ -2207,33 +2471,33 @@ public class ToJava {
                 }
                 }
                 }
-              else {ESLVal _v92 = _v40;
+              else {ESLVal _v2046 = _v1982;
                   
                   return $false;
                 }
-              default: {ESLVal _v93 = _v40;
+              default: {ESLVal _v2047 = _v1982;
                 
                 return $false;
               }
             }
             }
-            default: {ESLVal _v94 = _v40;
+            default: {ESLVal _v2048 = _v1982;
               
               return $false;
             }
           }
           }
-        else if($214.isNil())
-          {ESLVal _v95 = _v40;
+        else if($2539.isNil())
+          {ESLVal _v2049 = _v1982;
             
             return $false;
           }
-        else {ESLVal _v96 = _v40;
+        else {ESLVal _v2050 = _v1982;
             
             return $false;
           }
         }
-        default: {ESLVal _v97 = _v40;
+        default: {ESLVal _v2051 = _v1982;
           
           return $false;
         }
@@ -2244,124 +2508,124 @@ public class ToJava {
   private static ESLVal timeArmsToJCommand = new ESLVal(new Function(new ESLVal("timeArmsToJCommand"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal arms = $args[0];
-  {ESLVal _v39 = arms;
+  {ESLVal _v1981 = arms;
         
-        if(_v39.isCons())
-        {ESLVal $181 = _v39.head();
-          ESLVal $182 = _v39.tail();
+        if(_v1981.isCons())
+        {ESLVal $2506 = _v1981.head();
+          ESLVal $2507 = _v1981.tail();
           
-          switch($181.termName) {
-          case "BArm": {ESLVal $186 = $181.termRef(0);
-            ESLVal $185 = $181.termRef(1);
-            ESLVal $184 = $181.termRef(2);
-            ESLVal $183 = $181.termRef(3);
+          switch($2506.termName) {
+          case "BArm": {ESLVal $2511 = $2506.termRef(0);
+            ESLVal $2510 = $2506.termRef(1);
+            ESLVal $2509 = $2506.termRef(2);
+            ESLVal $2508 = $2506.termRef(3);
             
-            if($185.isCons())
-            {ESLVal $187 = $185.head();
-              ESLVal $188 = $185.tail();
+            if($2510.isCons())
+            {ESLVal $2512 = $2510.head();
+              ESLVal $2513 = $2510.tail();
               
-              switch($187.termName) {
-              case "PTerm": {ESLVal $192 = $187.termRef(0);
-                ESLVal $191 = $187.termRef(1);
-                ESLVal $190 = $187.termRef(2);
-                ESLVal $189 = $187.termRef(3);
+              switch($2512.termName) {
+              case "PTerm": {ESLVal $2517 = $2512.termRef(0);
+                ESLVal $2516 = $2512.termRef(1);
+                ESLVal $2515 = $2512.termRef(2);
+                ESLVal $2514 = $2512.termRef(3);
                 
-                switch($191.strVal) {
-                case "Time": if($190.isCons())
-                  {ESLVal $193 = $190.head();
-                    ESLVal $194 = $190.tail();
+                switch($2516.strVal) {
+                case "Time": if($2515.isCons())
+                  {ESLVal $2518 = $2515.head();
+                    ESLVal $2519 = $2515.tail();
                     
-                    return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+                    return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
                   }
-                else if($190.isNil())
-                  if($189.isCons())
-                    {ESLVal $195 = $189.head();
-                      ESLVal $196 = $189.tail();
+                else if($2515.isNil())
+                  if($2514.isCons())
+                    {ESLVal $2520 = $2514.head();
+                      ESLVal $2521 = $2514.tail();
                       
-                      switch($195.termName) {
-                      case "PVar": {ESLVal $207 = $195.termRef(0);
-                        ESLVal $206 = $195.termRef(1);
-                        ESLVal $205 = $195.termRef(2);
+                      switch($2520.termName) {
+                      case "PVar": {ESLVal $2532 = $2520.termRef(0);
+                        ESLVal $2531 = $2520.termRef(1);
+                        ESLVal $2530 = $2520.termRef(2);
                         
-                        if($196.isCons())
-                        {ESLVal $208 = $196.head();
-                          ESLVal $209 = $196.tail();
+                        if($2521.isCons())
+                        {ESLVal $2533 = $2521.head();
+                          ESLVal $2534 = $2521.tail();
                           
-                          return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+                          return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
                         }
-                      else if($196.isNil())
-                        if($188.isCons())
-                          {ESLVal $210 = $188.head();
-                            ESLVal $211 = $188.tail();
+                      else if($2521.isNil())
+                        if($2513.isCons())
+                          {ESLVal $2535 = $2513.head();
+                            ESLVal $2536 = $2513.tail();
                             
-                            return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+                            return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
                           }
-                        else if($188.isNil())
-                          {ESLVal l = $186;
+                        else if($2513.isNil())
+                          {ESLVal l = $2511;
                             
-                            {ESLVal tl = $192;
+                            {ESLVal tl = $2517;
                             
-                            {ESLVal vl = $207;
+                            {ESLVal vl = $2532;
                             
-                            {ESLVal n = $206;
+                            {ESLVal n = $2531;
                             
-                            {ESLVal t = $205;
+                            {ESLVal t = $2530;
                             
-                            {ESLVal g = $184;
+                            {ESLVal g = $2509;
                             
-                            {ESLVal e = $183;
+                            {ESLVal e = $2508;
                             
-                            {ESLVal _v90 = $182;
+                            {ESLVal _v2044 = $2507;
                             
-                            return new ESLVal("JLet",ESLVal.list(new ESLVal("JField",n,$null,new ESLVal("JVar",new ESLVal("$t"),$null))),new ESLVal("JIfCommand",expToJExp.apply(g),expToJCommand.apply(e,$false),timeArmsToJCommand.apply(_v90)));
-                          }
-                          }
+                            return new ESLVal("JLet",ESLVal.list(new ESLVal("JField",n,$null,new ESLVal("JVar",new ESLVal("$t"),$null))),new ESLVal("JIfCommand",expToJExp.apply(g),expToJCommand.apply(e,$false),timeArmsToJCommand.apply(_v2044)));
                           }
                           }
                           }
                           }
                           }
                           }
-                        else return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
-                      else return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+                          }
+                          }
+                        else return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
+                      else return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
                       }
-                    case "PInt": {ESLVal $198 = $195.termRef(0);
-                        ESLVal $197 = $195.termRef(1);
+                    case "PInt": {ESLVal $2523 = $2520.termRef(0);
+                        ESLVal $2522 = $2520.termRef(1);
                         
-                        if($196.isCons())
-                        {ESLVal $199 = $196.head();
-                          ESLVal $200 = $196.tail();
+                        if($2521.isCons())
+                        {ESLVal $2524 = $2521.head();
+                          ESLVal $2525 = $2521.tail();
                           
-                          return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+                          return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
                         }
-                      else if($196.isNil())
-                        if($188.isCons())
-                          {ESLVal $201 = $188.head();
-                            ESLVal $202 = $188.tail();
+                      else if($2521.isNil())
+                        if($2513.isCons())
+                          {ESLVal $2526 = $2513.head();
+                            ESLVal $2527 = $2513.tail();
                             
-                            return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+                            return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
                           }
-                        else if($188.isNil())
-                          switch($184.termName) {
-                            case "BoolExp": {ESLVal $204 = $184.termRef(0);
-                              ESLVal $203 = $184.termRef(1);
+                        else if($2513.isNil())
+                          switch($2509.termName) {
+                            case "BoolExp": {ESLVal $2529 = $2509.termRef(0);
+                              ESLVal $2528 = $2509.termRef(1);
                               
-                              switch($203.boolVal ? 1 : 0) {
-                              case 1: {ESLVal l = $186;
+                              switch($2528.boolVal ? 1 : 0) {
+                              case 1: {ESLVal l = $2511;
                                 
-                                {ESLVal tl = $192;
+                                {ESLVal tl = $2517;
                                 
-                                {ESLVal vl = $198;
+                                {ESLVal vl = $2523;
                                 
-                                {ESLVal n = $197;
+                                {ESLVal n = $2522;
                                 
-                                {ESLVal bl = $204;
+                                {ESLVal bl = $2529;
                                 
-                                {ESLVal e = $183;
+                                {ESLVal e = $2508;
                                 
-                                {ESLVal _v89 = $182;
+                                {ESLVal _v2043 = $2507;
                                 
-                                return new ESLVal("JIfCommand",new ESLVal("JBinExp",new ESLVal("JVar",new ESLVal("$t"),$null),new ESLVal("eq"),new ESLVal("JConstExp",new ESLVal("JConstInt",n))),expToJCommand.apply(e,$false),timeArmsToJCommand.apply(_v89));
+                                return new ESLVal("JIfCommand",new ESLVal("JBinExp",new ESLVal("JVar",new ESLVal("$t"),$null),new ESLVal("eq"),new ESLVal("JConstExp",new ESLVal("JConstInt",n))),expToJCommand.apply(e,$false),timeArmsToJCommand.apply(_v2043));
                               }
                               }
                               }
@@ -2369,37 +2633,37 @@ public class ToJava {
                               }
                               }
                               }
-                              default: return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+                              default: return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
                             }
                             }
-                            default: return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+                            default: return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
                           }
-                        else return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
-                      else return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+                        else return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
+                      else return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
                       }
-                      default: return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+                      default: return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
                     }
                     }
-                  else if($189.isNil())
-                    return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
-                  else return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
-                else return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
-                default: return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+                  else if($2514.isNil())
+                    return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
+                  else return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
+                else return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
+                default: return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
               }
               }
-              default: return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+              default: return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
             }
             }
-          else if($185.isNil())
-            return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
-          else return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+          else if($2510.isNil())
+            return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
+          else return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
           }
-          default: return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+          default: return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
         }
         }
-      else if(_v39.isNil())
+      else if(_v1981.isNil())
         return new ESLVal("JBlock",ESLVal.list());
-      else return error(new ESLVal("case error at Pos(16697,17227)").add(ESLVal.list(_v39)));
+      else return error(new ESLVal("case error at Pos(17827,18357)").add(ESLVal.list(_v1981)));
       }
     }
   });
@@ -2407,26 +2671,26 @@ public class ToJava {
     public ESLVal apply(ESLVal... $args) {
       ESLVal e = $args[0];
   ESLVal qs = $args[1];
-  {ESLVal _v38 = qs;
+  {ESLVal _v1980 = qs;
         
-        if(_v38.isCons())
-        {ESLVal $174 = _v38.head();
-          ESLVal $175 = _v38.tail();
+        if(_v1980.isCons())
+        {ESLVal $2499 = _v1980.head();
+          ESLVal $2500 = _v1980.tail();
           
-          switch($174.termName) {
-          case "BQual": {ESLVal $180 = $174.termRef(0);
-            ESLVal $179 = $174.termRef(1);
-            ESLVal $178 = $174.termRef(2);
+          switch($2499.termName) {
+          case "BQual": {ESLVal $2505 = $2499.termRef(0);
+            ESLVal $2504 = $2499.termRef(1);
+            ESLVal $2503 = $2499.termRef(2);
             
-            {ESLVal l = $180;
+            {ESLVal l = $2505;
             
-            {ESLVal p = $179;
+            {ESLVal p = $2504;
             
-            {ESLVal v = $178;
+            {ESLVal v = $2503;
             
-            {ESLVal _v88 = $175;
+            {ESLVal _v2042 = $2500;
             
-            {ESLVal f = new ESLVal("FunExp",new ESLVal("Pos",$zero,$zero),new ESLVal("StrExp",new ESLVal("Pos",$zero,$zero),new ESLVal("qual")),ESLVal.list(new ESLVal("Dec",new ESLVal("Pos",$zero,$zero),new ESLVal("$qualArg"),$null,$null)),$null,new ESLVal("Case",new ESLVal("Pos",$zero,$zero),ESLVal.list(),ESLVal.list(new ESLVal("Var",new ESLVal("Pos",$zero,$zero),new ESLVal("$qualArg"))),ESLVal.list(new ESLVal("BArm",new ESLVal("Pos",$zero,$zero),ESLVal.list(p),new ESLVal("BoolExp",new ESLVal("Pos",$zero,$zero),$true),new ESLVal("List",new ESLVal("Pos",$zero,$zero),ESLVal.list(new ESLVal("Cmp",new ESLVal("Pos",$zero,$zero),e,_v88)))),new ESLVal("BArm",new ESLVal("Pos",$zero,$zero),ESLVal.list(new ESLVal("PVar",new ESLVal("Pos",$zero,$zero),new ESLVal("_0"),$null)),new ESLVal("BoolExp",new ESLVal("Pos",$zero,$zero),$true),new ESLVal("List",new ESLVal("Pos",$zero,$zero),$nil)))));
+            {ESLVal f = new ESLVal("FunExp",new ESLVal("Pos",$zero,$zero),new ESLVal("StrExp",new ESLVal("Pos",$zero,$zero),new ESLVal("qual")),ESLVal.list(new ESLVal("Dec",new ESLVal("Pos",$zero,$zero),new ESLVal("$qualArg"),$null,$null)),$null,new ESLVal("Case",new ESLVal("Pos",$zero,$zero),ESLVal.list(),ESLVal.list(new ESLVal("Var",new ESLVal("Pos",$zero,$zero),new ESLVal("$qualArg"))),ESLVal.list(new ESLVal("BArm",new ESLVal("Pos",$zero,$zero),ESLVal.list(p),new ESLVal("BoolExp",new ESLVal("Pos",$zero,$zero),$true),new ESLVal("List",new ESLVal("Pos",$zero,$zero),ESLVal.list(new ESLVal("Cmp",new ESLVal("Pos",$zero,$zero),e,_v2042)))),new ESLVal("BArm",new ESLVal("Pos",$zero,$zero),ESLVal.list(new ESLVal("PVar",new ESLVal("Pos",$zero,$zero),new ESLVal("_0"),$null)),new ESLVal("BoolExp",new ESLVal("Pos",$zero,$zero),$true),new ESLVal("List",new ESLVal("Pos",$zero,$zero),$nil)))));
             
             return new ESLVal("JFlatten",new ESLVal("JFlatten",new ESLVal("JMapFun",expToJExp.apply(f),expToJExp.apply(v))));
           }
@@ -2435,69 +2699,69 @@ public class ToJava {
           }
           }
           }
-        case "PQual": {ESLVal $177 = $174.termRef(0);
-            ESLVal $176 = $174.termRef(1);
+        case "PQual": {ESLVal $2502 = $2499.termRef(0);
+            ESLVal $2501 = $2499.termRef(1);
             
-            {ESLVal l = $177;
+            {ESLVal l = $2502;
             
-            {ESLVal p = $176;
+            {ESLVal p = $2501;
             
-            {ESLVal _v87 = $175;
+            {ESLVal _v2041 = $2500;
             
-            return new ESLVal("JIfExp",expToJExp.apply(p),cmpToJExp.apply(e,_v87),new ESLVal("JNil",$null));
+            return new ESLVal("JIfExp",expToJExp.apply(p),cmpToJExp.apply(e,_v2041),new ESLVal("JNil",$null));
           }
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(17274,17942)").add(ESLVal.list(_v38)));
+          default: return error(new ESLVal("case error at Pos(18404,19072)").add(ESLVal.list(_v1980)));
         }
         }
-      else if(_v38.isNil())
+      else if(_v1980.isNil())
         return new ESLVal("JList",$null,ESLVal.list(expToJExp.apply(e)));
-      else return error(new ESLVal("case error at Pos(17274,17942)").add(ESLVal.list(_v38)));
+      else return error(new ESLVal("case error at Pos(18404,19072)").add(ESLVal.list(_v1980)));
       }
     }
   });
   public static ESLVal moduleToJava = new ESLVal(new Function(new ESLVal("moduleToJava"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal module = $args[0];
-  {ESLVal _v36 = module;
+  {ESLVal _v1978 = module;
         
-        switch(_v36.termName) {
-        case "Module": {ESLVal $173 = _v36.termRef(0);
-          ESLVal $172 = _v36.termRef(1);
-          ESLVal $171 = _v36.termRef(2);
-          ESLVal $170 = _v36.termRef(3);
-          ESLVal $169 = _v36.termRef(4);
-          ESLVal $168 = _v36.termRef(5);
-          ESLVal $167 = _v36.termRef(6);
+        switch(_v1978.termName) {
+        case "Module": {ESLVal $2498 = _v1978.termRef(0);
+          ESLVal $2497 = _v1978.termRef(1);
+          ESLVal $2496 = _v1978.termRef(2);
+          ESLVal $2495 = _v1978.termRef(3);
+          ESLVal $2494 = _v1978.termRef(4);
+          ESLVal $2493 = _v1978.termRef(5);
+          ESLVal $2492 = _v1978.termRef(6);
           
-          {ESLVal path = $173;
+          {ESLVal path = $2498;
           
-          {ESLVal name = $172;
+          {ESLVal name = $2497;
           
-          {ESLVal exports = $171;
+          {ESLVal exports = $2496;
           
-          {ESLVal imports = $170;
+          {ESLVal imports = $2495;
           
-          {ESLVal x = $169;
+          {ESLVal x = $2494;
           
-          {ESLVal y = $168;
+          {ESLVal y = $2493;
           
-          {ESLVal defs = $167;
+          {ESLVal defs = $2492;
           
           return renameJVarsModule.apply(new ESLVal("JModule",name,exports,imports,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v37 = $qualArg;
+          {ESLVal _v1979 = $qualArg;
                 
-                {ESLVal d = _v37;
+                {ESLVal d = _v1979;
                 
                 return ESLVal.list((isBinding.apply(d).or(isFunBind.apply(d)).boolVal) ? (ESLVal.list(defToField.apply(d))) : ($nil));
               }
               }
             }
-          }).map(defs).flatten().flatten()));
+          }).map(expandFunDefs.apply(mergeFunDefs.apply(defs))).flatten().flatten()));
         }
         }
         }
@@ -2506,7 +2770,7 @@ public class ToJava {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(17980,18223)").add(ESLVal.list(_v36)));
+        default: return error(new ESLVal("case error at Pos(19110,19383)").add(ESLVal.list(_v1978)));
       }
       }
     }
@@ -2514,44 +2778,44 @@ public class ToJava {
   private static ESLVal renameJVarsModule = new ESLVal(new Function(new ESLVal("renameJVarsModule"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal m = $args[0];
-  {ESLVal _v33 = m;
+  {ESLVal _v1975 = m;
         
-        switch(_v33.termName) {
-        case "JModule": {ESLVal $160 = _v33.termRef(0);
-          ESLVal $159 = _v33.termRef(1);
-          ESLVal $158 = _v33.termRef(2);
-          ESLVal $157 = _v33.termRef(3);
+        switch(_v1975.termName) {
+        case "JModule": {ESLVal $2485 = _v1975.termRef(0);
+          ESLVal $2484 = _v1975.termRef(1);
+          ESLVal $2483 = _v1975.termRef(2);
+          ESLVal $2482 = _v1975.termRef(3);
           
-          {ESLVal name = $160;
+          {ESLVal name = $2485;
           
-          {ESLVal exports = $159;
+          {ESLVal exports = $2484;
           
-          {ESLVal imports = $158;
+          {ESLVal imports = $2483;
           
-          {ESLVal fs = $157;
+          {ESLVal fs = $2482;
           
           {ESLVal fieldNames = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal $qualArg = $args[0];
-            {ESLVal _v34 = $qualArg;
+            {ESLVal _v1976 = $qualArg;
                   
-                  switch(_v34.termName) {
-                  case "JField": {ESLVal $163 = _v34.termRef(0);
-                    ESLVal $162 = _v34.termRef(1);
-                    ESLVal $161 = _v34.termRef(2);
+                  switch(_v1976.termName) {
+                  case "JField": {ESLVal $2488 = _v1976.termRef(0);
+                    ESLVal $2487 = _v1976.termRef(1);
+                    ESLVal $2486 = _v1976.termRef(2);
                     
-                    {ESLVal n = $163;
+                    {ESLVal n = $2488;
                     
-                    {ESLVal t = $162;
+                    {ESLVal t = $2487;
                     
-                    {ESLVal e = $161;
+                    {ESLVal e = $2486;
                     
                     return ESLVal.list(ESLVal.list(n));
                   }
                   }
                   }
                   }
-                  default: {ESLVal _0 = _v34;
+                  default: {ESLVal _0 = _v1976;
                     
                     return ESLVal.list();
                   }
@@ -2563,25 +2827,25 @@ public class ToJava {
           return new ESLVal("JModule",name,exports,imports,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v35 = $qualArg;
+          {ESLVal _v1977 = $qualArg;
                 
-                switch(_v35.termName) {
-                case "JField": {ESLVal $166 = _v35.termRef(0);
-                  ESLVal $165 = _v35.termRef(1);
-                  ESLVal $164 = _v35.termRef(2);
+                switch(_v1977.termName) {
+                case "JField": {ESLVal $2491 = _v1977.termRef(0);
+                  ESLVal $2490 = _v1977.termRef(1);
+                  ESLVal $2489 = _v1977.termRef(2);
                   
-                  {ESLVal n = $166;
+                  {ESLVal n = $2491;
                   
-                  {ESLVal t = $165;
+                  {ESLVal t = $2490;
                   
-                  {ESLVal e = $164;
+                  {ESLVal e = $2489;
                   
                   return ESLVal.list(ESLVal.list(new ESLVal("JField",n,t,renameJVarsExp.apply(e,fieldNames,emptyTable))));
                 }
                 }
                 }
                 }
-                default: {ESLVal _0 = _v35;
+                default: {ESLVal _0 = _v1977;
                   
                   return ESLVal.list();
                 }
@@ -2595,7 +2859,7 @@ public class ToJava {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(18263,18570)").add(ESLVal.list(_v33)));
+        default: return error(new ESLVal("case error at Pos(19423,19730)").add(ESLVal.list(_v1975)));
       }
       }
     }
@@ -2605,40 +2869,40 @@ public class ToJava {
       ESLVal e = $args[0];
   ESLVal vars = $args[1];
   ESLVal env = $args[2];
-  {ESLVal _v16 = e;
+  {ESLVal _v1958 = e;
         
-        switch(_v16.termName) {
-        case "JFun": {ESLVal $145 = _v16.termRef(0);
-          ESLVal $144 = _v16.termRef(1);
-          ESLVal $143 = _v16.termRef(2);
-          ESLVal $142 = _v16.termRef(3);
+        switch(_v1958.termName) {
+        case "JFun": {ESLVal $2470 = _v1958.termRef(0);
+          ESLVal $2469 = _v1958.termRef(1);
+          ESLVal $2468 = _v1958.termRef(2);
+          ESLVal $2467 = _v1958.termRef(3);
           
-          {ESLVal v0 = $145;
+          {ESLVal v0 = $2470;
           
-          {ESLVal v1 = $144;
+          {ESLVal v1 = $2469;
           
-          {ESLVal v2 = $143;
+          {ESLVal v2 = $2468;
           
-          {ESLVal v3 = $142;
+          {ESLVal v3 = $2467;
           
           {ESLVal boundNames = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal $qualArg = $args[0];
-            {ESLVal _v30 = $qualArg;
+            {ESLVal _v1972 = $qualArg;
                   
-                  switch(_v30.termName) {
-                  case "JDec": {ESLVal $156 = _v30.termRef(0);
-                    ESLVal $155 = _v30.termRef(1);
+                  switch(_v1972.termName) {
+                  case "JDec": {ESLVal $2481 = _v1972.termRef(0);
+                    ESLVal $2480 = _v1972.termRef(1);
                     
-                    {ESLVal n = $156;
+                    {ESLVal n = $2481;
                     
-                    {ESLVal t = $155;
+                    {ESLVal t = $2480;
                     
                     return ESLVal.list(ESLVal.list(n));
                   }
                   }
                   }
-                  default: {ESLVal _0 = _v30;
+                  default: {ESLVal _0 = _v1972;
                     
                     return ESLVal.list();
                   }
@@ -2647,7 +2911,7 @@ public class ToJava {
               }
             }).map(v1).flatten().flatten();
           
-          if(exists.apply(new ESLVal(new Function(new ESLVal("fun700"),getSelf()) {
+          if(exists.apply(new ESLVal(new Function(new ESLVal("fun825"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal n = $args[0];
         return member.apply(n,boundNames);
@@ -2656,9 +2920,9 @@ public class ToJava {
           {ESLVal newNames = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal $qualArg = $args[0];
-              {ESLVal _v31 = $qualArg;
+              {ESLVal _v1973 = $qualArg;
                     
-                    {ESLVal n = _v31;
+                    {ESLVal n = _v1973;
                     
                     return ESLVal.list(ESLVal.list(newName.apply()));
                   }
@@ -2671,9 +2935,9 @@ public class ToJava {
             return new ESLVal("JFun",v0,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal $qualArg = $args[0];
-            {ESLVal _v32 = $qualArg;
+            {ESLVal _v1974 = $qualArg;
                   
-                  {ESLVal n = _v32;
+                  {ESLVal n = _v1974;
                   
                   return ESLVal.list(ESLVal.list(new ESLVal("JDec",n,$null)));
                 }
@@ -2690,19 +2954,19 @@ public class ToJava {
         }
         }
         }
-      case "JApply": {ESLVal $141 = _v16.termRef(0);
-          ESLVal $140 = _v16.termRef(1);
+      case "JApply": {ESLVal $2466 = _v1958.termRef(0);
+          ESLVal $2465 = _v1958.termRef(1);
           
-          {ESLVal v0 = $141;
+          {ESLVal v0 = $2466;
           
-          {ESLVal v1 = $140;
+          {ESLVal v1 = $2465;
           
           return new ESLVal("JApply",renameJVarsExp.apply(v0,vars,env),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v29 = $qualArg;
+          {ESLVal _v1971 = $qualArg;
                 
-                {ESLVal v = _v29;
+                {ESLVal v = _v1971;
                 
                 return ESLVal.list(ESLVal.list(renameJVarsExp.apply(v,vars,env)));
               }
@@ -2712,45 +2976,45 @@ public class ToJava {
         }
         }
         }
-      case "JArrayRef": {ESLVal $139 = _v16.termRef(0);
-          ESLVal $138 = _v16.termRef(1);
+      case "JArrayRef": {ESLVal $2464 = _v1958.termRef(0);
+          ESLVal $2463 = _v1958.termRef(1);
           
-          {ESLVal a = $139;
+          {ESLVal a = $2464;
           
-          {ESLVal i = $138;
+          {ESLVal i = $2463;
           
           return new ESLVal("JArrayRef",renameJVarsExp.apply(a,vars,env),renameJVarsExp.apply(i,vars,env));
         }
         }
         }
-      case "JArrayUpdate": {ESLVal $137 = _v16.termRef(0);
-          ESLVal $136 = _v16.termRef(1);
-          ESLVal $135 = _v16.termRef(2);
+      case "JArrayUpdate": {ESLVal $2462 = _v1958.termRef(0);
+          ESLVal $2461 = _v1958.termRef(1);
+          ESLVal $2460 = _v1958.termRef(2);
           
-          {ESLVal a = $137;
+          {ESLVal a = $2462;
           
-          {ESLVal i = $136;
+          {ESLVal i = $2461;
           
-          {ESLVal v = $135;
+          {ESLVal v = $2460;
           
           return new ESLVal("JArrayUpdate",renameJVarsExp.apply(a,vars,env),renameJVarsExp.apply(i,vars,env),renameJVarsExp.apply(v,vars,env));
         }
         }
         }
         }
-      case "JBecome": {ESLVal $134 = _v16.termRef(0);
-          ESLVal $133 = _v16.termRef(1);
+      case "JBecome": {ESLVal $2459 = _v1958.termRef(0);
+          ESLVal $2458 = _v1958.termRef(1);
           
-          {ESLVal _v86 = $134;
+          {ESLVal _v2040 = $2459;
           
-          {ESLVal es = $133;
+          {ESLVal es = $2458;
           
-          return new ESLVal("JBecome",renameJVarsExp.apply(_v86,vars,env),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+          return new ESLVal("JBecome",renameJVarsExp.apply(_v2040,vars,env),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v28 = $qualArg;
+          {ESLVal _v1970 = $qualArg;
                 
-                {ESLVal v = _v28;
+                {ESLVal v = _v1970;
                 
                 return ESLVal.list(ESLVal.list(renameJVarsExp.apply(v,vars,env)));
               }
@@ -2760,67 +3024,67 @@ public class ToJava {
         }
         }
         }
-      case "JBinExp": {ESLVal $132 = _v16.termRef(0);
-          ESLVal $131 = _v16.termRef(1);
-          ESLVal $130 = _v16.termRef(2);
+      case "JBinExp": {ESLVal $2457 = _v1958.termRef(0);
+          ESLVal $2456 = _v1958.termRef(1);
+          ESLVal $2455 = _v1958.termRef(2);
           
-          {ESLVal v0 = $132;
+          {ESLVal v0 = $2457;
           
-          {ESLVal v1 = $131;
+          {ESLVal v1 = $2456;
           
-          {ESLVal v2 = $130;
+          {ESLVal v2 = $2455;
           
           return new ESLVal("JBinExp",renameJVarsExp.apply(v0,vars,env),v1,renameJVarsExp.apply(v2,vars,env));
         }
         }
         }
         }
-      case "JCommandExp": {ESLVal $129 = _v16.termRef(0);
-          ESLVal $128 = _v16.termRef(1);
+      case "JCommandExp": {ESLVal $2454 = _v1958.termRef(0);
+          ESLVal $2453 = _v1958.termRef(1);
           
-          {ESLVal v0 = $129;
+          {ESLVal v0 = $2454;
           
-          {ESLVal v1 = $128;
+          {ESLVal v1 = $2453;
           
           return new ESLVal("JCommandExp",renameJVarsCommand.apply(v0,vars,env),v1);
         }
         }
         }
-      case "JIfExp": {ESLVal $127 = _v16.termRef(0);
-          ESLVal $126 = _v16.termRef(1);
-          ESLVal $125 = _v16.termRef(2);
+      case "JIfExp": {ESLVal $2452 = _v1958.termRef(0);
+          ESLVal $2451 = _v1958.termRef(1);
+          ESLVal $2450 = _v1958.termRef(2);
           
-          {ESLVal v0 = $127;
+          {ESLVal v0 = $2452;
           
-          {ESLVal v1 = $126;
+          {ESLVal v1 = $2451;
           
-          {ESLVal v2 = $125;
+          {ESLVal v2 = $2450;
           
           return new ESLVal("JIfExp",renameJVarsExp.apply(v0,vars,env),renameJVarsExp.apply(v1,vars,env),renameJVarsExp.apply(v2,vars,env));
         }
         }
         }
         }
-      case "JConstExp": {ESLVal $124 = _v16.termRef(0);
+      case "JConstExp": {ESLVal $2449 = _v1958.termRef(0);
           
-          {ESLVal v0 = $124;
+          {ESLVal v0 = $2449;
           
           return e;
         }
         }
-      case "JTerm": {ESLVal $123 = _v16.termRef(0);
-          ESLVal $122 = _v16.termRef(1);
+      case "JTerm": {ESLVal $2448 = _v1958.termRef(0);
+          ESLVal $2447 = _v1958.termRef(1);
           
-          {ESLVal v0 = $123;
+          {ESLVal v0 = $2448;
           
-          {ESLVal v1 = $122;
+          {ESLVal v1 = $2447;
           
           return new ESLVal("JTerm",v0,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v27 = $qualArg;
+          {ESLVal _v1969 = $qualArg;
                 
-                {ESLVal v = _v27;
+                {ESLVal v = _v1969;
                 
                 return ESLVal.list(ESLVal.list(renameJVarsExp.apply(v,vars,env)));
               }
@@ -2830,30 +3094,30 @@ public class ToJava {
         }
         }
         }
-      case "JTermRef": {ESLVal $121 = _v16.termRef(0);
-          ESLVal $120 = _v16.termRef(1);
+      case "JTermRef": {ESLVal $2446 = _v1958.termRef(0);
+          ESLVal $2445 = _v1958.termRef(1);
           
-          {ESLVal v0 = $121;
+          {ESLVal v0 = $2446;
           
-          {ESLVal v1 = $120;
+          {ESLVal v1 = $2445;
           
           return new ESLVal("JTermRef",renameJVarsExp.apply(v0,vars,env),v1);
         }
         }
         }
-      case "JList": {ESLVal $119 = _v16.termRef(0);
-          ESLVal $118 = _v16.termRef(1);
+      case "JList": {ESLVal $2444 = _v1958.termRef(0);
+          ESLVal $2443 = _v1958.termRef(1);
           
-          {ESLVal v0 = $119;
+          {ESLVal v0 = $2444;
           
-          {ESLVal v1 = $118;
+          {ESLVal v1 = $2443;
           
           return new ESLVal("JList",v0,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v26 = $qualArg;
+          {ESLVal _v1968 = $qualArg;
                 
-                {ESLVal v = _v26;
+                {ESLVal v = _v1968;
                 
                 return ESLVal.list(ESLVal.list(renameJVarsExp.apply(v,vars,env)));
               }
@@ -2863,19 +3127,19 @@ public class ToJava {
         }
         }
         }
-      case "JSet": {ESLVal $117 = _v16.termRef(0);
-          ESLVal $116 = _v16.termRef(1);
+      case "JSet": {ESLVal $2442 = _v1958.termRef(0);
+          ESLVal $2441 = _v1958.termRef(1);
           
-          {ESLVal v0 = $117;
+          {ESLVal v0 = $2442;
           
-          {ESLVal v1 = $116;
+          {ESLVal v1 = $2441;
           
           return new ESLVal("JSet",v0,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v25 = $qualArg;
+          {ESLVal _v1967 = $qualArg;
                 
-                {ESLVal v = _v25;
+                {ESLVal v = _v1967;
                 
                 return ESLVal.list(ESLVal.list(renameJVarsExp.apply(v,vars,env)));
               }
@@ -2885,19 +3149,19 @@ public class ToJava {
         }
         }
         }
-      case "JBag": {ESLVal $115 = _v16.termRef(0);
-          ESLVal $114 = _v16.termRef(1);
+      case "JBag": {ESLVal $2440 = _v1958.termRef(0);
+          ESLVal $2439 = _v1958.termRef(1);
           
-          {ESLVal v0 = $115;
+          {ESLVal v0 = $2440;
           
-          {ESLVal v1 = $114;
+          {ESLVal v1 = $2439;
           
           return new ESLVal("JBag",v0,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v24 = $qualArg;
+          {ESLVal _v1966 = $qualArg;
                 
-                {ESLVal v = _v24;
+                {ESLVal v = _v1966;
                 
                 return ESLVal.list(ESLVal.list(renameJVarsExp.apply(v,vars,env)));
               }
@@ -2907,9 +3171,9 @@ public class ToJava {
         }
         }
         }
-      case "JNil": {ESLVal $113 = _v16.termRef(0);
+      case "JNil": {ESLVal $2438 = _v1958.termRef(0);
           
-          {ESLVal v0 = $113;
+          {ESLVal v0 = $2438;
           
           return e;
         }
@@ -2917,12 +3181,12 @@ public class ToJava {
       case "JNow": {
           return e;
         }
-      case "JVar": {ESLVal $112 = _v16.termRef(0);
-          ESLVal $111 = _v16.termRef(1);
+      case "JVar": {ESLVal $2437 = _v1958.termRef(0);
+          ESLVal $2436 = _v1958.termRef(1);
           
-          {ESLVal v0 = $112;
+          {ESLVal v0 = $2437;
           
-          {ESLVal v1 = $111;
+          {ESLVal v1 = $2436;
           
           if(hasEntry.apply(v0,env).boolVal)
           return new ESLVal("JVar",lookup.apply(v0,env),v1);
@@ -2934,73 +3198,80 @@ public class ToJava {
       case "JNull": {
           return e;
         }
-      case "JError": {ESLVal $110 = _v16.termRef(0);
+      case "JError": {ESLVal $2435 = _v1958.termRef(0);
           
-          {ESLVal v0 = $110;
+          {ESLVal v0 = $2435;
           
           return new ESLVal("JError",renameJVarsExp.apply(v0,vars,env));
         }
         }
-      case "JHead": {ESLVal $109 = _v16.termRef(0);
+      case "JHead": {ESLVal $2434 = _v1958.termRef(0);
           
-          {ESLVal v0 = $109;
+          {ESLVal v0 = $2434;
           
           return new ESLVal("JHead",renameJVarsExp.apply(v0,vars,env));
         }
         }
-      case "JTail": {ESLVal $108 = _v16.termRef(0);
+      case "JTail": {ESLVal $2433 = _v1958.termRef(0);
           
-          {ESLVal v0 = $108;
+          {ESLVal v0 = $2433;
           
           return new ESLVal("JTail",renameJVarsExp.apply(v0,vars,env));
         }
         }
-      case "JCastp": {ESLVal $107 = _v16.termRef(0);
-          ESLVal $106 = _v16.termRef(1);
-          ESLVal $105 = _v16.termRef(2);
+      case "JCastp": {ESLVal $2432 = _v1958.termRef(0);
+          ESLVal $2431 = _v1958.termRef(1);
+          ESLVal $2430 = _v1958.termRef(2);
           
-          {ESLVal v0 = $107;
+          {ESLVal v0 = $2432;
           
-          {ESLVal v1 = $106;
+          {ESLVal v1 = $2431;
           
-          {ESLVal v2 = $105;
+          {ESLVal v2 = $2430;
           
           return new ESLVal("JCastp",v0,v1,renameJVarsExp.apply(v2,vars,env));
         }
         }
         }
         }
-      case "JCast": {ESLVal $104 = _v16.termRef(0);
-          ESLVal $103 = _v16.termRef(1);
+      case "JCast": {ESLVal $2429 = _v1958.termRef(0);
+          ESLVal $2428 = _v1958.termRef(1);
           
-          {ESLVal v0 = $104;
+          {ESLVal v0 = $2429;
           
-          {ESLVal v1 = $103;
+          {ESLVal v1 = $2428;
           
           return new ESLVal("JCast",v0,renameJVarsExp.apply(v1,vars,env));
         }
         }
         }
-      case "JNot": {ESLVal $102 = _v16.termRef(0);
+      case "JCmpExp": {ESLVal $2427 = _v1958.termRef(0);
           
-          {ESLVal _v85 = $102;
+          {ESLVal cmp = $2427;
           
-          return new ESLVal("JNot",renameJVarsExp.apply(_v85,vars,env));
+          return new ESLVal("JCmpExp",renameJVarsCmp.apply(cmp,vars,env));
         }
         }
-      case "JNew": {ESLVal $101 = _v16.termRef(0);
-          ESLVal $100 = _v16.termRef(1);
+      case "JNot": {ESLVal $2426 = _v1958.termRef(0);
           
-          {ESLVal b = $101;
+          {ESLVal _v2039 = $2426;
           
-          {ESLVal args = $100;
+          return new ESLVal("JNot",renameJVarsExp.apply(_v2039,vars,env));
+        }
+        }
+      case "JNew": {ESLVal $2425 = _v1958.termRef(0);
+          ESLVal $2424 = _v1958.termRef(1);
+          
+          {ESLVal b = $2425;
+          
+          {ESLVal args = $2424;
           
           return new ESLVal("JNew",renameJVarsExp.apply(b,vars,env),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v23 = $qualArg;
+          {ESLVal _v1965 = $qualArg;
                 
-                {ESLVal a = _v23;
+                {ESLVal a = _v1965;
                 
                 return ESLVal.list(ESLVal.list(renameJVarsExp.apply(a,vars,env)));
               }
@@ -3010,26 +3281,26 @@ public class ToJava {
         }
         }
         }
-      case "JNewArray": {ESLVal $99 = _v16.termRef(0);
+      case "JNewArray": {ESLVal $2423 = _v1958.termRef(0);
           
-          {ESLVal b = $99;
+          {ESLVal b = $2423;
           
           return new ESLVal("JNewArray",renameJVarsExp.apply(b,vars,env));
         }
         }
-      case "JNewJava": {ESLVal $98 = _v16.termRef(0);
-          ESLVal $97 = _v16.termRef(1);
+      case "JNewJava": {ESLVal $2422 = _v1958.termRef(0);
+          ESLVal $2421 = _v1958.termRef(1);
           
-          {ESLVal n = $98;
+          {ESLVal n = $2422;
           
-          {ESLVal args = $97;
+          {ESLVal args = $2421;
           
           return new ESLVal("JNewJava",n,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v22 = $qualArg;
+          {ESLVal _v1964 = $qualArg;
                 
-                {ESLVal a = _v22;
+                {ESLVal a = _v1964;
                 
                 return ESLVal.list(ESLVal.list(renameJVarsExp.apply(a,vars,env)));
               }
@@ -3042,43 +3313,43 @@ public class ToJava {
       case "JNewTable": {
           return new ESLVal("JNewTable",new ESLVal[]{});
         }
-      case "JMapFun": {ESLVal $96 = _v16.termRef(0);
-          ESLVal $95 = _v16.termRef(1);
+      case "JMapFun": {ESLVal $2420 = _v1958.termRef(0);
+          ESLVal $2419 = _v1958.termRef(1);
           
-          {ESLVal f = $96;
+          {ESLVal f = $2420;
           
-          {ESLVal l = $95;
+          {ESLVal l = $2419;
           
           return new ESLVal("JMapFun",renameJVarsExp.apply(f,vars,env),renameJVarsExp.apply(l,vars,env));
         }
         }
         }
-      case "JRecord": {ESLVal $94 = _v16.termRef(0);
+      case "JRecord": {ESLVal $2418 = _v1958.termRef(0);
           
-          {ESLVal fs = $94;
+          {ESLVal fs = $2418;
           
           return new ESLVal("JRecord",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v21 = $qualArg;
+          {ESLVal _v1963 = $qualArg;
                 
-                switch(_v21.termName) {
-                case "JField": {ESLVal $154 = _v21.termRef(0);
-                  ESLVal $153 = _v21.termRef(1);
-                  ESLVal $152 = _v21.termRef(2);
+                switch(_v1963.termName) {
+                case "JField": {ESLVal $2479 = _v1963.termRef(0);
+                  ESLVal $2478 = _v1963.termRef(1);
+                  ESLVal $2477 = _v1963.termRef(2);
                   
-                  {ESLVal n = $154;
+                  {ESLVal n = $2479;
                   
-                  {ESLVal t = $153;
+                  {ESLVal t = $2478;
                   
-                  {ESLVal _v84 = $152;
+                  {ESLVal _v2038 = $2477;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("JField",n,t,renameJVarsExp.apply(_v84,vars,env))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("JField",n,t,renameJVarsExp.apply(_v2038,vars,env))));
                 }
                 }
                 }
                 }
-                default: {ESLVal _0 = _v21;
+                default: {ESLVal _0 = _v1963;
                   
                   return ESLVal.list();
                 }
@@ -3088,31 +3359,31 @@ public class ToJava {
           }).map(fs).flatten().flatten());
         }
         }
-      case "JFlatten": {ESLVal $93 = _v16.termRef(0);
+      case "JFlatten": {ESLVal $2417 = _v1958.termRef(0);
           
-          {ESLVal _v83 = $93;
+          {ESLVal _v2037 = $2417;
           
-          return new ESLVal("JFlatten",renameJVarsExp.apply(_v83,vars,env));
+          return new ESLVal("JFlatten",renameJVarsExp.apply(_v2037,vars,env));
         }
         }
-      case "JSend": {ESLVal $92 = _v16.termRef(0);
-          ESLVal $91 = _v16.termRef(1);
-          ESLVal $90 = _v16.termRef(2);
+      case "JSend": {ESLVal $2416 = _v1958.termRef(0);
+          ESLVal $2415 = _v1958.termRef(1);
+          ESLVal $2414 = _v1958.termRef(2);
           
-          {ESLVal _v81 = $92;
+          {ESLVal _v2035 = $2416;
           
-          {ESLVal n = $91;
+          {ESLVal n = $2415;
           
-          {ESLVal es = $90;
+          {ESLVal es = $2414;
           
-          return new ESLVal("JSend",renameJVarsExp.apply(_v81,vars,env),n,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+          return new ESLVal("JSend",renameJVarsExp.apply(_v2035,vars,env),n,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v20 = $qualArg;
+          {ESLVal _v1962 = $qualArg;
                 
-                {ESLVal _v82 = _v20;
+                {ESLVal _v2036 = _v1962;
                 
-                return ESLVal.list(ESLVal.list(renameJVarsExp.apply(_v82,vars,env)));
+                return ESLVal.list(ESLVal.list(renameJVarsExp.apply(_v2036,vars,env)));
               }
               }
             }
@@ -3121,11 +3392,11 @@ public class ToJava {
         }
         }
         }
-      case "JSendSuper": {ESLVal $89 = _v16.termRef(0);
+      case "JSendSuper": {ESLVal $2413 = _v1958.termRef(0);
           
-          {ESLVal _v80 = $89;
+          {ESLVal _v2034 = $2413;
           
-          return new ESLVal("JSendSuper",renameJVarsExp.apply(_v80,vars,env));
+          return new ESLVal("JSendSuper",renameJVarsExp.apply(_v2034,vars,env));
         }
         }
       case "JSendTimeSuper": {
@@ -3134,62 +3405,62 @@ public class ToJava {
       case "JSelf": {
           return new ESLVal("JSelf",new ESLVal[]{});
         }
-      case "JRef": {ESLVal $88 = _v16.termRef(0);
-          ESLVal $87 = _v16.termRef(1);
+      case "JRef": {ESLVal $2412 = _v1958.termRef(0);
+          ESLVal $2411 = _v1958.termRef(1);
           
-          {ESLVal _v79 = $88;
+          {ESLVal _v2033 = $2412;
           
-          {ESLVal n = $87;
+          {ESLVal n = $2411;
           
-          return new ESLVal("JRef",renameJVarsExp.apply(_v79,vars,env),n);
+          return new ESLVal("JRef",renameJVarsExp.apply(_v2033,vars,env),n);
         }
         }
         }
-      case "JRefSuper": {ESLVal $86 = _v16.termRef(0);
+      case "JRefSuper": {ESLVal $2410 = _v1958.termRef(0);
           
-          {ESLVal n = $86;
+          {ESLVal n = $2410;
           
           return new ESLVal("JRefSuper",n);
         }
         }
-      case "JBehaviour": {ESLVal $85 = _v16.termRef(0);
-          ESLVal $84 = _v16.termRef(1);
-          ESLVal $83 = _v16.termRef(2);
-          ESLVal $82 = _v16.termRef(3);
-          ESLVal $81 = _v16.termRef(4);
+      case "JBehaviour": {ESLVal $2409 = _v1958.termRef(0);
+          ESLVal $2408 = _v1958.termRef(1);
+          ESLVal $2407 = _v1958.termRef(2);
+          ESLVal $2406 = _v1958.termRef(3);
+          ESLVal $2405 = _v1958.termRef(4);
           
-          {ESLVal es = $85;
+          {ESLVal es = $2409;
           
-          {ESLVal fs = $84;
+          {ESLVal fs = $2408;
           
-          {ESLVal init = $83;
+          {ESLVal init = $2407;
           
-          {ESLVal handler = $82;
+          {ESLVal handler = $2406;
           
-          {ESLVal time = $81;
+          {ESLVal time = $2405;
           
           return new ESLVal("JBehaviour",es,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v19 = $qualArg;
+          {ESLVal _v1961 = $qualArg;
                 
-                switch(_v19.termName) {
-                case "JField": {ESLVal $151 = _v19.termRef(0);
-                  ESLVal $150 = _v19.termRef(1);
-                  ESLVal $149 = _v19.termRef(2);
+                switch(_v1961.termName) {
+                case "JField": {ESLVal $2476 = _v1961.termRef(0);
+                  ESLVal $2475 = _v1961.termRef(1);
+                  ESLVal $2474 = _v1961.termRef(2);
                   
-                  {ESLVal n = $151;
+                  {ESLVal n = $2476;
                   
-                  {ESLVal t = $150;
+                  {ESLVal t = $2475;
                   
-                  {ESLVal _v78 = $149;
+                  {ESLVal _v2032 = $2474;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("JField",n,t,renameJVarsExp.apply(_v78,vars,env))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("JField",n,t,renameJVarsExp.apply(_v2032,vars,env))));
                 }
                 }
                 }
                 }
-                default: {ESLVal _0 = _v19;
+                default: {ESLVal _0 = _v1961;
                   
                   return ESLVal.list();
                 }
@@ -3203,47 +3474,47 @@ public class ToJava {
         }
         }
         }
-      case "JExtendedBehaviour": {ESLVal $80 = _v16.termRef(0);
-          ESLVal $79 = _v16.termRef(1);
-          ESLVal $78 = _v16.termRef(2);
-          ESLVal $77 = _v16.termRef(3);
-          ESLVal $76 = _v16.termRef(4);
-          ESLVal $75 = _v16.termRef(5);
+      case "JExtendedBehaviour": {ESLVal $2404 = _v1958.termRef(0);
+          ESLVal $2403 = _v1958.termRef(1);
+          ESLVal $2402 = _v1958.termRef(2);
+          ESLVal $2401 = _v1958.termRef(3);
+          ESLVal $2400 = _v1958.termRef(4);
+          ESLVal $2399 = _v1958.termRef(5);
           
-          {ESLVal es = $80;
+          {ESLVal es = $2404;
           
-          {ESLVal parent = $79;
+          {ESLVal parent = $2403;
           
-          {ESLVal fs = $78;
+          {ESLVal fs = $2402;
           
-          {ESLVal init = $77;
+          {ESLVal init = $2401;
           
-          {ESLVal handler = $76;
+          {ESLVal handler = $2400;
           
-          {ESLVal time = $75;
+          {ESLVal time = $2399;
           
           return new ESLVal("JExtendedBehaviour",es,renameJVarsExp.apply(parent,vars,env),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v18 = $qualArg;
+          {ESLVal _v1960 = $qualArg;
                 
-                switch(_v18.termName) {
-                case "JField": {ESLVal $148 = _v18.termRef(0);
-                  ESLVal $147 = _v18.termRef(1);
-                  ESLVal $146 = _v18.termRef(2);
+                switch(_v1960.termName) {
+                case "JField": {ESLVal $2473 = _v1960.termRef(0);
+                  ESLVal $2472 = _v1960.termRef(1);
+                  ESLVal $2471 = _v1960.termRef(2);
                   
-                  {ESLVal n = $148;
+                  {ESLVal n = $2473;
                   
-                  {ESLVal t = $147;
+                  {ESLVal t = $2472;
                   
-                  {ESLVal _v77 = $146;
+                  {ESLVal _v2031 = $2471;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("JField",n,t,renameJVarsExp.apply(_v77,vars,env))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("JField",n,t,renameJVarsExp.apply(_v2031,vars,env))));
                 }
                 }
                 }
                 }
-                default: {ESLVal _0 = _v18;
+                default: {ESLVal _0 = _v1960;
                   
                   return ESLVal.list();
                 }
@@ -3258,51 +3529,51 @@ public class ToJava {
         }
         }
         }
-      case "JTry": {ESLVal $74 = _v16.termRef(0);
-          ESLVal $73 = _v16.termRef(1);
-          ESLVal $72 = _v16.termRef(2);
+      case "JTry": {ESLVal $2398 = _v1958.termRef(0);
+          ESLVal $2397 = _v1958.termRef(1);
+          ESLVal $2396 = _v1958.termRef(2);
           
-          {ESLVal _v76 = $74;
+          {ESLVal _v2030 = $2398;
           
-          {ESLVal n = $73;
+          {ESLVal n = $2397;
           
-          {ESLVal c = $72;
+          {ESLVal c = $2396;
           
-          return new ESLVal("JTry",renameJVarsExp.apply(_v76,vars,env),n,renameJVarsCommand.apply(c,vars,env));
+          return new ESLVal("JTry",renameJVarsExp.apply(_v2030,vars,env),n,renameJVarsCommand.apply(c,vars,env));
         }
         }
         }
         }
-      case "JProbably": {ESLVal $71 = _v16.termRef(0);
-          ESLVal $70 = _v16.termRef(1);
-          ESLVal $69 = _v16.termRef(2);
+      case "JProbably": {ESLVal $2395 = _v1958.termRef(0);
+          ESLVal $2394 = _v1958.termRef(1);
+          ESLVal $2393 = _v1958.termRef(2);
           
-          {ESLVal _v75 = $71;
+          {ESLVal _v2029 = $2395;
           
-          {ESLVal e1 = $70;
+          {ESLVal e1 = $2394;
           
-          {ESLVal e2 = $69;
+          {ESLVal e2 = $2393;
           
-          return new ESLVal("JProbably",renameJVarsExp.apply(_v75,vars,env),renameJVarsExp.apply(e1,vars,env),renameJVarsExp.apply(e2,vars,env));
+          return new ESLVal("JProbably",renameJVarsExp.apply(_v2029,vars,env),renameJVarsExp.apply(e1,vars,env),renameJVarsExp.apply(e2,vars,env));
         }
         }
         }
         }
-      case "JGrab": {ESLVal $68 = _v16.termRef(0);
-          ESLVal $67 = _v16.termRef(1);
+      case "JGrab": {ESLVal $2392 = _v1958.termRef(0);
+          ESLVal $2391 = _v1958.termRef(1);
           
-          {ESLVal es = $68;
+          {ESLVal es = $2392;
           
-          {ESLVal c = $67;
+          {ESLVal c = $2391;
           
           return new ESLVal("JGrab",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v17 = $qualArg;
+          {ESLVal _v1959 = $qualArg;
                 
-                {ESLVal _v74 = _v17;
+                {ESLVal _v2028 = _v1959;
                 
-                return ESLVal.list(ESLVal.list(renameJVarsExp.apply(_v74,vars,env)));
+                return ESLVal.list(ESLVal.list(renameJVarsExp.apply(_v2028,vars,env)));
               }
               }
             }
@@ -3310,7 +3581,76 @@ public class ToJava {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(18640,23225)").add(ESLVal.list(_v16)));
+        default: return error(new ESLVal("case error at Pos(19800,24444)").add(ESLVal.list(_v1958)));
+      }
+      }
+    }
+  });
+  private static ESLVal renameJVarsCmp = new ESLVal(new Function(new ESLVal("renameJVarsCmp"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal c = $args[0];
+  ESLVal vars = $args[1];
+  ESLVal env = $args[2];
+  {ESLVal _v1957 = c;
+        
+        switch(_v1957.termName) {
+        case "JCmpList": {ESLVal $2390 = _v1957.termRef(0);
+          
+          {ESLVal e = $2390;
+          
+          return new ESLVal("JCmpList",renameJVarsExp.apply(e,vars,env));
+        }
+        }
+      case "JCmpOuter": {ESLVal $2389 = _v1957.termRef(0);
+          ESLVal $2388 = _v1957.termRef(1);
+          ESLVal $2387 = _v1957.termRef(2);
+          
+          {ESLVal n = $2389;
+          
+          {ESLVal e = $2388;
+          
+          {ESLVal _v2025 = $2387;
+          
+          {ESLVal _v2027 = remove.apply(n,vars);
+          ESLVal _v2026 = addEntry.apply(n,n,env);
+          
+          return new ESLVal("JCmpOuter",n,renameJVarsExp.apply(e,_v2027,_v2026),renameJVarsCmp.apply(_v2025,_v2027,_v2026));
+        }
+        }
+        }
+        }
+        }
+      case "JCmpBind": {ESLVal $2386 = _v1957.termRef(0);
+          ESLVal $2385 = _v1957.termRef(1);
+          ESLVal $2384 = _v1957.termRef(2);
+          
+          {ESLVal n = $2386;
+          
+          {ESLVal e = $2385;
+          
+          {ESLVal _v2022 = $2384;
+          
+          {ESLVal _v2024 = remove.apply(n,vars);
+          ESLVal _v2023 = addEntry.apply(n,n,env);
+          
+          return new ESLVal("JCmpBind",n,renameJVarsExp.apply(e,_v2024,_v2023),renameJVarsCmp.apply(_v2022,_v2024,_v2023));
+        }
+        }
+        }
+        }
+        }
+      case "JCmpIf": {ESLVal $2383 = _v1957.termRef(0);
+          ESLVal $2382 = _v1957.termRef(1);
+          
+          {ESLVal e = $2383;
+          
+          {ESLVal _v2021 = $2382;
+          
+          return new ESLVal("JCmpIf",renameJVarsExp.apply(e,vars,env),renameJVarsCmp.apply(_v2021,vars,env));
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(24519,25100)").add(ESLVal.list(_v1957)));
       }
       }
     }
@@ -3327,61 +3667,61 @@ public class ToJava {
       ESLVal c = $args[0];
   ESLVal vars = $args[1];
   ESLVal env = $args[2];
-  {ESLVal _v2 = c;
+  {ESLVal _v1939 = c;
         
-        switch(_v2.termName) {
-        case "JBlock": {ESLVal $39 = _v2.termRef(0);
+        switch(_v1939.termName) {
+        case "JBlock": {ESLVal $2345 = _v1939.termRef(0);
           
-          {ESLVal v0 = $39;
+          {ESLVal v0 = $2345;
           
           return new ESLVal("JBlock",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v15 = $qualArg;
+          {ESLVal _v1956 = $qualArg;
                 
-                {ESLVal _v73 = _v15;
+                {ESLVal _v2020 = _v1956;
                 
-                return ESLVal.list(ESLVal.list(renameJVarsCommand.apply(_v73,vars,env)));
+                return ESLVal.list(ESLVal.list(renameJVarsCommand.apply(_v2020,vars,env)));
               }
               }
             }
           }).map(v0).flatten().flatten());
         }
         }
-      case "JReturn": {ESLVal $38 = _v2.termRef(0);
+      case "JReturn": {ESLVal $2344 = _v1939.termRef(0);
           
-          {ESLVal v0 = $38;
+          {ESLVal v0 = $2344;
           
           return new ESLVal("JReturn",renameJVarsExp.apply(v0,vars,env));
         }
         }
-      case "JSwitch": {ESLVal $37 = _v2.termRef(0);
-          ESLVal $36 = _v2.termRef(1);
-          ESLVal $35 = _v2.termRef(2);
+      case "JSwitch": {ESLVal $2343 = _v1939.termRef(0);
+          ESLVal $2342 = _v1939.termRef(1);
+          ESLVal $2341 = _v1939.termRef(2);
           
-          {ESLVal v0 = $37;
+          {ESLVal v0 = $2343;
           
-          {ESLVal v1 = $36;
+          {ESLVal v1 = $2342;
           
-          {ESLVal v2 = $35;
+          {ESLVal v2 = $2341;
           
           return error(new ESLVal("jswitch should not occur"));
         }
         }
         }
         }
-      case "JSwitchList": {ESLVal $34 = _v2.termRef(0);
-          ESLVal $33 = _v2.termRef(1);
-          ESLVal $32 = _v2.termRef(2);
-          ESLVal $31 = _v2.termRef(3);
+      case "JSwitchList": {ESLVal $2340 = _v1939.termRef(0);
+          ESLVal $2339 = _v1939.termRef(1);
+          ESLVal $2338 = _v1939.termRef(2);
+          ESLVal $2337 = _v1939.termRef(3);
           
-          {ESLVal v0 = $34;
+          {ESLVal v0 = $2340;
           
-          {ESLVal v1 = $33;
+          {ESLVal v1 = $2339;
           
-          {ESLVal v2 = $32;
+          {ESLVal v2 = $2338;
           
-          {ESLVal v3 = $31;
+          {ESLVal v3 = $2337;
           
           return new ESLVal("JSwitchList",renameJVarsExp.apply(v0,vars,env),renameJVarsCommand.apply(v1,vars,env),renameJVarsCommand.apply(v2,vars,env),renameJVarsCommand.apply(v3,vars,env));
         }
@@ -3389,33 +3729,33 @@ public class ToJava {
         }
         }
         }
-      case "JIfCommand": {ESLVal $30 = _v2.termRef(0);
-          ESLVal $29 = _v2.termRef(1);
-          ESLVal $28 = _v2.termRef(2);
+      case "JIfCommand": {ESLVal $2336 = _v1939.termRef(0);
+          ESLVal $2335 = _v1939.termRef(1);
+          ESLVal $2334 = _v1939.termRef(2);
           
-          {ESLVal v0 = $30;
+          {ESLVal v0 = $2336;
           
-          {ESLVal v1 = $29;
+          {ESLVal v1 = $2335;
           
-          {ESLVal v2 = $28;
+          {ESLVal v2 = $2334;
           
           return new ESLVal("JIfCommand",renameJVarsExp.apply(v0,vars,env),renameJVarsCommand.apply(v1,vars,env),renameJVarsCommand.apply(v2,vars,env));
         }
         }
         }
         }
-      case "JCaseList": {ESLVal $27 = _v2.termRef(0);
-          ESLVal $26 = _v2.termRef(1);
-          ESLVal $25 = _v2.termRef(2);
-          ESLVal $24 = _v2.termRef(3);
+      case "JCaseList": {ESLVal $2333 = _v1939.termRef(0);
+          ESLVal $2332 = _v1939.termRef(1);
+          ESLVal $2331 = _v1939.termRef(2);
+          ESLVal $2330 = _v1939.termRef(3);
           
-          {ESLVal v0 = $27;
+          {ESLVal v0 = $2333;
           
-          {ESLVal v1 = $26;
+          {ESLVal v1 = $2332;
           
-          {ESLVal v2 = $25;
+          {ESLVal v2 = $2331;
           
-          {ESLVal v3 = $24;
+          {ESLVal v3 = $2330;
           
           return new ESLVal("JCaseList",renameJVarsExp.apply(v0,vars,env),renameJVarsCommand.apply(v1,vars,env),renameJVarsCommand.apply(v2,vars,env),renameJVarsCommand.apply(v3,vars,env));
         }
@@ -3423,34 +3763,34 @@ public class ToJava {
         }
         }
         }
-      case "JCaseInt": {ESLVal $23 = _v2.termRef(0);
-          ESLVal $22 = _v2.termRef(1);
-          ESLVal $21 = _v2.termRef(2);
+      case "JCaseInt": {ESLVal $2329 = _v1939.termRef(0);
+          ESLVal $2328 = _v1939.termRef(1);
+          ESLVal $2327 = _v1939.termRef(2);
           
-          {ESLVal e = $23;
+          {ESLVal e = $2329;
           
-          {ESLVal arms = $22;
+          {ESLVal arms = $2328;
           
-          {ESLVal alt = $21;
+          {ESLVal alt = $2327;
           
           return new ESLVal("JCaseInt",renameJVarsExp.apply(e,vars,env),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v14 = $qualArg;
+          {ESLVal _v1955 = $qualArg;
                 
-                switch(_v14.termName) {
-                case "JIArm": {ESLVal $66 = _v14.termRef(0);
-                  ESLVal $65 = _v14.termRef(1);
+                switch(_v1955.termName) {
+                case "JIArm": {ESLVal $2381 = _v1955.termRef(0);
+                  ESLVal $2380 = _v1955.termRef(1);
                   
-                  {ESLVal n = $66;
+                  {ESLVal n = $2381;
                   
-                  {ESLVal _v72 = $65;
+                  {ESLVal _v2019 = $2380;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("JIArm",n,renameJVarsCommand.apply(_v72,vars,env))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("JIArm",n,renameJVarsCommand.apply(_v2019,vars,env))));
                 }
                 }
                 }
-                default: {ESLVal _0 = _v14;
+                default: {ESLVal _0 = _v1955;
                   
                   return ESLVal.list();
                 }
@@ -3462,34 +3802,34 @@ public class ToJava {
         }
         }
         }
-      case "JCaseStr": {ESLVal $20 = _v2.termRef(0);
-          ESLVal $19 = _v2.termRef(1);
-          ESLVal $18 = _v2.termRef(2);
+      case "JCaseStr": {ESLVal $2326 = _v1939.termRef(0);
+          ESLVal $2325 = _v1939.termRef(1);
+          ESLVal $2324 = _v1939.termRef(2);
           
-          {ESLVal e = $20;
+          {ESLVal e = $2326;
           
-          {ESLVal arms = $19;
+          {ESLVal arms = $2325;
           
-          {ESLVal alt = $18;
+          {ESLVal alt = $2324;
           
           return new ESLVal("JCaseStr",renameJVarsExp.apply(e,vars,env),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v13 = $qualArg;
+          {ESLVal _v1954 = $qualArg;
                 
-                switch(_v13.termName) {
-                case "JSArm": {ESLVal $64 = _v13.termRef(0);
-                  ESLVal $63 = _v13.termRef(1);
+                switch(_v1954.termName) {
+                case "JSArm": {ESLVal $2379 = _v1954.termRef(0);
+                  ESLVal $2378 = _v1954.termRef(1);
                   
-                  {ESLVal s = $64;
+                  {ESLVal s = $2379;
                   
-                  {ESLVal _v71 = $63;
+                  {ESLVal _v2018 = $2378;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("JSArm",s,renameJVarsCommand.apply(_v71,vars,env))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("JSArm",s,renameJVarsCommand.apply(_v2018,vars,env))));
                 }
                 }
                 }
-                default: {ESLVal _0 = _v13;
+                default: {ESLVal _0 = _v1954;
                   
                   return ESLVal.list();
                 }
@@ -3501,34 +3841,34 @@ public class ToJava {
         }
         }
         }
-      case "JCaseBool": {ESLVal $17 = _v2.termRef(0);
-          ESLVal $16 = _v2.termRef(1);
-          ESLVal $15 = _v2.termRef(2);
+      case "JCaseBool": {ESLVal $2323 = _v1939.termRef(0);
+          ESLVal $2322 = _v1939.termRef(1);
+          ESLVal $2321 = _v1939.termRef(2);
           
-          {ESLVal e = $17;
+          {ESLVal e = $2323;
           
-          {ESLVal arms = $16;
+          {ESLVal arms = $2322;
           
-          {ESLVal alt = $15;
+          {ESLVal alt = $2321;
           
           return new ESLVal("JCaseBool",renameJVarsExp.apply(e,vars,env),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v12 = $qualArg;
+          {ESLVal _v1953 = $qualArg;
                 
-                switch(_v12.termName) {
-                case "JBArm": {ESLVal $62 = _v12.termRef(0);
-                  ESLVal $61 = _v12.termRef(1);
+                switch(_v1953.termName) {
+                case "JBArm": {ESLVal $2377 = _v1953.termRef(0);
+                  ESLVal $2376 = _v1953.termRef(1);
                   
-                  {ESLVal b = $62;
+                  {ESLVal b = $2377;
                   
-                  {ESLVal _v70 = $61;
+                  {ESLVal _v2017 = $2376;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("JBArm",b,renameJVarsCommand.apply(_v70,vars,env))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("JBArm",b,renameJVarsCommand.apply(_v2017,vars,env))));
                 }
                 }
                 }
-                default: {ESLVal _0 = _v12;
+                default: {ESLVal _0 = _v1953;
                   
                   return ESLVal.list();
                 }
@@ -3540,38 +3880,38 @@ public class ToJava {
         }
         }
         }
-      case "JCaseTerm": {ESLVal $14 = _v2.termRef(0);
-          ESLVal $13 = _v2.termRef(1);
-          ESLVal $12 = _v2.termRef(2);
+      case "JCaseTerm": {ESLVal $2320 = _v1939.termRef(0);
+          ESLVal $2319 = _v1939.termRef(1);
+          ESLVal $2318 = _v1939.termRef(2);
           
-          {ESLVal e = $14;
+          {ESLVal e = $2320;
           
-          {ESLVal arms = $13;
+          {ESLVal arms = $2319;
           
-          {ESLVal alt = $12;
+          {ESLVal alt = $2318;
           
           return new ESLVal("JCaseTerm",renameJVarsExp.apply(e,vars,env),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v11 = $qualArg;
+          {ESLVal _v1952 = $qualArg;
                 
-                switch(_v11.termName) {
-                case "JTArm": {ESLVal $60 = _v11.termRef(0);
-                  ESLVal $59 = _v11.termRef(1);
-                  ESLVal $58 = _v11.termRef(2);
+                switch(_v1952.termName) {
+                case "JTArm": {ESLVal $2375 = _v1952.termRef(0);
+                  ESLVal $2374 = _v1952.termRef(1);
+                  ESLVal $2373 = _v1952.termRef(2);
                   
-                  {ESLVal n = $60;
+                  {ESLVal n = $2375;
                   
-                  {ESLVal i = $59;
+                  {ESLVal i = $2374;
                   
-                  {ESLVal _v69 = $58;
+                  {ESLVal _v2016 = $2373;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("JTArm",n,i,renameJVarsCommand.apply(_v69,vars,env))));
+                  return ESLVal.list(ESLVal.list(new ESLVal("JTArm",n,i,renameJVarsCommand.apply(_v2016,vars,env))));
                 }
                 }
                 }
                 }
-                default: {ESLVal _0 = _v11;
+                default: {ESLVal _0 = _v1952;
                   
                   return ESLVal.list();
                 }
@@ -3583,35 +3923,35 @@ public class ToJava {
         }
         }
         }
-      case "JLet": {ESLVal $11 = _v2.termRef(0);
-          ESLVal $10 = _v2.termRef(1);
+      case "JLet": {ESLVal $2317 = _v1939.termRef(0);
+          ESLVal $2316 = _v1939.termRef(1);
           
-          {ESLVal v0 = $11;
+          {ESLVal v0 = $2317;
           
-          {ESLVal v1 = $10;
+          {ESLVal v1 = $2316;
           
           {ESLVal boundNames = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal $qualArg = $args[0];
-            {ESLVal _v7 = $qualArg;
+            {ESLVal _v1948 = $qualArg;
                   
-                  switch(_v7.termName) {
-                  case "JField": {ESLVal $51 = _v7.termRef(0);
-                    ESLVal $50 = _v7.termRef(1);
-                    ESLVal $49 = _v7.termRef(2);
+                  switch(_v1948.termName) {
+                  case "JField": {ESLVal $2366 = _v1948.termRef(0);
+                    ESLVal $2365 = _v1948.termRef(1);
+                    ESLVal $2364 = _v1948.termRef(2);
                     
-                    {ESLVal n = $51;
+                    {ESLVal n = $2366;
                     
-                    {ESLVal t = $50;
+                    {ESLVal t = $2365;
                     
-                    {ESLVal e = $49;
+                    {ESLVal e = $2364;
                     
                     return ESLVal.list(ESLVal.list(n));
                   }
                   }
                   }
                   }
-                  default: {ESLVal _0 = _v7;
+                  default: {ESLVal _0 = _v1948;
                     
                     return ESLVal.list();
                   }
@@ -3620,7 +3960,7 @@ public class ToJava {
               }
             }).map(v0).flatten().flatten();
           
-          if(exists.apply(new ESLVal(new Function(new ESLVal("fun701"),getSelf()) {
+          if(exists.apply(new ESLVal(new Function(new ESLVal("fun826"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal n = $args[0];
         return member.apply(n,vars);
@@ -3629,9 +3969,9 @@ public class ToJava {
           {ESLVal newNames = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal $qualArg = $args[0];
-              {ESLVal _v8 = $qualArg;
+              {ESLVal _v1949 = $qualArg;
                     
-                    {ESLVal n = _v8;
+                    {ESLVal n = _v1949;
                     
                     return ESLVal.list(ESLVal.list(newName.apply()));
                   }
@@ -3644,25 +3984,25 @@ public class ToJava {
             return new ESLVal("JLet",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal $qualArg = $args[0];
-            {ESLVal _v9 = $qualArg;
+            {ESLVal _v1950 = $qualArg;
                   
-                  switch(_v9.termName) {
-                  case "JField": {ESLVal $54 = _v9.termRef(0);
-                    ESLVal $53 = _v9.termRef(1);
-                    ESLVal $52 = _v9.termRef(2);
+                  switch(_v1950.termName) {
+                  case "JField": {ESLVal $2369 = _v1950.termRef(0);
+                    ESLVal $2368 = _v1950.termRef(1);
+                    ESLVal $2367 = _v1950.termRef(2);
                     
-                    {ESLVal n = $54;
+                    {ESLVal n = $2369;
                     
-                    {ESLVal t = $53;
+                    {ESLVal t = $2368;
                     
-                    {ESLVal e = $52;
+                    {ESLVal e = $2367;
                     
                     return ESLVal.list(ESLVal.list(new ESLVal("JField",lookup.apply(n,env1),t,renameJVarsExp.apply(e,vars,env))));
                   }
                   }
                   }
                   }
-                  default: {ESLVal _0 = _v9;
+                  default: {ESLVal _0 = _v1950;
                     
                     return ESLVal.list();
                   }
@@ -3676,25 +4016,25 @@ public class ToJava {
             return new ESLVal("JLet",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal $qualArg = $args[0];
-              {ESLVal _v10 = $qualArg;
+              {ESLVal _v1951 = $qualArg;
                     
-                    switch(_v10.termName) {
-                    case "JField": {ESLVal $57 = _v10.termRef(0);
-                      ESLVal $56 = _v10.termRef(1);
-                      ESLVal $55 = _v10.termRef(2);
+                    switch(_v1951.termName) {
+                    case "JField": {ESLVal $2372 = _v1951.termRef(0);
+                      ESLVal $2371 = _v1951.termRef(1);
+                      ESLVal $2370 = _v1951.termRef(2);
                       
-                      {ESLVal n = $57;
+                      {ESLVal n = $2372;
                       
-                      {ESLVal t = $56;
+                      {ESLVal t = $2371;
                       
-                      {ESLVal e = $55;
+                      {ESLVal e = $2370;
                       
                       return ESLVal.list(ESLVal.list(new ESLVal("JField",n,t,renameJVarsExp.apply(e,vars,env))));
                     }
                     }
                     }
                     }
-                    default: {ESLVal _0 = _v10;
+                    default: {ESLVal _0 = _v1951;
                       
                       return ESLVal.list();
                     }
@@ -3706,35 +4046,35 @@ public class ToJava {
         }
         }
         }
-      case "JLetRec": {ESLVal $9 = _v2.termRef(0);
-          ESLVal $8 = _v2.termRef(1);
+      case "JPLet": {ESLVal $2315 = _v1939.termRef(0);
+          ESLVal $2314 = _v1939.termRef(1);
           
-          {ESLVal v0 = $9;
+          {ESLVal v0 = $2315;
           
-          {ESLVal v1 = $8;
+          {ESLVal v1 = $2314;
           
           {ESLVal boundNames = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal $qualArg = $args[0];
-            {ESLVal _v3 = $qualArg;
+            {ESLVal _v1944 = $qualArg;
                   
-                  switch(_v3.termName) {
-                  case "JField": {ESLVal $42 = _v3.termRef(0);
-                    ESLVal $41 = _v3.termRef(1);
-                    ESLVal $40 = _v3.termRef(2);
+                  switch(_v1944.termName) {
+                  case "JField": {ESLVal $2357 = _v1944.termRef(0);
+                    ESLVal $2356 = _v1944.termRef(1);
+                    ESLVal $2355 = _v1944.termRef(2);
                     
-                    {ESLVal n = $42;
+                    {ESLVal n = $2357;
                     
-                    {ESLVal t = $41;
+                    {ESLVal t = $2356;
                     
-                    {ESLVal e = $40;
+                    {ESLVal e = $2355;
                     
                     return ESLVal.list(ESLVal.list(n));
                   }
                   }
                   }
                   }
-                  default: {ESLVal _0 = _v3;
+                  default: {ESLVal _0 = _v1944;
                     
                     return ESLVal.list();
                   }
@@ -3743,7 +4083,7 @@ public class ToJava {
               }
             }).map(v0).flatten().flatten();
           
-          if(exists.apply(new ESLVal(new Function(new ESLVal("fun702"),getSelf()) {
+          if(exists.apply(new ESLVal(new Function(new ESLVal("fun827"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal n = $args[0];
         return member.apply(n,vars);
@@ -3752,9 +4092,9 @@ public class ToJava {
           {ESLVal newNames = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal $qualArg = $args[0];
-              {ESLVal _v4 = $qualArg;
+              {ESLVal _v1945 = $qualArg;
                     
-                    {ESLVal n = _v4;
+                    {ESLVal n = _v1945;
                     
                     return ESLVal.list(ESLVal.list(newName.apply()));
                   }
@@ -3762,62 +4102,62 @@ public class ToJava {
                 }
               }).map(boundNames).flatten().flatten();
             
-            {ESLVal _v68 = addEntries.apply(boundNames,newNames,env);
+            {ESLVal env1 = addEntries.apply(boundNames,newNames,env);
             
-            return new ESLVal("JLetRec",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+            return new ESLVal("JPLet",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal $qualArg = $args[0];
-            {ESLVal _v5 = $qualArg;
+            {ESLVal _v1946 = $qualArg;
                   
-                  switch(_v5.termName) {
-                  case "JField": {ESLVal $45 = _v5.termRef(0);
-                    ESLVal $44 = _v5.termRef(1);
-                    ESLVal $43 = _v5.termRef(2);
+                  switch(_v1946.termName) {
+                  case "JField": {ESLVal $2360 = _v1946.termRef(0);
+                    ESLVal $2359 = _v1946.termRef(1);
+                    ESLVal $2358 = _v1946.termRef(2);
                     
-                    {ESLVal n = $45;
+                    {ESLVal n = $2360;
                     
-                    {ESLVal t = $44;
+                    {ESLVal t = $2359;
                     
-                    {ESLVal e = $43;
+                    {ESLVal e = $2358;
                     
-                    return ESLVal.list(ESLVal.list(new ESLVal("JField",lookup.apply(n,_v68),t,renameJVarsExp.apply(e,vars,_v68))));
+                    return ESLVal.list(ESLVal.list(new ESLVal("JField",lookup.apply(n,env1),t,renameJVarsExp.apply(e,vars,env))));
                   }
                   }
                   }
                   }
-                  default: {ESLVal _0 = _v5;
+                  default: {ESLVal _0 = _v1946;
                     
                     return ESLVal.list();
                   }
                 }
                 }
               }
-            }).map(v0).flatten().flatten(),renameJVarsCommand.apply(v1,boundNames.add(vars),_v68));
+            }).map(v0).flatten().flatten(),renameJVarsCommand.apply(v1,boundNames.add(vars),env1));
           }
           }
           else
-            return new ESLVal("JLetRec",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+            return new ESLVal("JPLet",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal $qualArg = $args[0];
-              {ESLVal _v6 = $qualArg;
+              {ESLVal _v1947 = $qualArg;
                     
-                    switch(_v6.termName) {
-                    case "JField": {ESLVal $48 = _v6.termRef(0);
-                      ESLVal $47 = _v6.termRef(1);
-                      ESLVal $46 = _v6.termRef(2);
+                    switch(_v1947.termName) {
+                    case "JField": {ESLVal $2363 = _v1947.termRef(0);
+                      ESLVal $2362 = _v1947.termRef(1);
+                      ESLVal $2361 = _v1947.termRef(2);
                       
-                      {ESLVal n = $48;
+                      {ESLVal n = $2363;
                       
-                      {ESLVal t = $47;
+                      {ESLVal t = $2362;
                       
-                      {ESLVal e = $46;
+                      {ESLVal e = $2361;
                       
                       return ESLVal.list(ESLVal.list(new ESLVal("JField",n,t,renameJVarsExp.apply(e,vars,env))));
                     }
                     }
                     }
                     }
-                    default: {ESLVal _0 = _v6;
+                    default: {ESLVal _0 = _v1947;
                       
                       return ESLVal.list();
                     }
@@ -3829,26 +4169,149 @@ public class ToJava {
         }
         }
         }
-      case "JStatement": {ESLVal $7 = _v2.termRef(0);
+      case "JLetRec": {ESLVal $2313 = _v1939.termRef(0);
+          ESLVal $2312 = _v1939.termRef(1);
           
-          {ESLVal e = $7;
+          {ESLVal v0 = $2313;
+          
+          {ESLVal v1 = $2312;
+          
+          {ESLVal boundNames = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal $qualArg = $args[0];
+            {ESLVal _v1940 = $qualArg;
+                  
+                  switch(_v1940.termName) {
+                  case "JField": {ESLVal $2348 = _v1940.termRef(0);
+                    ESLVal $2347 = _v1940.termRef(1);
+                    ESLVal $2346 = _v1940.termRef(2);
+                    
+                    {ESLVal n = $2348;
+                    
+                    {ESLVal t = $2347;
+                    
+                    {ESLVal e = $2346;
+                    
+                    return ESLVal.list(ESLVal.list(n));
+                  }
+                  }
+                  }
+                  }
+                  default: {ESLVal _0 = _v1940;
+                    
+                    return ESLVal.list();
+                  }
+                }
+                }
+              }
+            }).map(v0).flatten().flatten();
+          
+          if(exists.apply(new ESLVal(new Function(new ESLVal("fun828"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal n = $args[0];
+        return member.apply(n,vars);
+          }
+        }),boundNames).boolVal)
+          {ESLVal newNames = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+                public ESLVal apply(ESLVal... $args) {
+                  ESLVal $qualArg = $args[0];
+              {ESLVal _v1941 = $qualArg;
+                    
+                    {ESLVal n = _v1941;
+                    
+                    return ESLVal.list(ESLVal.list(newName.apply()));
+                  }
+                  }
+                }
+              }).map(boundNames).flatten().flatten();
+            
+            {ESLVal _v2015 = addEntries.apply(boundNames,newNames,env);
+            
+            return new ESLVal("JLetRec",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal $qualArg = $args[0];
+            {ESLVal _v1942 = $qualArg;
+                  
+                  switch(_v1942.termName) {
+                  case "JField": {ESLVal $2351 = _v1942.termRef(0);
+                    ESLVal $2350 = _v1942.termRef(1);
+                    ESLVal $2349 = _v1942.termRef(2);
+                    
+                    {ESLVal n = $2351;
+                    
+                    {ESLVal t = $2350;
+                    
+                    {ESLVal e = $2349;
+                    
+                    return ESLVal.list(ESLVal.list(new ESLVal("JField",lookup.apply(n,_v2015),t,renameJVarsExp.apply(e,vars,_v2015))));
+                  }
+                  }
+                  }
+                  }
+                  default: {ESLVal _0 = _v1942;
+                    
+                    return ESLVal.list();
+                  }
+                }
+                }
+              }
+            }).map(v0).flatten().flatten(),renameJVarsCommand.apply(v1,boundNames.add(vars),_v2015));
+          }
+          }
+          else
+            return new ESLVal("JLetRec",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+                public ESLVal apply(ESLVal... $args) {
+                  ESLVal $qualArg = $args[0];
+              {ESLVal _v1943 = $qualArg;
+                    
+                    switch(_v1943.termName) {
+                    case "JField": {ESLVal $2354 = _v1943.termRef(0);
+                      ESLVal $2353 = _v1943.termRef(1);
+                      ESLVal $2352 = _v1943.termRef(2);
+                      
+                      {ESLVal n = $2354;
+                      
+                      {ESLVal t = $2353;
+                      
+                      {ESLVal e = $2352;
+                      
+                      return ESLVal.list(ESLVal.list(new ESLVal("JField",n,t,renameJVarsExp.apply(e,vars,env))));
+                    }
+                    }
+                    }
+                    }
+                    default: {ESLVal _0 = _v1943;
+                      
+                      return ESLVal.list();
+                    }
+                  }
+                  }
+                }
+              }).map(v0).flatten().flatten(),renameJVarsCommand.apply(v1,boundNames.add(vars),env));
+        }
+        }
+        }
+        }
+      case "JStatement": {ESLVal $2311 = _v1939.termRef(0);
+          
+          {ESLVal e = $2311;
           
           return new ESLVal("JStatement",renameJVarsExp.apply(e,vars,env));
         }
         }
-      case "JUpdate": {ESLVal $6 = _v2.termRef(0);
-          ESLVal $5 = _v2.termRef(1);
+      case "JUpdate": {ESLVal $2310 = _v1939.termRef(0);
+          ESLVal $2309 = _v1939.termRef(1);
           
-          {ESLVal name = $6;
+          {ESLVal name = $2310;
           
-          {ESLVal value = $5;
+          {ESLVal value = $2309;
           
           if(hasEntry.apply(name,env).boolVal)
           return new ESLVal("JUpdate",lookup.apply(name,env),renameJVarsExp.apply(value,vars,env));
           else
-            {ESLVal v0 = $6;
+            {ESLVal v0 = $2310;
               
-              {ESLVal v1 = $5;
+              {ESLVal v1 = $2309;
               
               return new ESLVal("JUpdate",v0,renameJVarsExp.apply(v1,vars,env));
             }
@@ -3856,26 +4319,26 @@ public class ToJava {
         }
         }
         }
-      case "JFor": {ESLVal $4 = _v2.termRef(0);
-          ESLVal $3 = _v2.termRef(1);
-          ESLVal $2 = _v2.termRef(2);
-          ESLVal $1 = _v2.termRef(3);
+      case "JFor": {ESLVal $2308 = _v1939.termRef(0);
+          ESLVal $2307 = _v1939.termRef(1);
+          ESLVal $2306 = _v1939.termRef(2);
+          ESLVal $2305 = _v1939.termRef(3);
           
-          {ESLVal l = $4;
+          {ESLVal l = $2308;
           
-          {ESLVal n = $3;
+          {ESLVal n = $2307;
           
-          {ESLVal e = $2;
+          {ESLVal e = $2306;
           
-          {ESLVal _v67 = $1;
+          {ESLVal _v2014 = $2305;
           
-          return new ESLVal("JFor",l,n,renameJVarsExp.apply(e,vars,env),renameJVarsCommand.apply(_v67,vars,env));
+          return new ESLVal("JFor",l,n,renameJVarsExp.apply(e,vars,env),renameJVarsCommand.apply(_v2014,vars,env));
         }
         }
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(23466,27128)").add(ESLVal.list(_v2)));
+        default: return error(new ESLVal("case error at Pos(25338,29746)").add(ESLVal.list(_v1939)));
       }
       }
     }
@@ -3884,9 +4347,9 @@ public class ToJava {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v1938 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1938)));
           }}
           public ESLVal get(String name) {
             switch(name) {

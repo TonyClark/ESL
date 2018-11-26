@@ -1,8 +1,8 @@
 package esl.lib;
 
-import runtime.data.Term;
+import java.io.Serializable;
 
-public class Actor {
+public class Actor implements Serializable {
 
 	private static int	idCount		= 0;
 

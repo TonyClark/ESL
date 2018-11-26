@@ -1,8 +1,9 @@
 package esl.lib;
 
+import java.io.Serializable;
 import java.util.ArrayDeque;
 
-public interface Behaviour {
+public interface Behaviour extends Serializable {
 
 	public ESLVal get(String name);
 

@@ -1,6 +1,16 @@
 export cache;
 
 cache[Arg,Key,Value](m::(Arg) -> Key,f::(Arg) -> Value)::(Arg) -> Value  =
+
+  // This operation is applied to a map m and a function f.
+  // The function maps a single argument to a value and should not contain
+  // any side effects. The map takes an argument to a key. The result of
+  // cache(m,f) is a function that behaves the same as f(a) for any arg a
+  // except that the result v = f(a) is added to a hash-table as a mapping
+  // m(a) -> v. The idea is that v is computed once and then saved in the
+  // table under a key m(a). Subsequent requests for f(a) will look up the
+  // value m(a) in the table, avoiding the computation.
+  
   let table::Hash[Key,Value] = new Hash[Key,Value];
   in {
     fun(a::Arg)::Value

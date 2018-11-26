@@ -42,7 +42,7 @@ translateCases(exp::AST)::AST =
   // been expanded into simple switches on data...
   
   case exp {
-    Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind])         -> Module(path,name,exports,imports,x,y,[ translateDef(d) | d::TBind <- defs]);
+    Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind])         -> Module(path,name,exports,imports,x,y,[ translateDef(d) | d::TBind <- mergeFunDefs(defs)]);
     FunExp(l::Loc,n::AST,args::[TDec],t::Type,e::AST)                                               -> FunExp(l,n,args,t,translateCases(e));
     StrExp(l::Loc,v::Str)                                                                           -> exp;
     IntExp(l::Loc,v::Int)                                                                           -> exp;
@@ -76,6 +76,7 @@ translateCases(exp::AST)::AST =
     Let(l::Loc,bs::[TBind],e::AST)                                                                  -> Let(l,[ translateDef(b) | b::TBind <- bs],translateCases(e));
     Letrec(l::Loc,bs::[TBind],e::AST)                                                               -> Letrec(l,[ translateDef(b) | b::TBind <- bs],translateCases(e));
     Grab(l::Loc,rs::[DRef],e::AST)                                                                  -> Grab(l,rs,translateCases(e));
+    PLet(l::Loc,bs::[TBind],e::AST)                                                                 -> PLet(l,[ translateDef(b) | b::TBind <- bs],translateCases(e));
     Probably(l::Loc,p::AST,t::Type,e1::AST,e2::AST)                                                 -> Probably(l,translateCases(p),t,translateCases(e1),translateCases(e2));
     Not(l::Loc,e::AST)                                                                              -> Not(l,translateCases(e));
     Fold(l::Loc,t::Type,e::AST)                                                                     -> Fold(l,t,translateCases(e));

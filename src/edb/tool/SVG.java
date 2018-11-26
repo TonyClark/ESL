@@ -2,20 +2,23 @@ package edb.tool;
 
 import java.awt.BasicStroke;
 import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.apache.batik.dom.GenericDOMImplementation;
+import org.apache.batik.svggen.SVGGraphics2DIOException;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.annotations.CategoryPointerAnnotation;
-import org.jfree.chart.annotations.CategoryTextAnnotation;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
@@ -30,6 +33,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 import org.jfree.ui.TextAnchor;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
 
 import edb.display.Display;
 import edb.sequence.Sequence;
@@ -379,9 +384,9 @@ public class SVG {
 				if (hasProp("label", pointProps)) {
 					Term label = getProp("label", pointProps);
 					String text = (String) label.getValues()[1];
-					CategoryPointerAnnotation a = new CategoryPointerAnnotation(text, "" + x, y,90.0);
+					CategoryPointerAnnotation a = new CategoryPointerAnnotation(text, "" + x, y, 90.0);
 					Font f = a.getFont();
-					a.setFont(new Font(f.getName(),f.getStyle(),7));
+					a.setFont(new Font(f.getName(), f.getStyle(), 7));
 					a.setTipRadius(0);
 					a.setBaseRadius(10);
 					a.setArrowWidth(0);
@@ -458,8 +463,10 @@ public class SVG {
 		int height = (int) term.getValues()[1];
 		Term treeElement = (Term) term.getValues()[2];
 		Display display = Display.toDisplay(treeElement);
-		SVGGraphics2D g2 = new SVGGraphics2D(width, height);
+
+		org.jfree.graphics2d.svg.SVGGraphics2D g2 = new org.jfree.graphics2d.svg.SVGGraphics2D(width, height);
 		display.draw(0, 0, width, height, g2);
+
 		String svg = g2.getSVGDocument();
 		g2.dispose();
 		return svg;

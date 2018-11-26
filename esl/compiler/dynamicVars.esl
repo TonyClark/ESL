@@ -42,6 +42,7 @@ dynamicVarsJExp(x::JExp)::[Str] = { //print[Str]('dynamic exp = ' + x);
     JCommandExp(v0::JCommand,v1::JType) -> dynamicVarsJCommand(v0);
     JIfExp(v0::JExp,v1::JExp,v2::JExp) -> dynamicVarsJExp(v0) + dynamicVarsJExp(v1) + dynamicVarsJExp(v2);
     JConstExp(v0::JConst) -> [];
+    JCmpExp(c) -> [];
     JTerm(v0::Str,v1::[JExp]) -> flatten[Str](map[JExp,[Str]](fun(e::JExp)::[Str] dynamicVarsJExp(e),v1));
     JTermRef(v0::JExp,v1::Int) -> dynamicVarsJExp(v0);
     JList(v0::JType,v1::[JExp]) -> flatten[Str](map[JExp,[Str]](fun(e::JExp)::[Str] dynamicVarsJExp(e),v1));
@@ -123,6 +124,7 @@ dynamicVarsJCommand(x::JCommand)::[Str] = { //print[Str]('dynamic command = ' + 
     JCaseStr(v0::JExp,v1::[JStrArm],v2::JCommand) -> dynamicVarsJExp(v0) + flatten[Str](map[JStrArm,[Str]](fun(t::JStrArm)::[Str] dynamicVarsJStrArm(t),v1)) + dynamicVarsJCommand(v2);
     JCaseBool(v0::JExp,v1::[JBoolArm],v2::JCommand) -> dynamicVarsJExp(v0) + flatten[Str](map[JBoolArm,[Str]](fun(t::JBoolArm)::[Str] dynamicVarsJBoolArm(t),v1)) + dynamicVarsJCommand(v2);
     JLet(v0::[JFieldDef],v1::JCommand) -> flatten[Str](map[JFieldDef,[Str]](fun(f::JFieldDef)::[Str] dynamicVarsJExp(fieldJExp(f)),v0)) + reject[Str](fun(n::Str)::Bool member[Str](n, map[JFieldDef,Str](fieldName,v0)),dynamicVarsJCommand(v1));
+    JPLet(v0::[JFieldDef],v1::JCommand) -> flatten[Str](map[JFieldDef,[Str]](fun(f::JFieldDef)::[Str] dynamicVarsJExp(fieldJExp(f)),v0)) + reject[Str](fun(n::Str)::Bool member[Str](n, map[JFieldDef,Str](fieldName,v0)),dynamicVarsJCommand(v1));
     JLetRec(v0::[JFieldDef],v1::JCommand) -> reject[Str](fun(n::Str)::Bool member[Str](n, map[JFieldDef,Str](fieldName,v0)),flatten[Str](map[JFieldDef,[Str]](fun(f::JFieldDef)::[Str] dynamicVarsJExp(fieldJExp(f)),v0)) + dynamicVarsJCommand(v1));
     JUpdate(v0::Str,v1::JExp) -> [v0] + dynamicVarsJExp(v1);
     JStatement(v0::JExp) -> dynamicVarsJExp(v0);

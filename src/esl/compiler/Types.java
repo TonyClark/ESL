@@ -5,76 +5,76 @@ import static esl.lib.Lib.*;
 import java.util.function.Supplier;
 public class Types {
   public static ESLVal getSelf() { return $null; }
-  private static ESLVal locStart = new ESLVal(new Function(new ESLVal("locStart"),getSelf()) {
+  public static ESLVal locStart = new ESLVal(new Function(new ESLVal("locStart"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
-  {ESLVal _v70 = l;
+  {ESLVal _v292 = l;
         
-        switch(_v70.termName) {
-        case "Pos": {ESLVal $607 = _v70.termRef(0);
-          ESLVal $606 = _v70.termRef(1);
+        switch(_v292.termName) {
+        case "Pos": {ESLVal $1236 = _v292.termRef(0);
+          ESLVal $1235 = _v292.termRef(1);
           
-          {ESLVal start = $607;
+          {ESLVal start = $1236;
           
-          {ESLVal end = $606;
-          
-          return start;
-        }
-        }
-        }
-      case "TypedLoc": {ESLVal $605 = _v70.termRef(0);
-          ESLVal $604 = _v70.termRef(1);
-          ESLVal $603 = _v70.termRef(2);
-          
-          {ESLVal t = $605;
-          
-          {ESLVal start = $604;
-          
-          {ESLVal end = $603;
+          {ESLVal end = $1235;
           
           return start;
         }
         }
         }
+      case "TypedLoc": {ESLVal $1234 = _v292.termRef(0);
+          ESLVal $1233 = _v292.termRef(1);
+          ESLVal $1232 = _v292.termRef(2);
+          
+          {ESLVal t = $1234;
+          
+          {ESLVal start = $1233;
+          
+          {ESLVal end = $1232;
+          
+          return start;
         }
-        default: return error(new ESLVal("case error at Pos(5833,5917)").add(ESLVal.list(_v70)));
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(5784,5868)").add(ESLVal.list(_v292)));
       }
       }
     }
   });
-  private static ESLVal locEnd = new ESLVal(new Function(new ESLVal("locEnd"),getSelf()) {
+  public static ESLVal locEnd = new ESLVal(new Function(new ESLVal("locEnd"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
-  {ESLVal _v69 = l;
+  {ESLVal _v291 = l;
         
-        switch(_v69.termName) {
-        case "Pos": {ESLVal $602 = _v69.termRef(0);
-          ESLVal $601 = _v69.termRef(1);
+        switch(_v291.termName) {
+        case "Pos": {ESLVal $1231 = _v291.termRef(0);
+          ESLVal $1230 = _v291.termRef(1);
           
-          {ESLVal start = $602;
+          {ESLVal start = $1231;
           
-          {ESLVal end = $601;
-          
-          return end;
-        }
-        }
-        }
-      case "TypedLoc": {ESLVal $600 = _v69.termRef(0);
-          ESLVal $599 = _v69.termRef(1);
-          ESLVal $598 = _v69.termRef(2);
-          
-          {ESLVal t = $600;
-          
-          {ESLVal start = $599;
-          
-          {ESLVal end = $598;
+          {ESLVal end = $1230;
           
           return end;
         }
         }
         }
+      case "TypedLoc": {ESLVal $1229 = _v291.termRef(0);
+          ESLVal $1228 = _v291.termRef(1);
+          ESLVal $1227 = _v291.termRef(2);
+          
+          {ESLVal t = $1229;
+          
+          {ESLVal start = $1228;
+          
+          {ESLVal end = $1227;
+          
+          return end;
         }
-        default: return error(new ESLVal("case error at Pos(5944,6024)").add(ESLVal.list(_v69)));
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(5895,5975)").add(ESLVal.list(_v291)));
       }
       }
     }
@@ -82,21 +82,21 @@ public class Types {
   public static ESLVal decName = new ESLVal(new Function(new ESLVal("decName"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal d = $args[0];
-  {ESLVal _v68 = d;
+  {ESLVal _v290 = d;
         
-        switch(_v68.termName) {
-        case "Dec": {ESLVal $597 = _v68.termRef(0);
-          ESLVal $596 = _v68.termRef(1);
-          ESLVal $595 = _v68.termRef(2);
-          ESLVal $594 = _v68.termRef(3);
+        switch(_v290.termName) {
+        case "Dec": {ESLVal $1226 = _v290.termRef(0);
+          ESLVal $1225 = _v290.termRef(1);
+          ESLVal $1224 = _v290.termRef(2);
+          ESLVal $1223 = _v290.termRef(3);
           
-          {ESLVal l = $597;
+          {ESLVal l = $1226;
           
-          {ESLVal n = $596;
+          {ESLVal n = $1225;
           
-          {ESLVal t = $595;
+          {ESLVal t = $1224;
           
-          {ESLVal dt = $594;
+          {ESLVal dt = $1223;
           
           return n;
         }
@@ -104,7 +104,7 @@ public class Types {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(6346,6468)").add(ESLVal.list(_v68)));
+        default: return error(new ESLVal("case error at Pos(6297,6419)").add(ESLVal.list(_v290)));
       }
       }
     }
@@ -112,21 +112,21 @@ public class Types {
   public static ESLVal decLoc = new ESLVal(new Function(new ESLVal("decLoc"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal d = $args[0];
-  {ESLVal _v67 = d;
+  {ESLVal _v289 = d;
         
-        switch(_v67.termName) {
-        case "Dec": {ESLVal $593 = _v67.termRef(0);
-          ESLVal $592 = _v67.termRef(1);
-          ESLVal $591 = _v67.termRef(2);
-          ESLVal $590 = _v67.termRef(3);
+        switch(_v289.termName) {
+        case "Dec": {ESLVal $1222 = _v289.termRef(0);
+          ESLVal $1221 = _v289.termRef(1);
+          ESLVal $1220 = _v289.termRef(2);
+          ESLVal $1219 = _v289.termRef(3);
           
-          {ESLVal l = $593;
+          {ESLVal l = $1222;
           
-          {ESLVal n = $592;
+          {ESLVal n = $1221;
           
-          {ESLVal t = $591;
+          {ESLVal t = $1220;
           
-          {ESLVal dt = $590;
+          {ESLVal dt = $1219;
           
           return l;
         }
@@ -134,7 +134,7 @@ public class Types {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(6572,6630)").add(ESLVal.list(_v67)));
+        default: return error(new ESLVal("case error at Pos(6523,6581)").add(ESLVal.list(_v289)));
       }
       }
     }
@@ -142,21 +142,21 @@ public class Types {
   public static ESLVal decType = new ESLVal(new Function(new ESLVal("decType"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal d = $args[0];
-  {ESLVal _v66 = d;
+  {ESLVal _v288 = d;
         
-        switch(_v66.termName) {
-        case "Dec": {ESLVal $589 = _v66.termRef(0);
-          ESLVal $588 = _v66.termRef(1);
-          ESLVal $587 = _v66.termRef(2);
-          ESLVal $586 = _v66.termRef(3);
+        switch(_v288.termName) {
+        case "Dec": {ESLVal $1218 = _v288.termRef(0);
+          ESLVal $1217 = _v288.termRef(1);
+          ESLVal $1216 = _v288.termRef(2);
+          ESLVal $1215 = _v288.termRef(3);
           
-          {ESLVal l = $589;
+          {ESLVal l = $1218;
           
-          {ESLVal n = $588;
+          {ESLVal n = $1217;
           
-          {ESLVal t = $587;
+          {ESLVal t = $1216;
           
-          {ESLVal dt = $586;
+          {ESLVal dt = $1215;
           
           return t;
         }
@@ -164,7 +164,7 @@ public class Types {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(6730,6788)").add(ESLVal.list(_v66)));
+        default: return error(new ESLVal("case error at Pos(6681,6739)").add(ESLVal.list(_v288)));
       }
       }
     }
@@ -172,17 +172,17 @@ public class Types {
   public static ESLVal isStrType = new ESLVal(new Function(new ESLVal("isStrType"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal t = $args[0];
-  {ESLVal _v65 = t;
+  {ESLVal _v287 = t;
         
-        switch(_v65.termName) {
-        case "StrType": {ESLVal $585 = _v65.termRef(0);
+        switch(_v287.termName) {
+        case "StrType": {ESLVal $1214 = _v287.termRef(0);
           
-          {ESLVal l = $585;
+          {ESLVal l = $1214;
           
           return $true;
         }
         }
-        default: {ESLVal _v563 = _v65;
+        default: {ESLVal _v810 = _v287;
           
           return $false;
         }
@@ -193,17 +193,17 @@ public class Types {
   public static ESLVal isIntType = new ESLVal(new Function(new ESLVal("isIntType"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal t = $args[0];
-  {ESLVal _v64 = t;
+  {ESLVal _v286 = t;
         
-        switch(_v64.termName) {
-        case "IntType": {ESLVal $584 = _v64.termRef(0);
+        switch(_v286.termName) {
+        case "IntType": {ESLVal $1213 = _v286.termRef(0);
           
-          {ESLVal l = $584;
+          {ESLVal l = $1213;
           
           return $true;
         }
         }
-        default: {ESLVal _v562 = _v64;
+        default: {ESLVal _v809 = _v286;
           
           return $false;
         }
@@ -214,24 +214,24 @@ public class Types {
   public static ESLVal isNumType = new ESLVal(new Function(new ESLVal("isNumType"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal t = $args[0];
-  {ESLVal _v63 = t;
+  {ESLVal _v285 = t;
         
-        switch(_v63.termName) {
-        case "IntType": {ESLVal $583 = _v63.termRef(0);
+        switch(_v285.termName) {
+        case "IntType": {ESLVal $1212 = _v285.termRef(0);
           
-          {ESLVal l = $583;
-          
-          return $true;
-        }
-        }
-      case "FloatType": {ESLVal $582 = _v63.termRef(0);
-          
-          {ESLVal l = $582;
+          {ESLVal l = $1212;
           
           return $true;
         }
         }
-        default: {ESLVal _v561 = _v63;
+      case "FloatType": {ESLVal $1211 = _v285.termRef(0);
+          
+          {ESLVal l = $1211;
+          
+          return $true;
+        }
+        }
+        default: {ESLVal _v808 = _v285;
           
           return $false;
         }
@@ -242,17 +242,17 @@ public class Types {
   public static ESLVal isBoolType = new ESLVal(new Function(new ESLVal("isBoolType"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal t = $args[0];
-  {ESLVal _v62 = t;
+  {ESLVal _v284 = t;
         
-        switch(_v62.termName) {
-        case "BoolType": {ESLVal $581 = _v62.termRef(0);
+        switch(_v284.termName) {
+        case "BoolType": {ESLVal $1210 = _v284.termRef(0);
           
-          {ESLVal l = $581;
+          {ESLVal l = $1210;
           
           return $true;
         }
         }
-        default: {ESLVal _v560 = _v62;
+        default: {ESLVal _v807 = _v284;
           
           return $false;
         }
@@ -260,20 +260,20 @@ public class Types {
       }
     }
   });
-  private static ESLVal isFloatType = new ESLVal(new Function(new ESLVal("isFloatType"),getSelf()) {
+  public static ESLVal isFloatType = new ESLVal(new Function(new ESLVal("isFloatType"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal t = $args[0];
-  {ESLVal _v61 = t;
+  {ESLVal _v283 = t;
         
-        switch(_v61.termName) {
-        case "FloatType": {ESLVal $580 = _v61.termRef(0);
+        switch(_v283.termName) {
+        case "FloatType": {ESLVal $1209 = _v283.termRef(0);
           
-          {ESLVal l = $580;
+          {ESLVal l = $1209;
           
           return $true;
         }
         }
-        default: {ESLVal _v559 = _v61;
+        default: {ESLVal _v806 = _v283;
           
           return $false;
         }
@@ -298,93 +298,93 @@ public class Types {
   if(t1.eql(t2).boolVal)
         return $true;
         else
-          {ESLVal _v60 = t1;
-            ESLVal _v59 = t2;
+          {ESLVal _v282 = t1;
+            ESLVal _v281 = t2;
             
-            switch(_v60.termName) {
-            case "ArrayType": {ESLVal $577 = _v60.termRef(0);
-              ESLVal $576 = _v60.termRef(1);
+            switch(_v282.termName) {
+            case "ArrayType": {ESLVal $1206 = _v282.termRef(0);
+              ESLVal $1205 = _v282.termRef(1);
               
-              switch(_v59.termName) {
-              case "ArrayType": {ESLVal $579 = _v59.termRef(0);
-                ESLVal $578 = _v59.termRef(1);
+              switch(_v281.termName) {
+              case "ArrayType": {ESLVal $1208 = _v281.termRef(0);
+                ESLVal $1207 = _v281.termRef(1);
                 
-                {ESLVal l1 = $577;
+                {ESLVal l1 = $1206;
                 
-                {ESLVal _v535 = $576;
+                {ESLVal _v782 = $1205;
                 
-                {ESLVal l2 = $579;
+                {ESLVal l2 = $1208;
                 
-                {ESLVal _v536 = $578;
+                {ESLVal _v783 = $1207;
                 
-                return typeEqual.apply(_v535,_v536);
+                return typeEqual.apply(_v782,_v783);
               }
               }
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v545 = _v60;
+                  {ESLVal _v792 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v545,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v792,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v543 = _v60;
+                  {ESLVal _v790 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v544 = $447;
+                  {ESLVal _v791 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v543,flattenAct.apply(l2,_v544,ds2,ms2));
+                  return typeEqual.apply(_v790,flattenAct.apply(l2,_v791,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v542 = _v60;
+                  {ESLVal _v789 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -392,55 +392,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v541 = _v60;
+                  {ESLVal _v788 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v541,f.apply());
+                  return typeEqual.apply(_v788,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v539 = _v60;
+                  {ESLVal _v786 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v540 = $437;
+                  {ESLVal _v787 = $1066;
                   
-                  return typeEqual.apply(_v539,substType.apply(new ESLVal("RecType",l2,n2,_v540),n2,_v540));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v537 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v538 = $434;
-                  
-                  return typeEqual.apply(_v537,_v538);
+                  return typeEqual.apply(_v786,substType.apply(new ESLVal("RecType",l2,n2,_v787),n2,_v787));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v546 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v547 = _v59;
+                  {ESLVal _v784 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v785 = $1063;
+                  
+                  return typeEqual.apply(_v784,_v785);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v793 = _v282;
+                  
+                  {ESLVal _v794 = _v281;
                   
                   return $false;
                 }
@@ -448,26 +448,26 @@ public class Types {
               }
             }
             }
-          case "ActType": {ESLVal $572 = _v60.termRef(0);
-              ESLVal $571 = _v60.termRef(1);
-              ESLVal $570 = _v60.termRef(2);
+          case "ActType": {ESLVal $1201 = _v282.termRef(0);
+              ESLVal $1200 = _v282.termRef(1);
+              ESLVal $1199 = _v282.termRef(2);
               
-              switch(_v59.termName) {
-              case "ActType": {ESLVal $575 = _v59.termRef(0);
-                ESLVal $574 = _v59.termRef(1);
-                ESLVal $573 = _v59.termRef(2);
+              switch(_v281.termName) {
+              case "ActType": {ESLVal $1204 = _v281.termRef(0);
+                ESLVal $1203 = _v281.termRef(1);
+                ESLVal $1202 = _v281.termRef(2);
                 
-                {ESLVal l1 = $572;
+                {ESLVal l1 = $1201;
                 
-                {ESLVal exports1 = $571;
+                {ESLVal exports1 = $1200;
                 
-                {ESLVal handlers1 = $570;
+                {ESLVal handlers1 = $1199;
                 
-                {ESLVal l2 = $575;
+                {ESLVal l2 = $1204;
                 
-                {ESLVal exports2 = $574;
+                {ESLVal exports2 = $1203;
                 
-                {ESLVal handlers2 = $573;
+                {ESLVal handlers2 = $1202;
                 
                 return actEqual.apply(exports1,exports2,handlers1,handlers2);
               }
@@ -477,68 +477,68 @@ public class Types {
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v532 = _v60;
+                  {ESLVal _v779 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v532,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v779,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v530 = _v60;
+                  {ESLVal _v777 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v531 = $447;
+                  {ESLVal _v778 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v530,flattenAct.apply(l2,_v531,ds2,ms2));
+                  return typeEqual.apply(_v777,flattenAct.apply(l2,_v778,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v529 = _v60;
+                  {ESLVal _v776 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -546,55 +546,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v528 = _v60;
+                  {ESLVal _v775 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v528,f.apply());
+                  return typeEqual.apply(_v775,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v526 = _v60;
+                  {ESLVal _v773 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v527 = $437;
+                  {ESLVal _v774 = $1066;
                   
-                  return typeEqual.apply(_v526,substType.apply(new ESLVal("RecType",l2,n2,_v527),n2,_v527));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v524 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v525 = $434;
-                  
-                  return typeEqual.apply(_v524,_v525);
+                  return typeEqual.apply(_v773,substType.apply(new ESLVal("RecType",l2,n2,_v774),n2,_v774));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v533 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v534 = _v59;
+                  {ESLVal _v771 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v772 = $1063;
+                  
+                  return typeEqual.apply(_v771,_v772);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v780 = _v282;
+                  
+                  {ESLVal _v781 = _v281;
                   
                   return $false;
                 }
@@ -602,26 +602,26 @@ public class Types {
               }
             }
             }
-          case "ApplyTypeFun": {ESLVal $566 = _v60.termRef(0);
-              ESLVal $565 = _v60.termRef(1);
-              ESLVal $564 = _v60.termRef(2);
+          case "ApplyTypeFun": {ESLVal $1195 = _v282.termRef(0);
+              ESLVal $1194 = _v282.termRef(1);
+              ESLVal $1193 = _v282.termRef(2);
               
-              switch(_v59.termName) {
-              case "ApplyTypeFun": {ESLVal $569 = _v59.termRef(0);
-                ESLVal $568 = _v59.termRef(1);
-                ESLVal $567 = _v59.termRef(2);
+              switch(_v281.termName) {
+              case "ApplyTypeFun": {ESLVal $1198 = _v281.termRef(0);
+                ESLVal $1197 = _v281.termRef(1);
+                ESLVal $1196 = _v281.termRef(2);
                 
-                {ESLVal l1 = $566;
+                {ESLVal l1 = $1195;
                 
-                {ESLVal op1 = $565;
+                {ESLVal op1 = $1194;
                 
-                {ESLVal args1 = $564;
+                {ESLVal args1 = $1193;
                 
-                {ESLVal l2 = $569;
+                {ESLVal l2 = $1198;
                 
-                {ESLVal op2 = $568;
+                {ESLVal op2 = $1197;
                 
-                {ESLVal args2 = $567;
+                {ESLVal args2 = $1196;
                 
                 return typeEqual.apply(op1,op2).and(typesEqual.apply(args1,args2));
               }
@@ -631,118 +631,118 @@ public class Types {
               }
               }
               }
-              default: {ESLVal l = $566;
+              default: {ESLVal l = $1195;
                 
-                {ESLVal op = $565;
+                {ESLVal op = $1194;
                 
-                {ESLVal args = $564;
+                {ESLVal args = $1193;
                 
-                {ESLVal _v523 = _v59;
+                {ESLVal _v770 = _v281;
                 
-                return typeEqual.apply(applyTypeFun.apply(l,forceType.apply(op),args),_v523);
+                return typeEqual.apply(applyTypeFun.apply(l,forceType.apply(op),args),_v770);
               }
               }
               }
               }
             }
             }
-          case "ExtendedAct": {ESLVal $563 = _v60.termRef(0);
-              ESLVal $562 = _v60.termRef(1);
-              ESLVal $561 = _v60.termRef(2);
-              ESLVal $560 = _v60.termRef(3);
+          case "ExtendedAct": {ESLVal $1192 = _v282.termRef(0);
+              ESLVal $1191 = _v282.termRef(1);
+              ESLVal $1190 = _v282.termRef(2);
+              ESLVal $1189 = _v282.termRef(3);
               
-              {ESLVal l1 = $563;
+              {ESLVal l1 = $1192;
               
-              {ESLVal _v521 = $562;
+              {ESLVal _v768 = $1191;
               
-              {ESLVal ds1 = $561;
+              {ESLVal ds1 = $1190;
               
-              {ESLVal ms1 = $560;
+              {ESLVal ms1 = $1189;
               
-              {ESLVal _v522 = _v59;
+              {ESLVal _v769 = _v281;
               
-              return typeEqual.apply(flattenAct.apply(l1,_v521,ds1,ms1),_v522);
+              return typeEqual.apply(flattenAct.apply(l1,_v768,ds1,ms1),_v769);
             }
             }
             }
             }
             }
             }
-          case "BoolType": {ESLVal $558 = _v60.termRef(0);
+          case "BoolType": {ESLVal $1187 = _v282.termRef(0);
               
-              switch(_v59.termName) {
-              case "BoolType": {ESLVal $559 = _v59.termRef(0);
+              switch(_v281.termName) {
+              case "BoolType": {ESLVal $1188 = _v281.termRef(0);
                 
-                {ESLVal l1 = $558;
+                {ESLVal l1 = $1187;
                 
-                {ESLVal l2 = $559;
+                {ESLVal l2 = $1188;
                 
                 return $true;
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v518 = _v60;
+                  {ESLVal _v765 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v518,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v765,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v516 = _v60;
+                  {ESLVal _v763 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v517 = $447;
+                  {ESLVal _v764 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v516,flattenAct.apply(l2,_v517,ds2,ms2));
+                  return typeEqual.apply(_v763,flattenAct.apply(l2,_v764,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v515 = _v60;
+                  {ESLVal _v762 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -750,55 +750,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v514 = _v60;
+                  {ESLVal _v761 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v514,f.apply());
+                  return typeEqual.apply(_v761,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v512 = _v60;
+                  {ESLVal _v759 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v513 = $437;
+                  {ESLVal _v760 = $1066;
                   
-                  return typeEqual.apply(_v512,substType.apply(new ESLVal("RecType",l2,n2,_v513),n2,_v513));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v510 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v511 = $434;
-                  
-                  return typeEqual.apply(_v510,_v511);
+                  return typeEqual.apply(_v759,substType.apply(new ESLVal("RecType",l2,n2,_v760),n2,_v760));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v519 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v520 = _v59;
+                  {ESLVal _v757 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v758 = $1063;
+                  
+                  return typeEqual.apply(_v757,_v758);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v766 = _v282;
+                  
+                  {ESLVal _v767 = _v281;
                   
                   return $false;
                 }
@@ -806,81 +806,81 @@ public class Types {
               }
             }
             }
-          case "FloatType": {ESLVal $556 = _v60.termRef(0);
+          case "FloatType": {ESLVal $1185 = _v282.termRef(0);
               
-              switch(_v59.termName) {
-              case "FloatType": {ESLVal $557 = _v59.termRef(0);
+              switch(_v281.termName) {
+              case "FloatType": {ESLVal $1186 = _v281.termRef(0);
                 
-                {ESLVal l1 = $556;
+                {ESLVal l1 = $1185;
                 
-                {ESLVal l2 = $557;
+                {ESLVal l2 = $1186;
                 
                 return $true;
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v507 = _v60;
+                  {ESLVal _v754 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v507,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v754,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v505 = _v60;
+                  {ESLVal _v752 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v506 = $447;
+                  {ESLVal _v753 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v505,flattenAct.apply(l2,_v506,ds2,ms2));
+                  return typeEqual.apply(_v752,flattenAct.apply(l2,_v753,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v504 = _v60;
+                  {ESLVal _v751 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -888,55 +888,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v503 = _v60;
+                  {ESLVal _v750 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v503,f.apply());
+                  return typeEqual.apply(_v750,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v501 = _v60;
+                  {ESLVal _v748 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v502 = $437;
+                  {ESLVal _v749 = $1066;
                   
-                  return typeEqual.apply(_v501,substType.apply(new ESLVal("RecType",l2,n2,_v502),n2,_v502));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v499 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v500 = $434;
-                  
-                  return typeEqual.apply(_v499,_v500);
+                  return typeEqual.apply(_v748,substType.apply(new ESLVal("RecType",l2,n2,_v749),n2,_v749));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v508 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v509 = _v59;
+                  {ESLVal _v746 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v747 = $1063;
+                  
+                  return typeEqual.apply(_v746,_v747);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v755 = _v282;
+                  
+                  {ESLVal _v756 = _v281;
                   
                   return $false;
                 }
@@ -944,81 +944,81 @@ public class Types {
               }
             }
             }
-          case "IntType": {ESLVal $554 = _v60.termRef(0);
+          case "IntType": {ESLVal $1183 = _v282.termRef(0);
               
-              switch(_v59.termName) {
-              case "IntType": {ESLVal $555 = _v59.termRef(0);
+              switch(_v281.termName) {
+              case "IntType": {ESLVal $1184 = _v281.termRef(0);
                 
-                {ESLVal l1 = $554;
+                {ESLVal l1 = $1183;
                 
-                {ESLVal l2 = $555;
+                {ESLVal l2 = $1184;
                 
                 return $true;
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v496 = _v60;
+                  {ESLVal _v743 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v496,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v743,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v494 = _v60;
+                  {ESLVal _v741 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v495 = $447;
+                  {ESLVal _v742 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v494,flattenAct.apply(l2,_v495,ds2,ms2));
+                  return typeEqual.apply(_v741,flattenAct.apply(l2,_v742,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v493 = _v60;
+                  {ESLVal _v740 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -1026,55 +1026,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v492 = _v60;
+                  {ESLVal _v739 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v492,f.apply());
+                  return typeEqual.apply(_v739,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v490 = _v60;
+                  {ESLVal _v737 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v491 = $437;
+                  {ESLVal _v738 = $1066;
                   
-                  return typeEqual.apply(_v490,substType.apply(new ESLVal("RecType",l2,n2,_v491),n2,_v491));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v488 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v489 = $434;
-                  
-                  return typeEqual.apply(_v488,_v489);
+                  return typeEqual.apply(_v737,substType.apply(new ESLVal("RecType",l2,n2,_v738),n2,_v738));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v497 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v498 = _v59;
+                  {ESLVal _v735 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v736 = $1063;
+                  
+                  return typeEqual.apply(_v735,_v736);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v744 = _v282;
+                  
+                  {ESLVal _v745 = _v281;
                   
                   return $false;
                 }
@@ -1082,101 +1082,101 @@ public class Types {
               }
             }
             }
-          case "ListType": {ESLVal $540 = _v60.termRef(0);
-              ESLVal $539 = _v60.termRef(1);
+          case "ListType": {ESLVal $1169 = _v282.termRef(0);
+              ESLVal $1168 = _v282.termRef(1);
               
-              switch(_v59.termName) {
-              case "ListType": {ESLVal $553 = _v59.termRef(0);
-                ESLVal $552 = _v59.termRef(1);
+              switch(_v281.termName) {
+              case "ListType": {ESLVal $1182 = _v281.termRef(0);
+                ESLVal $1181 = _v281.termRef(1);
                 
-                {ESLVal l1 = $540;
+                {ESLVal l1 = $1169;
                 
-                {ESLVal _v475 = $539;
+                {ESLVal _v722 = $1168;
                 
-                {ESLVal l2 = $553;
+                {ESLVal l2 = $1182;
                 
-                {ESLVal _v476 = $552;
+                {ESLVal _v723 = $1181;
                 
-                return typeEqual.apply(_v475,_v476);
+                return typeEqual.apply(_v722,_v723);
               }
               }
               }
               }
               }
-            case "ForallType": {ESLVal $543 = _v59.termRef(0);
-                ESLVal $542 = _v59.termRef(1);
-                ESLVal $541 = _v59.termRef(2);
+            case "ForallType": {ESLVal $1172 = _v281.termRef(0);
+                ESLVal $1171 = _v281.termRef(1);
+                ESLVal $1170 = _v281.termRef(2);
                 
-                if($542.isCons())
-                {ESLVal $544 = $542.head();
-                  ESLVal $545 = $542.tail();
+                if($1171.isCons())
+                {ESLVal $1173 = $1171.head();
+                  ESLVal $1174 = $1171.tail();
                   
-                  if($545.isCons())
-                  {ESLVal $546 = $545.head();
-                    ESLVal $547 = $545.tail();
+                  if($1174.isCons())
+                  {ESLVal $1175 = $1174.head();
+                    ESLVal $1176 = $1174.tail();
                     
-                    switch(_v59.termName) {
-                    case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                      ESLVal $450 = _v59.termRef(1);
-                      ESLVal $449 = _v59.termRef(2);
+                    switch(_v281.termName) {
+                    case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                      ESLVal $1079 = _v281.termRef(1);
+                      ESLVal $1078 = _v281.termRef(2);
                       
-                      {ESLVal _v400 = _v60;
+                      {ESLVal _v647 = _v282;
                       
-                      {ESLVal l = $451;
+                      {ESLVal l = $1080;
                       
-                      {ESLVal op = $450;
+                      {ESLVal op = $1079;
                       
-                      {ESLVal args = $449;
+                      {ESLVal args = $1078;
                       
-                      return typeEqual.apply(_v400,applyTypeFun.apply(l,forceType.apply(op),args));
+                      return typeEqual.apply(_v647,applyTypeFun.apply(l,forceType.apply(op),args));
                     }
                     }
                     }
                     }
                     }
-                  case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                      ESLVal $447 = _v59.termRef(1);
-                      ESLVal $446 = _v59.termRef(2);
-                      ESLVal $445 = _v59.termRef(3);
+                  case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                      ESLVal $1076 = _v281.termRef(1);
+                      ESLVal $1075 = _v281.termRef(2);
+                      ESLVal $1074 = _v281.termRef(3);
                       
-                      {ESLVal _v398 = _v60;
+                      {ESLVal _v645 = _v282;
                       
-                      {ESLVal l2 = $448;
+                      {ESLVal l2 = $1077;
                       
-                      {ESLVal _v399 = $447;
+                      {ESLVal _v646 = $1076;
                       
-                      {ESLVal ds2 = $446;
+                      {ESLVal ds2 = $1075;
                       
-                      {ESLVal ms2 = $445;
+                      {ESLVal ms2 = $1074;
                       
-                      return typeEqual.apply(_v398,flattenAct.apply(l2,_v399,ds2,ms2));
+                      return typeEqual.apply(_v645,flattenAct.apply(l2,_v646,ds2,ms2));
                     }
                     }
                     }
                     }
                     }
                     }
-                  case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                  case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                       
-                      {ESLVal t = _v60;
+                      {ESLVal t = _v282;
                       
-                      {ESLVal l1 = $444;
+                      {ESLVal l1 = $1073;
                       
                       return $true;
                     }
                     }
                     }
-                  case "TermType": {ESLVal $443 = _v59.termRef(0);
-                      ESLVal $442 = _v59.termRef(1);
-                      ESLVal $441 = _v59.termRef(2);
+                  case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                      ESLVal $1071 = _v281.termRef(1);
+                      ESLVal $1070 = _v281.termRef(2);
                       
-                      {ESLVal _v397 = _v60;
+                      {ESLVal _v644 = _v282;
                       
-                      {ESLVal l2 = $443;
+                      {ESLVal l2 = $1072;
                       
-                      {ESLVal n2 = $442;
+                      {ESLVal n2 = $1071;
                       
-                      {ESLVal args2 = $441;
+                      {ESLVal args2 = $1070;
                       
                       return $false;
                     }
@@ -1184,149 +1184,149 @@ public class Types {
                     }
                     }
                     }
-                  case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                  case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                       
-                      {ESLVal _v396 = _v60;
+                      {ESLVal _v643 = _v282;
                       
-                      {ESLVal f = $440;
+                      {ESLVal f = $1069;
                       
-                      return typeEqual.apply(_v396,f.apply());
+                      return typeEqual.apply(_v643,f.apply());
                     }
                     }
                     }
-                  case "RecType": {ESLVal $439 = _v59.termRef(0);
-                      ESLVal $438 = _v59.termRef(1);
-                      ESLVal $437 = _v59.termRef(2);
+                  case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                      ESLVal $1067 = _v281.termRef(1);
+                      ESLVal $1066 = _v281.termRef(2);
                       
-                      {ESLVal _v394 = _v60;
+                      {ESLVal _v641 = _v282;
                       
-                      {ESLVal l2 = $439;
+                      {ESLVal l2 = $1068;
                       
-                      {ESLVal n2 = $438;
+                      {ESLVal n2 = $1067;
                       
-                      {ESLVal _v395 = $437;
+                      {ESLVal _v642 = $1066;
                       
-                      return typeEqual.apply(_v394,substType.apply(new ESLVal("RecType",l2,n2,_v395),n2,_v395));
-                    }
-                    }
-                    }
-                    }
-                    }
-                  case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                      ESLVal $435 = _v59.termRef(1);
-                      ESLVal $434 = _v59.termRef(2);
-                      
-                      {ESLVal _v392 = _v60;
-                      
-                      {ESLVal l1 = $436;
-                      
-                      {ESLVal ns2 = $435;
-                      
-                      {ESLVal _v393 = $434;
-                      
-                      return typeEqual.apply(_v392,_v393);
+                      return typeEqual.apply(_v641,substType.apply(new ESLVal("RecType",l2,n2,_v642),n2,_v642));
                     }
                     }
                     }
                     }
                     }
-                    default: {ESLVal _v401 = _v60;
+                  case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                      ESLVal $1064 = _v281.termRef(1);
+                      ESLVal $1063 = _v281.termRef(2);
                       
-                      {ESLVal _v402 = _v59;
+                      {ESLVal _v639 = _v282;
+                      
+                      {ESLVal l1 = $1065;
+                      
+                      {ESLVal ns2 = $1064;
+                      
+                      {ESLVal _v640 = $1063;
+                      
+                      return typeEqual.apply(_v639,_v640);
+                    }
+                    }
+                    }
+                    }
+                    }
+                    default: {ESLVal _v648 = _v282;
+                      
+                      {ESLVal _v649 = _v281;
                       
                       return $false;
                     }
                     }
                   }
                   }
-                else if($545.isNil())
-                  switch($541.termName) {
-                    case "ListType": {ESLVal $549 = $541.termRef(0);
-                      ESLVal $548 = $541.termRef(1);
+                else if($1174.isNil())
+                  switch($1170.termName) {
+                    case "ListType": {ESLVal $1178 = $1170.termRef(0);
+                      ESLVal $1177 = $1170.termRef(1);
                       
-                      switch($548.termName) {
-                      case "VarType": {ESLVal $551 = $548.termRef(0);
-                        ESLVal $550 = $548.termRef(1);
+                      switch($1177.termName) {
+                      case "VarType": {ESLVal $1180 = $1177.termRef(0);
+                        ESLVal $1179 = $1177.termRef(1);
                         
-                        {ESLVal l1 = $540;
+                        {ESLVal l1 = $1169;
                         
-                        {ESLVal _v403 = $539;
+                        {ESLVal _v650 = $1168;
                         
-                        {ESLVal l2 = $543;
+                        {ESLVal l2 = $1172;
                         
-                        {ESLVal v1 = $544;
+                        {ESLVal v1 = $1173;
                         
-                        {ESLVal l3 = $549;
+                        {ESLVal l3 = $1178;
                         
-                        {ESLVal l4 = $551;
+                        {ESLVal l4 = $1180;
                         
-                        {ESLVal v2 = $550;
+                        {ESLVal v2 = $1179;
                         
                         if(v1.eql(v2).boolVal)
                         return $true;
                         else
-                          switch(_v59.termName) {
-                            case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                              ESLVal $450 = _v59.termRef(1);
-                              ESLVal $449 = _v59.termRef(2);
+                          switch(_v281.termName) {
+                            case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                              ESLVal $1079 = _v281.termRef(1);
+                              ESLVal $1078 = _v281.termRef(2);
                               
-                              {ESLVal _v417 = _v60;
+                              {ESLVal _v664 = _v282;
                               
-                              {ESLVal l = $451;
+                              {ESLVal l = $1080;
                               
-                              {ESLVal op = $450;
+                              {ESLVal op = $1079;
                               
-                              {ESLVal args = $449;
+                              {ESLVal args = $1078;
                               
-                              return typeEqual.apply(_v417,applyTypeFun.apply(l,forceType.apply(op),args));
+                              return typeEqual.apply(_v664,applyTypeFun.apply(l,forceType.apply(op),args));
                             }
                             }
                             }
                             }
                             }
-                          case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                              ESLVal $447 = _v59.termRef(1);
-                              ESLVal $446 = _v59.termRef(2);
-                              ESLVal $445 = _v59.termRef(3);
+                          case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                              ESLVal $1076 = _v281.termRef(1);
+                              ESLVal $1075 = _v281.termRef(2);
+                              ESLVal $1074 = _v281.termRef(3);
                               
-                              {ESLVal _v414 = _v60;
+                              {ESLVal _v661 = _v282;
                               
-                              {ESLVal _v415 = $448;
+                              {ESLVal _v662 = $1077;
                               
-                              {ESLVal _v416 = $447;
+                              {ESLVal _v663 = $1076;
                               
-                              {ESLVal ds2 = $446;
+                              {ESLVal ds2 = $1075;
                               
-                              {ESLVal ms2 = $445;
+                              {ESLVal ms2 = $1074;
                               
-                              return typeEqual.apply(_v414,flattenAct.apply(_v415,_v416,ds2,ms2));
+                              return typeEqual.apply(_v661,flattenAct.apply(_v662,_v663,ds2,ms2));
                             }
                             }
                             }
                             }
                             }
                             }
-                          case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                          case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                               
-                              {ESLVal t = _v60;
+                              {ESLVal t = _v282;
                               
-                              {ESLVal _v413 = $444;
+                              {ESLVal _v660 = $1073;
                               
                               return $true;
                             }
                             }
                             }
-                          case "TermType": {ESLVal $443 = _v59.termRef(0);
-                              ESLVal $442 = _v59.termRef(1);
-                              ESLVal $441 = _v59.termRef(2);
+                          case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                              ESLVal $1071 = _v281.termRef(1);
+                              ESLVal $1070 = _v281.termRef(2);
                               
-                              {ESLVal _v411 = _v60;
+                              {ESLVal _v658 = _v282;
                               
-                              {ESLVal _v412 = $443;
+                              {ESLVal _v659 = $1072;
                               
-                              {ESLVal n2 = $442;
+                              {ESLVal n2 = $1071;
                               
-                              {ESLVal args2 = $441;
+                              {ESLVal args2 = $1070;
                               
                               return $false;
                             }
@@ -1334,55 +1334,55 @@ public class Types {
                             }
                             }
                             }
-                          case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                          case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                               
-                              {ESLVal _v410 = _v60;
+                              {ESLVal _v657 = _v282;
                               
-                              {ESLVal f = $440;
+                              {ESLVal f = $1069;
                               
-                              return typeEqual.apply(_v410,f.apply());
+                              return typeEqual.apply(_v657,f.apply());
                             }
                             }
                             }
-                          case "RecType": {ESLVal $439 = _v59.termRef(0);
-                              ESLVal $438 = _v59.termRef(1);
-                              ESLVal $437 = _v59.termRef(2);
+                          case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                              ESLVal $1067 = _v281.termRef(1);
+                              ESLVal $1066 = _v281.termRef(2);
                               
-                              {ESLVal _v407 = _v60;
+                              {ESLVal _v654 = _v282;
                               
-                              {ESLVal _v408 = $439;
+                              {ESLVal _v655 = $1068;
                               
-                              {ESLVal n2 = $438;
+                              {ESLVal n2 = $1067;
                               
-                              {ESLVal _v409 = $437;
+                              {ESLVal _v656 = $1066;
                               
-                              return typeEqual.apply(_v407,substType.apply(new ESLVal("RecType",_v408,n2,_v409),n2,_v409));
-                            }
-                            }
-                            }
-                            }
-                            }
-                          case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                              ESLVal $435 = _v59.termRef(1);
-                              ESLVal $434 = _v59.termRef(2);
-                              
-                              {ESLVal _v404 = _v60;
-                              
-                              {ESLVal _v405 = $436;
-                              
-                              {ESLVal ns2 = $435;
-                              
-                              {ESLVal _v406 = $434;
-                              
-                              return typeEqual.apply(_v404,_v406);
+                              return typeEqual.apply(_v654,substType.apply(new ESLVal("RecType",_v655,n2,_v656),n2,_v656));
                             }
                             }
                             }
                             }
                             }
-                            default: {ESLVal _v418 = _v60;
+                          case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                              ESLVal $1064 = _v281.termRef(1);
+                              ESLVal $1063 = _v281.termRef(2);
                               
-                              {ESLVal _v419 = _v59;
+                              {ESLVal _v651 = _v282;
+                              
+                              {ESLVal _v652 = $1065;
+                              
+                              {ESLVal ns2 = $1064;
+                              
+                              {ESLVal _v653 = $1063;
+                              
+                              return typeEqual.apply(_v651,_v653);
+                            }
+                            }
+                            }
+                            }
+                            }
+                            default: {ESLVal _v665 = _v282;
+                              
+                              {ESLVal _v666 = _v281;
                               
                               return $false;
                             }
@@ -1396,68 +1396,68 @@ public class Types {
                       }
                       }
                       }
-                      default: switch(_v59.termName) {
-                        case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                          ESLVal $450 = _v59.termRef(1);
-                          ESLVal $449 = _v59.termRef(2);
+                      default: switch(_v281.termName) {
+                        case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                          ESLVal $1079 = _v281.termRef(1);
+                          ESLVal $1078 = _v281.termRef(2);
                           
-                          {ESLVal _v428 = _v60;
+                          {ESLVal _v675 = _v282;
                           
-                          {ESLVal l = $451;
+                          {ESLVal l = $1080;
                           
-                          {ESLVal op = $450;
+                          {ESLVal op = $1079;
                           
-                          {ESLVal args = $449;
+                          {ESLVal args = $1078;
                           
-                          return typeEqual.apply(_v428,applyTypeFun.apply(l,forceType.apply(op),args));
+                          return typeEqual.apply(_v675,applyTypeFun.apply(l,forceType.apply(op),args));
                         }
                         }
                         }
                         }
                         }
-                      case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                          ESLVal $447 = _v59.termRef(1);
-                          ESLVal $446 = _v59.termRef(2);
-                          ESLVal $445 = _v59.termRef(3);
+                      case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                          ESLVal $1076 = _v281.termRef(1);
+                          ESLVal $1075 = _v281.termRef(2);
+                          ESLVal $1074 = _v281.termRef(3);
                           
-                          {ESLVal _v426 = _v60;
+                          {ESLVal _v673 = _v282;
                           
-                          {ESLVal l2 = $448;
+                          {ESLVal l2 = $1077;
                           
-                          {ESLVal _v427 = $447;
+                          {ESLVal _v674 = $1076;
                           
-                          {ESLVal ds2 = $446;
+                          {ESLVal ds2 = $1075;
                           
-                          {ESLVal ms2 = $445;
+                          {ESLVal ms2 = $1074;
                           
-                          return typeEqual.apply(_v426,flattenAct.apply(l2,_v427,ds2,ms2));
+                          return typeEqual.apply(_v673,flattenAct.apply(l2,_v674,ds2,ms2));
                         }
                         }
                         }
                         }
                         }
                         }
-                      case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                      case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                           
-                          {ESLVal t = _v60;
+                          {ESLVal t = _v282;
                           
-                          {ESLVal l1 = $444;
+                          {ESLVal l1 = $1073;
                           
                           return $true;
                         }
                         }
                         }
-                      case "TermType": {ESLVal $443 = _v59.termRef(0);
-                          ESLVal $442 = _v59.termRef(1);
-                          ESLVal $441 = _v59.termRef(2);
+                      case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                          ESLVal $1071 = _v281.termRef(1);
+                          ESLVal $1070 = _v281.termRef(2);
                           
-                          {ESLVal _v425 = _v60;
+                          {ESLVal _v672 = _v282;
                           
-                          {ESLVal l2 = $443;
+                          {ESLVal l2 = $1072;
                           
-                          {ESLVal n2 = $442;
+                          {ESLVal n2 = $1071;
                           
-                          {ESLVal args2 = $441;
+                          {ESLVal args2 = $1070;
                           
                           return $false;
                         }
@@ -1465,55 +1465,55 @@ public class Types {
                         }
                         }
                         }
-                      case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                      case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                           
-                          {ESLVal _v424 = _v60;
+                          {ESLVal _v671 = _v282;
                           
-                          {ESLVal f = $440;
+                          {ESLVal f = $1069;
                           
-                          return typeEqual.apply(_v424,f.apply());
+                          return typeEqual.apply(_v671,f.apply());
                         }
                         }
                         }
-                      case "RecType": {ESLVal $439 = _v59.termRef(0);
-                          ESLVal $438 = _v59.termRef(1);
-                          ESLVal $437 = _v59.termRef(2);
+                      case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                          ESLVal $1067 = _v281.termRef(1);
+                          ESLVal $1066 = _v281.termRef(2);
                           
-                          {ESLVal _v422 = _v60;
+                          {ESLVal _v669 = _v282;
                           
-                          {ESLVal l2 = $439;
+                          {ESLVal l2 = $1068;
                           
-                          {ESLVal n2 = $438;
+                          {ESLVal n2 = $1067;
                           
-                          {ESLVal _v423 = $437;
+                          {ESLVal _v670 = $1066;
                           
-                          return typeEqual.apply(_v422,substType.apply(new ESLVal("RecType",l2,n2,_v423),n2,_v423));
-                        }
-                        }
-                        }
-                        }
-                        }
-                      case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                          ESLVal $435 = _v59.termRef(1);
-                          ESLVal $434 = _v59.termRef(2);
-                          
-                          {ESLVal _v420 = _v60;
-                          
-                          {ESLVal l1 = $436;
-                          
-                          {ESLVal ns2 = $435;
-                          
-                          {ESLVal _v421 = $434;
-                          
-                          return typeEqual.apply(_v420,_v421);
+                          return typeEqual.apply(_v669,substType.apply(new ESLVal("RecType",l2,n2,_v670),n2,_v670));
                         }
                         }
                         }
                         }
                         }
-                        default: {ESLVal _v429 = _v60;
+                      case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                          ESLVal $1064 = _v281.termRef(1);
+                          ESLVal $1063 = _v281.termRef(2);
                           
-                          {ESLVal _v430 = _v59;
+                          {ESLVal _v667 = _v282;
+                          
+                          {ESLVal l1 = $1065;
+                          
+                          {ESLVal ns2 = $1064;
+                          
+                          {ESLVal _v668 = $1063;
+                          
+                          return typeEqual.apply(_v667,_v668);
+                        }
+                        }
+                        }
+                        }
+                        }
+                        default: {ESLVal _v676 = _v282;
+                          
+                          {ESLVal _v677 = _v281;
                           
                           return $false;
                         }
@@ -1521,68 +1521,68 @@ public class Types {
                       }
                     }
                     }
-                    default: switch(_v59.termName) {
-                      case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                        ESLVal $450 = _v59.termRef(1);
-                        ESLVal $449 = _v59.termRef(2);
+                    default: switch(_v281.termName) {
+                      case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                        ESLVal $1079 = _v281.termRef(1);
+                        ESLVal $1078 = _v281.termRef(2);
                         
-                        {ESLVal _v439 = _v60;
+                        {ESLVal _v686 = _v282;
                         
-                        {ESLVal l = $451;
+                        {ESLVal l = $1080;
                         
-                        {ESLVal op = $450;
+                        {ESLVal op = $1079;
                         
-                        {ESLVal args = $449;
+                        {ESLVal args = $1078;
                         
-                        return typeEqual.apply(_v439,applyTypeFun.apply(l,forceType.apply(op),args));
+                        return typeEqual.apply(_v686,applyTypeFun.apply(l,forceType.apply(op),args));
                       }
                       }
                       }
                       }
                       }
-                    case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                        ESLVal $447 = _v59.termRef(1);
-                        ESLVal $446 = _v59.termRef(2);
-                        ESLVal $445 = _v59.termRef(3);
+                    case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                        ESLVal $1076 = _v281.termRef(1);
+                        ESLVal $1075 = _v281.termRef(2);
+                        ESLVal $1074 = _v281.termRef(3);
                         
-                        {ESLVal _v437 = _v60;
+                        {ESLVal _v684 = _v282;
                         
-                        {ESLVal l2 = $448;
+                        {ESLVal l2 = $1077;
                         
-                        {ESLVal _v438 = $447;
+                        {ESLVal _v685 = $1076;
                         
-                        {ESLVal ds2 = $446;
+                        {ESLVal ds2 = $1075;
                         
-                        {ESLVal ms2 = $445;
+                        {ESLVal ms2 = $1074;
                         
-                        return typeEqual.apply(_v437,flattenAct.apply(l2,_v438,ds2,ms2));
+                        return typeEqual.apply(_v684,flattenAct.apply(l2,_v685,ds2,ms2));
                       }
                       }
                       }
                       }
                       }
                       }
-                    case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                    case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                         
-                        {ESLVal t = _v60;
+                        {ESLVal t = _v282;
                         
-                        {ESLVal l1 = $444;
+                        {ESLVal l1 = $1073;
                         
                         return $true;
                       }
                       }
                       }
-                    case "TermType": {ESLVal $443 = _v59.termRef(0);
-                        ESLVal $442 = _v59.termRef(1);
-                        ESLVal $441 = _v59.termRef(2);
+                    case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                        ESLVal $1071 = _v281.termRef(1);
+                        ESLVal $1070 = _v281.termRef(2);
                         
-                        {ESLVal _v436 = _v60;
+                        {ESLVal _v683 = _v282;
                         
-                        {ESLVal l2 = $443;
+                        {ESLVal l2 = $1072;
                         
-                        {ESLVal n2 = $442;
+                        {ESLVal n2 = $1071;
                         
-                        {ESLVal args2 = $441;
+                        {ESLVal args2 = $1070;
                         
                         return $false;
                       }
@@ -1590,123 +1590,123 @@ public class Types {
                       }
                       }
                       }
-                    case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                    case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                         
-                        {ESLVal _v435 = _v60;
+                        {ESLVal _v682 = _v282;
                         
-                        {ESLVal f = $440;
+                        {ESLVal f = $1069;
                         
-                        return typeEqual.apply(_v435,f.apply());
+                        return typeEqual.apply(_v682,f.apply());
                       }
                       }
                       }
-                    case "RecType": {ESLVal $439 = _v59.termRef(0);
-                        ESLVal $438 = _v59.termRef(1);
-                        ESLVal $437 = _v59.termRef(2);
+                    case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                        ESLVal $1067 = _v281.termRef(1);
+                        ESLVal $1066 = _v281.termRef(2);
                         
-                        {ESLVal _v433 = _v60;
+                        {ESLVal _v680 = _v282;
                         
-                        {ESLVal l2 = $439;
+                        {ESLVal l2 = $1068;
                         
-                        {ESLVal n2 = $438;
+                        {ESLVal n2 = $1067;
                         
-                        {ESLVal _v434 = $437;
+                        {ESLVal _v681 = $1066;
                         
-                        return typeEqual.apply(_v433,substType.apply(new ESLVal("RecType",l2,n2,_v434),n2,_v434));
-                      }
-                      }
-                      }
-                      }
-                      }
-                    case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                        ESLVal $435 = _v59.termRef(1);
-                        ESLVal $434 = _v59.termRef(2);
-                        
-                        {ESLVal _v431 = _v60;
-                        
-                        {ESLVal l1 = $436;
-                        
-                        {ESLVal ns2 = $435;
-                        
-                        {ESLVal _v432 = $434;
-                        
-                        return typeEqual.apply(_v431,_v432);
+                        return typeEqual.apply(_v680,substType.apply(new ESLVal("RecType",l2,n2,_v681),n2,_v681));
                       }
                       }
                       }
                       }
                       }
-                      default: {ESLVal _v440 = _v60;
+                    case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                        ESLVal $1064 = _v281.termRef(1);
+                        ESLVal $1063 = _v281.termRef(2);
                         
-                        {ESLVal _v441 = _v59;
+                        {ESLVal _v678 = _v282;
+                        
+                        {ESLVal l1 = $1065;
+                        
+                        {ESLVal ns2 = $1064;
+                        
+                        {ESLVal _v679 = $1063;
+                        
+                        return typeEqual.apply(_v678,_v679);
+                      }
+                      }
+                      }
+                      }
+                      }
+                      default: {ESLVal _v687 = _v282;
+                        
+                        {ESLVal _v688 = _v281;
                         
                         return $false;
                       }
                       }
                     }
                   }
-                else switch(_v59.termName) {
-                    case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                      ESLVal $450 = _v59.termRef(1);
-                      ESLVal $449 = _v59.termRef(2);
+                else switch(_v281.termName) {
+                    case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                      ESLVal $1079 = _v281.termRef(1);
+                      ESLVal $1078 = _v281.termRef(2);
                       
-                      {ESLVal _v450 = _v60;
+                      {ESLVal _v697 = _v282;
                       
-                      {ESLVal l = $451;
+                      {ESLVal l = $1080;
                       
-                      {ESLVal op = $450;
+                      {ESLVal op = $1079;
                       
-                      {ESLVal args = $449;
+                      {ESLVal args = $1078;
                       
-                      return typeEqual.apply(_v450,applyTypeFun.apply(l,forceType.apply(op),args));
+                      return typeEqual.apply(_v697,applyTypeFun.apply(l,forceType.apply(op),args));
                     }
                     }
                     }
                     }
                     }
-                  case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                      ESLVal $447 = _v59.termRef(1);
-                      ESLVal $446 = _v59.termRef(2);
-                      ESLVal $445 = _v59.termRef(3);
+                  case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                      ESLVal $1076 = _v281.termRef(1);
+                      ESLVal $1075 = _v281.termRef(2);
+                      ESLVal $1074 = _v281.termRef(3);
                       
-                      {ESLVal _v448 = _v60;
+                      {ESLVal _v695 = _v282;
                       
-                      {ESLVal l2 = $448;
+                      {ESLVal l2 = $1077;
                       
-                      {ESLVal _v449 = $447;
+                      {ESLVal _v696 = $1076;
                       
-                      {ESLVal ds2 = $446;
+                      {ESLVal ds2 = $1075;
                       
-                      {ESLVal ms2 = $445;
+                      {ESLVal ms2 = $1074;
                       
-                      return typeEqual.apply(_v448,flattenAct.apply(l2,_v449,ds2,ms2));
+                      return typeEqual.apply(_v695,flattenAct.apply(l2,_v696,ds2,ms2));
                     }
                     }
                     }
                     }
                     }
                     }
-                  case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                  case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                       
-                      {ESLVal t = _v60;
+                      {ESLVal t = _v282;
                       
-                      {ESLVal l1 = $444;
+                      {ESLVal l1 = $1073;
                       
                       return $true;
                     }
                     }
                     }
-                  case "TermType": {ESLVal $443 = _v59.termRef(0);
-                      ESLVal $442 = _v59.termRef(1);
-                      ESLVal $441 = _v59.termRef(2);
+                  case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                      ESLVal $1071 = _v281.termRef(1);
+                      ESLVal $1070 = _v281.termRef(2);
                       
-                      {ESLVal _v447 = _v60;
+                      {ESLVal _v694 = _v282;
                       
-                      {ESLVal l2 = $443;
+                      {ESLVal l2 = $1072;
                       
-                      {ESLVal n2 = $442;
+                      {ESLVal n2 = $1071;
                       
-                      {ESLVal args2 = $441;
+                      {ESLVal args2 = $1070;
                       
                       return $false;
                     }
@@ -1714,124 +1714,124 @@ public class Types {
                     }
                     }
                     }
-                  case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                  case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                       
-                      {ESLVal _v446 = _v60;
+                      {ESLVal _v693 = _v282;
                       
-                      {ESLVal f = $440;
+                      {ESLVal f = $1069;
                       
-                      return typeEqual.apply(_v446,f.apply());
+                      return typeEqual.apply(_v693,f.apply());
                     }
                     }
                     }
-                  case "RecType": {ESLVal $439 = _v59.termRef(0);
-                      ESLVal $438 = _v59.termRef(1);
-                      ESLVal $437 = _v59.termRef(2);
+                  case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                      ESLVal $1067 = _v281.termRef(1);
+                      ESLVal $1066 = _v281.termRef(2);
                       
-                      {ESLVal _v444 = _v60;
+                      {ESLVal _v691 = _v282;
                       
-                      {ESLVal l2 = $439;
+                      {ESLVal l2 = $1068;
                       
-                      {ESLVal n2 = $438;
+                      {ESLVal n2 = $1067;
                       
-                      {ESLVal _v445 = $437;
+                      {ESLVal _v692 = $1066;
                       
-                      return typeEqual.apply(_v444,substType.apply(new ESLVal("RecType",l2,n2,_v445),n2,_v445));
-                    }
-                    }
-                    }
-                    }
-                    }
-                  case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                      ESLVal $435 = _v59.termRef(1);
-                      ESLVal $434 = _v59.termRef(2);
-                      
-                      {ESLVal _v442 = _v60;
-                      
-                      {ESLVal l1 = $436;
-                      
-                      {ESLVal ns2 = $435;
-                      
-                      {ESLVal _v443 = $434;
-                      
-                      return typeEqual.apply(_v442,_v443);
+                      return typeEqual.apply(_v691,substType.apply(new ESLVal("RecType",l2,n2,_v692),n2,_v692));
                     }
                     }
                     }
                     }
                     }
-                    default: {ESLVal _v451 = _v60;
+                  case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                      ESLVal $1064 = _v281.termRef(1);
+                      ESLVal $1063 = _v281.termRef(2);
                       
-                      {ESLVal _v452 = _v59;
+                      {ESLVal _v689 = _v282;
+                      
+                      {ESLVal l1 = $1065;
+                      
+                      {ESLVal ns2 = $1064;
+                      
+                      {ESLVal _v690 = $1063;
+                      
+                      return typeEqual.apply(_v689,_v690);
+                    }
+                    }
+                    }
+                    }
+                    }
+                    default: {ESLVal _v698 = _v282;
+                      
+                      {ESLVal _v699 = _v281;
                       
                       return $false;
                     }
                     }
                   }
                 }
-              else if($542.isNil())
-                switch(_v59.termName) {
-                  case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                    ESLVal $450 = _v59.termRef(1);
-                    ESLVal $449 = _v59.termRef(2);
+              else if($1171.isNil())
+                switch(_v281.termName) {
+                  case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                    ESLVal $1079 = _v281.termRef(1);
+                    ESLVal $1078 = _v281.termRef(2);
                     
-                    {ESLVal _v461 = _v60;
+                    {ESLVal _v708 = _v282;
                     
-                    {ESLVal l = $451;
+                    {ESLVal l = $1080;
                     
-                    {ESLVal op = $450;
+                    {ESLVal op = $1079;
                     
-                    {ESLVal args = $449;
+                    {ESLVal args = $1078;
                     
-                    return typeEqual.apply(_v461,applyTypeFun.apply(l,forceType.apply(op),args));
+                    return typeEqual.apply(_v708,applyTypeFun.apply(l,forceType.apply(op),args));
                   }
                   }
                   }
                   }
                   }
-                case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                    ESLVal $447 = _v59.termRef(1);
-                    ESLVal $446 = _v59.termRef(2);
-                    ESLVal $445 = _v59.termRef(3);
+                case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                    ESLVal $1076 = _v281.termRef(1);
+                    ESLVal $1075 = _v281.termRef(2);
+                    ESLVal $1074 = _v281.termRef(3);
                     
-                    {ESLVal _v459 = _v60;
+                    {ESLVal _v706 = _v282;
                     
-                    {ESLVal l2 = $448;
+                    {ESLVal l2 = $1077;
                     
-                    {ESLVal _v460 = $447;
+                    {ESLVal _v707 = $1076;
                     
-                    {ESLVal ds2 = $446;
+                    {ESLVal ds2 = $1075;
                     
-                    {ESLVal ms2 = $445;
+                    {ESLVal ms2 = $1074;
                     
-                    return typeEqual.apply(_v459,flattenAct.apply(l2,_v460,ds2,ms2));
+                    return typeEqual.apply(_v706,flattenAct.apply(l2,_v707,ds2,ms2));
                   }
                   }
                   }
                   }
                   }
                   }
-                case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                     
-                    {ESLVal t = _v60;
+                    {ESLVal t = _v282;
                     
-                    {ESLVal l1 = $444;
+                    {ESLVal l1 = $1073;
                     
                     return $true;
                   }
                   }
                   }
-                case "TermType": {ESLVal $443 = _v59.termRef(0);
-                    ESLVal $442 = _v59.termRef(1);
-                    ESLVal $441 = _v59.termRef(2);
+                case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                    ESLVal $1071 = _v281.termRef(1);
+                    ESLVal $1070 = _v281.termRef(2);
                     
-                    {ESLVal _v458 = _v60;
+                    {ESLVal _v705 = _v282;
                     
-                    {ESLVal l2 = $443;
+                    {ESLVal l2 = $1072;
                     
-                    {ESLVal n2 = $442;
+                    {ESLVal n2 = $1071;
                     
-                    {ESLVal args2 = $441;
+                    {ESLVal args2 = $1070;
                     
                     return $false;
                   }
@@ -1839,122 +1839,122 @@ public class Types {
                   }
                   }
                   }
-                case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                     
-                    {ESLVal _v457 = _v60;
+                    {ESLVal _v704 = _v282;
                     
-                    {ESLVal f = $440;
+                    {ESLVal f = $1069;
                     
-                    return typeEqual.apply(_v457,f.apply());
+                    return typeEqual.apply(_v704,f.apply());
                   }
                   }
                   }
-                case "RecType": {ESLVal $439 = _v59.termRef(0);
-                    ESLVal $438 = _v59.termRef(1);
-                    ESLVal $437 = _v59.termRef(2);
+                case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                    ESLVal $1067 = _v281.termRef(1);
+                    ESLVal $1066 = _v281.termRef(2);
                     
-                    {ESLVal _v455 = _v60;
+                    {ESLVal _v702 = _v282;
                     
-                    {ESLVal l2 = $439;
+                    {ESLVal l2 = $1068;
                     
-                    {ESLVal n2 = $438;
+                    {ESLVal n2 = $1067;
                     
-                    {ESLVal _v456 = $437;
+                    {ESLVal _v703 = $1066;
                     
-                    return typeEqual.apply(_v455,substType.apply(new ESLVal("RecType",l2,n2,_v456),n2,_v456));
-                  }
-                  }
-                  }
-                  }
-                  }
-                case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                    ESLVal $435 = _v59.termRef(1);
-                    ESLVal $434 = _v59.termRef(2);
-                    
-                    {ESLVal _v453 = _v60;
-                    
-                    {ESLVal l1 = $436;
-                    
-                    {ESLVal ns2 = $435;
-                    
-                    {ESLVal _v454 = $434;
-                    
-                    return typeEqual.apply(_v453,_v454);
+                    return typeEqual.apply(_v702,substType.apply(new ESLVal("RecType",l2,n2,_v703),n2,_v703));
                   }
                   }
                   }
                   }
                   }
-                  default: {ESLVal _v462 = _v60;
+                case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                    ESLVal $1064 = _v281.termRef(1);
+                    ESLVal $1063 = _v281.termRef(2);
                     
-                    {ESLVal _v463 = _v59;
+                    {ESLVal _v700 = _v282;
+                    
+                    {ESLVal l1 = $1065;
+                    
+                    {ESLVal ns2 = $1064;
+                    
+                    {ESLVal _v701 = $1063;
+                    
+                    return typeEqual.apply(_v700,_v701);
+                  }
+                  }
+                  }
+                  }
+                  }
+                  default: {ESLVal _v709 = _v282;
+                    
+                    {ESLVal _v710 = _v281;
                     
                     return $false;
                   }
                   }
                 }
-              else switch(_v59.termName) {
-                  case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                    ESLVal $450 = _v59.termRef(1);
-                    ESLVal $449 = _v59.termRef(2);
+              else switch(_v281.termName) {
+                  case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                    ESLVal $1079 = _v281.termRef(1);
+                    ESLVal $1078 = _v281.termRef(2);
                     
-                    {ESLVal _v472 = _v60;
+                    {ESLVal _v719 = _v282;
                     
-                    {ESLVal l = $451;
+                    {ESLVal l = $1080;
                     
-                    {ESLVal op = $450;
+                    {ESLVal op = $1079;
                     
-                    {ESLVal args = $449;
+                    {ESLVal args = $1078;
                     
-                    return typeEqual.apply(_v472,applyTypeFun.apply(l,forceType.apply(op),args));
+                    return typeEqual.apply(_v719,applyTypeFun.apply(l,forceType.apply(op),args));
                   }
                   }
                   }
                   }
                   }
-                case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                    ESLVal $447 = _v59.termRef(1);
-                    ESLVal $446 = _v59.termRef(2);
-                    ESLVal $445 = _v59.termRef(3);
+                case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                    ESLVal $1076 = _v281.termRef(1);
+                    ESLVal $1075 = _v281.termRef(2);
+                    ESLVal $1074 = _v281.termRef(3);
                     
-                    {ESLVal _v470 = _v60;
+                    {ESLVal _v717 = _v282;
                     
-                    {ESLVal l2 = $448;
+                    {ESLVal l2 = $1077;
                     
-                    {ESLVal _v471 = $447;
+                    {ESLVal _v718 = $1076;
                     
-                    {ESLVal ds2 = $446;
+                    {ESLVal ds2 = $1075;
                     
-                    {ESLVal ms2 = $445;
+                    {ESLVal ms2 = $1074;
                     
-                    return typeEqual.apply(_v470,flattenAct.apply(l2,_v471,ds2,ms2));
+                    return typeEqual.apply(_v717,flattenAct.apply(l2,_v718,ds2,ms2));
                   }
                   }
                   }
                   }
                   }
                   }
-                case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                     
-                    {ESLVal t = _v60;
+                    {ESLVal t = _v282;
                     
-                    {ESLVal l1 = $444;
+                    {ESLVal l1 = $1073;
                     
                     return $true;
                   }
                   }
                   }
-                case "TermType": {ESLVal $443 = _v59.termRef(0);
-                    ESLVal $442 = _v59.termRef(1);
-                    ESLVal $441 = _v59.termRef(2);
+                case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                    ESLVal $1071 = _v281.termRef(1);
+                    ESLVal $1070 = _v281.termRef(2);
                     
-                    {ESLVal _v469 = _v60;
+                    {ESLVal _v716 = _v282;
                     
-                    {ESLVal l2 = $443;
+                    {ESLVal l2 = $1072;
                     
-                    {ESLVal n2 = $442;
+                    {ESLVal n2 = $1071;
                     
-                    {ESLVal args2 = $441;
+                    {ESLVal args2 = $1070;
                     
                     return $false;
                   }
@@ -1962,123 +1962,123 @@ public class Types {
                   }
                   }
                   }
-                case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                     
-                    {ESLVal _v468 = _v60;
+                    {ESLVal _v715 = _v282;
                     
-                    {ESLVal f = $440;
+                    {ESLVal f = $1069;
                     
-                    return typeEqual.apply(_v468,f.apply());
+                    return typeEqual.apply(_v715,f.apply());
                   }
                   }
                   }
-                case "RecType": {ESLVal $439 = _v59.termRef(0);
-                    ESLVal $438 = _v59.termRef(1);
-                    ESLVal $437 = _v59.termRef(2);
+                case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                    ESLVal $1067 = _v281.termRef(1);
+                    ESLVal $1066 = _v281.termRef(2);
                     
-                    {ESLVal _v466 = _v60;
+                    {ESLVal _v713 = _v282;
                     
-                    {ESLVal l2 = $439;
+                    {ESLVal l2 = $1068;
                     
-                    {ESLVal n2 = $438;
+                    {ESLVal n2 = $1067;
                     
-                    {ESLVal _v467 = $437;
+                    {ESLVal _v714 = $1066;
                     
-                    return typeEqual.apply(_v466,substType.apply(new ESLVal("RecType",l2,n2,_v467),n2,_v467));
-                  }
-                  }
-                  }
-                  }
-                  }
-                case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                    ESLVal $435 = _v59.termRef(1);
-                    ESLVal $434 = _v59.termRef(2);
-                    
-                    {ESLVal _v464 = _v60;
-                    
-                    {ESLVal l1 = $436;
-                    
-                    {ESLVal ns2 = $435;
-                    
-                    {ESLVal _v465 = $434;
-                    
-                    return typeEqual.apply(_v464,_v465);
+                    return typeEqual.apply(_v713,substType.apply(new ESLVal("RecType",l2,n2,_v714),n2,_v714));
                   }
                   }
                   }
                   }
                   }
-                  default: {ESLVal _v473 = _v60;
+                case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                    ESLVal $1064 = _v281.termRef(1);
+                    ESLVal $1063 = _v281.termRef(2);
                     
-                    {ESLVal _v474 = _v59;
+                    {ESLVal _v711 = _v282;
+                    
+                    {ESLVal l1 = $1065;
+                    
+                    {ESLVal ns2 = $1064;
+                    
+                    {ESLVal _v712 = $1063;
+                    
+                    return typeEqual.apply(_v711,_v712);
+                  }
+                  }
+                  }
+                  }
+                  }
+                  default: {ESLVal _v720 = _v282;
+                    
+                    {ESLVal _v721 = _v281;
                     
                     return $false;
                   }
                   }
                 }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v485 = _v60;
+                  {ESLVal _v732 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v485,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v732,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v483 = _v60;
+                  {ESLVal _v730 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v484 = $447;
+                  {ESLVal _v731 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v483,flattenAct.apply(l2,_v484,ds2,ms2));
+                  return typeEqual.apply(_v730,flattenAct.apply(l2,_v731,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v482 = _v60;
+                  {ESLVal _v729 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -2086,55 +2086,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v481 = _v60;
+                  {ESLVal _v728 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v481,f.apply());
+                  return typeEqual.apply(_v728,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v479 = _v60;
+                  {ESLVal _v726 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v480 = $437;
+                  {ESLVal _v727 = $1066;
                   
-                  return typeEqual.apply(_v479,substType.apply(new ESLVal("RecType",l2,n2,_v480),n2,_v480));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v477 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v478 = $434;
-                  
-                  return typeEqual.apply(_v477,_v478);
+                  return typeEqual.apply(_v726,substType.apply(new ESLVal("RecType",l2,n2,_v727),n2,_v727));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v486 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v487 = _v59;
+                  {ESLVal _v724 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v725 = $1063;
+                  
+                  return typeEqual.apply(_v724,_v725);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v733 = _v282;
+                  
+                  {ESLVal _v734 = _v281;
                   
                   return $false;
                 }
@@ -2142,89 +2142,89 @@ public class Types {
               }
             }
             }
-          case "BagType": {ESLVal $536 = _v60.termRef(0);
-              ESLVal $535 = _v60.termRef(1);
+          case "BagType": {ESLVal $1165 = _v282.termRef(0);
+              ESLVal $1164 = _v282.termRef(1);
               
-              switch(_v59.termName) {
-              case "BagType": {ESLVal $538 = _v59.termRef(0);
-                ESLVal $537 = _v59.termRef(1);
+              switch(_v281.termName) {
+              case "BagType": {ESLVal $1167 = _v281.termRef(0);
+                ESLVal $1166 = _v281.termRef(1);
                 
-                {ESLVal l1 = $536;
+                {ESLVal l1 = $1165;
                 
-                {ESLVal _v379 = $535;
+                {ESLVal _v626 = $1164;
                 
-                {ESLVal l2 = $538;
+                {ESLVal l2 = $1167;
                 
-                {ESLVal _v380 = $537;
+                {ESLVal _v627 = $1166;
                 
-                return typeEqual.apply(_v379,_v380);
+                return typeEqual.apply(_v626,_v627);
               }
               }
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v389 = _v60;
+                  {ESLVal _v636 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v389,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v636,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v387 = _v60;
+                  {ESLVal _v634 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v388 = $447;
+                  {ESLVal _v635 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v387,flattenAct.apply(l2,_v388,ds2,ms2));
+                  return typeEqual.apply(_v634,flattenAct.apply(l2,_v635,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v386 = _v60;
+                  {ESLVal _v633 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -2232,55 +2232,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v385 = _v60;
+                  {ESLVal _v632 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v385,f.apply());
+                  return typeEqual.apply(_v632,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v383 = _v60;
+                  {ESLVal _v630 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v384 = $437;
+                  {ESLVal _v631 = $1066;
                   
-                  return typeEqual.apply(_v383,substType.apply(new ESLVal("RecType",l2,n2,_v384),n2,_v384));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v381 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v382 = $434;
-                  
-                  return typeEqual.apply(_v381,_v382);
+                  return typeEqual.apply(_v630,substType.apply(new ESLVal("RecType",l2,n2,_v631),n2,_v631));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v390 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v391 = _v59;
+                  {ESLVal _v628 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v629 = $1063;
+                  
+                  return typeEqual.apply(_v628,_v629);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v637 = _v282;
+                  
+                  {ESLVal _v638 = _v281;
                   
                   return $false;
                 }
@@ -2288,101 +2288,101 @@ public class Types {
               }
             }
             }
-          case "SetType": {ESLVal $521 = _v60.termRef(0);
-              ESLVal $520 = _v60.termRef(1);
+          case "SetType": {ESLVal $1150 = _v282.termRef(0);
+              ESLVal $1149 = _v282.termRef(1);
               
-              switch(_v59.termName) {
-              case "SetType": {ESLVal $534 = _v59.termRef(0);
-                ESLVal $533 = _v59.termRef(1);
+              switch(_v281.termName) {
+              case "SetType": {ESLVal $1163 = _v281.termRef(0);
+                ESLVal $1162 = _v281.termRef(1);
                 
-                {ESLVal l1 = $521;
+                {ESLVal l1 = $1150;
                 
-                {ESLVal _v366 = $520;
+                {ESLVal _v613 = $1149;
                 
-                {ESLVal l2 = $534;
+                {ESLVal l2 = $1163;
                 
-                {ESLVal _v367 = $533;
+                {ESLVal _v614 = $1162;
                 
-                return typeEqual.apply(_v366,_v367);
+                return typeEqual.apply(_v613,_v614);
               }
               }
               }
               }
               }
-            case "ForallType": {ESLVal $524 = _v59.termRef(0);
-                ESLVal $523 = _v59.termRef(1);
-                ESLVal $522 = _v59.termRef(2);
+            case "ForallType": {ESLVal $1153 = _v281.termRef(0);
+                ESLVal $1152 = _v281.termRef(1);
+                ESLVal $1151 = _v281.termRef(2);
                 
-                if($523.isCons())
-                {ESLVal $525 = $523.head();
-                  ESLVal $526 = $523.tail();
+                if($1152.isCons())
+                {ESLVal $1154 = $1152.head();
+                  ESLVal $1155 = $1152.tail();
                   
-                  if($526.isCons())
-                  {ESLVal $527 = $526.head();
-                    ESLVal $528 = $526.tail();
+                  if($1155.isCons())
+                  {ESLVal $1156 = $1155.head();
+                    ESLVal $1157 = $1155.tail();
                     
-                    switch(_v59.termName) {
-                    case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                      ESLVal $450 = _v59.termRef(1);
-                      ESLVal $449 = _v59.termRef(2);
+                    switch(_v281.termName) {
+                    case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                      ESLVal $1079 = _v281.termRef(1);
+                      ESLVal $1078 = _v281.termRef(2);
                       
-                      {ESLVal _v291 = _v60;
+                      {ESLVal _v538 = _v282;
                       
-                      {ESLVal l = $451;
+                      {ESLVal l = $1080;
                       
-                      {ESLVal op = $450;
+                      {ESLVal op = $1079;
                       
-                      {ESLVal args = $449;
+                      {ESLVal args = $1078;
                       
-                      return typeEqual.apply(_v291,applyTypeFun.apply(l,forceType.apply(op),args));
+                      return typeEqual.apply(_v538,applyTypeFun.apply(l,forceType.apply(op),args));
                     }
                     }
                     }
                     }
                     }
-                  case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                      ESLVal $447 = _v59.termRef(1);
-                      ESLVal $446 = _v59.termRef(2);
-                      ESLVal $445 = _v59.termRef(3);
+                  case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                      ESLVal $1076 = _v281.termRef(1);
+                      ESLVal $1075 = _v281.termRef(2);
+                      ESLVal $1074 = _v281.termRef(3);
                       
-                      {ESLVal _v289 = _v60;
+                      {ESLVal _v536 = _v282;
                       
-                      {ESLVal l2 = $448;
+                      {ESLVal l2 = $1077;
                       
-                      {ESLVal _v290 = $447;
+                      {ESLVal _v537 = $1076;
                       
-                      {ESLVal ds2 = $446;
+                      {ESLVal ds2 = $1075;
                       
-                      {ESLVal ms2 = $445;
+                      {ESLVal ms2 = $1074;
                       
-                      return typeEqual.apply(_v289,flattenAct.apply(l2,_v290,ds2,ms2));
+                      return typeEqual.apply(_v536,flattenAct.apply(l2,_v537,ds2,ms2));
                     }
                     }
                     }
                     }
                     }
                     }
-                  case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                  case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                       
-                      {ESLVal t = _v60;
+                      {ESLVal t = _v282;
                       
-                      {ESLVal l1 = $444;
+                      {ESLVal l1 = $1073;
                       
                       return $true;
                     }
                     }
                     }
-                  case "TermType": {ESLVal $443 = _v59.termRef(0);
-                      ESLVal $442 = _v59.termRef(1);
-                      ESLVal $441 = _v59.termRef(2);
+                  case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                      ESLVal $1071 = _v281.termRef(1);
+                      ESLVal $1070 = _v281.termRef(2);
                       
-                      {ESLVal _v288 = _v60;
+                      {ESLVal _v535 = _v282;
                       
-                      {ESLVal l2 = $443;
+                      {ESLVal l2 = $1072;
                       
-                      {ESLVal n2 = $442;
+                      {ESLVal n2 = $1071;
                       
-                      {ESLVal args2 = $441;
+                      {ESLVal args2 = $1070;
                       
                       return $false;
                     }
@@ -2390,149 +2390,149 @@ public class Types {
                     }
                     }
                     }
-                  case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                  case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                       
-                      {ESLVal _v287 = _v60;
+                      {ESLVal _v534 = _v282;
                       
-                      {ESLVal f = $440;
+                      {ESLVal f = $1069;
                       
-                      return typeEqual.apply(_v287,f.apply());
+                      return typeEqual.apply(_v534,f.apply());
                     }
                     }
                     }
-                  case "RecType": {ESLVal $439 = _v59.termRef(0);
-                      ESLVal $438 = _v59.termRef(1);
-                      ESLVal $437 = _v59.termRef(2);
+                  case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                      ESLVal $1067 = _v281.termRef(1);
+                      ESLVal $1066 = _v281.termRef(2);
                       
-                      {ESLVal _v285 = _v60;
+                      {ESLVal _v532 = _v282;
                       
-                      {ESLVal l2 = $439;
+                      {ESLVal l2 = $1068;
                       
-                      {ESLVal n2 = $438;
+                      {ESLVal n2 = $1067;
                       
-                      {ESLVal _v286 = $437;
+                      {ESLVal _v533 = $1066;
                       
-                      return typeEqual.apply(_v285,substType.apply(new ESLVal("RecType",l2,n2,_v286),n2,_v286));
-                    }
-                    }
-                    }
-                    }
-                    }
-                  case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                      ESLVal $435 = _v59.termRef(1);
-                      ESLVal $434 = _v59.termRef(2);
-                      
-                      {ESLVal _v283 = _v60;
-                      
-                      {ESLVal l1 = $436;
-                      
-                      {ESLVal ns2 = $435;
-                      
-                      {ESLVal _v284 = $434;
-                      
-                      return typeEqual.apply(_v283,_v284);
+                      return typeEqual.apply(_v532,substType.apply(new ESLVal("RecType",l2,n2,_v533),n2,_v533));
                     }
                     }
                     }
                     }
                     }
-                    default: {ESLVal _v292 = _v60;
+                  case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                      ESLVal $1064 = _v281.termRef(1);
+                      ESLVal $1063 = _v281.termRef(2);
                       
-                      {ESLVal _v293 = _v59;
+                      {ESLVal _v530 = _v282;
+                      
+                      {ESLVal l1 = $1065;
+                      
+                      {ESLVal ns2 = $1064;
+                      
+                      {ESLVal _v531 = $1063;
+                      
+                      return typeEqual.apply(_v530,_v531);
+                    }
+                    }
+                    }
+                    }
+                    }
+                    default: {ESLVal _v539 = _v282;
+                      
+                      {ESLVal _v540 = _v281;
                       
                       return $false;
                     }
                     }
                   }
                   }
-                else if($526.isNil())
-                  switch($522.termName) {
-                    case "SetType": {ESLVal $530 = $522.termRef(0);
-                      ESLVal $529 = $522.termRef(1);
+                else if($1155.isNil())
+                  switch($1151.termName) {
+                    case "SetType": {ESLVal $1159 = $1151.termRef(0);
+                      ESLVal $1158 = $1151.termRef(1);
                       
-                      switch($529.termName) {
-                      case "VarType": {ESLVal $532 = $529.termRef(0);
-                        ESLVal $531 = $529.termRef(1);
+                      switch($1158.termName) {
+                      case "VarType": {ESLVal $1161 = $1158.termRef(0);
+                        ESLVal $1160 = $1158.termRef(1);
                         
-                        {ESLVal l1 = $521;
+                        {ESLVal l1 = $1150;
                         
-                        {ESLVal _v294 = $520;
+                        {ESLVal _v541 = $1149;
                         
-                        {ESLVal l2 = $524;
+                        {ESLVal l2 = $1153;
                         
-                        {ESLVal v1 = $525;
+                        {ESLVal v1 = $1154;
                         
-                        {ESLVal l3 = $530;
+                        {ESLVal l3 = $1159;
                         
-                        {ESLVal l4 = $532;
+                        {ESLVal l4 = $1161;
                         
-                        {ESLVal v2 = $531;
+                        {ESLVal v2 = $1160;
                         
                         if(v1.eql(v2).boolVal)
                         return $true;
                         else
-                          switch(_v59.termName) {
-                            case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                              ESLVal $450 = _v59.termRef(1);
-                              ESLVal $449 = _v59.termRef(2);
+                          switch(_v281.termName) {
+                            case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                              ESLVal $1079 = _v281.termRef(1);
+                              ESLVal $1078 = _v281.termRef(2);
                               
-                              {ESLVal _v308 = _v60;
+                              {ESLVal _v555 = _v282;
                               
-                              {ESLVal l = $451;
+                              {ESLVal l = $1080;
                               
-                              {ESLVal op = $450;
+                              {ESLVal op = $1079;
                               
-                              {ESLVal args = $449;
+                              {ESLVal args = $1078;
                               
-                              return typeEqual.apply(_v308,applyTypeFun.apply(l,forceType.apply(op),args));
+                              return typeEqual.apply(_v555,applyTypeFun.apply(l,forceType.apply(op),args));
                             }
                             }
                             }
                             }
                             }
-                          case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                              ESLVal $447 = _v59.termRef(1);
-                              ESLVal $446 = _v59.termRef(2);
-                              ESLVal $445 = _v59.termRef(3);
+                          case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                              ESLVal $1076 = _v281.termRef(1);
+                              ESLVal $1075 = _v281.termRef(2);
+                              ESLVal $1074 = _v281.termRef(3);
                               
-                              {ESLVal _v305 = _v60;
+                              {ESLVal _v552 = _v282;
                               
-                              {ESLVal _v306 = $448;
+                              {ESLVal _v553 = $1077;
                               
-                              {ESLVal _v307 = $447;
+                              {ESLVal _v554 = $1076;
                               
-                              {ESLVal ds2 = $446;
+                              {ESLVal ds2 = $1075;
                               
-                              {ESLVal ms2 = $445;
+                              {ESLVal ms2 = $1074;
                               
-                              return typeEqual.apply(_v305,flattenAct.apply(_v306,_v307,ds2,ms2));
+                              return typeEqual.apply(_v552,flattenAct.apply(_v553,_v554,ds2,ms2));
                             }
                             }
                             }
                             }
                             }
                             }
-                          case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                          case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                               
-                              {ESLVal t = _v60;
+                              {ESLVal t = _v282;
                               
-                              {ESLVal _v304 = $444;
+                              {ESLVal _v551 = $1073;
                               
                               return $true;
                             }
                             }
                             }
-                          case "TermType": {ESLVal $443 = _v59.termRef(0);
-                              ESLVal $442 = _v59.termRef(1);
-                              ESLVal $441 = _v59.termRef(2);
+                          case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                              ESLVal $1071 = _v281.termRef(1);
+                              ESLVal $1070 = _v281.termRef(2);
                               
-                              {ESLVal _v302 = _v60;
+                              {ESLVal _v549 = _v282;
                               
-                              {ESLVal _v303 = $443;
+                              {ESLVal _v550 = $1072;
                               
-                              {ESLVal n2 = $442;
+                              {ESLVal n2 = $1071;
                               
-                              {ESLVal args2 = $441;
+                              {ESLVal args2 = $1070;
                               
                               return $false;
                             }
@@ -2540,55 +2540,55 @@ public class Types {
                             }
                             }
                             }
-                          case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                          case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                               
-                              {ESLVal _v301 = _v60;
+                              {ESLVal _v548 = _v282;
                               
-                              {ESLVal f = $440;
+                              {ESLVal f = $1069;
                               
-                              return typeEqual.apply(_v301,f.apply());
+                              return typeEqual.apply(_v548,f.apply());
                             }
                             }
                             }
-                          case "RecType": {ESLVal $439 = _v59.termRef(0);
-                              ESLVal $438 = _v59.termRef(1);
-                              ESLVal $437 = _v59.termRef(2);
+                          case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                              ESLVal $1067 = _v281.termRef(1);
+                              ESLVal $1066 = _v281.termRef(2);
                               
-                              {ESLVal _v298 = _v60;
+                              {ESLVal _v545 = _v282;
                               
-                              {ESLVal _v299 = $439;
+                              {ESLVal _v546 = $1068;
                               
-                              {ESLVal n2 = $438;
+                              {ESLVal n2 = $1067;
                               
-                              {ESLVal _v300 = $437;
+                              {ESLVal _v547 = $1066;
                               
-                              return typeEqual.apply(_v298,substType.apply(new ESLVal("RecType",_v299,n2,_v300),n2,_v300));
-                            }
-                            }
-                            }
-                            }
-                            }
-                          case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                              ESLVal $435 = _v59.termRef(1);
-                              ESLVal $434 = _v59.termRef(2);
-                              
-                              {ESLVal _v295 = _v60;
-                              
-                              {ESLVal _v296 = $436;
-                              
-                              {ESLVal ns2 = $435;
-                              
-                              {ESLVal _v297 = $434;
-                              
-                              return typeEqual.apply(_v295,_v297);
+                              return typeEqual.apply(_v545,substType.apply(new ESLVal("RecType",_v546,n2,_v547),n2,_v547));
                             }
                             }
                             }
                             }
                             }
-                            default: {ESLVal _v309 = _v60;
+                          case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                              ESLVal $1064 = _v281.termRef(1);
+                              ESLVal $1063 = _v281.termRef(2);
                               
-                              {ESLVal _v310 = _v59;
+                              {ESLVal _v542 = _v282;
+                              
+                              {ESLVal _v543 = $1065;
+                              
+                              {ESLVal ns2 = $1064;
+                              
+                              {ESLVal _v544 = $1063;
+                              
+                              return typeEqual.apply(_v542,_v544);
+                            }
+                            }
+                            }
+                            }
+                            }
+                            default: {ESLVal _v556 = _v282;
+                              
+                              {ESLVal _v557 = _v281;
                               
                               return $false;
                             }
@@ -2602,68 +2602,68 @@ public class Types {
                       }
                       }
                       }
-                      default: switch(_v59.termName) {
-                        case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                          ESLVal $450 = _v59.termRef(1);
-                          ESLVal $449 = _v59.termRef(2);
+                      default: switch(_v281.termName) {
+                        case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                          ESLVal $1079 = _v281.termRef(1);
+                          ESLVal $1078 = _v281.termRef(2);
                           
-                          {ESLVal _v319 = _v60;
+                          {ESLVal _v566 = _v282;
                           
-                          {ESLVal l = $451;
+                          {ESLVal l = $1080;
                           
-                          {ESLVal op = $450;
+                          {ESLVal op = $1079;
                           
-                          {ESLVal args = $449;
+                          {ESLVal args = $1078;
                           
-                          return typeEqual.apply(_v319,applyTypeFun.apply(l,forceType.apply(op),args));
+                          return typeEqual.apply(_v566,applyTypeFun.apply(l,forceType.apply(op),args));
                         }
                         }
                         }
                         }
                         }
-                      case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                          ESLVal $447 = _v59.termRef(1);
-                          ESLVal $446 = _v59.termRef(2);
-                          ESLVal $445 = _v59.termRef(3);
+                      case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                          ESLVal $1076 = _v281.termRef(1);
+                          ESLVal $1075 = _v281.termRef(2);
+                          ESLVal $1074 = _v281.termRef(3);
                           
-                          {ESLVal _v317 = _v60;
+                          {ESLVal _v564 = _v282;
                           
-                          {ESLVal l2 = $448;
+                          {ESLVal l2 = $1077;
                           
-                          {ESLVal _v318 = $447;
+                          {ESLVal _v565 = $1076;
                           
-                          {ESLVal ds2 = $446;
+                          {ESLVal ds2 = $1075;
                           
-                          {ESLVal ms2 = $445;
+                          {ESLVal ms2 = $1074;
                           
-                          return typeEqual.apply(_v317,flattenAct.apply(l2,_v318,ds2,ms2));
+                          return typeEqual.apply(_v564,flattenAct.apply(l2,_v565,ds2,ms2));
                         }
                         }
                         }
                         }
                         }
                         }
-                      case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                      case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                           
-                          {ESLVal t = _v60;
+                          {ESLVal t = _v282;
                           
-                          {ESLVal l1 = $444;
+                          {ESLVal l1 = $1073;
                           
                           return $true;
                         }
                         }
                         }
-                      case "TermType": {ESLVal $443 = _v59.termRef(0);
-                          ESLVal $442 = _v59.termRef(1);
-                          ESLVal $441 = _v59.termRef(2);
+                      case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                          ESLVal $1071 = _v281.termRef(1);
+                          ESLVal $1070 = _v281.termRef(2);
                           
-                          {ESLVal _v316 = _v60;
+                          {ESLVal _v563 = _v282;
                           
-                          {ESLVal l2 = $443;
+                          {ESLVal l2 = $1072;
                           
-                          {ESLVal n2 = $442;
+                          {ESLVal n2 = $1071;
                           
-                          {ESLVal args2 = $441;
+                          {ESLVal args2 = $1070;
                           
                           return $false;
                         }
@@ -2671,55 +2671,55 @@ public class Types {
                         }
                         }
                         }
-                      case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                      case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                           
-                          {ESLVal _v315 = _v60;
+                          {ESLVal _v562 = _v282;
                           
-                          {ESLVal f = $440;
+                          {ESLVal f = $1069;
                           
-                          return typeEqual.apply(_v315,f.apply());
+                          return typeEqual.apply(_v562,f.apply());
                         }
                         }
                         }
-                      case "RecType": {ESLVal $439 = _v59.termRef(0);
-                          ESLVal $438 = _v59.termRef(1);
-                          ESLVal $437 = _v59.termRef(2);
+                      case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                          ESLVal $1067 = _v281.termRef(1);
+                          ESLVal $1066 = _v281.termRef(2);
                           
-                          {ESLVal _v313 = _v60;
+                          {ESLVal _v560 = _v282;
                           
-                          {ESLVal l2 = $439;
+                          {ESLVal l2 = $1068;
                           
-                          {ESLVal n2 = $438;
+                          {ESLVal n2 = $1067;
                           
-                          {ESLVal _v314 = $437;
+                          {ESLVal _v561 = $1066;
                           
-                          return typeEqual.apply(_v313,substType.apply(new ESLVal("RecType",l2,n2,_v314),n2,_v314));
-                        }
-                        }
-                        }
-                        }
-                        }
-                      case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                          ESLVal $435 = _v59.termRef(1);
-                          ESLVal $434 = _v59.termRef(2);
-                          
-                          {ESLVal _v311 = _v60;
-                          
-                          {ESLVal l1 = $436;
-                          
-                          {ESLVal ns2 = $435;
-                          
-                          {ESLVal _v312 = $434;
-                          
-                          return typeEqual.apply(_v311,_v312);
+                          return typeEqual.apply(_v560,substType.apply(new ESLVal("RecType",l2,n2,_v561),n2,_v561));
                         }
                         }
                         }
                         }
                         }
-                        default: {ESLVal _v320 = _v60;
+                      case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                          ESLVal $1064 = _v281.termRef(1);
+                          ESLVal $1063 = _v281.termRef(2);
                           
-                          {ESLVal _v321 = _v59;
+                          {ESLVal _v558 = _v282;
+                          
+                          {ESLVal l1 = $1065;
+                          
+                          {ESLVal ns2 = $1064;
+                          
+                          {ESLVal _v559 = $1063;
+                          
+                          return typeEqual.apply(_v558,_v559);
+                        }
+                        }
+                        }
+                        }
+                        }
+                        default: {ESLVal _v567 = _v282;
+                          
+                          {ESLVal _v568 = _v281;
                           
                           return $false;
                         }
@@ -2727,68 +2727,68 @@ public class Types {
                       }
                     }
                     }
-                    default: switch(_v59.termName) {
-                      case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                        ESLVal $450 = _v59.termRef(1);
-                        ESLVal $449 = _v59.termRef(2);
+                    default: switch(_v281.termName) {
+                      case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                        ESLVal $1079 = _v281.termRef(1);
+                        ESLVal $1078 = _v281.termRef(2);
                         
-                        {ESLVal _v330 = _v60;
+                        {ESLVal _v577 = _v282;
                         
-                        {ESLVal l = $451;
+                        {ESLVal l = $1080;
                         
-                        {ESLVal op = $450;
+                        {ESLVal op = $1079;
                         
-                        {ESLVal args = $449;
+                        {ESLVal args = $1078;
                         
-                        return typeEqual.apply(_v330,applyTypeFun.apply(l,forceType.apply(op),args));
+                        return typeEqual.apply(_v577,applyTypeFun.apply(l,forceType.apply(op),args));
                       }
                       }
                       }
                       }
                       }
-                    case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                        ESLVal $447 = _v59.termRef(1);
-                        ESLVal $446 = _v59.termRef(2);
-                        ESLVal $445 = _v59.termRef(3);
+                    case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                        ESLVal $1076 = _v281.termRef(1);
+                        ESLVal $1075 = _v281.termRef(2);
+                        ESLVal $1074 = _v281.termRef(3);
                         
-                        {ESLVal _v328 = _v60;
+                        {ESLVal _v575 = _v282;
                         
-                        {ESLVal l2 = $448;
+                        {ESLVal l2 = $1077;
                         
-                        {ESLVal _v329 = $447;
+                        {ESLVal _v576 = $1076;
                         
-                        {ESLVal ds2 = $446;
+                        {ESLVal ds2 = $1075;
                         
-                        {ESLVal ms2 = $445;
+                        {ESLVal ms2 = $1074;
                         
-                        return typeEqual.apply(_v328,flattenAct.apply(l2,_v329,ds2,ms2));
+                        return typeEqual.apply(_v575,flattenAct.apply(l2,_v576,ds2,ms2));
                       }
                       }
                       }
                       }
                       }
                       }
-                    case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                    case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                         
-                        {ESLVal t = _v60;
+                        {ESLVal t = _v282;
                         
-                        {ESLVal l1 = $444;
+                        {ESLVal l1 = $1073;
                         
                         return $true;
                       }
                       }
                       }
-                    case "TermType": {ESLVal $443 = _v59.termRef(0);
-                        ESLVal $442 = _v59.termRef(1);
-                        ESLVal $441 = _v59.termRef(2);
+                    case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                        ESLVal $1071 = _v281.termRef(1);
+                        ESLVal $1070 = _v281.termRef(2);
                         
-                        {ESLVal _v327 = _v60;
+                        {ESLVal _v574 = _v282;
                         
-                        {ESLVal l2 = $443;
+                        {ESLVal l2 = $1072;
                         
-                        {ESLVal n2 = $442;
+                        {ESLVal n2 = $1071;
                         
-                        {ESLVal args2 = $441;
+                        {ESLVal args2 = $1070;
                         
                         return $false;
                       }
@@ -2796,123 +2796,123 @@ public class Types {
                       }
                       }
                       }
-                    case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                    case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                         
-                        {ESLVal _v326 = _v60;
+                        {ESLVal _v573 = _v282;
                         
-                        {ESLVal f = $440;
+                        {ESLVal f = $1069;
                         
-                        return typeEqual.apply(_v326,f.apply());
+                        return typeEqual.apply(_v573,f.apply());
                       }
                       }
                       }
-                    case "RecType": {ESLVal $439 = _v59.termRef(0);
-                        ESLVal $438 = _v59.termRef(1);
-                        ESLVal $437 = _v59.termRef(2);
+                    case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                        ESLVal $1067 = _v281.termRef(1);
+                        ESLVal $1066 = _v281.termRef(2);
                         
-                        {ESLVal _v324 = _v60;
+                        {ESLVal _v571 = _v282;
                         
-                        {ESLVal l2 = $439;
+                        {ESLVal l2 = $1068;
                         
-                        {ESLVal n2 = $438;
+                        {ESLVal n2 = $1067;
                         
-                        {ESLVal _v325 = $437;
+                        {ESLVal _v572 = $1066;
                         
-                        return typeEqual.apply(_v324,substType.apply(new ESLVal("RecType",l2,n2,_v325),n2,_v325));
-                      }
-                      }
-                      }
-                      }
-                      }
-                    case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                        ESLVal $435 = _v59.termRef(1);
-                        ESLVal $434 = _v59.termRef(2);
-                        
-                        {ESLVal _v322 = _v60;
-                        
-                        {ESLVal l1 = $436;
-                        
-                        {ESLVal ns2 = $435;
-                        
-                        {ESLVal _v323 = $434;
-                        
-                        return typeEqual.apply(_v322,_v323);
+                        return typeEqual.apply(_v571,substType.apply(new ESLVal("RecType",l2,n2,_v572),n2,_v572));
                       }
                       }
                       }
                       }
                       }
-                      default: {ESLVal _v331 = _v60;
+                    case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                        ESLVal $1064 = _v281.termRef(1);
+                        ESLVal $1063 = _v281.termRef(2);
                         
-                        {ESLVal _v332 = _v59;
+                        {ESLVal _v569 = _v282;
+                        
+                        {ESLVal l1 = $1065;
+                        
+                        {ESLVal ns2 = $1064;
+                        
+                        {ESLVal _v570 = $1063;
+                        
+                        return typeEqual.apply(_v569,_v570);
+                      }
+                      }
+                      }
+                      }
+                      }
+                      default: {ESLVal _v578 = _v282;
+                        
+                        {ESLVal _v579 = _v281;
                         
                         return $false;
                       }
                       }
                     }
                   }
-                else switch(_v59.termName) {
-                    case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                      ESLVal $450 = _v59.termRef(1);
-                      ESLVal $449 = _v59.termRef(2);
+                else switch(_v281.termName) {
+                    case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                      ESLVal $1079 = _v281.termRef(1);
+                      ESLVal $1078 = _v281.termRef(2);
                       
-                      {ESLVal _v341 = _v60;
+                      {ESLVal _v588 = _v282;
                       
-                      {ESLVal l = $451;
+                      {ESLVal l = $1080;
                       
-                      {ESLVal op = $450;
+                      {ESLVal op = $1079;
                       
-                      {ESLVal args = $449;
+                      {ESLVal args = $1078;
                       
-                      return typeEqual.apply(_v341,applyTypeFun.apply(l,forceType.apply(op),args));
+                      return typeEqual.apply(_v588,applyTypeFun.apply(l,forceType.apply(op),args));
                     }
                     }
                     }
                     }
                     }
-                  case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                      ESLVal $447 = _v59.termRef(1);
-                      ESLVal $446 = _v59.termRef(2);
-                      ESLVal $445 = _v59.termRef(3);
+                  case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                      ESLVal $1076 = _v281.termRef(1);
+                      ESLVal $1075 = _v281.termRef(2);
+                      ESLVal $1074 = _v281.termRef(3);
                       
-                      {ESLVal _v339 = _v60;
+                      {ESLVal _v586 = _v282;
                       
-                      {ESLVal l2 = $448;
+                      {ESLVal l2 = $1077;
                       
-                      {ESLVal _v340 = $447;
+                      {ESLVal _v587 = $1076;
                       
-                      {ESLVal ds2 = $446;
+                      {ESLVal ds2 = $1075;
                       
-                      {ESLVal ms2 = $445;
+                      {ESLVal ms2 = $1074;
                       
-                      return typeEqual.apply(_v339,flattenAct.apply(l2,_v340,ds2,ms2));
+                      return typeEqual.apply(_v586,flattenAct.apply(l2,_v587,ds2,ms2));
                     }
                     }
                     }
                     }
                     }
                     }
-                  case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                  case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                       
-                      {ESLVal t = _v60;
+                      {ESLVal t = _v282;
                       
-                      {ESLVal l1 = $444;
+                      {ESLVal l1 = $1073;
                       
                       return $true;
                     }
                     }
                     }
-                  case "TermType": {ESLVal $443 = _v59.termRef(0);
-                      ESLVal $442 = _v59.termRef(1);
-                      ESLVal $441 = _v59.termRef(2);
+                  case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                      ESLVal $1071 = _v281.termRef(1);
+                      ESLVal $1070 = _v281.termRef(2);
                       
-                      {ESLVal _v338 = _v60;
+                      {ESLVal _v585 = _v282;
                       
-                      {ESLVal l2 = $443;
+                      {ESLVal l2 = $1072;
                       
-                      {ESLVal n2 = $442;
+                      {ESLVal n2 = $1071;
                       
-                      {ESLVal args2 = $441;
+                      {ESLVal args2 = $1070;
                       
                       return $false;
                     }
@@ -2920,124 +2920,124 @@ public class Types {
                     }
                     }
                     }
-                  case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                  case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                       
-                      {ESLVal _v337 = _v60;
+                      {ESLVal _v584 = _v282;
                       
-                      {ESLVal f = $440;
+                      {ESLVal f = $1069;
                       
-                      return typeEqual.apply(_v337,f.apply());
+                      return typeEqual.apply(_v584,f.apply());
                     }
                     }
                     }
-                  case "RecType": {ESLVal $439 = _v59.termRef(0);
-                      ESLVal $438 = _v59.termRef(1);
-                      ESLVal $437 = _v59.termRef(2);
+                  case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                      ESLVal $1067 = _v281.termRef(1);
+                      ESLVal $1066 = _v281.termRef(2);
                       
-                      {ESLVal _v335 = _v60;
+                      {ESLVal _v582 = _v282;
                       
-                      {ESLVal l2 = $439;
+                      {ESLVal l2 = $1068;
                       
-                      {ESLVal n2 = $438;
+                      {ESLVal n2 = $1067;
                       
-                      {ESLVal _v336 = $437;
+                      {ESLVal _v583 = $1066;
                       
-                      return typeEqual.apply(_v335,substType.apply(new ESLVal("RecType",l2,n2,_v336),n2,_v336));
-                    }
-                    }
-                    }
-                    }
-                    }
-                  case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                      ESLVal $435 = _v59.termRef(1);
-                      ESLVal $434 = _v59.termRef(2);
-                      
-                      {ESLVal _v333 = _v60;
-                      
-                      {ESLVal l1 = $436;
-                      
-                      {ESLVal ns2 = $435;
-                      
-                      {ESLVal _v334 = $434;
-                      
-                      return typeEqual.apply(_v333,_v334);
+                      return typeEqual.apply(_v582,substType.apply(new ESLVal("RecType",l2,n2,_v583),n2,_v583));
                     }
                     }
                     }
                     }
                     }
-                    default: {ESLVal _v342 = _v60;
+                  case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                      ESLVal $1064 = _v281.termRef(1);
+                      ESLVal $1063 = _v281.termRef(2);
                       
-                      {ESLVal _v343 = _v59;
+                      {ESLVal _v580 = _v282;
+                      
+                      {ESLVal l1 = $1065;
+                      
+                      {ESLVal ns2 = $1064;
+                      
+                      {ESLVal _v581 = $1063;
+                      
+                      return typeEqual.apply(_v580,_v581);
+                    }
+                    }
+                    }
+                    }
+                    }
+                    default: {ESLVal _v589 = _v282;
+                      
+                      {ESLVal _v590 = _v281;
                       
                       return $false;
                     }
                     }
                   }
                 }
-              else if($523.isNil())
-                switch(_v59.termName) {
-                  case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                    ESLVal $450 = _v59.termRef(1);
-                    ESLVal $449 = _v59.termRef(2);
+              else if($1152.isNil())
+                switch(_v281.termName) {
+                  case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                    ESLVal $1079 = _v281.termRef(1);
+                    ESLVal $1078 = _v281.termRef(2);
                     
-                    {ESLVal _v352 = _v60;
+                    {ESLVal _v599 = _v282;
                     
-                    {ESLVal l = $451;
+                    {ESLVal l = $1080;
                     
-                    {ESLVal op = $450;
+                    {ESLVal op = $1079;
                     
-                    {ESLVal args = $449;
+                    {ESLVal args = $1078;
                     
-                    return typeEqual.apply(_v352,applyTypeFun.apply(l,forceType.apply(op),args));
+                    return typeEqual.apply(_v599,applyTypeFun.apply(l,forceType.apply(op),args));
                   }
                   }
                   }
                   }
                   }
-                case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                    ESLVal $447 = _v59.termRef(1);
-                    ESLVal $446 = _v59.termRef(2);
-                    ESLVal $445 = _v59.termRef(3);
+                case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                    ESLVal $1076 = _v281.termRef(1);
+                    ESLVal $1075 = _v281.termRef(2);
+                    ESLVal $1074 = _v281.termRef(3);
                     
-                    {ESLVal _v350 = _v60;
+                    {ESLVal _v597 = _v282;
                     
-                    {ESLVal l2 = $448;
+                    {ESLVal l2 = $1077;
                     
-                    {ESLVal _v351 = $447;
+                    {ESLVal _v598 = $1076;
                     
-                    {ESLVal ds2 = $446;
+                    {ESLVal ds2 = $1075;
                     
-                    {ESLVal ms2 = $445;
+                    {ESLVal ms2 = $1074;
                     
-                    return typeEqual.apply(_v350,flattenAct.apply(l2,_v351,ds2,ms2));
+                    return typeEqual.apply(_v597,flattenAct.apply(l2,_v598,ds2,ms2));
                   }
                   }
                   }
                   }
                   }
                   }
-                case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                     
-                    {ESLVal t = _v60;
+                    {ESLVal t = _v282;
                     
-                    {ESLVal l1 = $444;
+                    {ESLVal l1 = $1073;
                     
                     return $true;
                   }
                   }
                   }
-                case "TermType": {ESLVal $443 = _v59.termRef(0);
-                    ESLVal $442 = _v59.termRef(1);
-                    ESLVal $441 = _v59.termRef(2);
+                case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                    ESLVal $1071 = _v281.termRef(1);
+                    ESLVal $1070 = _v281.termRef(2);
                     
-                    {ESLVal _v349 = _v60;
+                    {ESLVal _v596 = _v282;
                     
-                    {ESLVal l2 = $443;
+                    {ESLVal l2 = $1072;
                     
-                    {ESLVal n2 = $442;
+                    {ESLVal n2 = $1071;
                     
-                    {ESLVal args2 = $441;
+                    {ESLVal args2 = $1070;
                     
                     return $false;
                   }
@@ -3045,122 +3045,122 @@ public class Types {
                   }
                   }
                   }
-                case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                     
-                    {ESLVal _v348 = _v60;
+                    {ESLVal _v595 = _v282;
                     
-                    {ESLVal f = $440;
+                    {ESLVal f = $1069;
                     
-                    return typeEqual.apply(_v348,f.apply());
+                    return typeEqual.apply(_v595,f.apply());
                   }
                   }
                   }
-                case "RecType": {ESLVal $439 = _v59.termRef(0);
-                    ESLVal $438 = _v59.termRef(1);
-                    ESLVal $437 = _v59.termRef(2);
+                case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                    ESLVal $1067 = _v281.termRef(1);
+                    ESLVal $1066 = _v281.termRef(2);
                     
-                    {ESLVal _v346 = _v60;
+                    {ESLVal _v593 = _v282;
                     
-                    {ESLVal l2 = $439;
+                    {ESLVal l2 = $1068;
                     
-                    {ESLVal n2 = $438;
+                    {ESLVal n2 = $1067;
                     
-                    {ESLVal _v347 = $437;
+                    {ESLVal _v594 = $1066;
                     
-                    return typeEqual.apply(_v346,substType.apply(new ESLVal("RecType",l2,n2,_v347),n2,_v347));
-                  }
-                  }
-                  }
-                  }
-                  }
-                case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                    ESLVal $435 = _v59.termRef(1);
-                    ESLVal $434 = _v59.termRef(2);
-                    
-                    {ESLVal _v344 = _v60;
-                    
-                    {ESLVal l1 = $436;
-                    
-                    {ESLVal ns2 = $435;
-                    
-                    {ESLVal _v345 = $434;
-                    
-                    return typeEqual.apply(_v344,_v345);
+                    return typeEqual.apply(_v593,substType.apply(new ESLVal("RecType",l2,n2,_v594),n2,_v594));
                   }
                   }
                   }
                   }
                   }
-                  default: {ESLVal _v353 = _v60;
+                case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                    ESLVal $1064 = _v281.termRef(1);
+                    ESLVal $1063 = _v281.termRef(2);
                     
-                    {ESLVal _v354 = _v59;
+                    {ESLVal _v591 = _v282;
+                    
+                    {ESLVal l1 = $1065;
+                    
+                    {ESLVal ns2 = $1064;
+                    
+                    {ESLVal _v592 = $1063;
+                    
+                    return typeEqual.apply(_v591,_v592);
+                  }
+                  }
+                  }
+                  }
+                  }
+                  default: {ESLVal _v600 = _v282;
+                    
+                    {ESLVal _v601 = _v281;
                     
                     return $false;
                   }
                   }
                 }
-              else switch(_v59.termName) {
-                  case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                    ESLVal $450 = _v59.termRef(1);
-                    ESLVal $449 = _v59.termRef(2);
+              else switch(_v281.termName) {
+                  case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                    ESLVal $1079 = _v281.termRef(1);
+                    ESLVal $1078 = _v281.termRef(2);
                     
-                    {ESLVal _v363 = _v60;
+                    {ESLVal _v610 = _v282;
                     
-                    {ESLVal l = $451;
+                    {ESLVal l = $1080;
                     
-                    {ESLVal op = $450;
+                    {ESLVal op = $1079;
                     
-                    {ESLVal args = $449;
+                    {ESLVal args = $1078;
                     
-                    return typeEqual.apply(_v363,applyTypeFun.apply(l,forceType.apply(op),args));
+                    return typeEqual.apply(_v610,applyTypeFun.apply(l,forceType.apply(op),args));
                   }
                   }
                   }
                   }
                   }
-                case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                    ESLVal $447 = _v59.termRef(1);
-                    ESLVal $446 = _v59.termRef(2);
-                    ESLVal $445 = _v59.termRef(3);
+                case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                    ESLVal $1076 = _v281.termRef(1);
+                    ESLVal $1075 = _v281.termRef(2);
+                    ESLVal $1074 = _v281.termRef(3);
                     
-                    {ESLVal _v361 = _v60;
+                    {ESLVal _v608 = _v282;
                     
-                    {ESLVal l2 = $448;
+                    {ESLVal l2 = $1077;
                     
-                    {ESLVal _v362 = $447;
+                    {ESLVal _v609 = $1076;
                     
-                    {ESLVal ds2 = $446;
+                    {ESLVal ds2 = $1075;
                     
-                    {ESLVal ms2 = $445;
+                    {ESLVal ms2 = $1074;
                     
-                    return typeEqual.apply(_v361,flattenAct.apply(l2,_v362,ds2,ms2));
+                    return typeEqual.apply(_v608,flattenAct.apply(l2,_v609,ds2,ms2));
                   }
                   }
                   }
                   }
                   }
                   }
-                case "VoidType": {ESLVal $444 = _v59.termRef(0);
+                case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                     
-                    {ESLVal t = _v60;
+                    {ESLVal t = _v282;
                     
-                    {ESLVal l1 = $444;
+                    {ESLVal l1 = $1073;
                     
                     return $true;
                   }
                   }
                   }
-                case "TermType": {ESLVal $443 = _v59.termRef(0);
-                    ESLVal $442 = _v59.termRef(1);
-                    ESLVal $441 = _v59.termRef(2);
+                case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                    ESLVal $1071 = _v281.termRef(1);
+                    ESLVal $1070 = _v281.termRef(2);
                     
-                    {ESLVal _v360 = _v60;
+                    {ESLVal _v607 = _v282;
                     
-                    {ESLVal l2 = $443;
+                    {ESLVal l2 = $1072;
                     
-                    {ESLVal n2 = $442;
+                    {ESLVal n2 = $1071;
                     
-                    {ESLVal args2 = $441;
+                    {ESLVal args2 = $1070;
                     
                     return $false;
                   }
@@ -3168,123 +3168,123 @@ public class Types {
                   }
                   }
                   }
-                case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+                case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                     
-                    {ESLVal _v359 = _v60;
+                    {ESLVal _v606 = _v282;
                     
-                    {ESLVal f = $440;
+                    {ESLVal f = $1069;
                     
-                    return typeEqual.apply(_v359,f.apply());
+                    return typeEqual.apply(_v606,f.apply());
                   }
                   }
                   }
-                case "RecType": {ESLVal $439 = _v59.termRef(0);
-                    ESLVal $438 = _v59.termRef(1);
-                    ESLVal $437 = _v59.termRef(2);
+                case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                    ESLVal $1067 = _v281.termRef(1);
+                    ESLVal $1066 = _v281.termRef(2);
                     
-                    {ESLVal _v357 = _v60;
+                    {ESLVal _v604 = _v282;
                     
-                    {ESLVal l2 = $439;
+                    {ESLVal l2 = $1068;
                     
-                    {ESLVal n2 = $438;
+                    {ESLVal n2 = $1067;
                     
-                    {ESLVal _v358 = $437;
+                    {ESLVal _v605 = $1066;
                     
-                    return typeEqual.apply(_v357,substType.apply(new ESLVal("RecType",l2,n2,_v358),n2,_v358));
-                  }
-                  }
-                  }
-                  }
-                  }
-                case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                    ESLVal $435 = _v59.termRef(1);
-                    ESLVal $434 = _v59.termRef(2);
-                    
-                    {ESLVal _v355 = _v60;
-                    
-                    {ESLVal l1 = $436;
-                    
-                    {ESLVal ns2 = $435;
-                    
-                    {ESLVal _v356 = $434;
-                    
-                    return typeEqual.apply(_v355,_v356);
+                    return typeEqual.apply(_v604,substType.apply(new ESLVal("RecType",l2,n2,_v605),n2,_v605));
                   }
                   }
                   }
                   }
                   }
-                  default: {ESLVal _v364 = _v60;
+                case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                    ESLVal $1064 = _v281.termRef(1);
+                    ESLVal $1063 = _v281.termRef(2);
                     
-                    {ESLVal _v365 = _v59;
+                    {ESLVal _v602 = _v282;
+                    
+                    {ESLVal l1 = $1065;
+                    
+                    {ESLVal ns2 = $1064;
+                    
+                    {ESLVal _v603 = $1063;
+                    
+                    return typeEqual.apply(_v602,_v603);
+                  }
+                  }
+                  }
+                  }
+                  }
+                  default: {ESLVal _v611 = _v282;
+                    
+                    {ESLVal _v612 = _v281;
                     
                     return $false;
                   }
                   }
                 }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v376 = _v60;
+                  {ESLVal _v623 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v376,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v623,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v374 = _v60;
+                  {ESLVal _v621 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v375 = $447;
+                  {ESLVal _v622 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v374,flattenAct.apply(l2,_v375,ds2,ms2));
+                  return typeEqual.apply(_v621,flattenAct.apply(l2,_v622,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v373 = _v60;
+                  {ESLVal _v620 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -3292,55 +3292,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v372 = _v60;
+                  {ESLVal _v619 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v372,f.apply());
+                  return typeEqual.apply(_v619,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v370 = _v60;
+                  {ESLVal _v617 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v371 = $437;
+                  {ESLVal _v618 = $1066;
                   
-                  return typeEqual.apply(_v370,substType.apply(new ESLVal("RecType",l2,n2,_v371),n2,_v371));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v368 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v369 = $434;
-                  
-                  return typeEqual.apply(_v368,_v369);
+                  return typeEqual.apply(_v617,substType.apply(new ESLVal("RecType",l2,n2,_v618),n2,_v618));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v377 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v378 = _v59;
+                  {ESLVal _v615 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v616 = $1063;
+                  
+                  return typeEqual.apply(_v615,_v616);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v624 = _v282;
+                  
+                  {ESLVal _v625 = _v281;
                   
                   return $false;
                 }
@@ -3348,81 +3348,81 @@ public class Types {
               }
             }
             }
-          case "StrType": {ESLVal $518 = _v60.termRef(0);
+          case "StrType": {ESLVal $1147 = _v282.termRef(0);
               
-              switch(_v59.termName) {
-              case "StrType": {ESLVal $519 = _v59.termRef(0);
+              switch(_v281.termName) {
+              case "StrType": {ESLVal $1148 = _v281.termRef(0);
                 
-                {ESLVal l1 = $518;
+                {ESLVal l1 = $1147;
                 
-                {ESLVal l2 = $519;
+                {ESLVal l2 = $1148;
                 
                 return $true;
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v280 = _v60;
+                  {ESLVal _v527 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v280,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v527,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v278 = _v60;
+                  {ESLVal _v525 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v279 = $447;
+                  {ESLVal _v526 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v278,flattenAct.apply(l2,_v279,ds2,ms2));
+                  return typeEqual.apply(_v525,flattenAct.apply(l2,_v526,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v277 = _v60;
+                  {ESLVal _v524 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -3430,55 +3430,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v276 = _v60;
+                  {ESLVal _v523 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v276,f.apply());
+                  return typeEqual.apply(_v523,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v274 = _v60;
+                  {ESLVal _v521 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v275 = $437;
+                  {ESLVal _v522 = $1066;
                   
-                  return typeEqual.apply(_v274,substType.apply(new ESLVal("RecType",l2,n2,_v275),n2,_v275));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v272 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v273 = $434;
-                  
-                  return typeEqual.apply(_v272,_v273);
+                  return typeEqual.apply(_v521,substType.apply(new ESLVal("RecType",l2,n2,_v522),n2,_v522));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v281 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v282 = _v59;
+                  {ESLVal _v519 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v520 = $1063;
+                  
+                  return typeEqual.apply(_v519,_v520);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v528 = _v282;
+                  
+                  {ESLVal _v529 = _v281;
                   
                   return $false;
                 }
@@ -3486,38 +3486,38 @@ public class Types {
               }
             }
             }
-          case "VoidType": {ESLVal $517 = _v60.termRef(0);
+          case "VoidType": {ESLVal $1146 = _v282.termRef(0);
               
-              {ESLVal l1 = $517;
+              {ESLVal l1 = $1146;
               
-              {ESLVal t = _v59;
+              {ESLVal t = _v281;
               
               return $true;
             }
             }
             }
-          case "FieldType": {ESLVal $513 = _v60.termRef(0);
-              ESLVal $512 = _v60.termRef(1);
-              ESLVal $511 = _v60.termRef(2);
+          case "FieldType": {ESLVal $1142 = _v282.termRef(0);
+              ESLVal $1141 = _v282.termRef(1);
+              ESLVal $1140 = _v282.termRef(2);
               
-              switch(_v59.termName) {
-              case "FieldType": {ESLVal $516 = _v59.termRef(0);
-                ESLVal $515 = _v59.termRef(1);
-                ESLVal $514 = _v59.termRef(2);
+              switch(_v281.termName) {
+              case "FieldType": {ESLVal $1145 = _v281.termRef(0);
+                ESLVal $1144 = _v281.termRef(1);
+                ESLVal $1143 = _v281.termRef(2);
                 
-                {ESLVal l1 = $513;
+                {ESLVal l1 = $1142;
                 
-                {ESLVal n1 = $512;
+                {ESLVal n1 = $1141;
                 
-                {ESLVal _v259 = $511;
+                {ESLVal _v506 = $1140;
                 
-                {ESLVal l2 = $516;
+                {ESLVal l2 = $1145;
                 
-                {ESLVal n2 = $515;
+                {ESLVal n2 = $1144;
                 
-                {ESLVal _v260 = $514;
+                {ESLVal _v507 = $1143;
                 
-                return n1.eql(n2).and(typeEqual.apply(_v259,_v260));
+                return n1.eql(n2).and(typeEqual.apply(_v506,_v507));
               }
               }
               }
@@ -3525,68 +3525,68 @@ public class Types {
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v269 = _v60;
+                  {ESLVal _v516 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v269,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v516,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v267 = _v60;
+                  {ESLVal _v514 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v268 = $447;
+                  {ESLVal _v515 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v267,flattenAct.apply(l2,_v268,ds2,ms2));
+                  return typeEqual.apply(_v514,flattenAct.apply(l2,_v515,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v266 = _v60;
+                  {ESLVal _v513 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -3594,55 +3594,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v265 = _v60;
+                  {ESLVal _v512 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v265,f.apply());
+                  return typeEqual.apply(_v512,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v263 = _v60;
+                  {ESLVal _v510 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v264 = $437;
+                  {ESLVal _v511 = $1066;
                   
-                  return typeEqual.apply(_v263,substType.apply(new ESLVal("RecType",l2,n2,_v264),n2,_v264));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v261 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v262 = $434;
-                  
-                  return typeEqual.apply(_v261,_v262);
+                  return typeEqual.apply(_v510,substType.apply(new ESLVal("RecType",l2,n2,_v511),n2,_v511));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v270 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v271 = _v59;
+                  {ESLVal _v508 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v509 = $1063;
+                  
+                  return typeEqual.apply(_v508,_v509);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v517 = _v282;
+                  
+                  {ESLVal _v518 = _v281;
                   
                   return $false;
                 }
@@ -3650,26 +3650,26 @@ public class Types {
               }
             }
             }
-          case "TableType": {ESLVal $507 = _v60.termRef(0);
-              ESLVal $506 = _v60.termRef(1);
-              ESLVal $505 = _v60.termRef(2);
+          case "TableType": {ESLVal $1136 = _v282.termRef(0);
+              ESLVal $1135 = _v282.termRef(1);
+              ESLVal $1134 = _v282.termRef(2);
               
-              switch(_v59.termName) {
-              case "TableType": {ESLVal $510 = _v59.termRef(0);
-                ESLVal $509 = _v59.termRef(1);
-                ESLVal $508 = _v59.termRef(2);
+              switch(_v281.termName) {
+              case "TableType": {ESLVal $1139 = _v281.termRef(0);
+                ESLVal $1138 = _v281.termRef(1);
+                ESLVal $1137 = _v281.termRef(2);
                 
-                {ESLVal l1 = $507;
+                {ESLVal l1 = $1136;
                 
-                {ESLVal k1 = $506;
+                {ESLVal k1 = $1135;
                 
-                {ESLVal v1 = $505;
+                {ESLVal v1 = $1134;
                 
-                {ESLVal l2 = $510;
+                {ESLVal l2 = $1139;
                 
-                {ESLVal k2 = $509;
+                {ESLVal k2 = $1138;
                 
-                {ESLVal v2 = $508;
+                {ESLVal v2 = $1137;
                 
                 return typeEqual.apply(k1,k2).and(typeEqual.apply(v1,v2));
               }
@@ -3679,68 +3679,68 @@ public class Types {
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v256 = _v60;
+                  {ESLVal _v503 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v256,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v503,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v254 = _v60;
+                  {ESLVal _v501 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v255 = $447;
+                  {ESLVal _v502 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v254,flattenAct.apply(l2,_v255,ds2,ms2));
+                  return typeEqual.apply(_v501,flattenAct.apply(l2,_v502,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v253 = _v60;
+                  {ESLVal _v500 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -3748,55 +3748,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v252 = _v60;
+                  {ESLVal _v499 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v252,f.apply());
+                  return typeEqual.apply(_v499,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v250 = _v60;
+                  {ESLVal _v497 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v251 = $437;
+                  {ESLVal _v498 = $1066;
                   
-                  return typeEqual.apply(_v250,substType.apply(new ESLVal("RecType",l2,n2,_v251),n2,_v251));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v248 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v249 = $434;
-                  
-                  return typeEqual.apply(_v248,_v249);
+                  return typeEqual.apply(_v497,substType.apply(new ESLVal("RecType",l2,n2,_v498),n2,_v498));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v257 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v258 = _v59;
+                  {ESLVal _v495 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v496 = $1063;
+                  
+                  return typeEqual.apply(_v495,_v496);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v504 = _v282;
+                  
+                  {ESLVal _v505 = _v281;
                   
                   return $false;
                 }
@@ -3804,26 +3804,26 @@ public class Types {
               }
             }
             }
-          case "TermType": {ESLVal $501 = _v60.termRef(0);
-              ESLVal $500 = _v60.termRef(1);
-              ESLVal $499 = _v60.termRef(2);
+          case "TermType": {ESLVal $1130 = _v282.termRef(0);
+              ESLVal $1129 = _v282.termRef(1);
+              ESLVal $1128 = _v282.termRef(2);
               
-              switch(_v59.termName) {
-              case "TermType": {ESLVal $504 = _v59.termRef(0);
-                ESLVal $503 = _v59.termRef(1);
-                ESLVal $502 = _v59.termRef(2);
+              switch(_v281.termName) {
+              case "TermType": {ESLVal $1133 = _v281.termRef(0);
+                ESLVal $1132 = _v281.termRef(1);
+                ESLVal $1131 = _v281.termRef(2);
                 
-                {ESLVal l1 = $501;
+                {ESLVal l1 = $1130;
                 
-                {ESLVal n1 = $500;
+                {ESLVal n1 = $1129;
                 
-                {ESLVal args1 = $499;
+                {ESLVal args1 = $1128;
                 
-                {ESLVal l2 = $504;
+                {ESLVal l2 = $1133;
                 
-                {ESLVal n2 = $503;
+                {ESLVal n2 = $1132;
                 
-                {ESLVal args2 = $502;
+                {ESLVal args2 = $1131;
                 
                 if(n1.eql(n2).boolVal)
                 return typesEqual.apply(args1,args2);
@@ -3836,13 +3836,13 @@ public class Types {
               }
               }
               }
-              default: {ESLVal l1 = $501;
+              default: {ESLVal l1 = $1130;
                 
-                {ESLVal n1 = $500;
+                {ESLVal n1 = $1129;
                 
-                {ESLVal args1 = $499;
+                {ESLVal args1 = $1128;
                 
-                {ESLVal _v247 = _v59;
+                {ESLVal _v494 = _v281;
                 
                 return $false;
               }
@@ -3851,26 +3851,26 @@ public class Types {
               }
             }
             }
-          case "FunType": {ESLVal $495 = _v60.termRef(0);
-              ESLVal $494 = _v60.termRef(1);
-              ESLVal $493 = _v60.termRef(2);
+          case "FunType": {ESLVal $1124 = _v282.termRef(0);
+              ESLVal $1123 = _v282.termRef(1);
+              ESLVal $1122 = _v282.termRef(2);
               
-              switch(_v59.termName) {
-              case "FunType": {ESLVal $498 = _v59.termRef(0);
-                ESLVal $497 = _v59.termRef(1);
-                ESLVal $496 = _v59.termRef(2);
+              switch(_v281.termName) {
+              case "FunType": {ESLVal $1127 = _v281.termRef(0);
+                ESLVal $1126 = _v281.termRef(1);
+                ESLVal $1125 = _v281.termRef(2);
                 
-                {ESLVal l1 = $495;
+                {ESLVal l1 = $1124;
                 
-                {ESLVal d1 = $494;
+                {ESLVal d1 = $1123;
                 
-                {ESLVal r1 = $493;
+                {ESLVal r1 = $1122;
                 
-                {ESLVal l2 = $498;
+                {ESLVal l2 = $1127;
                 
-                {ESLVal d2 = $497;
+                {ESLVal d2 = $1126;
                 
-                {ESLVal r2 = $496;
+                {ESLVal r2 = $1125;
                 
                 return typeEqual.apply(r1,r2).and(typesEqual.apply(d1,d2));
               }
@@ -3880,68 +3880,68 @@ public class Types {
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v244 = _v60;
+                  {ESLVal _v491 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v244,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v491,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v242 = _v60;
+                  {ESLVal _v489 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v243 = $447;
+                  {ESLVal _v490 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v242,flattenAct.apply(l2,_v243,ds2,ms2));
+                  return typeEqual.apply(_v489,flattenAct.apply(l2,_v490,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v241 = _v60;
+                  {ESLVal _v488 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -3949,55 +3949,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v240 = _v60;
+                  {ESLVal _v487 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v240,f.apply());
+                  return typeEqual.apply(_v487,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v238 = _v60;
+                  {ESLVal _v485 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v239 = $437;
+                  {ESLVal _v486 = $1066;
                   
-                  return typeEqual.apply(_v238,substType.apply(new ESLVal("RecType",l2,n2,_v239),n2,_v239));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v236 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v237 = $434;
-                  
-                  return typeEqual.apply(_v236,_v237);
+                  return typeEqual.apply(_v485,substType.apply(new ESLVal("RecType",l2,n2,_v486),n2,_v486));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v245 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v246 = _v59;
+                  {ESLVal _v483 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v484 = $1063;
+                  
+                  return typeEqual.apply(_v483,_v484);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v492 = _v282;
+                  
+                  {ESLVal _v493 = _v281;
                   
                   return $false;
                 }
@@ -4005,30 +4005,30 @@ public class Types {
               }
             }
             }
-          case "TypeClosure": {ESLVal $492 = _v60.termRef(0);
+          case "TypeClosure": {ESLVal $1121 = _v282.termRef(0);
               
-              {ESLVal f = $492;
+              {ESLVal f = $1121;
               
-              {ESLVal _v235 = _v59;
+              {ESLVal _v482 = _v281;
               
-              return typeEqual.apply(f.apply(),_v235);
+              return typeEqual.apply(f.apply(),_v482);
             }
             }
             }
-          case "RecordType": {ESLVal $489 = _v60.termRef(0);
-              ESLVal $488 = _v60.termRef(1);
+          case "RecordType": {ESLVal $1118 = _v282.termRef(0);
+              ESLVal $1117 = _v282.termRef(1);
               
-              switch(_v59.termName) {
-              case "RecordType": {ESLVal $491 = _v59.termRef(0);
-                ESLVal $490 = _v59.termRef(1);
+              switch(_v281.termName) {
+              case "RecordType": {ESLVal $1120 = _v281.termRef(0);
+                ESLVal $1119 = _v281.termRef(1);
                 
-                {ESLVal l1 = $489;
+                {ESLVal l1 = $1118;
                 
-                {ESLVal fs1 = $488;
+                {ESLVal fs1 = $1117;
                 
-                {ESLVal l2 = $491;
+                {ESLVal l2 = $1120;
                 
-                {ESLVal fs2 = $490;
+                {ESLVal fs2 = $1119;
                 
                 return recordTypeEqual.apply(fs1,fs2);
               }
@@ -4036,68 +4036,68 @@ public class Types {
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v232 = _v60;
+                  {ESLVal _v479 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v232,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v479,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v230 = _v60;
+                  {ESLVal _v477 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v231 = $447;
+                  {ESLVal _v478 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v230,flattenAct.apply(l2,_v231,ds2,ms2));
+                  return typeEqual.apply(_v477,flattenAct.apply(l2,_v478,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v229 = _v60;
+                  {ESLVal _v476 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -4105,55 +4105,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v228 = _v60;
+                  {ESLVal _v475 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v228,f.apply());
+                  return typeEqual.apply(_v475,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v226 = _v60;
+                  {ESLVal _v473 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v227 = $437;
+                  {ESLVal _v474 = $1066;
                   
-                  return typeEqual.apply(_v226,substType.apply(new ESLVal("RecType",l2,n2,_v227),n2,_v227));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v224 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v225 = $434;
-                  
-                  return typeEqual.apply(_v224,_v225);
+                  return typeEqual.apply(_v473,substType.apply(new ESLVal("RecType",l2,n2,_v474),n2,_v474));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v233 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v234 = _v59;
+                  {ESLVal _v471 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v472 = $1063;
+                  
+                  return typeEqual.apply(_v471,_v472);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v480 = _v282;
+                  
+                  {ESLVal _v481 = _v281;
                   
                   return $false;
                 }
@@ -4161,39 +4161,39 @@ public class Types {
               }
             }
             }
-          case "RecType": {ESLVal $484 = _v60.termRef(0);
-              ESLVal $483 = _v60.termRef(1);
-              ESLVal $482 = _v60.termRef(2);
+          case "RecType": {ESLVal $1113 = _v282.termRef(0);
+              ESLVal $1112 = _v282.termRef(1);
+              ESLVal $1111 = _v282.termRef(2);
               
-              switch(_v59.termName) {
-              case "RecType": {ESLVal $487 = _v59.termRef(0);
-                ESLVal $486 = _v59.termRef(1);
-                ESLVal $485 = _v59.termRef(2);
+              switch(_v281.termName) {
+              case "RecType": {ESLVal $1116 = _v281.termRef(0);
+                ESLVal $1115 = _v281.termRef(1);
+                ESLVal $1114 = _v281.termRef(2);
                 
-                {ESLVal l1 = $484;
+                {ESLVal l1 = $1113;
                 
-                {ESLVal n1 = $483;
+                {ESLVal n1 = $1112;
                 
-                {ESLVal _v216 = $482;
+                {ESLVal _v463 = $1111;
                 
-                {ESLVal l2 = $487;
+                {ESLVal l2 = $1116;
                 
-                {ESLVal n2 = $486;
+                {ESLVal n2 = $1115;
                 
-                {ESLVal _v217 = $485;
+                {ESLVal _v464 = $1114;
                 
                 if(n1.eql(n2).boolVal)
-                return typeEqual.apply(_v216,_v217);
+                return typeEqual.apply(_v463,_v464);
                 else
-                  {ESLVal _v218 = $484;
+                  {ESLVal _v465 = $1113;
                     
-                    {ESLVal _v219 = $483;
+                    {ESLVal _v466 = $1112;
                     
-                    {ESLVal _v220 = $482;
+                    {ESLVal _v467 = $1111;
                     
-                    {ESLVal _v221 = _v59;
+                    {ESLVal _v468 = _v281;
                     
-                    return typeEqual.apply(substType.apply(new ESLVal("RecType",_v218,_v219,_v220),_v219,_v220),_v221);
+                    return typeEqual.apply(substType.apply(new ESLVal("RecType",_v465,_v466,_v467),_v466,_v467),_v468);
                   }
                   }
                   }
@@ -4205,35 +4205,35 @@ public class Types {
               }
               }
               }
-              default: {ESLVal l1 = $484;
+              default: {ESLVal l1 = $1113;
                 
-                {ESLVal n1 = $483;
+                {ESLVal n1 = $1112;
                 
-                {ESLVal _v222 = $482;
+                {ESLVal _v469 = $1111;
                 
-                {ESLVal _v223 = _v59;
+                {ESLVal _v470 = _v281;
                 
-                return typeEqual.apply(substType.apply(new ESLVal("RecType",l1,n1,_v222),n1,_v222),_v223);
+                return typeEqual.apply(substType.apply(new ESLVal("RecType",l1,n1,_v469),n1,_v469),_v470);
               }
               }
               }
               }
             }
             }
-          case "UnionType": {ESLVal $479 = _v60.termRef(0);
-              ESLVal $478 = _v60.termRef(1);
+          case "UnionType": {ESLVal $1108 = _v282.termRef(0);
+              ESLVal $1107 = _v282.termRef(1);
               
-              switch(_v59.termName) {
-              case "UnionType": {ESLVal $481 = _v59.termRef(0);
-                ESLVal $480 = _v59.termRef(1);
+              switch(_v281.termName) {
+              case "UnionType": {ESLVal $1110 = _v281.termRef(0);
+                ESLVal $1109 = _v281.termRef(1);
                 
-                {ESLVal l1 = $479;
+                {ESLVal l1 = $1108;
                 
-                {ESLVal terms1 = $478;
+                {ESLVal terms1 = $1107;
                 
-                {ESLVal l2 = $481;
+                {ESLVal l2 = $1110;
                 
-                {ESLVal terms2 = $480;
+                {ESLVal terms2 = $1109;
                 
                 return typeSetEqual.apply(terms1,terms2);
               }
@@ -4241,68 +4241,68 @@ public class Types {
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v213 = _v60;
+                  {ESLVal _v460 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v213,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v460,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v211 = _v60;
+                  {ESLVal _v458 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v212 = $447;
+                  {ESLVal _v459 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v211,flattenAct.apply(l2,_v212,ds2,ms2));
+                  return typeEqual.apply(_v458,flattenAct.apply(l2,_v459,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v210 = _v60;
+                  {ESLVal _v457 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -4310,55 +4310,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v209 = _v60;
+                  {ESLVal _v456 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v209,f.apply());
+                  return typeEqual.apply(_v456,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v207 = _v60;
+                  {ESLVal _v454 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v208 = $437;
+                  {ESLVal _v455 = $1066;
                   
-                  return typeEqual.apply(_v207,substType.apply(new ESLVal("RecType",l2,n2,_v208),n2,_v208));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v205 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v206 = $434;
-                  
-                  return typeEqual.apply(_v205,_v206);
+                  return typeEqual.apply(_v454,substType.apply(new ESLVal("RecType",l2,n2,_v455),n2,_v455));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v214 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v215 = _v59;
+                  {ESLVal _v452 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v453 = $1063;
+                  
+                  return typeEqual.apply(_v452,_v453);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v461 = _v282;
+                  
+                  {ESLVal _v462 = _v281;
                   
                   return $false;
                 }
@@ -4366,20 +4366,20 @@ public class Types {
               }
             }
             }
-          case "VarType": {ESLVal $475 = _v60.termRef(0);
-              ESLVal $474 = _v60.termRef(1);
+          case "VarType": {ESLVal $1104 = _v282.termRef(0);
+              ESLVal $1103 = _v282.termRef(1);
               
-              switch(_v59.termName) {
-              case "VarType": {ESLVal $477 = _v59.termRef(0);
-                ESLVal $476 = _v59.termRef(1);
+              switch(_v281.termName) {
+              case "VarType": {ESLVal $1106 = _v281.termRef(0);
+                ESLVal $1105 = _v281.termRef(1);
                 
-                {ESLVal l1 = $475;
+                {ESLVal l1 = $1104;
                 
-                {ESLVal n1 = $474;
+                {ESLVal n1 = $1103;
                 
-                {ESLVal l2 = $477;
+                {ESLVal l2 = $1106;
                 
-                {ESLVal n2 = $476;
+                {ESLVal n2 = $1105;
                 
                 return n1.eql(n2);
               }
@@ -4387,68 +4387,68 @@ public class Types {
               }
               }
               }
-              default: switch(_v59.termName) {
-                case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                  ESLVal $450 = _v59.termRef(1);
-                  ESLVal $449 = _v59.termRef(2);
+              default: switch(_v281.termName) {
+                case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                  ESLVal $1079 = _v281.termRef(1);
+                  ESLVal $1078 = _v281.termRef(2);
                   
-                  {ESLVal _v202 = _v60;
+                  {ESLVal _v449 = _v282;
                   
-                  {ESLVal l = $451;
+                  {ESLVal l = $1080;
                   
-                  {ESLVal op = $450;
+                  {ESLVal op = $1079;
                   
-                  {ESLVal args = $449;
+                  {ESLVal args = $1078;
                   
-                  return typeEqual.apply(_v202,applyTypeFun.apply(l,forceType.apply(op),args));
+                  return typeEqual.apply(_v449,applyTypeFun.apply(l,forceType.apply(op),args));
                 }
                 }
                 }
                 }
                 }
-              case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                  ESLVal $447 = _v59.termRef(1);
-                  ESLVal $446 = _v59.termRef(2);
-                  ESLVal $445 = _v59.termRef(3);
+              case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                  ESLVal $1076 = _v281.termRef(1);
+                  ESLVal $1075 = _v281.termRef(2);
+                  ESLVal $1074 = _v281.termRef(3);
                   
-                  {ESLVal _v200 = _v60;
+                  {ESLVal _v447 = _v282;
                   
-                  {ESLVal l2 = $448;
+                  {ESLVal l2 = $1077;
                   
-                  {ESLVal _v201 = $447;
+                  {ESLVal _v448 = $1076;
                   
-                  {ESLVal ds2 = $446;
+                  {ESLVal ds2 = $1075;
                   
-                  {ESLVal ms2 = $445;
+                  {ESLVal ms2 = $1074;
                   
-                  return typeEqual.apply(_v200,flattenAct.apply(l2,_v201,ds2,ms2));
+                  return typeEqual.apply(_v447,flattenAct.apply(l2,_v448,ds2,ms2));
                 }
                 }
                 }
                 }
                 }
                 }
-              case "VoidType": {ESLVal $444 = _v59.termRef(0);
+              case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                   
-                  {ESLVal t = _v60;
+                  {ESLVal t = _v282;
                   
-                  {ESLVal l1 = $444;
+                  {ESLVal l1 = $1073;
                   
                   return $true;
                 }
                 }
                 }
-              case "TermType": {ESLVal $443 = _v59.termRef(0);
-                  ESLVal $442 = _v59.termRef(1);
-                  ESLVal $441 = _v59.termRef(2);
+              case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                  ESLVal $1071 = _v281.termRef(1);
+                  ESLVal $1070 = _v281.termRef(2);
                   
-                  {ESLVal _v199 = _v60;
+                  {ESLVal _v446 = _v282;
                   
-                  {ESLVal l2 = $443;
+                  {ESLVal l2 = $1072;
                   
-                  {ESLVal n2 = $442;
+                  {ESLVal n2 = $1071;
                   
-                  {ESLVal args2 = $441;
+                  {ESLVal args2 = $1070;
                   
                   return $false;
                 }
@@ -4456,55 +4456,55 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+              case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                   
-                  {ESLVal _v198 = _v60;
+                  {ESLVal _v445 = _v282;
                   
-                  {ESLVal f = $440;
+                  {ESLVal f = $1069;
                   
-                  return typeEqual.apply(_v198,f.apply());
+                  return typeEqual.apply(_v445,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $439 = _v59.termRef(0);
-                  ESLVal $438 = _v59.termRef(1);
-                  ESLVal $437 = _v59.termRef(2);
+              case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                  ESLVal $1067 = _v281.termRef(1);
+                  ESLVal $1066 = _v281.termRef(2);
                   
-                  {ESLVal _v196 = _v60;
+                  {ESLVal _v443 = _v282;
                   
-                  {ESLVal l2 = $439;
+                  {ESLVal l2 = $1068;
                   
-                  {ESLVal n2 = $438;
+                  {ESLVal n2 = $1067;
                   
-                  {ESLVal _v197 = $437;
+                  {ESLVal _v444 = $1066;
                   
-                  return typeEqual.apply(_v196,substType.apply(new ESLVal("RecType",l2,n2,_v197),n2,_v197));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                  ESLVal $435 = _v59.termRef(1);
-                  ESLVal $434 = _v59.termRef(2);
-                  
-                  {ESLVal _v194 = _v60;
-                  
-                  {ESLVal l1 = $436;
-                  
-                  {ESLVal ns2 = $435;
-                  
-                  {ESLVal _v195 = $434;
-                  
-                  return typeEqual.apply(_v194,_v195);
+                  return typeEqual.apply(_v443,substType.apply(new ESLVal("RecType",l2,n2,_v444),n2,_v444));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _v203 = _v60;
+              case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                  ESLVal $1064 = _v281.termRef(1);
+                  ESLVal $1063 = _v281.termRef(2);
                   
-                  {ESLVal _v204 = _v59;
+                  {ESLVal _v441 = _v282;
+                  
+                  {ESLVal l1 = $1065;
+                  
+                  {ESLVal ns2 = $1064;
+                  
+                  {ESLVal _v442 = $1063;
+                  
+                  return typeEqual.apply(_v441,_v442);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v450 = _v282;
+                  
+                  {ESLVal _v451 = _v281;
                   
                   return $false;
                 }
@@ -4512,36 +4512,36 @@ public class Types {
               }
             }
             }
-          case "ForallType": {ESLVal $454 = _v60.termRef(0);
-              ESLVal $453 = _v60.termRef(1);
-              ESLVal $452 = _v60.termRef(2);
+          case "ForallType": {ESLVal $1083 = _v282.termRef(0);
+              ESLVal $1082 = _v282.termRef(1);
+              ESLVal $1081 = _v282.termRef(2);
               
-              if($453.isCons())
-              {ESLVal $458 = $453.head();
-                ESLVal $459 = $453.tail();
+              if($1082.isCons())
+              {ESLVal $1087 = $1082.head();
+                ESLVal $1088 = $1082.tail();
                 
-                if($459.isCons())
-                {ESLVal $460 = $459.head();
-                  ESLVal $461 = $459.tail();
+                if($1088.isCons())
+                {ESLVal $1089 = $1088.head();
+                  ESLVal $1090 = $1088.tail();
                   
-                  switch(_v59.termName) {
-                  case "ForallType": {ESLVal $457 = _v59.termRef(0);
-                    ESLVal $456 = _v59.termRef(1);
-                    ESLVal $455 = _v59.termRef(2);
+                  switch(_v281.termName) {
+                  case "ForallType": {ESLVal $1086 = _v281.termRef(0);
+                    ESLVal $1085 = _v281.termRef(1);
+                    ESLVal $1084 = _v281.termRef(2);
                     
-                    {ESLVal l1 = $454;
+                    {ESLVal l1 = $1083;
                     
-                    {ESLVal ns1 = $453;
+                    {ESLVal ns1 = $1082;
                     
-                    {ESLVal _v142 = $452;
+                    {ESLVal _v389 = $1081;
                     
-                    {ESLVal l2 = $457;
+                    {ESLVal l2 = $1086;
                     
-                    {ESLVal ns2 = $456;
+                    {ESLVal ns2 = $1085;
                     
-                    {ESLVal _v143 = $455;
+                    {ESLVal _v390 = $1084;
                     
-                    return ns1.eql(ns2).and(typeEqual.apply(_v142,_v143));
+                    return ns1.eql(ns2).and(typeEqual.apply(_v389,_v390));
                   }
                   }
                   }
@@ -4549,69 +4549,69 @@ public class Types {
                   }
                   }
                   }
-                  default: {ESLVal l1 = $454;
+                  default: {ESLVal l1 = $1083;
                     
-                    {ESLVal ns1 = $453;
+                    {ESLVal ns1 = $1082;
                     
-                    {ESLVal _v144 = $452;
+                    {ESLVal _v391 = $1081;
                     
-                    {ESLVal _v145 = _v59;
+                    {ESLVal _v392 = _v281;
                     
-                    return typeEqual.apply(_v144,_v145);
+                    return typeEqual.apply(_v391,_v392);
                   }
                   }
                   }
                   }
                 }
                 }
-              else if($459.isNil())
-                switch($452.termName) {
-                  case "ListType": {ESLVal $469 = $452.termRef(0);
-                    ESLVal $468 = $452.termRef(1);
+              else if($1088.isNil())
+                switch($1081.termName) {
+                  case "ListType": {ESLVal $1098 = $1081.termRef(0);
+                    ESLVal $1097 = $1081.termRef(1);
                     
-                    switch($468.termName) {
-                    case "VarType": {ESLVal $471 = $468.termRef(0);
-                      ESLVal $470 = $468.termRef(1);
+                    switch($1097.termName) {
+                    case "VarType": {ESLVal $1100 = $1097.termRef(0);
+                      ESLVal $1099 = $1097.termRef(1);
                       
-                      switch(_v59.termName) {
-                      case "ListType": {ESLVal $473 = _v59.termRef(0);
-                        ESLVal $472 = _v59.termRef(1);
+                      switch(_v281.termName) {
+                      case "ListType": {ESLVal $1102 = _v281.termRef(0);
+                        ESLVal $1101 = _v281.termRef(1);
                         
-                        {ESLVal l2 = $454;
+                        {ESLVal l2 = $1083;
                         
-                        {ESLVal v1 = $458;
+                        {ESLVal v1 = $1087;
                         
-                        {ESLVal l3 = $469;
+                        {ESLVal l3 = $1098;
                         
-                        {ESLVal l4 = $471;
+                        {ESLVal l4 = $1100;
                         
-                        {ESLVal v2 = $470;
+                        {ESLVal v2 = $1099;
                         
-                        {ESLVal l1 = $473;
+                        {ESLVal l1 = $1102;
                         
-                        {ESLVal _v162 = $472;
+                        {ESLVal _v409 = $1101;
                         
                         if(v1.eql(v2).boolVal)
                         return $true;
                         else
-                          switch(_v59.termName) {
-                            case "ForallType": {ESLVal $457 = _v59.termRef(0);
-                              ESLVal $456 = _v59.termRef(1);
-                              ESLVal $455 = _v59.termRef(2);
+                          switch(_v281.termName) {
+                            case "ForallType": {ESLVal $1086 = _v281.termRef(0);
+                              ESLVal $1085 = _v281.termRef(1);
+                              ESLVal $1084 = _v281.termRef(2);
                               
-                              {ESLVal _v163 = $454;
+                              {ESLVal _v410 = $1083;
                               
-                              {ESLVal ns1 = $453;
+                              {ESLVal ns1 = $1082;
                               
-                              {ESLVal _v164 = $452;
+                              {ESLVal _v411 = $1081;
                               
-                              {ESLVal _v165 = $457;
+                              {ESLVal _v412 = $1086;
                               
-                              {ESLVal ns2 = $456;
+                              {ESLVal ns2 = $1085;
                               
-                              {ESLVal _v166 = $455;
+                              {ESLVal _v413 = $1084;
                               
-                              return ns1.eql(ns2).and(typeEqual.apply(_v164,_v166));
+                              return ns1.eql(ns2).and(typeEqual.apply(_v411,_v413));
                             }
                             }
                             }
@@ -4619,15 +4619,15 @@ public class Types {
                             }
                             }
                             }
-                            default: {ESLVal _v167 = $454;
+                            default: {ESLVal _v414 = $1083;
                               
-                              {ESLVal ns1 = $453;
+                              {ESLVal ns1 = $1082;
                               
-                              {ESLVal _v168 = $452;
+                              {ESLVal _v415 = $1081;
                               
-                              {ESLVal _v169 = _v59;
+                              {ESLVal _v416 = _v281;
                               
-                              return typeEqual.apply(_v168,_v169);
+                              return typeEqual.apply(_v415,_v416);
                             }
                             }
                             }
@@ -4641,24 +4641,24 @@ public class Types {
                       }
                       }
                       }
-                      default: switch(_v59.termName) {
-                        case "ForallType": {ESLVal $457 = _v59.termRef(0);
-                          ESLVal $456 = _v59.termRef(1);
-                          ESLVal $455 = _v59.termRef(2);
+                      default: switch(_v281.termName) {
+                        case "ForallType": {ESLVal $1086 = _v281.termRef(0);
+                          ESLVal $1085 = _v281.termRef(1);
+                          ESLVal $1084 = _v281.termRef(2);
                           
-                          {ESLVal l1 = $454;
+                          {ESLVal l1 = $1083;
                           
-                          {ESLVal ns1 = $453;
+                          {ESLVal ns1 = $1082;
                           
-                          {ESLVal _v170 = $452;
+                          {ESLVal _v417 = $1081;
                           
-                          {ESLVal l2 = $457;
+                          {ESLVal l2 = $1086;
                           
-                          {ESLVal ns2 = $456;
+                          {ESLVal ns2 = $1085;
                           
-                          {ESLVal _v171 = $455;
+                          {ESLVal _v418 = $1084;
                           
-                          return ns1.eql(ns2).and(typeEqual.apply(_v170,_v171));
+                          return ns1.eql(ns2).and(typeEqual.apply(_v417,_v418));
                         }
                         }
                         }
@@ -4666,15 +4666,15 @@ public class Types {
                         }
                         }
                         }
-                        default: {ESLVal l1 = $454;
+                        default: {ESLVal l1 = $1083;
                           
-                          {ESLVal ns1 = $453;
+                          {ESLVal ns1 = $1082;
                           
-                          {ESLVal _v172 = $452;
+                          {ESLVal _v419 = $1081;
                           
-                          {ESLVal _v173 = _v59;
+                          {ESLVal _v420 = _v281;
                           
-                          return typeEqual.apply(_v172,_v173);
+                          return typeEqual.apply(_v419,_v420);
                         }
                         }
                         }
@@ -4682,24 +4682,24 @@ public class Types {
                       }
                     }
                     }
-                    default: switch(_v59.termName) {
-                      case "ForallType": {ESLVal $457 = _v59.termRef(0);
-                        ESLVal $456 = _v59.termRef(1);
-                        ESLVal $455 = _v59.termRef(2);
+                    default: switch(_v281.termName) {
+                      case "ForallType": {ESLVal $1086 = _v281.termRef(0);
+                        ESLVal $1085 = _v281.termRef(1);
+                        ESLVal $1084 = _v281.termRef(2);
                         
-                        {ESLVal l1 = $454;
+                        {ESLVal l1 = $1083;
                         
-                        {ESLVal ns1 = $453;
+                        {ESLVal ns1 = $1082;
                         
-                        {ESLVal _v174 = $452;
+                        {ESLVal _v421 = $1081;
                         
-                        {ESLVal l2 = $457;
+                        {ESLVal l2 = $1086;
                         
-                        {ESLVal ns2 = $456;
+                        {ESLVal ns2 = $1085;
                         
-                        {ESLVal _v175 = $455;
+                        {ESLVal _v422 = $1084;
                         
-                        return ns1.eql(ns2).and(typeEqual.apply(_v174,_v175));
+                        return ns1.eql(ns2).and(typeEqual.apply(_v421,_v422));
                       }
                       }
                       }
@@ -4707,15 +4707,15 @@ public class Types {
                       }
                       }
                       }
-                      default: {ESLVal l1 = $454;
+                      default: {ESLVal l1 = $1083;
                         
-                        {ESLVal ns1 = $453;
+                        {ESLVal ns1 = $1082;
                         
-                        {ESLVal _v176 = $452;
+                        {ESLVal _v423 = $1081;
                         
-                        {ESLVal _v177 = _v59;
+                        {ESLVal _v424 = _v281;
                         
-                        return typeEqual.apply(_v176,_v177);
+                        return typeEqual.apply(_v423,_v424);
                       }
                       }
                       }
@@ -4723,52 +4723,52 @@ public class Types {
                     }
                   }
                   }
-                case "SetType": {ESLVal $463 = $452.termRef(0);
-                    ESLVal $462 = $452.termRef(1);
+                case "SetType": {ESLVal $1092 = $1081.termRef(0);
+                    ESLVal $1091 = $1081.termRef(1);
                     
-                    switch($462.termName) {
-                    case "VarType": {ESLVal $465 = $462.termRef(0);
-                      ESLVal $464 = $462.termRef(1);
+                    switch($1091.termName) {
+                    case "VarType": {ESLVal $1094 = $1091.termRef(0);
+                      ESLVal $1093 = $1091.termRef(1);
                       
-                      switch(_v59.termName) {
-                      case "SetType": {ESLVal $467 = _v59.termRef(0);
-                        ESLVal $466 = _v59.termRef(1);
+                      switch(_v281.termName) {
+                      case "SetType": {ESLVal $1096 = _v281.termRef(0);
+                        ESLVal $1095 = _v281.termRef(1);
                         
-                        {ESLVal l2 = $454;
+                        {ESLVal l2 = $1083;
                         
-                        {ESLVal v1 = $458;
+                        {ESLVal v1 = $1087;
                         
-                        {ESLVal l3 = $463;
+                        {ESLVal l3 = $1092;
                         
-                        {ESLVal l4 = $465;
+                        {ESLVal l4 = $1094;
                         
-                        {ESLVal v2 = $464;
+                        {ESLVal v2 = $1093;
                         
-                        {ESLVal l1 = $467;
+                        {ESLVal l1 = $1096;
                         
-                        {ESLVal _v146 = $466;
+                        {ESLVal _v393 = $1095;
                         
                         if(v1.eql(v2).boolVal)
                         return $true;
                         else
-                          switch(_v59.termName) {
-                            case "ForallType": {ESLVal $457 = _v59.termRef(0);
-                              ESLVal $456 = _v59.termRef(1);
-                              ESLVal $455 = _v59.termRef(2);
+                          switch(_v281.termName) {
+                            case "ForallType": {ESLVal $1086 = _v281.termRef(0);
+                              ESLVal $1085 = _v281.termRef(1);
+                              ESLVal $1084 = _v281.termRef(2);
                               
-                              {ESLVal _v147 = $454;
+                              {ESLVal _v394 = $1083;
                               
-                              {ESLVal ns1 = $453;
+                              {ESLVal ns1 = $1082;
                               
-                              {ESLVal _v148 = $452;
+                              {ESLVal _v395 = $1081;
                               
-                              {ESLVal _v149 = $457;
+                              {ESLVal _v396 = $1086;
                               
-                              {ESLVal ns2 = $456;
+                              {ESLVal ns2 = $1085;
                               
-                              {ESLVal _v150 = $455;
+                              {ESLVal _v397 = $1084;
                               
-                              return ns1.eql(ns2).and(typeEqual.apply(_v148,_v150));
+                              return ns1.eql(ns2).and(typeEqual.apply(_v395,_v397));
                             }
                             }
                             }
@@ -4776,15 +4776,15 @@ public class Types {
                             }
                             }
                             }
-                            default: {ESLVal _v151 = $454;
+                            default: {ESLVal _v398 = $1083;
                               
-                              {ESLVal ns1 = $453;
+                              {ESLVal ns1 = $1082;
                               
-                              {ESLVal _v152 = $452;
+                              {ESLVal _v399 = $1081;
                               
-                              {ESLVal _v153 = _v59;
+                              {ESLVal _v400 = _v281;
                               
-                              return typeEqual.apply(_v152,_v153);
+                              return typeEqual.apply(_v399,_v400);
                             }
                             }
                             }
@@ -4798,24 +4798,24 @@ public class Types {
                       }
                       }
                       }
-                      default: switch(_v59.termName) {
-                        case "ForallType": {ESLVal $457 = _v59.termRef(0);
-                          ESLVal $456 = _v59.termRef(1);
-                          ESLVal $455 = _v59.termRef(2);
+                      default: switch(_v281.termName) {
+                        case "ForallType": {ESLVal $1086 = _v281.termRef(0);
+                          ESLVal $1085 = _v281.termRef(1);
+                          ESLVal $1084 = _v281.termRef(2);
                           
-                          {ESLVal l1 = $454;
+                          {ESLVal l1 = $1083;
                           
-                          {ESLVal ns1 = $453;
+                          {ESLVal ns1 = $1082;
                           
-                          {ESLVal _v154 = $452;
+                          {ESLVal _v401 = $1081;
                           
-                          {ESLVal l2 = $457;
+                          {ESLVal l2 = $1086;
                           
-                          {ESLVal ns2 = $456;
+                          {ESLVal ns2 = $1085;
                           
-                          {ESLVal _v155 = $455;
+                          {ESLVal _v402 = $1084;
                           
-                          return ns1.eql(ns2).and(typeEqual.apply(_v154,_v155));
+                          return ns1.eql(ns2).and(typeEqual.apply(_v401,_v402));
                         }
                         }
                         }
@@ -4823,15 +4823,15 @@ public class Types {
                         }
                         }
                         }
-                        default: {ESLVal l1 = $454;
+                        default: {ESLVal l1 = $1083;
                           
-                          {ESLVal ns1 = $453;
+                          {ESLVal ns1 = $1082;
                           
-                          {ESLVal _v156 = $452;
+                          {ESLVal _v403 = $1081;
                           
-                          {ESLVal _v157 = _v59;
+                          {ESLVal _v404 = _v281;
                           
-                          return typeEqual.apply(_v156,_v157);
+                          return typeEqual.apply(_v403,_v404);
                         }
                         }
                         }
@@ -4839,24 +4839,24 @@ public class Types {
                       }
                     }
                     }
-                    default: switch(_v59.termName) {
-                      case "ForallType": {ESLVal $457 = _v59.termRef(0);
-                        ESLVal $456 = _v59.termRef(1);
-                        ESLVal $455 = _v59.termRef(2);
+                    default: switch(_v281.termName) {
+                      case "ForallType": {ESLVal $1086 = _v281.termRef(0);
+                        ESLVal $1085 = _v281.termRef(1);
+                        ESLVal $1084 = _v281.termRef(2);
                         
-                        {ESLVal l1 = $454;
+                        {ESLVal l1 = $1083;
                         
-                        {ESLVal ns1 = $453;
+                        {ESLVal ns1 = $1082;
                         
-                        {ESLVal _v158 = $452;
+                        {ESLVal _v405 = $1081;
                         
-                        {ESLVal l2 = $457;
+                        {ESLVal l2 = $1086;
                         
-                        {ESLVal ns2 = $456;
+                        {ESLVal ns2 = $1085;
                         
-                        {ESLVal _v159 = $455;
+                        {ESLVal _v406 = $1084;
                         
-                        return ns1.eql(ns2).and(typeEqual.apply(_v158,_v159));
+                        return ns1.eql(ns2).and(typeEqual.apply(_v405,_v406));
                       }
                       }
                       }
@@ -4864,15 +4864,15 @@ public class Types {
                       }
                       }
                       }
-                      default: {ESLVal l1 = $454;
+                      default: {ESLVal l1 = $1083;
                         
-                        {ESLVal ns1 = $453;
+                        {ESLVal ns1 = $1082;
                         
-                        {ESLVal _v160 = $452;
+                        {ESLVal _v407 = $1081;
                         
-                        {ESLVal _v161 = _v59;
+                        {ESLVal _v408 = _v281;
                         
-                        return typeEqual.apply(_v160,_v161);
+                        return typeEqual.apply(_v407,_v408);
                       }
                       }
                       }
@@ -4880,24 +4880,24 @@ public class Types {
                     }
                   }
                   }
-                  default: switch(_v59.termName) {
-                    case "ForallType": {ESLVal $457 = _v59.termRef(0);
-                      ESLVal $456 = _v59.termRef(1);
-                      ESLVal $455 = _v59.termRef(2);
+                  default: switch(_v281.termName) {
+                    case "ForallType": {ESLVal $1086 = _v281.termRef(0);
+                      ESLVal $1085 = _v281.termRef(1);
+                      ESLVal $1084 = _v281.termRef(2);
                       
-                      {ESLVal l1 = $454;
+                      {ESLVal l1 = $1083;
                       
-                      {ESLVal ns1 = $453;
+                      {ESLVal ns1 = $1082;
                       
-                      {ESLVal _v178 = $452;
+                      {ESLVal _v425 = $1081;
                       
-                      {ESLVal l2 = $457;
+                      {ESLVal l2 = $1086;
                       
-                      {ESLVal ns2 = $456;
+                      {ESLVal ns2 = $1085;
                       
-                      {ESLVal _v179 = $455;
+                      {ESLVal _v426 = $1084;
                       
-                      return ns1.eql(ns2).and(typeEqual.apply(_v178,_v179));
+                      return ns1.eql(ns2).and(typeEqual.apply(_v425,_v426));
                     }
                     }
                     }
@@ -4905,39 +4905,39 @@ public class Types {
                     }
                     }
                     }
-                    default: {ESLVal l1 = $454;
+                    default: {ESLVal l1 = $1083;
                       
-                      {ESLVal ns1 = $453;
+                      {ESLVal ns1 = $1082;
                       
-                      {ESLVal _v180 = $452;
+                      {ESLVal _v427 = $1081;
                       
-                      {ESLVal _v181 = _v59;
+                      {ESLVal _v428 = _v281;
                       
-                      return typeEqual.apply(_v180,_v181);
+                      return typeEqual.apply(_v427,_v428);
                     }
                     }
                     }
                     }
                   }
                 }
-              else switch(_v59.termName) {
-                  case "ForallType": {ESLVal $457 = _v59.termRef(0);
-                    ESLVal $456 = _v59.termRef(1);
-                    ESLVal $455 = _v59.termRef(2);
+              else switch(_v281.termName) {
+                  case "ForallType": {ESLVal $1086 = _v281.termRef(0);
+                    ESLVal $1085 = _v281.termRef(1);
+                    ESLVal $1084 = _v281.termRef(2);
                     
-                    {ESLVal l1 = $454;
+                    {ESLVal l1 = $1083;
                     
-                    {ESLVal ns1 = $453;
+                    {ESLVal ns1 = $1082;
                     
-                    {ESLVal _v182 = $452;
+                    {ESLVal _v429 = $1081;
                     
-                    {ESLVal l2 = $457;
+                    {ESLVal l2 = $1086;
                     
-                    {ESLVal ns2 = $456;
+                    {ESLVal ns2 = $1085;
                     
-                    {ESLVal _v183 = $455;
+                    {ESLVal _v430 = $1084;
                     
-                    return ns1.eql(ns2).and(typeEqual.apply(_v182,_v183));
+                    return ns1.eql(ns2).and(typeEqual.apply(_v429,_v430));
                   }
                   }
                   }
@@ -4945,40 +4945,40 @@ public class Types {
                   }
                   }
                   }
-                  default: {ESLVal l1 = $454;
+                  default: {ESLVal l1 = $1083;
                     
-                    {ESLVal ns1 = $453;
+                    {ESLVal ns1 = $1082;
                     
-                    {ESLVal _v184 = $452;
+                    {ESLVal _v431 = $1081;
                     
-                    {ESLVal _v185 = _v59;
+                    {ESLVal _v432 = _v281;
                     
-                    return typeEqual.apply(_v184,_v185);
+                    return typeEqual.apply(_v431,_v432);
                   }
                   }
                   }
                   }
                 }
               }
-            else if($453.isNil())
-              switch(_v59.termName) {
-                case "ForallType": {ESLVal $457 = _v59.termRef(0);
-                  ESLVal $456 = _v59.termRef(1);
-                  ESLVal $455 = _v59.termRef(2);
+            else if($1082.isNil())
+              switch(_v281.termName) {
+                case "ForallType": {ESLVal $1086 = _v281.termRef(0);
+                  ESLVal $1085 = _v281.termRef(1);
+                  ESLVal $1084 = _v281.termRef(2);
                   
-                  {ESLVal l1 = $454;
+                  {ESLVal l1 = $1083;
                   
-                  {ESLVal ns1 = $453;
+                  {ESLVal ns1 = $1082;
                   
-                  {ESLVal _v186 = $452;
+                  {ESLVal _v433 = $1081;
                   
-                  {ESLVal l2 = $457;
+                  {ESLVal l2 = $1086;
                   
-                  {ESLVal ns2 = $456;
+                  {ESLVal ns2 = $1085;
                   
-                  {ESLVal _v187 = $455;
+                  {ESLVal _v434 = $1084;
                   
-                  return ns1.eql(ns2).and(typeEqual.apply(_v186,_v187));
+                  return ns1.eql(ns2).and(typeEqual.apply(_v433,_v434));
                 }
                 }
                 }
@@ -4986,38 +4986,38 @@ public class Types {
                 }
                 }
                 }
-                default: {ESLVal l1 = $454;
+                default: {ESLVal l1 = $1083;
                   
-                  {ESLVal ns1 = $453;
+                  {ESLVal ns1 = $1082;
                   
-                  {ESLVal _v188 = $452;
+                  {ESLVal _v435 = $1081;
                   
-                  {ESLVal _v189 = _v59;
+                  {ESLVal _v436 = _v281;
                   
-                  return typeEqual.apply(_v188,_v189);
+                  return typeEqual.apply(_v435,_v436);
                 }
                 }
                 }
                 }
               }
-            else switch(_v59.termName) {
-                case "ForallType": {ESLVal $457 = _v59.termRef(0);
-                  ESLVal $456 = _v59.termRef(1);
-                  ESLVal $455 = _v59.termRef(2);
+            else switch(_v281.termName) {
+                case "ForallType": {ESLVal $1086 = _v281.termRef(0);
+                  ESLVal $1085 = _v281.termRef(1);
+                  ESLVal $1084 = _v281.termRef(2);
                   
-                  {ESLVal l1 = $454;
+                  {ESLVal l1 = $1083;
                   
-                  {ESLVal ns1 = $453;
+                  {ESLVal ns1 = $1082;
                   
-                  {ESLVal _v190 = $452;
+                  {ESLVal _v437 = $1081;
                   
-                  {ESLVal l2 = $457;
+                  {ESLVal l2 = $1086;
                   
-                  {ESLVal ns2 = $456;
+                  {ESLVal ns2 = $1085;
                   
-                  {ESLVal _v191 = $455;
+                  {ESLVal _v438 = $1084;
                   
-                  return ns1.eql(ns2).and(typeEqual.apply(_v190,_v191));
+                  return ns1.eql(ns2).and(typeEqual.apply(_v437,_v438));
                 }
                 }
                 }
@@ -5025,83 +5025,83 @@ public class Types {
                 }
                 }
                 }
-                default: {ESLVal l1 = $454;
+                default: {ESLVal l1 = $1083;
                   
-                  {ESLVal ns1 = $453;
+                  {ESLVal ns1 = $1082;
                   
-                  {ESLVal _v192 = $452;
+                  {ESLVal _v439 = $1081;
                   
-                  {ESLVal _v193 = _v59;
+                  {ESLVal _v440 = _v281;
                   
-                  return typeEqual.apply(_v192,_v193);
+                  return typeEqual.apply(_v439,_v440);
                 }
                 }
                 }
                 }
               }
             }
-            default: switch(_v59.termName) {
-              case "ApplyTypeFun": {ESLVal $451 = _v59.termRef(0);
-                ESLVal $450 = _v59.termRef(1);
-                ESLVal $449 = _v59.termRef(2);
+            default: switch(_v281.termName) {
+              case "ApplyTypeFun": {ESLVal $1080 = _v281.termRef(0);
+                ESLVal $1079 = _v281.termRef(1);
+                ESLVal $1078 = _v281.termRef(2);
                 
-                {ESLVal _v556 = _v60;
+                {ESLVal _v803 = _v282;
                 
-                {ESLVal l = $451;
+                {ESLVal l = $1080;
                 
-                {ESLVal op = $450;
+                {ESLVal op = $1079;
                 
-                {ESLVal args = $449;
+                {ESLVal args = $1078;
                 
-                return typeEqual.apply(_v556,applyTypeFun.apply(l,forceType.apply(op),args));
+                return typeEqual.apply(_v803,applyTypeFun.apply(l,forceType.apply(op),args));
               }
               }
               }
               }
               }
-            case "ExtendedAct": {ESLVal $448 = _v59.termRef(0);
-                ESLVal $447 = _v59.termRef(1);
-                ESLVal $446 = _v59.termRef(2);
-                ESLVal $445 = _v59.termRef(3);
+            case "ExtendedAct": {ESLVal $1077 = _v281.termRef(0);
+                ESLVal $1076 = _v281.termRef(1);
+                ESLVal $1075 = _v281.termRef(2);
+                ESLVal $1074 = _v281.termRef(3);
                 
-                {ESLVal _v554 = _v60;
+                {ESLVal _v801 = _v282;
                 
-                {ESLVal l2 = $448;
+                {ESLVal l2 = $1077;
                 
-                {ESLVal _v555 = $447;
+                {ESLVal _v802 = $1076;
                 
-                {ESLVal ds2 = $446;
+                {ESLVal ds2 = $1075;
                 
-                {ESLVal ms2 = $445;
+                {ESLVal ms2 = $1074;
                 
-                return typeEqual.apply(_v554,flattenAct.apply(l2,_v555,ds2,ms2));
+                return typeEqual.apply(_v801,flattenAct.apply(l2,_v802,ds2,ms2));
               }
               }
               }
               }
               }
               }
-            case "VoidType": {ESLVal $444 = _v59.termRef(0);
+            case "VoidType": {ESLVal $1073 = _v281.termRef(0);
                 
-                {ESLVal t = _v60;
+                {ESLVal t = _v282;
                 
-                {ESLVal l1 = $444;
+                {ESLVal l1 = $1073;
                 
                 return $true;
               }
               }
               }
-            case "TermType": {ESLVal $443 = _v59.termRef(0);
-                ESLVal $442 = _v59.termRef(1);
-                ESLVal $441 = _v59.termRef(2);
+            case "TermType": {ESLVal $1072 = _v281.termRef(0);
+                ESLVal $1071 = _v281.termRef(1);
+                ESLVal $1070 = _v281.termRef(2);
                 
-                {ESLVal _v553 = _v60;
+                {ESLVal _v800 = _v282;
                 
-                {ESLVal l2 = $443;
+                {ESLVal l2 = $1072;
                 
-                {ESLVal n2 = $442;
+                {ESLVal n2 = $1071;
                 
-                {ESLVal args2 = $441;
+                {ESLVal args2 = $1070;
                 
                 return $false;
               }
@@ -5109,55 +5109,55 @@ public class Types {
               }
               }
               }
-            case "TypeClosure": {ESLVal $440 = _v59.termRef(0);
+            case "TypeClosure": {ESLVal $1069 = _v281.termRef(0);
                 
-                {ESLVal _v552 = _v60;
+                {ESLVal _v799 = _v282;
                 
-                {ESLVal f = $440;
+                {ESLVal f = $1069;
                 
-                return typeEqual.apply(_v552,f.apply());
+                return typeEqual.apply(_v799,f.apply());
               }
               }
               }
-            case "RecType": {ESLVal $439 = _v59.termRef(0);
-                ESLVal $438 = _v59.termRef(1);
-                ESLVal $437 = _v59.termRef(2);
+            case "RecType": {ESLVal $1068 = _v281.termRef(0);
+                ESLVal $1067 = _v281.termRef(1);
+                ESLVal $1066 = _v281.termRef(2);
                 
-                {ESLVal _v550 = _v60;
+                {ESLVal _v797 = _v282;
                 
-                {ESLVal l2 = $439;
+                {ESLVal l2 = $1068;
                 
-                {ESLVal n2 = $438;
+                {ESLVal n2 = $1067;
                 
-                {ESLVal _v551 = $437;
+                {ESLVal _v798 = $1066;
                 
-                return typeEqual.apply(_v550,substType.apply(new ESLVal("RecType",l2,n2,_v551),n2,_v551));
-              }
-              }
-              }
-              }
-              }
-            case "ForallType": {ESLVal $436 = _v59.termRef(0);
-                ESLVal $435 = _v59.termRef(1);
-                ESLVal $434 = _v59.termRef(2);
-                
-                {ESLVal _v548 = _v60;
-                
-                {ESLVal l1 = $436;
-                
-                {ESLVal ns2 = $435;
-                
-                {ESLVal _v549 = $434;
-                
-                return typeEqual.apply(_v548,_v549);
+                return typeEqual.apply(_v797,substType.apply(new ESLVal("RecType",l2,n2,_v798),n2,_v798));
               }
               }
               }
               }
               }
-              default: {ESLVal _v557 = _v60;
+            case "ForallType": {ESLVal $1065 = _v281.termRef(0);
+                ESLVal $1064 = _v281.termRef(1);
+                ESLVal $1063 = _v281.termRef(2);
                 
-                {ESLVal _v558 = _v59;
+                {ESLVal _v795 = _v282;
+                
+                {ESLVal l1 = $1065;
+                
+                {ESLVal ns2 = $1064;
+                
+                {ESLVal _v796 = $1063;
+                
+                return typeEqual.apply(_v795,_v796);
+              }
+              }
+              }
+              }
+              }
+              default: {ESLVal _v804 = _v282;
+                
+                {ESLVal _v805 = _v281;
                 
                 return $false;
               }
@@ -5174,30 +5174,30 @@ public class Types {
   if(sub.eql(parent).boolVal)
         return $true;
         else
-          {ESLVal _v58 = sub;
-            ESLVal _v57 = parent;
+          {ESLVal _v280 = sub;
+            ESLVal _v279 = parent;
             
-            switch(_v58.termName) {
-            case "ActType": {ESLVal $430 = _v58.termRef(0);
-              ESLVal $429 = _v58.termRef(1);
-              ESLVal $428 = _v58.termRef(2);
+            switch(_v280.termName) {
+            case "ActType": {ESLVal $1059 = _v280.termRef(0);
+              ESLVal $1058 = _v280.termRef(1);
+              ESLVal $1057 = _v280.termRef(2);
               
-              switch(_v57.termName) {
-              case "ActType": {ESLVal $433 = _v57.termRef(0);
-                ESLVal $432 = _v57.termRef(1);
-                ESLVal $431 = _v57.termRef(2);
+              switch(_v279.termName) {
+              case "ActType": {ESLVal $1062 = _v279.termRef(0);
+                ESLVal $1061 = _v279.termRef(1);
+                ESLVal $1060 = _v279.termRef(2);
                 
-                {ESLVal l1 = $430;
+                {ESLVal l1 = $1059;
                 
-                {ESLVal exports1 = $429;
+                {ESLVal exports1 = $1058;
                 
-                {ESLVal handlers1 = $428;
+                {ESLVal handlers1 = $1057;
                 
-                {ESLVal l2 = $433;
+                {ESLVal l2 = $1062;
                 
-                {ESLVal exports2 = $432;
+                {ESLVal exports2 = $1061;
                 
-                {ESLVal handlers2 = $431;
+                {ESLVal handlers2 = $1060;
                 
                 return actSubType.apply(exports1,exports2,handlers1,handlers2);
               }
@@ -5207,21 +5207,21 @@ public class Types {
               }
               }
               }
-              default: switch(_v57.termName) {
-                case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                  ESLVal $335 = _v57.termRef(1);
-                  ESLVal $334 = _v57.termRef(2);
-                  ESLVal $333 = _v57.termRef(3);
+              default: switch(_v279.termName) {
+                case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                  ESLVal $964 = _v279.termRef(1);
+                  ESLVal $963 = _v279.termRef(2);
+                  ESLVal $962 = _v279.termRef(3);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $336;
+                  {ESLVal l2 = $965;
                   
-                  {ESLVal t2 = $335;
+                  {ESLVal t2 = $964;
                   
-                  {ESLVal ds2 = $334;
+                  {ESLVal ds2 = $963;
                   
-                  {ESLVal ms2 = $333;
+                  {ESLVal ms2 = $962;
                   
                   return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                 }
@@ -5230,27 +5230,27 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+              case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal f = $332;
+                  {ESLVal f = $961;
                   
                   return subType.apply(t1,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $331 = _v57.termRef(0);
-                  ESLVal $330 = _v57.termRef(1);
-                  ESLVal $329 = _v57.termRef(2);
+              case "RecType": {ESLVal $960 = _v279.termRef(0);
+                  ESLVal $959 = _v279.termRef(1);
+                  ESLVal $958 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $331;
+                  {ESLVal l2 = $960;
                   
-                  {ESLVal n2 = $330;
+                  {ESLVal n2 = $959;
                   
-                  {ESLVal t2 = $329;
+                  {ESLVal t2 = $958;
                   
                   return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                 }
@@ -5258,17 +5258,17 @@ public class Types {
                 }
                 }
                 }
-              case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                  ESLVal $327 = _v57.termRef(1);
-                  ESLVal $326 = _v57.termRef(2);
+              case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                  ESLVal $956 = _v279.termRef(1);
+                  ESLVal $955 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l1 = $328;
+                  {ESLVal l1 = $957;
                   
-                  {ESLVal ns2 = $327;
+                  {ESLVal ns2 = $956;
                   
-                  {ESLVal t2 = $326;
+                  {ESLVal t2 = $955;
                   
                   return subType.apply(t1,t2);
                 }
@@ -5276,9 +5276,9 @@ public class Types {
                 }
                 }
                 }
-                default: {ESLVal t1 = _v58;
+                default: {ESLVal t1 = _v280;
                   
-                  {ESLVal t2 = _v57;
+                  {ESLVal t2 = _v279;
                   
                   return typeEqual.apply(t1,t2);
                 }
@@ -5286,20 +5286,20 @@ public class Types {
               }
             }
             }
-          case "ExtendedAct": {ESLVal $427 = _v58.termRef(0);
-              ESLVal $426 = _v58.termRef(1);
-              ESLVal $425 = _v58.termRef(2);
-              ESLVal $424 = _v58.termRef(3);
+          case "ExtendedAct": {ESLVal $1056 = _v280.termRef(0);
+              ESLVal $1055 = _v280.termRef(1);
+              ESLVal $1054 = _v280.termRef(2);
+              ESLVal $1053 = _v280.termRef(3);
               
-              {ESLVal l1 = $427;
+              {ESLVal l1 = $1056;
               
-              {ESLVal t1 = $426;
+              {ESLVal t1 = $1055;
               
-              {ESLVal ds1 = $425;
+              {ESLVal ds1 = $1054;
               
-              {ESLVal ms1 = $424;
+              {ESLVal ms1 = $1053;
               
-              {ESLVal t2 = _v57;
+              {ESLVal t2 = _v279;
               
               return subType.apply(flattenAct.apply(l1,t1,ds1,ms1),t2);
             }
@@ -5308,20 +5308,20 @@ public class Types {
             }
             }
             }
-          case "ListType": {ESLVal $410 = _v58.termRef(0);
-              ESLVal $409 = _v58.termRef(1);
+          case "ListType": {ESLVal $1039 = _v280.termRef(0);
+              ESLVal $1038 = _v280.termRef(1);
               
-              switch(_v57.termName) {
-              case "ListType": {ESLVal $423 = _v57.termRef(0);
-                ESLVal $422 = _v57.termRef(1);
+              switch(_v279.termName) {
+              case "ListType": {ESLVal $1052 = _v279.termRef(0);
+                ESLVal $1051 = _v279.termRef(1);
                 
-                {ESLVal l1 = $410;
+                {ESLVal l1 = $1039;
                 
-                {ESLVal t1 = $409;
+                {ESLVal t1 = $1038;
                 
-                {ESLVal l2 = $423;
+                {ESLVal l2 = $1052;
                 
-                {ESLVal t2 = $422;
+                {ESLVal t2 = $1051;
                 
                 return subType.apply(t1,t2);
               }
@@ -5329,33 +5329,33 @@ public class Types {
               }
               }
               }
-            case "ForallType": {ESLVal $413 = _v57.termRef(0);
-                ESLVal $412 = _v57.termRef(1);
-                ESLVal $411 = _v57.termRef(2);
+            case "ForallType": {ESLVal $1042 = _v279.termRef(0);
+                ESLVal $1041 = _v279.termRef(1);
+                ESLVal $1040 = _v279.termRef(2);
                 
-                if($412.isCons())
-                {ESLVal $414 = $412.head();
-                  ESLVal $415 = $412.tail();
+                if($1041.isCons())
+                {ESLVal $1043 = $1041.head();
+                  ESLVal $1044 = $1041.tail();
                   
-                  if($415.isCons())
-                  {ESLVal $416 = $415.head();
-                    ESLVal $417 = $415.tail();
+                  if($1044.isCons())
+                  {ESLVal $1045 = $1044.head();
+                    ESLVal $1046 = $1044.tail();
                     
-                    switch(_v57.termName) {
-                    case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                      ESLVal $335 = _v57.termRef(1);
-                      ESLVal $334 = _v57.termRef(2);
-                      ESLVal $333 = _v57.termRef(3);
+                    switch(_v279.termName) {
+                    case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                      ESLVal $964 = _v279.termRef(1);
+                      ESLVal $963 = _v279.termRef(2);
+                      ESLVal $962 = _v279.termRef(3);
                       
-                      {ESLVal t1 = _v58;
+                      {ESLVal t1 = _v280;
                       
-                      {ESLVal l2 = $336;
+                      {ESLVal l2 = $965;
                       
-                      {ESLVal t2 = $335;
+                      {ESLVal t2 = $964;
                       
-                      {ESLVal ds2 = $334;
+                      {ESLVal ds2 = $963;
                       
-                      {ESLVal ms2 = $333;
+                      {ESLVal ms2 = $962;
                       
                       return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                     }
@@ -5364,27 +5364,27 @@ public class Types {
                     }
                     }
                     }
-                  case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+                  case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                       
-                      {ESLVal t1 = _v58;
+                      {ESLVal t1 = _v280;
                       
-                      {ESLVal f = $332;
+                      {ESLVal f = $961;
                       
                       return subType.apply(t1,f.apply());
                     }
                     }
                     }
-                  case "RecType": {ESLVal $331 = _v57.termRef(0);
-                      ESLVal $330 = _v57.termRef(1);
-                      ESLVal $329 = _v57.termRef(2);
+                  case "RecType": {ESLVal $960 = _v279.termRef(0);
+                      ESLVal $959 = _v279.termRef(1);
+                      ESLVal $958 = _v279.termRef(2);
                       
-                      {ESLVal t1 = _v58;
+                      {ESLVal t1 = _v280;
                       
-                      {ESLVal l2 = $331;
+                      {ESLVal l2 = $960;
                       
-                      {ESLVal n2 = $330;
+                      {ESLVal n2 = $959;
                       
-                      {ESLVal t2 = $329;
+                      {ESLVal t2 = $958;
                       
                       return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                     }
@@ -5392,17 +5392,17 @@ public class Types {
                     }
                     }
                     }
-                  case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                      ESLVal $327 = _v57.termRef(1);
-                      ESLVal $326 = _v57.termRef(2);
+                  case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                      ESLVal $956 = _v279.termRef(1);
+                      ESLVal $955 = _v279.termRef(2);
                       
-                      {ESLVal t1 = _v58;
+                      {ESLVal t1 = _v280;
                       
-                      {ESLVal l1 = $328;
+                      {ESLVal l1 = $957;
                       
-                      {ESLVal ns2 = $327;
+                      {ESLVal ns2 = $956;
                       
-                      {ESLVal t2 = $326;
+                      {ESLVal t2 = $955;
                       
                       return subType.apply(t1,t2);
                     }
@@ -5410,115 +5410,115 @@ public class Types {
                     }
                     }
                     }
-                    default: {ESLVal t1 = _v58;
+                    default: {ESLVal t1 = _v280;
                       
-                      {ESLVal t2 = _v57;
+                      {ESLVal t2 = _v279;
                       
                       return typeEqual.apply(t1,t2);
                     }
                     }
                   }
                   }
-                else if($415.isNil())
-                  switch($411.termName) {
-                    case "ListType": {ESLVal $419 = $411.termRef(0);
-                      ESLVal $418 = $411.termRef(1);
+                else if($1044.isNil())
+                  switch($1040.termName) {
+                    case "ListType": {ESLVal $1048 = $1040.termRef(0);
+                      ESLVal $1047 = $1040.termRef(1);
                       
-                      switch($418.termName) {
-                      case "VarType": {ESLVal $421 = $418.termRef(0);
-                        ESLVal $420 = $418.termRef(1);
+                      switch($1047.termName) {
+                      case "VarType": {ESLVal $1050 = $1047.termRef(0);
+                        ESLVal $1049 = $1047.termRef(1);
                         
-                        {ESLVal l1 = $410;
+                        {ESLVal l1 = $1039;
                         
-                        {ESLVal t1 = $409;
+                        {ESLVal t1 = $1038;
                         
-                        {ESLVal l2 = $413;
+                        {ESLVal l2 = $1042;
                         
-                        {ESLVal v1 = $414;
+                        {ESLVal v1 = $1043;
                         
-                        {ESLVal l3 = $419;
+                        {ESLVal l3 = $1048;
                         
-                        {ESLVal l4 = $421;
+                        {ESLVal l4 = $1050;
                         
-                        {ESLVal v2 = $420;
+                        {ESLVal v2 = $1049;
                         
                         if(v1.eql(v2).boolVal)
                         return $true;
                         else
-                          switch(_v57.termName) {
-                            case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                              ESLVal $335 = _v57.termRef(1);
-                              ESLVal $334 = _v57.termRef(2);
-                              ESLVal $333 = _v57.termRef(3);
+                          switch(_v279.termName) {
+                            case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                              ESLVal $964 = _v279.termRef(1);
+                              ESLVal $963 = _v279.termRef(2);
+                              ESLVal $962 = _v279.termRef(3);
                               
-                              {ESLVal _v139 = _v58;
+                              {ESLVal _v386 = _v280;
                               
-                              {ESLVal _v140 = $336;
+                              {ESLVal _v387 = $965;
                               
-                              {ESLVal t2 = $335;
+                              {ESLVal t2 = $964;
                               
-                              {ESLVal ds2 = $334;
+                              {ESLVal ds2 = $963;
                               
-                              {ESLVal ms2 = $333;
+                              {ESLVal ms2 = $962;
                               
-                              return subType.apply(_v139,flattenAct.apply(_v140,t2,ds2,ms2));
+                              return subType.apply(_v386,flattenAct.apply(_v387,t2,ds2,ms2));
                             }
                             }
                             }
                             }
                             }
                             }
-                          case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+                          case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                               
-                              {ESLVal _v138 = _v58;
+                              {ESLVal _v385 = _v280;
                               
-                              {ESLVal f = $332;
+                              {ESLVal f = $961;
                               
-                              return subType.apply(_v138,f.apply());
+                              return subType.apply(_v385,f.apply());
                             }
                             }
                             }
-                          case "RecType": {ESLVal $331 = _v57.termRef(0);
-                              ESLVal $330 = _v57.termRef(1);
-                              ESLVal $329 = _v57.termRef(2);
+                          case "RecType": {ESLVal $960 = _v279.termRef(0);
+                              ESLVal $959 = _v279.termRef(1);
+                              ESLVal $958 = _v279.termRef(2);
                               
-                              {ESLVal _v136 = _v58;
+                              {ESLVal _v383 = _v280;
                               
-                              {ESLVal _v137 = $331;
+                              {ESLVal _v384 = $960;
                               
-                              {ESLVal n2 = $330;
+                              {ESLVal n2 = $959;
                               
-                              {ESLVal t2 = $329;
+                              {ESLVal t2 = $958;
                               
-                              return subType.apply(_v136,substType.apply(new ESLVal("RecType",_v137,n2,t2),n2,t2));
-                            }
-                            }
-                            }
-                            }
-                            }
-                          case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                              ESLVal $327 = _v57.termRef(1);
-                              ESLVal $326 = _v57.termRef(2);
-                              
-                              {ESLVal _v134 = _v58;
-                              
-                              {ESLVal _v135 = $328;
-                              
-                              {ESLVal ns2 = $327;
-                              
-                              {ESLVal t2 = $326;
-                              
-                              return subType.apply(_v134,t2);
+                              return subType.apply(_v383,substType.apply(new ESLVal("RecType",_v384,n2,t2),n2,t2));
                             }
                             }
                             }
                             }
                             }
-                            default: {ESLVal _v141 = _v58;
+                          case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                              ESLVal $956 = _v279.termRef(1);
+                              ESLVal $955 = _v279.termRef(2);
                               
-                              {ESLVal t2 = _v57;
+                              {ESLVal _v381 = _v280;
                               
-                              return typeEqual.apply(_v141,t2);
+                              {ESLVal _v382 = $957;
+                              
+                              {ESLVal ns2 = $956;
+                              
+                              {ESLVal t2 = $955;
+                              
+                              return subType.apply(_v381,t2);
+                            }
+                            }
+                            }
+                            }
+                            }
+                            default: {ESLVal _v388 = _v280;
+                              
+                              {ESLVal t2 = _v279;
+                              
+                              return typeEqual.apply(_v388,t2);
                             }
                             }
                           }
@@ -5530,21 +5530,21 @@ public class Types {
                       }
                       }
                       }
-                      default: switch(_v57.termName) {
-                        case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                          ESLVal $335 = _v57.termRef(1);
-                          ESLVal $334 = _v57.termRef(2);
-                          ESLVal $333 = _v57.termRef(3);
+                      default: switch(_v279.termName) {
+                        case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                          ESLVal $964 = _v279.termRef(1);
+                          ESLVal $963 = _v279.termRef(2);
+                          ESLVal $962 = _v279.termRef(3);
                           
-                          {ESLVal t1 = _v58;
+                          {ESLVal t1 = _v280;
                           
-                          {ESLVal l2 = $336;
+                          {ESLVal l2 = $965;
                           
-                          {ESLVal t2 = $335;
+                          {ESLVal t2 = $964;
                           
-                          {ESLVal ds2 = $334;
+                          {ESLVal ds2 = $963;
                           
-                          {ESLVal ms2 = $333;
+                          {ESLVal ms2 = $962;
                           
                           return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                         }
@@ -5553,27 +5553,27 @@ public class Types {
                         }
                         }
                         }
-                      case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+                      case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                           
-                          {ESLVal t1 = _v58;
+                          {ESLVal t1 = _v280;
                           
-                          {ESLVal f = $332;
+                          {ESLVal f = $961;
                           
                           return subType.apply(t1,f.apply());
                         }
                         }
                         }
-                      case "RecType": {ESLVal $331 = _v57.termRef(0);
-                          ESLVal $330 = _v57.termRef(1);
-                          ESLVal $329 = _v57.termRef(2);
+                      case "RecType": {ESLVal $960 = _v279.termRef(0);
+                          ESLVal $959 = _v279.termRef(1);
+                          ESLVal $958 = _v279.termRef(2);
                           
-                          {ESLVal t1 = _v58;
+                          {ESLVal t1 = _v280;
                           
-                          {ESLVal l2 = $331;
+                          {ESLVal l2 = $960;
                           
-                          {ESLVal n2 = $330;
+                          {ESLVal n2 = $959;
                           
-                          {ESLVal t2 = $329;
+                          {ESLVal t2 = $958;
                           
                           return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                         }
@@ -5581,17 +5581,17 @@ public class Types {
                         }
                         }
                         }
-                      case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                          ESLVal $327 = _v57.termRef(1);
-                          ESLVal $326 = _v57.termRef(2);
+                      case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                          ESLVal $956 = _v279.termRef(1);
+                          ESLVal $955 = _v279.termRef(2);
                           
-                          {ESLVal t1 = _v58;
+                          {ESLVal t1 = _v280;
                           
-                          {ESLVal l1 = $328;
+                          {ESLVal l1 = $957;
                           
-                          {ESLVal ns2 = $327;
+                          {ESLVal ns2 = $956;
                           
-                          {ESLVal t2 = $326;
+                          {ESLVal t2 = $955;
                           
                           return subType.apply(t1,t2);
                         }
@@ -5599,9 +5599,9 @@ public class Types {
                         }
                         }
                         }
-                        default: {ESLVal t1 = _v58;
+                        default: {ESLVal t1 = _v280;
                           
-                          {ESLVal t2 = _v57;
+                          {ESLVal t2 = _v279;
                           
                           return typeEqual.apply(t1,t2);
                         }
@@ -5609,21 +5609,21 @@ public class Types {
                       }
                     }
                     }
-                    default: switch(_v57.termName) {
-                      case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                        ESLVal $335 = _v57.termRef(1);
-                        ESLVal $334 = _v57.termRef(2);
-                        ESLVal $333 = _v57.termRef(3);
+                    default: switch(_v279.termName) {
+                      case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                        ESLVal $964 = _v279.termRef(1);
+                        ESLVal $963 = _v279.termRef(2);
+                        ESLVal $962 = _v279.termRef(3);
                         
-                        {ESLVal t1 = _v58;
+                        {ESLVal t1 = _v280;
                         
-                        {ESLVal l2 = $336;
+                        {ESLVal l2 = $965;
                         
-                        {ESLVal t2 = $335;
+                        {ESLVal t2 = $964;
                         
-                        {ESLVal ds2 = $334;
+                        {ESLVal ds2 = $963;
                         
-                        {ESLVal ms2 = $333;
+                        {ESLVal ms2 = $962;
                         
                         return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                       }
@@ -5632,27 +5632,27 @@ public class Types {
                       }
                       }
                       }
-                    case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+                    case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                         
-                        {ESLVal t1 = _v58;
+                        {ESLVal t1 = _v280;
                         
-                        {ESLVal f = $332;
+                        {ESLVal f = $961;
                         
                         return subType.apply(t1,f.apply());
                       }
                       }
                       }
-                    case "RecType": {ESLVal $331 = _v57.termRef(0);
-                        ESLVal $330 = _v57.termRef(1);
-                        ESLVal $329 = _v57.termRef(2);
+                    case "RecType": {ESLVal $960 = _v279.termRef(0);
+                        ESLVal $959 = _v279.termRef(1);
+                        ESLVal $958 = _v279.termRef(2);
                         
-                        {ESLVal t1 = _v58;
+                        {ESLVal t1 = _v280;
                         
-                        {ESLVal l2 = $331;
+                        {ESLVal l2 = $960;
                         
-                        {ESLVal n2 = $330;
+                        {ESLVal n2 = $959;
                         
-                        {ESLVal t2 = $329;
+                        {ESLVal t2 = $958;
                         
                         return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                       }
@@ -5660,17 +5660,17 @@ public class Types {
                       }
                       }
                       }
-                    case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                        ESLVal $327 = _v57.termRef(1);
-                        ESLVal $326 = _v57.termRef(2);
+                    case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                        ESLVal $956 = _v279.termRef(1);
+                        ESLVal $955 = _v279.termRef(2);
                         
-                        {ESLVal t1 = _v58;
+                        {ESLVal t1 = _v280;
                         
-                        {ESLVal l1 = $328;
+                        {ESLVal l1 = $957;
                         
-                        {ESLVal ns2 = $327;
+                        {ESLVal ns2 = $956;
                         
-                        {ESLVal t2 = $326;
+                        {ESLVal t2 = $955;
                         
                         return subType.apply(t1,t2);
                       }
@@ -5678,476 +5678,30 @@ public class Types {
                       }
                       }
                       }
-                      default: {ESLVal t1 = _v58;
+                      default: {ESLVal t1 = _v280;
                         
-                        {ESLVal t2 = _v57;
+                        {ESLVal t2 = _v279;
                         
                         return typeEqual.apply(t1,t2);
                       }
                       }
                     }
                   }
-                else switch(_v57.termName) {
-                    case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                      ESLVal $335 = _v57.termRef(1);
-                      ESLVal $334 = _v57.termRef(2);
-                      ESLVal $333 = _v57.termRef(3);
+                else switch(_v279.termName) {
+                    case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                      ESLVal $964 = _v279.termRef(1);
+                      ESLVal $963 = _v279.termRef(2);
+                      ESLVal $962 = _v279.termRef(3);
                       
-                      {ESLVal t1 = _v58;
+                      {ESLVal t1 = _v280;
                       
-                      {ESLVal l2 = $336;
+                      {ESLVal l2 = $965;
                       
-                      {ESLVal t2 = $335;
+                      {ESLVal t2 = $964;
                       
-                      {ESLVal ds2 = $334;
+                      {ESLVal ds2 = $963;
                       
-                      {ESLVal ms2 = $333;
-                      
-                      return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
-                    }
-                    }
-                    }
-                    }
-                    }
-                    }
-                  case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
-                      
-                      {ESLVal t1 = _v58;
-                      
-                      {ESLVal f = $332;
-                      
-                      return subType.apply(t1,f.apply());
-                    }
-                    }
-                    }
-                  case "RecType": {ESLVal $331 = _v57.termRef(0);
-                      ESLVal $330 = _v57.termRef(1);
-                      ESLVal $329 = _v57.termRef(2);
-                      
-                      {ESLVal t1 = _v58;
-                      
-                      {ESLVal l2 = $331;
-                      
-                      {ESLVal n2 = $330;
-                      
-                      {ESLVal t2 = $329;
-                      
-                      return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
-                    }
-                    }
-                    }
-                    }
-                    }
-                  case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                      ESLVal $327 = _v57.termRef(1);
-                      ESLVal $326 = _v57.termRef(2);
-                      
-                      {ESLVal t1 = _v58;
-                      
-                      {ESLVal l1 = $328;
-                      
-                      {ESLVal ns2 = $327;
-                      
-                      {ESLVal t2 = $326;
-                      
-                      return subType.apply(t1,t2);
-                    }
-                    }
-                    }
-                    }
-                    }
-                    default: {ESLVal t1 = _v58;
-                      
-                      {ESLVal t2 = _v57;
-                      
-                      return typeEqual.apply(t1,t2);
-                    }
-                    }
-                  }
-                }
-              else if($412.isNil())
-                switch(_v57.termName) {
-                  case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                    ESLVal $335 = _v57.termRef(1);
-                    ESLVal $334 = _v57.termRef(2);
-                    ESLVal $333 = _v57.termRef(3);
-                    
-                    {ESLVal t1 = _v58;
-                    
-                    {ESLVal l2 = $336;
-                    
-                    {ESLVal t2 = $335;
-                    
-                    {ESLVal ds2 = $334;
-                    
-                    {ESLVal ms2 = $333;
-                    
-                    return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
-                    
-                    {ESLVal t1 = _v58;
-                    
-                    {ESLVal f = $332;
-                    
-                    return subType.apply(t1,f.apply());
-                  }
-                  }
-                  }
-                case "RecType": {ESLVal $331 = _v57.termRef(0);
-                    ESLVal $330 = _v57.termRef(1);
-                    ESLVal $329 = _v57.termRef(2);
-                    
-                    {ESLVal t1 = _v58;
-                    
-                    {ESLVal l2 = $331;
-                    
-                    {ESLVal n2 = $330;
-                    
-                    {ESLVal t2 = $329;
-                    
-                    return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
-                  }
-                  }
-                  }
-                  }
-                  }
-                case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                    ESLVal $327 = _v57.termRef(1);
-                    ESLVal $326 = _v57.termRef(2);
-                    
-                    {ESLVal t1 = _v58;
-                    
-                    {ESLVal l1 = $328;
-                    
-                    {ESLVal ns2 = $327;
-                    
-                    {ESLVal t2 = $326;
-                    
-                    return subType.apply(t1,t2);
-                  }
-                  }
-                  }
-                  }
-                  }
-                  default: {ESLVal t1 = _v58;
-                    
-                    {ESLVal t2 = _v57;
-                    
-                    return typeEqual.apply(t1,t2);
-                  }
-                  }
-                }
-              else switch(_v57.termName) {
-                  case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                    ESLVal $335 = _v57.termRef(1);
-                    ESLVal $334 = _v57.termRef(2);
-                    ESLVal $333 = _v57.termRef(3);
-                    
-                    {ESLVal t1 = _v58;
-                    
-                    {ESLVal l2 = $336;
-                    
-                    {ESLVal t2 = $335;
-                    
-                    {ESLVal ds2 = $334;
-                    
-                    {ESLVal ms2 = $333;
-                    
-                    return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
-                    
-                    {ESLVal t1 = _v58;
-                    
-                    {ESLVal f = $332;
-                    
-                    return subType.apply(t1,f.apply());
-                  }
-                  }
-                  }
-                case "RecType": {ESLVal $331 = _v57.termRef(0);
-                    ESLVal $330 = _v57.termRef(1);
-                    ESLVal $329 = _v57.termRef(2);
-                    
-                    {ESLVal t1 = _v58;
-                    
-                    {ESLVal l2 = $331;
-                    
-                    {ESLVal n2 = $330;
-                    
-                    {ESLVal t2 = $329;
-                    
-                    return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
-                  }
-                  }
-                  }
-                  }
-                  }
-                case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                    ESLVal $327 = _v57.termRef(1);
-                    ESLVal $326 = _v57.termRef(2);
-                    
-                    {ESLVal t1 = _v58;
-                    
-                    {ESLVal l1 = $328;
-                    
-                    {ESLVal ns2 = $327;
-                    
-                    {ESLVal t2 = $326;
-                    
-                    return subType.apply(t1,t2);
-                  }
-                  }
-                  }
-                  }
-                  }
-                  default: {ESLVal t1 = _v58;
-                    
-                    {ESLVal t2 = _v57;
-                    
-                    return typeEqual.apply(t1,t2);
-                  }
-                  }
-                }
-              }
-              default: switch(_v57.termName) {
-                case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                  ESLVal $335 = _v57.termRef(1);
-                  ESLVal $334 = _v57.termRef(2);
-                  ESLVal $333 = _v57.termRef(3);
-                  
-                  {ESLVal t1 = _v58;
-                  
-                  {ESLVal l2 = $336;
-                  
-                  {ESLVal t2 = $335;
-                  
-                  {ESLVal ds2 = $334;
-                  
-                  {ESLVal ms2 = $333;
-                  
-                  return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
-                }
-                }
-                }
-                }
-                }
-                }
-              case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
-                  
-                  {ESLVal t1 = _v58;
-                  
-                  {ESLVal f = $332;
-                  
-                  return subType.apply(t1,f.apply());
-                }
-                }
-                }
-              case "RecType": {ESLVal $331 = _v57.termRef(0);
-                  ESLVal $330 = _v57.termRef(1);
-                  ESLVal $329 = _v57.termRef(2);
-                  
-                  {ESLVal t1 = _v58;
-                  
-                  {ESLVal l2 = $331;
-                  
-                  {ESLVal n2 = $330;
-                  
-                  {ESLVal t2 = $329;
-                  
-                  return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                  ESLVal $327 = _v57.termRef(1);
-                  ESLVal $326 = _v57.termRef(2);
-                  
-                  {ESLVal t1 = _v58;
-                  
-                  {ESLVal l1 = $328;
-                  
-                  {ESLVal ns2 = $327;
-                  
-                  {ESLVal t2 = $326;
-                  
-                  return subType.apply(t1,t2);
-                }
-                }
-                }
-                }
-                }
-                default: {ESLVal t1 = _v58;
-                  
-                  {ESLVal t2 = _v57;
-                  
-                  return typeEqual.apply(t1,t2);
-                }
-                }
-              }
-            }
-            }
-          case "BagType": {ESLVal $406 = _v58.termRef(0);
-              ESLVal $405 = _v58.termRef(1);
-              
-              switch(_v57.termName) {
-              case "BagType": {ESLVal $408 = _v57.termRef(0);
-                ESLVal $407 = _v57.termRef(1);
-                
-                {ESLVal l1 = $406;
-                
-                {ESLVal t1 = $405;
-                
-                {ESLVal l2 = $408;
-                
-                {ESLVal t2 = $407;
-                
-                return subType.apply(t1,t2);
-              }
-              }
-              }
-              }
-              }
-              default: switch(_v57.termName) {
-                case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                  ESLVal $335 = _v57.termRef(1);
-                  ESLVal $334 = _v57.termRef(2);
-                  ESLVal $333 = _v57.termRef(3);
-                  
-                  {ESLVal t1 = _v58;
-                  
-                  {ESLVal l2 = $336;
-                  
-                  {ESLVal t2 = $335;
-                  
-                  {ESLVal ds2 = $334;
-                  
-                  {ESLVal ms2 = $333;
-                  
-                  return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
-                }
-                }
-                }
-                }
-                }
-                }
-              case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
-                  
-                  {ESLVal t1 = _v58;
-                  
-                  {ESLVal f = $332;
-                  
-                  return subType.apply(t1,f.apply());
-                }
-                }
-                }
-              case "RecType": {ESLVal $331 = _v57.termRef(0);
-                  ESLVal $330 = _v57.termRef(1);
-                  ESLVal $329 = _v57.termRef(2);
-                  
-                  {ESLVal t1 = _v58;
-                  
-                  {ESLVal l2 = $331;
-                  
-                  {ESLVal n2 = $330;
-                  
-                  {ESLVal t2 = $329;
-                  
-                  return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
-                }
-                }
-                }
-                }
-                }
-              case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                  ESLVal $327 = _v57.termRef(1);
-                  ESLVal $326 = _v57.termRef(2);
-                  
-                  {ESLVal t1 = _v58;
-                  
-                  {ESLVal l1 = $328;
-                  
-                  {ESLVal ns2 = $327;
-                  
-                  {ESLVal t2 = $326;
-                  
-                  return subType.apply(t1,t2);
-                }
-                }
-                }
-                }
-                }
-                default: {ESLVal t1 = _v58;
-                  
-                  {ESLVal t2 = _v57;
-                  
-                  return typeEqual.apply(t1,t2);
-                }
-                }
-              }
-            }
-            }
-          case "SetType": {ESLVal $391 = _v58.termRef(0);
-              ESLVal $390 = _v58.termRef(1);
-              
-              switch(_v57.termName) {
-              case "SetType": {ESLVal $404 = _v57.termRef(0);
-                ESLVal $403 = _v57.termRef(1);
-                
-                {ESLVal l1 = $391;
-                
-                {ESLVal t1 = $390;
-                
-                {ESLVal l2 = $404;
-                
-                {ESLVal t2 = $403;
-                
-                return subType.apply(t1,t2);
-              }
-              }
-              }
-              }
-              }
-            case "ForallType": {ESLVal $394 = _v57.termRef(0);
-                ESLVal $393 = _v57.termRef(1);
-                ESLVal $392 = _v57.termRef(2);
-                
-                if($393.isCons())
-                {ESLVal $395 = $393.head();
-                  ESLVal $396 = $393.tail();
-                  
-                  if($396.isCons())
-                  {ESLVal $397 = $396.head();
-                    ESLVal $398 = $396.tail();
-                    
-                    switch(_v57.termName) {
-                    case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                      ESLVal $335 = _v57.termRef(1);
-                      ESLVal $334 = _v57.termRef(2);
-                      ESLVal $333 = _v57.termRef(3);
-                      
-                      {ESLVal t1 = _v58;
-                      
-                      {ESLVal l2 = $336;
-                      
-                      {ESLVal t2 = $335;
-                      
-                      {ESLVal ds2 = $334;
-                      
-                      {ESLVal ms2 = $333;
+                      {ESLVal ms2 = $962;
                       
                       return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                     }
@@ -6156,27 +5710,27 @@ public class Types {
                     }
                     }
                     }
-                  case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+                  case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                       
-                      {ESLVal t1 = _v58;
+                      {ESLVal t1 = _v280;
                       
-                      {ESLVal f = $332;
+                      {ESLVal f = $961;
                       
                       return subType.apply(t1,f.apply());
                     }
                     }
                     }
-                  case "RecType": {ESLVal $331 = _v57.termRef(0);
-                      ESLVal $330 = _v57.termRef(1);
-                      ESLVal $329 = _v57.termRef(2);
+                  case "RecType": {ESLVal $960 = _v279.termRef(0);
+                      ESLVal $959 = _v279.termRef(1);
+                      ESLVal $958 = _v279.termRef(2);
                       
-                      {ESLVal t1 = _v58;
+                      {ESLVal t1 = _v280;
                       
-                      {ESLVal l2 = $331;
+                      {ESLVal l2 = $960;
                       
-                      {ESLVal n2 = $330;
+                      {ESLVal n2 = $959;
                       
-                      {ESLVal t2 = $329;
+                      {ESLVal t2 = $958;
                       
                       return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                     }
@@ -6184,17 +5738,17 @@ public class Types {
                     }
                     }
                     }
-                  case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                      ESLVal $327 = _v57.termRef(1);
-                      ESLVal $326 = _v57.termRef(2);
+                  case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                      ESLVal $956 = _v279.termRef(1);
+                      ESLVal $955 = _v279.termRef(2);
                       
-                      {ESLVal t1 = _v58;
+                      {ESLVal t1 = _v280;
                       
-                      {ESLVal l1 = $328;
+                      {ESLVal l1 = $957;
                       
-                      {ESLVal ns2 = $327;
+                      {ESLVal ns2 = $956;
                       
-                      {ESLVal t2 = $326;
+                      {ESLVal t2 = $955;
                       
                       return subType.apply(t1,t2);
                     }
@@ -6202,115 +5756,561 @@ public class Types {
                     }
                     }
                     }
-                    default: {ESLVal t1 = _v58;
+                    default: {ESLVal t1 = _v280;
                       
-                      {ESLVal t2 = _v57;
+                      {ESLVal t2 = _v279;
+                      
+                      return typeEqual.apply(t1,t2);
+                    }
+                    }
+                  }
+                }
+              else if($1041.isNil())
+                switch(_v279.termName) {
+                  case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                    ESLVal $964 = _v279.termRef(1);
+                    ESLVal $963 = _v279.termRef(2);
+                    ESLVal $962 = _v279.termRef(3);
+                    
+                    {ESLVal t1 = _v280;
+                    
+                    {ESLVal l2 = $965;
+                    
+                    {ESLVal t2 = $964;
+                    
+                    {ESLVal ds2 = $963;
+                    
+                    {ESLVal ms2 = $962;
+                    
+                    return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
+                    
+                    {ESLVal t1 = _v280;
+                    
+                    {ESLVal f = $961;
+                    
+                    return subType.apply(t1,f.apply());
+                  }
+                  }
+                  }
+                case "RecType": {ESLVal $960 = _v279.termRef(0);
+                    ESLVal $959 = _v279.termRef(1);
+                    ESLVal $958 = _v279.termRef(2);
+                    
+                    {ESLVal t1 = _v280;
+                    
+                    {ESLVal l2 = $960;
+                    
+                    {ESLVal n2 = $959;
+                    
+                    {ESLVal t2 = $958;
+                    
+                    return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
+                  }
+                  }
+                  }
+                  }
+                  }
+                case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                    ESLVal $956 = _v279.termRef(1);
+                    ESLVal $955 = _v279.termRef(2);
+                    
+                    {ESLVal t1 = _v280;
+                    
+                    {ESLVal l1 = $957;
+                    
+                    {ESLVal ns2 = $956;
+                    
+                    {ESLVal t2 = $955;
+                    
+                    return subType.apply(t1,t2);
+                  }
+                  }
+                  }
+                  }
+                  }
+                  default: {ESLVal t1 = _v280;
+                    
+                    {ESLVal t2 = _v279;
+                    
+                    return typeEqual.apply(t1,t2);
+                  }
+                  }
+                }
+              else switch(_v279.termName) {
+                  case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                    ESLVal $964 = _v279.termRef(1);
+                    ESLVal $963 = _v279.termRef(2);
+                    ESLVal $962 = _v279.termRef(3);
+                    
+                    {ESLVal t1 = _v280;
+                    
+                    {ESLVal l2 = $965;
+                    
+                    {ESLVal t2 = $964;
+                    
+                    {ESLVal ds2 = $963;
+                    
+                    {ESLVal ms2 = $962;
+                    
+                    return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
+                    
+                    {ESLVal t1 = _v280;
+                    
+                    {ESLVal f = $961;
+                    
+                    return subType.apply(t1,f.apply());
+                  }
+                  }
+                  }
+                case "RecType": {ESLVal $960 = _v279.termRef(0);
+                    ESLVal $959 = _v279.termRef(1);
+                    ESLVal $958 = _v279.termRef(2);
+                    
+                    {ESLVal t1 = _v280;
+                    
+                    {ESLVal l2 = $960;
+                    
+                    {ESLVal n2 = $959;
+                    
+                    {ESLVal t2 = $958;
+                    
+                    return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
+                  }
+                  }
+                  }
+                  }
+                  }
+                case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                    ESLVal $956 = _v279.termRef(1);
+                    ESLVal $955 = _v279.termRef(2);
+                    
+                    {ESLVal t1 = _v280;
+                    
+                    {ESLVal l1 = $957;
+                    
+                    {ESLVal ns2 = $956;
+                    
+                    {ESLVal t2 = $955;
+                    
+                    return subType.apply(t1,t2);
+                  }
+                  }
+                  }
+                  }
+                  }
+                  default: {ESLVal t1 = _v280;
+                    
+                    {ESLVal t2 = _v279;
+                    
+                    return typeEqual.apply(t1,t2);
+                  }
+                  }
+                }
+              }
+              default: switch(_v279.termName) {
+                case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                  ESLVal $964 = _v279.termRef(1);
+                  ESLVal $963 = _v279.termRef(2);
+                  ESLVal $962 = _v279.termRef(3);
+                  
+                  {ESLVal t1 = _v280;
+                  
+                  {ESLVal l2 = $965;
+                  
+                  {ESLVal t2 = $964;
+                  
+                  {ESLVal ds2 = $963;
+                  
+                  {ESLVal ms2 = $962;
+                  
+                  return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
+                }
+                }
+                }
+                }
+                }
+                }
+              case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
+                  
+                  {ESLVal t1 = _v280;
+                  
+                  {ESLVal f = $961;
+                  
+                  return subType.apply(t1,f.apply());
+                }
+                }
+                }
+              case "RecType": {ESLVal $960 = _v279.termRef(0);
+                  ESLVal $959 = _v279.termRef(1);
+                  ESLVal $958 = _v279.termRef(2);
+                  
+                  {ESLVal t1 = _v280;
+                  
+                  {ESLVal l2 = $960;
+                  
+                  {ESLVal n2 = $959;
+                  
+                  {ESLVal t2 = $958;
+                  
+                  return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
+                }
+                }
+                }
+                }
+                }
+              case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                  ESLVal $956 = _v279.termRef(1);
+                  ESLVal $955 = _v279.termRef(2);
+                  
+                  {ESLVal t1 = _v280;
+                  
+                  {ESLVal l1 = $957;
+                  
+                  {ESLVal ns2 = $956;
+                  
+                  {ESLVal t2 = $955;
+                  
+                  return subType.apply(t1,t2);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal t1 = _v280;
+                  
+                  {ESLVal t2 = _v279;
+                  
+                  return typeEqual.apply(t1,t2);
+                }
+                }
+              }
+            }
+            }
+          case "BagType": {ESLVal $1035 = _v280.termRef(0);
+              ESLVal $1034 = _v280.termRef(1);
+              
+              switch(_v279.termName) {
+              case "BagType": {ESLVal $1037 = _v279.termRef(0);
+                ESLVal $1036 = _v279.termRef(1);
+                
+                {ESLVal l1 = $1035;
+                
+                {ESLVal t1 = $1034;
+                
+                {ESLVal l2 = $1037;
+                
+                {ESLVal t2 = $1036;
+                
+                return subType.apply(t1,t2);
+              }
+              }
+              }
+              }
+              }
+              default: switch(_v279.termName) {
+                case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                  ESLVal $964 = _v279.termRef(1);
+                  ESLVal $963 = _v279.termRef(2);
+                  ESLVal $962 = _v279.termRef(3);
+                  
+                  {ESLVal t1 = _v280;
+                  
+                  {ESLVal l2 = $965;
+                  
+                  {ESLVal t2 = $964;
+                  
+                  {ESLVal ds2 = $963;
+                  
+                  {ESLVal ms2 = $962;
+                  
+                  return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
+                }
+                }
+                }
+                }
+                }
+                }
+              case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
+                  
+                  {ESLVal t1 = _v280;
+                  
+                  {ESLVal f = $961;
+                  
+                  return subType.apply(t1,f.apply());
+                }
+                }
+                }
+              case "RecType": {ESLVal $960 = _v279.termRef(0);
+                  ESLVal $959 = _v279.termRef(1);
+                  ESLVal $958 = _v279.termRef(2);
+                  
+                  {ESLVal t1 = _v280;
+                  
+                  {ESLVal l2 = $960;
+                  
+                  {ESLVal n2 = $959;
+                  
+                  {ESLVal t2 = $958;
+                  
+                  return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
+                }
+                }
+                }
+                }
+                }
+              case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                  ESLVal $956 = _v279.termRef(1);
+                  ESLVal $955 = _v279.termRef(2);
+                  
+                  {ESLVal t1 = _v280;
+                  
+                  {ESLVal l1 = $957;
+                  
+                  {ESLVal ns2 = $956;
+                  
+                  {ESLVal t2 = $955;
+                  
+                  return subType.apply(t1,t2);
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal t1 = _v280;
+                  
+                  {ESLVal t2 = _v279;
+                  
+                  return typeEqual.apply(t1,t2);
+                }
+                }
+              }
+            }
+            }
+          case "SetType": {ESLVal $1020 = _v280.termRef(0);
+              ESLVal $1019 = _v280.termRef(1);
+              
+              switch(_v279.termName) {
+              case "SetType": {ESLVal $1033 = _v279.termRef(0);
+                ESLVal $1032 = _v279.termRef(1);
+                
+                {ESLVal l1 = $1020;
+                
+                {ESLVal t1 = $1019;
+                
+                {ESLVal l2 = $1033;
+                
+                {ESLVal t2 = $1032;
+                
+                return subType.apply(t1,t2);
+              }
+              }
+              }
+              }
+              }
+            case "ForallType": {ESLVal $1023 = _v279.termRef(0);
+                ESLVal $1022 = _v279.termRef(1);
+                ESLVal $1021 = _v279.termRef(2);
+                
+                if($1022.isCons())
+                {ESLVal $1024 = $1022.head();
+                  ESLVal $1025 = $1022.tail();
+                  
+                  if($1025.isCons())
+                  {ESLVal $1026 = $1025.head();
+                    ESLVal $1027 = $1025.tail();
+                    
+                    switch(_v279.termName) {
+                    case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                      ESLVal $964 = _v279.termRef(1);
+                      ESLVal $963 = _v279.termRef(2);
+                      ESLVal $962 = _v279.termRef(3);
+                      
+                      {ESLVal t1 = _v280;
+                      
+                      {ESLVal l2 = $965;
+                      
+                      {ESLVal t2 = $964;
+                      
+                      {ESLVal ds2 = $963;
+                      
+                      {ESLVal ms2 = $962;
+                      
+                      return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
+                    }
+                    }
+                    }
+                    }
+                    }
+                    }
+                  case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
+                      
+                      {ESLVal t1 = _v280;
+                      
+                      {ESLVal f = $961;
+                      
+                      return subType.apply(t1,f.apply());
+                    }
+                    }
+                    }
+                  case "RecType": {ESLVal $960 = _v279.termRef(0);
+                      ESLVal $959 = _v279.termRef(1);
+                      ESLVal $958 = _v279.termRef(2);
+                      
+                      {ESLVal t1 = _v280;
+                      
+                      {ESLVal l2 = $960;
+                      
+                      {ESLVal n2 = $959;
+                      
+                      {ESLVal t2 = $958;
+                      
+                      return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
+                    }
+                    }
+                    }
+                    }
+                    }
+                  case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                      ESLVal $956 = _v279.termRef(1);
+                      ESLVal $955 = _v279.termRef(2);
+                      
+                      {ESLVal t1 = _v280;
+                      
+                      {ESLVal l1 = $957;
+                      
+                      {ESLVal ns2 = $956;
+                      
+                      {ESLVal t2 = $955;
+                      
+                      return subType.apply(t1,t2);
+                    }
+                    }
+                    }
+                    }
+                    }
+                    default: {ESLVal t1 = _v280;
+                      
+                      {ESLVal t2 = _v279;
                       
                       return typeEqual.apply(t1,t2);
                     }
                     }
                   }
                   }
-                else if($396.isNil())
-                  switch($392.termName) {
-                    case "SetType": {ESLVal $400 = $392.termRef(0);
-                      ESLVal $399 = $392.termRef(1);
+                else if($1025.isNil())
+                  switch($1021.termName) {
+                    case "SetType": {ESLVal $1029 = $1021.termRef(0);
+                      ESLVal $1028 = $1021.termRef(1);
                       
-                      switch($399.termName) {
-                      case "VarType": {ESLVal $402 = $399.termRef(0);
-                        ESLVal $401 = $399.termRef(1);
+                      switch($1028.termName) {
+                      case "VarType": {ESLVal $1031 = $1028.termRef(0);
+                        ESLVal $1030 = $1028.termRef(1);
                         
-                        {ESLVal l1 = $391;
+                        {ESLVal l1 = $1020;
                         
-                        {ESLVal t1 = $390;
+                        {ESLVal t1 = $1019;
                         
-                        {ESLVal l2 = $394;
+                        {ESLVal l2 = $1023;
                         
-                        {ESLVal v1 = $395;
+                        {ESLVal v1 = $1024;
                         
-                        {ESLVal l3 = $400;
+                        {ESLVal l3 = $1029;
                         
-                        {ESLVal l4 = $402;
+                        {ESLVal l4 = $1031;
                         
-                        {ESLVal v2 = $401;
+                        {ESLVal v2 = $1030;
                         
                         if(v1.eql(v2).boolVal)
                         return $true;
                         else
-                          switch(_v57.termName) {
-                            case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                              ESLVal $335 = _v57.termRef(1);
-                              ESLVal $334 = _v57.termRef(2);
-                              ESLVal $333 = _v57.termRef(3);
+                          switch(_v279.termName) {
+                            case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                              ESLVal $964 = _v279.termRef(1);
+                              ESLVal $963 = _v279.termRef(2);
+                              ESLVal $962 = _v279.termRef(3);
                               
-                              {ESLVal _v131 = _v58;
+                              {ESLVal _v378 = _v280;
                               
-                              {ESLVal _v132 = $336;
+                              {ESLVal _v379 = $965;
                               
-                              {ESLVal t2 = $335;
+                              {ESLVal t2 = $964;
                               
-                              {ESLVal ds2 = $334;
+                              {ESLVal ds2 = $963;
                               
-                              {ESLVal ms2 = $333;
+                              {ESLVal ms2 = $962;
                               
-                              return subType.apply(_v131,flattenAct.apply(_v132,t2,ds2,ms2));
+                              return subType.apply(_v378,flattenAct.apply(_v379,t2,ds2,ms2));
                             }
                             }
                             }
                             }
                             }
                             }
-                          case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+                          case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                               
-                              {ESLVal _v130 = _v58;
+                              {ESLVal _v377 = _v280;
                               
-                              {ESLVal f = $332;
+                              {ESLVal f = $961;
                               
-                              return subType.apply(_v130,f.apply());
+                              return subType.apply(_v377,f.apply());
                             }
                             }
                             }
-                          case "RecType": {ESLVal $331 = _v57.termRef(0);
-                              ESLVal $330 = _v57.termRef(1);
-                              ESLVal $329 = _v57.termRef(2);
+                          case "RecType": {ESLVal $960 = _v279.termRef(0);
+                              ESLVal $959 = _v279.termRef(1);
+                              ESLVal $958 = _v279.termRef(2);
                               
-                              {ESLVal _v128 = _v58;
+                              {ESLVal _v375 = _v280;
                               
-                              {ESLVal _v129 = $331;
+                              {ESLVal _v376 = $960;
                               
-                              {ESLVal n2 = $330;
+                              {ESLVal n2 = $959;
                               
-                              {ESLVal t2 = $329;
+                              {ESLVal t2 = $958;
                               
-                              return subType.apply(_v128,substType.apply(new ESLVal("RecType",_v129,n2,t2),n2,t2));
-                            }
-                            }
-                            }
-                            }
-                            }
-                          case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                              ESLVal $327 = _v57.termRef(1);
-                              ESLVal $326 = _v57.termRef(2);
-                              
-                              {ESLVal _v126 = _v58;
-                              
-                              {ESLVal _v127 = $328;
-                              
-                              {ESLVal ns2 = $327;
-                              
-                              {ESLVal t2 = $326;
-                              
-                              return subType.apply(_v126,t2);
+                              return subType.apply(_v375,substType.apply(new ESLVal("RecType",_v376,n2,t2),n2,t2));
                             }
                             }
                             }
                             }
                             }
-                            default: {ESLVal _v133 = _v58;
+                          case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                              ESLVal $956 = _v279.termRef(1);
+                              ESLVal $955 = _v279.termRef(2);
                               
-                              {ESLVal t2 = _v57;
+                              {ESLVal _v373 = _v280;
                               
-                              return typeEqual.apply(_v133,t2);
+                              {ESLVal _v374 = $957;
+                              
+                              {ESLVal ns2 = $956;
+                              
+                              {ESLVal t2 = $955;
+                              
+                              return subType.apply(_v373,t2);
+                            }
+                            }
+                            }
+                            }
+                            }
+                            default: {ESLVal _v380 = _v280;
+                              
+                              {ESLVal t2 = _v279;
+                              
+                              return typeEqual.apply(_v380,t2);
                             }
                             }
                           }
@@ -6322,21 +6322,21 @@ public class Types {
                       }
                       }
                       }
-                      default: switch(_v57.termName) {
-                        case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                          ESLVal $335 = _v57.termRef(1);
-                          ESLVal $334 = _v57.termRef(2);
-                          ESLVal $333 = _v57.termRef(3);
+                      default: switch(_v279.termName) {
+                        case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                          ESLVal $964 = _v279.termRef(1);
+                          ESLVal $963 = _v279.termRef(2);
+                          ESLVal $962 = _v279.termRef(3);
                           
-                          {ESLVal t1 = _v58;
+                          {ESLVal t1 = _v280;
                           
-                          {ESLVal l2 = $336;
+                          {ESLVal l2 = $965;
                           
-                          {ESLVal t2 = $335;
+                          {ESLVal t2 = $964;
                           
-                          {ESLVal ds2 = $334;
+                          {ESLVal ds2 = $963;
                           
-                          {ESLVal ms2 = $333;
+                          {ESLVal ms2 = $962;
                           
                           return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                         }
@@ -6345,27 +6345,27 @@ public class Types {
                         }
                         }
                         }
-                      case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+                      case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                           
-                          {ESLVal t1 = _v58;
+                          {ESLVal t1 = _v280;
                           
-                          {ESLVal f = $332;
+                          {ESLVal f = $961;
                           
                           return subType.apply(t1,f.apply());
                         }
                         }
                         }
-                      case "RecType": {ESLVal $331 = _v57.termRef(0);
-                          ESLVal $330 = _v57.termRef(1);
-                          ESLVal $329 = _v57.termRef(2);
+                      case "RecType": {ESLVal $960 = _v279.termRef(0);
+                          ESLVal $959 = _v279.termRef(1);
+                          ESLVal $958 = _v279.termRef(2);
                           
-                          {ESLVal t1 = _v58;
+                          {ESLVal t1 = _v280;
                           
-                          {ESLVal l2 = $331;
+                          {ESLVal l2 = $960;
                           
-                          {ESLVal n2 = $330;
+                          {ESLVal n2 = $959;
                           
-                          {ESLVal t2 = $329;
+                          {ESLVal t2 = $958;
                           
                           return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                         }
@@ -6373,17 +6373,17 @@ public class Types {
                         }
                         }
                         }
-                      case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                          ESLVal $327 = _v57.termRef(1);
-                          ESLVal $326 = _v57.termRef(2);
+                      case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                          ESLVal $956 = _v279.termRef(1);
+                          ESLVal $955 = _v279.termRef(2);
                           
-                          {ESLVal t1 = _v58;
+                          {ESLVal t1 = _v280;
                           
-                          {ESLVal l1 = $328;
+                          {ESLVal l1 = $957;
                           
-                          {ESLVal ns2 = $327;
+                          {ESLVal ns2 = $956;
                           
-                          {ESLVal t2 = $326;
+                          {ESLVal t2 = $955;
                           
                           return subType.apply(t1,t2);
                         }
@@ -6391,9 +6391,9 @@ public class Types {
                         }
                         }
                         }
-                        default: {ESLVal t1 = _v58;
+                        default: {ESLVal t1 = _v280;
                           
-                          {ESLVal t2 = _v57;
+                          {ESLVal t2 = _v279;
                           
                           return typeEqual.apply(t1,t2);
                         }
@@ -6401,21 +6401,21 @@ public class Types {
                       }
                     }
                     }
-                    default: switch(_v57.termName) {
-                      case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                        ESLVal $335 = _v57.termRef(1);
-                        ESLVal $334 = _v57.termRef(2);
-                        ESLVal $333 = _v57.termRef(3);
+                    default: switch(_v279.termName) {
+                      case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                        ESLVal $964 = _v279.termRef(1);
+                        ESLVal $963 = _v279.termRef(2);
+                        ESLVal $962 = _v279.termRef(3);
                         
-                        {ESLVal t1 = _v58;
+                        {ESLVal t1 = _v280;
                         
-                        {ESLVal l2 = $336;
+                        {ESLVal l2 = $965;
                         
-                        {ESLVal t2 = $335;
+                        {ESLVal t2 = $964;
                         
-                        {ESLVal ds2 = $334;
+                        {ESLVal ds2 = $963;
                         
-                        {ESLVal ms2 = $333;
+                        {ESLVal ms2 = $962;
                         
                         return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                       }
@@ -6424,27 +6424,27 @@ public class Types {
                       }
                       }
                       }
-                    case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+                    case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                         
-                        {ESLVal t1 = _v58;
+                        {ESLVal t1 = _v280;
                         
-                        {ESLVal f = $332;
+                        {ESLVal f = $961;
                         
                         return subType.apply(t1,f.apply());
                       }
                       }
                       }
-                    case "RecType": {ESLVal $331 = _v57.termRef(0);
-                        ESLVal $330 = _v57.termRef(1);
-                        ESLVal $329 = _v57.termRef(2);
+                    case "RecType": {ESLVal $960 = _v279.termRef(0);
+                        ESLVal $959 = _v279.termRef(1);
+                        ESLVal $958 = _v279.termRef(2);
                         
-                        {ESLVal t1 = _v58;
+                        {ESLVal t1 = _v280;
                         
-                        {ESLVal l2 = $331;
+                        {ESLVal l2 = $960;
                         
-                        {ESLVal n2 = $330;
+                        {ESLVal n2 = $959;
                         
-                        {ESLVal t2 = $329;
+                        {ESLVal t2 = $958;
                         
                         return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                       }
@@ -6452,17 +6452,17 @@ public class Types {
                       }
                       }
                       }
-                    case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                        ESLVal $327 = _v57.termRef(1);
-                        ESLVal $326 = _v57.termRef(2);
+                    case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                        ESLVal $956 = _v279.termRef(1);
+                        ESLVal $955 = _v279.termRef(2);
                         
-                        {ESLVal t1 = _v58;
+                        {ESLVal t1 = _v280;
                         
-                        {ESLVal l1 = $328;
+                        {ESLVal l1 = $957;
                         
-                        {ESLVal ns2 = $327;
+                        {ESLVal ns2 = $956;
                         
-                        {ESLVal t2 = $326;
+                        {ESLVal t2 = $955;
                         
                         return subType.apply(t1,t2);
                       }
@@ -6470,30 +6470,30 @@ public class Types {
                       }
                       }
                       }
-                      default: {ESLVal t1 = _v58;
+                      default: {ESLVal t1 = _v280;
                         
-                        {ESLVal t2 = _v57;
+                        {ESLVal t2 = _v279;
                         
                         return typeEqual.apply(t1,t2);
                       }
                       }
                     }
                   }
-                else switch(_v57.termName) {
-                    case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                      ESLVal $335 = _v57.termRef(1);
-                      ESLVal $334 = _v57.termRef(2);
-                      ESLVal $333 = _v57.termRef(3);
+                else switch(_v279.termName) {
+                    case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                      ESLVal $964 = _v279.termRef(1);
+                      ESLVal $963 = _v279.termRef(2);
+                      ESLVal $962 = _v279.termRef(3);
                       
-                      {ESLVal t1 = _v58;
+                      {ESLVal t1 = _v280;
                       
-                      {ESLVal l2 = $336;
+                      {ESLVal l2 = $965;
                       
-                      {ESLVal t2 = $335;
+                      {ESLVal t2 = $964;
                       
-                      {ESLVal ds2 = $334;
+                      {ESLVal ds2 = $963;
                       
-                      {ESLVal ms2 = $333;
+                      {ESLVal ms2 = $962;
                       
                       return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                     }
@@ -6502,27 +6502,27 @@ public class Types {
                     }
                     }
                     }
-                  case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+                  case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                       
-                      {ESLVal t1 = _v58;
+                      {ESLVal t1 = _v280;
                       
-                      {ESLVal f = $332;
+                      {ESLVal f = $961;
                       
                       return subType.apply(t1,f.apply());
                     }
                     }
                     }
-                  case "RecType": {ESLVal $331 = _v57.termRef(0);
-                      ESLVal $330 = _v57.termRef(1);
-                      ESLVal $329 = _v57.termRef(2);
+                  case "RecType": {ESLVal $960 = _v279.termRef(0);
+                      ESLVal $959 = _v279.termRef(1);
+                      ESLVal $958 = _v279.termRef(2);
                       
-                      {ESLVal t1 = _v58;
+                      {ESLVal t1 = _v280;
                       
-                      {ESLVal l2 = $331;
+                      {ESLVal l2 = $960;
                       
-                      {ESLVal n2 = $330;
+                      {ESLVal n2 = $959;
                       
-                      {ESLVal t2 = $329;
+                      {ESLVal t2 = $958;
                       
                       return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                     }
@@ -6530,17 +6530,17 @@ public class Types {
                     }
                     }
                     }
-                  case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                      ESLVal $327 = _v57.termRef(1);
-                      ESLVal $326 = _v57.termRef(2);
+                  case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                      ESLVal $956 = _v279.termRef(1);
+                      ESLVal $955 = _v279.termRef(2);
                       
-                      {ESLVal t1 = _v58;
+                      {ESLVal t1 = _v280;
                       
-                      {ESLVal l1 = $328;
+                      {ESLVal l1 = $957;
                       
-                      {ESLVal ns2 = $327;
+                      {ESLVal ns2 = $956;
                       
-                      {ESLVal t2 = $326;
+                      {ESLVal t2 = $955;
                       
                       return subType.apply(t1,t2);
                     }
@@ -6548,31 +6548,31 @@ public class Types {
                     }
                     }
                     }
-                    default: {ESLVal t1 = _v58;
+                    default: {ESLVal t1 = _v280;
                       
-                      {ESLVal t2 = _v57;
+                      {ESLVal t2 = _v279;
                       
                       return typeEqual.apply(t1,t2);
                     }
                     }
                   }
                 }
-              else if($393.isNil())
-                switch(_v57.termName) {
-                  case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                    ESLVal $335 = _v57.termRef(1);
-                    ESLVal $334 = _v57.termRef(2);
-                    ESLVal $333 = _v57.termRef(3);
+              else if($1022.isNil())
+                switch(_v279.termName) {
+                  case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                    ESLVal $964 = _v279.termRef(1);
+                    ESLVal $963 = _v279.termRef(2);
+                    ESLVal $962 = _v279.termRef(3);
                     
-                    {ESLVal t1 = _v58;
+                    {ESLVal t1 = _v280;
                     
-                    {ESLVal l2 = $336;
+                    {ESLVal l2 = $965;
                     
-                    {ESLVal t2 = $335;
+                    {ESLVal t2 = $964;
                     
-                    {ESLVal ds2 = $334;
+                    {ESLVal ds2 = $963;
                     
-                    {ESLVal ms2 = $333;
+                    {ESLVal ms2 = $962;
                     
                     return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                   }
@@ -6581,27 +6581,27 @@ public class Types {
                   }
                   }
                   }
-                case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+                case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                     
-                    {ESLVal t1 = _v58;
+                    {ESLVal t1 = _v280;
                     
-                    {ESLVal f = $332;
+                    {ESLVal f = $961;
                     
                     return subType.apply(t1,f.apply());
                   }
                   }
                   }
-                case "RecType": {ESLVal $331 = _v57.termRef(0);
-                    ESLVal $330 = _v57.termRef(1);
-                    ESLVal $329 = _v57.termRef(2);
+                case "RecType": {ESLVal $960 = _v279.termRef(0);
+                    ESLVal $959 = _v279.termRef(1);
+                    ESLVal $958 = _v279.termRef(2);
                     
-                    {ESLVal t1 = _v58;
+                    {ESLVal t1 = _v280;
                     
-                    {ESLVal l2 = $331;
+                    {ESLVal l2 = $960;
                     
-                    {ESLVal n2 = $330;
+                    {ESLVal n2 = $959;
                     
-                    {ESLVal t2 = $329;
+                    {ESLVal t2 = $958;
                     
                     return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                   }
@@ -6609,17 +6609,17 @@ public class Types {
                   }
                   }
                   }
-                case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                    ESLVal $327 = _v57.termRef(1);
-                    ESLVal $326 = _v57.termRef(2);
+                case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                    ESLVal $956 = _v279.termRef(1);
+                    ESLVal $955 = _v279.termRef(2);
                     
-                    {ESLVal t1 = _v58;
+                    {ESLVal t1 = _v280;
                     
-                    {ESLVal l1 = $328;
+                    {ESLVal l1 = $957;
                     
-                    {ESLVal ns2 = $327;
+                    {ESLVal ns2 = $956;
                     
-                    {ESLVal t2 = $326;
+                    {ESLVal t2 = $955;
                     
                     return subType.apply(t1,t2);
                   }
@@ -6627,29 +6627,29 @@ public class Types {
                   }
                   }
                   }
-                  default: {ESLVal t1 = _v58;
+                  default: {ESLVal t1 = _v280;
                     
-                    {ESLVal t2 = _v57;
+                    {ESLVal t2 = _v279;
                     
                     return typeEqual.apply(t1,t2);
                   }
                   }
                 }
-              else switch(_v57.termName) {
-                  case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                    ESLVal $335 = _v57.termRef(1);
-                    ESLVal $334 = _v57.termRef(2);
-                    ESLVal $333 = _v57.termRef(3);
+              else switch(_v279.termName) {
+                  case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                    ESLVal $964 = _v279.termRef(1);
+                    ESLVal $963 = _v279.termRef(2);
+                    ESLVal $962 = _v279.termRef(3);
                     
-                    {ESLVal t1 = _v58;
+                    {ESLVal t1 = _v280;
                     
-                    {ESLVal l2 = $336;
+                    {ESLVal l2 = $965;
                     
-                    {ESLVal t2 = $335;
+                    {ESLVal t2 = $964;
                     
-                    {ESLVal ds2 = $334;
+                    {ESLVal ds2 = $963;
                     
-                    {ESLVal ms2 = $333;
+                    {ESLVal ms2 = $962;
                     
                     return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                   }
@@ -6658,27 +6658,27 @@ public class Types {
                   }
                   }
                   }
-                case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+                case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                     
-                    {ESLVal t1 = _v58;
+                    {ESLVal t1 = _v280;
                     
-                    {ESLVal f = $332;
+                    {ESLVal f = $961;
                     
                     return subType.apply(t1,f.apply());
                   }
                   }
                   }
-                case "RecType": {ESLVal $331 = _v57.termRef(0);
-                    ESLVal $330 = _v57.termRef(1);
-                    ESLVal $329 = _v57.termRef(2);
+                case "RecType": {ESLVal $960 = _v279.termRef(0);
+                    ESLVal $959 = _v279.termRef(1);
+                    ESLVal $958 = _v279.termRef(2);
                     
-                    {ESLVal t1 = _v58;
+                    {ESLVal t1 = _v280;
                     
-                    {ESLVal l2 = $331;
+                    {ESLVal l2 = $960;
                     
-                    {ESLVal n2 = $330;
+                    {ESLVal n2 = $959;
                     
-                    {ESLVal t2 = $329;
+                    {ESLVal t2 = $958;
                     
                     return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                   }
@@ -6686,17 +6686,17 @@ public class Types {
                   }
                   }
                   }
-                case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                    ESLVal $327 = _v57.termRef(1);
-                    ESLVal $326 = _v57.termRef(2);
+                case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                    ESLVal $956 = _v279.termRef(1);
+                    ESLVal $955 = _v279.termRef(2);
                     
-                    {ESLVal t1 = _v58;
+                    {ESLVal t1 = _v280;
                     
-                    {ESLVal l1 = $328;
+                    {ESLVal l1 = $957;
                     
-                    {ESLVal ns2 = $327;
+                    {ESLVal ns2 = $956;
                     
-                    {ESLVal t2 = $326;
+                    {ESLVal t2 = $955;
                     
                     return subType.apply(t1,t2);
                   }
@@ -6704,30 +6704,30 @@ public class Types {
                   }
                   }
                   }
-                  default: {ESLVal t1 = _v58;
+                  default: {ESLVal t1 = _v280;
                     
-                    {ESLVal t2 = _v57;
+                    {ESLVal t2 = _v279;
                     
                     return typeEqual.apply(t1,t2);
                   }
                   }
                 }
               }
-              default: switch(_v57.termName) {
-                case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                  ESLVal $335 = _v57.termRef(1);
-                  ESLVal $334 = _v57.termRef(2);
-                  ESLVal $333 = _v57.termRef(3);
+              default: switch(_v279.termName) {
+                case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                  ESLVal $964 = _v279.termRef(1);
+                  ESLVal $963 = _v279.termRef(2);
+                  ESLVal $962 = _v279.termRef(3);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $336;
+                  {ESLVal l2 = $965;
                   
-                  {ESLVal t2 = $335;
+                  {ESLVal t2 = $964;
                   
-                  {ESLVal ds2 = $334;
+                  {ESLVal ds2 = $963;
                   
-                  {ESLVal ms2 = $333;
+                  {ESLVal ms2 = $962;
                   
                   return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                 }
@@ -6736,27 +6736,27 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+              case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal f = $332;
+                  {ESLVal f = $961;
                   
                   return subType.apply(t1,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $331 = _v57.termRef(0);
-                  ESLVal $330 = _v57.termRef(1);
-                  ESLVal $329 = _v57.termRef(2);
+              case "RecType": {ESLVal $960 = _v279.termRef(0);
+                  ESLVal $959 = _v279.termRef(1);
+                  ESLVal $958 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $331;
+                  {ESLVal l2 = $960;
                   
-                  {ESLVal n2 = $330;
+                  {ESLVal n2 = $959;
                   
-                  {ESLVal t2 = $329;
+                  {ESLVal t2 = $958;
                   
                   return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                 }
@@ -6764,17 +6764,17 @@ public class Types {
                 }
                 }
                 }
-              case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                  ESLVal $327 = _v57.termRef(1);
-                  ESLVal $326 = _v57.termRef(2);
+              case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                  ESLVal $956 = _v279.termRef(1);
+                  ESLVal $955 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l1 = $328;
+                  {ESLVal l1 = $957;
                   
-                  {ESLVal ns2 = $327;
+                  {ESLVal ns2 = $956;
                   
-                  {ESLVal t2 = $326;
+                  {ESLVal t2 = $955;
                   
                   return subType.apply(t1,t2);
                 }
@@ -6782,9 +6782,9 @@ public class Types {
                 }
                 }
                 }
-                default: {ESLVal t1 = _v58;
+                default: {ESLVal t1 = _v280;
                   
-                  {ESLVal t2 = _v57;
+                  {ESLVal t2 = _v279;
                   
                   return typeEqual.apply(t1,t2);
                 }
@@ -6792,26 +6792,26 @@ public class Types {
               }
             }
             }
-          case "TermType": {ESLVal $386 = _v58.termRef(0);
-              ESLVal $385 = _v58.termRef(1);
-              ESLVal $384 = _v58.termRef(2);
+          case "TermType": {ESLVal $1015 = _v280.termRef(0);
+              ESLVal $1014 = _v280.termRef(1);
+              ESLVal $1013 = _v280.termRef(2);
               
-              switch(_v57.termName) {
-              case "TermType": {ESLVal $389 = _v57.termRef(0);
-                ESLVal $388 = _v57.termRef(1);
-                ESLVal $387 = _v57.termRef(2);
+              switch(_v279.termName) {
+              case "TermType": {ESLVal $1018 = _v279.termRef(0);
+                ESLVal $1017 = _v279.termRef(1);
+                ESLVal $1016 = _v279.termRef(2);
                 
-                {ESLVal l1 = $386;
+                {ESLVal l1 = $1015;
                 
-                {ESLVal n1 = $385;
+                {ESLVal n1 = $1014;
                 
-                {ESLVal args1 = $384;
+                {ESLVal args1 = $1013;
                 
-                {ESLVal l2 = $389;
+                {ESLVal l2 = $1018;
                 
-                {ESLVal n2 = $388;
+                {ESLVal n2 = $1017;
                 
-                {ESLVal args2 = $387;
+                {ESLVal args2 = $1016;
                 
                 if(n1.eql(n2).boolVal)
                 return subTypes.apply(args1,args2);
@@ -6824,21 +6824,21 @@ public class Types {
               }
               }
               }
-              default: switch(_v57.termName) {
-                case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                  ESLVal $335 = _v57.termRef(1);
-                  ESLVal $334 = _v57.termRef(2);
-                  ESLVal $333 = _v57.termRef(3);
+              default: switch(_v279.termName) {
+                case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                  ESLVal $964 = _v279.termRef(1);
+                  ESLVal $963 = _v279.termRef(2);
+                  ESLVal $962 = _v279.termRef(3);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $336;
+                  {ESLVal l2 = $965;
                   
-                  {ESLVal t2 = $335;
+                  {ESLVal t2 = $964;
                   
-                  {ESLVal ds2 = $334;
+                  {ESLVal ds2 = $963;
                   
-                  {ESLVal ms2 = $333;
+                  {ESLVal ms2 = $962;
                   
                   return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                 }
@@ -6847,27 +6847,27 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+              case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal f = $332;
+                  {ESLVal f = $961;
                   
                   return subType.apply(t1,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $331 = _v57.termRef(0);
-                  ESLVal $330 = _v57.termRef(1);
-                  ESLVal $329 = _v57.termRef(2);
+              case "RecType": {ESLVal $960 = _v279.termRef(0);
+                  ESLVal $959 = _v279.termRef(1);
+                  ESLVal $958 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $331;
+                  {ESLVal l2 = $960;
                   
-                  {ESLVal n2 = $330;
+                  {ESLVal n2 = $959;
                   
-                  {ESLVal t2 = $329;
+                  {ESLVal t2 = $958;
                   
                   return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                 }
@@ -6875,17 +6875,17 @@ public class Types {
                 }
                 }
                 }
-              case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                  ESLVal $327 = _v57.termRef(1);
-                  ESLVal $326 = _v57.termRef(2);
+              case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                  ESLVal $956 = _v279.termRef(1);
+                  ESLVal $955 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l1 = $328;
+                  {ESLVal l1 = $957;
                   
-                  {ESLVal ns2 = $327;
+                  {ESLVal ns2 = $956;
                   
-                  {ESLVal t2 = $326;
+                  {ESLVal t2 = $955;
                   
                   return subType.apply(t1,t2);
                 }
@@ -6893,9 +6893,9 @@ public class Types {
                 }
                 }
                 }
-                default: {ESLVal t1 = _v58;
+                default: {ESLVal t1 = _v280;
                   
-                  {ESLVal t2 = _v57;
+                  {ESLVal t2 = _v279;
                   
                   return typeEqual.apply(t1,t2);
                 }
@@ -6903,26 +6903,26 @@ public class Types {
               }
             }
             }
-          case "FunType": {ESLVal $380 = _v58.termRef(0);
-              ESLVal $379 = _v58.termRef(1);
-              ESLVal $378 = _v58.termRef(2);
+          case "FunType": {ESLVal $1009 = _v280.termRef(0);
+              ESLVal $1008 = _v280.termRef(1);
+              ESLVal $1007 = _v280.termRef(2);
               
-              switch(_v57.termName) {
-              case "FunType": {ESLVal $383 = _v57.termRef(0);
-                ESLVal $382 = _v57.termRef(1);
-                ESLVal $381 = _v57.termRef(2);
+              switch(_v279.termName) {
+              case "FunType": {ESLVal $1012 = _v279.termRef(0);
+                ESLVal $1011 = _v279.termRef(1);
+                ESLVal $1010 = _v279.termRef(2);
                 
-                {ESLVal l1 = $380;
+                {ESLVal l1 = $1009;
                 
-                {ESLVal d1 = $379;
+                {ESLVal d1 = $1008;
                 
-                {ESLVal r1 = $378;
+                {ESLVal r1 = $1007;
                 
-                {ESLVal l2 = $383;
+                {ESLVal l2 = $1012;
                 
-                {ESLVal d2 = $382;
+                {ESLVal d2 = $1011;
                 
-                {ESLVal r2 = $381;
+                {ESLVal r2 = $1010;
                 
                 return subType.apply(r1,r2).and(subTypes.apply(d2,d1));
               }
@@ -6932,21 +6932,21 @@ public class Types {
               }
               }
               }
-              default: switch(_v57.termName) {
-                case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                  ESLVal $335 = _v57.termRef(1);
-                  ESLVal $334 = _v57.termRef(2);
-                  ESLVal $333 = _v57.termRef(3);
+              default: switch(_v279.termName) {
+                case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                  ESLVal $964 = _v279.termRef(1);
+                  ESLVal $963 = _v279.termRef(2);
+                  ESLVal $962 = _v279.termRef(3);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $336;
+                  {ESLVal l2 = $965;
                   
-                  {ESLVal t2 = $335;
+                  {ESLVal t2 = $964;
                   
-                  {ESLVal ds2 = $334;
+                  {ESLVal ds2 = $963;
                   
-                  {ESLVal ms2 = $333;
+                  {ESLVal ms2 = $962;
                   
                   return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                 }
@@ -6955,27 +6955,27 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+              case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal f = $332;
+                  {ESLVal f = $961;
                   
                   return subType.apply(t1,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $331 = _v57.termRef(0);
-                  ESLVal $330 = _v57.termRef(1);
-                  ESLVal $329 = _v57.termRef(2);
+              case "RecType": {ESLVal $960 = _v279.termRef(0);
+                  ESLVal $959 = _v279.termRef(1);
+                  ESLVal $958 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $331;
+                  {ESLVal l2 = $960;
                   
-                  {ESLVal n2 = $330;
+                  {ESLVal n2 = $959;
                   
-                  {ESLVal t2 = $329;
+                  {ESLVal t2 = $958;
                   
                   return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                 }
@@ -6983,17 +6983,17 @@ public class Types {
                 }
                 }
                 }
-              case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                  ESLVal $327 = _v57.termRef(1);
-                  ESLVal $326 = _v57.termRef(2);
+              case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                  ESLVal $956 = _v279.termRef(1);
+                  ESLVal $955 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l1 = $328;
+                  {ESLVal l1 = $957;
                   
-                  {ESLVal ns2 = $327;
+                  {ESLVal ns2 = $956;
                   
-                  {ESLVal t2 = $326;
+                  {ESLVal t2 = $955;
                   
                   return subType.apply(t1,t2);
                 }
@@ -7001,9 +7001,9 @@ public class Types {
                 }
                 }
                 }
-                default: {ESLVal t1 = _v58;
+                default: {ESLVal t1 = _v280;
                   
-                  {ESLVal t2 = _v57;
+                  {ESLVal t2 = _v279;
                   
                   return typeEqual.apply(t1,t2);
                 }
@@ -7011,30 +7011,30 @@ public class Types {
               }
             }
             }
-          case "TypeClosure": {ESLVal $377 = _v58.termRef(0);
+          case "TypeClosure": {ESLVal $1006 = _v280.termRef(0);
               
-              {ESLVal f = $377;
+              {ESLVal f = $1006;
               
-              {ESLVal t2 = _v57;
+              {ESLVal t2 = _v279;
               
               return subType.apply(f.apply(),t2);
             }
             }
             }
-          case "RecordType": {ESLVal $374 = _v58.termRef(0);
-              ESLVal $373 = _v58.termRef(1);
+          case "RecordType": {ESLVal $1003 = _v280.termRef(0);
+              ESLVal $1002 = _v280.termRef(1);
               
-              switch(_v57.termName) {
-              case "RecordType": {ESLVal $376 = _v57.termRef(0);
-                ESLVal $375 = _v57.termRef(1);
+              switch(_v279.termName) {
+              case "RecordType": {ESLVal $1005 = _v279.termRef(0);
+                ESLVal $1004 = _v279.termRef(1);
                 
-                {ESLVal l1 = $374;
+                {ESLVal l1 = $1003;
                 
-                {ESLVal fs1 = $373;
+                {ESLVal fs1 = $1002;
                 
-                {ESLVal l2 = $376;
+                {ESLVal l2 = $1005;
                 
-                {ESLVal fs2 = $375;
+                {ESLVal fs2 = $1004;
                 
                 return recordSubType.apply(fs1,fs2);
               }
@@ -7042,21 +7042,21 @@ public class Types {
               }
               }
               }
-              default: switch(_v57.termName) {
-                case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                  ESLVal $335 = _v57.termRef(1);
-                  ESLVal $334 = _v57.termRef(2);
-                  ESLVal $333 = _v57.termRef(3);
+              default: switch(_v279.termName) {
+                case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                  ESLVal $964 = _v279.termRef(1);
+                  ESLVal $963 = _v279.termRef(2);
+                  ESLVal $962 = _v279.termRef(3);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $336;
+                  {ESLVal l2 = $965;
                   
-                  {ESLVal t2 = $335;
+                  {ESLVal t2 = $964;
                   
-                  {ESLVal ds2 = $334;
+                  {ESLVal ds2 = $963;
                   
-                  {ESLVal ms2 = $333;
+                  {ESLVal ms2 = $962;
                   
                   return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                 }
@@ -7065,27 +7065,27 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+              case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal f = $332;
+                  {ESLVal f = $961;
                   
                   return subType.apply(t1,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $331 = _v57.termRef(0);
-                  ESLVal $330 = _v57.termRef(1);
-                  ESLVal $329 = _v57.termRef(2);
+              case "RecType": {ESLVal $960 = _v279.termRef(0);
+                  ESLVal $959 = _v279.termRef(1);
+                  ESLVal $958 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $331;
+                  {ESLVal l2 = $960;
                   
-                  {ESLVal n2 = $330;
+                  {ESLVal n2 = $959;
                   
-                  {ESLVal t2 = $329;
+                  {ESLVal t2 = $958;
                   
                   return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                 }
@@ -7093,17 +7093,17 @@ public class Types {
                 }
                 }
                 }
-              case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                  ESLVal $327 = _v57.termRef(1);
-                  ESLVal $326 = _v57.termRef(2);
+              case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                  ESLVal $956 = _v279.termRef(1);
+                  ESLVal $955 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l1 = $328;
+                  {ESLVal l1 = $957;
                   
-                  {ESLVal ns2 = $327;
+                  {ESLVal ns2 = $956;
                   
-                  {ESLVal t2 = $326;
+                  {ESLVal t2 = $955;
                   
                   return subType.apply(t1,t2);
                 }
@@ -7111,9 +7111,9 @@ public class Types {
                 }
                 }
                 }
-                default: {ESLVal t1 = _v58;
+                default: {ESLVal t1 = _v280;
                   
-                  {ESLVal t2 = _v57;
+                  {ESLVal t2 = _v279;
                   
                   return typeEqual.apply(t1,t2);
                 }
@@ -7121,39 +7121,39 @@ public class Types {
               }
             }
             }
-          case "RecType": {ESLVal $369 = _v58.termRef(0);
-              ESLVal $368 = _v58.termRef(1);
-              ESLVal $367 = _v58.termRef(2);
+          case "RecType": {ESLVal $998 = _v280.termRef(0);
+              ESLVal $997 = _v280.termRef(1);
+              ESLVal $996 = _v280.termRef(2);
               
-              switch(_v57.termName) {
-              case "RecType": {ESLVal $372 = _v57.termRef(0);
-                ESLVal $371 = _v57.termRef(1);
-                ESLVal $370 = _v57.termRef(2);
+              switch(_v279.termName) {
+              case "RecType": {ESLVal $1001 = _v279.termRef(0);
+                ESLVal $1000 = _v279.termRef(1);
+                ESLVal $999 = _v279.termRef(2);
                 
-                {ESLVal l1 = $369;
+                {ESLVal l1 = $998;
                 
-                {ESLVal n1 = $368;
+                {ESLVal n1 = $997;
                 
-                {ESLVal t1 = $367;
+                {ESLVal t1 = $996;
                 
-                {ESLVal l2 = $372;
+                {ESLVal l2 = $1001;
                 
-                {ESLVal n2 = $371;
+                {ESLVal n2 = $1000;
                 
-                {ESLVal t2 = $370;
+                {ESLVal t2 = $999;
                 
                 if(n1.eql(n2).boolVal)
                 return subType.apply(t1,t2);
                 else
-                  {ESLVal _v122 = $369;
+                  {ESLVal _v369 = $998;
                     
-                    {ESLVal _v123 = $368;
+                    {ESLVal _v370 = $997;
                     
-                    {ESLVal _v124 = $367;
+                    {ESLVal _v371 = $996;
                     
-                    {ESLVal _v125 = _v57;
+                    {ESLVal _v372 = _v279;
                     
-                    return subType.apply(substType.apply(new ESLVal("RecType",_v122,_v123,_v124),_v123,_v124),_v125);
+                    return subType.apply(substType.apply(new ESLVal("RecType",_v369,_v370,_v371),_v370,_v371),_v372);
                   }
                   }
                   }
@@ -7165,13 +7165,13 @@ public class Types {
               }
               }
               }
-              default: {ESLVal l1 = $369;
+              default: {ESLVal l1 = $998;
                 
-                {ESLVal n1 = $368;
+                {ESLVal n1 = $997;
                 
-                {ESLVal t1 = $367;
+                {ESLVal t1 = $996;
                 
-                {ESLVal t2 = _v57;
+                {ESLVal t2 = _v279;
                 
                 return subType.apply(substType.apply(new ESLVal("RecType",l1,n1,t1),n1,t1),t2);
               }
@@ -7180,20 +7180,20 @@ public class Types {
               }
             }
             }
-          case "UnionType": {ESLVal $364 = _v58.termRef(0);
-              ESLVal $363 = _v58.termRef(1);
+          case "UnionType": {ESLVal $993 = _v280.termRef(0);
+              ESLVal $992 = _v280.termRef(1);
               
-              switch(_v57.termName) {
-              case "UnionType": {ESLVal $366 = _v57.termRef(0);
-                ESLVal $365 = _v57.termRef(1);
+              switch(_v279.termName) {
+              case "UnionType": {ESLVal $995 = _v279.termRef(0);
+                ESLVal $994 = _v279.termRef(1);
                 
-                {ESLVal l1 = $364;
+                {ESLVal l1 = $993;
                 
-                {ESLVal terms1 = $363;
+                {ESLVal terms1 = $992;
                 
-                {ESLVal l2 = $366;
+                {ESLVal l2 = $995;
                 
-                {ESLVal terms2 = $365;
+                {ESLVal terms2 = $994;
                 
                 return subTypes.apply(terms1,terms2);
               }
@@ -7201,21 +7201,21 @@ public class Types {
               }
               }
               }
-              default: switch(_v57.termName) {
-                case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                  ESLVal $335 = _v57.termRef(1);
-                  ESLVal $334 = _v57.termRef(2);
-                  ESLVal $333 = _v57.termRef(3);
+              default: switch(_v279.termName) {
+                case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                  ESLVal $964 = _v279.termRef(1);
+                  ESLVal $963 = _v279.termRef(2);
+                  ESLVal $962 = _v279.termRef(3);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $336;
+                  {ESLVal l2 = $965;
                   
-                  {ESLVal t2 = $335;
+                  {ESLVal t2 = $964;
                   
-                  {ESLVal ds2 = $334;
+                  {ESLVal ds2 = $963;
                   
-                  {ESLVal ms2 = $333;
+                  {ESLVal ms2 = $962;
                   
                   return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                 }
@@ -7224,27 +7224,27 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+              case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal f = $332;
+                  {ESLVal f = $961;
                   
                   return subType.apply(t1,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $331 = _v57.termRef(0);
-                  ESLVal $330 = _v57.termRef(1);
-                  ESLVal $329 = _v57.termRef(2);
+              case "RecType": {ESLVal $960 = _v279.termRef(0);
+                  ESLVal $959 = _v279.termRef(1);
+                  ESLVal $958 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $331;
+                  {ESLVal l2 = $960;
                   
-                  {ESLVal n2 = $330;
+                  {ESLVal n2 = $959;
                   
-                  {ESLVal t2 = $329;
+                  {ESLVal t2 = $958;
                   
                   return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                 }
@@ -7252,17 +7252,17 @@ public class Types {
                 }
                 }
                 }
-              case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                  ESLVal $327 = _v57.termRef(1);
-                  ESLVal $326 = _v57.termRef(2);
+              case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                  ESLVal $956 = _v279.termRef(1);
+                  ESLVal $955 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l1 = $328;
+                  {ESLVal l1 = $957;
                   
-                  {ESLVal ns2 = $327;
+                  {ESLVal ns2 = $956;
                   
-                  {ESLVal t2 = $326;
+                  {ESLVal t2 = $955;
                   
                   return subType.apply(t1,t2);
                 }
@@ -7270,9 +7270,9 @@ public class Types {
                 }
                 }
                 }
-                default: {ESLVal t1 = _v58;
+                default: {ESLVal t1 = _v280;
                   
-                  {ESLVal t2 = _v57;
+                  {ESLVal t2 = _v279;
                   
                   return typeEqual.apply(t1,t2);
                 }
@@ -7280,20 +7280,20 @@ public class Types {
               }
             }
             }
-          case "VarType": {ESLVal $360 = _v58.termRef(0);
-              ESLVal $359 = _v58.termRef(1);
+          case "VarType": {ESLVal $989 = _v280.termRef(0);
+              ESLVal $988 = _v280.termRef(1);
               
-              switch(_v57.termName) {
-              case "VarType": {ESLVal $362 = _v57.termRef(0);
-                ESLVal $361 = _v57.termRef(1);
+              switch(_v279.termName) {
+              case "VarType": {ESLVal $991 = _v279.termRef(0);
+                ESLVal $990 = _v279.termRef(1);
                 
-                {ESLVal l1 = $360;
+                {ESLVal l1 = $989;
                 
-                {ESLVal n1 = $359;
+                {ESLVal n1 = $988;
                 
-                {ESLVal l2 = $362;
+                {ESLVal l2 = $991;
                 
-                {ESLVal n2 = $361;
+                {ESLVal n2 = $990;
                 
                 return n1.eql(n2);
               }
@@ -7301,21 +7301,21 @@ public class Types {
               }
               }
               }
-              default: switch(_v57.termName) {
-                case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                  ESLVal $335 = _v57.termRef(1);
-                  ESLVal $334 = _v57.termRef(2);
-                  ESLVal $333 = _v57.termRef(3);
+              default: switch(_v279.termName) {
+                case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                  ESLVal $964 = _v279.termRef(1);
+                  ESLVal $963 = _v279.termRef(2);
+                  ESLVal $962 = _v279.termRef(3);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $336;
+                  {ESLVal l2 = $965;
                   
-                  {ESLVal t2 = $335;
+                  {ESLVal t2 = $964;
                   
-                  {ESLVal ds2 = $334;
+                  {ESLVal ds2 = $963;
                   
-                  {ESLVal ms2 = $333;
+                  {ESLVal ms2 = $962;
                   
                   return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
                 }
@@ -7324,27 +7324,27 @@ public class Types {
                 }
                 }
                 }
-              case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+              case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal f = $332;
+                  {ESLVal f = $961;
                   
                   return subType.apply(t1,f.apply());
                 }
                 }
                 }
-              case "RecType": {ESLVal $331 = _v57.termRef(0);
-                  ESLVal $330 = _v57.termRef(1);
-                  ESLVal $329 = _v57.termRef(2);
+              case "RecType": {ESLVal $960 = _v279.termRef(0);
+                  ESLVal $959 = _v279.termRef(1);
+                  ESLVal $958 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l2 = $331;
+                  {ESLVal l2 = $960;
                   
-                  {ESLVal n2 = $330;
+                  {ESLVal n2 = $959;
                   
-                  {ESLVal t2 = $329;
+                  {ESLVal t2 = $958;
                   
                   return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
                 }
@@ -7352,17 +7352,17 @@ public class Types {
                 }
                 }
                 }
-              case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                  ESLVal $327 = _v57.termRef(1);
-                  ESLVal $326 = _v57.termRef(2);
+              case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                  ESLVal $956 = _v279.termRef(1);
+                  ESLVal $955 = _v279.termRef(2);
                   
-                  {ESLVal t1 = _v58;
+                  {ESLVal t1 = _v280;
                   
-                  {ESLVal l1 = $328;
+                  {ESLVal l1 = $957;
                   
-                  {ESLVal ns2 = $327;
+                  {ESLVal ns2 = $956;
                   
-                  {ESLVal t2 = $326;
+                  {ESLVal t2 = $955;
                   
                   return subType.apply(t1,t2);
                 }
@@ -7370,9 +7370,9 @@ public class Types {
                 }
                 }
                 }
-                default: {ESLVal t1 = _v58;
+                default: {ESLVal t1 = _v280;
                   
-                  {ESLVal t2 = _v57;
+                  {ESLVal t2 = _v279;
                   
                   return typeEqual.apply(t1,t2);
                 }
@@ -7380,34 +7380,34 @@ public class Types {
               }
             }
             }
-          case "ForallType": {ESLVal $339 = _v58.termRef(0);
-              ESLVal $338 = _v58.termRef(1);
-              ESLVal $337 = _v58.termRef(2);
+          case "ForallType": {ESLVal $968 = _v280.termRef(0);
+              ESLVal $967 = _v280.termRef(1);
+              ESLVal $966 = _v280.termRef(2);
               
-              if($338.isCons())
-              {ESLVal $343 = $338.head();
-                ESLVal $344 = $338.tail();
+              if($967.isCons())
+              {ESLVal $972 = $967.head();
+                ESLVal $973 = $967.tail();
                 
-                if($344.isCons())
-                {ESLVal $345 = $344.head();
-                  ESLVal $346 = $344.tail();
+                if($973.isCons())
+                {ESLVal $974 = $973.head();
+                  ESLVal $975 = $973.tail();
                   
-                  switch(_v57.termName) {
-                  case "ForallType": {ESLVal $342 = _v57.termRef(0);
-                    ESLVal $341 = _v57.termRef(1);
-                    ESLVal $340 = _v57.termRef(2);
+                  switch(_v279.termName) {
+                  case "ForallType": {ESLVal $971 = _v279.termRef(0);
+                    ESLVal $970 = _v279.termRef(1);
+                    ESLVal $969 = _v279.termRef(2);
                     
-                    {ESLVal l1 = $339;
+                    {ESLVal l1 = $968;
                     
-                    {ESLVal ns1 = $338;
+                    {ESLVal ns1 = $967;
                     
-                    {ESLVal t1 = $337;
+                    {ESLVal t1 = $966;
                     
-                    {ESLVal l2 = $342;
+                    {ESLVal l2 = $971;
                     
-                    {ESLVal ns2 = $341;
+                    {ESLVal ns2 = $970;
                     
-                    {ESLVal t2 = $340;
+                    {ESLVal t2 = $969;
                     
                     return ns1.eql(ns2).and(subType.apply(t1,t2));
                   }
@@ -7417,13 +7417,13 @@ public class Types {
                   }
                   }
                   }
-                  default: {ESLVal l1 = $339;
+                  default: {ESLVal l1 = $968;
                     
-                    {ESLVal ns1 = $338;
+                    {ESLVal ns1 = $967;
                     
-                    {ESLVal t1 = $337;
+                    {ESLVal t1 = $966;
                     
-                    {ESLVal t2 = _v57;
+                    {ESLVal t2 = _v279;
                     
                     return subType.apply(t1,t2);
                   }
@@ -7432,54 +7432,54 @@ public class Types {
                   }
                 }
                 }
-              else if($344.isNil())
-                switch($337.termName) {
-                  case "ListType": {ESLVal $354 = $337.termRef(0);
-                    ESLVal $353 = $337.termRef(1);
+              else if($973.isNil())
+                switch($966.termName) {
+                  case "ListType": {ESLVal $983 = $966.termRef(0);
+                    ESLVal $982 = $966.termRef(1);
                     
-                    switch($353.termName) {
-                    case "VarType": {ESLVal $356 = $353.termRef(0);
-                      ESLVal $355 = $353.termRef(1);
+                    switch($982.termName) {
+                    case "VarType": {ESLVal $985 = $982.termRef(0);
+                      ESLVal $984 = $982.termRef(1);
                       
-                      switch(_v57.termName) {
-                      case "ListType": {ESLVal $358 = _v57.termRef(0);
-                        ESLVal $357 = _v57.termRef(1);
+                      switch(_v279.termName) {
+                      case "ListType": {ESLVal $987 = _v279.termRef(0);
+                        ESLVal $986 = _v279.termRef(1);
                         
-                        {ESLVal l2 = $339;
+                        {ESLVal l2 = $968;
                         
-                        {ESLVal v1 = $343;
+                        {ESLVal v1 = $972;
                         
-                        {ESLVal l3 = $354;
+                        {ESLVal l3 = $983;
                         
-                        {ESLVal l4 = $356;
+                        {ESLVal l4 = $985;
                         
-                        {ESLVal v2 = $355;
+                        {ESLVal v2 = $984;
                         
-                        {ESLVal l1 = $358;
+                        {ESLVal l1 = $987;
                         
-                        {ESLVal t1 = $357;
+                        {ESLVal t1 = $986;
                         
                         if(v1.eql(v2).boolVal)
                         return $true;
                         else
-                          switch(_v57.termName) {
-                            case "ForallType": {ESLVal $342 = _v57.termRef(0);
-                              ESLVal $341 = _v57.termRef(1);
-                              ESLVal $340 = _v57.termRef(2);
+                          switch(_v279.termName) {
+                            case "ForallType": {ESLVal $971 = _v279.termRef(0);
+                              ESLVal $970 = _v279.termRef(1);
+                              ESLVal $969 = _v279.termRef(2);
                               
-                              {ESLVal _v117 = $339;
+                              {ESLVal _v364 = $968;
                               
-                              {ESLVal ns1 = $338;
+                              {ESLVal ns1 = $967;
                               
-                              {ESLVal _v118 = $337;
+                              {ESLVal _v365 = $966;
                               
-                              {ESLVal _v119 = $342;
+                              {ESLVal _v366 = $971;
                               
-                              {ESLVal ns2 = $341;
+                              {ESLVal ns2 = $970;
                               
-                              {ESLVal t2 = $340;
+                              {ESLVal t2 = $969;
                               
-                              return ns1.eql(ns2).and(subType.apply(_v118,t2));
+                              return ns1.eql(ns2).and(subType.apply(_v365,t2));
                             }
                             }
                             }
@@ -7487,15 +7487,15 @@ public class Types {
                             }
                             }
                             }
-                            default: {ESLVal _v120 = $339;
+                            default: {ESLVal _v367 = $968;
                               
-                              {ESLVal ns1 = $338;
+                              {ESLVal ns1 = $967;
                               
-                              {ESLVal _v121 = $337;
+                              {ESLVal _v368 = $966;
                               
-                              {ESLVal t2 = _v57;
+                              {ESLVal t2 = _v279;
                               
-                              return subType.apply(_v121,t2);
+                              return subType.apply(_v368,t2);
                             }
                             }
                             }
@@ -7509,22 +7509,22 @@ public class Types {
                       }
                       }
                       }
-                      default: switch(_v57.termName) {
-                        case "ForallType": {ESLVal $342 = _v57.termRef(0);
-                          ESLVal $341 = _v57.termRef(1);
-                          ESLVal $340 = _v57.termRef(2);
+                      default: switch(_v279.termName) {
+                        case "ForallType": {ESLVal $971 = _v279.termRef(0);
+                          ESLVal $970 = _v279.termRef(1);
+                          ESLVal $969 = _v279.termRef(2);
                           
-                          {ESLVal l1 = $339;
+                          {ESLVal l1 = $968;
                           
-                          {ESLVal ns1 = $338;
+                          {ESLVal ns1 = $967;
                           
-                          {ESLVal t1 = $337;
+                          {ESLVal t1 = $966;
                           
-                          {ESLVal l2 = $342;
+                          {ESLVal l2 = $971;
                           
-                          {ESLVal ns2 = $341;
+                          {ESLVal ns2 = $970;
                           
-                          {ESLVal t2 = $340;
+                          {ESLVal t2 = $969;
                           
                           return ns1.eql(ns2).and(subType.apply(t1,t2));
                         }
@@ -7534,13 +7534,13 @@ public class Types {
                         }
                         }
                         }
-                        default: {ESLVal l1 = $339;
+                        default: {ESLVal l1 = $968;
                           
-                          {ESLVal ns1 = $338;
+                          {ESLVal ns1 = $967;
                           
-                          {ESLVal t1 = $337;
+                          {ESLVal t1 = $966;
                           
-                          {ESLVal t2 = _v57;
+                          {ESLVal t2 = _v279;
                           
                           return subType.apply(t1,t2);
                         }
@@ -7550,22 +7550,22 @@ public class Types {
                       }
                     }
                     }
-                    default: switch(_v57.termName) {
-                      case "ForallType": {ESLVal $342 = _v57.termRef(0);
-                        ESLVal $341 = _v57.termRef(1);
-                        ESLVal $340 = _v57.termRef(2);
+                    default: switch(_v279.termName) {
+                      case "ForallType": {ESLVal $971 = _v279.termRef(0);
+                        ESLVal $970 = _v279.termRef(1);
+                        ESLVal $969 = _v279.termRef(2);
                         
-                        {ESLVal l1 = $339;
+                        {ESLVal l1 = $968;
                         
-                        {ESLVal ns1 = $338;
+                        {ESLVal ns1 = $967;
                         
-                        {ESLVal t1 = $337;
+                        {ESLVal t1 = $966;
                         
-                        {ESLVal l2 = $342;
+                        {ESLVal l2 = $971;
                         
-                        {ESLVal ns2 = $341;
+                        {ESLVal ns2 = $970;
                         
-                        {ESLVal t2 = $340;
+                        {ESLVal t2 = $969;
                         
                         return ns1.eql(ns2).and(subType.apply(t1,t2));
                       }
@@ -7575,13 +7575,13 @@ public class Types {
                       }
                       }
                       }
-                      default: {ESLVal l1 = $339;
+                      default: {ESLVal l1 = $968;
                         
-                        {ESLVal ns1 = $338;
+                        {ESLVal ns1 = $967;
                         
-                        {ESLVal t1 = $337;
+                        {ESLVal t1 = $966;
                         
-                        {ESLVal t2 = _v57;
+                        {ESLVal t2 = _v279;
                         
                         return subType.apply(t1,t2);
                       }
@@ -7591,52 +7591,52 @@ public class Types {
                     }
                   }
                   }
-                case "SetType": {ESLVal $348 = $337.termRef(0);
-                    ESLVal $347 = $337.termRef(1);
+                case "SetType": {ESLVal $977 = $966.termRef(0);
+                    ESLVal $976 = $966.termRef(1);
                     
-                    switch($347.termName) {
-                    case "VarType": {ESLVal $350 = $347.termRef(0);
-                      ESLVal $349 = $347.termRef(1);
+                    switch($976.termName) {
+                    case "VarType": {ESLVal $979 = $976.termRef(0);
+                      ESLVal $978 = $976.termRef(1);
                       
-                      switch(_v57.termName) {
-                      case "SetType": {ESLVal $352 = _v57.termRef(0);
-                        ESLVal $351 = _v57.termRef(1);
+                      switch(_v279.termName) {
+                      case "SetType": {ESLVal $981 = _v279.termRef(0);
+                        ESLVal $980 = _v279.termRef(1);
                         
-                        {ESLVal l2 = $339;
+                        {ESLVal l2 = $968;
                         
-                        {ESLVal v1 = $343;
+                        {ESLVal v1 = $972;
                         
-                        {ESLVal l3 = $348;
+                        {ESLVal l3 = $977;
                         
-                        {ESLVal l4 = $350;
+                        {ESLVal l4 = $979;
                         
-                        {ESLVal v2 = $349;
+                        {ESLVal v2 = $978;
                         
-                        {ESLVal l1 = $352;
+                        {ESLVal l1 = $981;
                         
-                        {ESLVal t1 = $351;
+                        {ESLVal t1 = $980;
                         
                         if(v1.eql(v2).boolVal)
                         return $true;
                         else
-                          switch(_v57.termName) {
-                            case "ForallType": {ESLVal $342 = _v57.termRef(0);
-                              ESLVal $341 = _v57.termRef(1);
-                              ESLVal $340 = _v57.termRef(2);
+                          switch(_v279.termName) {
+                            case "ForallType": {ESLVal $971 = _v279.termRef(0);
+                              ESLVal $970 = _v279.termRef(1);
+                              ESLVal $969 = _v279.termRef(2);
                               
-                              {ESLVal _v112 = $339;
+                              {ESLVal _v359 = $968;
                               
-                              {ESLVal ns1 = $338;
+                              {ESLVal ns1 = $967;
                               
-                              {ESLVal _v113 = $337;
+                              {ESLVal _v360 = $966;
                               
-                              {ESLVal _v114 = $342;
+                              {ESLVal _v361 = $971;
                               
-                              {ESLVal ns2 = $341;
+                              {ESLVal ns2 = $970;
                               
-                              {ESLVal t2 = $340;
+                              {ESLVal t2 = $969;
                               
-                              return ns1.eql(ns2).and(subType.apply(_v113,t2));
+                              return ns1.eql(ns2).and(subType.apply(_v360,t2));
                             }
                             }
                             }
@@ -7644,15 +7644,15 @@ public class Types {
                             }
                             }
                             }
-                            default: {ESLVal _v115 = $339;
+                            default: {ESLVal _v362 = $968;
                               
-                              {ESLVal ns1 = $338;
+                              {ESLVal ns1 = $967;
                               
-                              {ESLVal _v116 = $337;
+                              {ESLVal _v363 = $966;
                               
-                              {ESLVal t2 = _v57;
+                              {ESLVal t2 = _v279;
                               
-                              return subType.apply(_v116,t2);
+                              return subType.apply(_v363,t2);
                             }
                             }
                             }
@@ -7666,22 +7666,22 @@ public class Types {
                       }
                       }
                       }
-                      default: switch(_v57.termName) {
-                        case "ForallType": {ESLVal $342 = _v57.termRef(0);
-                          ESLVal $341 = _v57.termRef(1);
-                          ESLVal $340 = _v57.termRef(2);
+                      default: switch(_v279.termName) {
+                        case "ForallType": {ESLVal $971 = _v279.termRef(0);
+                          ESLVal $970 = _v279.termRef(1);
+                          ESLVal $969 = _v279.termRef(2);
                           
-                          {ESLVal l1 = $339;
+                          {ESLVal l1 = $968;
                           
-                          {ESLVal ns1 = $338;
+                          {ESLVal ns1 = $967;
                           
-                          {ESLVal t1 = $337;
+                          {ESLVal t1 = $966;
                           
-                          {ESLVal l2 = $342;
+                          {ESLVal l2 = $971;
                           
-                          {ESLVal ns2 = $341;
+                          {ESLVal ns2 = $970;
                           
-                          {ESLVal t2 = $340;
+                          {ESLVal t2 = $969;
                           
                           return ns1.eql(ns2).and(subType.apply(t1,t2));
                         }
@@ -7691,13 +7691,13 @@ public class Types {
                         }
                         }
                         }
-                        default: {ESLVal l1 = $339;
+                        default: {ESLVal l1 = $968;
                           
-                          {ESLVal ns1 = $338;
+                          {ESLVal ns1 = $967;
                           
-                          {ESLVal t1 = $337;
+                          {ESLVal t1 = $966;
                           
-                          {ESLVal t2 = _v57;
+                          {ESLVal t2 = _v279;
                           
                           return subType.apply(t1,t2);
                         }
@@ -7707,22 +7707,22 @@ public class Types {
                       }
                     }
                     }
-                    default: switch(_v57.termName) {
-                      case "ForallType": {ESLVal $342 = _v57.termRef(0);
-                        ESLVal $341 = _v57.termRef(1);
-                        ESLVal $340 = _v57.termRef(2);
+                    default: switch(_v279.termName) {
+                      case "ForallType": {ESLVal $971 = _v279.termRef(0);
+                        ESLVal $970 = _v279.termRef(1);
+                        ESLVal $969 = _v279.termRef(2);
                         
-                        {ESLVal l1 = $339;
+                        {ESLVal l1 = $968;
                         
-                        {ESLVal ns1 = $338;
+                        {ESLVal ns1 = $967;
                         
-                        {ESLVal t1 = $337;
+                        {ESLVal t1 = $966;
                         
-                        {ESLVal l2 = $342;
+                        {ESLVal l2 = $971;
                         
-                        {ESLVal ns2 = $341;
+                        {ESLVal ns2 = $970;
                         
-                        {ESLVal t2 = $340;
+                        {ESLVal t2 = $969;
                         
                         return ns1.eql(ns2).and(subType.apply(t1,t2));
                       }
@@ -7732,13 +7732,13 @@ public class Types {
                       }
                       }
                       }
-                      default: {ESLVal l1 = $339;
+                      default: {ESLVal l1 = $968;
                         
-                        {ESLVal ns1 = $338;
+                        {ESLVal ns1 = $967;
                         
-                        {ESLVal t1 = $337;
+                        {ESLVal t1 = $966;
                         
-                        {ESLVal t2 = _v57;
+                        {ESLVal t2 = _v279;
                         
                         return subType.apply(t1,t2);
                       }
@@ -7748,22 +7748,22 @@ public class Types {
                     }
                   }
                   }
-                  default: switch(_v57.termName) {
-                    case "ForallType": {ESLVal $342 = _v57.termRef(0);
-                      ESLVal $341 = _v57.termRef(1);
-                      ESLVal $340 = _v57.termRef(2);
+                  default: switch(_v279.termName) {
+                    case "ForallType": {ESLVal $971 = _v279.termRef(0);
+                      ESLVal $970 = _v279.termRef(1);
+                      ESLVal $969 = _v279.termRef(2);
                       
-                      {ESLVal l1 = $339;
+                      {ESLVal l1 = $968;
                       
-                      {ESLVal ns1 = $338;
+                      {ESLVal ns1 = $967;
                       
-                      {ESLVal t1 = $337;
+                      {ESLVal t1 = $966;
                       
-                      {ESLVal l2 = $342;
+                      {ESLVal l2 = $971;
                       
-                      {ESLVal ns2 = $341;
+                      {ESLVal ns2 = $970;
                       
-                      {ESLVal t2 = $340;
+                      {ESLVal t2 = $969;
                       
                       return ns1.eql(ns2).and(subType.apply(t1,t2));
                     }
@@ -7773,13 +7773,13 @@ public class Types {
                     }
                     }
                     }
-                    default: {ESLVal l1 = $339;
+                    default: {ESLVal l1 = $968;
                       
-                      {ESLVal ns1 = $338;
+                      {ESLVal ns1 = $967;
                       
-                      {ESLVal t1 = $337;
+                      {ESLVal t1 = $966;
                       
-                      {ESLVal t2 = _v57;
+                      {ESLVal t2 = _v279;
                       
                       return subType.apply(t1,t2);
                     }
@@ -7788,22 +7788,22 @@ public class Types {
                     }
                   }
                 }
-              else switch(_v57.termName) {
-                  case "ForallType": {ESLVal $342 = _v57.termRef(0);
-                    ESLVal $341 = _v57.termRef(1);
-                    ESLVal $340 = _v57.termRef(2);
+              else switch(_v279.termName) {
+                  case "ForallType": {ESLVal $971 = _v279.termRef(0);
+                    ESLVal $970 = _v279.termRef(1);
+                    ESLVal $969 = _v279.termRef(2);
                     
-                    {ESLVal l1 = $339;
+                    {ESLVal l1 = $968;
                     
-                    {ESLVal ns1 = $338;
+                    {ESLVal ns1 = $967;
                     
-                    {ESLVal t1 = $337;
+                    {ESLVal t1 = $966;
                     
-                    {ESLVal l2 = $342;
+                    {ESLVal l2 = $971;
                     
-                    {ESLVal ns2 = $341;
+                    {ESLVal ns2 = $970;
                     
-                    {ESLVal t2 = $340;
+                    {ESLVal t2 = $969;
                     
                     return ns1.eql(ns2).and(subType.apply(t1,t2));
                   }
@@ -7813,13 +7813,13 @@ public class Types {
                   }
                   }
                   }
-                  default: {ESLVal l1 = $339;
+                  default: {ESLVal l1 = $968;
                     
-                    {ESLVal ns1 = $338;
+                    {ESLVal ns1 = $967;
                     
-                    {ESLVal t1 = $337;
+                    {ESLVal t1 = $966;
                     
-                    {ESLVal t2 = _v57;
+                    {ESLVal t2 = _v279;
                     
                     return subType.apply(t1,t2);
                   }
@@ -7828,23 +7828,23 @@ public class Types {
                   }
                 }
               }
-            else if($338.isNil())
-              switch(_v57.termName) {
-                case "ForallType": {ESLVal $342 = _v57.termRef(0);
-                  ESLVal $341 = _v57.termRef(1);
-                  ESLVal $340 = _v57.termRef(2);
+            else if($967.isNil())
+              switch(_v279.termName) {
+                case "ForallType": {ESLVal $971 = _v279.termRef(0);
+                  ESLVal $970 = _v279.termRef(1);
+                  ESLVal $969 = _v279.termRef(2);
                   
-                  {ESLVal l1 = $339;
+                  {ESLVal l1 = $968;
                   
-                  {ESLVal ns1 = $338;
+                  {ESLVal ns1 = $967;
                   
-                  {ESLVal t1 = $337;
+                  {ESLVal t1 = $966;
                   
-                  {ESLVal l2 = $342;
+                  {ESLVal l2 = $971;
                   
-                  {ESLVal ns2 = $341;
+                  {ESLVal ns2 = $970;
                   
-                  {ESLVal t2 = $340;
+                  {ESLVal t2 = $969;
                   
                   return ns1.eql(ns2).and(subType.apply(t1,t2));
                 }
@@ -7854,13 +7854,13 @@ public class Types {
                 }
                 }
                 }
-                default: {ESLVal l1 = $339;
+                default: {ESLVal l1 = $968;
                   
-                  {ESLVal ns1 = $338;
+                  {ESLVal ns1 = $967;
                   
-                  {ESLVal t1 = $337;
+                  {ESLVal t1 = $966;
                   
-                  {ESLVal t2 = _v57;
+                  {ESLVal t2 = _v279;
                   
                   return subType.apply(t1,t2);
                 }
@@ -7868,22 +7868,22 @@ public class Types {
                 }
                 }
               }
-            else switch(_v57.termName) {
-                case "ForallType": {ESLVal $342 = _v57.termRef(0);
-                  ESLVal $341 = _v57.termRef(1);
-                  ESLVal $340 = _v57.termRef(2);
+            else switch(_v279.termName) {
+                case "ForallType": {ESLVal $971 = _v279.termRef(0);
+                  ESLVal $970 = _v279.termRef(1);
+                  ESLVal $969 = _v279.termRef(2);
                   
-                  {ESLVal l1 = $339;
+                  {ESLVal l1 = $968;
                   
-                  {ESLVal ns1 = $338;
+                  {ESLVal ns1 = $967;
                   
-                  {ESLVal t1 = $337;
+                  {ESLVal t1 = $966;
                   
-                  {ESLVal l2 = $342;
+                  {ESLVal l2 = $971;
                   
-                  {ESLVal ns2 = $341;
+                  {ESLVal ns2 = $970;
                   
-                  {ESLVal t2 = $340;
+                  {ESLVal t2 = $969;
                   
                   return ns1.eql(ns2).and(subType.apply(t1,t2));
                 }
@@ -7893,13 +7893,13 @@ public class Types {
                 }
                 }
                 }
-                default: {ESLVal l1 = $339;
+                default: {ESLVal l1 = $968;
                   
-                  {ESLVal ns1 = $338;
+                  {ESLVal ns1 = $967;
                   
-                  {ESLVal t1 = $337;
+                  {ESLVal t1 = $966;
                   
-                  {ESLVal t2 = _v57;
+                  {ESLVal t2 = _v279;
                   
                   return subType.apply(t1,t2);
                 }
@@ -7908,21 +7908,21 @@ public class Types {
                 }
               }
             }
-            default: switch(_v57.termName) {
-              case "ExtendedAct": {ESLVal $336 = _v57.termRef(0);
-                ESLVal $335 = _v57.termRef(1);
-                ESLVal $334 = _v57.termRef(2);
-                ESLVal $333 = _v57.termRef(3);
+            default: switch(_v279.termName) {
+              case "ExtendedAct": {ESLVal $965 = _v279.termRef(0);
+                ESLVal $964 = _v279.termRef(1);
+                ESLVal $963 = _v279.termRef(2);
+                ESLVal $962 = _v279.termRef(3);
                 
-                {ESLVal t1 = _v58;
+                {ESLVal t1 = _v280;
                 
-                {ESLVal l2 = $336;
+                {ESLVal l2 = $965;
                 
-                {ESLVal t2 = $335;
+                {ESLVal t2 = $964;
                 
-                {ESLVal ds2 = $334;
+                {ESLVal ds2 = $963;
                 
-                {ESLVal ms2 = $333;
+                {ESLVal ms2 = $962;
                 
                 return subType.apply(t1,flattenAct.apply(l2,t2,ds2,ms2));
               }
@@ -7931,27 +7931,27 @@ public class Types {
               }
               }
               }
-            case "TypeClosure": {ESLVal $332 = _v57.termRef(0);
+            case "TypeClosure": {ESLVal $961 = _v279.termRef(0);
                 
-                {ESLVal t1 = _v58;
+                {ESLVal t1 = _v280;
                 
-                {ESLVal f = $332;
+                {ESLVal f = $961;
                 
                 return subType.apply(t1,f.apply());
               }
               }
               }
-            case "RecType": {ESLVal $331 = _v57.termRef(0);
-                ESLVal $330 = _v57.termRef(1);
-                ESLVal $329 = _v57.termRef(2);
+            case "RecType": {ESLVal $960 = _v279.termRef(0);
+                ESLVal $959 = _v279.termRef(1);
+                ESLVal $958 = _v279.termRef(2);
                 
-                {ESLVal t1 = _v58;
+                {ESLVal t1 = _v280;
                 
-                {ESLVal l2 = $331;
+                {ESLVal l2 = $960;
                 
-                {ESLVal n2 = $330;
+                {ESLVal n2 = $959;
                 
-                {ESLVal t2 = $329;
+                {ESLVal t2 = $958;
                 
                 return subType.apply(t1,substType.apply(new ESLVal("RecType",l2,n2,t2),n2,t2));
               }
@@ -7959,17 +7959,17 @@ public class Types {
               }
               }
               }
-            case "ForallType": {ESLVal $328 = _v57.termRef(0);
-                ESLVal $327 = _v57.termRef(1);
-                ESLVal $326 = _v57.termRef(2);
+            case "ForallType": {ESLVal $957 = _v279.termRef(0);
+                ESLVal $956 = _v279.termRef(1);
+                ESLVal $955 = _v279.termRef(2);
                 
-                {ESLVal t1 = _v58;
+                {ESLVal t1 = _v280;
                 
-                {ESLVal l1 = $328;
+                {ESLVal l1 = $957;
                 
-                {ESLVal ns2 = $327;
+                {ESLVal ns2 = $956;
                 
-                {ESLVal t2 = $326;
+                {ESLVal t2 = $955;
                 
                 return subType.apply(t1,t2);
               }
@@ -7977,9 +7977,9 @@ public class Types {
               }
               }
               }
-              default: {ESLVal t1 = _v58;
+              default: {ESLVal t1 = _v280;
                 
-                {ESLVal t2 = _v57;
+                {ESLVal t2 = _v279;
                 
                 return typeEqual.apply(t1,t2);
               }
@@ -7989,74 +7989,74 @@ public class Types {
           }
     }
   });
-  private static ESLVal flattenAct = new ESLVal(new Function(new ESLVal("flattenAct"),getSelf()) {
+  public static ESLVal flattenAct = new ESLVal(new Function(new ESLVal("flattenAct"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l1 = $args[0];
   ESLVal t = $args[1];
   ESLVal ds1 = $args[2];
   ESLVal ms1 = $args[3];
-  {ESLVal _v56 = t;
+  {ESLVal _v278 = t;
         
-        switch(_v56.termName) {
-        case "ActType": {ESLVal $325 = _v56.termRef(0);
-          ESLVal $324 = _v56.termRef(1);
-          ESLVal $323 = _v56.termRef(2);
+        switch(_v278.termName) {
+        case "ActType": {ESLVal $954 = _v278.termRef(0);
+          ESLVal $953 = _v278.termRef(1);
+          ESLVal $952 = _v278.termRef(2);
           
-          {ESLVal l2 = $325;
+          {ESLVal l2 = $954;
           
-          {ESLVal ds2 = $324;
+          {ESLVal ds2 = $953;
           
-          {ESLVal ms2 = $323;
+          {ESLVal ms2 = $952;
           
           return new ESLVal("ActType",l1,ds1.add(ds2),ms1.add(ms2));
         }
         }
         }
         }
-      case "ExtendedAct": {ESLVal $322 = _v56.termRef(0);
-          ESLVal $321 = _v56.termRef(1);
-          ESLVal $320 = _v56.termRef(2);
-          ESLVal $319 = _v56.termRef(3);
+      case "ExtendedAct": {ESLVal $951 = _v278.termRef(0);
+          ESLVal $950 = _v278.termRef(1);
+          ESLVal $949 = _v278.termRef(2);
+          ESLVal $948 = _v278.termRef(3);
           
-          {ESLVal l2 = $322;
+          {ESLVal l2 = $951;
           
-          {ESLVal _v110 = $321;
+          {ESLVal _v357 = $950;
           
-          {ESLVal ds2 = $320;
+          {ESLVal ds2 = $949;
           
-          {ESLVal ms2 = $319;
+          {ESLVal ms2 = $948;
           
-          return flattenAct.apply(l1,flattenAct.apply(l2,_v110,ds2,ms2),ds1,ms1);
+          return flattenAct.apply(l1,flattenAct.apply(l2,_v357,ds2,ms2),ds1,ms1);
         }
         }
         }
         }
         }
-      case "TypeClosure": {ESLVal $318 = _v56.termRef(0);
+      case "TypeClosure": {ESLVal $947 = _v278.termRef(0);
           
-          {ESLVal f = $318;
+          {ESLVal f = $947;
           
           return flattenAct.apply(l1,f.apply(),ds1,ms1);
         }
         }
-      case "RecType": {ESLVal $317 = _v56.termRef(0);
-          ESLVal $316 = _v56.termRef(1);
-          ESLVal $315 = _v56.termRef(2);
+      case "RecType": {ESLVal $946 = _v278.termRef(0);
+          ESLVal $945 = _v278.termRef(1);
+          ESLVal $944 = _v278.termRef(2);
           
-          {ESLVal l2 = $317;
+          {ESLVal l2 = $946;
           
-          {ESLVal n = $316;
+          {ESLVal n = $945;
           
-          {ESLVal b = $315;
+          {ESLVal b = $944;
           
           return flattenAct.apply(l1,substType.apply(t,n,b),ds1,ms1);
         }
         }
         }
         }
-        default: {ESLVal _v111 = _v56;
+        default: {ESLVal _v358 = _v278;
           
-          return error(new ESLVal("TypeError",l1,new ESLVal("unknown type for flatten ").add(_v111)));
+          return error(new ESLVal("TypeError",l1,new ESLVal("unknown type for flatten ").add(_v358)));
         }
       }
       }
@@ -8068,40 +8068,40 @@ public class Types {
   ESLVal exports2 = $args[1];
   ESLVal handlers1 = $args[2];
   ESLVal handlers2 = $args[3];
-  return forall.apply(new ESLVal(new Function(new ESLVal("fun150"),getSelf()) {
+  return forall.apply(new ESLVal(new Function(new ESLVal("fun595"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal d1 = $args[0];
-        return exists.apply(new ESLVal(new Function(new ESLVal("fun151"),getSelf()) {
+        return exists.apply(new ESLVal(new Function(new ESLVal("fun596"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal d2 = $args[0];
               return equalDec.apply(d1,d2);
                 }
               }),exports2);
           }
-        }),exports1).and(forall.apply(new ESLVal(new Function(new ESLVal("fun152"),getSelf()) {
+        }),exports1).and(forall.apply(new ESLVal(new Function(new ESLVal("fun597"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal d1 = $args[0];
-        return exists.apply(new ESLVal(new Function(new ESLVal("fun153"),getSelf()) {
+        return exists.apply(new ESLVal(new Function(new ESLVal("fun598"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal d2 = $args[0];
               return equalDec.apply(d1,d2);
                 }
               }),exports1);
           }
-        }),exports2).and(forall.apply(new ESLVal(new Function(new ESLVal("fun154"),getSelf()) {
+        }),exports2).and(forall.apply(new ESLVal(new Function(new ESLVal("fun599"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal m1 = $args[0];
-        return exists.apply(new ESLVal(new Function(new ESLVal("fun155"),getSelf()) {
+        return exists.apply(new ESLVal(new Function(new ESLVal("fun600"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal m2 = $args[0];
               return equalMessage.apply(m1,m2);
                 }
               }),handlers2);
           }
-        }),handlers1).and(forall.apply(new ESLVal(new Function(new ESLVal("fun156"),getSelf()) {
+        }),handlers1).and(forall.apply(new ESLVal(new Function(new ESLVal("fun601"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal m1 = $args[0];
-        return exists.apply(new ESLVal(new Function(new ESLVal("fun157"),getSelf()) {
+        return exists.apply(new ESLVal(new Function(new ESLVal("fun602"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal m2 = $args[0];
               return equalMessage.apply(m1,m2);
@@ -8111,26 +8111,26 @@ public class Types {
         }),handlers2))));
     }
   });
-  private static ESLVal actSubType = new ESLVal(new Function(new ESLVal("actSubType"),getSelf()) {
+  public static ESLVal actSubType = new ESLVal(new Function(new ESLVal("actSubType"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal exports1 = $args[0];
   ESLVal exports2 = $args[1];
   ESLVal handlers1 = $args[2];
   ESLVal handlers2 = $args[3];
-  return forall.apply(new ESLVal(new Function(new ESLVal("fun158"),getSelf()) {
+  return forall.apply(new ESLVal(new Function(new ESLVal("fun603"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal d2 = $args[0];
-        return exists.apply(new ESLVal(new Function(new ESLVal("fun159"),getSelf()) {
+        return exists.apply(new ESLVal(new Function(new ESLVal("fun604"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal d1 = $args[0];
               return decSubType.apply(d1,d2);
                 }
               }),exports1);
           }
-        }),exports2).and(forall.apply(new ESLVal(new Function(new ESLVal("fun160"),getSelf()) {
+        }),exports2).and(forall.apply(new ESLVal(new Function(new ESLVal("fun605"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal m2 = $args[0];
-        return exists.apply(new ESLVal(new Function(new ESLVal("fun161"),getSelf()) {
+        return exists.apply(new ESLVal(new Function(new ESLVal("fun606"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal m1 = $args[0];
               return messSubType.apply(m1,m2);
@@ -8144,36 +8144,36 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal d1 = $args[0];
   ESLVal d2 = $args[1];
-  {ESLVal _v55 = d1;
-        ESLVal _v54 = d2;
+  {ESLVal _v277 = d1;
+        ESLVal _v276 = d2;
         
-        switch(_v55.termName) {
-        case "Dec": {ESLVal $310 = _v55.termRef(0);
-          ESLVal $309 = _v55.termRef(1);
-          ESLVal $308 = _v55.termRef(2);
-          ESLVal $307 = _v55.termRef(3);
+        switch(_v277.termName) {
+        case "Dec": {ESLVal $939 = _v277.termRef(0);
+          ESLVal $938 = _v277.termRef(1);
+          ESLVal $937 = _v277.termRef(2);
+          ESLVal $936 = _v277.termRef(3);
           
-          switch(_v54.termName) {
-          case "Dec": {ESLVal $314 = _v54.termRef(0);
-            ESLVal $313 = _v54.termRef(1);
-            ESLVal $312 = _v54.termRef(2);
-            ESLVal $311 = _v54.termRef(3);
+          switch(_v276.termName) {
+          case "Dec": {ESLVal $943 = _v276.termRef(0);
+            ESLVal $942 = _v276.termRef(1);
+            ESLVal $941 = _v276.termRef(2);
+            ESLVal $940 = _v276.termRef(3);
             
-            {ESLVal l1 = $310;
+            {ESLVal l1 = $939;
             
-            {ESLVal n1 = $309;
+            {ESLVal n1 = $938;
             
-            {ESLVal t1 = $308;
+            {ESLVal t1 = $937;
             
-            {ESLVal st1 = $307;
+            {ESLVal st1 = $936;
             
-            {ESLVal l2 = $314;
+            {ESLVal l2 = $943;
             
-            {ESLVal n2 = $313;
+            {ESLVal n2 = $942;
             
-            {ESLVal t2 = $312;
+            {ESLVal t2 = $941;
             
-            {ESLVal st2 = $311;
+            {ESLVal st2 = $940;
             
             return n1.eql(n2).and(typeEqual.apply(t1,t2));
           }
@@ -8185,48 +8185,48 @@ public class Types {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(19840,19971)").add(ESLVal.list(_v55,_v54)));
+          default: return error(new ESLVal("case error at Pos(19774,19905)").add(ESLVal.list(_v277,_v276)));
         }
         }
-        default: return error(new ESLVal("case error at Pos(19840,19971)").add(ESLVal.list(_v55,_v54)));
+        default: return error(new ESLVal("case error at Pos(19774,19905)").add(ESLVal.list(_v277,_v276)));
       }
       }
     }
   });
-  private static ESLVal decSubType = new ESLVal(new Function(new ESLVal("decSubType"),getSelf()) {
+  public static ESLVal decSubType = new ESLVal(new Function(new ESLVal("decSubType"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal d1 = $args[0];
   ESLVal d2 = $args[1];
-  {ESLVal _v53 = d1;
-        ESLVal _v52 = d2;
+  {ESLVal _v275 = d1;
+        ESLVal _v274 = d2;
         
-        switch(_v53.termName) {
-        case "Dec": {ESLVal $302 = _v53.termRef(0);
-          ESLVal $301 = _v53.termRef(1);
-          ESLVal $300 = _v53.termRef(2);
-          ESLVal $299 = _v53.termRef(3);
+        switch(_v275.termName) {
+        case "Dec": {ESLVal $931 = _v275.termRef(0);
+          ESLVal $930 = _v275.termRef(1);
+          ESLVal $929 = _v275.termRef(2);
+          ESLVal $928 = _v275.termRef(3);
           
-          switch(_v52.termName) {
-          case "Dec": {ESLVal $306 = _v52.termRef(0);
-            ESLVal $305 = _v52.termRef(1);
-            ESLVal $304 = _v52.termRef(2);
-            ESLVal $303 = _v52.termRef(3);
+          switch(_v274.termName) {
+          case "Dec": {ESLVal $935 = _v274.termRef(0);
+            ESLVal $934 = _v274.termRef(1);
+            ESLVal $933 = _v274.termRef(2);
+            ESLVal $932 = _v274.termRef(3);
             
-            {ESLVal l1 = $302;
+            {ESLVal l1 = $931;
             
-            {ESLVal n1 = $301;
+            {ESLVal n1 = $930;
             
-            {ESLVal t1 = $300;
+            {ESLVal t1 = $929;
             
-            {ESLVal st1 = $299;
+            {ESLVal st1 = $928;
             
-            {ESLVal l2 = $306;
+            {ESLVal l2 = $935;
             
-            {ESLVal n2 = $305;
+            {ESLVal n2 = $934;
             
-            {ESLVal t2 = $304;
+            {ESLVal t2 = $933;
             
-            {ESLVal st2 = $303;
+            {ESLVal st2 = $932;
             
             return n1.eql(n2).and(subType.apply(t1,t2));
           }
@@ -8238,10 +8238,10 @@ public class Types {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(20015,20144)").add(ESLVal.list(_v53,_v52)));
+          default: return error(new ESLVal("case error at Pos(19949,20078)").add(ESLVal.list(_v275,_v274)));
         }
         }
-        default: return error(new ESLVal("case error at Pos(20015,20144)").add(ESLVal.list(_v53,_v52)));
+        default: return error(new ESLVal("case error at Pos(19949,20078)").add(ESLVal.list(_v275,_v274)));
       }
       }
     }
@@ -8250,24 +8250,24 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal m1 = $args[0];
   ESLVal m2 = $args[1];
-  {ESLVal _v51 = m1;
-        ESLVal _v50 = m2;
+  {ESLVal _v273 = m1;
+        ESLVal _v272 = m2;
         
-        switch(_v51.termName) {
-        case "MessageType": {ESLVal $296 = _v51.termRef(0);
-          ESLVal $295 = _v51.termRef(1);
+        switch(_v273.termName) {
+        case "MessageType": {ESLVal $925 = _v273.termRef(0);
+          ESLVal $924 = _v273.termRef(1);
           
-          switch(_v50.termName) {
-          case "MessageType": {ESLVal $298 = _v50.termRef(0);
-            ESLVal $297 = _v50.termRef(1);
+          switch(_v272.termName) {
+          case "MessageType": {ESLVal $927 = _v272.termRef(0);
+            ESLVal $926 = _v272.termRef(1);
             
-            {ESLVal l1 = $296;
+            {ESLVal l1 = $925;
             
-            {ESLVal ts1 = $295;
+            {ESLVal ts1 = $924;
             
-            {ESLVal l2 = $298;
+            {ESLVal l2 = $927;
             
-            {ESLVal ts2 = $297;
+            {ESLVal ts2 = $926;
             
             return typesEqual.apply(ts1,ts2);
           }
@@ -8275,36 +8275,36 @@ public class Types {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(20190,20300)").add(ESLVal.list(_v51,_v50)));
+          default: return error(new ESLVal("case error at Pos(20124,20234)").add(ESLVal.list(_v273,_v272)));
         }
         }
-        default: return error(new ESLVal("case error at Pos(20190,20300)").add(ESLVal.list(_v51,_v50)));
+        default: return error(new ESLVal("case error at Pos(20124,20234)").add(ESLVal.list(_v273,_v272)));
       }
       }
     }
   });
-  private static ESLVal messSubType = new ESLVal(new Function(new ESLVal("messSubType"),getSelf()) {
+  public static ESLVal messSubType = new ESLVal(new Function(new ESLVal("messSubType"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal m1 = $args[0];
   ESLVal m2 = $args[1];
-  {ESLVal _v49 = m1;
-        ESLVal _v48 = m2;
+  {ESLVal _v271 = m1;
+        ESLVal _v270 = m2;
         
-        switch(_v49.termName) {
-        case "MessageType": {ESLVal $292 = _v49.termRef(0);
-          ESLVal $291 = _v49.termRef(1);
+        switch(_v271.termName) {
+        case "MessageType": {ESLVal $921 = _v271.termRef(0);
+          ESLVal $920 = _v271.termRef(1);
           
-          switch(_v48.termName) {
-          case "MessageType": {ESLVal $294 = _v48.termRef(0);
-            ESLVal $293 = _v48.termRef(1);
+          switch(_v270.termName) {
+          case "MessageType": {ESLVal $923 = _v270.termRef(0);
+            ESLVal $922 = _v270.termRef(1);
             
-            {ESLVal l1 = $292;
+            {ESLVal l1 = $921;
             
-            {ESLVal ts1 = $291;
+            {ESLVal ts1 = $920;
             
-            {ESLVal l2 = $294;
+            {ESLVal l2 = $923;
             
-            {ESLVal ts2 = $293;
+            {ESLVal ts2 = $922;
             
             return subTypes.apply(ts1,ts2);
           }
@@ -8312,10 +8312,10 @@ public class Types {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(20345,20453)").add(ESLVal.list(_v49,_v48)));
+          default: return error(new ESLVal("case error at Pos(20279,20387)").add(ESLVal.list(_v271,_v270)));
         }
         }
-        default: return error(new ESLVal("case error at Pos(20345,20453)").add(ESLVal.list(_v49,_v48)));
+        default: return error(new ESLVal("case error at Pos(20279,20387)").add(ESLVal.list(_v271,_v270)));
       }
       }
     }
@@ -8324,20 +8324,20 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal fields1 = $args[0];
   ESLVal fields2 = $args[1];
-  return forall.apply(new ESLVal(new Function(new ESLVal("fun162"),getSelf()) {
+  return forall.apply(new ESLVal(new Function(new ESLVal("fun607"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal t1 = $args[0];
-        return exists.apply(new ESLVal(new Function(new ESLVal("fun163"),getSelf()) {
+        return exists.apply(new ESLVal(new Function(new ESLVal("fun608"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal t2 = $args[0];
               return decName.apply(t1).eql(decName.apply(t2)).and(typeEqual.apply(decType.apply(t1),decType.apply(t2)));
                 }
               }),fields2);
           }
-        }),fields1).and(forall.apply(new ESLVal(new Function(new ESLVal("fun164"),getSelf()) {
+        }),fields1).and(forall.apply(new ESLVal(new Function(new ESLVal("fun609"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal t1 = $args[0];
-        return exists.apply(new ESLVal(new Function(new ESLVal("fun165"),getSelf()) {
+        return exists.apply(new ESLVal(new Function(new ESLVal("fun610"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal t2 = $args[0];
               return decName.apply(t1).eql(decName.apply(t2)).and(typeEqual.apply(decType.apply(t1),decType.apply(t2)));
@@ -8347,14 +8347,14 @@ public class Types {
         }),fields2));
     }
   });
-  private static ESLVal recordSubType = new ESLVal(new Function(new ESLVal("recordSubType"),getSelf()) {
+  public static ESLVal recordSubType = new ESLVal(new Function(new ESLVal("recordSubType"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal fields1 = $args[0];
   ESLVal fields2 = $args[1];
-  return forall.apply(new ESLVal(new Function(new ESLVal("fun166"),getSelf()) {
+  return forall.apply(new ESLVal(new Function(new ESLVal("fun611"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal t2 = $args[0];
-        return exists.apply(new ESLVal(new Function(new ESLVal("fun167"),getSelf()) {
+        return exists.apply(new ESLVal(new Function(new ESLVal("fun612"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal t1 = $args[0];
               return decName.apply(t1).eql(decName.apply(t2)).and(subType.apply(decType.apply(t1),decType.apply(t2)));
@@ -8369,45 +8369,45 @@ public class Types {
       ESLVal l = $args[0];
   ESLVal op = $args[1];
   ESLVal args = $args[2];
-  {ESLVal _v47 = op;
+  {ESLVal _v269 = op;
         
-        switch(_v47.termName) {
-        case "RecType": {ESLVal $290 = _v47.termRef(0);
-          ESLVal $289 = _v47.termRef(1);
-          ESLVal $288 = _v47.termRef(2);
+        switch(_v269.termName) {
+        case "RecType": {ESLVal $919 = _v269.termRef(0);
+          ESLVal $918 = _v269.termRef(1);
+          ESLVal $917 = _v269.termRef(2);
           
-          {ESLVal lr = $290;
+          {ESLVal lr = $919;
           
-          {ESLVal n = $289;
+          {ESLVal n = $918;
           
-          {ESLVal t = $288;
+          {ESLVal t = $917;
           
           return applyTypeFun.apply(l,unfoldType.apply(lr,n,t),args);
         }
         }
         }
         }
-      case "TypeFun": {ESLVal $287 = _v47.termRef(0);
-          ESLVal $286 = _v47.termRef(1);
-          ESLVal $285 = _v47.termRef(2);
+      case "TypeFun": {ESLVal $916 = _v269.termRef(0);
+          ESLVal $915 = _v269.termRef(1);
+          ESLVal $914 = _v269.termRef(2);
           
-          {ESLVal _v108 = $287;
+          {ESLVal _v355 = $916;
           
-          {ESLVal names = $286;
+          {ESLVal names = $915;
           
-          {ESLVal t = $285;
+          {ESLVal t = $914;
           
           if(length.apply(args).eql(length.apply(names)).boolVal)
           return substTypeEnv.apply(zipTypeEnv.apply(names,args),t);
           else
-            return error(new ESLVal("TypeError",_v108,new ESLVal("type fun expects ").add(length.apply(names).add(new ESLVal(" args, but supplied with ").add(length.apply(args))))));
+            return error(new ESLVal("TypeError",_v355,new ESLVal("type fun expects ").add(length.apply(names).add(new ESLVal(" args, but supplied with ").add(length.apply(args))))));
         }
         }
         }
         }
-        default: {ESLVal _v109 = _v47;
+        default: {ESLVal _v356 = _v269;
           
-          return error(new ESLVal("TypeError",l,new ESLVal("expecting a type function: ").add(_v109)));
+          return error(new ESLVal("TypeError",l,new ESLVal("expecting a type function: ").add(_v356)));
         }
       }
       }
@@ -8424,19 +8424,19 @@ public class Types {
   public static ESLVal forceType = new ESLVal(new Function(new ESLVal("forceType"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal t = $args[0];
-  {ESLVal _v46 = t;
+  {ESLVal _v268 = t;
         
-        switch(_v46.termName) {
-        case "TypeClosure": {ESLVal $284 = _v46.termRef(0);
+        switch(_v268.termName) {
+        case "TypeClosure": {ESLVal $913 = _v268.termRef(0);
           
-          {ESLVal f = $284;
+          {ESLVal f = $913;
           
           return forceType.apply(f.apply());
         }
         }
-        default: {ESLVal _v107 = _v46;
+        default: {ESLVal _v354 = _v268;
           
-          return _v107;
+          return _v354;
         }
       }
       }
@@ -8446,85 +8446,85 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal ts1 = $args[0];
   ESLVal ts2 = $args[1];
-  {ESLVal _v45 = ts1;
-        ESLVal _v44 = ts2;
+  {ESLVal _v267 = ts1;
+        ESLVal _v266 = ts2;
         
-        if(_v45.isCons())
-        {ESLVal $278 = _v45.head();
-          ESLVal $279 = _v45.tail();
+        if(_v267.isCons())
+        {ESLVal $907 = _v267.head();
+          ESLVal $908 = _v267.tail();
           
-          if(_v44.isCons())
-          {ESLVal $280 = _v44.head();
-            ESLVal $281 = _v44.tail();
+          if(_v266.isCons())
+          {ESLVal $909 = _v266.head();
+            ESLVal $910 = _v266.tail();
             
-            {ESLVal t1 = $278;
+            {ESLVal t1 = $907;
             
-            {ESLVal _v100 = $279;
+            {ESLVal _v347 = $908;
             
-            {ESLVal t2 = $280;
+            {ESLVal t2 = $909;
             
-            {ESLVal _v101 = $281;
+            {ESLVal _v348 = $910;
             
-            return typeEqual.apply(t1,t2).and(typesEqual.apply(_v100,_v101));
+            return typeEqual.apply(t1,t2).and(typesEqual.apply(_v347,_v348));
           }
           }
           }
           }
           }
-        else if(_v44.isNil())
-          if(_v44.isCons())
-            {ESLVal $276 = _v44.head();
-              ESLVal $277 = _v44.tail();
+        else if(_v266.isNil())
+          if(_v266.isCons())
+            {ESLVal $905 = _v266.head();
+              ESLVal $906 = _v266.tail();
               
-              return error(new ESLVal("case error at Pos(21755,21965)").add(ESLVal.list(_v45,_v44)));
+              return error(new ESLVal("case error at Pos(21693,21903)").add(ESLVal.list(_v267,_v266)));
             }
-          else if(_v44.isNil())
-            {ESLVal _v102 = _v45;
-              
-              return $false;
-            }
-          else return error(new ESLVal("case error at Pos(21755,21965)").add(ESLVal.list(_v45,_v44)));
-        else if(_v44.isCons())
-            {ESLVal $276 = _v44.head();
-              ESLVal $277 = _v44.tail();
-              
-              return error(new ESLVal("case error at Pos(21755,21965)").add(ESLVal.list(_v45,_v44)));
-            }
-          else if(_v44.isNil())
-            {ESLVal _v103 = _v45;
+          else if(_v266.isNil())
+            {ESLVal _v349 = _v267;
               
               return $false;
             }
-          else return error(new ESLVal("case error at Pos(21755,21965)").add(ESLVal.list(_v45,_v44)));
+          else return error(new ESLVal("case error at Pos(21693,21903)").add(ESLVal.list(_v267,_v266)));
+        else if(_v266.isCons())
+            {ESLVal $905 = _v266.head();
+              ESLVal $906 = _v266.tail();
+              
+              return error(new ESLVal("case error at Pos(21693,21903)").add(ESLVal.list(_v267,_v266)));
+            }
+          else if(_v266.isNil())
+            {ESLVal _v350 = _v267;
+              
+              return $false;
+            }
+          else return error(new ESLVal("case error at Pos(21693,21903)").add(ESLVal.list(_v267,_v266)));
         }
-      else if(_v45.isNil())
-        if(_v44.isCons())
-          {ESLVal $282 = _v44.head();
-            ESLVal $283 = _v44.tail();
+      else if(_v267.isNil())
+        if(_v266.isCons())
+          {ESLVal $911 = _v266.head();
+            ESLVal $912 = _v266.tail();
             
-            {ESLVal _v104 = _v44;
+            {ESLVal _v351 = _v266;
             
             return $false;
           }
           }
-        else if(_v44.isNil())
+        else if(_v266.isNil())
           return $true;
-        else {ESLVal _v105 = _v44;
+        else {ESLVal _v352 = _v266;
             
             return $false;
           }
-      else if(_v44.isCons())
-          {ESLVal $276 = _v44.head();
-            ESLVal $277 = _v44.tail();
+      else if(_v266.isCons())
+          {ESLVal $905 = _v266.head();
+            ESLVal $906 = _v266.tail();
             
-            return error(new ESLVal("case error at Pos(21755,21965)").add(ESLVal.list(_v45,_v44)));
+            return error(new ESLVal("case error at Pos(21693,21903)").add(ESLVal.list(_v267,_v266)));
           }
-        else if(_v44.isNil())
-          {ESLVal _v106 = _v45;
+        else if(_v266.isNil())
+          {ESLVal _v353 = _v267;
             
             return $false;
           }
-        else return error(new ESLVal("case error at Pos(21755,21965)").add(ESLVal.list(_v45,_v44)));
+        else return error(new ESLVal("case error at Pos(21693,21903)").add(ESLVal.list(_v267,_v266)));
       }
     }
   });
@@ -8532,85 +8532,85 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal ts1 = $args[0];
   ESLVal ts2 = $args[1];
-  {ESLVal _v43 = ts1;
-        ESLVal _v42 = ts2;
+  {ESLVal _v265 = ts1;
+        ESLVal _v264 = ts2;
         
-        if(_v43.isCons())
-        {ESLVal $270 = _v43.head();
-          ESLVal $271 = _v43.tail();
+        if(_v265.isCons())
+        {ESLVal $899 = _v265.head();
+          ESLVal $900 = _v265.tail();
           
-          if(_v42.isCons())
-          {ESLVal $272 = _v42.head();
-            ESLVal $273 = _v42.tail();
+          if(_v264.isCons())
+          {ESLVal $901 = _v264.head();
+            ESLVal $902 = _v264.tail();
             
-            {ESLVal t1 = $270;
+            {ESLVal t1 = $899;
             
-            {ESLVal _v93 = $271;
+            {ESLVal _v340 = $900;
             
-            {ESLVal t2 = $272;
+            {ESLVal t2 = $901;
             
-            {ESLVal _v94 = $273;
+            {ESLVal _v341 = $902;
             
-            return subType.apply(t1,t2).and(subTypes.apply(_v93,_v94));
+            return subType.apply(t1,t2).and(subTypes.apply(_v340,_v341));
           }
           }
           }
           }
           }
-        else if(_v42.isNil())
-          if(_v42.isCons())
-            {ESLVal $268 = _v42.head();
-              ESLVal $269 = _v42.tail();
+        else if(_v264.isNil())
+          if(_v264.isCons())
+            {ESLVal $897 = _v264.head();
+              ESLVal $898 = _v264.tail();
               
-              return error(new ESLVal("case error at Pos(22011,22217)").add(ESLVal.list(_v43,_v42)));
+              return error(new ESLVal("case error at Pos(21949,22155)").add(ESLVal.list(_v265,_v264)));
             }
-          else if(_v42.isNil())
-            {ESLVal _v95 = _v43;
-              
-              return $false;
-            }
-          else return error(new ESLVal("case error at Pos(22011,22217)").add(ESLVal.list(_v43,_v42)));
-        else if(_v42.isCons())
-            {ESLVal $268 = _v42.head();
-              ESLVal $269 = _v42.tail();
-              
-              return error(new ESLVal("case error at Pos(22011,22217)").add(ESLVal.list(_v43,_v42)));
-            }
-          else if(_v42.isNil())
-            {ESLVal _v96 = _v43;
+          else if(_v264.isNil())
+            {ESLVal _v342 = _v265;
               
               return $false;
             }
-          else return error(new ESLVal("case error at Pos(22011,22217)").add(ESLVal.list(_v43,_v42)));
+          else return error(new ESLVal("case error at Pos(21949,22155)").add(ESLVal.list(_v265,_v264)));
+        else if(_v264.isCons())
+            {ESLVal $897 = _v264.head();
+              ESLVal $898 = _v264.tail();
+              
+              return error(new ESLVal("case error at Pos(21949,22155)").add(ESLVal.list(_v265,_v264)));
+            }
+          else if(_v264.isNil())
+            {ESLVal _v343 = _v265;
+              
+              return $false;
+            }
+          else return error(new ESLVal("case error at Pos(21949,22155)").add(ESLVal.list(_v265,_v264)));
         }
-      else if(_v43.isNil())
-        if(_v42.isCons())
-          {ESLVal $274 = _v42.head();
-            ESLVal $275 = _v42.tail();
+      else if(_v265.isNil())
+        if(_v264.isCons())
+          {ESLVal $903 = _v264.head();
+            ESLVal $904 = _v264.tail();
             
-            {ESLVal _v97 = _v42;
+            {ESLVal _v344 = _v264;
             
             return $false;
           }
           }
-        else if(_v42.isNil())
+        else if(_v264.isNil())
           return $true;
-        else {ESLVal _v98 = _v42;
+        else {ESLVal _v345 = _v264;
             
             return $false;
           }
-      else if(_v42.isCons())
-          {ESLVal $268 = _v42.head();
-            ESLVal $269 = _v42.tail();
+      else if(_v264.isCons())
+          {ESLVal $897 = _v264.head();
+            ESLVal $898 = _v264.tail();
             
-            return error(new ESLVal("case error at Pos(22011,22217)").add(ESLVal.list(_v43,_v42)));
+            return error(new ESLVal("case error at Pos(21949,22155)").add(ESLVal.list(_v265,_v264)));
           }
-        else if(_v42.isNil())
-          {ESLVal _v99 = _v43;
+        else if(_v264.isNil())
+          {ESLVal _v346 = _v265;
             
             return $false;
           }
-        else return error(new ESLVal("case error at Pos(22011,22217)").add(ESLVal.list(_v43,_v42)));
+        else return error(new ESLVal("case error at Pos(21949,22155)").add(ESLVal.list(_v265,_v264)));
       }
     }
   });
@@ -8625,23 +8625,23 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal sub = $args[0];
   ESLVal sup = $args[1];
-  {ESLVal _v41 = sub;
+  {ESLVal _v263 = sub;
         
-        if(_v41.isCons())
-        {ESLVal $266 = _v41.head();
-          ESLVal $267 = _v41.tail();
+        if(_v263.isCons())
+        {ESLVal $895 = _v263.head();
+          ESLVal $896 = _v263.tail();
           
-          {ESLVal t = $266;
+          {ESLVal t = $895;
           
-          {ESLVal _v92 = $267;
+          {ESLVal _v339 = $896;
           
-          return typeMember.apply(t,sup).and(typeSubset.apply(_v92,sup));
+          return typeMember.apply(t,sup).and(typeSubset.apply(_v339,sup));
         }
         }
         }
-      else if(_v41.isNil())
+      else if(_v263.isNil())
         return $true;
-      else return error(new ESLVal("case error at Pos(22377,22483)").add(ESLVal.list(_v41)));
+      else return error(new ESLVal("case error at Pos(22315,22421)").add(ESLVal.list(_v263)));
       }
     }
   });
@@ -8649,32 +8649,32 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal t = $args[0];
   ESLVal types = $args[1];
-  {ESLVal _v40 = types;
+  {ESLVal _v262 = types;
         
-        if(_v40.isCons())
-        {ESLVal $264 = _v40.head();
-          ESLVal $265 = _v40.tail();
+        if(_v262.isCons())
+        {ESLVal $893 = _v262.head();
+          ESLVal $894 = _v262.tail();
           
-          {ESLVal tt = $264;
+          {ESLVal tt = $893;
           
-          {ESLVal _v89 = $265;
+          {ESLVal _v336 = $894;
           
           if(typeEqual.apply(t,tt).boolVal)
           return $true;
           else
-            {ESLVal _v90 = $264;
+            {ESLVal _v337 = $893;
               
-              {ESLVal _v91 = $265;
+              {ESLVal _v338 = $894;
               
-              return typeMember.apply(t,_v91);
+              return typeMember.apply(t,_v338);
             }
             }
         }
         }
         }
-      else if(_v40.isNil())
+      else if(_v262.isNil())
         return $false;
-      else return error(new ESLVal("case error at Pos(22529,22676)").add(ESLVal.list(_v40)));
+      else return error(new ESLVal("case error at Pos(22467,22614)").add(ESLVal.list(_v262)));
       }
     }
   });
@@ -8683,23 +8683,23 @@ public class Types {
       ESLVal newType = $args[0];
   ESLVal n = $args[1];
   ESLVal oldTypes = $args[2];
-  {ESLVal _v39 = oldTypes;
+  {ESLVal _v261 = oldTypes;
         
-        if(_v39.isCons())
-        {ESLVal $262 = _v39.head();
-          ESLVal $263 = _v39.tail();
+        if(_v261.isCons())
+        {ESLVal $891 = _v261.head();
+          ESLVal $892 = _v261.tail();
           
-          {ESLVal t = $262;
+          {ESLVal t = $891;
           
-          {ESLVal ts = $263;
+          {ESLVal ts = $892;
           
           return substTypes.apply(newType,n,ts).cons(substType.apply(newType,n,t));
         }
         }
         }
-      else if(_v39.isNil())
+      else if(_v261.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(22828,22948)").add(ESLVal.list(_v39)));
+      else return error(new ESLVal("case error at Pos(22766,22886)").add(ESLVal.list(_v261)));
       }
     }
   });
@@ -8708,18 +8708,18 @@ public class Types {
       ESLVal newType = $args[0];
   ESLVal n = $args[1];
   ESLVal oldType = $args[2];
-  {ESLVal _v33 = oldType;
+  {ESLVal _v255 = oldType;
         
-        switch(_v33.termName) {
-        case "ApplyType": {ESLVal $257 = _v33.termRef(0);
-          ESLVal $256 = _v33.termRef(1);
-          ESLVal $255 = _v33.termRef(2);
+        switch(_v255.termName) {
+        case "ApplyType": {ESLVal $886 = _v255.termRef(0);
+          ESLVal $885 = _v255.termRef(1);
+          ESLVal $884 = _v255.termRef(2);
           
-          {ESLVal l = $257;
+          {ESLVal l = $886;
           
-          {ESLVal m = $256;
+          {ESLVal m = $885;
           
-          {ESLVal types = $255;
+          {ESLVal types = $884;
           
           if(m.eql(n).boolVal)
           return new ESLVal("ApplyTypeFun",l,newType,substTypes.apply(newType,n,types));
@@ -8729,37 +8729,37 @@ public class Types {
         }
         }
         }
-      case "ApplyTypeFun": {ESLVal $254 = _v33.termRef(0);
-          ESLVal $253 = _v33.termRef(1);
-          ESLVal $252 = _v33.termRef(2);
+      case "ApplyTypeFun": {ESLVal $883 = _v255.termRef(0);
+          ESLVal $882 = _v255.termRef(1);
+          ESLVal $881 = _v255.termRef(2);
           
-          {ESLVal l = $254;
+          {ESLVal l = $883;
           
-          {ESLVal op = $253;
+          {ESLVal op = $882;
           
-          {ESLVal args = $252;
+          {ESLVal args = $881;
           
           return new ESLVal("ApplyTypeFun",l,substType.apply(newType,n,op),substTypes.apply(newType,n,args));
         }
         }
         }
         }
-      case "ActType": {ESLVal $251 = _v33.termRef(0);
-          ESLVal $250 = _v33.termRef(1);
-          ESLVal $249 = _v33.termRef(2);
+      case "ActType": {ESLVal $880 = _v255.termRef(0);
+          ESLVal $879 = _v255.termRef(1);
+          ESLVal $878 = _v255.termRef(2);
           
-          {ESLVal l = $251;
+          {ESLVal l = $880;
           
-          {ESLVal decs = $250;
+          {ESLVal decs = $879;
           
-          {ESLVal handlers = $249;
+          {ESLVal handlers = $878;
           
           return new ESLVal("ActType",l,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v37 = $qualArg;
+          {ESLVal _v259 = $qualArg;
                 
-                {ESLVal d = _v37;
+                {ESLVal d = _v259;
                 
                 return ESLVal.list(ESLVal.list(substDec.apply(newType,n,d)));
               }
@@ -8768,9 +8768,9 @@ public class Types {
           }).map(decs).flatten().flatten(),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v38 = $qualArg;
+          {ESLVal _v260 = $qualArg;
                 
-                {ESLVal m = _v38;
+                {ESLVal m = _v260;
                 
                 return ESLVal.list(ESLVal.list(substMType.apply(newType,n,m)));
               }
@@ -8781,43 +8781,43 @@ public class Types {
         }
         }
         }
-      case "ArrayType": {ESLVal $248 = _v33.termRef(0);
-          ESLVal $247 = _v33.termRef(1);
+      case "ArrayType": {ESLVal $877 = _v255.termRef(0);
+          ESLVal $876 = _v255.termRef(1);
           
-          {ESLVal l = $248;
+          {ESLVal l = $877;
           
-          {ESLVal t = $247;
+          {ESLVal t = $876;
           
           return new ESLVal("ArrayType",l,substType.apply(newType,n,t));
         }
         }
         }
-      case "BoolType": {ESLVal $246 = _v33.termRef(0);
+      case "BoolType": {ESLVal $875 = _v255.termRef(0);
           
-          {ESLVal l = $246;
+          {ESLVal l = $875;
           
           return oldType;
         }
         }
-      case "ExtendedAct": {ESLVal $245 = _v33.termRef(0);
-          ESLVal $244 = _v33.termRef(1);
-          ESLVal $243 = _v33.termRef(2);
-          ESLVal $242 = _v33.termRef(3);
+      case "ExtendedAct": {ESLVal $874 = _v255.termRef(0);
+          ESLVal $873 = _v255.termRef(1);
+          ESLVal $872 = _v255.termRef(2);
+          ESLVal $871 = _v255.termRef(3);
           
-          {ESLVal l = $245;
+          {ESLVal l = $874;
           
-          {ESLVal parent = $244;
+          {ESLVal parent = $873;
           
-          {ESLVal decs = $243;
+          {ESLVal decs = $872;
           
-          {ESLVal ms = $242;
+          {ESLVal ms = $871;
           
           return new ESLVal("ExtendedAct",l,substType.apply(newType,n,parent),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v35 = $qualArg;
+          {ESLVal _v257 = $qualArg;
                 
-                {ESLVal d = _v35;
+                {ESLVal d = _v257;
                 
                 return ESLVal.list(ESLVal.list(substDec.apply(newType,n,d)));
               }
@@ -8826,9 +8826,9 @@ public class Types {
           }).map(decs).flatten().flatten(),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v36 = $qualArg;
+          {ESLVal _v258 = $qualArg;
                 
-                {ESLVal m = _v36;
+                {ESLVal m = _v258;
                 
                 return ESLVal.list(ESLVal.list(substMType.apply(newType,n,m)));
               }
@@ -8840,22 +8840,22 @@ public class Types {
         }
         }
         }
-      case "FloatType": {ESLVal $241 = _v33.termRef(0);
+      case "FloatType": {ESLVal $870 = _v255.termRef(0);
           
-          {ESLVal l = $241;
+          {ESLVal l = $870;
           
           return oldType;
         }
         }
-      case "ForallType": {ESLVal $240 = _v33.termRef(0);
-          ESLVal $239 = _v33.termRef(1);
-          ESLVal $238 = _v33.termRef(2);
+      case "ForallType": {ESLVal $869 = _v255.termRef(0);
+          ESLVal $868 = _v255.termRef(1);
+          ESLVal $867 = _v255.termRef(2);
           
-          {ESLVal l = $240;
+          {ESLVal l = $869;
           
-          {ESLVal ns = $239;
+          {ESLVal ns = $868;
           
-          {ESLVal t = $238;
+          {ESLVal t = $867;
           
           if(member.apply(n,ns).boolVal)
           return oldType;
@@ -8865,79 +8865,79 @@ public class Types {
         }
         }
         }
-      case "FunType": {ESLVal $237 = _v33.termRef(0);
-          ESLVal $236 = _v33.termRef(1);
-          ESLVal $235 = _v33.termRef(2);
+      case "FunType": {ESLVal $866 = _v255.termRef(0);
+          ESLVal $865 = _v255.termRef(1);
+          ESLVal $864 = _v255.termRef(2);
           
-          {ESLVal l = $237;
+          {ESLVal l = $866;
           
-          {ESLVal d = $236;
+          {ESLVal d = $865;
           
-          {ESLVal r = $235;
+          {ESLVal r = $864;
           
           return new ESLVal("FunType",l,substTypes.apply(newType,n,d),substType.apply(newType,n,r));
         }
         }
         }
         }
-      case "IntType": {ESLVal $234 = _v33.termRef(0);
+      case "IntType": {ESLVal $863 = _v255.termRef(0);
           
-          {ESLVal l = $234;
+          {ESLVal l = $863;
           
           return oldType;
         }
         }
-      case "ListType": {ESLVal $233 = _v33.termRef(0);
-          ESLVal $232 = _v33.termRef(1);
+      case "ListType": {ESLVal $862 = _v255.termRef(0);
+          ESLVal $861 = _v255.termRef(1);
           
-          {ESLVal l = $233;
+          {ESLVal l = $862;
           
-          {ESLVal t = $232;
+          {ESLVal t = $861;
           
           return new ESLVal("ListType",l,substType.apply(newType,n,t));
         }
         }
         }
-      case "NullType": {ESLVal $231 = _v33.termRef(0);
+      case "NullType": {ESLVal $860 = _v255.termRef(0);
           
-          {ESLVal l = $231;
+          {ESLVal l = $860;
           
           return oldType;
         }
         }
-      case "RecordType": {ESLVal $230 = _v33.termRef(0);
-          ESLVal $229 = _v33.termRef(1);
+      case "RecordType": {ESLVal $859 = _v255.termRef(0);
+          ESLVal $858 = _v255.termRef(1);
           
-          {ESLVal l = $230;
+          {ESLVal l = $859;
           
-          {ESLVal fs = $229;
+          {ESLVal fs = $858;
           
           return new ESLVal("RecordType",l,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v34 = $qualArg;
+          {ESLVal _v256 = $qualArg;
                 
-                switch(_v34.termName) {
-                case "Dec": {ESLVal $261 = _v34.termRef(0);
-                  ESLVal $260 = _v34.termRef(1);
-                  ESLVal $259 = _v34.termRef(2);
-                  ESLVal $258 = _v34.termRef(3);
+                switch(_v256.termName) {
+                case "Dec": {ESLVal $890 = _v256.termRef(0);
+                  ESLVal $889 = _v256.termRef(1);
+                  ESLVal $888 = _v256.termRef(2);
+                  ESLVal $887 = _v256.termRef(3);
                   
-                  {ESLVal dl = $261;
+                  {ESLVal dl = $890;
                   
-                  {ESLVal _v88 = $260;
+                  {ESLVal _v335 = $889;
                   
-                  {ESLVal t = $259;
+                  {ESLVal t = $888;
                   
-                  {ESLVal dt = $258;
+                  {ESLVal dt = $887;
                   
-                  return ESLVal.list(ESLVal.list(new ESLVal("Dec",dl,_v88,substType.apply(newType,_v88,t),dt)));
+                  return ESLVal.list(ESLVal.list(new ESLVal("Dec",dl,_v335,substType.apply(newType,_v335,t),dt)));
                 }
                 }
                 }
                 }
                 }
-                default: {ESLVal _0 = _v34;
+                default: {ESLVal _0 = _v256;
                   
                   return ESLVal.list();
                 }
@@ -8948,15 +8948,15 @@ public class Types {
         }
         }
         }
-      case "RecType": {ESLVal $228 = _v33.termRef(0);
-          ESLVal $227 = _v33.termRef(1);
-          ESLVal $226 = _v33.termRef(2);
+      case "RecType": {ESLVal $857 = _v255.termRef(0);
+          ESLVal $856 = _v255.termRef(1);
+          ESLVal $855 = _v255.termRef(2);
           
-          {ESLVal l = $228;
+          {ESLVal l = $857;
           
-          {ESLVal a = $227;
+          {ESLVal a = $856;
           
-          {ESLVal t = $226;
+          {ESLVal t = $855;
           
           if(n.eql(a).boolVal)
           return oldType;
@@ -8966,70 +8966,70 @@ public class Types {
         }
         }
         }
-      case "SetType": {ESLVal $225 = _v33.termRef(0);
-          ESLVal $224 = _v33.termRef(1);
+      case "SetType": {ESLVal $854 = _v255.termRef(0);
+          ESLVal $853 = _v255.termRef(1);
           
-          {ESLVal l = $225;
+          {ESLVal l = $854;
           
-          {ESLVal t = $224;
+          {ESLVal t = $853;
           
           return new ESLVal("SetType",l,substType.apply(newType,n,t));
         }
         }
         }
-      case "StrType": {ESLVal $223 = _v33.termRef(0);
+      case "StrType": {ESLVal $852 = _v255.termRef(0);
           
-          {ESLVal l = $223;
+          {ESLVal l = $852;
           
           return oldType;
         }
         }
-      case "TableType": {ESLVal $222 = _v33.termRef(0);
-          ESLVal $221 = _v33.termRef(1);
-          ESLVal $220 = _v33.termRef(2);
+      case "TableType": {ESLVal $851 = _v255.termRef(0);
+          ESLVal $850 = _v255.termRef(1);
+          ESLVal $849 = _v255.termRef(2);
           
-          {ESLVal l = $222;
+          {ESLVal l = $851;
           
-          {ESLVal k = $221;
+          {ESLVal k = $850;
           
-          {ESLVal v = $220;
+          {ESLVal v = $849;
           
           return new ESLVal("TableType",l,substType.apply(newType,n,k),substType.apply(newType,n,v));
         }
         }
         }
         }
-      case "TermType": {ESLVal $219 = _v33.termRef(0);
-          ESLVal $218 = _v33.termRef(1);
-          ESLVal $217 = _v33.termRef(2);
+      case "TermType": {ESLVal $848 = _v255.termRef(0);
+          ESLVal $847 = _v255.termRef(1);
+          ESLVal $846 = _v255.termRef(2);
           
-          {ESLVal l = $219;
+          {ESLVal l = $848;
           
-          {ESLVal f = $218;
+          {ESLVal f = $847;
           
-          {ESLVal ts = $217;
+          {ESLVal ts = $846;
           
           return new ESLVal("TermType",l,f,substTypes.apply(newType,n,ts));
         }
         }
         }
         }
-      case "TypeClosure": {ESLVal $216 = _v33.termRef(0);
+      case "TypeClosure": {ESLVal $845 = _v255.termRef(0);
           
-          {ESLVal f = $216;
+          {ESLVal f = $845;
           
           return oldType;
         }
         }
-      case "TypeFun": {ESLVal $215 = _v33.termRef(0);
-          ESLVal $214 = _v33.termRef(1);
-          ESLVal $213 = _v33.termRef(2);
+      case "TypeFun": {ESLVal $844 = _v255.termRef(0);
+          ESLVal $843 = _v255.termRef(1);
+          ESLVal $842 = _v255.termRef(2);
           
-          {ESLVal l = $215;
+          {ESLVal l = $844;
           
-          {ESLVal ns = $214;
+          {ESLVal ns = $843;
           
-          {ESLVal t = $213;
+          {ESLVal t = $842;
           
           if(member.apply(n,ns).boolVal)
           return oldType;
@@ -9039,34 +9039,34 @@ public class Types {
         }
         }
         }
-      case "UnfoldType": {ESLVal $212 = _v33.termRef(0);
-          ESLVal $211 = _v33.termRef(1);
+      case "UnfoldType": {ESLVal $841 = _v255.termRef(0);
+          ESLVal $840 = _v255.termRef(1);
           
-          {ESLVal l = $212;
+          {ESLVal l = $841;
           
-          {ESLVal t = $211;
+          {ESLVal t = $840;
           
           return new ESLVal("UnfoldType",l,substType.apply(newType,n,t));
         }
         }
         }
-      case "UnionType": {ESLVal $210 = _v33.termRef(0);
-          ESLVal $209 = _v33.termRef(1);
+      case "UnionType": {ESLVal $839 = _v255.termRef(0);
+          ESLVal $838 = _v255.termRef(1);
           
-          {ESLVal l = $210;
+          {ESLVal l = $839;
           
-          {ESLVal ts = $209;
+          {ESLVal ts = $838;
           
           return new ESLVal("UnionType",l,substTypes.apply(newType,n,ts));
         }
         }
         }
-      case "VarType": {ESLVal $208 = _v33.termRef(0);
-          ESLVal $207 = _v33.termRef(1);
+      case "VarType": {ESLVal $837 = _v255.termRef(0);
+          ESLVal $836 = _v255.termRef(1);
           
-          {ESLVal l = $208;
+          {ESLVal l = $837;
           
-          {ESLVal name = $207;
+          {ESLVal name = $836;
           
           if(name.eql(n).boolVal)
           return newType;
@@ -9075,29 +9075,29 @@ public class Types {
         }
         }
         }
-      case "VoidType": {ESLVal $206 = _v33.termRef(0);
+      case "VoidType": {ESLVal $835 = _v255.termRef(0);
           
-          {ESLVal l = $206;
+          {ESLVal l = $835;
           
           return oldType;
         }
         }
-      case "UnionRef": {ESLVal $205 = _v33.termRef(0);
-          ESLVal $204 = _v33.termRef(1);
-          ESLVal $203 = _v33.termRef(2);
+      case "UnionRef": {ESLVal $834 = _v255.termRef(0);
+          ESLVal $833 = _v255.termRef(1);
+          ESLVal $832 = _v255.termRef(2);
           
-          {ESLVal l = $205;
+          {ESLVal l = $834;
           
-          {ESLVal t = $204;
+          {ESLVal t = $833;
           
-          {ESLVal name = $203;
+          {ESLVal name = $832;
           
           return new ESLVal("UnionRef",l,substType.apply(newType,n,t),name);
         }
         }
         }
         }
-        default: {ESLVal x = _v33;
+        default: {ESLVal x = _v255;
           
           return error(x);
         }
@@ -9109,23 +9109,23 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal env = $args[0];
   ESLVal types = $args[1];
-  {ESLVal _v32 = types;
+  {ESLVal _v254 = types;
         
-        if(_v32.isCons())
-        {ESLVal $201 = _v32.head();
-          ESLVal $202 = _v32.tail();
+        if(_v254.isCons())
+        {ESLVal $830 = _v254.head();
+          ESLVal $831 = _v254.tail();
           
-          {ESLVal t = $201;
+          {ESLVal t = $830;
           
-          {ESLVal ts = $202;
+          {ESLVal ts = $831;
           
           return substTypesEnv.apply(env,ts).cons(substTypeEnv.apply(env,t));
         }
         }
         }
-      else if(_v32.isNil())
+      else if(_v254.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(25430,25541)").add(ESLVal.list(_v32)));
+      else return error(new ESLVal("case error at Pos(25368,25479)").add(ESLVal.list(_v254)));
       }
     }
   });
@@ -9133,18 +9133,18 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal env = $args[0];
   ESLVal oldType = $args[1];
-  {ESLVal _v22 = oldType;
+  {ESLVal _v244 = oldType;
         
-        switch(_v22.termName) {
-        case "ApplyType": {ESLVal $196 = _v22.termRef(0);
-          ESLVal $195 = _v22.termRef(1);
-          ESLVal $194 = _v22.termRef(2);
+        switch(_v244.termName) {
+        case "ApplyType": {ESLVal $825 = _v244.termRef(0);
+          ESLVal $824 = _v244.termRef(1);
+          ESLVal $823 = _v244.termRef(2);
           
-          {ESLVal l = $196;
+          {ESLVal l = $825;
           
-          {ESLVal n = $195;
+          {ESLVal n = $824;
           
-          {ESLVal types = $194;
+          {ESLVal types = $823;
           
           {ESLVal op = lookupType.apply(n,env);
           
@@ -9157,37 +9157,37 @@ public class Types {
         }
         }
         }
-      case "ApplyTypeFun": {ESLVal $193 = _v22.termRef(0);
-          ESLVal $192 = _v22.termRef(1);
-          ESLVal $191 = _v22.termRef(2);
+      case "ApplyTypeFun": {ESLVal $822 = _v244.termRef(0);
+          ESLVal $821 = _v244.termRef(1);
+          ESLVal $820 = _v244.termRef(2);
           
-          {ESLVal l = $193;
+          {ESLVal l = $822;
           
-          {ESLVal op = $192;
+          {ESLVal op = $821;
           
-          {ESLVal args = $191;
+          {ESLVal args = $820;
           
           return new ESLVal("ApplyTypeFun",l,substTypeEnv.apply(env,op),substTypesEnv.apply(env,args));
         }
         }
         }
         }
-      case "ActType": {ESLVal $190 = _v22.termRef(0);
-          ESLVal $189 = _v22.termRef(1);
-          ESLVal $188 = _v22.termRef(2);
+      case "ActType": {ESLVal $819 = _v244.termRef(0);
+          ESLVal $818 = _v244.termRef(1);
+          ESLVal $817 = _v244.termRef(2);
           
-          {ESLVal l = $190;
+          {ESLVal l = $819;
           
-          {ESLVal decs = $189;
+          {ESLVal decs = $818;
           
-          {ESLVal handlers = $188;
+          {ESLVal handlers = $817;
           
           return new ESLVal("ActType",l,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v30 = $qualArg;
+          {ESLVal _v252 = $qualArg;
                 
-                {ESLVal d = _v30;
+                {ESLVal d = _v252;
                 
                 return ESLVal.list(ESLVal.list(substDecEnv.apply(env,d)));
               }
@@ -9196,9 +9196,9 @@ public class Types {
           }).map(decs).flatten().flatten(),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v31 = $qualArg;
+          {ESLVal _v253 = $qualArg;
                 
-                {ESLVal m = _v31;
+                {ESLVal m = _v253;
                 
                 return ESLVal.list(ESLVal.list(substMTypeEnv.apply(env,m)));
               }
@@ -9209,25 +9209,25 @@ public class Types {
         }
         }
         }
-      case "ExtendedAct": {ESLVal $187 = _v22.termRef(0);
-          ESLVal $186 = _v22.termRef(1);
-          ESLVal $185 = _v22.termRef(2);
-          ESLVal $184 = _v22.termRef(3);
+      case "ExtendedAct": {ESLVal $816 = _v244.termRef(0);
+          ESLVal $815 = _v244.termRef(1);
+          ESLVal $814 = _v244.termRef(2);
+          ESLVal $813 = _v244.termRef(3);
           
-          {ESLVal l = $187;
+          {ESLVal l = $816;
           
-          {ESLVal parent = $186;
+          {ESLVal parent = $815;
           
-          {ESLVal decs = $185;
+          {ESLVal decs = $814;
           
-          {ESLVal handlers = $184;
+          {ESLVal handlers = $813;
           
           return new ESLVal("ExtendedAct",l,substTypeEnv.apply(env,parent),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v28 = $qualArg;
+          {ESLVal _v250 = $qualArg;
                 
-                {ESLVal d = _v28;
+                {ESLVal d = _v250;
                 
                 return ESLVal.list(ESLVal.list(substDecEnv.apply(env,d)));
               }
@@ -9236,9 +9236,9 @@ public class Types {
           }).map(decs).flatten().flatten(),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v29 = $qualArg;
+          {ESLVal _v251 = $qualArg;
                 
-                {ESLVal m = _v29;
+                {ESLVal m = _v251;
                 
                 return ESLVal.list(ESLVal.list(substMTypeEnv.apply(env,m)));
               }
@@ -9250,77 +9250,77 @@ public class Types {
         }
         }
         }
-      case "ArrayType": {ESLVal $183 = _v22.termRef(0);
-          ESLVal $182 = _v22.termRef(1);
+      case "ArrayType": {ESLVal $812 = _v244.termRef(0);
+          ESLVal $811 = _v244.termRef(1);
           
-          {ESLVal l = $183;
+          {ESLVal l = $812;
           
-          {ESLVal t = $182;
+          {ESLVal t = $811;
           
           return new ESLVal("ArrayType",l,substTypeEnv.apply(env,t));
         }
         }
         }
-      case "BoolType": {ESLVal $181 = _v22.termRef(0);
+      case "BoolType": {ESLVal $810 = _v244.termRef(0);
           
-          {ESLVal l = $181;
-          
-          return oldType;
-        }
-        }
-      case "FloatType": {ESLVal $180 = _v22.termRef(0);
-          
-          {ESLVal l = $180;
+          {ESLVal l = $810;
           
           return oldType;
         }
         }
-      case "ForallType": {ESLVal $179 = _v22.termRef(0);
-          ESLVal $178 = _v22.termRef(1);
-          ESLVal $177 = _v22.termRef(2);
+      case "FloatType": {ESLVal $809 = _v244.termRef(0);
           
-          {ESLVal l = $179;
+          {ESLVal l = $809;
           
-          {ESLVal ns = $178;
+          return oldType;
+        }
+        }
+      case "ForallType": {ESLVal $808 = _v244.termRef(0);
+          ESLVal $807 = _v244.termRef(1);
+          ESLVal $806 = _v244.termRef(2);
           
-          {ESLVal t = $177;
+          {ESLVal l = $808;
+          
+          {ESLVal ns = $807;
+          
+          {ESLVal t = $806;
           
           return new ESLVal("ForallType",l,ns,substTypeEnv.apply(removeFromDom.apply(env,ns),t));
         }
         }
         }
         }
-      case "FieldType": {ESLVal $176 = _v22.termRef(0);
-          ESLVal $175 = _v22.termRef(1);
-          ESLVal $174 = _v22.termRef(2);
+      case "FieldType": {ESLVal $805 = _v244.termRef(0);
+          ESLVal $804 = _v244.termRef(1);
+          ESLVal $803 = _v244.termRef(2);
           
-          {ESLVal l = $176;
+          {ESLVal l = $805;
           
-          {ESLVal n = $175;
+          {ESLVal n = $804;
           
-          {ESLVal t = $174;
+          {ESLVal t = $803;
           
           return new ESLVal("FieldType",l,n,substTypeEnv.apply(env,t));
         }
         }
         }
         }
-      case "FunType": {ESLVal $173 = _v22.termRef(0);
-          ESLVal $172 = _v22.termRef(1);
-          ESLVal $171 = _v22.termRef(2);
+      case "FunType": {ESLVal $802 = _v244.termRef(0);
+          ESLVal $801 = _v244.termRef(1);
+          ESLVal $800 = _v244.termRef(2);
           
-          {ESLVal l = $173;
+          {ESLVal l = $802;
           
-          {ESLVal d = $172;
+          {ESLVal d = $801;
           
-          {ESLVal r = $171;
+          {ESLVal r = $800;
           
           return new ESLVal("FunType",l,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v27 = $qualArg;
+          {ESLVal _v249 = $qualArg;
                 
-                {ESLVal t = _v27;
+                {ESLVal t = _v249;
                 
                 return ESLVal.list(ESLVal.list(substTypeEnv.apply(env,t)));
               }
@@ -9331,25 +9331,25 @@ public class Types {
         }
         }
         }
-      case "TaggedFunType": {ESLVal $170 = _v22.termRef(0);
-          ESLVal $169 = _v22.termRef(1);
-          ESLVal $168 = _v22.termRef(2);
-          ESLVal $167 = _v22.termRef(3);
+      case "TaggedFunType": {ESLVal $799 = _v244.termRef(0);
+          ESLVal $798 = _v244.termRef(1);
+          ESLVal $797 = _v244.termRef(2);
+          ESLVal $796 = _v244.termRef(3);
           
-          {ESLVal l = $170;
+          {ESLVal l = $799;
           
-          {ESLVal d = $169;
+          {ESLVal d = $798;
           
-          {ESLVal p = $168;
+          {ESLVal p = $797;
           
-          {ESLVal r = $167;
+          {ESLVal r = $796;
           
           return new ESLVal("FunType",l,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v26 = $qualArg;
+          {ESLVal _v248 = $qualArg;
                 
-                {ESLVal t = _v26;
+                {ESLVal t = _v248;
                 
                 return ESLVal.list(ESLVal.list(substTypeEnv.apply(env,t)));
               }
@@ -9361,93 +9361,93 @@ public class Types {
         }
         }
         }
-      case "IntType": {ESLVal $166 = _v22.termRef(0);
+      case "IntType": {ESLVal $795 = _v244.termRef(0);
           
-          {ESLVal l = $166;
+          {ESLVal l = $795;
           
           return oldType;
         }
         }
-      case "ListType": {ESLVal $165 = _v22.termRef(0);
-          ESLVal $164 = _v22.termRef(1);
+      case "ListType": {ESLVal $794 = _v244.termRef(0);
+          ESLVal $793 = _v244.termRef(1);
           
-          {ESLVal l = $165;
+          {ESLVal l = $794;
           
-          {ESLVal t = $164;
+          {ESLVal t = $793;
           
           return new ESLVal("ListType",l,substTypeEnv.apply(env,t));
         }
         }
         }
-      case "SetType": {ESLVal $163 = _v22.termRef(0);
-          ESLVal $162 = _v22.termRef(1);
+      case "SetType": {ESLVal $792 = _v244.termRef(0);
+          ESLVal $791 = _v244.termRef(1);
           
-          {ESLVal l = $163;
+          {ESLVal l = $792;
           
-          {ESLVal t = $162;
+          {ESLVal t = $791;
           
           return new ESLVal("SetType",l,substTypeEnv.apply(env,t));
         }
         }
         }
-      case "BagType": {ESLVal $161 = _v22.termRef(0);
-          ESLVal $160 = _v22.termRef(1);
+      case "BagType": {ESLVal $790 = _v244.termRef(0);
+          ESLVal $789 = _v244.termRef(1);
           
-          {ESLVal l = $161;
+          {ESLVal l = $790;
           
-          {ESLVal t = $160;
+          {ESLVal t = $789;
           
           return new ESLVal("BagType",l,substTypeEnv.apply(env,t));
         }
         }
         }
-      case "NullType": {ESLVal $159 = _v22.termRef(0);
+      case "NullType": {ESLVal $788 = _v244.termRef(0);
           
-          {ESLVal l = $159;
+          {ESLVal l = $788;
           
           return oldType;
         }
         }
-      case "RecType": {ESLVal $158 = _v22.termRef(0);
-          ESLVal $157 = _v22.termRef(1);
-          ESLVal $156 = _v22.termRef(2);
+      case "RecType": {ESLVal $787 = _v244.termRef(0);
+          ESLVal $786 = _v244.termRef(1);
+          ESLVal $785 = _v244.termRef(2);
           
-          {ESLVal l = $158;
+          {ESLVal l = $787;
           
-          {ESLVal a = $157;
+          {ESLVal a = $786;
           
-          {ESLVal t = $156;
+          {ESLVal t = $785;
           
           return new ESLVal("RecType",l,a,substTypeEnv.apply(removeFromDom.apply(env,ESLVal.list(a)),t));
         }
         }
         }
         }
-      case "RecordType": {ESLVal $155 = _v22.termRef(0);
-          ESLVal $154 = _v22.termRef(1);
+      case "RecordType": {ESLVal $784 = _v244.termRef(0);
+          ESLVal $783 = _v244.termRef(1);
           
-          {ESLVal l = $155;
+          {ESLVal l = $784;
           
-          {ESLVal fs = $154;
+          {ESLVal fs = $783;
           
           return new ESLVal("RecordType",l,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v25 = $qualArg;
+          {ESLVal _v247 = $qualArg;
                 
-                switch(_v25.termName) {
-                case "Dec": {ESLVal $200 = _v25.termRef(0);
-                  ESLVal $199 = _v25.termRef(1);
-                  ESLVal $198 = _v25.termRef(2);
-                  ESLVal $197 = _v25.termRef(3);
+                switch(_v247.termName) {
+                case "Dec": {ESLVal $829 = _v247.termRef(0);
+                  ESLVal $828 = _v247.termRef(1);
+                  ESLVal $827 = _v247.termRef(2);
+                  ESLVal $826 = _v247.termRef(3);
                   
-                  {ESLVal dl = $200;
+                  {ESLVal dl = $829;
                   
-                  {ESLVal n = $199;
+                  {ESLVal n = $828;
                   
-                  {ESLVal t = $198;
+                  {ESLVal t = $827;
                   
-                  {ESLVal dt = $197;
+                  {ESLVal dt = $826;
                   
                   return ESLVal.list(ESLVal.list(new ESLVal("Dec",dl,n,substTypeEnv.apply(env,t),dt)));
                 }
@@ -9455,7 +9455,7 @@ public class Types {
                 }
                 }
                 }
-                default: {ESLVal _0 = _v25;
+                default: {ESLVal _0 = _v247;
                   
                   return ESLVal.list();
                 }
@@ -9466,44 +9466,44 @@ public class Types {
         }
         }
         }
-      case "StrType": {ESLVal $153 = _v22.termRef(0);
+      case "StrType": {ESLVal $782 = _v244.termRef(0);
           
-          {ESLVal l = $153;
+          {ESLVal l = $782;
           
           return oldType;
         }
         }
-      case "TableType": {ESLVal $152 = _v22.termRef(0);
-          ESLVal $151 = _v22.termRef(1);
-          ESLVal $150 = _v22.termRef(2);
+      case "TableType": {ESLVal $781 = _v244.termRef(0);
+          ESLVal $780 = _v244.termRef(1);
+          ESLVal $779 = _v244.termRef(2);
           
-          {ESLVal l = $152;
+          {ESLVal l = $781;
           
-          {ESLVal k = $151;
+          {ESLVal k = $780;
           
-          {ESLVal v = $150;
+          {ESLVal v = $779;
           
           return new ESLVal("TableType",l,substTypeEnv.apply(env,k),substTypeEnv.apply(env,v));
         }
         }
         }
         }
-      case "TermType": {ESLVal $149 = _v22.termRef(0);
-          ESLVal $148 = _v22.termRef(1);
-          ESLVal $147 = _v22.termRef(2);
+      case "TermType": {ESLVal $778 = _v244.termRef(0);
+          ESLVal $777 = _v244.termRef(1);
+          ESLVal $776 = _v244.termRef(2);
           
-          {ESLVal l = $149;
+          {ESLVal l = $778;
           
-          {ESLVal f = $148;
+          {ESLVal f = $777;
           
-          {ESLVal ts = $147;
+          {ESLVal ts = $776;
           
           return new ESLVal("TermType",l,f,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v24 = $qualArg;
+          {ESLVal _v246 = $qualArg;
                 
-                {ESLVal t = _v24;
+                {ESLVal t = _v246;
                 
                 return ESLVal.list(ESLVal.list(substTypeEnv.apply(env,t)));
               }
@@ -9514,52 +9514,52 @@ public class Types {
         }
         }
         }
-      case "TypeClosure": {ESLVal $146 = _v22.termRef(0);
+      case "TypeClosure": {ESLVal $775 = _v244.termRef(0);
           
-          {ESLVal f = $146;
+          {ESLVal f = $775;
           
           return oldType;
         }
         }
-      case "TypeFun": {ESLVal $145 = _v22.termRef(0);
-          ESLVal $144 = _v22.termRef(1);
-          ESLVal $143 = _v22.termRef(2);
+      case "TypeFun": {ESLVal $774 = _v244.termRef(0);
+          ESLVal $773 = _v244.termRef(1);
+          ESLVal $772 = _v244.termRef(2);
           
-          {ESLVal l = $145;
+          {ESLVal l = $774;
           
-          {ESLVal ns = $144;
+          {ESLVal ns = $773;
           
-          {ESLVal t = $143;
+          {ESLVal t = $772;
           
           return new ESLVal("TypeFun",l,ns,substTypeEnv.apply(removeFromDom.apply(env,ns),t));
         }
         }
         }
         }
-      case "UnfoldType": {ESLVal $142 = _v22.termRef(0);
-          ESLVal $141 = _v22.termRef(1);
+      case "UnfoldType": {ESLVal $771 = _v244.termRef(0);
+          ESLVal $770 = _v244.termRef(1);
           
-          {ESLVal l = $142;
+          {ESLVal l = $771;
           
-          {ESLVal t = $141;
+          {ESLVal t = $770;
           
           return new ESLVal("UnfoldType",l,substTypeEnv.apply(env,t));
         }
         }
         }
-      case "UnionType": {ESLVal $140 = _v22.termRef(0);
-          ESLVal $139 = _v22.termRef(1);
+      case "UnionType": {ESLVal $769 = _v244.termRef(0);
+          ESLVal $768 = _v244.termRef(1);
           
-          {ESLVal l = $140;
+          {ESLVal l = $769;
           
-          {ESLVal ts = $139;
+          {ESLVal ts = $768;
           
           return new ESLVal("UnionType",l,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v23 = $qualArg;
+          {ESLVal _v245 = $qualArg;
                 
-                {ESLVal t = _v23;
+                {ESLVal t = _v245;
                 
                 return ESLVal.list(ESLVal.list(substTypeEnv.apply(env,t)));
               }
@@ -9569,12 +9569,12 @@ public class Types {
         }
         }
         }
-      case "VarType": {ESLVal $138 = _v22.termRef(0);
-          ESLVal $137 = _v22.termRef(1);
+      case "VarType": {ESLVal $767 = _v244.termRef(0);
+          ESLVal $766 = _v244.termRef(1);
           
-          {ESLVal l = $138;
+          {ESLVal l = $767;
           
-          {ESLVal name = $137;
+          {ESLVal name = $766;
           
           if(member.apply(name,typeEnvDom.apply(env)).boolVal)
           return lookupType.apply(name,env);
@@ -9583,29 +9583,29 @@ public class Types {
         }
         }
         }
-      case "VoidType": {ESLVal $136 = _v22.termRef(0);
+      case "VoidType": {ESLVal $765 = _v244.termRef(0);
           
-          {ESLVal l = $136;
+          {ESLVal l = $765;
           
           return oldType;
         }
         }
-      case "UnionRef": {ESLVal $135 = _v22.termRef(0);
-          ESLVal $134 = _v22.termRef(1);
-          ESLVal $133 = _v22.termRef(2);
+      case "UnionRef": {ESLVal $764 = _v244.termRef(0);
+          ESLVal $763 = _v244.termRef(1);
+          ESLVal $762 = _v244.termRef(2);
           
-          {ESLVal l = $135;
+          {ESLVal l = $764;
           
-          {ESLVal t = $134;
+          {ESLVal t = $763;
           
-          {ESLVal name = $133;
+          {ESLVal name = $762;
           
           return new ESLVal("UnionRef",l,substTypeEnv.apply(env,t),name);
         }
         }
         }
         }
-        default: {ESLVal x = _v22;
+        default: {ESLVal x = _v244;
           
           return error(oldType);
         }
@@ -9617,46 +9617,46 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal ns = $args[0];
   ESLVal ts = $args[1];
-  {ESLVal _v21 = ns;
-        ESLVal _v20 = ts;
+  {ESLVal _v243 = ns;
+        ESLVal _v242 = ts;
         
-        if(_v21.isCons())
-        {ESLVal $127 = _v21.head();
-          ESLVal $128 = _v21.tail();
+        if(_v243.isCons())
+        {ESLVal $756 = _v243.head();
+          ESLVal $757 = _v243.tail();
           
-          if(_v20.isCons())
-          {ESLVal $129 = _v20.head();
-            ESLVal $130 = _v20.tail();
+          if(_v242.isCons())
+          {ESLVal $758 = _v242.head();
+            ESLVal $759 = _v242.tail();
             
-            {ESLVal n = $127;
+            {ESLVal n = $756;
             
-            {ESLVal _v86 = $128;
+            {ESLVal _v333 = $757;
             
-            {ESLVal t = $129;
+            {ESLVal t = $758;
             
-            {ESLVal _v87 = $130;
+            {ESLVal _v334 = $759;
             
-            return zipTypeEnv.apply(_v86,_v87).cons(new ESLVal("Map",n,t));
+            return zipTypeEnv.apply(_v333,_v334).cons(new ESLVal("Map",n,t));
           }
           }
           }
           }
           }
-        else if(_v20.isNil())
-          return error(new ESLVal("case error at Pos(28287,28408)").add(ESLVal.list(_v21,_v20)));
-        else return error(new ESLVal("case error at Pos(28287,28408)").add(ESLVal.list(_v21,_v20)));
+        else if(_v242.isNil())
+          return error(new ESLVal("case error at Pos(28225,28346)").add(ESLVal.list(_v243,_v242)));
+        else return error(new ESLVal("case error at Pos(28225,28346)").add(ESLVal.list(_v243,_v242)));
         }
-      else if(_v21.isNil())
-        if(_v20.isCons())
-          {ESLVal $131 = _v20.head();
-            ESLVal $132 = _v20.tail();
+      else if(_v243.isNil())
+        if(_v242.isCons())
+          {ESLVal $760 = _v242.head();
+            ESLVal $761 = _v242.tail();
             
-            return error(new ESLVal("case error at Pos(28287,28408)").add(ESLVal.list(_v21,_v20)));
+            return error(new ESLVal("case error at Pos(28225,28346)").add(ESLVal.list(_v243,_v242)));
           }
-        else if(_v20.isNil())
+        else if(_v242.isNil())
           return $nil;
-        else return error(new ESLVal("case error at Pos(28287,28408)").add(ESLVal.list(_v21,_v20)));
-      else return error(new ESLVal("case error at Pos(28287,28408)").add(ESLVal.list(_v21,_v20)));
+        else return error(new ESLVal("case error at Pos(28225,28346)").add(ESLVal.list(_v243,_v242)));
+      else return error(new ESLVal("case error at Pos(28225,28346)").add(ESLVal.list(_v243,_v242)));
       }
     }
   });
@@ -9664,81 +9664,81 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal name = $args[0];
   ESLVal env = $args[1];
-  {ESLVal _v19 = env;
+  {ESLVal _v241 = env;
         
-        if(_v19.isCons())
-        {ESLVal $123 = _v19.head();
-          ESLVal $124 = _v19.tail();
+        if(_v241.isCons())
+        {ESLVal $752 = _v241.head();
+          ESLVal $753 = _v241.tail();
           
-          switch($123.termName) {
-          case "Map": {ESLVal $126 = $123.termRef(0);
-            ESLVal $125 = $123.termRef(1);
+          switch($752.termName) {
+          case "Map": {ESLVal $755 = $752.termRef(0);
+            ESLVal $754 = $752.termRef(1);
             
-            {ESLVal n = $126;
+            {ESLVal n = $755;
             
-            {ESLVal t = $125;
+            {ESLVal t = $754;
             
-            {ESLVal e = $124;
+            {ESLVal e = $753;
             
             if(n.eql(name).boolVal)
             return t;
             else
-              {ESLVal m = $123;
+              {ESLVal m = $752;
                 
-                {ESLVal _v85 = $124;
+                {ESLVal _v332 = $753;
                 
-                return lookupType.apply(name,_v85);
+                return lookupType.apply(name,_v332);
               }
               }
           }
           }
           }
           }
-          default: {ESLVal m = $123;
+          default: {ESLVal m = $752;
             
-            {ESLVal e = $124;
+            {ESLVal e = $753;
             
             return lookupType.apply(name,e);
           }
           }
         }
         }
-      else if(_v19.isNil())
+      else if(_v241.isNil())
         return $null;
-      else return error(new ESLVal("case error at Pos(28454,28591)").add(ESLVal.list(_v19)));
+      else return error(new ESLVal("case error at Pos(28392,28529)").add(ESLVal.list(_v241)));
       }
     }
   });
   public static ESLVal typeEnvDom = new ESLVal(new Function(new ESLVal("typeEnvDom"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal e = $args[0];
-  {ESLVal _v18 = e;
+  {ESLVal _v240 = e;
         
-        if(_v18.isCons())
-        {ESLVal $119 = _v18.head();
-          ESLVal $120 = _v18.tail();
+        if(_v240.isCons())
+        {ESLVal $748 = _v240.head();
+          ESLVal $749 = _v240.tail();
           
-          switch($119.termName) {
-          case "Map": {ESLVal $122 = $119.termRef(0);
-            ESLVal $121 = $119.termRef(1);
+          switch($748.termName) {
+          case "Map": {ESLVal $751 = $748.termRef(0);
+            ESLVal $750 = $748.termRef(1);
             
-            {ESLVal n = $122;
+            {ESLVal n = $751;
             
-            {ESLVal t = $121;
+            {ESLVal t = $750;
             
-            {ESLVal x = $120;
+            {ESLVal x = $749;
             
             return typeEnvDom.apply(x).cons(n);
           }
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(28626,28715)").add(ESLVal.list(_v18)));
+          default: return error(new ESLVal("case error at Pos(28564,28653)").add(ESLVal.list(_v240)));
         }
         }
-      else if(_v18.isNil())
+      else if(_v240.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(28626,28715)").add(ESLVal.list(_v18)));
+      else return error(new ESLVal("case error at Pos(28564,28653)").add(ESLVal.list(_v240)));
       }
     }
   });
@@ -9746,32 +9746,32 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal e = $args[0];
   ESLVal ns = $args[1];
-  {ESLVal _v17 = e;
+  {ESLVal _v239 = e;
         
-        if(_v17.isCons())
-        {ESLVal $115 = _v17.head();
-          ESLVal $116 = _v17.tail();
+        if(_v239.isCons())
+        {ESLVal $744 = _v239.head();
+          ESLVal $745 = _v239.tail();
           
-          switch($115.termName) {
-          case "Map": {ESLVal $118 = $115.termRef(0);
-            ESLVal $117 = $115.termRef(1);
+          switch($744.termName) {
+          case "Map": {ESLVal $747 = $744.termRef(0);
+            ESLVal $746 = $744.termRef(1);
             
-            {ESLVal n = $118;
+            {ESLVal n = $747;
             
-            {ESLVal t = $117;
+            {ESLVal t = $746;
             
-            {ESLVal _v81 = $116;
+            {ESLVal _v328 = $745;
             
             if(member.apply(n,ns).boolVal)
-            return removeFromDom.apply(_v81,ns);
+            return removeFromDom.apply(_v328,ns);
             else
-              {ESLVal _v82 = $118;
+              {ESLVal _v329 = $747;
                 
-                {ESLVal _v83 = $117;
+                {ESLVal _v330 = $746;
                 
-                {ESLVal _v84 = $116;
+                {ESLVal _v331 = $745;
                 
-                return removeFromDom.apply(_v84,ns).cons(new ESLVal("Map",_v82,_v83));
+                return removeFromDom.apply(_v331,ns).cons(new ESLVal("Map",_v329,_v330));
               }
               }
               }
@@ -9779,12 +9779,12 @@ public class Types {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(28762,28944)").add(ESLVal.list(_v17)));
+          default: return error(new ESLVal("case error at Pos(28700,28882)").add(ESLVal.list(_v239)));
         }
         }
-      else if(_v17.isNil())
+      else if(_v239.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(28762,28944)").add(ESLVal.list(_v17)));
+      else return error(new ESLVal("case error at Pos(28700,28882)").add(ESLVal.list(_v239)));
       }
     }
   });
@@ -9792,32 +9792,32 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal e = $args[0];
   ESLVal ns = $args[1];
-  {ESLVal _v16 = e;
+  {ESLVal _v238 = e;
         
-        if(_v16.isCons())
-        {ESLVal $111 = _v16.head();
-          ESLVal $112 = _v16.tail();
+        if(_v238.isCons())
+        {ESLVal $740 = _v238.head();
+          ESLVal $741 = _v238.tail();
           
-          switch($111.termName) {
-          case "Map": {ESLVal $114 = $111.termRef(0);
-            ESLVal $113 = $111.termRef(1);
+          switch($740.termName) {
+          case "Map": {ESLVal $743 = $740.termRef(0);
+            ESLVal $742 = $740.termRef(1);
             
-            {ESLVal n = $114;
+            {ESLVal n = $743;
             
-            {ESLVal t = $113;
+            {ESLVal t = $742;
             
-            {ESLVal _v77 = $112;
+            {ESLVal _v324 = $741;
             
             if(member.apply(n,ns).not().boolVal)
-            return restrictTypeEnv.apply(_v77,ns);
+            return restrictTypeEnv.apply(_v324,ns);
             else
-              {ESLVal _v78 = $114;
+              {ESLVal _v325 = $743;
                 
-                {ESLVal _v79 = $113;
+                {ESLVal _v326 = $742;
                 
-                {ESLVal _v80 = $112;
+                {ESLVal _v327 = $741;
                 
-                return restrictTypeEnv.apply(_v80,ns).cons(new ESLVal("Map",_v78,_v79));
+                return restrictTypeEnv.apply(_v327,ns).cons(new ESLVal("Map",_v325,_v326));
               }
               }
               }
@@ -9825,45 +9825,45 @@ public class Types {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(28993,29184)").add(ESLVal.list(_v16)));
+          default: return error(new ESLVal("case error at Pos(28931,29122)").add(ESLVal.list(_v238)));
         }
         }
-      else if(_v16.isNil())
+      else if(_v238.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(28993,29184)").add(ESLVal.list(_v16)));
+      else return error(new ESLVal("case error at Pos(28931,29122)").add(ESLVal.list(_v238)));
       }
     }
   });
   public static ESLVal typeEnvRan = new ESLVal(new Function(new ESLVal("typeEnvRan"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal e = $args[0];
-  {ESLVal _v15 = e;
+  {ESLVal _v237 = e;
         
-        if(_v15.isCons())
-        {ESLVal $107 = _v15.head();
-          ESLVal $108 = _v15.tail();
+        if(_v237.isCons())
+        {ESLVal $736 = _v237.head();
+          ESLVal $737 = _v237.tail();
           
-          switch($107.termName) {
-          case "Map": {ESLVal $110 = $107.termRef(0);
-            ESLVal $109 = $107.termRef(1);
+          switch($736.termName) {
+          case "Map": {ESLVal $739 = $736.termRef(0);
+            ESLVal $738 = $736.termRef(1);
             
-            {ESLVal n = $110;
+            {ESLVal n = $739;
             
-            {ESLVal t = $109;
+            {ESLVal t = $738;
             
-            {ESLVal x = $108;
+            {ESLVal x = $737;
             
             return typeEnvRan.apply(x).cons(t);
           }
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(29220,29311)").add(ESLVal.list(_v15)));
+          default: return error(new ESLVal("case error at Pos(29158,29249)").add(ESLVal.list(_v237)));
         }
         }
-      else if(_v15.isNil())
+      else if(_v237.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(29220,29311)").add(ESLVal.list(_v15)));
+      else return error(new ESLVal("case error at Pos(29158,29249)").add(ESLVal.list(_v237)));
       }
     }
   });
@@ -9871,29 +9871,29 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal t1 = $args[0];
   ESLVal ts = $args[1];
-  {ESLVal _v14 = ts;
+  {ESLVal _v236 = ts;
         
-        if(_v14.isCons())
-        {ESLVal $105 = _v14.head();
-          ESLVal $106 = _v14.tail();
+        if(_v236.isCons())
+        {ESLVal $734 = _v236.head();
+          ESLVal $735 = _v236.tail();
           
-          {ESLVal t2 = $105;
+          {ESLVal t2 = $734;
           
-          {ESLVal _v74 = $106;
+          {ESLVal _v321 = $735;
           
           if(typeEqual.apply(t1,t2).boolVal)
-          return allEqualTypes.apply(t1,_v74);
+          return allEqualTypes.apply(t1,_v321);
           else
-            {ESLVal _v75 = _v14;
+            {ESLVal _v322 = _v236;
               
               return $false;
             }
         }
         }
         }
-      else if(_v14.isNil())
+      else if(_v236.isNil())
         return $true;
-      else {ESLVal _v76 = _v14;
+      else {ESLVal _v323 = _v236;
           
           return $false;
         }
@@ -9905,21 +9905,21 @@ public class Types {
       ESLVal newType = $args[0];
   ESLVal n = $args[1];
   ESLVal d = $args[2];
-  {ESLVal _v13 = d;
+  {ESLVal _v235 = d;
         
-        switch(_v13.termName) {
-        case "Dec": {ESLVal $104 = _v13.termRef(0);
-          ESLVal $103 = _v13.termRef(1);
-          ESLVal $102 = _v13.termRef(2);
-          ESLVal $101 = _v13.termRef(3);
+        switch(_v235.termName) {
+        case "Dec": {ESLVal $733 = _v235.termRef(0);
+          ESLVal $732 = _v235.termRef(1);
+          ESLVal $731 = _v235.termRef(2);
+          ESLVal $730 = _v235.termRef(3);
           
-          {ESLVal l = $104;
+          {ESLVal l = $733;
           
-          {ESLVal name = $103;
+          {ESLVal name = $732;
           
-          {ESLVal t = $102;
+          {ESLVal t = $731;
           
-          {ESLVal st = $101;
+          {ESLVal st = $730;
           
           return new ESLVal("Dec",l,name,substType.apply(newType,n,t),st);
         }
@@ -9927,7 +9927,7 @@ public class Types {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(29544,29641)").add(ESLVal.list(_v13)));
+        default: return error(new ESLVal("case error at Pos(29482,29579)").add(ESLVal.list(_v235)));
       }
       }
     }
@@ -9936,21 +9936,21 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal env = $args[0];
   ESLVal d = $args[1];
-  {ESLVal _v12 = d;
+  {ESLVal _v234 = d;
         
-        switch(_v12.termName) {
-        case "Dec": {ESLVal $100 = _v12.termRef(0);
-          ESLVal $99 = _v12.termRef(1);
-          ESLVal $98 = _v12.termRef(2);
-          ESLVal $97 = _v12.termRef(3);
+        switch(_v234.termName) {
+        case "Dec": {ESLVal $729 = _v234.termRef(0);
+          ESLVal $728 = _v234.termRef(1);
+          ESLVal $727 = _v234.termRef(2);
+          ESLVal $726 = _v234.termRef(3);
           
-          {ESLVal l = $100;
+          {ESLVal l = $729;
           
-          {ESLVal name = $99;
+          {ESLVal name = $728;
           
-          {ESLVal t = $98;
+          {ESLVal t = $727;
           
-          {ESLVal st = $97;
+          {ESLVal st = $726;
           
           return new ESLVal("Dec",l,name,substTypeEnv.apply(env,t),st);
         }
@@ -9958,7 +9958,7 @@ public class Types {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(29686,29780)").add(ESLVal.list(_v12)));
+        default: return error(new ESLVal("case error at Pos(29624,29718)").add(ESLVal.list(_v234)));
       }
       }
     }
@@ -9968,22 +9968,22 @@ public class Types {
       ESLVal newType = $args[0];
   ESLVal n = $args[1];
   ESLVal m = $args[2];
-  {ESLVal _v10 = m;
+  {ESLVal _v232 = m;
         
-        switch(_v10.termName) {
-        case "MessageType": {ESLVal $96 = _v10.termRef(0);
-          ESLVal $95 = _v10.termRef(1);
+        switch(_v232.termName) {
+        case "MessageType": {ESLVal $725 = _v232.termRef(0);
+          ESLVal $724 = _v232.termRef(1);
           
-          {ESLVal l = $96;
+          {ESLVal l = $725;
           
-          {ESLVal ts = $95;
+          {ESLVal ts = $724;
           
           return new ESLVal("MessageType",l,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v11 = $qualArg;
+          {ESLVal _v233 = $qualArg;
                 
-                {ESLVal t = _v11;
+                {ESLVal t = _v233;
                 
                 return ESLVal.list(ESLVal.list(substType.apply(newType,n,t)));
               }
@@ -9993,7 +9993,7 @@ public class Types {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(29840,29948)").add(ESLVal.list(_v10)));
+        default: return error(new ESLVal("case error at Pos(29778,29886)").add(ESLVal.list(_v232)));
       }
       }
     }
@@ -10002,22 +10002,22 @@ public class Types {
     public ESLVal apply(ESLVal... $args) {
       ESLVal env = $args[0];
   ESLVal m = $args[1];
-  {ESLVal _v8 = m;
+  {ESLVal _v230 = m;
         
-        switch(_v8.termName) {
-        case "MessageType": {ESLVal $94 = _v8.termRef(0);
-          ESLVal $93 = _v8.termRef(1);
+        switch(_v230.termName) {
+        case "MessageType": {ESLVal $723 = _v230.termRef(0);
+          ESLVal $722 = _v230.termRef(1);
           
-          {ESLVal l = $94;
+          {ESLVal l = $723;
           
-          {ESLVal ts = $93;
+          {ESLVal ts = $722;
           
           return new ESLVal("MessageType",l,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v9 = $qualArg;
+          {ESLVal _v231 = $qualArg;
                 
-                {ESLVal t = _v9;
+                {ESLVal t = _v231;
                 
                 return ESLVal.list(ESLVal.list(substTypeEnv.apply(env,t)));
               }
@@ -10027,7 +10027,7 @@ public class Types {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(30000,30105)").add(ESLVal.list(_v8)));
+        default: return error(new ESLVal("case error at Pos(29938,30043)").add(ESLVal.list(_v230)));
       }
       }
     }
@@ -10035,65 +10035,65 @@ public class Types {
   public static ESLVal patternNames = new ESLVal(new Function(new ESLVal("patternNames"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal x = $args[0];
-  {ESLVal _v5 = x;
+  {ESLVal _v227 = x;
         
-        switch(_v5.termName) {
-        case "PAdd": {ESLVal $92 = _v5.termRef(0);
-          ESLVal $91 = _v5.termRef(1);
-          ESLVal $90 = _v5.termRef(2);
+        switch(_v227.termName) {
+        case "PAdd": {ESLVal $721 = _v227.termRef(0);
+          ESLVal $720 = _v227.termRef(1);
+          ESLVal $719 = _v227.termRef(2);
           
-          {ESLVal l = $92;
+          {ESLVal l = $721;
           
-          {ESLVal p1 = $91;
+          {ESLVal p1 = $720;
           
-          {ESLVal p2 = $90;
+          {ESLVal p2 = $719;
           
           return patternNames.apply(p1).add(patternNames.apply(p2));
         }
         }
         }
         }
-      case "PVar": {ESLVal $89 = _v5.termRef(0);
-          ESLVal $88 = _v5.termRef(1);
-          ESLVal $87 = _v5.termRef(2);
+      case "PVar": {ESLVal $718 = _v227.termRef(0);
+          ESLVal $717 = _v227.termRef(1);
+          ESLVal $716 = _v227.termRef(2);
           
-          {ESLVal v0 = $89;
+          {ESLVal v0 = $718;
           
-          {ESLVal v1 = $88;
+          {ESLVal v1 = $717;
           
-          {ESLVal v2 = $87;
+          {ESLVal v2 = $716;
           
           return ESLVal.list(v1);
         }
         }
         }
         }
-      case "PTerm": {ESLVal $86 = _v5.termRef(0);
-          ESLVal $85 = _v5.termRef(1);
-          ESLVal $84 = _v5.termRef(2);
-          ESLVal $83 = _v5.termRef(3);
+      case "PTerm": {ESLVal $715 = _v227.termRef(0);
+          ESLVal $714 = _v227.termRef(1);
+          ESLVal $713 = _v227.termRef(2);
+          ESLVal $712 = _v227.termRef(3);
           
-          {ESLVal v0 = $86;
+          {ESLVal v0 = $715;
           
-          {ESLVal v1 = $85;
+          {ESLVal v1 = $714;
           
-          {ESLVal v2 = $84;
+          {ESLVal v2 = $713;
           
-          {ESLVal v3 = $83;
+          {ESLVal v3 = $712;
           
           return new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal $qualArg = $args[0];
-          {ESLVal _v6 = $qualArg;
+          {ESLVal _v228 = $qualArg;
                 
-                {ESLVal p = _v6;
+                {ESLVal p = _v228;
                 
                 return ESLVal.list(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
                   public ESLVal apply(ESLVal... $args) {
-                    ESLVal _v73 = $args[0];
-                {ESLVal _v7 = _v73;
+                    ESLVal _v320 = $args[0];
+                {ESLVal _v229 = _v320;
                       
-                      {ESLVal n = _v7;
+                      {ESLVal n = _v229;
                       
                       return ESLVal.list(ESLVal.list(n));
                     }
@@ -10109,153 +10109,538 @@ public class Types {
         }
         }
         }
-      case "PApplyType": {ESLVal $82 = _v5.termRef(0);
-          ESLVal $81 = _v5.termRef(1);
-          ESLVal $80 = _v5.termRef(2);
+      case "PApplyType": {ESLVal $711 = _v227.termRef(0);
+          ESLVal $710 = _v227.termRef(1);
+          ESLVal $709 = _v227.termRef(2);
           
-          {ESLVal v0 = $82;
+          {ESLVal v0 = $711;
           
-          {ESLVal v1 = $81;
+          {ESLVal v1 = $710;
           
-          {ESLVal v2 = $80;
+          {ESLVal v2 = $709;
           
           return patternNames.apply(v1);
         }
         }
         }
         }
-      case "PNil": {ESLVal $79 = _v5.termRef(0);
+      case "PNil": {ESLVal $708 = _v227.termRef(0);
           
-          {ESLVal v0 = $79;
-          
-          return ESLVal.list();
-        }
-        }
-      case "PNull": {ESLVal $78 = _v5.termRef(0);
-          
-          {ESLVal v0 = $78;
+          {ESLVal v0 = $708;
           
           return ESLVal.list();
         }
         }
-      case "PInt": {ESLVal $77 = _v5.termRef(0);
-          ESLVal $76 = _v5.termRef(1);
+      case "PNull": {ESLVal $707 = _v227.termRef(0);
           
-          {ESLVal v0 = $77;
-          
-          {ESLVal v1 = $76;
+          {ESLVal v0 = $707;
           
           return ESLVal.list();
         }
         }
-        }
-      case "PStr": {ESLVal $75 = _v5.termRef(0);
-          ESLVal $74 = _v5.termRef(1);
+      case "PInt": {ESLVal $706 = _v227.termRef(0);
+          ESLVal $705 = _v227.termRef(1);
           
-          {ESLVal v0 = $75;
+          {ESLVal v0 = $706;
           
-          {ESLVal v1 = $74;
+          {ESLVal v1 = $705;
           
           return ESLVal.list();
         }
         }
         }
-      case "PBool": {ESLVal $73 = _v5.termRef(0);
-          ESLVal $72 = _v5.termRef(1);
+      case "PStr": {ESLVal $704 = _v227.termRef(0);
+          ESLVal $703 = _v227.termRef(1);
           
-          {ESLVal v0 = $73;
+          {ESLVal v0 = $704;
           
-          {ESLVal v1 = $72;
+          {ESLVal v1 = $703;
           
           return ESLVal.list();
         }
         }
         }
-      case "PCons": {ESLVal $71 = _v5.termRef(0);
-          ESLVal $70 = _v5.termRef(1);
-          ESLVal $69 = _v5.termRef(2);
+      case "PBool": {ESLVal $702 = _v227.termRef(0);
+          ESLVal $701 = _v227.termRef(1);
           
-          {ESLVal v0 = $71;
+          {ESLVal v0 = $702;
           
-          {ESLVal v1 = $70;
+          {ESLVal v1 = $701;
           
-          {ESLVal v2 = $69;
+          return ESLVal.list();
+        }
+        }
+        }
+      case "PCons": {ESLVal $700 = _v227.termRef(0);
+          ESLVal $699 = _v227.termRef(1);
+          ESLVal $698 = _v227.termRef(2);
+          
+          {ESLVal v0 = $700;
+          
+          {ESLVal v1 = $699;
+          
+          {ESLVal v2 = $698;
           
           return patternNames.apply(v1).add(patternNames.apply(v2));
         }
         }
         }
         }
-      case "PBagCons": {ESLVal $68 = _v5.termRef(0);
-          ESLVal $67 = _v5.termRef(1);
-          ESLVal $66 = _v5.termRef(2);
+      case "PBagCons": {ESLVal $697 = _v227.termRef(0);
+          ESLVal $696 = _v227.termRef(1);
+          ESLVal $695 = _v227.termRef(2);
           
-          {ESLVal v0 = $68;
+          {ESLVal v0 = $697;
           
-          {ESLVal v1 = $67;
+          {ESLVal v1 = $696;
           
-          {ESLVal v2 = $66;
-          
-          return patternNames.apply(v1).add(patternNames.apply(v2));
-        }
-        }
-        }
-        }
-      case "PEmptyBag": {ESLVal $65 = _v5.termRef(0);
-          
-          {ESLVal v0 = $65;
-          
-          return ESLVal.list();
-        }
-        }
-      case "PSetCons": {ESLVal $64 = _v5.termRef(0);
-          ESLVal $63 = _v5.termRef(1);
-          ESLVal $62 = _v5.termRef(2);
-          
-          {ESLVal v0 = $64;
-          
-          {ESLVal v1 = $63;
-          
-          {ESLVal v2 = $62;
+          {ESLVal v2 = $695;
           
           return patternNames.apply(v1).add(patternNames.apply(v2));
         }
         }
         }
         }
-      case "PEmptySet": {ESLVal $61 = _v5.termRef(0);
+      case "PEmptyBag": {ESLVal $694 = _v227.termRef(0);
           
-          {ESLVal v0 = $61;
+          {ESLVal v0 = $694;
           
           return ESLVal.list();
         }
         }
-        default: return error(new ESLVal("case error at Pos(30450,31230)").add(ESLVal.list(_v5)));
+      case "PSetCons": {ESLVal $693 = _v227.termRef(0);
+          ESLVal $692 = _v227.termRef(1);
+          ESLVal $691 = _v227.termRef(2);
+          
+          {ESLVal v0 = $693;
+          
+          {ESLVal v1 = $692;
+          
+          {ESLVal v2 = $691;
+          
+          return patternNames.apply(v1).add(patternNames.apply(v2));
+        }
+        }
+        }
+        }
+      case "PEmptySet": {ESLVal $690 = _v227.termRef(0);
+          
+          {ESLVal v0 = $690;
+          
+          return ESLVal.list();
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(30420,31200)").add(ESLVal.list(_v227)));
       }
+      }
+    }
+  });
+  public static ESLVal mergeFunDefs = new ESLVal(new Function(new ESLVal("mergeFunDefs"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal defs = $args[0];
+  LetRec letrec = new LetRec() {
+        ESLVal getFunCases = new ESLVal(new Function(new ESLVal("getFunCases"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal _v313 = $args[0];
+          ESLVal _v312 = $args[1];
+          {ESLVal _v225 = _v312;
+                
+                if(_v225.isCons())
+                {ESLVal $672 = _v225.head();
+                  ESLVal $673 = _v225.tail();
+                  
+                  switch($672.termName) {
+                  case "FunBind": {ESLVal $680 = $672.termRef(0);
+                    ESLVal $679 = $672.termRef(1);
+                    ESLVal $678 = $672.termRef(2);
+                    ESLVal $677 = $672.termRef(3);
+                    ESLVal $676 = $672.termRef(4);
+                    ESLVal $675 = $672.termRef(5);
+                    ESLVal $674 = $672.termRef(6);
+                    
+                    {ESLVal l = $680;
+                    
+                    {ESLVal n0 = $679;
+                    
+                    {ESLVal args = $678;
+                    
+                    {ESLVal t = $677;
+                    
+                    {ESLVal dt = $676;
+                    
+                    {ESLVal e = $675;
+                    
+                    {ESLVal g = $674;
+                    
+                    {ESLVal _v314 = $673;
+                    
+                    if(_v313.eql(n0).boolVal)
+                    return getFunCases.apply(_v313,_v314).cons(new ESLVal("FunCase",l,args,t,g,e));
+                    else
+                      {ESLVal def = $672;
+                        
+                        {ESLVal _v315 = $673;
+                        
+                        return getFunCases.apply(_v313,_v315);
+                      }
+                      }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  default: {ESLVal def = $672;
+                    
+                    {ESLVal _v316 = $673;
+                    
+                    return getFunCases.apply(_v313,_v316);
+                  }
+                  }
+                }
+                }
+              else if(_v225.isNil())
+                return ESLVal.list();
+              else return error(new ESLVal("case error at Pos(31579,31756)").add(ESLVal.list(_v225)));
+              }
+            }
+          });
+        ESLVal removeFunCases = new ESLVal(new Function(new ESLVal("removeFunCases"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal _v308 = $args[0];
+          ESLVal _v307 = $args[1];
+          {ESLVal _v224 = _v307;
+                
+                if(_v224.isCons())
+                {ESLVal $663 = _v224.head();
+                  ESLVal $664 = _v224.tail();
+                  
+                  switch($663.termName) {
+                  case "FunBind": {ESLVal $671 = $663.termRef(0);
+                    ESLVal $670 = $663.termRef(1);
+                    ESLVal $669 = $663.termRef(2);
+                    ESLVal $668 = $663.termRef(3);
+                    ESLVal $667 = $663.termRef(4);
+                    ESLVal $666 = $663.termRef(5);
+                    ESLVal $665 = $663.termRef(6);
+                    
+                    {ESLVal l = $671;
+                    
+                    {ESLVal n0 = $670;
+                    
+                    {ESLVal args = $669;
+                    
+                    {ESLVal t = $668;
+                    
+                    {ESLVal dt = $667;
+                    
+                    {ESLVal e = $666;
+                    
+                    {ESLVal g = $665;
+                    
+                    {ESLVal _v309 = $664;
+                    
+                    if(_v308.eql(n0).boolVal)
+                    return removeFunCases.apply(_v308,_v309);
+                    else
+                      {ESLVal def = $663;
+                        
+                        {ESLVal _v310 = $664;
+                        
+                        return removeFunCases.apply(_v308,_v310).cons(def);
+                      }
+                      }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  default: {ESLVal def = $663;
+                    
+                    {ESLVal _v311 = $664;
+                    
+                    return removeFunCases.apply(_v308,_v311).cons(def);
+                  }
+                  }
+                }
+                }
+              else if(_v224.isNil())
+                return ESLVal.list();
+              else return error(new ESLVal("case error at Pos(31815,31980)").add(ESLVal.list(_v224)));
+              }
+            }
+          });
+        
+        public ESLVal get(String name) {
+          switch(name) {
+            case "getFunCases": return getFunCases;
+            
+            case "removeFunCases": return removeFunCases;
+            
+            default: throw new Error("cannot find letrec binding");
+          }
+          }
+        };
+      ESLVal getFunCases = letrec.get("getFunCases");
+      
+      ESLVal removeFunCases = letrec.get("removeFunCases");
+      
+        {ESLVal _v226 = defs;
+        
+        if(_v226.isCons())
+        {ESLVal $681 = _v226.head();
+          ESLVal $682 = _v226.tail();
+          
+          switch($681.termName) {
+          case "FunBind": {ESLVal $689 = $681.termRef(0);
+            ESLVal $688 = $681.termRef(1);
+            ESLVal $687 = $681.termRef(2);
+            ESLVal $686 = $681.termRef(3);
+            ESLVal $685 = $681.termRef(4);
+            ESLVal $684 = $681.termRef(5);
+            ESLVal $683 = $681.termRef(6);
+            
+            {ESLVal l = $689;
+            
+            {ESLVal n = $688;
+            
+            {ESLVal args = $687;
+            
+            {ESLVal t = $686;
+            
+            {ESLVal dt = $685;
+            
+            {ESLVal e = $684;
+            
+            {ESLVal g = $683;
+            
+            {ESLVal _v317 = $682;
+            
+            {ESLVal cases = getFunCases.apply(n,_v317);
+            
+            if(cases.eql(ESLVal.list()).boolVal)
+            return mergeFunDefs.apply(_v317).cons(new ESLVal("FunBind",l,n,args,t,dt,e,g));
+            else
+              {ESLVal _v318 = removeFunCases.apply(n,_v317);
+                
+                return mergeFunDefs.apply(_v318).cons(new ESLVal("FunBinds",n,cases.cons(new ESLVal("FunCase",l,args,t,g,e))));
+              }
+          }
+          }
+          }
+          }
+          }
+          }
+          }
+          }
+          }
+          }
+          default: {ESLVal def = $681;
+            
+            {ESLVal _v319 = $682;
+            
+            return mergeFunDefs.apply(_v319).cons(def);
+          }
+          }
+        }
+        }
+      else if(_v226.isNil())
+        return ESLVal.list();
+      else return error(new ESLVal("case error at Pos(31992,32412)").add(ESLVal.list(_v226)));
+      }
+      
+    }
+  });
+  public static ESLVal expandFunDefs = new ESLVal(new Function(new ESLVal("expandFunDefs"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal defs = $args[0];
+  {ESLVal _v219 = defs;
+        
+        if(_v219.isCons())
+        {ESLVal $647 = _v219.head();
+          ESLVal $648 = _v219.tail();
+          
+          switch($647.termName) {
+          case "FunBinds": {ESLVal $650 = $647.termRef(0);
+            ESLVal $649 = $647.termRef(1);
+            
+            if($649.isCons())
+            {ESLVal $651 = $649.head();
+              ESLVal $652 = $649.tail();
+              
+              switch($651.termName) {
+              case "FunCase": {ESLVal $657 = $651.termRef(0);
+                ESLVal $656 = $651.termRef(1);
+                ESLVal $655 = $651.termRef(2);
+                ESLVal $654 = $651.termRef(3);
+                ESLVal $653 = $651.termRef(4);
+                
+                {ESLVal n = $650;
+                
+                {ESLVal l = $657;
+                
+                {ESLVal args = $656;
+                
+                {ESLVal t = $655;
+                
+                {ESLVal g = $654;
+                
+                {ESLVal e = $653;
+                
+                {ESLVal cases = $652;
+                
+                {ESLVal _v295 = $648;
+                
+                {ESLVal names = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+                    public ESLVal apply(ESLVal... $args) {
+                      ESLVal $qualArg = $args[0];
+                  {ESLVal _v220 = $qualArg;
+                        
+                        {ESLVal i = _v220;
+                        
+                        return ESLVal.list(ESLVal.list(new ESLVal("$").add(i)));
+                      }
+                      }
+                    }
+                  }).map($zero.to(length.apply(args))).flatten().flatten();
+                
+                return expandFunDefs.apply(_v295).cons(new ESLVal("Binding",l,n,t,t,new ESLVal("FunExp",l,new ESLVal("StrExp",l,n),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+                  public ESLVal apply(ESLVal... $args) {
+                    ESLVal $qualArg = $args[0];
+                {ESLVal _v221 = $qualArg;
+                      
+                      {ESLVal _v302 = _v221;
+                      
+                      return ESLVal.list(ESLVal.list(new ESLVal("Dec",l,_v302,$null,$null)));
+                    }
+                    }
+                  }
+                }).map(names).flatten().flatten(),t,new ESLVal("Case",l,ESLVal.list(),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+                  public ESLVal apply(ESLVal... $args) {
+                    ESLVal $qualArg = $args[0];
+                {ESLVal _v222 = $qualArg;
+                      
+                      {ESLVal _v301 = _v222;
+                      
+                      return ESLVal.list(ESLVal.list(new ESLVal("Var",l,_v301)));
+                    }
+                    }
+                  }
+                }).map(names).flatten().flatten(),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+                  public ESLVal apply(ESLVal... $args) {
+                    ESLVal $qualArg = $args[0];
+                {ESLVal _v223 = $qualArg;
+                      
+                      switch(_v223.termName) {
+                      case "FunCase": {ESLVal $662 = _v223.termRef(0);
+                        ESLVal $661 = _v223.termRef(1);
+                        ESLVal $660 = _v223.termRef(2);
+                        ESLVal $659 = _v223.termRef(3);
+                        ESLVal $658 = _v223.termRef(4);
+                        
+                        {ESLVal _v296 = $662;
+                        
+                        {ESLVal _v297 = $661;
+                        
+                        {ESLVal _v298 = $660;
+                        
+                        {ESLVal _v299 = $659;
+                        
+                        {ESLVal _v300 = $658;
+                        
+                        return ESLVal.list(ESLVal.list(new ESLVal("BArm",_v296,_v297,_v299,_v300)));
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      default: {ESLVal _0 = _v223;
+                        
+                        return ESLVal.list();
+                      }
+                    }
+                    }
+                  }
+                }).map(cases.cons(new ESLVal("FunCase",l,args,t,g,e))).flatten().flatten()))));
+              }
+              }
+              }
+              }
+              }
+              }
+              }
+              }
+              }
+              }
+              default: {ESLVal d = $647;
+                
+                {ESLVal _v303 = $648;
+                
+                return expandFunDefs.apply(_v303).cons(d);
+              }
+              }
+            }
+            }
+          else if($649.isNil())
+            {ESLVal d = $647;
+              
+              {ESLVal _v304 = $648;
+              
+              return expandFunDefs.apply(_v304).cons(d);
+            }
+            }
+          else {ESLVal d = $647;
+              
+              {ESLVal _v305 = $648;
+              
+              return expandFunDefs.apply(_v305).cons(d);
+            }
+            }
+          }
+          default: {ESLVal d = $647;
+            
+            {ESLVal _v306 = $648;
+            
+            return expandFunDefs.apply(_v306).cons(d);
+          }
+          }
+        }
+        }
+      else if(_v219.isNil())
+        return ESLVal.list();
+      else return error(new ESLVal("case error at Pos(32460,32916)").add(ESLVal.list(_v219)));
       }
     }
   });
   public static ESLVal isBinding = new ESLVal(new Function(new ESLVal("isBinding"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal b = $args[0];
-  {ESLVal _v4 = b;
+  {ESLVal _v218 = b;
         
-        switch(_v4.termName) {
-        case "Binding": {ESLVal $60 = _v4.termRef(0);
-          ESLVal $59 = _v4.termRef(1);
-          ESLVal $58 = _v4.termRef(2);
-          ESLVal $57 = _v4.termRef(3);
-          ESLVal $56 = _v4.termRef(4);
+        switch(_v218.termName) {
+        case "Binding": {ESLVal $646 = _v218.termRef(0);
+          ESLVal $645 = _v218.termRef(1);
+          ESLVal $644 = _v218.termRef(2);
+          ESLVal $643 = _v218.termRef(3);
+          ESLVal $642 = _v218.termRef(4);
           
-          {ESLVal l = $60;
+          {ESLVal l = $646;
           
-          {ESLVal n = $59;
+          {ESLVal n = $645;
           
-          {ESLVal t = $58;
+          {ESLVal t = $644;
           
-          {ESLVal st = $57;
+          {ESLVal st = $643;
           
-          {ESLVal e = $56;
+          {ESLVal e = $642;
           
           return $true;
         }
@@ -10264,7 +10649,7 @@ public class Types {
         }
         }
         }
-        default: {ESLVal _v72 = _v4;
+        default: {ESLVal _v294 = _v218;
           
           return $false;
         }
@@ -10275,30 +10660,30 @@ public class Types {
   public static ESLVal isFunBind = new ESLVal(new Function(new ESLVal("isFunBind"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal b = $args[0];
-  {ESLVal _v3 = b;
+  {ESLVal _v217 = b;
         
-        switch(_v3.termName) {
-        case "FunBind": {ESLVal $55 = _v3.termRef(0);
-          ESLVal $54 = _v3.termRef(1);
-          ESLVal $53 = _v3.termRef(2);
-          ESLVal $52 = _v3.termRef(3);
-          ESLVal $51 = _v3.termRef(4);
-          ESLVal $50 = _v3.termRef(5);
-          ESLVal $49 = _v3.termRef(6);
+        switch(_v217.termName) {
+        case "FunBind": {ESLVal $641 = _v217.termRef(0);
+          ESLVal $640 = _v217.termRef(1);
+          ESLVal $639 = _v217.termRef(2);
+          ESLVal $638 = _v217.termRef(3);
+          ESLVal $637 = _v217.termRef(4);
+          ESLVal $636 = _v217.termRef(5);
+          ESLVal $635 = _v217.termRef(6);
           
-          {ESLVal l = $55;
+          {ESLVal l = $641;
           
-          {ESLVal n = $54;
+          {ESLVal n = $640;
           
-          {ESLVal args = $53;
+          {ESLVal args = $639;
           
-          {ESLVal t = $52;
+          {ESLVal t = $638;
           
-          {ESLVal st = $51;
+          {ESLVal st = $637;
           
-          {ESLVal g = $50;
+          {ESLVal g = $636;
           
-          {ESLVal e = $49;
+          {ESLVal e = $635;
           
           return $true;
         }
@@ -10309,7 +10694,7 @@ public class Types {
         }
         }
         }
-        default: {ESLVal _v71 = _v3;
+        default: {ESLVal _v293 = _v217;
           
           return $false;
         }
@@ -10320,40 +10705,21 @@ public class Types {
   public static ESLVal bindingName = new ESLVal(new Function(new ESLVal("bindingName"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal b = $args[0];
-  {ESLVal _v2 = b;
+  {ESLVal _v216 = b;
         
-        switch(_v2.termName) {
-        case "TypeBind": {ESLVal $48 = _v2.termRef(0);
-          ESLVal $47 = _v2.termRef(1);
-          ESLVal $46 = _v2.termRef(2);
-          ESLVal $45 = _v2.termRef(3);
+        switch(_v216.termName) {
+        case "TypeBind": {ESLVal $634 = _v216.termRef(0);
+          ESLVal $633 = _v216.termRef(1);
+          ESLVal $632 = _v216.termRef(2);
+          ESLVal $631 = _v216.termRef(3);
           
-          {ESLVal v0 = $48;
+          {ESLVal v0 = $634;
           
-          {ESLVal v1 = $47;
+          {ESLVal v1 = $633;
           
-          {ESLVal v2 = $46;
+          {ESLVal v2 = $632;
           
-          {ESLVal v3 = $45;
-          
-          return v1;
-        }
-        }
-        }
-        }
-        }
-      case "CnstrBind": {ESLVal $44 = _v2.termRef(0);
-          ESLVal $43 = _v2.termRef(1);
-          ESLVal $42 = _v2.termRef(2);
-          ESLVal $41 = _v2.termRef(3);
-          
-          {ESLVal v0 = $44;
-          
-          {ESLVal v1 = $43;
-          
-          {ESLVal v2 = $42;
-          
-          {ESLVal v3 = $41;
+          {ESLVal v3 = $631;
           
           return v1;
         }
@@ -10361,27 +10727,18 @@ public class Types {
         }
         }
         }
-      case "FunBind": {ESLVal $40 = _v2.termRef(0);
-          ESLVal $39 = _v2.termRef(1);
-          ESLVal $38 = _v2.termRef(2);
-          ESLVal $37 = _v2.termRef(3);
-          ESLVal $36 = _v2.termRef(4);
-          ESLVal $35 = _v2.termRef(5);
-          ESLVal $34 = _v2.termRef(6);
+      case "CnstrBind": {ESLVal $630 = _v216.termRef(0);
+          ESLVal $629 = _v216.termRef(1);
+          ESLVal $628 = _v216.termRef(2);
+          ESLVal $627 = _v216.termRef(3);
           
-          {ESLVal v0 = $40;
+          {ESLVal v0 = $630;
           
-          {ESLVal v1 = $39;
+          {ESLVal v1 = $629;
           
-          {ESLVal v2 = $38;
+          {ESLVal v2 = $628;
           
-          {ESLVal v3 = $37;
-          
-          {ESLVal v4 = $36;
-          
-          {ESLVal v5 = $35;
-          
-          {ESLVal v6 = $34;
+          {ESLVal v3 = $627;
           
           return v1;
         }
@@ -10389,24 +10746,27 @@ public class Types {
         }
         }
         }
-        }
-        }
-        }
-      case "Binding": {ESLVal $33 = _v2.termRef(0);
-          ESLVal $32 = _v2.termRef(1);
-          ESLVal $31 = _v2.termRef(2);
-          ESLVal $30 = _v2.termRef(3);
-          ESLVal $29 = _v2.termRef(4);
+      case "FunBind": {ESLVal $626 = _v216.termRef(0);
+          ESLVal $625 = _v216.termRef(1);
+          ESLVal $624 = _v216.termRef(2);
+          ESLVal $623 = _v216.termRef(3);
+          ESLVal $622 = _v216.termRef(4);
+          ESLVal $621 = _v216.termRef(5);
+          ESLVal $620 = _v216.termRef(6);
           
-          {ESLVal v0 = $33;
+          {ESLVal v0 = $626;
           
-          {ESLVal v1 = $32;
+          {ESLVal v1 = $625;
           
-          {ESLVal v2 = $31;
+          {ESLVal v2 = $624;
           
-          {ESLVal v3 = $30;
+          {ESLVal v3 = $623;
           
-          {ESLVal v4 = $29;
+          {ESLVal v4 = $622;
+          
+          {ESLVal v5 = $621;
+          
+          {ESLVal v6 = $620;
           
           return v1;
         }
@@ -10415,18 +10775,34 @@ public class Types {
         }
         }
         }
-      case "DataBind": {ESLVal $28 = _v2.termRef(0);
-          ESLVal $27 = _v2.termRef(1);
-          ESLVal $26 = _v2.termRef(2);
-          ESLVal $25 = _v2.termRef(3);
+        }
+        }
+      case "FunBinds": {ESLVal $619 = _v216.termRef(0);
+          ESLVal $618 = _v216.termRef(1);
           
-          {ESLVal v0 = $28;
+          {ESLVal n = $619;
           
-          {ESLVal v1 = $27;
+          {ESLVal cases = $618;
           
-          {ESLVal v2 = $26;
+          return n;
+        }
+        }
+        }
+      case "Binding": {ESLVal $617 = _v216.termRef(0);
+          ESLVal $616 = _v216.termRef(1);
+          ESLVal $615 = _v216.termRef(2);
+          ESLVal $614 = _v216.termRef(3);
+          ESLVal $613 = _v216.termRef(4);
           
-          {ESLVal v3 = $25;
+          {ESLVal v0 = $617;
+          
+          {ESLVal v1 = $616;
+          
+          {ESLVal v2 = $615;
+          
+          {ESLVal v3 = $614;
+          
+          {ESLVal v4 = $613;
           
           return v1;
         }
@@ -10434,7 +10810,27 @@ public class Types {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(31731,32052)").add(ESLVal.list(_v2)));
+        }
+      case "DataBind": {ESLVal $612 = _v216.termRef(0);
+          ESLVal $611 = _v216.termRef(1);
+          ESLVal $610 = _v216.termRef(2);
+          ESLVal $609 = _v216.termRef(3);
+          
+          {ESLVal v0 = $612;
+          
+          {ESLVal v1 = $611;
+          
+          {ESLVal v2 = $610;
+          
+          {ESLVal v3 = $609;
+          
+          return v1;
+        }
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(33226,33575)").add(ESLVal.list(_v216)));
       }
       }
     }
@@ -10442,40 +10838,21 @@ public class Types {
   public static ESLVal bindingLoc = new ESLVal(new Function(new ESLVal("bindingLoc"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal b = $args[0];
-  {ESLVal _v1 = b;
+  {ESLVal _v215 = b;
         
-        switch(_v1.termName) {
-        case "TypeBind": {ESLVal $24 = _v1.termRef(0);
-          ESLVal $23 = _v1.termRef(1);
-          ESLVal $22 = _v1.termRef(2);
-          ESLVal $21 = _v1.termRef(3);
+        switch(_v215.termName) {
+        case "TypeBind": {ESLVal $608 = _v215.termRef(0);
+          ESLVal $607 = _v215.termRef(1);
+          ESLVal $606 = _v215.termRef(2);
+          ESLVal $605 = _v215.termRef(3);
           
-          {ESLVal v0 = $24;
+          {ESLVal v0 = $608;
           
-          {ESLVal v1 = $23;
+          {ESLVal v1 = $607;
           
-          {ESLVal v2 = $22;
+          {ESLVal v2 = $606;
           
-          {ESLVal v3 = $21;
-          
-          return v0;
-        }
-        }
-        }
-        }
-        }
-      case "CnstrBind": {ESLVal $20 = _v1.termRef(0);
-          ESLVal $19 = _v1.termRef(1);
-          ESLVal $18 = _v1.termRef(2);
-          ESLVal $17 = _v1.termRef(3);
-          
-          {ESLVal v0 = $20;
-          
-          {ESLVal v1 = $19;
-          
-          {ESLVal v2 = $18;
-          
-          {ESLVal v3 = $17;
+          {ESLVal v3 = $605;
           
           return v0;
         }
@@ -10483,27 +10860,18 @@ public class Types {
         }
         }
         }
-      case "FunBind": {ESLVal $16 = _v1.termRef(0);
-          ESLVal $15 = _v1.termRef(1);
-          ESLVal $14 = _v1.termRef(2);
-          ESLVal $13 = _v1.termRef(3);
-          ESLVal $12 = _v1.termRef(4);
-          ESLVal $11 = _v1.termRef(5);
-          ESLVal $10 = _v1.termRef(6);
+      case "CnstrBind": {ESLVal $604 = _v215.termRef(0);
+          ESLVal $603 = _v215.termRef(1);
+          ESLVal $602 = _v215.termRef(2);
+          ESLVal $601 = _v215.termRef(3);
           
-          {ESLVal v0 = $16;
+          {ESLVal v0 = $604;
           
-          {ESLVal v1 = $15;
+          {ESLVal v1 = $603;
           
-          {ESLVal v2 = $14;
+          {ESLVal v2 = $602;
           
-          {ESLVal v3 = $13;
-          
-          {ESLVal v4 = $12;
-          
-          {ESLVal v5 = $11;
-          
-          {ESLVal v6 = $10;
+          {ESLVal v3 = $601;
           
           return v0;
         }
@@ -10511,24 +10879,27 @@ public class Types {
         }
         }
         }
-        }
-        }
-        }
-      case "Binding": {ESLVal $9 = _v1.termRef(0);
-          ESLVal $8 = _v1.termRef(1);
-          ESLVal $7 = _v1.termRef(2);
-          ESLVal $6 = _v1.termRef(3);
-          ESLVal $5 = _v1.termRef(4);
+      case "FunBind": {ESLVal $600 = _v215.termRef(0);
+          ESLVal $599 = _v215.termRef(1);
+          ESLVal $598 = _v215.termRef(2);
+          ESLVal $597 = _v215.termRef(3);
+          ESLVal $596 = _v215.termRef(4);
+          ESLVal $595 = _v215.termRef(5);
+          ESLVal $594 = _v215.termRef(6);
           
-          {ESLVal v0 = $9;
+          {ESLVal v0 = $600;
           
-          {ESLVal v1 = $8;
+          {ESLVal v1 = $599;
           
-          {ESLVal v2 = $7;
+          {ESLVal v2 = $598;
           
-          {ESLVal v3 = $6;
+          {ESLVal v3 = $597;
           
-          {ESLVal v4 = $5;
+          {ESLVal v4 = $596;
+          
+          {ESLVal v5 = $595;
+          
+          {ESLVal v6 = $594;
           
           return v0;
         }
@@ -10537,18 +10908,67 @@ public class Types {
         }
         }
         }
-      case "DataBind": {ESLVal $4 = _v1.termRef(0);
-          ESLVal $3 = _v1.termRef(1);
-          ESLVal $2 = _v1.termRef(2);
-          ESLVal $1 = _v1.termRef(3);
+        }
+        }
+      case "FunBinds": {ESLVal $586 = _v215.termRef(0);
+          ESLVal $585 = _v215.termRef(1);
           
-          {ESLVal v0 = $4;
+          if($585.isCons())
+          {ESLVal $587 = $585.head();
+            ESLVal $588 = $585.tail();
+            
+            switch($587.termName) {
+            case "FunCase": {ESLVal $593 = $587.termRef(0);
+              ESLVal $592 = $587.termRef(1);
+              ESLVal $591 = $587.termRef(2);
+              ESLVal $590 = $587.termRef(3);
+              ESLVal $589 = $587.termRef(4);
+              
+              {ESLVal n = $586;
+              
+              {ESLVal l = $593;
+              
+              {ESLVal args = $592;
+              
+              {ESLVal t = $591;
+              
+              {ESLVal g = $590;
+              
+              {ESLVal e = $589;
+              
+              {ESLVal cases = $588;
+              
+              return l;
+            }
+            }
+            }
+            }
+            }
+            }
+            }
+            }
+            default: return error(new ESLVal("case error at Pos(33607,33978)").add(ESLVal.list(_v215)));
+          }
+          }
+        else if($585.isNil())
+          return error(new ESLVal("case error at Pos(33607,33978)").add(ESLVal.list(_v215)));
+        else return error(new ESLVal("case error at Pos(33607,33978)").add(ESLVal.list(_v215)));
+        }
+      case "Binding": {ESLVal $584 = _v215.termRef(0);
+          ESLVal $583 = _v215.termRef(1);
+          ESLVal $582 = _v215.termRef(2);
+          ESLVal $581 = _v215.termRef(3);
+          ESLVal $580 = _v215.termRef(4);
           
-          {ESLVal v1 = $3;
+          {ESLVal v0 = $584;
           
-          {ESLVal v2 = $2;
+          {ESLVal v1 = $583;
           
-          {ESLVal v3 = $1;
+          {ESLVal v2 = $582;
+          
+          {ESLVal v3 = $581;
+          
+          {ESLVal v4 = $580;
           
           return v0;
         }
@@ -10556,7 +10976,27 @@ public class Types {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(32084,32405)").add(ESLVal.list(_v1)));
+        }
+      case "DataBind": {ESLVal $579 = _v215.termRef(0);
+          ESLVal $578 = _v215.termRef(1);
+          ESLVal $577 = _v215.termRef(2);
+          ESLVal $576 = _v215.termRef(3);
+          
+          {ESLVal v0 = $579;
+          
+          {ESLVal v1 = $578;
+          
+          {ESLVal v2 = $577;
+          
+          {ESLVal v3 = $576;
+          
+          return v0;
+        }
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(33607,33978)").add(ESLVal.list(_v215)));
       }
       }
     }

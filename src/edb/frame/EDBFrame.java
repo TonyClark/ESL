@@ -14,6 +14,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -34,9 +35,11 @@ import edb.frame.commands.SetPosition;
 import edb.frame.commands.SetSize;
 import edb.tool.DelayedString;
 import edb.tool.SVG;
+import esl.lib.Actor;
 import esl.lib.AlienActor;
 import esl.lib.ESLVal;
 import esl.lib.Function;
+import esl.lib.Lib;
 import esl.lib.Record;
 import list.Cons;
 import list.List;
@@ -110,37 +113,56 @@ public class EDBFrame extends JFrame implements EDBMenuProvider, AlienActor, Jav
 		return dialogResult == 0;
 	}
 
-	private EDBTabs			tabs			= new EDBTabs(this);
-	private EDBMenuBar	menuBar		= new EDBMenuBar();
-	private String			edbState	= null;
-	private String			edbDir		= null;
-	private String			javaDir		= null;
-	private ESLVal			display		= new ESLVal(new Function(new ESLVal("display"), new ESLVal(this)) {
-																	public ESLVal apply(ESLVal... args) {
-																		String name = args[0].toString();
-																		AlienActor actor = args[1].javaActor;
-																		if (actor instanceof TabbedActor) {
-																			TabbedActor t = (TabbedActor) actor;
-																			tabs.add(name, t);
-																			return null;
-																		}
-																		return null;
-																	}
-																});
-	private ESLVal			button		= new ESLVal(new Function(new ESLVal("button"), new ESLVal(this)) {
-																	public ESLVal apply(ESLVal... args) {
-																		String tabLabel = args[0].strVal;
-																		String key = args[1].strVal;
-																		String icon = args[2].strVal;
-																		String tooltip = args[3].strVal;
-																		Function action = args[4].funVal;
-																		JButton button = MenuProvider.getImageButton(icon, tooltip, () -> {
-																																		action.apply();
-																																	});
-																		FRAME.tabs.addButton(tabLabel, key, button);
-																		return null;
-																	}
-																});
+	private EDBTabs										tabs							= new EDBTabs(this);
+	private EDBMenuBar								menuBar						= new EDBMenuBar();
+	private String										edbState					= null;
+	private String										edbDir						= null;
+	private String										javaDir						= null;
+	private Hashtable<String, ESLVal>	properties				= new Hashtable<String, ESLVal>();
+	private Vector<ESLVal>						browserListeners	= new Vector<ESLVal>();
+	private ESLVal										setProperty				= new ESLVal(new Function(new ESLVal("setProperty"), new ESLVal(this)) {
+																												public ESLVal apply(ESLVal... args) {
+																													String name = args[0].toString();
+																													ESLVal val = args[1];
+																													properties.put(name, val);
+																													return val;
+																												}
+																											});
+	private ESLVal										getProperty				= new ESLVal(new Function(new ESLVal("getProperty"), new ESLVal(this)) {
+																												public ESLVal apply(ESLVal... args) {
+																													String name = args[0].toString();
+																													if (properties.containsKey(name))
+																														return properties.get(name);
+																													else
+																														return Lib.$null;
+																												}
+																											});
+	private ESLVal										display						= new ESLVal(new Function(new ESLVal("display"), new ESLVal(this)) {
+																												public ESLVal apply(ESLVal... args) {
+																													String name = args[0].toString();
+																													AlienActor actor = args[1].javaActor;
+																													if (actor instanceof TabbedActor) {
+																														TabbedActor t = (TabbedActor) actor;
+																														tabs.add(name, t);
+																														return null;
+																													}
+																													return null;
+																												}
+																											});
+	private ESLVal										button						= new ESLVal(new Function(new ESLVal("button"), new ESLVal(this)) {
+																												public ESLVal apply(ESLVal... args) {
+																													String tabLabel = args[0].strVal;
+																													String key = args[1].strVal;
+																													String icon = args[2].strVal;
+																													String tooltip = args[3].strVal;
+																													Function action = args[4].funVal;
+																													JButton button = MenuProvider.getImageButton(icon, tooltip, () -> {
+																																																								action.apply();
+																																																							});
+																													FRAME.tabs.addButton(tabLabel, key, button);
+																													return null;
+																												}
+																											});
 
 	public EDBFrame(String eslDir, String edbDir, String edbState) {
 		FRAME = this;
@@ -159,7 +181,7 @@ public class EDBFrame extends JFrame implements EDBMenuProvider, AlienActor, Jav
 		fileChooser.setCurrentDirectory(new File(eslDir));
 		addWindowListener(this);
 		readState();
-		//System.setOut(new PrintStream(new EDBOutputStream(this)));
+		System.setOut(new PrintStream(new EDBOutputStream(this)));
 	}
 
 	public void addButton(String label, JButton button) {
@@ -184,6 +206,7 @@ public class EDBFrame extends JFrame implements EDBMenuProvider, AlienActor, Jav
 		addLoad();
 		addNew();
 		addDelete();
+		addStopAll();
 	}
 
 	public void addNew() {
@@ -193,6 +216,17 @@ public class EDBFrame extends JFrame implements EDBMenuProvider, AlienActor, Jav
 		menuBar.add(newFile);
 	}
 
+	public void addStopAll() {
+		JButton newFile = MenuProvider.getImageButton("icons/stop.png", "stop all runnning actors", () -> {
+			stopAll();
+		});
+		menuBar.add(newFile);
+	}
+
+	private void stopAll() {
+		Lib.stopAll();
+	}
+
 	public ESLVal alienRef(String name) {
 		if (name == "display")
 			return display;
@@ -200,6 +234,10 @@ public class EDBFrame extends JFrame implements EDBMenuProvider, AlienActor, Jav
 			return button;
 		else if (name == "math")
 			return math;
+		else if (name == "getProperty")
+			return getProperty;
+		else if (name == "setProperty")
+			return setProperty;
 		else
 			throw new Error("ref: " + name);
 	}
@@ -216,12 +254,14 @@ public class EDBFrame extends JFrame implements EDBMenuProvider, AlienActor, Jav
 				String label = message.termRef(0).toString();
 				ESLVal list = message.termRef(1);
 				sendFilmstrip(label, list);
+			} else if (message.termName == "AddBrowserListener") {
+				browserListeners.add(message.termRef(0));
 			} else
 				throw new Error("unknown message " + message);
 		}
 	}
 
-	private Object asTerm(ESLVal value) {
+	private Object asTerm(ESLVal value) { 
 		switch (value.state) {
 		case TERM:
 			Object[] values = new Object[value.termVals.length];
@@ -608,6 +648,14 @@ public class EDBFrame extends JFrame implements EDBMenuProvider, AlienActor, Jav
 
 	public void write(int b) {
 		tabs.write(b);
+	}
+
+	public void setProperties(Hashtable<String, ESLVal> properties) {
+		this.properties = properties;
+	}
+
+	public Vector<ESLVal> getBrowserListeners() {
+		return browserListeners;
 	}
 
 }

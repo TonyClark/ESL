@@ -88,7 +88,7 @@ data H = Holds(Int,[Chopstick]);
 data S = Snapshot([H],[Chopstick]);
 type EDB = Act { 
   export math :: { circlePos :: (Int,Int,Int,Int) -> Point };
-  Filmstrip(Str,[EDBDisplay]);
+  Filmstrip(Str,[Display]);
 }
 
 edb::EDB = null[EDB];
@@ -105,7 +105,7 @@ pointY(p::Point)::Int =
     Point(x::Int,y::Int) -> y;
   }
 
-toPictures(filmstrip::[S])::[EDBDisplay] =
+toPictures(filmstrip::[S])::[Display] =
   // Map a sequence of snapshots into a sequence of pictures ready to display.
   case filmstrip {
     [] -> []; 
@@ -113,7 +113,7 @@ toPictures(filmstrip::[S])::[EDBDisplay] =
       toPicture(s):toPictures(fs);
   }
   
-toPicture(s::S)::EDBDisplay =
+toPicture(s::S)::Display =
   case s {
     Snapshot(holds::[H],free::[Chopstick]) -> 
       Picture(pictureWidth,pictureHeight,toCircles(0,chopsticks,holds,free) + toPhils(0,holds));
@@ -247,7 +247,7 @@ act philosopher2(i::Int,left::Chopstick,right::Chopstick)::Philosopher {
   // grabbed independently (and there is a delay in between)...
   
   Time(n::Int) when n < timeLimit -> {
-    think();
+    think(); 
     grab(left) {
       grab(history) history := Grab(i,left):history;
       think();
@@ -273,7 +273,7 @@ philosophers::[Philosopher] =
     
 act main::Main {
   Time(n::Int) when n > timeLimit -> { 
-    edb <- Filmstrip('Philosophers',reverse[EDBDisplay](toPictures(filmstrip(history))));
+    edb <- Filmstrip('Philosophers',reverse[Display](toPictures(filmstrip(history))));
     stopAll(); 
   }
   Time(n::Int) -> { }

@@ -4,11 +4,11 @@ import 'esl/lists.esl';
 
 type Main = Act { }
 
-type Agent = Act { export toString::()->Str; getX::()->Int; getY::()->Int; setX::(Int)->Void; setY::(Int)->Void; Die; }
+type Agent = Act { export toString::()->Str; getX::()->Int; getY::()->Int; setX::(Int)->Void; setY::(Int)->Void; }
 
-type Grid = Act { SetColour(Int,Int,Str); Swap(Int,Int,Int,Int); Turn(Int,Int); } 
+type Grid = Act { SetColour(Int,Int,Str); Swap(Int,Int,Int,Int); } 
 
-type Population = Act { Move(Agent); Kill; }  
+type Population = Act { Move(Agent); }  
 
 data Loc = Coord(Int,Int);
 
@@ -29,7 +29,6 @@ act agent(x::Int,y::Int)::Agent {
 
   -> population <- Move(self);
   
-  Die -> kill[Agent](self);
 }
 
 intToFloat::(Int)->Float = builtin[(Int)->Float]('runtime.actors.Builtins','intToFloat',1);
@@ -113,32 +112,15 @@ act pop::Population {
     {}
   }
 
-  diffCellCount(x::Int,y::Int,c::Int)::Int = {
-    let legalCell(x::Int,y::Int)::Int = if legalx(x) and legaly(y) then if popEl(x,y) = c then 1; else 0; else 0;
-    in 
-      legalCell(x-1,y) +
-      legalCell(x+1,y) +
-      legalCell(x,y+1) +
-      legalCell(x,y-1) +
-      legalCell(x-1,y-1) +
-      legalCell(x-1,y+1) +
-      legalCell(x+1,y+1) +
-      legalCell(x+1,y-1);
-  }
+  diffCellCount(x::Int,y::Int,c::Int)::Int =  length[Int]([ 1 | 
+    dx <- [-1,0,1], 
+    dy <- [-1,0,1], 
+    ?not(dx=0 and dy=0),
+    ?legalx(x+dx), 
+    ?legaly(y+dy), 
+    ?popEl(x+dx,y+dy) = c]);
 
   diffpc(x::Int,y::Int)::Float = (intToFloat(diffCellCount(x,y,opp(popEl(x,y))))/8.0)*100.0;
-  
-  Kill -> {
-    kill[Population](self);
-    for x::Int in 0..width do {
-      for y::Int in 0..height do {
-        let a::Agent = (agents[x])[y];
-        in if a <> null[Agent]
-           then a <- Die;
-           else {}
-      }
-    }
-  }
 
   Move(a::Agent) -> { 
     let x::Int = a.getX(); y::Int = a.getY(); in
@@ -168,8 +150,7 @@ population::Population = new pop;
 act main::Main {
 
    -> {
-    edb.display[Grid]('Segregation',grid);  
-    edb.button('Segregation','stop','icons/stop.png','stop application',fun()::Void stopAll()); 
+    edb.display[Grid]('Segregation',grid); 
   }
   
 }

@@ -3,7 +3,7 @@ import esl.lib.*;
 import static esl.lib.Lib.*;
 
 import java.util.function.Supplier;
-public class Collisions { 
+public class Collisions {
   public static ESLVal getSelf() { return $null; }
   private static ESLVal min = new ESLVal(new Function(new ESLVal("min"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
@@ -34,48 +34,39 @@ public class Collisions {
           ESLVal gui = $null;
           ESLVal balls = ESLVal.list();
           
-          public ESLVal handle(ESLVal $m) {switch($m.termName) {
-            case "SetGUI": {ESLVal $1 = $m.termRef(0);
+          public ESLVal handle(ESLVal $m) {{ESLVal _v3 = $m;
+            
+            switch(_v3.termName) {
+            case "SetGUI": {ESLVal $7 = _v3.termRef(0);
               
-              {ESLVal g = $1;
+              {ESLVal g = $7;
               
               {gui = g;
             return $null;}
             }
             }
           case "Start": {
-              {balls = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal $qualArg = $args[0];
-            {ESLVal i = $qualArg;
-                  
-                  return ESLVal.list(ESLVal.list(newActor(ball,new ESLVal(new Actor()),i,getSelf())));
+              {balls = new java.util.function.Function<ESLVal,ESLVal>() {
+              public ESLVal apply(ESLVal $l0) {
+                ESLVal $a = $nil;
+                java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                while(!$l0.isNil()) { 
+                  ESLVal i = $l0.head();
+                  $l0 = $l0.tail();
+                  $v.add(newActor(ball,new ESLVal(new Actor()),i,getSelf()));
                 }
-              }
-            }).map($zero.to(gui.ref("size").sub($one))).flatten().flatten();
+                for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                return $a;
+              }}.apply($zero.to(gui.ref("size").sub($one)));
             return $null;}
             }
           case "Stop": {
               {{
-              ESLVal _v1 = balls;
-              while(_v1.isCons()) {
-                if(_v1.isCons())
-                  {ESLVal $6 = _v1.head();
-                    ESLVal $7 = _v1.tail();
-                    
-                    {ESLVal ball = $6;
-                    
-                    {ESLVal _v2 = $7;
-                    
-                    {_v1 = _v2;
-                  kill.apply(ball);}
-                  }
-                  }
-                  }
-                else if(_v1.isNil())
-                  error(new ESLVal("case error at Pos(815,859)"));
-                else error(new ESLVal("case error at Pos(815,859)"));
-                }
+              ESLVal _v5 = balls;
+              while(_v5.isCons()) {
+                ESLVal ball = _v5.headVal;
+                kill.apply(ball);
+                _v5 = _v5.tailVal;}
             }
             return $null;}
             }
@@ -90,12 +81,12 @@ public class Collisions {
               {followMouse = $false;
             return $null;}
             }
-          case "MouseMoved": {ESLVal $2 = $m.termRef(0);
-              ESLVal $3 = $m.termRef(1);
+          case "MouseMoved": {ESLVal $6 = _v3.termRef(0);
+              ESLVal $5 = _v3.termRef(1);
               
-              {ESLVal x = $2;
+              {ESLVal x = $6;
               
-              {ESLVal y = $3;
+              {ESLVal y = $5;
               
               {mouseX = x;
             {mouseY = y;
@@ -103,35 +94,21 @@ public class Collisions {
             }
             }
             }
-          case "MouseClick": {ESLVal $4 = $m.termRef(0);
-              ESLVal $5 = $m.termRef(1);
+          case "MouseClick": {ESLVal $4 = _v3.termRef(0);
+              ESLVal $3 = _v3.termRef(1);
               
               {ESLVal x = $4;
               
-              {ESLVal y = $5;
+              {ESLVal y = $3;
               
               if(followMouse.boolVal)
               {followMouse = $false;
               {{
-                ESLVal _v3 = balls;
-                while(_v3.isCons()) {
-                  if(_v3.isCons())
-                    {ESLVal $8 = _v3.head();
-                      ESLVal $9 = _v3.tail();
-                      
-                      {ESLVal ball = $8;
-                      
-                      {ESLVal _v4 = $9;
-                      
-                      {_v3 = _v4;
-                    Lib.send(ball,"Bang",x,y);}
-                    }
-                    }
-                    }
-                  else if(_v3.isNil())
-                    error(new ESLVal("case error at Pos(1129,1192)"));
-                  else error(new ESLVal("case error at Pos(1129,1192)"));
-                  }
+                ESLVal _v4 = balls;
+                while(_v4.isCons()) {
+                  ESLVal ball = _v4.headVal;
+                  Lib.send(ball,"Bang",x,y);
+                  _v4 = _v4.tailVal;}
               }
               return $null;}}
               else
@@ -140,7 +117,8 @@ public class Collisions {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v3)));
+          }
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -166,11 +144,11 @@ public class Collisions {
   });
   private static ESLVal ball = new ESLVal(new Function(new ESLVal("ball"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
-      ESLVal id = $args[0];
-  ESLVal simulator = $args[1];
+      ESLVal _v7 = $args[0];
+  ESLVal _v6 = $args[1];
   return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("ball")) {
-          ESLVal x = random.apply(simulator.ref("gui").ref("width"));
-          ESLVal y = random.apply(simulator.ref("gui").ref("height"));
+          ESLVal x = random.apply(_v6.ref("gui").ref("width"));
+          ESLVal y = random.apply(_v6.ref("gui").ref("height"));
           ESLVal dx = random.apply(new ESLVal(3)).sub(new ESLVal(2));
           ESLVal dy = random.apply(new ESLVal(3)).sub(new ESLVal(2));
           ESLVal checkDeltas = new ESLVal(new Function(new ESLVal("checkDeltas"),getSelf()) {
@@ -186,13 +164,13 @@ public class Collisions {
             });
           ESLVal hitWalls = new ESLVal(new Function(new ESLVal("hitWalls"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                {if(x.add(dx.add(simulator.ref("gui").ref("ballSize"))).gre(simulator.ref("gui").ref("width")).boolVal)
+                {if(x.add(dx.add(_v6.ref("gui").ref("ballSize"))).gre(_v6.ref("gui").ref("width")).boolVal)
                   dx = $zero.sub(dx);
                   else
                     if(x.add(dx).less($zero).boolVal)
                       dx = $zero.sub(dx);
                       else
-                        if(y.add(dy.add(simulator.ref("gui").ref("ballSize"))).gre(simulator.ref("gui").ref("height")).boolVal)
+                        if(y.add(dy.add(_v6.ref("gui").ref("ballSize"))).gre(_v6.ref("gui").ref("height")).boolVal)
                           dy = $zero.sub(dy);
                           else
                             if(y.add(dy).less($zero).boolVal)
@@ -208,12 +186,12 @@ public class Collisions {
             ESLVal y1 = $args[1];
             ESLVal x2 = $args[2];
             ESLVal y2 = $args[3];
-            return x1.gre(x2).andalso(x1.less(x2.add(simulator.ref("gui").ref("ballSize")))).andalso(y1.gre(y2).andalso(y1.less(y2.add(simulator.ref("gui").ref("ballSize"))))).orelse(x2.gre(x1).andalso(x2.less(x1.add(simulator.ref("gui").ref("ballSize")))).andalso(y2.gre(y1).andalso(y2.less(y1.add(simulator.ref("gui").ref("ballSize"))))));
+            return x1.gre(x2).andalso(x1.less(x2.add(_v6.ref("gui").ref("ballSize")))).andalso(y1.gre(y2).andalso(y1.less(y2.add(_v6.ref("gui").ref("ballSize"))))).orelse(x2.gre(x1).andalso(x2.less(x1.add(_v6.ref("gui").ref("ballSize")))).andalso(y2.gre(y1).andalso(y2.less(y1.add(_v6.ref("gui").ref("ballSize"))))));
               }
             });
           ESLVal hitBalls = new ESLVal(new Function(new ESLVal("hitBalls"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                if(simulator.ref("gui").ref("isOccupied").apply(id,x.add(dx),y.add(dy)).boolVal)
+                if(_v6.ref("gui").ref("isOccupied").apply(_v7,x.add(dx),y.add(dy)).boolVal)
                   {dx = $zero.sub(dx);
                   {dy = $zero.sub(dy);
                   return $null;}}
@@ -231,17 +209,19 @@ public class Collisions {
                   y = y.sub(random.apply(new ESLVal(10)));
                   else
                     y = y.add(random.apply(new ESLVal(10)));
-                return Lib.send(simulator.ref("gui"),"Draw",id,x,y);}
+                return Lib.send(_v6.ref("gui"),"Draw",_v7,x,y);}
               }
             });
           
-          public ESLVal handle(ESLVal $m) {switch($m.termName) {
-            case "Bang": {ESLVal $10 = $m.termRef(0);
-              ESLVal $11 = $m.termRef(1);
+          public ESLVal handle(ESLVal $m) {{ESLVal _v2 = $m;
+            
+            switch(_v2.termName) {
+            case "Bang": {ESLVal $2 = _v2.termRef(0);
+              ESLVal $1 = _v2.termRef(1);
               
-              {ESLVal bx = $10;
+              {ESLVal bx = $2;
               
-              {ESLVal by = $11;
+              {ESLVal by = $1;
               
               {if(x.less(bx).boolVal)
               dx = random.apply(new ESLVal(5));
@@ -257,7 +237,8 @@ public class Collisions {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)"));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v2)));
+          }
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -275,9 +256,9 @@ public class Collisions {
               else
                 {hitWalls.apply();
                 hitBalls.apply();
-                x = max.apply($zero,min.apply(x.add(dx),simulator.ref("gui").ref("width")));
-                y = max.apply($zero,min.apply(y.add(dy),simulator.ref("gui").ref("height")));
-                Lib.send(simulator.ref("gui"),"Draw",id,x,y);}
+                x = max.apply($zero,min.apply(x.add(dx),_v6.ref("gui").ref("width")));
+                y = max.apply($zero,min.apply(y.add(dy),_v6.ref("gui").ref("height")));
+                Lib.send(_v6.ref("gui"),"Draw",_v7,x,y);}
             else
               {}
           }
@@ -292,7 +273,10 @@ public class Collisions {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {return error(new ESLVal("case error at Pos(0,0)"));}
+          public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
+            
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
+          }}
           public ESLVal get(String name) {
             switch(name) {
               

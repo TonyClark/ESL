@@ -11,7 +11,7 @@ public class Util {
   ESLVal f = $args[1];
   {ESLVal table = newTable();
         
-        return new ESLVal(new Function(new ESLVal("fun117"),getSelf()) {
+        return new ESLVal(new Function(new ESLVal("fun78"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal a = $args[0];
         {ESLVal k = m.apply(a);

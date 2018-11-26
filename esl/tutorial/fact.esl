@@ -2,26 +2,25 @@ export main;
 
 import 'esl/lists.esl', 'esl/displays.esl';
 
-type Customer = Act { export id::Int; Value(Int,Int,Int); Time(Int); }
-type Fact = Act{ export id::Int; Get(Int,Int,Int,Customer); Time(Int); }
+// Demonstrates how actors can be used to implement recursive stack frames so that
+// several calls on a function can occur concurrently. Also provides an example
+// of how a sequence diagram can be constructed and displayed via EDB.
 
-type M = union{ 
-  GetValue(Int,Int,Int,Fact,Fact,Customer,Customer), 
-  ReturnValue(Int,Int,Int,Customer,Customer), 
-  Zero(Int,Int,Fact,Customer),
-  Start(Int,Int,Customer,Fact)
-}
-cnstr GetValue = M.GetValue;
-cnstr ReturnValue = M.ReturnValue;
-cnstr Zero = M.Zero;
-cnstr Start = M.Start;
+type Customer = Act { export id::Int; Value(Int,Int,Int); }
+type Fact = Act{ export id::Int; Get(Int,Int,Int,Customer); }
 
-actors::[Actor(Int,Int,Int,Str)] = [];
+data M =
+  GetValue(Int,Int,Int,Fact,Fact,Customer,Customer)
+| ReturnValue(Int,Int,Int,Customer,Customer)
+| Zero(Int,Int,Fact,Customer)
+| Start(Int,Int,Customer,Fact);
+
+actors::[Actor] = [];
 messages::[M] = [];
 
 addActor(behaviour::Str)::Int =
   grab(actors) {
-    let id::Int = length[Actor(Int,Int,Int,Str)](actors);
+    let id::Int = length[Actor](actors);
     in {
       actors := actors + [Actor(id,0,timeOut,behaviour)];
       id;
@@ -48,18 +47,17 @@ addStart(n::Int,threadId::Int,c::Customer,f::Fact)::Void =
     messages := messages + [ Start(n,threadId,c,f) ];
   }
   
-limit::Int = 4;       
 timeOut::Int = 1000;
 
 act fact::Fact {
   export id;
   id::Int = 0;
   -> id := addActor('fact');
-  Get(0,threadId::Int,time::Int,c::Customer) -> {
+  Get(0,threadId,time::Int,c::Customer) -> {
     addZero(threadId,time,self,c);
     c <- Value(threadId,time+1,1);
   }
-  Get(n::Int,threadId::Int,time::Int,c::Customer) -> {
+  Get(n::Int,threadId,time::Int,c) -> {
     let cc::Customer = new cust(n,c);
     in {
       addGet(threadId,time,n-1,self,self,c,cc);
@@ -73,7 +71,7 @@ act cust(n::Int,c::Customer)::Customer {
   export id;
   id::Int = 0;
   -> id := addActor('cust');
-  Value(threadId::Int,time::Int,m::Int) -> {
+  Value(threadId,time::Int,m::Int) -> {
     addReturn(threadId,time,n*m,self,c);
     setDeath(id,time);
     c <- Value(threadId,time+1,n*m);
@@ -81,67 +79,66 @@ act cust(n::Int,c::Customer)::Customer {
   Time(t::Int) -> {}
 }
 
-translate(msIn::[M])::[Message(Int,Int,Int,Str)] =
+translate(msIn::[M])::[Message] =
   case msIn {
-    m::M;
-    rest::[M];
     [] -> [];
-    Start(n::Int,threadId::Int,c::Customer,f::Fact):rest -> 
+    Start(n,threadId,c,f):rest -> 
       Message(1,c.id,f.id,'[' + threadId + ']Start('+n+')'):translate(rest);
-    GetValue(n::Int,threadId::Int,time::Int,source::Fact,target::Fact,sourceCustomer::Customer,targetCustomer::Customer):rest -> 
+    GetValue(n,threadId,time,source,target,sourceCustomer,targetCustomer):rest -> 
       Message(time,source.id,target.id,'[' + threadId + ']Get(' + n + ',' + sourceCustomer.id + ',' + targetCustomer.id + ')'):translate(rest);
-    ReturnValue(n::Int,threadId::Int,time::Int,source::Customer,target::Customer):rest -> 
+    ReturnValue(n,threadId,time,source,target):rest -> 
       Message(time,source.id,target.id,'[' + threadId + ']Return(' + n + ')'):translate(rest);
-    Zero(threadId::Int,time::Int,f::Fact,c::Customer):rest -> 
+    Zero(threadId,time,f,c):rest -> 
       Message(time,f.id,c.id,'[' + threadId + ']One'):translate(rest);
   }
   
-getActor(id::Int,as::[Actor(Int,Int,Int,Str)])::Actor(Int,Int,Int,Str) =
+getActor(id::Int,as::[Actor])::Actor =
   case as {
-    Actor(i::Int,time::Int,death::Int,b::Str):l::[Actor(Int,Int,Int,Str)] when i = id -> Actor(i,time,death,b);
-    a::Actor(Int,Int,Int,Str):l::[Actor(Int,Int,Int,Str)] -> getActor(id,l);
+    Actor(i,time,death,b):l when i = id -> Actor(i,time,death,b);
+    a:l -> getActor(id,l);
   }
   
-changeDeath(Actor(i::Int,birth::Int,death::Int,b::Str),t::Int)::Actor(Int,Int,Int,Str) = Actor(i,birth,t,b);
+changeDeath(a::Actor,t::Int)::Actor =
+  case a {
+    Actor(i,birth,death,b) ->  Actor(i,birth,t,b);
+  }
   
 setDeath(id::Int,time::Int)::Void =
-  let oldActor::Actor(Int,Int,Int,Str) = getActor(id,actors); in
-  let newActor::Actor(Int,Int,Int,Str) = changeDeath(oldActor,time);
+  let oldActor::Actor = getActor(id,actors); in
+  let newActor::Actor = changeDeath(oldActor,time);
   in grab(actors) {
-   actors := subst[Actor(Int,Int,Int,Str)](newActor,oldActor,actors);
+   actors := subst[Actor](newActor,oldActor,actors);
   }
 
 act main::Customer {
   export id;
   id::Int = 0;
   counter::Int = 0;
+  count::Int = 1;
   f::Fact = new fact;
-  lastTime::Int = 0;
+  numberOfFacts::Int = 2;
   computeFact(n::Int)::Void = {
     addStart(n,counter,self,f);
     counter := counter + 1;
     f <- Get(n,counter-1,1,self);
   }
-  messageTime(Message(t::Int,s::Int,tt::Int,l::Str))::Int = t;
-  messageBefore(time::Int)::(Message(Int,Int,Int,Str))->Bool = fun(m::Message(Int,Int,Int,Str))::Bool messageTime(m) < time;
-  createFilmstrip(ms::[Message(Int,Int,Int,Str)])::[EDBDisplay] =
-    [Sequence(actors,select[Message(Int,Int,Int,Str)](messageBefore(t),ms)) | t::Int <- 1..lastTime];
+  messageTime(m::Message)::Int = case m { Message(t,s,tt,l) ->  t; }
+  messageBefore(time::Int)::(Message)->Bool = fun(m::Message)::Bool messageTime(m) < time;
+  createFilmstrip(ms)::[Display] =
+    [Sequence(actors,select[Message](messageBefore(t),ms)) | t <- 1..numberOfFacts];
   -> {
     id := addActor('Main');
-    computeFact(6);
-    computeFact(7);
-    computeFact(8);
+    computeFact(3);
+    computeFact(3);
   }
   Value(threadId::Int,time::Int,n::Int) -> {
-    print[Str](n + ' at ' + time);
     setDeath(id,time);
-    if time > lastTime then lastTime := time; else {}
+    if count = numberOfFacts
+    then {
+      edb <- Show('Factorial',Sequence(actors,translate(messages)));
+      stopAll();
+    } else count := count + 1;
   }
-  Time(n::Int) when n > timeOut -> {
-    edb <- Filmstrip('Sequence',createFilmstrip(translate(messages)));
-    stopAll();
-  }
-  Time(n::Int) -> {}
 }
 
 

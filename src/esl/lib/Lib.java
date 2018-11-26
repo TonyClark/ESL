@@ -2,11 +2,11 @@ package esl.lib;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 
 import ast.general.AST;
 import ast.modules.Module;
@@ -526,6 +526,59 @@ public class Lib {
 			return new ESLVal(t.getName().getString(), vals);
 		}
 		throw new Error("asESLVal: " + o);
+	}
+
+	public static ESLVal at(Supplier<ESLVal> left, Supplier<ESLVal> right) {
+
+		// Call both suppliers and wait. Return when the first supplier produces a
+		// result. Ignore the second result...
+
+		ESLVal[] result = new ESLVal[] { null };
+		synchronized (left) {
+			threadPool.execute(() -> {
+				result[0] = left.get();
+				synchronized (left) {
+					left.notify();
+				}
+			});
+			threadPool.execute(() -> {
+				result[0] = right.get();
+				synchronized (left) {
+					left.notify();
+				}
+			});
+			try {
+				left.wait();
+				return result[0];
+			} catch (InterruptedException e) {
+				return $null;
+			}
+		}
+	}
+
+	public static ESLVal[] plet(Supplier[] suppliers) {
+		int[] count = new int[] { 0 };
+		ESLVal[] results = new ESLVal[suppliers.length];
+		for (int i = 0; i < suppliers.length;i++) {
+			Supplier<ESLVal> s = (Supplier)suppliers[i];
+			int[] index = new int[] {i};
+			threadPool.execute(() -> {
+				ESLVal v = s.get();
+				synchronized (results) {
+					results[index[0]] = v;
+					count[0]++;
+					if (count[0] == suppliers.length) results.notify();
+				}
+			});
+		}
+		synchronized(results) {
+			try {
+				results.wait();
+			} catch (InterruptedException e) {
+				throw new Error(e.toString());
+			}
+			return results;
+		}
 	}
 
 	public static ESLVal become(ESLVal fun, ESLVal actor, ESLVal... args) {

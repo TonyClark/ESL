@@ -1,84 +1,91 @@
-export TRow,TData,Data,Row,Prop,LGLine,GLine,Circle,EDBDisplay,ESLSource,ESLSource,EditType,Graph,HBox,HBox,HTML,Image,Image,JavaSource,JavaSource,LPoint,LPoint,LabelledTree,LabelledTree,Line,Line,LineGraph,LinePoint,Padding,Padding,Picture,PictureElement,Pie,Property,Props,RawText,RawText,Rectangle,Rectangle,Sequence,Table,Text,Text,Tree,TreeElement,TreeNode,TreeNode,VBox,VBox;
+/********************************************************************************************************************************
+ *                                                                                                                              *
+ *                                                   EDB Displays                                                               *
+ *                                                 ================                                                             *
+ *                                                                                                                              *
+ *   EDB can display graphics including pictures, HTML pages and filmstrips. This file defines the data types that are used     *
+ *   to construct the graphics that are then supplied to the value edb::EDB.                                                    *
+ *                                                                                                                              *
+ ********************************************************************************************************************************/
 
-// This file contains a collection of type definitions that can be used to 
-// create data to be supplied to EDB for display.
+
+export Actor,Actor,BrowserListener,Circle,Data,Data,Display,EDB,ESLSource,Edge,Edge,EditType,GLine,GLine,Graph,HBox,HTML,Image,JavaSource,LPoint,LabelledTree,Line,LineGraph,LinePoint,Math,Message,Message,Node,Node,Padding,Picture,PictureElement,Pie,Prop,Property,Props,RawText,Rectangle,Row,Row,Sequence,Slice,Slice,Table,Text,Tree,TreeElement,TreeNode,VBox,edb,edgeProps,edgeSource,edgeTarget,hasProp,nodeId,nodeProps,propValue,setEdgeProps,setNodeProps,setProp;
+
+Act EDB {
+  export 
+    math::Math;
+    message::Forall[T] (T)->T; 
+    display::Forall[T] (Str,T)->Void; 
+    button::(Str,Str,Str,Str,()->Void)->Void; 
+    getProperty::Forall[T] (Str) -> T;
+    setProperty::Forall[T] (Str,T) -> T;
+  Show(Str,Display);
+  Filmstrip(Str,[Display]);
+  AddBrowserListener(BrowserListener);
+  Edit(EditType);
+}
+
+edb::EDB = null[EDB];
+
+type Math = {
+  circlePos::(Int,Int,Int,Int) -> Point
+};
+
+Act BrowserListener {
+  BrowserEvent(Str);
+}
 
 data Property = Prop(Str,Str);
-type Props = [Property];
+type Props    = [Property];
 
-type PictureElement = union { 
+propValue(props::Props,n::Str)::Str = case props { ps1 + [Prop(m,v)] + ps2 when m = n -> v; }
+hasProp(props::Props,n::Str)::Bool = case props { ps1 + [Prop(m,v)] + ps2 when m = n -> true; props -> false; }
+setProp(props::Props,n::Str,v::Str)::Props = case props { ps1 + [Prop(m,v0)] + ps2 when m = n -> ps1 + [Prop(n,v)] + ps2; }
 
-  // Shapes, images and text with absolute positions...
-  
-  Rectangle(Int,Int,Int,Int,Str), 
-  Circle(Int,Int,Int,Str), 
-  Line(Int,Int,Int,Int,Str),
-  Image(Int,Int,Int,Int,Str),
-  Text(Int,Int,Str,Str) 
-}
+data PictureElement = // Shapes, images and text with absolute positions...
+  Rectangle(Int,Int,Int,Int,Str)
+| Circle(Int,Int,Int,Str)
+| Line(Int,Int,Int,Int,Str)
+| Image(Int,Int,Int,Int,Str)
+| Text(Int,Int,Str,Str);
 
-cnstr Rectangle     = PictureElement.Rectangle;
-cnstr Circle        = PictureElement.Circle;
-cnstr Line          = PictureElement.Line;
-cnstr Image         = PictureElement.Image;
-cnstr Text          = PictureElement.Text;
-
-type TreeElement = union {
-
-  // Horizontal and vertical layout with elastic padding...
-  
-  TreeNode(PictureElement),
-  VBox(Props,[TreeElement]),
-  HBox(Props,[TreeElement]),
-  Padding(Props),
-  LabelledTree(Str,TreeElement)
-}
-
-cnstr TreeNode     = unfold[TreeElement].TreeNode;
-cnstr VBox         = unfold[TreeElement].VBox;
-cnstr HBox         = unfold[TreeElement].HBox;
-cnstr Padding      = unfold[TreeElement].Padding;
-cnstr LabelledTree = unfold[TreeElement].LabelledTree;
+data TreeElement = // Horizontal and vertical layout with elastic padding...
+   TreeNode(PictureElement)
+|  VBox(Props,[TreeElement])
+|  HBox(Props,[TreeElement])
+|  Padding(Props)
+|  LabelledTree(Str,TreeElement);
 
 data LinePoint = LPoint(Props,Int,Int);
-data TRow[T]   = Row(Props,[TData[T]]);
-data TData[T]  = Data(Props,T);
-data PSlice    = Slice(Props,Str,Int);
-data LGLine    = GLine(Props,Str,[LinePoint]);
-data SMessage  = Message(Int,Int,Int,Str);
-data SActor    = Actor(Int,Int,Int,Str);
-data GNode[T]  = Node(Props,Int,T);
-data GEdge[T]  = Edge(Props,Int,Int,T);
+data Row       = Row(Props,[Data]);
+data Data      = Data(Props,Display);
+data Slice     = Slice(Props,Str,Int);
+data GLine     = GLine(Props,Str,[LinePoint]);
+data Message   = Message(Int,Int,Int,Str);
+data Actor     = Actor(Int,Int,Int,Str);
+data Node      = Node(Props,Int,Display);
+data Edge      = Edge(Props,Int,Int,Display);
 
-type EDBDisplay = rec T. union { 
-                                                   // Types of EDB display element.
-  HTML(Str),                                       // Raw HTML.
-  Table(Props,[TRow[T]]),                          // A table of display elements.
-  Pie(Props,Str,Int,Int,[PSlice]),                 // A pie chart.
-  LineGraph(Props,Str,Str,Str,Int,Int,[LGLine]),   // A line graph.
-  Picture(Int,Int,[PictureElement]),               // Absolute positions.
-  Sequence([SActor],[SMessage]),                   // Sequence diagram.
-  Graph(Props,[GNode[T]],[GEdge[T]]),              // Graph.
-  Tree(Int,Int,TreeElement)                        // Recursive horizontal and vertical layout.
-}
+edgeSource(e::Edge)::Int                 = case e { Edge(props,source,target,display) -> source; }
+edgeTarget(e::Edge)::Int                 = case e { Edge(props,source,target,display) -> target; }
+nodeId(n::Node)::Int                     = case n { Node(props,id,display) -> id; }
+nodeProps(n::Node)::Props                = case n { Node(props,id,display) -> props; }
+setNodeProps(n::Node,props::Props)::Node = case n { Node(props0,id,display) -> Node(props,id,display); }
+edgeProps(e::Edge)::Props                = case e { Edge(props,source,target,display) -> props; }
+setEdgeProps(e::Edge,props::Props)::Edge = case e { Edge(props0,source,target,display) -> Edge(props,source,target,display); }
 
-cnstr Tree      = unfold[EDBDisplay].Tree;
-cnstr Graph     = unfold[EDBDisplay].Graph;
-cnstr HTML      = unfold[EDBDisplay].HTML;
-cnstr Sequence  = unfold[EDBDisplay].Sequence;
-cnstr Table     = unfold[EDBDisplay].Table;
-cnstr Pie       = unfold[EDBDisplay].Pie;
-cnstr LineGraph = unfold[EDBDisplay].LineGraph;
-cnstr Picture   = unfold[EDBDisplay].Picture;
-
-cnstr LPoint = LinePoint.LPoint;
+data Display = // Types of EDB display element.        
+  HTML(Str)                                      // Raw HTML.
+| Table(Props,[Row])                             // A table of display elements.
+| Pie(Props,Str,Int,Int,[Slice])                 // A pie chart.
+| LineGraph(Props,Str,Str,Str,Int,Int,[GLine])   // A line graph.
+| Picture(Int,Int,[PictureElement])              // Absolute positions.
+| Sequence([Actor],[Message])                    // Sequence diagram.
+| Graph(Props,[Node],[Edge])                     // Graph.
+| Tree(Int,Int,TreeElement);                     // Recursive horizontal and vertical layout.
 
 
 data EditType =
   ESLSource(Str,Str)
 | JavaSource(Str,Str,Str)
 | RawText(Str);
-
-cnstr ESLSource = EditType.ESLSource; 
-cnstr JavaSource = EditType.JavaSource; 
-cnstr RawText = EditType.RawText; 

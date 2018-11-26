@@ -6,7 +6,7 @@ import
   'esl/compiler/dynamicVars.esl', 
   'esl/compiler/strings.esl';
 
-type Main = Act { Time(Int); }
+type Main = Act { Time(Int); } 
 
 p0::Loc = Pos(0,0);
 
@@ -153,7 +153,8 @@ ppExp(indent::Int,exp::AST)::Str = {
       'fun(' + ppDecs(indent,args) + ')::' + ppType(t) + ' ' + ppExp(indent+2,e);
     }
     Let(l::Loc,bs::[TBind],e::AST) -> {
-      'let ' + ppBinds(indent+4,bs) + nl(indent) + 'in ' + ppExp(indent+3,e);
+      'let ' + ppBinds(indent+4,bs) + nl(indent) + 'in ' + 
+      ppExp(indent+3,e);
     }
     Letrec(l::Loc,bs::[TBind],e::AST) -> {
       'letrec ' + ppBinds(indent+7,bs) + nl(indent) + 'in ' + ppExp(indent+3,e);
@@ -366,9 +367,11 @@ ppJExp(indent::Int,dynamics::[Str],e::JExp)::Str = { //print[Str]('ppJExp ' + e)
     JTerm(n::Str,[][JExp]) ->  'new ESLVal("' + n + '",new ESLVal[]{})'; 
     JTerm(n::Str,es::[JExp]) -> 'new ESLVal("' + n +  '",' + ppJExps(indent,dynamics,es,',') + ')';
     JFun(n::JExp,args::[JDeclaration],t::JType,body::JCommand) -> ppJFun(indent,dynamics,n,args,t,body);
+    JBinExp(e1::JExp,'at',e2::JExp) -> 'at(() -> { return ' + ppJExp(indent,dynamics,e1) + '; },() -> { return ' +  ppJExp(indent,dynamics,e2) + '; })';
     JBinExp(e1::JExp,'==',e2::JExp) -> ppJExp(indent,dynamics,e1) + '.equals(' + ppJExp(indent,dynamics,e2) + ')';
     JBinExp(e1::JExp,'cons',e2::JExp) -> ppJExp(indent,dynamics,e2) + '.cons(' + ppJExp(indent,dynamics,e1) + ')';
     JBinExp(e1::JExp,op::Str,e2::JExp) -> ppJExp(indent,dynamics,e1) + '.' + op + '(' + ppJExp(indent,dynamics,e2) + ')';
+    JCmpExp(c) -> ppJCmp(indent,dynamics,c);
     JNull -> '$null';
     JNow -> 'now()';
     JVar(n::Str,t::JType) when member[Str](n,dynamics) -> n + '[0]'; 
@@ -453,6 +456,39 @@ ppJExp(indent::Int,dynamics::[Str],e::JExp)::Str = { //print[Str]('ppJExp ' + e)
   }
 }
 
+ppJCmp(indent::Int,dynamics::[Str],c::JCmp)::Str =
+  letrec
+    inner(indent::Int,i::Int,c::JCmp)::Str =
+      case c {
+        JCmpBind(n,e,c) -> 
+          'ESLVal $l' + i + ' = ' + ppJExp(indent,dynamics,e) + ';' + nl(indent) +
+          'while(!$l' + i + '.isNil()) {' + nl(indent+2) +
+            'ESLVal ' + n + ' = $l' + i + '.head();' + nl(indent+2) +
+            '$l' + i + ' = $l' + i + '.tail();' + nl(indent+2) +
+            inner(indent+2,i+1,c) + nl(indent) +
+          '}';
+        JCmpList(e) -> '$v.add(' + ppJExp(indent,dynamics,e) + ');';
+        JCmpIf(e,c) -> 
+          'if(' + ppJExp(indent,dynamics,e) + '.boolVal) {' +
+            inner(indent,i,c) + nl(indent) + 
+          '}';
+      }
+  in case c {
+    JCmpOuter(n,e,c) -> 'new java.util.function.Function<ESLVal,ESLVal>() {' + nl(indent+2) +
+      'public ESLVal apply(ESLVal $l0) {' + nl(indent+4) +
+        'ESLVal $a = $nil;' + nl(indent+4) + 
+        'java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();' + nl(indent+4) +
+        'while(!$l0.isNil()) { ' + nl(indent+6) +
+          'ESLVal ' + n + ' = $l0.head();' + nl(indent+6) +
+          '$l0 = $l0.tail();' +nl(indent+6) +
+          inner(indent,1,c) + nl(indent+4) +
+        '}' + nl(indent+4) +
+        'for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);' + nl(indent+4) + 
+        'return $a;' + nl(indent+2) +
+      '}}.apply(' + ppJExp(indent,dynamics,e) + ')';
+    c -> '// Illegal Comprehension ' + c;
+  }
+
 ppBehaviourParent(indent::Int,dynamics::[Str],e::JExp)::Str =
   case e {
     JApply(op::JExp,args::[JExp]) -> 'getParent(getSelf(),' + ppJExp(indent,dynamics,op) + ',' + ppJExps(indent,dynamics,args,',') + ')';
@@ -528,7 +564,7 @@ ppJCommand(indent::Int,dynamics::[Str],c::JCommand)::Str = {
     JLetRec(bs::[JFieldDef],c::JCommand) -> 
       // Recursive closures in Java are a pain...
       // For now only define recursive functions or side-effect free variables... 
-      'LetRec letrec = new LetRec() {' + nl(indent+2) +
+      '{ LetRec letrec = new LetRec() {' + nl(indent+2) +
       ppJFields(indent+2,dynamics,bs) + nl(indent+2) +
       'public ESLVal get(String name) {' + nl(indent+4) +
       'switch(name) {' + nl(indent+6) +
@@ -537,7 +573,13 @@ ppJCommand(indent::Int,dynamics::[Str],c::JCommand)::Str = {
       '}' + nl(indent+4) + '}' + nl(indent+2) + '};' +
       nl(indent) + 
       ppJoin(indent,[ 'ESLVal ' + n + ' = letrec.get("' + n + '");' + nl(indent) |  JField(n::Str,t::JType,e::JExp) <- bs ]) +
-      nl(indent+2) + ppJCommand(indent,dynamics,c) + nl(indent);
+      nl(indent+2) + ppJCommand(indent,dynamics,c) + '}' + nl(indent);
+    JPLet(bs::[JFieldDef],c::JCommand) -> {     
+      let boundVars::[Str] = [ n | JField(n::Str,t::JType,e::JExp) <- bs ];
+          dynamicVars::[Str] = dynamicVarsJCommand(c); in
+      let boundDynamicVars::[Str] = filter[Str](fun(s::Str)::Bool member[Str](s,dynamicVars),boundVars);
+      in '{' + ppJParFields(indent+2,dynamics + boundDynamicVars,bs) + nl(indent+2) + ppJCommand(indent,dynamics+boundDynamicVars,c) + nl(indent) + '}';
+    }
     JBlock(cs::[JCommand]) -> '{' + ppJoin(indent,[ ppJCommand(indent,dynamics,c) | c::JCommand <- cs ]) + '}';
     JUpdate(n::Str,e::JExp) when member[Str](n,dynamics) -> n + '[0] = ' + ppJExp(indent,dynamics,e) + ';';
     JUpdate(n::Str,e::JExp) -> n + ' = ' + ppJExp(indent,dynamics,e) + ';';
@@ -553,6 +595,24 @@ ppJCommand(indent::Int,dynamics::[Str],c::JCommand)::Str = {
     c::JCommand -> '******* unknown command: ' + c;
   }
 }
+
+ppJParFields(indent::Int,dynamics::[Str],bs::[JFieldDef])::Str = 
+  letrec
+    vals::[JExp] = [ e | JField(n,t,e) <- bs ];
+    names::[Str] = [ n | JField(n,t,e) <- bs ];
+    doVals(vals::[JExp])::Str =
+      case vals {
+        [] -> '';
+        [v] -> '() -> ' + ppJExp(indent,dynamics,v);
+        v:vs -> '() -> ' + ppJExp(indent,dynamics,v) + ',' + doVals(vs);
+      }
+    bindNames(ns::[Str],i::Int)::Str =
+      case ns {
+        [] -> '';
+        n:ns when member[Str](n,dynamics) -> 'ESLVal[] ' + n + '= new ESLVal[]{$p[' + i + ']};' + nl(indent) + bindNames(ns,i+1);
+        n:ns -> 'ESLVal ' + n + '= $p[' + i + '];' + nl(indent) + bindNames(ns,i+1);
+      }
+  in 'ESLVal[] $p = plet(new Supplier[]{' + doVals(vals) + '});' + nl(indent) + bindNames(names,0);
   
 ppJFields(indent::Int,dynamics::[Str],bs::[JFieldDef])::Str = 
   case bs {

@@ -1,59 +1,117 @@
 export main;
 
-import 'esl/lists.esl';
+import 'esl/lists.esl', 'esl/util.esl';
 
 // This file implements a simple version of the game Pacman. Many simulations have a turn-based 
 // architecture where a collection of actors are autonomous, but must take their turn because
 // they access a shared state. Access to the shared state is granted exclusively to each actor
-// via a lock. The shared state is used by each actor to work out how to process messages (in
-// this case simple Time(n) messages). The strategies of the actors are implemented by a function
-// that can be replaced to make them more or less sophisticated.
+// via the maze. 
 
-data GhostInfo = Point(Ghost,Int,Int,Int); // Point(g,type,x,y)
+data GhostInfo = Point(Ghost,Int,Int,Int); // Point(g,type,x,y) 
 
-type GUI = Act { 
+data GhostState =
+  Scatter
+| Chase;
 
-  // A GUI actor is external and visualises the current state of play.
+data Loc = Loc(Int,Int);
+locX(l::Loc)::Int = case l { Loc(x,y) -> x; }
+locY(l::Loc)::Int = case l { Loc(x,y) -> y; }
+
+type Plans = [Plan];
+type Plan = [Loc];
+
+Act GUI { 
+
+  // A GUI actor is external and visualises the current state of play. 
   // The (mouseX,mouseY) position is the current position of the mouse
   // and can be used to work out how the player should move next.
   // A message State(ghosts,food) is used to inform a gui what to display.
   // A message Player(x,y) is used to inform the gui where the player is.
   
   export mouseX::Int; mouseY::Int; 
-  State([GhostInfo],[[Int]]); 
+  State([GhostInfo],Array[Array[Int]]); 
   Player(Int,Int);
 }
 
-type Maze = Act {
+Act Maze {
 
   // A board is the global state of the game. It must have a monitor
   // that allows any actor to lock the board and perform access and
   // update via the exported functions.
 
-  export mon::Int; 
-         isGhostTurn::(Ghost)->Bool;        // Checks whether a ghost can move.
-         ghostMoved::()->Void;              // Record that current ghost has moved.
-         moveGhost::(Ghost,Int,Int)->Void;  // Update the position of a ghost.
-         isWall::(Int,Int)->Bool;           // Is (x,y) a wall?
+  export isWall::(Int,Int)->Bool;           // Is (x,y) a wall?
          atHome::(Int,Int)->Bool;           // Is (x,y) ghost-home?
-         ghostX::(Ghost)->Int;              // Get x position of supplied ghost.
-         ghostY::(Ghost)->Int;              // Get y position of supplied ghost.
-         playerX::Int;                      // Current x position of player.
-         playerY::Int;                      // Current y position of player.
+         getPacman::() -> Pacman;           // Player
+         getGhosts::() -> [Ghost];           // Ghosts
+         legalPos::(Int,Int)->Bool;
+         eat::(Int,Int)->Void;
   
-  Time(Int);
-  RegisterGhost(Ghost,Int,Int,Int);         // RegisterGhost(g,type,x,y)
-
+  RegisterGhost(Ghost);                     // RegisterGhost(g)
+  RegisterPacman(Pacman);                   // RegisterPacman(p)
+  Move;                                     // Try to move.
 }
 
-type Ghost = Act { Time(Int); }
+Act Player {
 
-type Main = Act { Time(Int); }
+  // Player is an abstract behaviour type that defines the minimal
+  // information necessary to exist in the maze...
+
+  export 
+    getX::() -> Int;
+    getY::() -> Int;
+    setX::(Int) -> Void;
+    setY::(Int) -> Void;
+    getMaze::() -> Maze;
+    moveTo::(Int,Int)->Void;
+    move::()->Void;
+    canMove::(Int,Int)->Bool;
+
+  Start;
+   
+}
+ 
+act player(x::Int,y::Int,maze::Maze)::Player {
+
+  // A basic implementation of the player interface...
+  
+  export getX,getY,setX,setY,moveTo,getMaze,move,canMove;
+
+  getX()::Int = x;
+  getY()::Int = y;
+  setX(v::Int)::Void = x := v;
+  setY(v::Int)::Void = y := v;
+  moveTo(v1::Int,v2::Int)::Void = { x := v1; y := v2; }
+  getMaze()::Maze = maze;
+  move()::Void = throw[Void]('abstract operation move');
+  canMove(x::Int,y::Int)::Bool = maze.legalPos(x,y) or maze.atHome(x,y);
+      
+
+  Start -> throw[Void]('abstract message Start');
+}
+
+Act Ghost extends Player { 
+
+  // A ghost is a player that has a special value that
+  // indicates the type of ghost. The GUI uses this to
+  // change the displayed icon...
+
+  export ghostType::Int;
+  
+}
+
+Act Pacman extends Player {
+
+  // The pacman is just a player...
+  
+}
+
+Act Main { Time(Int); }
 
 cellWidth::Int         = 20;    // Used to convert the (mouseX,mouseY) positions.
 cellHeight::Int        = 20;    // Used to convert the (mouseX,mouseY) positions.
 maxWidth::Int          = 29;    // Max number of horizontal locations in the maze.
-delay::Int             = 1;    // Used to slow down the game.
+maxHeight::Int         = 27;    // Max number of vertical locations in the maze.
+delay::Int             = 100;   // Used to slow down the game.
 cellEmpty::Int         = 0;     // Code for an empty cell.
 legalCell::Int         = 2;     // No occupation above this code.
 homeCell::Int          = 3;     // Code for ghost home.
@@ -63,152 +121,393 @@ topLeftCorner::Int     = 6;     // Code for a top-left corner.
 topRightCorner::Int    = 7;     // Code for a top-right corner.
 bottomLeftCorner::Int  = 8;     // Code for a bottom-left corner.
 bottomRightCorner::Int = 9;     // Code for a bottom-right corner.
-timeLimit::Int         = 50000; // How long to run the game.
+timeLimit::Int         = 70000; // How long to run the game.
 
-act ghost(m::Maze,strategy::(Ghost,Maze)->Void)::Ghost {
+imin(x::Int,y::Int)::Int = if x < y then x; else y;
+imax(x::Int,y::Int)::Int = if x > y then x; else y;
+max[T](l::[T],greater::(T,T)->Bool)::T =
+  select1[T](l,null[T],fun(greatest::T)::Bool
+    not(exists[T](fun(x::T)::Bool greater(x,greatest),l)));
 
-  // A ghost waits for the appropriate delay and then makes
-  // a move. The goal of a ghost is provided by the supplied
-  // strategy function. In order to make a move, a ghost must 
-  // grab the global-state monitor and thereby assure that it
-  // has exclusive access.
+distance(x1::Int,y1::Int,x2::Int,y2::Int)::Float =
+ let dx::Int = x1-x2;
+     dy::Int = y1-y2;
+ in isqrt((dx*dx)+(dy*dy));
 
-  Time(n::Int) when (n % delay) = 0 ->
-    grab(m.mon) { 
-      if m.isGhostTurn(self)
-      then {
-        strategy(self,m);
-        m.ghostMoved();
+initArray(l::[[Int]])::Array[Array[Int]] =
+
+  // Currently ESL does not have a syntax construct for statically initialising
+  // arrays. This can be used to initialise an n*n array of integers from a
+  // list of nested lists of integer...
+  
+  let a::Array[Array[Int]] = new Array[Array[Int]](length[[Int]](l));
+  in {
+    for y::Int in 0..length[[Int]](l) do {
+      let b::Array[Int] = new Array[Int](length[Int](nth[[Int]](l,y)));
+      in { 
+        a[y] := b;
+        for x::Int in 0..length[Int](nth[[Int]](l,y)) do {
+          a[y][x] := nth[Int](nth[[Int]](l,y),x);
+        }
       }
+    }
+    a;
+  }
+
+forallArray[T](p::(T)->Bool,a::Array[T],size::Int)::Bool = 
+
+  // The equivalent of forall, but for arrays...
+  
+  let b::Bool = true;
+  in {
+    for i::Int in 0..size do {
+      if not(p(a[i]))
+      then b := false;
       else {}
     }
-    
-  Time(n::Int) -> {}
+    b;
+  }
+
+act ghost(x::Int,y::Int,homeX::Int,homeY::Int,gType::Int,m::Maze)::Ghost extends player(x,y,m) {
+
+  // A basic ghost must be supplied with its starting position, its home (used when scattering)
+  // its type (for display purposes) and the maze. A ghost uses simple planning to work out how
+  // to get to its current goal location. The goal location will depend on the current state of
+  // the ghost: if the state is Chase then the goal is the pacman location, otherwise the goal
+  // is the home location.
+
+  export ghostType, move;
+
+  ghostType::Int     = gType;        // The type of the ghost.
+  state::GhostState  = Chase;        // Current state, used for planning.
+  changeMode::Int    = 15;           // Change the state after this number of moves.
+  modeCount::Int     = changeMode;   // Current countdown to change state.
+  maxPlanLength::Int = 8;            // Select the best plan after this number of plan steps.
+
+  move()::Void = 
+    letrec 
+      selectMin(r::(Plan,Plan)->Bool,plans::[Plan])::Plan = select1[Plan](plans,null[Plan],fun(p1::Plan)::Bool forall[Plan](fun(p2::Plan)::Bool if p1=p2 then true else r(p1,p2),plans));
+      planDistance(p::Plan,x::Int,y::Int)::Float = case head[Loc](p) { Loc(x0,y0) -> distance(x,y,x0,y0); }
+      plan(goalX::Int,goalY::Int,plans::Plans)::Plan = 
+        // Create a plan that takes the ghost nearest to the goal position...
+        if length[Loc](head[Plan](plans)) > maxPlanLength
+        then 
+          selectMin(fun(p1::Plan,p2::Plan)::Bool planDistance(p1,goalX,goalY) <= planDistance(p2,goalX,goalY),plans);
+        else 
+          let p::Plan = select1[Plan](plans,null[Plan],fun(p::Plan)::Bool head[Loc](p) = Loc(goalX,goalY));
+          in if p = null[Plan]
+             then plan(goalX,goalY,[ m:p | p <- plans, m <- moves(p), ?(not(exists[Plan](fun(p::Plan)::Bool member[Loc](m,p),plans))) ]);
+             else p;
+      getMove(goalX::Int,goalY::Int)::Loc = 
+        // Get a move towards the goal...
+        case plan(goalX,goalY,[[Loc(self.getX(),self.getY())]]) {
+          [Loc(x,y)] -> Loc(x,y);           // Nothing available, no move.
+          p -> last[Loc](butlast[Loc](p));  // Plan is in reverse and contains current location.
+        }
+      moves::(Plan) -> [Loc] = cache[Plan,Loc,[Loc]](head[Loc],fun(p::Plan)::[Loc] 
+        // Get the available moves based on the location at the head of the supplied plan...
+        case head[Loc](p) {
+          Loc(x::Int,y::Int) -> 
+            [ Loc(x+dx,y+dy) | dx <- [0-1,0,1], dy <- [0-1,0,1], ?(not(x=0 and y=0)), ?(self.canMove(x+dx,y+dy)) ];
+        });
+    in {
+      case state {
+        Scatter when modeCount > 0 -> 
+          // Scattering heads towards the home location...
+          case getMove(homeX,homeY) {
+            Loc(x::Int,y::Int) -> {
+              self.moveTo(x,y);
+              modeCount := modeCount - 1;
+            }
+          }
+        Scatter -> {
+          // Switch mode to chasing the pacman...
+          state := Chase;
+          modeCount := changeMode;
+        }
+        Chase when modeCount > 0 -> 
+          // Chasing heads towards the pacman...
+          case getMove(m.getPacman().getX(),m.getPacman().getY()) {
+            Loc(x::Int,y::Int) -> {
+              self.moveTo(x,y);
+              modeCount := modeCount - 1;
+            }
+         }
+        Chase -> {
+          // Switch mode to heading back home...
+          state := Scatter;
+          modeCount := changeMode;
+        }
+       }
+    }
+
+  Start -> {
+    m <- RegisterGhost(self);
+  }
+
+}
+
+// Various types of ghost...
+
+act ghost1(x::Int,y::Int,m::Maze)::Ghost extends ghost(x,y,1,1,0,m) { }
+act ghost2(x::Int,y::Int,m::Maze)::Ghost extends ghost(x,y,1,maxHeight-2,1,m) { }
+act ghost3(x::Int,y::Int,m::Maze)::Ghost extends ghost(x,y,maxWidth-2,1,2,m) { }
+act ghost4(x::Int,y::Int,m::Maze)::Ghost extends ghost(x,y,maxWidth-2,maxHeight-2,3,m) { }
+
+act pacman(x::Int,y::Int,m::Maze)::Pacman extends player(x,y,m) {
+  // A basic pacman...
+  Start -> {
+    m <- RegisterPacman(self);
+  }
   
 }
 
-act maze::Maze {
-
-  export mon, isGhostTurn, ghostMoved, moveGhost, isWall, atHome, ghostX, ghostY, playerX, playerY;
+act playerPacman(x::Int,y::Int,m::Maze)::Pacman extends pacman(x,y,m) {
+  // The player controls the pacman using the mouse...
+  export move;
   
-  mon::Int     = 0;    // The value of the monitor is not important.
-  playerX::Int = 20;   // Start the player at (20,20).
-  playerY::Int = 20;   // Start the player at (20,20).
-  ghosts::[GhostInfo] = [];                              // In principle we can have any number of ghosts.
-  turnCounter::Int = 0;                                  // Used to control when the player should move.
-  
-  eaten()::Bool = exists[GhostInfo](isEatingPlayer,ghosts);         // The player has been eaten.
-  is0 :: (Int)[compiler.extensions.Is0] -> Bool = fun(n::Int)::Bool n=0; // Check for 0.
-  allEaten()::Bool = forall[[Int]](fun(row::[Int])::Bool forall[Int](is0,row),food);  // Player wins?
-  isEatingPlayer(p::GhostInfo)::Bool =
-    // Is the supplied ghost co-located with the player?
-    (pointX(p) = playerX) and (pointY(p) = playerY);
-  isGhostTurn(g::Ghost)::Bool =
-  
-    // Thse ghost at the head of the ghosts list is next.
-    // This is a way of ensuring that each ghost gets fair
-    // access to the global state. When all ghosts have 
-    // moved, the turnCounter will be set to the total
-    // number of ghosts and this is used to ensure that
-    // the player gets a move.
-    
-    case ghosts {
-      Point(g1::Ghost,t::Int,x::Int,y::Int):gs::[GhostInfo] when (g1 = g) and (turnCounter < length[GhostInfo](ghosts)) -> true;
-      gs::[GhostInfo] -> false;
-    }
-    
-  ghostMoved()::Void =  
-    // Rotate the ghosts list to enforce fair turns.
-    ghosts := tail[GhostInfo](ghosts) + [head[GhostInfo](ghosts)];
-    
-  moveGhost(g::Ghost,x::Int,y::Int)::Void = {
-    // Update the position of a ghost. The gui is informed of the
-    // change and the turnCounter is incremented.
-    ghosts := subst[GhostInfo](Point(g,ghostType(g),x,y),getGhost(g,ghosts),ghosts);
-    gui <- State(ghosts,food);
-    turnCounter := turnCounter + 1;
-  }
-  
-  isWall(x::Int,y::Int)::Bool =  {
-    // tiles is a list of encoded maze cells. Return true when 
-    // the position (x,y) in the list is a wall.
-    nth[Int](nth[[Int]](tiles,y),x) > legalCell;
-  }
-  
-  atHome(x::Int,y::Int)::Bool =  {
-    // tiles is a list of encoded maze cells. Return true when
-    // the position (x,y) in the list is a ghost-home cell.
-    nth[Int](nth[[Int]](tiles,y),x) = homeCell;
-  }
-  
-  // Accessors into the list of ghosts...
-  ghostX(g::Ghost)::Int = pointX(getGhost(g,ghosts));
-  ghostY(g::Ghost)::Int = pointY(getGhost(g,ghosts));
-  ghostType(g::Ghost)::Int = pointType(getGhost(g,ghosts));
-  
-  getGhost(g::Ghost,gs::[GhostInfo])::GhostInfo = 
-    // Find the information in the ghost-list for the supplied ghost.
-    case gs {
-      Point(g1::Ghost,t::Int,x::Int,y::Int):gs::[GhostInfo] when g1 = g -> Point(g,t,x,y);
-      g1::Point(Ghost,Int,Int,Int):gs::[GhostInfo] -> getGhost(g,gs);
-    }
-  
-  // Accessors for a point structure...
-  pointX(g::GhostInfo)::Int = case g { Point(g::Ghost,t::Int,x::Int,y::Int) -> x; }
-  pointY(g::GhostInfo)::Int = case g { Point(g::Ghost,t::Int,x::Int,y::Int) -> y; }
-  pointType(g::GhostInfo)::Int = case g { Point(g::Ghost,t::Int,x::Int,y::Int) -> t; }
-  
-  legalPos(x::Int,y::Int)::Bool =
-    // Position is legal when it can be occupied.
-    (x > (0-1)) and
-    (x < length[Int](head[[Int]](tiles))) and
-    (y > (0-1)) and
-    (y < length[[Int]](tiles)) and
-    not(isWall(x,y));
-    
-  eat()::Void =
-    // If the player is on food then eat it by removing it from the food list.
-    if nth[Int](nth[[Int]](food,playerY),playerX) = 1
-    then 
-      let row::[Int] = nth[[Int]](food,playerY);
-      in food := replaceNth[[Int]](food,playerY,replaceNth[Int](row,playerX,0));
-    else {}
-    
-  playerTurn()::Void = {
+  move()::Void = {
     // It is the player turn. The player will move in the direction of the
     // mouse providing it is possible to move into the appropriate cell.
     let mouseX::Int = gui.mouseX;
         mouseY::Int = gui.mouseY; in
     // Work out the directions...
-    let dx::Int = mouseX - playerX;
-        dy::Int = mouseY - playerY; in
+    let dx::Int = mouseX - self.getX();
+        dy::Int = mouseY - self.getY(); in
     // Calculate the movement in x and y directions...
     let mx::Int = if dx > 0 then 1; else if dx < 0 then 0-1; else 0;
         my::Int = if dy > 0 then 1; else if dy < 0 then 0-1; else 0;
     in {
       // If modified x position is legal then move.
-      if (mx <> 0) and legalPos((playerX+mx)%maxWidth,playerY)
-      then playerX := (playerX+mx)%maxWidth;
+      if (mx <> 0) and m.legalPos((self.getX()+mx)%maxWidth,self.getY())
+      then self.setX((self.getX()+mx)%maxWidth);
       // Otherwise if modified y position is legal then move.
-      else if (my <> 0) and legalPos(playerX,playerY+my)
-      then playerY := playerY+my;
-      // Otherwise try a diagonal move.
-      else if legalPos((playerX+mx)%maxWidth,playerY+my) 
-      then {
-        playerX := (playerX+mx)%maxWidth;
-        playerY := playerY+my;
-      } else if playerX + mx = 0 or playerX + mx < 0
-      then playerX := maxWidth -1;
-      else {}
+      else 
+        if (my <> 0) and m.legalPos(self.getX(),self.getY()+my)
+        then self.setY(self.getY()+my);
+        // Otherwise try a diagonal move.
+        else 
+          if m.legalPos((self.getX()+mx)%maxWidth,self.getY()+my) 
+          then self.moveTo((self.getX()+mx)%maxWidth,self.getY()+my);
+          else  
+            if self.getX() + mx = 0 and m.legalPos(0,self.getY())
+            then self.setX(maxWidth -1);
+            else {}
       // Tell the gui that things (may) have changed.
-      gui <- Player(playerX,playerY);
+      gui <- Player(self.getX(),self.getY());
       // Check for food, and eat if available.
-      eat();
-      // Reset the trun counter so that the ghosts can move.
-      turnCounter := 0;
-      wait(100);
+      m.eat(self.getX(),self.getY());
+      wait(delay);
     }
   }
+  
+}
+
+act autoPacman(x::Int,y::Int,m::Maze)::Pacman extends pacman(x,y,m) { 
+  // The pacman generates plans and follows them...
+  export move;
+
+  plan::Plan             = [];         // A sequence of locations in reverse order.
+  fleeing::Bool          = false;      // Is the pacman in danger of being eaten?
+  setPlan(p::Plan)::Void = plan := p;  // Update the plan.
+  
+  moves::(Plan) -> [Loc] = cache[Plan,Loc,[Loc]](head[Loc],fun(p::Plan)::[Loc] 
+    case head[Loc](p) {
+      Loc(x::Int,y::Int) ->
+        [ Loc(if x+dx = 0 then maxWidth-1 else x+dx,y+dy) | 
+            dx::Int <- [1,0,0-1], 
+            dy::Int <- [1,0,0-1], 
+            ?(not(dx=0 and dy=0)), 
+            ?(self.canMove(x+dx,y+dy)) ];
+    });
+
+  ghostDistance(l::Loc)::Float =
+    min(1000.0,[ distance(locX(l),locY(l),g.getX(),g.getY()) | g::Ghost <- m.getGhosts() ]);
+
+  min(m::Float,fs::[Float])::Float =
+    case fs {
+      [] -> m;
+      f:fs when f < m -> min(f,fs);
+      f:fs -> min(m,fs);
+    }
+
+  nextMove(p::Plan)::Loc =
+    case p { 
+      p1 + [l] + p2 when length[Loc](p2) = 1 -> l;
+    }
+      
+  
+  move()::Void = {
+    let d::Float = ghostDistance(Loc(self.getX(),self.getY()));
+    in if d < 5.0 and not(fleeing)
+       then {
+        flee(7);
+        fleeing := true;
+        doPlan();
+       } else if d > 5.0 and fleeing
+       then {
+        eat(9);
+        fleeing := false;
+        doPlan();
+       } else doPlan();
+  }
+
+  ghostMoves::(Loc) -> [Loc] = cache[Loc,Loc,[Loc]](id[Loc],fun(l::Loc)::[Loc]
+        case l {
+          Loc(x::Int,y::Int) ->
+           [ Loc(x+dx,y+dy) | dx <- [1,0,0-1], dy <- [1,0,0-1], ?(dx=0 or dy=0), ?(not(dx=0 and dy=0)), ?(self.canMove(x+dx,y+dy)) ];
+        });
+
+  getDangerZones(moves::Int)::[[Loc]] = 
+    // The locations in each danger zone are those reached by the ghosts
+    // after n moves...
+    letrec 
+      ghostLocs::[Loc] = [ Loc(g.getX(),g.getY()) | g::Ghost <- m.getGhosts() ];
+      zones(zone::[Loc],i::Int,max::Int)::[[Loc]] =
+        if i >= max
+        then [];
+        else 
+          let z::[Loc] = [ m  | l::Loc <- zone, m::Loc <- ghostMoves(l) ];
+          in z:zones(z,i+1,max);
+    in zones(ghostLocs,0,moves);
+
+  eat(n::Int)::Void =
+    // Find some food and use it as the target of a plan...
+    let dangerZones::[[Loc]] = getDangerZones(n+1); in
+    letrec
+      eatPlans(plans::Plans,i::Int,max::Int)::Plans =
+        if i >= max 
+        then plans;
+        else eatPlans([ l:p | 
+           p::Plan <- plans, 
+           l::Loc <- moves(p),
+           ?(not(exists[[Loc]](fun(zone::[Loc])::Bool member[Loc](l,zone),take[[Loc]](dangerZones,i+1)))),
+           ?(not(exists[Plan](fun(p::Plan)::Bool member[Loc](l,p),plans)))
+         ],i+1,max);
+       foodCount(plan::Plan)::Int =
+         let count::Int = 0;
+         in {
+          for l::Loc in plan do {
+            count := count + food[locY(l)][locX(l)];
+          }
+          count;
+         }
+       moreFood(plan1::Plan,plan2::Plan)::Bool =
+         foodCount(plan1) > foodCount(plan2);
+       mostFood(plans::Plans)::Plan =
+         max[Plan](plans,moreFood);
+    in {
+      case mostFood(eatPlans([[Loc(self.getX(),self.getY())]],0,n)) {
+        p when p = null[Plan] -> {
+          print[Str]('Yikes - no plan!');
+          setPlan([]);
+        }
+        p -> {
+          print[Str]('eat ' + p + ' ghosts = ' + [ Loc(g.getX(),g.getY()) | g::Ghost <- m.getGhosts() ]);
+          setPlan(butlast[Loc](p));
+        }
+      }
+    }
+
+  flee(n::Int)::Void = {
+    // Create a plan that moves us as far away as possible 
+    // from the ghosts whilst not allowing them to get us...
+    let dangerZones::[[Loc]] = getDangerZones(n+1); in
+    letrec
+      fleePlans(plans::Plans,i::Int,max::Int)::Plans =
+        if i >= max 
+        then plans;
+        else fleePlans([ l:p | 
+           p::Plan <- plans, 
+           l::Loc <- moves(p),
+           ?(not(exists[[Loc]](fun(zone::[Loc])::Bool member[Loc](l,zone),take[[Loc]](dangerZones,i+1)))),
+           ?(not(exists[Plan](fun(p::Plan)::Bool member[Loc](l,p),plans)))
+         ],i+1,max);
+    in {
+      case fleePlans([[Loc(self.getX(),self.getY())]],0,n) {
+        [] -> {
+          print[Str]('Yikes - no plan!');
+          setPlan([]);
+        }
+        p:ps -> {
+          print[Str]('flee ' + p + ' ghosts = ' + [ Loc(g.getX(),g.getY()) | g::Ghost <- m.getGhosts() ]);
+          setPlan(butlast[Loc](p));
+        }
+      }
+    }
+  }
+
+  doPlan()::Void =
+    if plan = []
+    then replan();
+    else { 
+      case plan {
+        p1 + [l] -> { 
+          setPlan(p1);
+          print[Str]('plan = ' + plan);
+          case l { 
+             Loc(x,y) -> {
+               self.moveTo(x,y); 
+               print[Str]('move ' + l);
+               gui <- Player(self.getX(),self.getY());
+               // Check for food, and eat if available.
+               m.eat(self.getX(),self.getY());
+               wait(delay);
+             }
+          }
+        }
+      }
+    }
+
+  replan()::Void =
+    if fleeing
+    then flee(7);
+    else eat(9);
+}
+
+act maze::Maze {
+  
+  export isWall,atHome,getPacman,getGhosts,legalPos,eat;
+  
+  ghosts::[Ghost]   = [];                                       // In principle we can have any number of ghosts.
+  pacman::Pacman    = null[Pacman];
+  players::[Player] = [][Player];
+  
+  eaten()::Bool = exists[Ghost](isEatingPacman,ghosts);         // The player has been eaten.
+  is0(n::Int)::Bool = n=0;                                      // Check for 0.
+  allEaten()::Bool = 
+    forallArray[Array[Int]](fun(row::Array[Int])::Bool 
+      forallArray[Int](is0,row,maxWidth),food,maxHeight);       // Player wins?
+  isEatingPacman(g::Ghost)::Bool =                              // Is the supplied ghost co-located with the player?
+    (g.getX() = pacman.getX()) and (g.getY() = pacman.getY());
+  getPacman()::Pacman = pacman;
+  getGhosts()::[Ghost] = ghosts;
+  eat(x::Int,y::Int)::Void =                                    // If the player is on food then eat it by removing it from the food list.
+    if food[y][x] = 1
+    then food[y][x] := 0;
+    else {}
+    
+  repaint()::Void = gui <- State([ Point(g,g.ghostType,g.getX(),g.getY()) | g::Ghost <- ghosts ],food);
+  
+  isWall(x::Int,y::Int)::Bool =  {
+    // tiles is a list of encoded maze cells. Return true when 
+    // the position (x,y) in the list is a wall.
+    tiles[y][x] > legalCell;
+  }
+  
+  atHome(x::Int,y::Int)::Bool =  {
+    // tiles is a list of encoded maze cells. Return true when
+    // the position (x,y) in the list is a ghost-home cell.
+    if (x > (0-1)) and (x < maxWidth) and (y > (0-1)) and (y < maxHeight) 
+    then tiles[y][x] = homeCell;
+    else false;
+  }
+  
+  legalPos(x::Int,y::Int)::Bool =
+    // Position is legal when it can be occupied.
+    if (x > (0-1)) and (x < maxWidth) and (y > (0-1)) and (y < maxHeight) 
+    then not(isWall(x,y));
+    else false;
   
   playerLoses()::Void = {
     print[Str]('You are eaten!');
@@ -220,87 +519,27 @@ act maze::Maze {
     stopAll();
   }
   
-  Time(n::Int) when (n % delay) = 0 -> 
-    // Check the state of play. If it is time for a player-move
-    // then move the player.
-    grab(mon) {
-      if eaten() then playerLoses(); else {}
-      if allEaten() then playerWins(); else {}
-      if turnCounter = length[GhostInfo](ghosts) 
-      then playerTurn(); 
-      else {}
-    }
-    
-  Time(n::Int) -> {}
-  
-  RegisterGhost(g::Ghost,t::Int,x::Int,y::Int) -> ghosts := Point(g,t,x,y):ghosts;
+  RegisterGhost(g::Ghost) -> { players := g:players; ghosts := g:ghosts; }
+  RegisterPacman(p::Pacman) -> { players := p:p:players; pacman := p; }
+  Move -> {
+    if players <> [] and pacman <> null[Pacman]
+    then {
+      if allEaten()
+      then playerWins();
+      else if eaten()
+      then playerLoses();
+      else {
+        head[Player](players).move();
+        players := tail[Player](players) + [head[Player](players)];
+        repaint();
+        self <- Move;
+      }
+    } else self <- Move;
+  }
   
 }
 
-opp(direction::Str)::Str =
-  case direction {
-    'NORTH' -> 'SOUTH';
-    'SOUTH' -> 'NORTH';
-    'EAST'  -> 'WEST';
-    'WEST'  -> 'EAST';
-  }
-
-defaultGhost(direction::Str)::(Ghost,Maze)->Void =
-
-  // The default strategy is to continue in the current direction until
-  // a wall is hit. Then to move towards the goal position. If there are
-  // multiple possible options towards the goal position then one is
-  // chosen at random...
-  
-  letrec 
-    canMove(x::Int,y::Int,m::Maze)::Bool =
-      case direction {
-        'NORTH' -> not(m.isWall(x,y-1));
-        'SOUTH' -> not(m.isWall(x,y+1));
-        'EAST' -> not(m.isWall(x+1,y));
-        'WEST' -> not(m.isWall(x-1,y));
-      }
-    move(g::Ghost,x::Int,y::Int,m::Maze)::Void =
-      case direction {
-        'NORTH' -> m.moveGhost(g,x,y-1);
-        'SOUTH' -> m.moveGhost(g,x,y+1);
-        'EAST'  -> m.moveGhost(g,x+1,y);
-        'WEST'  -> m.moveGhost(g,x-1,y);
-      }
-      
-    changeDirection(x::Int,y::Int,goalX::Int,goalY::Int,m::Maze)::Void =
-      let directions::[Str] = [];
-      in {
-        if x < goalX then directions := 'EAST':directions; else {}
-        if x > goalX then directions := 'WEST':directions; else {}
-        if y < goalY then directions := 'SOUTH':directions; else {}
-        if y > goalY then directions := 'NORTH':directions; else {}
-        directions := remove[Str](direction,remove[Str](opp(direction),directions)) + [opp(direction)]; 
-        chooseDirection(x,y,directions,m);
-    }
-    
-    chooseDirection(x::Int,y::Int,directions::[Str],m::Maze)::Void =
-      case directions {
-        [] -> {}
-        'NORTH':ds::[Str] -> if not(m.isWall(x,y-1)) then direction := 'NORTH'; else chooseDirection(x,y,ds,m);
-        'SOUTH':ds::[Str] -> if not(m.isWall(x,y+1)) then direction := 'SOUTH'; else chooseDirection(x,y,ds,m);
-        'EAST':ds::[Str]  -> if not(m.isWall(x+1,y)) then direction := 'EAST'; else chooseDirection(x,y,ds,m);
-        'WEST':ds::[Str]  -> if not(m.isWall(x-1,y)) then direction := 'WEST'; else chooseDirection(x,y,ds,m);
-      }
-        
-    defaultGhost1(g::Ghost,m::Maze)::Void = 
-      let x::Int = m.ghostX(g);
-          y::Int = m.ghostY(g);
-          goalX::Int = m.playerX;
-          goalY::Int = m.playerY;
-      in if m.atHome(x,y)
-         then move(g,x,y-1,m);
-         else if canMove(x,y,m)
-         then move(g,x,y,m);
-         else changeDirection(x,y,goalX,goalY,m);
-   in defaultGhost1;
-
-tiles::[[Int]] = [
+tiles::Array[Array[Int]] = initArray([
 
   // The tiles encode the maze.
 
@@ -331,9 +570,9 @@ tiles::[[Int]] = [
   [5,0,8,4,4,4,4,4,9,0,0,0,0,0,8,9,0,0,0,0,8,4,4,4,4,4,9,0,5],
   [5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5],
   [8,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,9]
-];
+]);
 
-food::[[Int]] = [
+food::Array[Array[Int]] = initArray([
 
   // The initial location of food.
 
@@ -364,7 +603,7 @@ food::[[Int]] = [
   [0,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0,0,0,1,0],
   [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-];
+]);
      
 gui::GUI = new 'esl.pacman.Pacman'[GUI](tiles);   // Create the gui which is implemented in Java.
 
@@ -372,22 +611,26 @@ act main::Main {
    -> {
     edb.display[GUI]('Pacman',gui);
     let m::Maze = new maze; in
-    let g1::Ghost = new ghost(m,defaultGhost('WEST'));
-        g2::Ghost = new ghost(m,defaultGhost('NORTH'));
-        g3::Ghost = new ghost(m,defaultGhost('NORTH'));
-        g4::Ghost = new ghost(m,defaultGhost('EAST'));
+    let p::Pacman = new autoPacman(15,21,m); 
+        //p::Pacman = new playerPacman(15,21,m);
+        g1::Ghost = new ghost1(15,13,m);
+        g2::Ghost = new ghost2(15,13,m);
+        g3::Ghost = new ghost3(15,13,m);
+        g4::Ghost = new ghost4(15,13,m);
     in {
-      m <- RegisterGhost(g1,0,14,13);
-      m <- RegisterGhost(g2,1,14,13);
-      m <- RegisterGhost(g3,2,14,13);
-      m <- RegisterGhost(g4,3,14,13);
+      p <- Start;
+      g1 <- Start;
+      g2 <- Start;
+      g3 <- Start;
+      g4 <- Start;
+      m <- Move;
     }
    }
     
   Time(n::Int) when n > timeLimit ->  stopAll();
   
   Time(n::Int) -> {}
-  
+ 
 }
 
 

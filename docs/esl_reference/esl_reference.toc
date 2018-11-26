@@ -1,28 +1,42 @@
 \babel@toc {english}{}
 \contentsline {section}{\numberline {1}Introduction}{1}
-\contentsline {section}{\numberline {2}Data}{1}
-\contentsline {section}{\numberline {3}Blocks and Commands}{2}
-\contentsline {section}{\numberline {4}List Comprehensions and List Operations}{3}
-\contentsline {section}{\numberline {5}Algebraic Data Types and Pattern Matching}{3}
-\contentsline {section}{\numberline {6}Sets and Collection Matching}{4}
-\contentsline {section}{\numberline {7}Actors}{4}
-\contentsline {section}{\numberline {8}Binding and Scope}{6}
-\contentsline {section}{\numberline {9}Modules}{6}
-\contentsline {section}{\numberline {10}Time}{7}
-\contentsline {section}{\numberline {11}State}{7}
-\contentsline {section}{\numberline {12}Concurrency}{8}
-\contentsline {subsection}{\numberline {12.1}Search}{8}
-\contentsline {subsection}{\numberline {12.2}Quicksort}{8}
-\contentsline {subsection}{\numberline {12.3}Termites}{9}
-\contentsline {subsection}{\numberline {12.4}Dining Philosophers}{10}
-\contentsline {subsection}{\numberline {12.5}Segregation}{12}
-\contentsline {section}{\numberline {13}Polymorphism}{12}
-\contentsline {section}{\numberline {14}Simulation}{12}
-\contentsline {section}{\numberline {15}Object Orientation}{12}
-\contentsline {section}{\numberline {16}EDB}{12}
-\contentsline {section}{\numberline {17}Java Interface}{12}
-\contentsline {section}{\numberline {18}Type Checking}{12}
-\contentsline {section}{\numberline {19}Compilation}{12}
-\contentsline {section}{\numberline {20}Implementation}{12}
-\contentsline {section}{\numberline {A}Syntax and Type Checking}{13}
-\contentsline {section}{\numberline {B}List Operations}{13}
+\contentsline {section}{\numberline {2}Data and Types}{2}
+\contentsline {section}{\numberline {3}Blocks and Commands}{4}
+\contentsline {section}{\numberline {4}List Comprehensions and List Operations}{4}
+\contentsline {section}{\numberline {5}Algebraic Data Types and Pattern Matching}{4}
+\contentsline {section}{\numberline {6}Sets and Collection Matching}{5}
+\contentsline {section}{\numberline {7}Actors}{5}
+\contentsline {section}{\numberline {8}Binding and Scope}{7}
+\contentsline {section}{\numberline {9}Modules}{7}
+\contentsline {section}{\numberline {10}Time}{8}
+\contentsline {section}{\numberline {11}State}{8}
+\contentsline {section}{\numberline {12}Concurrency}{9}
+\contentsline {subsection}{\numberline {12.1}Search}{9}
+\contentsline {subsection}{\numberline {12.2}Quicksort}{10}
+\contentsline {subsection}{\numberline {12.3}Termites}{10}
+\contentsline {subsection}{\numberline {12.4}Dining Philosophers}{11}
+\contentsline {subsection}{\numberline {12.5}Segregation}{13}
+\contentsline {section}{\numberline {13}Polymorphism}{14}
+\contentsline {subsection}{\numberline {13.1}Map/Reduce}{15}
+\contentsline {subsubsection}{\numberline {13.1.1}All Words of a Given Length}{16}
+\contentsline {subsubsection}{\numberline {13.1.2}Occurrences of a Word}{16}
+\contentsline {subsection}{\numberline {13.2}Cached Functions}{16}
+\contentsline {section}{\numberline {14}Object Orientation}{17}
+\contentsline {section}{\numberline {15}EDB}{19}
+\contentsline {subsection}{\numberline {15.1}EDB Interface}{22}
+\contentsline {subsection}{\numberline {15.2}EDB Actor}{22}
+\contentsline {subsection}{\numberline {15.3}EDB Displays}{22}
+\contentsline {subsection}{\numberline {15.4}Tables}{22}
+\contentsline {subsection}{\numberline {15.5}Pie Charts}{24}
+\contentsline {subsection}{\numberline {15.6}Line Graphs}{24}
+\contentsline {subsection}{\numberline {15.7}Pictures}{24}
+\contentsline {subsection}{\numberline {15.8}Graphs}{24}
+\contentsline {subsection}{\numberline {15.9}Filmstrips}{25}
+\contentsline {subsection}{\numberline {15.10}Sequence Diagrams}{26}
+\contentsline {subsection}{\numberline {15.11}Combining Pictures}{28}
+\contentsline {section}{\numberline {16}Java Interface}{31}
+\contentsline {section}{\numberline {17}Compilation}{31}
+\contentsline {section}{\numberline {18}Implementation}{31}
+\contentsline {section}{\numberline {A}Syntax and Type Checking}{32}
+\contentsline {section}{\numberline {B}Displays}{32}
+\contentsline {section}{\numberline {C}List Operations}{32}

@@ -1,0 +1,84 @@
+This is BibTeX, Version 0.99d (TeX Live 2018)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: bib2htmlf2a827.aux
+The style file: plain.bst
+Database file #1: esl.bib
+A bad cross reference---entry "DBLP:conf/indiaSE/ClarkKBB18"
+refers to entry "DBLP:conf/indiaSE/2018", which doesn't exist
+A bad cross reference---entry "DBLP:series/lncs/ClarkKBB18"
+refers to entry "DBLP:series/lncs/10789", which doesn't exist
+A bad cross reference---entry "DBLP:conf/er/ClarkKBB17"
+refers to entry "DBLP:conf/er/2017f", which doesn't exist
+A bad cross reference---entry "DBLP:conf/ifip8-1/BaratKCB17"
+refers to entry "DBLP:conf/ifip8-1/2017", which doesn't exist
+A bad cross reference---entry "DBLP:conf/indiaSE/ClarkKBB17"
+refers to entry "DBLP:conf/indiaSE/2017", which doesn't exist
+A bad cross reference---entry "DBLP:conf/isdevel/ClarkBKB17"
+refers to entry "DBLP:conf/isdevel/2017", which doesn't exist
+A bad cross reference---entry "DBLP:conf/models/ClarkKBB17"
+refers to entry "DBLP:conf/models/2017s", which doesn't exist
+A bad cross reference---entry "DBLP:conf/modelsward/BaratKCB17a"
+refers to entry "DBLP:conf/modelsward/2017s", which doesn't exist
+A bad cross reference---entry "DBLP:conf/modelsward/BaratKCB17"
+refers to entry "DBLP:conf/modelsward/2017", which doesn't exist
+A bad cross reference---entry "DBLP:conf/paams/ClarkKBB17"
+refers to entry "DBLP:conf/paams/2017", which doesn't exist
+A bad cross reference---entry "DBLP:conf/wsc/BaratKCB17"
+refers to entry "DBLP:conf/wsc/2017", which doesn't exist
+A bad cross reference---entry "DBLP:conf/icsoft/BaratKCB16"
+refers to entry "DBLP:conf/icsoft/2016-2", which doesn't exist
+A bad cross reference---entry "DBLP:conf/models/KulkarniBCB15"
+refers to entry "DBLP:conf/models/2015", which doesn't exist
+A bad cross reference---entry "DBLP:conf/summersim/KulkarniBCB15"
+refers to entry "DBLP:conf/summersim/2015", which doesn't exist
+A bad cross reference---entry "DBLP:conf/er/KulkarniCBB14"
+refers to entry "DBLP:conf/er/2014w", which doesn't exist
+A bad cross reference---entry "DBLP:conf/hicss/ClarkKBFFT14"
+refers to entry "DBLP:conf/hicss/2014", which doesn't exist
+A bad cross reference---entry "DBLP:conf/icsoft/BarnCK14a"
+refers to entry "DBLP:conf/icsoft/2014s", which doesn't exist
+A bad cross reference---entry "DBLP:conf/icsoft/BarnCK14"
+refers to entry "DBLP:conf/icsoft/2014ea", which doesn't exist
+Warning--empty publisher in DBLP:series/lncs/ClarkKBB18
+You've used 20 entries,
+            2118 wiz_defined-function locations,
+            633 strings with 10809 characters,
+and the built_in function-call counts, 9706 in all, are:
+= -- 959
+> -- 440
+< -- 17
++ -- 179
+- -- 152
+* -- 637
+:= -- 1417
+add.period$ -- 61
+call.type$ -- 20
+change.case$ -- 136
+chr.to.int$ -- 0
+cite$ -- 21
+duplicate$ -- 424
+empty$ -- 775
+format.name$ -- 152
+if$ -- 2164
+int.to.chr$ -- 0
+int.to.str$ -- 20
+missing$ -- 20
+newline$ -- 103
+num.names$ -- 40
+pop$ -- 188
+preamble$ -- 1
+purify$ -- 116
+quote$ -- 0
+skip$ -- 354
+stack$ -- 0
+substring$ -- 688
+swap$ -- 186
+text.length$ -- 17
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 80
+warning$ -- 1
+while$ -- 95
+width$ -- 22
+write$ -- 221
+(There were 18 error messages)

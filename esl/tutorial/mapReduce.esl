@@ -40,7 +40,7 @@ act mkGroup[Key,Value](n::Int,reduce::Reduce[Key,Value])::Group[Key,Value] {    
   }
 }
 
-mapper[In,Key,Value](l::[In],f::(In)->KV[Key,Value], g::Group[Key,Value])::Void =      // Create a mapper from a function, a collection
+mapReduce[In,Key,Value](l::[In],f::(In)->KV[Key,Value], g::Group[Key,Value])::Void =      // Create a mapper from a function, a collection
   for x::In in l do  (new (mkMap[In,Key,Value])(f,g)) <- Perform(x);                   // of input results, and a grouper.
 
 // Map word lengths to the words of that length. Each word is mapped to a pair Key(length,word)
@@ -59,7 +59,7 @@ strLen(s::Str)::KV[Int,Str] = Key[Int,Str](length[Int](s.explode),s);
 
 mapReduceWordLength()::Void =
   let g::Group[Int,Str] = new (mkGroup[Int,Str])(length[Str](words),new reduceWordLen); 
-  in mapper[Str,Int,Str](words,strLen,g);
+  in mapReduce[Str,Int,Str](words,strLen,g);
 
 
 
@@ -107,7 +107,7 @@ strOccurs(s::Str)::KV[Str,Int] = Key[Str,Int](s,1);
 
 mapReduceOccurrences()::Void =
   let g::Group[Str,Int] = new (mkGroup[Str,Int])(length[Str](words),new occurs);
-  in mapper[Str,Str,Int](words,strOccurs,g);
+  in mapReduce[Str,Str,Int](words,strOccurs,g);
 
 act main::Main {
   -> {

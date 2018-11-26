@@ -21,7 +21,7 @@
  *                                                                                                                              *
  ********************************************************************************************************************************/
 
-export PAdd,JSet,JBag,SetExp,BagExp,CaseSet,CaseAdd,JRecord,JNewTable,NewTable,TableType,JRefSuper,RefSuper,decType,JSendSuper,JSendTimeSuper,SendSuper,SendTimeSuper,JExtendedBehaviour,subType,subTypes,ExtendedAct,AST,ActExp,ActType,ActorDynamicRef,ActorDynamicRef,Apply,ApplyType,ApplyTypeExp,ApplyTypeFun,Arm,ArrayRef,ArrayType,ArrayUpdate,BArm,BArm,BQual,BQual,BagType,Become,BinExp,Binding,Binding,Block,BoolArm,BoolArm,BoolExp,BoolType,Case,CaseBool,CaseBoolsArm,CaseError,CaseInt,CaseIntsArm,CaseList,CaseStr,CaseStrsArm,CaseTerm,CaseTermArm,Cmp,CnstrBind,CnstrBind,Cons,DRef,DataBind,DataBind,Dec,Dec,Error,FieldType,FloatExp,FloatType,Fold,For,ForallType,FunBind,FunBind,FunExp,FunType,Grab,Head,IArm,IArm,If,IntExp,IntType,JActorType,JApply,JArrayRef,JArrayUpdate,JBArm,JBArm,JBecome,JBehaviour,JBinExp,JBlock,JBoolArm,JBooleanType,JCase,JCaseBool,JCaseInt,JCaseList,JCaseOf,JCaseOf,JCaseStr,JCaseTerm,JCast,JCastp,JCommand,JCommandExp,JConst,JConstBool,JConstBool,JConstDouble,JConstDouble,JConstExp,JConstInt,JConstInt,JConstStr,JConstStr,JDec,JDec,JDeclaration,JDoubleType,JEnv,JError,JExp,JField,JField,JFieldDef,JFlatten,JFor,JFun,JFunType,JGrab,JHead,JIArm,JIArm,JIfCommand,JIfExp,JIntArm,JIntegerType,JLet,JLetRec,JList,JListType,JMap,JMap,JMapFun,JMod,JModule,JModule,JNew,JNewArray,JNewJava,JNil,JNot,JNow,JNull,JNullType,JObject,JProbably,JRef,JReturn,JSArm,JSArm,JSelf,JSend,JStatement,JStrArm,JStringType,JSwitch,JSwitchList,JTArm,JTArm,JTMap,JTail,JTerm,JTermArm,JTermRef,JTermType,JTry,JType,JUnknown,JUpdate,JVar,LArm,LArm,Let,Letrec,List,ListType,Loc,MType,Map,Map,MessageType,MessageType,Module,New,NewArray,NewJava,Not,Now,NullExp,NullType,PApplyType,PBagCons,PBool,PCons,PEmptyBag,PEmptySet,PInt,PNil,PNull,PQual,PQual,PSetCons,PStr,PTerm,PVar,Pattern,Pos,Pos,Probably,Qualifier,RecType,Record,RecordType,Ref,SArm,SArm,Self,Send,SetType,StrExp,StrType,TArm,TArm,TBind,TDec,TEnv,TMap,TVar,TaggedFunType,Tail,Term,TermRef,TermType,Throw,Try,Type,TypeBind,TypeBind,TypeClosure,TypeError,TypeError,TypeFun,Unfold,UnfoldType,UnionRef,UnionType,Update,V,V,Var,VarDynamicRef,VarDynamicRef,VarType,VoidType,actEqual,allEqualTypes,applyTypeFun,bindingLoc,bindingName,decLoc,decName,equalDec,equalMessage,forceType,isBinding,isBoolType,isFunBind,isIntType,isNumType,isStrType,lookupType,patternNames,recordTypeEqual,removeFromDom,restrictTypeEnv,substDec,substDecEnv,substMType,substMTypeEnv,substType,substTypeEnv,substTypes,substTypesEnv,typeEnvDom,typeEnvRan,typeEqual,typeEqual1,typeMember,typeSetEqual,typeSubset,typesEqual,unfoldType,zipTypeEnv;
+export AST,ActExp,ActType,ActorDynamicRef,Apply,ApplyType,ApplyTypeExp,ApplyTypeFun,Arm,ArrayRef,ArrayType,ArrayUpdate,BArm,BQual,BagExp,BagType,Become,BinExp,Binding,Block,BoolArm,BoolExp,BoolType,Case,CaseAdd,CaseBool,CaseBoolsArm,CaseError,CaseInt,CaseIntsArm,CaseList,CaseSet,CaseStr,CaseStrsArm,CaseTerm,CaseTermArm,Cmp,CnstrBind,Cons,DRef,DataBind,Dec,Error,ExtendedAct,FieldType,FloatExp,FloatType,Fold,For,ForallType,FunBind,FunBinds,FunCase,FunCase,FunExp,FunType,Grab,Head,IArm,If,IntExp,IntType,JActorType,JApply,JArrayRef,JArrayUpdate,JBArm,JBag,JBecome,JBehaviour,JBinExp,JBlock,JBoolArm,JBooleanType,JCase,JCaseBool,JCaseInt,JCaseList,JCaseOf,JCaseStr,JCaseTerm,JCast,JCastp,JCmp,JCmpBind,JCmpExp,JCmpIf,JCmpList,JCmpOuter,JCommand,JCommandExp,JConst,JConstBool,JConstDouble,JConstExp,JConstInt,JConstStr,JDec,JDeclaration,JDoubleType,JEnv,JError,JExp,JExtendedBehaviour,JField,JFieldDef,JFlatten,JFor,JFun,JFunType,JGrab,JHead,JIArm,JIfCommand,JIfExp,JIntArm,JIntegerType,JLet,JLetRec,JList,JListType,JMap,JMapFun,JMod,JModule,JNew,JNewArray,JNewJava,JNewTable,JNil,JNot,JNow,JNull,JNullType,JObject,JPLet,JProbably,JRecord,JRef,JRefSuper,JReturn,JSArm,JSelf,JSend,JSendSuper,JSendTimeSuper,JSet,JStatement,JStrArm,JStringType,JSwitch,JSwitchList,JTArm,JTMap,JTail,JTerm,JTermArm,JTermRef,JTermType,JTry,JType,JUnknown,JUpdate,JVar,LArm,Let,Letrec,List,ListType,Loc,MType,Map,MessageType,Module,New,NewArray,NewJava,NewTable,Not,Now,NullExp,NullType,PAdd,PApplyType,PBagCons,PBool,PCons,PEmptyBag,PEmptySet,PInt,PLet,PNil,PNull,PQual,PSetCons,PStr,PTerm,PVar,Pattern,Pos,Probably,Qualifier,RecType,Record,RecordType,Ref,RefSuper,SArm,Self,Send,SendSuper,SendTimeSuper,SetExp,SetType,StrExp,StrType,TArm,TBind,TDec,TEnv,TMap,TVar,TableType,TaggedFunType,Tail,Term,TermRef,TermType,Throw,Try,Type,TypeBind,TypeClosure,TypeError,TypeFun,TypedLoc,Unfold,UnfoldType,UnionRef,UnionType,Update,V,Var,VarDynamicRef,VarType,VoidType,actEqual,actSubType,allEqualTypes,applyTypeFun,bindingLoc,bindingName,decLoc,decName,decSubType,decType,equalDec,equalMessage,expandFunDefs,flattenAct,forceType,isBinding,isBoolType,isFloatType,isFunBind,isIntType,isNumType,isStrType,locEnd,locStart,lookupType,mergeFunDefs,messSubType,patternNames,recordSubType,recordTypeEqual,removeFromDom,restrictTypeEnv,subType,subTypes,substDec,substDecEnv,substMType,substMTypeEnv,substType,substTypeEnv,substTypes,substTypesEnv,typeEnvDom,typeEnvRan,typeEqual,typeEqual1,typeMember,typeSetEqual,typeSubset,typesEqual,unfoldType,zipTypeEnv;
 
 import 'esl/lists.esl';
 
@@ -68,41 +68,38 @@ type TEnv = [TMap];                                           // The type checke
 data JTMap = JMap(Str,JType);                                 // Currently not used.
 type JEnv = [JTMap];                                          // Currently not used.
 
-cnstr JMap = JTMap.JMap;                                      // Currently not used.
-
 data MType = MessageType(Loc,[Type]);                         // The type of a message handler MessageType(location,[Term(name,types)])
 data Error = TypeError(Loc,Str);                              // The value thrown when the type checker fails. The location is used for reporting.
  
-type Type  = rec T. union {                                   // The abstract syntax of ESL types.
-  ApplyType(Loc,Str,[T]),
-  ApplyTypeFun(Loc,T,[T]),
-  ArrayType(Loc,T),
-  TableType(Loc,T,T),
-  StrType(Loc),
-  IntType(Loc),
-  FloatType(Loc),
-  BoolType(Loc),
-  NullType(Loc),
-  ActType(Loc,[TDec],[MType]),
-  ExtendedAct(Loc,T,[TDec],[MType]),
-  UnionType(Loc,[T]),
-  TermType(Loc,Str,[T]),
-  VarType(Loc,Str),
-  RecType(Loc,Str,T),
-  RecordType(Loc,[TDec]),
-  FieldType(Loc,Str,T),
-  ListType(Loc,T),
-  BagType(Loc,T),
-  SetType(Loc,T),
-  TaggedFunType(Loc,[T],Str,T),
-  UnionRef(Loc,T,Str),
-  UnfoldType(Loc,T),
-  FunType(Loc,[T],T),
-  VoidType(Loc),
-  ForallType(Loc,[Str],T),
-  TypeFun(Loc,[Str],T),
-  TypeClosure(() -> T)
-}
+data Type =                                                   // The abstract syntax of ESL types.
+   ActType(Loc,[TDec],[MType])
+|  ApplyType(Loc,Str,[Type])
+|  ApplyTypeFun(Loc,Type,[Type])
+|  ArrayType(Loc,Type)
+|  BagType(Loc,Type)
+|  BoolType(Loc)
+|  ExtendedAct(Loc,Type,[TDec],[MType])
+|  FieldType(Loc,Str,Type)
+|  FloatType(Loc)
+|  ForallType(Loc,[Str],Type)
+|  FunType(Loc,[Type],Type)
+|  IntType(Loc)
+|  ListType(Loc,Type)
+|  NullType(Loc)
+|  RecType(Loc,Str,Type)
+|  RecordType(Loc,[TDec])
+|  SetType(Loc,Type)
+|  StrType(Loc)
+|  TaggedFunType(Loc,[Type],Str,Type)
+|  TableType(Loc,Type,Type)
+|  TermType(Loc,Str,[Type])
+|  TypeFun(Loc,[Str],Type)
+|  TypeClosure(() -> Type)
+|  UnionType(Loc,[Type])
+|  UnionRef(Loc,Type,Str)
+|  UnfoldType(Loc,Type)
+|  VarType(Loc,Str)
+|  VoidType(Loc);
 
 isStrType(t::Type)::Bool =
   case t {
@@ -265,8 +262,9 @@ recordTypeEqual(fields1::[TDec],fields2::[TDec])::Bool =
   forall[TDec](fun(t1::TDec)::Bool exists[TDec](fun(t2::TDec)::Bool decName(t1) = decName(t2) and typeEqual(decType(t1),decType(t2)),fields2),fields1) and
   forall[TDec](fun(t1::TDec)::Bool exists[TDec](fun(t2::TDec)::Bool decName(t1) = decName(t2) and typeEqual(decType(t1),decType(t2)),fields1),fields2);
 
-recordSubType(fields1::[TDec],fields2::[TDec])::Bool = 
+recordSubType(fields1::[TDec],fields2::[TDec])::Bool = { 
   forall[TDec](fun(t2::TDec)::Bool exists[TDec](fun(t1::TDec)::Bool decName(t1) = decName(t2) and subType(decType(t1),decType(t2)),fields1),fields2);
+}
 
 applyTypeFun(l::Loc,op::Type,args::[Type])::Type =
   case op {
@@ -476,22 +474,21 @@ substMTypeEnv(env::TEnv,m::MType)::MType =
     MessageType(l::Loc,ts::[Type]) -> MessageType(l,[ substTypeEnv(env,t) | t::Type <- ts]);
   }
  
-type Pattern = rec P. union {
-  PAdd(Loc,P,P),
-  PVar(Loc,Str,Type),
-  PTerm(Loc,Str,[Type],[P]),
-  PApplyType(Loc,P,[Type]),
-  PNil(Loc),
-  PNull(Loc),
-  PInt(Loc,Int),
-  PStr(Loc,Str),
-  PBool(Loc,Bool),
-  PCons(Loc,P,P),
-  PBagCons(Loc,P,P),
-  PEmptyBag(Loc),
-  PSetCons(Loc,P,P),
-  PEmptySet(Loc)
-}
+data Pattern = 
+  PAdd(Loc,Pattern,Pattern)
+| PApplyType(Loc,Pattern,[Type])
+| PBagCons(Loc,Pattern,Pattern)
+| PBool(Loc,Bool)
+| PCons(Loc,Pattern,Pattern)
+| PEmptyBag(Loc)
+| PEmptySet(Loc)
+| PInt(Loc,Int)
+| PNil(Loc)
+| PNull(Loc)
+| PSetCons(Loc,Pattern,Pattern)
+| PStr(Loc,Str)
+| PTerm(Loc,Str,[Type],[Pattern])
+| PVar(Loc,Str,Type);
 
 patternNames(x::Pattern)::[Str] = {
   case x {
@@ -516,8 +513,52 @@ data TBind =
    TypeBind(Loc,Str,Type,AST)
 |  CnstrBind(Loc,Str,Type,AST)
 |  FunBind(Loc,Str,[Pattern],Type,Type,AST,AST)
+|  FunBinds(Str,[FunCase])
 |  Binding(Loc,Str,Type,Type,AST)
 |  DataBind(Loc,Str,Type,AST);
+
+data FunCase = FunCase(Loc,[Pattern],Type,AST,AST);
+
+mergeFunDefs(defs::[TBind])::[TBind] = 
+  letrec
+    getFunCases(n::Str,defs::[TBind])::[FunCase] =
+      case defs {
+        [] -> [];
+        FunBind(l,n0,args,t,dt,e,g):defs when n = n0 -> FunCase(l,args,t,g,e):getFunCases(n,defs);
+        def:defs -> getFunCases(n,defs);
+      }
+    removeFunCases(n::Str,defs::[TBind])::[TBind] =
+      case defs {
+        [] -> [];
+        FunBind(l,n0,args,t,dt,e,g):defs when n = n0 -> removeFunCases(n,defs);
+        def:defs -> def:removeFunCases(n,defs);
+      }
+  in {
+    case defs {
+      [] -> [];
+      FunBind(l,n,args,t,dt,e,g):defs ->
+        let cases::[FunCase] = getFunCases(n,defs);
+        in if cases = []
+           then FunBind(l,n,args,t,dt,e,g):mergeFunDefs(defs);
+           else {
+             let defs::[TBind] = removeFunCases(n,defs);
+             in FunBinds(n,FunCase(l,args,t,g,e):cases):mergeFunDefs(defs);
+           }
+      def:defs -> def:mergeFunDefs(defs);
+    }
+  }
+
+expandFunDefs(defs::[TBind])::[TBind] =
+  case defs {
+    [] -> [];
+    FunBinds(n,FunCase(l,args,t,g,e):cases):defs ->
+      let names::[Str] = [ '$' + i | i <- 0..length[Pattern](args) ];
+      in Binding(l,n,t,t,FunExp(l,StrExp(l,n),
+           [ Dec(l,n,null[Type],null[Type]) | n <- names ],
+           t,
+           Case(l,[],[ Var(l,n) | n <- names ],[ BArm(l,args,g,e) | FunCase(l,args,t,g,e) <- FunCase(l,args,t,g,e):cases ]))):expandFunDefs(defs);
+    d:defs -> d:expandFunDefs(defs);
+  }
 
 isBinding(b::TBind)::Bool =
   case b {
@@ -536,6 +577,7 @@ bindingName(b::TBind)::Str =
     TypeBind(v0::Loc,v1::Str,v2::Type,v3::AST) -> v1;
     CnstrBind(v0::Loc,v1::Str,v2::Type,v3::AST) -> v1;
     FunBind(v0::Loc,v1::Str,v2::[Pattern],v3::Type,v4::Type,v5::AST,v6::AST) -> v1;
+    FunBinds(n,cases) -> n;
     Binding(v0::Loc,v1::Str,v2::Type,v3::Type,v4::AST) -> v1;
     DataBind(v0::Loc,v1::Str,v2::Type,v3::AST) -> v1;
   }
@@ -545,6 +587,7 @@ bindingLoc(b::TBind)::Loc =
     TypeBind(v0::Loc,v1::Str,v2::Type,v3::AST) -> v0;
     CnstrBind(v0::Loc,v1::Str,v2::Type,v3::AST) -> v0;
     FunBind(v0::Loc,v1::Str,v2::[Pattern],v3::Type,v4::Type,v5::AST,v6::AST) -> v0;
+    FunBinds(n,FunCase(l,args,t,g,e):cases) -> l;
     Binding(v0::Loc,v1::Str,v2::Type,v3::Type,v4::AST) -> v0;
     DataBind(v0::Loc,v1::Str,v2::Type,v3::AST) -> v0;
   }
@@ -565,82 +608,82 @@ data CaseStrsArm = SArm(Str,AST);
 
 data CaseBoolsArm = BoolArm(Bool,AST);
 
-type AST = rec A. union {
-  Module(Str,Str,[Str],[Str],Null,Null,[TBind]), 
-  FunExp(Loc,A,[TDec],Type,A),
-  IntExp(Loc,Int),
-  StrExp(Loc,Str),
-  BoolExp(Loc,Bool),
-  FloatExp(Loc,Float),
-  Term(Loc,Str,[Type],[A]),
-  TermRef(A,Int),
-  List(Loc,[A]),
-  NullExp(Loc),
-  BagExp(Loc,[A]),
-  CaseError(Loc,A),
-  Case(Loc,[TDec],[A],[Arm]),
-  CaseTerm(Loc,A,[CaseTermArm],A),
-  CaseList(Loc,A,A,A,A),
-  CaseInt(Loc,A,[CaseIntsArm],A),
-  CaseStr(Loc,A,[CaseStrsArm],A),
-  CaseBool(Loc,A,[CaseBoolsArm],A),
-  CaseAdd(Loc,A,A,A),
-  CaseSet(Loc,A,A,A),
-  Var(Loc,Str),
-  Block(Loc,[A]),
-  Apply(Loc,A,[A]),
-  ApplyTypeExp(Loc,A,[Type]),
-  ArrayUpdate(Loc,A,A,A),
-  ArrayRef(Loc,A,A),
-  BinExp(Loc,A,Str,A),
-  For(Loc,Pattern,A,A),
-  Head(A),
-  Tail(A),
-  Cons(A,A),
-  Throw(Loc,Type,A),
-  ActExp(Loc,A,[TDec],[Str],A,[TBind],A,[Arm]),
-  If(Loc,A,A,A),
-  Ref(Loc,A,Str),
-  Update(Loc,Str,A),
-  Self(Loc),
-  Send(Loc,A,A),
-  Cmp(Loc,A,[Qualifier]),
-  New(Loc,A,[A]),
-  NewJava(Loc,Str,Type,[A]),
-  NewArray(Loc,Type,A),
-  NewTable(Loc,Type,Type),
-  Let(Loc,[TBind],A),
-  Letrec(Loc,[TBind],A),
-  Grab(Loc,[DRef],A),
-  Probably(Loc,A,Type,A,A),
-  Not(Loc,A),
-  Fold(Loc,Type,A),
-  Unfold(Loc,Type,A),
-  Now(Loc),
-  Become(Loc,A),
-  Try(Loc,A,[Arm]),
-  Record(Loc,[TBind]),
-  RefSuper(Loc,Str),
-  SendSuper(Loc,A),
-  SendTimeSuper(Loc),
-  SetExp(Loc,[A])
-}
+data AST = 
+  ActExp(Loc,AST,[TDec],[Str],AST,[TBind],AST,[Arm])
+| Apply(Loc,AST,[AST])
+| ApplyTypeExp(Loc,AST,[Type])
+| ArrayRef(Loc,AST,AST)
+| ArrayUpdate(Loc,AST,AST,AST)
+| BagExp(Loc,[AST])
+| Become(Loc,AST)
+| BinExp(Loc,AST,Str,AST)
+| Block(Loc,[AST])
+| BoolExp(Loc,Bool)
+| Case(Loc,[TDec],[AST],[Arm])
+| CaseAdd(Loc,AST,AST,AST)
+| CaseBool(Loc,AST,[CaseBoolsArm],AST)
+| CaseError(Loc,AST)
+| CaseInt(Loc,AST,[CaseIntsArm],AST)
+| CaseList(Loc,AST,AST,AST,AST)
+| CaseSet(Loc,AST,AST,AST)
+| CaseStr(Loc,AST,[CaseStrsArm],AST)
+| CaseTerm(Loc,AST,[CaseTermArm],AST)
+| Cmp(Loc,AST,[Qualifier])
+| Cons(AST,AST)
+| For(Loc,Pattern,AST,AST)
+| FunExp(Loc,AST,[TDec],Type,AST)
+| Grab(Loc,[DRef],AST)
+| If(Loc,AST,AST,AST)
+| IntExp(Loc,Int)
+| FloatExp(Loc,Float)
+| Fold(Loc,Type,AST)
+| Head(AST)
+| Let(Loc,[TBind],AST)
+| Letrec(Loc,[TBind],AST)
+| List(Loc,[AST])
+| Module(Str,Str,[Str],[Str],Null,Null,[TBind])
+| New(Loc,AST,[AST])
+| NewArray(Loc,Type,AST)
+| NewJava(Loc,Str,Type,[AST])
+| NewTable(Loc,Type,Type)
+| Not(Loc,AST)
+| Now(Loc)
+| NullExp(Loc)
+| PLet(Loc,[TBind],AST)
+| Probably(Loc,AST,Type,AST,AST)
+| Record(Loc,[TBind])
+| RefSuper(Loc,Str)
+| Ref(Loc,AST,Str)
+| Self(Loc)
+| Send(Loc,AST,AST)
+| SendSuper(Loc,AST)
+| SendTimeSuper(Loc)
+| SetExp(Loc,[AST])
+| StrExp(Loc,Str)
+| Tail(AST)
+| Term(Loc,Str,[Type],[AST])
+| TermRef(AST,Int)
+| Throw(Loc,Type,AST)
+| Try(Loc,AST,[Arm])
+| Update(Loc,Str,AST)
+| Unfold(Loc,Type,AST)
+| Var(Loc,Str);
 
 data TVar = V(Int);
 
-type JType = rec T. union {
-  JIntegerType,
-  JStringType,
-  JBooleanType,
-  JDoubleType,
-  JListType(T),
-  JFunType([T],T),
-  JTermType,
-  JActorType,
-  JObject,
-  JNullType(T),
-  JUnknown(TVar)
-}
+data JType = 
+  JIntegerType
+| JStringType
+| JBooleanType
+| JDoubleType
+| JListType(JType)
+| JFunType([JType],JType)
+| JTermType
+| JActorType
+| JObject
+| JNullType(JType)
+| JUnknown(TVar);
+
 data JMod = JModule(Str,[Str],[Str],[JFieldDef]);
 
 data JFieldDef = JField(Str,JType,JExp);
@@ -654,50 +697,56 @@ data JConst =
 | JConstDouble(Float);
 
 
-type JExp = rec E. union {
-  JFun(E,[JDeclaration],JType,JCommand),
-  JApply(E,[E]),
-  JArrayUpdate(E,E,E),
-  JArrayRef(E,E),
-  JBecome(E,[E]),
-  JBinExp(E,Str,E),
-  JCommandExp(JCommand,JType),
-  JIfExp(E,E,E),
-  JConstExp(JConst),
-  JTerm(Str,[E]),
-  JTermRef(E,Int),
-  JList(JType,[E]),
-  JSet(JType,[E]),
-  JBag(JType,[E]),
-  JNil(JType),
-  JVar(Str,JType),
-  JNull,
-  JError(E),
-  JHead(E),
-  JTail(E),
-  JCastp(JType,JType,E),
-  JCast(JType,E),
-  JMapFun(E,E),
-  JFlatten(E),
-  JNot(E),
-  JNow,
-  JBehaviour([Str],[JFieldDef],E,E,JCommand),
-  JExtendedBehaviour([Str],E,[JFieldDef],E,E,JCommand),  // Merge into the above once bootstrapped.
-  JNew(E,[E]),
-  JNewArray(E),
-  JNewTable,
-  JNewJava(Str,[E]),
-  JSend(E,Str,[E]),
-  JSendSuper(E),
-  JSendTimeSuper,
-  JSelf,
-  JRecord([JFieldDef]),
-  JRef(E,Str),
-  JRefSuper(Str),
-  JGrab([E],E),
-  JProbably(E,E,E),
-  JTry(E,Str,JCommand)
-}
+data JExp = 
+  JApply(JExp,[JExp])
+| JArrayRef(JExp,JExp)
+| JArrayUpdate(JExp,JExp,JExp)
+| JBag(JType,[JExp])
+| JBecome(JExp,[JExp])
+| JBehaviour([Str],[JFieldDef],JExp,JExp,JCommand)
+| JBinExp(JExp,Str,JExp)
+| JCast(JType,JExp)
+| JCastp(JType,JType,JExp)
+| JCmpExp(JCmp)
+| JCommandExp(JCommand,JType)
+| JConstExp(JConst)
+| JError(JExp)
+| JExtendedBehaviour([Str],JExp,[JFieldDef],JExp,JExp,JCommand)  // Merge into the above once bootstrapped.
+| JFlatten(JExp)
+| JFun(JExp,[JDeclaration],JType,JCommand)
+| JGrab([JExp],JExp)
+| JHead(JExp)
+| JIfExp(JExp,JExp,JExp)
+| JList(JType,[JExp])
+| JMapFun(JExp,JExp)
+| JNew(JExp,[JExp])
+| JNewArray(JExp)
+| JNewJava(Str,[JExp])
+| JNewTable
+| JNil(JType)
+| JNot(JExp)
+| JNow
+| JNull
+| JProbably(JExp,JExp,JExp)
+| JRecord([JFieldDef])
+| JRef(JExp,Str)
+| JRefSuper(Str)
+| JSelf
+| JSend(JExp,Str,[JExp])
+| JSendSuper(JExp)
+| JSendTimeSuper
+| JSet(JType,[JExp])
+| JTail(JExp)
+| JTerm(Str,[JExp])
+| JTermRef(JExp,Int)
+| JTry(JExp,Str,JCommand)
+| JVar(Str,JType);
+
+data JCmp =
+  JCmpList(JExp)
+| JCmpOuter(Str,JExp,JCmp)
+| JCmpIf(JExp,JCmp)
+| JCmpBind(Str,JExp,JCmp);
 
 data JCase = JCaseOf(JConst,JCommand);
 data JTermArm = JTArm(Str,Int,JCommand);
@@ -705,224 +754,20 @@ data JIntArm = JIArm(Int,JCommand);
 data JStrArm = JSArm(Str,JCommand);
 data JBoolArm = JBArm(Bool,JCommand);
 
-type JCommand = rec C. union {
-  JBlock([C]),
-  JReturn(JExp),
-  JSwitch(JExp,[JCase],C),
-  JSwitchList(JExp,C,C,C),
-  JIfCommand(JExp,C,C),
-  JCaseList(JExp,C,C,C),
-  JCaseTerm(JExp,[JTermArm],C),
-  JCaseInt(JExp,[JIntArm],C),
-  JCaseStr(JExp,[JStrArm],C),
-  JCaseBool(JExp,[JBoolArm],C),
-  JLet([JFieldDef],C),
-  JLetRec([JFieldDef],C),
-  JUpdate(Str,JExp),
-  JStatement(JExp),
-  JFor(Str,Str,JExp,C)
-}
-
-// Everything below this line is required for the old type checker.
-// When the new type checker is available these will be redundant...
-
-cnstr JBlock = unfold[JCommand].JBlock;
-cnstr JReturn = unfold[JCommand].JReturn;
-cnstr JSwitch = unfold[JCommand].JSwitch;
-cnstr JSwitchList = unfold[JCommand].JSwitchList;
-cnstr JIfCommand = unfold[JCommand].JIfCommand;
-cnstr JCaseList = unfold[JCommand].JCaseList;
-cnstr JLet = unfold[JCommand].JLet;
-cnstr JLetRec = unfold[JCommand].JLetRec;
-cnstr JUpdate = unfold[JCommand].JUpdate;
-cnstr JStatement = unfold[JCommand].JStatement;
-cnstr JFor = unfold[JCommand].JFor;
-
-cnstr JCaseOf = JCase.JCaseOf;
-cnstr JTArm = JTermArm.JTArm;
-cnstr JIArm = JIntArm.JIArm;
-cnstr JSArm = JStrArm.JSArm;
-cnstr JBArm = JBoolArm.JBArm;
-cnstr JCaseTerm = unfold[JCommand].JCaseTerm;
-cnstr JCaseInt = unfold[JCommand].JCaseInt;
-cnstr JCaseStr = unfold[JCommand].JCaseStr;
-cnstr JCaseBool = unfold[JCommand].JCaseBool;
-
-cnstr JConstExp = unfold[JExp].JConstExp;
-cnstr JArrayUpdate = unfold[JExp].JArrayUpdate;
-cnstr JArrayRef = unfold[JExp].JArrayRef;
-cnstr JBinExp = unfold[JExp].JBinExp;
-cnstr JBecome = unfold[JExp].JBecome;
-cnstr JCommandExp = unfold[JExp].JCommandExp;
-cnstr JIfExp = unfold[JExp].JIfExp;
-cnstr JApply = unfold[JExp].JApply;
-cnstr JTerm = unfold[JExp].JTerm;
-cnstr JTermRef = unfold[JExp].JTermRef;
-cnstr JList = unfold[JExp].JList;
-cnstr JNil = unfold[JExp].JNil;
-cnstr JNull = unfold[JExp].JNull;
-cnstr JNow = unfold[JExp].JNow;
-cnstr JError = unfold[JExp].JError;
-cnstr JVar = unfold[JExp].JVar;
-cnstr JFun = unfold[JExp].JFun;
-cnstr JHead = unfold[JExp].JHead;
-cnstr JTail = unfold[JExp].JTail;
-cnstr JCastp = unfold[JExp].JCastp;
-cnstr JCast = unfold[JExp].JCast;
-cnstr JMapFun = unfold[JExp].JMapFun;
-cnstr JFlatten = unfold[JExp].JFlatten;
-cnstr JNot = unfold[JExp].JNot;
-cnstr JBehaviour = unfold[JExp].JBehaviour;
-cnstr JNew = unfold[JExp].JNew;
-cnstr JNewArray = unfold[JExp].JNewArray;
-cnstr JNewJava = unfold[JExp].JNewJava;
-cnstr JSend = unfold[JExp].JSend;
-cnstr JSelf = unfold[JExp].JSelf;
-cnstr JRef = unfold[JExp].JRef;
-cnstr JGrab = unfold[JExp].JGrab;
-cnstr JProbably = unfold[JExp].JProbably;
-cnstr JTry = unfold[JExp].JTry;
-
-cnstr JConstInt = JConst.JConstInt;
-cnstr JConstStr = JConst.JConstStr;
-cnstr JConstBool = JConst.JConstBool;
-cnstr JConstDouble = JConst.JConstDouble;
-
-cnstr JIntegerType = unfold[JType].JIntegerType;
-cnstr JStringType = unfold[JType].JStringType;
-cnstr JBooleanType = unfold[JType].JBooleanType;
-cnstr JDoubleType = unfold[JType].JDoubleType;
-cnstr JListType = unfold[JType].JListType;
-cnstr JFunType = unfold[JType].JFunType;
-cnstr JTermType = unfold[JType].JTermType;
-cnstr JActorType = unfold[JType].JActorType;
-cnstr JObject = unfold[JType].JObject;
-cnstr JUnknown = unfold[JType].JUnknown;
-cnstr JNullType = unfold[JType].JNullType;
-
-cnstr JModule = JMod.JModule;
-
-cnstr JField = JFieldDef.JField;
-
-cnstr JDec = JDeclaration.JDec;
-
-cnstr Module = unfold[AST].Module;
-cnstr FunExp = unfold[AST].FunExp;
-cnstr StrExp = unfold[AST].StrExp;
-cnstr IntExp = unfold[AST].IntExp;
-cnstr BoolExp = unfold[AST].BoolExp;
-cnstr FloatExp = unfold[AST].FloatExp;
-cnstr Term = unfold[AST].Term;
-cnstr TermRef = unfold[AST].TermRef;
-cnstr List = unfold[AST].List;
-cnstr NullExp = unfold[AST].NullExp;
-cnstr CaseError = unfold[AST].CaseError;
-cnstr Case = unfold[AST].Case;
-cnstr CaseTerm = unfold[AST].CaseTerm;
-cnstr CaseList = unfold[AST].CaseList;
-cnstr CaseInt = unfold[AST].CaseInt;
-cnstr CaseStr = unfold[AST].CaseStr;
-cnstr CaseBool = unfold[AST].CaseBool;
-cnstr Var = unfold[AST].Var;
-cnstr Block = unfold[AST].Block;
-cnstr Apply = unfold[AST].Apply;
-cnstr ApplyTypeExp = unfold[AST].ApplyTypeExp;
-cnstr ArrayUpdate = unfold[AST].ArrayUpdate;
-cnstr ArrayRef = unfold[AST].ArrayRef;
-cnstr BinExp = unfold[AST].BinExp;
-cnstr For = unfold[AST].For;
-cnstr Head = unfold[AST].Head;
-cnstr Tail = unfold[AST].Tail;
-cnstr Cons = unfold[AST].Cons;
-cnstr Throw = unfold[AST].Throw;
-cnstr ActExp = unfold[AST].ActExp;
-cnstr If = unfold[AST].If;
-cnstr Ref = unfold[AST].Ref;
-cnstr Update = unfold[AST].Update;
-cnstr Self = unfold[AST].Self;
-cnstr Send = unfold[AST].Send;
-cnstr Cmp = unfold[AST].Cmp;
-cnstr New = unfold[AST].New;
-cnstr NewArray = unfold[AST].NewArray;
-cnstr NewJava = unfold[AST].NewJava;
-cnstr Let = unfold[AST].Let;
-cnstr Letrec = unfold[AST].Letrec;
-cnstr Grab = unfold[AST].Grab;
-cnstr Probably = unfold[AST].Probably;
-cnstr Not = unfold[AST].Not;
-cnstr Fold = unfold[AST].Fold;
-cnstr Unfold = unfold[AST].Unfold;
-cnstr Now = unfold[AST].Now;
-cnstr Become = unfold[AST].Become;
-cnstr Try = unfold[AST].Try;
-cnstr Record = unfold[AST].Record;
-
-
-cnstr IArm = CaseIntsArm.IArm;
-cnstr SArm = CaseStrsArm.SArm;
-cnstr BoolArm = CaseBoolsArm.BoolArm;
-
-cnstr Pos = Loc.Pos;
-cnstr Dec = TDec.Dec;
-cnstr VarDynamicRef = DRef.VarDynamicRef;
-cnstr ActorDynamicRef = DRef.ActorDynamicRef;
-cnstr Map = TMap.Map; 
-cnstr MessageType = MType.MessageType;
-cnstr TypeError = Error.TypeError;
-
-cnstr ArrayType = unfold[Type].ArrayType;
-cnstr ApplyType = unfold[Type].ApplyType;
-cnstr ApplyTypeFun = unfold[Type].ApplyTypeFun;
-cnstr StrType = unfold[Type].StrType;
-cnstr IntType = unfold[Type].IntType;
-cnstr FieldType = unfold[Type].FieldType;
-cnstr FloatType = unfold[Type].FloatType;
-cnstr BoolType = unfold[Type].BoolType;
-cnstr NullType = unfold[Type].NullType;
-cnstr VoidType = unfold[Type].VoidType;
-cnstr ActType = unfold[Type].ActType;
-cnstr ExtendedAct = unfold[Type].ExtendedAct;
-cnstr UnionType = unfold[Type].UnionType;
-cnstr TermType = unfold[Type].TermType;
-cnstr VarType = unfold[Type].VarType;
-cnstr RecType = unfold[Type].RecType;
-cnstr RecordType = unfold[Type].RecordType;
-cnstr ListType = unfold[Type].ListType;
-cnstr SetType = unfold[Type].SetType;
-cnstr BagType = unfold[Type].BagType;
-cnstr UnfoldType = unfold[Type].UnfoldType;
-cnstr UnionRef = unfold[Type].UnionRef;
-cnstr FunType = unfold[Type].FunType;
-cnstr TaggedFunType = unfold[Type].TaggedFunType;
-cnstr TypeFun = unfold[Type].TypeFun;
-cnstr ForallType = unfold[Type].ForallType;
-cnstr TypeClosure = unfold[Type].TypeClosure;
-
-cnstr PVar = unfold[Pattern].PVar;
-cnstr PTerm = unfold[Pattern].PTerm;
-cnstr PApplyType = unfold[Pattern].PApplyType;
-cnstr PNil = unfold[Pattern].PNil;
-cnstr PNull = unfold[Pattern].PNull;
-cnstr PInt = unfold[Pattern].PInt;
-cnstr PStr = unfold[Pattern].PStr;
-cnstr PBool = unfold[Pattern].PBool;
-cnstr PCons = unfold[Pattern].PCons;
-cnstr PBagCons = unfold[Pattern].PBagCons;
-cnstr PEmptyBag = unfold[Pattern].PEmptyBag;
-cnstr PSetCons = unfold[Pattern].PSetCons;
-cnstr PEmptySet = unfold[Pattern].PEmptySet;
-
-cnstr TypeBind = TBind.TypeBind;
-cnstr CnstrBind = TBind.CnstrBind;
-cnstr FunBind = TBind.FunBind;
-cnstr Binding = TBind.Binding;
-cnstr DataBind = TBind.DataBind;
-cnstr BArm = Arm.BArm;
-cnstr LArm = Arm.LArm;
-cnstr BQual = Qualifier.BQual;
-cnstr PQual = Qualifier.PQual;
-
-cnstr TArm = CaseTermArm.TArm;
-cnstr V = TVar.V;
-
-
+data JCommand = 
+  JBlock([JCommand])
+| JCaseBool(JExp,[JBoolArm],JCommand)
+| JCaseInt(JExp,[JIntArm],JCommand)
+| JCaseList(JExp,JCommand,JCommand,JCommand)
+| JCaseStr(JExp,[JStrArm],JCommand)
+| JCaseTerm(JExp,[JTermArm],JCommand)
+| JFor(Str,Str,JExp,JCommand)
+| JIfCommand(JExp,JCommand,JCommand)
+| JLet([JFieldDef],JCommand)
+| JLetRec([JFieldDef],JCommand)
+| JPLet([JFieldDef],JCommand)
+| JReturn(JExp)
+| JStatement(JExp)
+| JSwitch(JExp,[JCase],JCommand)
+| JSwitchList(JExp,JCommand,JCommand,JCommand)
+| JUpdate(Str,JExp);

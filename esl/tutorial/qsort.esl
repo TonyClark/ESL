@@ -4,7 +4,7 @@ data Direction = Left | Right | Final;
 
 Act QSort { Sorted([Int],Direction); }
 
-nums::[Int] = [ random(50) | n::Int <- 0..25 ];
+nums::[Int] = [ random(2000) | n::Int <- 0..2000 ];
 
 act qmain(l::[Int])::QSort {                                    // The starting point for sorting.
   -> new qsorter(self,l,Final);                                 // Think of this as the initial
@@ -38,7 +38,9 @@ act qsorter(parent::QSort,l::[Int],dir::Direction)::QSort {     // A request to 
   Sorted(l::[Int],d::Direction) -> throw[Void] 'error!';
 }
   
-act main::Act{} { -> new qmain(nums); }
+act main::Act{} { 
+  -> new qmain(nums);
+}
 
 qsort(l::[Int])::[Int] =
   // Sequential quicksort...
@@ -48,4 +50,15 @@ qsort(l::[Int])::[Int] =
       qsort([ n | n::Int <- l, ?(n<x) ])
       + [x] +
       qsort([ n | n::Int <- l, ?(n>x) ]);
+  }
+  
+psort(l::[Int])::[Int] =
+  // Parallel quicksort...
+  case l {
+    [] ->[];
+    x::Int:l::[Int] ->
+      plet 
+        left::[Int] = psort([ n | n::Int <- l, ?(n<x) ]);
+        right::[Int] = psort([ n | n::Int <- l, ?(n>x) ]);
+      in left + [x] + right;
   }

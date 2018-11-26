@@ -9,21 +9,21 @@ public class Pac {
   private static ESLVal locX = new ESLVal(new Function(new ESLVal("locX"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
-  {ESLVal _v50 = l;
+  {ESLVal _v30 = l;
         
-        switch(_v50.termName) {
-        case "Loc": {ESLVal $37 = _v50.termRef(0);
-          ESLVal $36 = _v50.termRef(1);
+        switch(_v30.termName) {
+        case "Loc": {ESLVal $41 = _v30.termRef(0);
+          ESLVal $40 = _v30.termRef(1);
           
-          {ESLVal x = $37;
+          {ESLVal x = $41;
           
-          {ESLVal y = $36;
+          {ESLVal y = $40;
           
           return x;
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(508,533)").add(ESLVal.list(_v50)));
+        default: return error(new ESLVal("case error at Pos(509,534)").add(ESLVal.list(_v30)));
       }
       }
     }
@@ -31,52 +31,52 @@ public class Pac {
   private static ESLVal locY = new ESLVal(new Function(new ESLVal("locY"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
-  {ESLVal _v49 = l;
+  {ESLVal _v29 = l;
         
-        switch(_v49.termName) {
-        case "Loc": {ESLVal $35 = _v49.termRef(0);
-          ESLVal $34 = _v49.termRef(1);
+        switch(_v29.termName) {
+        case "Loc": {ESLVal $39 = _v29.termRef(0);
+          ESLVal $38 = _v29.termRef(1);
           
-          {ESLVal x = $35;
+          {ESLVal x = $39;
           
-          {ESLVal y = $34;
+          {ESLVal y = $38;
           
           return y;
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(554,579)").add(ESLVal.list(_v49)));
+        default: return error(new ESLVal("case error at Pos(555,580)").add(ESLVal.list(_v29)));
       }
       }
     }
   });
   private static ESLVal player = new ESLVal(new Function(new ESLVal("player"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
-      ESLVal[] _v107 = new ESLVal[]{$args[0]};
-  ESLVal[] _v106 = new ESLVal[]{$args[1]};
-  ESLVal _v105 = $args[2];
+      ESLVal[] _v74 = new ESLVal[]{$args[0]};
+  ESLVal[] _v73 = new ESLVal[]{$args[1]};
+  ESLVal _v72 = $args[2];
   return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("player")) {
           ESLVal getX = new ESLVal(new Function(new ESLVal("getX"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                return _v107[0];
+                return _v74[0];
               }
             });
           ESLVal getY = new ESLVal(new Function(new ESLVal("getY"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                return _v106[0];
+                return _v73[0];
               }
             });
           ESLVal setX = new ESLVal(new Function(new ESLVal("setX"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal v = $args[0];
-            {_v107[0] = v;
+            {_v74[0] = v;
                 return $null;}
               }
             });
           ESLVal setY = new ESLVal(new Function(new ESLVal("setY"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal v = $args[0];
-            {_v106[0] = v;
+            {_v73[0] = v;
                 return $null;}
               }
             });
@@ -84,14 +84,14 @@ public class Pac {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal v1 = $args[0];
             ESLVal v2 = $args[1];
-            {_v107[0] = v1;
-                {_v106[0] = v2;
+            {_v74[0] = v1;
+                {_v73[0] = v2;
                 return $null;}}
               }
             });
           ESLVal getMaze = new ESLVal(new Function(new ESLVal("getMaze"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                return _v105;
+                return _v72;
               }
             });
           ESLVal move = new ESLVal(new Function(new ESLVal("move"),getSelf()) {
@@ -101,19 +101,159 @@ public class Pac {
             });
           ESLVal canMove = new ESLVal(new Function(new ESLVal("canMove"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                ESLVal _v109 = $args[0];
-            ESLVal _v108 = $args[1];
-            return _v105.ref("legalPos").apply(_v109,_v108).or(_v105.ref("atHome").apply(_v109,_v108));
+                ESLVal _v78 = $args[0];
+            ESLVal _v77 = $args[1];
+            return _v72.ref("legalPos").apply(_v78,_v77).or(_v72.ref("atHome").apply(_v78,_v77));
               }
             });
+          ESLVal deltas = ESLVal.list(new ESLVal(-1),$zero,$one);
+          ESLVal deltaOK = new ESLVal(new Function(new ESLVal("deltaOK"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal dx = $args[0];
+            ESLVal dy = $args[1];
+            return dx.eql($zero).and(dy.eql($zero)).not();
+              }
+            });
+          ESLVal initPlans = new ESLVal(new Function(new ESLVal("initPlans"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                return ESLVal.list(ESLVal.list(new ESLVal("Loc",getSelf().ref("getX").apply(),getSelf().ref("getY").apply())));
+              }
+            });
+          ESLVal getBestPlan = new ESLVal(new Function(new ESLVal("getBestPlan"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal better = $args[0];
+            ESLVal plans = $args[1];
+            return select1.apply(plans,$null,new ESLVal(new Function(new ESLVal("fun528"),getSelf()) {
+                    public ESLVal apply(ESLVal... $args) {
+                      ESLVal p1 = $args[0];
+                  return exists.apply(new ESLVal(new Function(new ESLVal("fun529"),getSelf()) {
+                          public ESLVal apply(ESLVal... $args) {
+                            ESLVal p2 = $args[0];
+                        return p1.neql(p2).and(better.apply(p2,p1));
+                          }
+                        }),plans).not();
+                    }
+                  }));
+              }
+            });
+          ESLVal plan = new ESLVal(new Function(new ESLVal("plan"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal maxLength = $args[0];
+            ESLVal better = $args[1];
+            ESLVal goal = $args[2];
+            ESLVal pred = $args[3];
+            ESLVal moves = $args[4];
+            ESLVal plans = $args[5];
+            if(plans.eql(ESLVal.list()).boolVal)
+                  return $null;
+                  else
+                    if(maxLength.less($zero).boolVal)
+                      return getBestPlan.apply(better,plans);
+                      else
+                        {ESLVal p = goal.apply(plans);
+                          
+                          if(p.eql($null).boolVal)
+                          return plan.apply(maxLength.sub($one),better,goal,pred,moves,new java.util.function.Function<ESLVal,ESLVal>() {
+                              public ESLVal apply(ESLVal $l0) {
+                                ESLVal $a = $nil;
+                                java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                                while(!$l0.isNil()) { 
+                                  ESLVal p = $l0.head();
+                                  $l0 = $l0.tail();
+                                  if(pred.apply(p).boolVal) {$v.add(p);
+                            }
+                                }
+                                for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                                return $a;
+                              }}.apply(addMoves.apply(plans,moves)));
+                          else
+                            return p;
+                        }
+              }
+            });
+          ESLVal hasMove = new ESLVal(new Function(new ESLVal("hasMove"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal m = $args[0];
+            return new ESLVal(new Function(new ESLVal("fun530"),getSelf()) {
+                    public ESLVal apply(ESLVal... $args) {
+                      ESLVal p = $args[0];
+                  return member.apply(m,p);
+                    }
+                  });
+              }
+            });
+          ESLVal addMoves = new ESLVal(new Function(new ESLVal("addMoves"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal plans = $args[0];
+            ESLVal moves = $args[1];
+            return new java.util.function.Function<ESLVal,ESLVal>() {
+                    public ESLVal apply(ESLVal $l0) {
+                      ESLVal $a = $nil;
+                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                      while(!$l0.isNil()) { 
+                        ESLVal p = $l0.head();
+                        $l0 = $l0.tail();
+                        ESLVal $l1 = moves.apply(p);
+                  while(!$l1.isNil()) {
+                    ESLVal m = $l1.head();
+                    $l1 = $l1.tail();
+                    if(exists.apply(hasMove.apply(m),plans).not().boolVal) {$v.add(p.cons(m));
+                    }
+                  }
+                      }
+                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                      return $a;
+                    }}.apply(plans);
+              }
+            });
+          ESLVal moves = cache.apply(head,new ESLVal(new Function(new ESLVal("fun531"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal p = $args[0];
+            {ESLVal _v27 = head.apply(p);
+                  
+                  switch(_v27.termName) {
+                  case "Loc": {ESLVal $37 = _v27.termRef(0);
+                    ESLVal $36 = _v27.termRef(1);
+                    
+                    {ESLVal _v75 = $37;
+                    
+                    {ESLVal _v76 = $36;
+                    
+                    return new java.util.function.Function<ESLVal,ESLVal>() {
+                      public ESLVal apply(ESLVal $l0) {
+                        ESLVal $a = $nil;
+                        java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                        while(!$l0.isNil()) { 
+                          ESLVal dx = $l0.head();
+                          $l0 = $l0.tail();
+                          ESLVal $l1 = deltas;
+                    while(!$l1.isNil()) {
+                      ESLVal dy = $l1.head();
+                      $l1 = $l1.tail();
+                      if(getSelf().ref("deltaOK").apply(dx,dy).boolVal) {if(canMove.apply(_v75.add(dx),_v76.add(dy)).boolVal) {$v.add(new ESLVal("Loc",_v75.add(dx),_v76.add(dy)));
+                      }
+                      }
+                    }
+                        }
+                        for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                        return $a;
+                      }}.apply(deltas);
+                  }
+                  }
+                  }
+                  default: return error(new ESLVal("case error at Pos(3924,4082)").add(ESLVal.list(_v27)));
+                }
+                }
+              }
+            }));
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v48 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v28 = $m;
             
-            switch(_v48.termName) {
+            switch(_v28.termName) {
             case "Start": {
               return error(new ESLVal("abstract message Start"));
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v48)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v28)));
           }
           }}
           public ESLVal get(String name) {
@@ -126,6 +266,11 @@ public class Pac {
               case "getMaze": return getMaze;
               case "move": return move;
               case "canMove": return canMove;
+              case "moves": return moves;
+              case "plan": return plan;
+              case "deltaOK": return deltaOK;
+              case "initPlans": return initPlans;
+              case "deltas": return deltas;
               default: throw new Error("ref illegal " + self + "." + name);
             }
           }
@@ -177,10 +322,10 @@ public class Pac {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
   ESLVal greater = $args[1];
-  return select1.apply(l,$null,new ESLVal(new Function(new ESLVal("fun30"),getSelf()) {
+  return select1.apply(l,$null,new ESLVal(new Function(new ESLVal("fun532"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal greatest = $args[0];
-        return exists.apply(new ESLVal(new Function(new ESLVal("fun31"),getSelf()) {
+        return exists.apply(new ESLVal(new Function(new ESLVal("fun533"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   ESLVal x = $args[0];
               return greater.apply(x,greatest);
@@ -188,6 +333,29 @@ public class Pac {
               }),l).not();
           }
         }));
+    }
+  });
+  private static ESLVal sum = new ESLVal(new Function(new ESLVal("sum"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal l = $args[0];
+  {ESLVal _v26 = l;
+        
+        if(_v26.isCons())
+        {ESLVal $34 = _v26.head();
+          ESLVal $35 = _v26.tail();
+          
+          {ESLVal n = $34;
+          
+          {ESLVal _v71 = $35;
+          
+          return n.add(sum.apply(_v71));
+        }
+        }
+        }
+      else if(_v26.isNil())
+        return $zero;
+      else return error(new ESLVal("case error at Pos(5738,5786)").add(ESLVal.list(_v26)));
+      }
     }
   });
   private static ESLVal distance = new ESLVal(new Function(new ESLVal("distance"),getSelf()) {
@@ -209,21 +377,21 @@ public class Pac {
   {ESLVal a = newArray(length.apply(l).intVal);
         
         {{
-        ESLVal _v46 = $zero.to(length.apply(l));
-        while(_v46.isCons()) {
-          ESLVal y = _v46.headVal;
+        ESLVal _v24 = $zero.to(length.apply(l));
+        while(_v24.isCons()) {
+          ESLVal y = _v24.headVal;
           {ESLVal b = newArray(length.apply(nth.apply(l,y)).intVal);
             
             {a.array[y.intVal] = b;
           {
-            ESLVal _v47 = $zero.to(length.apply(nth.apply(l,y)));
-            while(_v47.isCons()) {
-              ESLVal x = _v47.headVal;
+            ESLVal _v25 = $zero.to(length.apply(nth.apply(l,y)));
+            while(_v25.isCons()) {
+              ESLVal x = _v25.headVal;
               a.array[y.intVal].array[x.intVal] = nth.apply(nth.apply(l,y),x);
-              _v47 = _v47.tailVal;}
+              _v25 = _v25.tailVal;}
           }}
           }
-          _v46 = _v46.tailVal;}
+          _v24 = _v24.tailVal;}
       }
       return a;}
       }
@@ -237,14 +405,14 @@ public class Pac {
   {ESLVal[] b = new ESLVal[]{$true};
         
         {{
-        ESLVal _v45 = $zero.to(size);
-        while(_v45.isCons()) {
-          ESLVal i = _v45.headVal;
+        ESLVal _v23 = $zero.to(size);
+        while(_v23.isCons()) {
+          ESLVal i = _v23.headVal;
           if(p.apply(a.array[i.intVal]).not().boolVal)
             b[0] = $false;
             else
               {}
-          _v45 = _v45.tailVal;}
+          _v23 = _v23.tailVal;}
       }
       return b[0];}
       }
@@ -263,305 +431,243 @@ public class Pac {
           ESLVal state = new ESLVal("Chase",new ESLVal[]{});
           ESLVal changeMode = new ESLVal(15);
           ESLVal modeCount = changeMode;
-          ESLVal maxPlanLength = new ESLVal(8);
+          ESLVal switchMode = new ESLVal(new Function(new ESLVal("switchMode"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal s = $args[0];
+            {state = s;
+                {modeCount = changeMode;
+                return $null;}}
+              }
+            });
+          ESLVal deltaOK = new ESLVal(new Function(new ESLVal("deltaOK"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal dx = $args[0];
+            ESLVal dy = $args[1];
+            return refSuper("deltaOK").apply(dx,dy).and(dx.eql($zero).or(dy.eql($zero)));
+              }
+            });
           ESLVal move = new ESLVal(new Function(new ESLVal("move"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                LetRec letrec = new LetRec() {
-                  ESLVal selectMin = new ESLVal(new Function(new ESLVal("selectMin"),getSelf()) {
-                      public ESLVal apply(ESLVal... $args) {
-                        ESLVal r = $args[0];
-                    ESLVal plans = $args[1];
-                    return select1.apply(plans,$null,new ESLVal(new Function(new ESLVal("fun32"),getSelf()) {
-                            public ESLVal apply(ESLVal... $args) {
-                              ESLVal p1 = $args[0];
-                          return forall.apply(new ESLVal(new Function(new ESLVal("fun33"),getSelf()) {
-                                  public ESLVal apply(ESLVal... $args) {
-                                    ESLVal p2 = $args[0];
-                                if(p1.eql(p2).boolVal)
-                                      return $true;
-                                      else
-                                        return r.apply(p1,p2);
-                                  }
-                                }),plans);
-                            }
-                          }));
-                      }
-                    });
+                { LetRec letrec = new LetRec() {
                   ESLVal planDistance = new ESLVal(new Function(new ESLVal("planDistance"),getSelf()) {
                       public ESLVal apply(ESLVal... $args) {
-                        ESLVal _v99 = $args[0];
-                    ESLVal _v98 = $args[1];
-                    ESLVal _v97 = $args[2];
-                    {ESLVal _v40 = head.apply(_v99);
+                        ESLVal _v65 = $args[0];
+                    ESLVal _v64 = $args[1];
+                    ESLVal _v63 = $args[2];
+                    {ESLVal _v18 = head.apply(_v65);
                           
-                          switch(_v40.termName) {
-                          case "Loc": {ESLVal $29 = _v40.termRef(0);
-                            ESLVal $28 = _v40.termRef(1);
+                          switch(_v18.termName) {
+                          case "Loc": {ESLVal $29 = _v18.termRef(0);
+                            ESLVal $28 = _v18.termRef(1);
                             
                             {ESLVal x0 = $29;
                             
                             {ESLVal y0 = $28;
                             
-                            return distance.apply(_v98,_v97,x0,y0);
+                            return distance.apply(_v64,_v63,x0,y0);
                           }
                           }
                           }
-                          default: return error(new ESLVal("case error at Pos(6435,6491)").add(ESLVal.list(_v40)));
+                          default: return error(new ESLVal("case error at Pos(7856,7912)").add(ESLVal.list(_v18)));
                         }
                         }
                       }
                     });
-                  ESLVal plan = new ESLVal(new Function(new ESLVal("plan"),getSelf()) {
+                  ESLVal pred = new ESLVal(new Function(new ESLVal("pred"),getSelf()) {
+                      public ESLVal apply(ESLVal... $args) {
+                        ESLVal p = $args[0];
+                    return $true;
+                      }
+                    });
+                  ESLVal better = new ESLVal(new Function(new ESLVal("better"),getSelf()) {
                       public ESLVal apply(ESLVal... $args) {
                         ESLVal goalX = $args[0];
                     ESLVal goalY = $args[1];
-                    ESLVal plans = $args[2];
-                    if(length.apply(head.apply(plans)).gre(maxPlanLength).boolVal)
-                          return selectMin.apply(new ESLVal(new Function(new ESLVal("fun34"),getSelf()) {
-                              public ESLVal apply(ESLVal... $args) {
-                                ESLVal p1 = $args[0];
-                            ESLVal p2 = $args[1];
-                            return planDistance.apply(p1,goalX,goalY).lesseql(planDistance.apply(p2,goalX,goalY));
-                              }
-                            }),plans);
-                          else
-                            {ESLVal p = select1.apply(plans,$null,new ESLVal(new Function(new ESLVal("fun35"),getSelf()) {
+                    return new ESLVal(new Function(new ESLVal("fun534"),getSelf()) {
+                            public ESLVal apply(ESLVal... $args) {
+                              ESLVal p1 = $args[0];
+                          ESLVal p2 = $args[1];
+                          return planDistance.apply(p1,goalX,goalY).less(planDistance.apply(p2,goalX,goalY));
+                            }
+                          });
+                      }
+                    });
+                  ESLVal at = new ESLVal(new Function(new ESLVal("at"),getSelf()) {
+                      public ESLVal apply(ESLVal... $args) {
+                        ESLVal goalX = $args[0];
+                    ESLVal goalY = $args[1];
+                    return new ESLVal(new Function(new ESLVal("fun535"),getSelf()) {
+                            public ESLVal apply(ESLVal... $args) {
+                              ESLVal plans = $args[0];
+                          return select1.apply(plans,$null,new ESLVal(new Function(new ESLVal("fun536"),getSelf()) {
                                   public ESLVal apply(ESLVal... $args) {
                                     ESLVal p = $args[0];
                                 return head.apply(p).eql(new ESLVal("Loc",goalX,goalY));
                                   }
                                 }));
-                              
-                              if(p.eql($null).boolVal)
-                              return plan.apply(goalX,goalY,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                                  public ESLVal apply(ESLVal... $args) {
-                                    ESLVal $qualArg = $args[0];
-                                {ESLVal _v38 = $qualArg;
-                                      
-                                      {ESLVal _v93 = _v38;
-                                      
-                                      return ESLVal.list(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                                        public ESLVal apply(ESLVal... $args) {
-                                          ESLVal _v94 = $args[0];
-                                      {ESLVal _v39 = _v94;
-                                            
-                                            {ESLVal _v95 = _v39;
-                                            
-                                            return ESLVal.list((exists.apply(new ESLVal(new Function(new ESLVal("fun36"),getSelf()) {
-                                              public ESLVal apply(ESLVal... $args) {
-                                                ESLVal _v96 = $args[0];
-                                            return member.apply(_v95,_v96);
-                                              }
-                                            }),plans).not().boolVal) ? (ESLVal.list(_v93.cons(_v95))) : ($nil));
-                                          }
-                                          }
-                                        }
-                                      }).map(moves.apply(_v93)).flatten().flatten());
-                                    }
-                                    }
-                                  }
-                                }).map(plans).flatten().flatten());
-                              else
-                                return p;
                             }
+                          });
                       }
                     });
                   ESLVal getMove = new ESLVal(new Function(new ESLVal("getMove"),getSelf()) {
                       public ESLVal apply(ESLVal... $args) {
                         ESLVal goalX = $args[0];
                     ESLVal goalY = $args[1];
-                    {ESLVal _v37 = plan.apply(goalX,goalY,ESLVal.list(ESLVal.list(new ESLVal("Loc",getSelf().ref("getX").apply(),getSelf().ref("getY").apply()))));
+                    {ESLVal _v17 = getSelf().ref("plan").apply(new ESLVal(8),better.apply(goalX,goalY),at.apply(goalX,goalY),pred,getSelf().ref("moves"),getSelf().ref("initPlans").apply());
                           
-                          if(_v37.isCons())
-                          {ESLVal $22 = _v37.head();
-                            ESLVal $23 = _v37.tail();
+                          if(_v17.isCons())
+                          {ESLVal $24 = _v17.head();
+                            ESLVal $25 = _v17.tail();
                             
-                            switch($22.termName) {
-                            case "Loc": {ESLVal $25 = $22.termRef(0);
-                              ESLVal $24 = $22.termRef(1);
+                            if($25.isCons())
+                            {ESLVal $26 = $25.head();
+                              ESLVal $27 = $25.tail();
                               
-                              if($23.isCons())
-                              {ESLVal $26 = $23.head();
-                                ESLVal $27 = $23.tail();
-                                
-                                {ESLVal p = _v37;
-                                
-                                return last.apply(butlast.apply(p));
-                              }
-                              }
-                            else if($23.isNil())
-                              {ESLVal _v91 = $25;
-                                
-                                {ESLVal _v92 = $24;
-                                
-                                return new ESLVal("Loc",_v91,_v92);
-                              }
-                              }
-                            else {ESLVal p = _v37;
-                                
-                                return last.apply(butlast.apply(p));
-                              }
-                            }
-                            default: {ESLVal p = _v37;
+                              {ESLVal p = _v17;
                               
-                              return last.apply(butlast.apply(p));
+                              if(p.eql($null).boolVal)
+                              return new ESLVal("Loc",getSelf().ref("getX").apply(),getSelf().ref("getY").apply());
+                              else
+                                {ESLVal _v59 = _v17;
+                                  
+                                  return last.apply(butlast.apply(_v59));
+                                }
+                            }
+                            }
+                          else if($25.isNil())
+                            {ESLVal l = $24;
+                              
+                              return new ESLVal("Loc",getSelf().ref("getX").apply(),getSelf().ref("getY").apply());
+                            }
+                          else {ESLVal p = _v17;
+                              
+                              if(p.eql($null).boolVal)
+                              return new ESLVal("Loc",getSelf().ref("getX").apply(),getSelf().ref("getY").apply());
+                              else
+                                {ESLVal _v60 = _v17;
+                                  
+                                  return last.apply(butlast.apply(_v60));
+                                }
                             }
                           }
-                          }
-                        else if(_v37.isNil())
-                          {ESLVal p = _v37;
+                        else if(_v17.isNil())
+                          {ESLVal p = _v17;
                             
-                            return last.apply(butlast.apply(p));
+                            if(p.eql($null).boolVal)
+                            return new ESLVal("Loc",getSelf().ref("getX").apply(),getSelf().ref("getY").apply());
+                            else
+                              {ESLVal _v61 = _v17;
+                                
+                                return last.apply(butlast.apply(_v61));
+                              }
                           }
-                        else {ESLVal p = _v37;
+                        else {ESLVal p = _v17;
                             
-                            return last.apply(butlast.apply(p));
+                            if(p.eql($null).boolVal)
+                            return new ESLVal("Loc",getSelf().ref("getX").apply(),getSelf().ref("getY").apply());
+                            else
+                              {ESLVal _v62 = _v17;
+                                
+                                return last.apply(butlast.apply(_v62));
+                              }
                           }
                         }
                       }
                     });
-                  ESLVal moves = cache.apply(head,new ESLVal(new Function(new ESLVal("fun37"),getSelf()) {
-                      public ESLVal apply(ESLVal... $args) {
-                        ESLVal p = $args[0];
-                    {ESLVal _v34 = head.apply(p);
-                          
-                          switch(_v34.termName) {
-                          case "Loc": {ESLVal $21 = _v34.termRef(0);
-                            ESLVal $20 = _v34.termRef(1);
-                            
-                            {ESLVal _v88 = $21;
-                            
-                            {ESLVal _v89 = $20;
-                            
-                            return new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                              public ESLVal apply(ESLVal... $args) {
-                                ESLVal $qualArg = $args[0];
-                            {ESLVal _v35 = $qualArg;
-                                  
-                                  {ESLVal dx = _v35;
-                                  
-                                  return ESLVal.list(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                                    public ESLVal apply(ESLVal... $args) {
-                                      ESLVal _v90 = $args[0];
-                                  {ESLVal _v36 = _v90;
-                                        
-                                        {ESLVal dy = _v36;
-                                        
-                                        return ESLVal.list((_v88.eql($zero).and(_v89.eql($zero)).not().boolVal) ? ((getSelf().ref("canMove").apply(_v88.add(dx),_v89.add(dy)).boolVal) ? (ESLVal.list(new ESLVal("Loc",_v88.add(dx),_v89.add(dy)))) : ($nil)) : ($nil));
-                                      }
-                                      }
-                                    }
-                                  }).map(ESLVal.list($zero.sub($one),$zero,$one)).flatten().flatten());
-                                }
-                                }
-                              }
-                            }).map(ESLVal.list($zero.sub($one),$zero,$one)).flatten().flatten();
-                          }
-                          }
-                          }
-                          default: return error(new ESLVal("case error at Pos(7648,7826)").add(ESLVal.list(_v34)));
-                        }
-                        }
-                      }
-                    }));
                   
                   public ESLVal get(String name) {
                     switch(name) {
-                      case "selectMin": return selectMin;
-                      
                       case "planDistance": return planDistance;
                       
-                      case "plan": return plan;
+                      case "pred": return pred;
+                      
+                      case "better": return better;
+                      
+                      case "at": return at;
                       
                       case "getMove": return getMove;
-                      
-                      case "moves": return moves;
                       
                       default: throw new Error("cannot find letrec binding");
                     }
                     }
                   };
-                ESLVal selectMin = letrec.get("selectMin");
-                
                 ESLVal planDistance = letrec.get("planDistance");
                 
-                ESLVal plan = letrec.get("plan");
+                ESLVal pred = letrec.get("pred");
+                
+                ESLVal better = letrec.get("better");
+                
+                ESLVal at = letrec.get("at");
                 
                 ESLVal getMove = letrec.get("getMove");
                 
-                ESLVal moves = letrec.get("moves");
-                
-                  {ESLVal _v41 = state;
+                  {ESLVal _v19 = state;
                   
-                  switch(_v41.termName) {
+                  switch(_v19.termName) {
                   case "Scatter": {
                     if(modeCount.gre($zero).boolVal)
-                    {ESLVal _v43 = getMove.apply(homeX,homeY);
+                    {ESLVal _v21 = getMove.apply(homeX,homeY);
                       
-                      switch(_v43.termName) {
-                      case "Loc": {ESLVal $33 = _v43.termRef(0);
-                        ESLVal $32 = _v43.termRef(1);
+                      switch(_v21.termName) {
+                      case "Loc": {ESLVal $33 = _v21.termRef(0);
+                        ESLVal $32 = _v21.termRef(1);
                         
-                        {ESLVal _v102 = $33;
+                        {ESLVal _v68 = $33;
                         
-                        {ESLVal _v103 = $32;
+                        {ESLVal _v69 = $32;
                         
-                        {getSelf().ref("moveTo").apply(_v102,_v103);
+                        {getSelf().ref("moveTo").apply(_v68,_v69);
                       {modeCount = modeCount.sub($one);
                       return $null;}}
                       }
                       }
                       }
-                      default: return error(new ESLVal("case error at Pos(7965,8128)").add(ESLVal.list(_v43)));
+                      default: return error(new ESLVal("case error at Pos(8848,9011)").add(ESLVal.list(_v21)));
                     }
                     }
                     else
-                      {state = new ESLVal("Chase",new ESLVal[]{});
-                      {modeCount = changeMode;
-                      return $null;}}
+                      return switchMode.apply(new ESLVal("Chase",new ESLVal[]{}));
                   }
                 case "Chase": {
                     if(modeCount.gre($zero).boolVal)
-                    {ESLVal _v42 = getMove.apply(m.ref("getPacman").apply().ref("getX").apply(),m.ref("getPacman").apply().ref("getY").apply());
+                    {ESLVal _v20 = getMove.apply(m.ref("getPacman").apply().ref("getX").apply(),m.ref("getPacman").apply().ref("getY").apply());
                       
-                      switch(_v42.termName) {
-                      case "Loc": {ESLVal $31 = _v42.termRef(0);
-                        ESLVal $30 = _v42.termRef(1);
+                      switch(_v20.termName) {
+                      case "Loc": {ESLVal $31 = _v20.termRef(0);
+                        ESLVal $30 = _v20.termRef(1);
                         
-                        {ESLVal _v100 = $31;
+                        {ESLVal _v66 = $31;
                         
-                        {ESLVal _v101 = $30;
+                        {ESLVal _v67 = $30;
                         
-                        {getSelf().ref("moveTo").apply(_v100,_v101);
+                        {getSelf().ref("moveTo").apply(_v66,_v67);
                       {modeCount = modeCount.sub($one);
                       return $null;}}
                       }
                       }
                       }
-                      default: return error(new ESLVal("case error at Pos(8367,8559)").add(ESLVal.list(_v42)));
+                      default: return error(new ESLVal("case error at Pos(9146,9338)").add(ESLVal.list(_v20)));
                     }
                     }
                     else
-                      {state = new ESLVal("Scatter",new ESLVal[]{});
-                      {modeCount = changeMode;
-                      return $null;}}
+                      return switchMode.apply(new ESLVal("Scatter",new ESLVal[]{}));
                   }
-                  default: return error(new ESLVal("case error at Pos(7844,8709)").add(ESLVal.list(_v41)));
+                  default: return error(new ESLVal("case error at Pos(8727,9384)").add(ESLVal.list(_v19)));
                 }
-                }
+                }}
                 
               }
             });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v44 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v22 = $m;
             
-            switch(_v44.termName) {
+            switch(_v22.termName) {
             case "Start": {
               return Lib.send(m,"RegisterGhost",getSelf());
             }
-            default: {ESLVal _v104 = _v44;
+            default: {ESLVal _v70 = _v22;
               
-              {sendSuper(_v104);
+              {sendSuper(_v70);
             return $null;}
             }
           }
@@ -570,6 +676,7 @@ public class Pac {
             switch(name) {
               case "ghostType": return ghostType;
               case "move": return move;
+              case "deltaOK": return deltaOK;
               default: return refSuper(name);
             }
           }
@@ -595,11 +702,11 @@ public class Pac {
   ESLVal m = $args[2];
   return new ESLVal(new BehaviourAdapter(getParent(getSelf(),ghost,x,y,$one,$one,$zero,m),true,getSelf(),new ESLVal("ghost1")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v33 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v16 = $m;
             
-            {ESLVal _v87 = _v33;
+            {ESLVal _v58 = _v16;
             
-            {sendSuper(_v87);
+            {sendSuper(_v58);
           return $null;}
           }
           }}
@@ -631,11 +738,11 @@ public class Pac {
   ESLVal m = $args[2];
   return new ESLVal(new BehaviourAdapter(getParent(getSelf(),ghost,x,y,$one,maxHeight.sub(new ESLVal(2)),$one,m),true,getSelf(),new ESLVal("ghost2")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v32 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v15 = $m;
             
-            {ESLVal _v86 = _v32;
+            {ESLVal _v57 = _v15;
             
-            {sendSuper(_v86);
+            {sendSuper(_v57);
           return $null;}
           }
           }}
@@ -667,11 +774,11 @@ public class Pac {
   ESLVal m = $args[2];
   return new ESLVal(new BehaviourAdapter(getParent(getSelf(),ghost,x,y,maxWidth.sub(new ESLVal(2)),$one,new ESLVal(2),m),true,getSelf(),new ESLVal("ghost3")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v31 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v14 = $m;
             
-            {ESLVal _v85 = _v31;
+            {ESLVal _v56 = _v14;
             
-            {sendSuper(_v85);
+            {sendSuper(_v56);
           return $null;}
           }
           }}
@@ -703,11 +810,11 @@ public class Pac {
   ESLVal m = $args[2];
   return new ESLVal(new BehaviourAdapter(getParent(getSelf(),ghost,x,y,maxWidth.sub(new ESLVal(2)),maxHeight.sub(new ESLVal(2)),new ESLVal(3),m),true,getSelf(),new ESLVal("ghost4")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v30 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v13 = $m;
             
-            {ESLVal _v84 = _v30;
+            {ESLVal _v55 = _v13;
             
-            {sendSuper(_v84);
+            {sendSuper(_v55);
           return $null;}
           }
           }}
@@ -739,15 +846,15 @@ public class Pac {
   ESLVal m = $args[2];
   return new ESLVal(new BehaviourAdapter(getParent(getSelf(),player,x,y,m),true,getSelf(),new ESLVal("pacman")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v29 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v12 = $m;
             
-            switch(_v29.termName) {
+            switch(_v12.termName) {
             case "Start": {
               return Lib.send(m,"RegisterPacman",getSelf());
             }
-            default: {ESLVal _v83 = _v29;
+            default: {ESLVal _v54 = _v12;
               
-              {sendSuper(_v83);
+              {sendSuper(_v54);
             return $null;}
             }
           }
@@ -792,7 +899,7 @@ public class Pac {
                         return $one;
                         else
                           if(dx.less($zero).boolVal)
-                            return $zero.sub($one);
+                            return new ESLVal(-1);
                             else
                               return $zero;
                     }).get();
@@ -801,7 +908,7 @@ public class Pac {
                         return $one;
                         else
                           if(dy.less($zero).boolVal)
-                            return $zero.sub($one);
+                            return new ESLVal(-1);
                             else
                               return $zero;
                     }).get();
@@ -828,11 +935,11 @@ public class Pac {
               }
             });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v28 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v11 = $m;
             
-            {ESLVal _v82 = _v28;
+            {ESLVal _v53 = _v11;
             
-            {sendSuper(_v82);
+            {sendSuper(_v53);
           return $null;}
           }
           }}
@@ -865,140 +972,125 @@ public class Pac {
   return new ESLVal(new BehaviourAdapter(getParent(getSelf(),pacman,x,y,m),true,getSelf(),new ESLVal("autoPacman")) {
           ESLVal plan = ESLVal.list();
           ESLVal fleeing = $false;
-          ESLVal setPlan = new ESLVal(new Function(new ESLVal("setPlan"),getSelf()) {
+          ESLVal moves = new ESLVal(new Function(new ESLVal("moves"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal p = $args[0];
-            {plan = p;
-                return $null;}
+            return new java.util.function.Function<ESLVal,ESLVal>() {
+                    public ESLVal apply(ESLVal $l0) {
+                      ESLVal $a = $nil;
+                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                      while(!$l0.isNil()) { 
+                        ESLVal p = $l0.head();
+                        $l0 = $l0.tail();
+                        $v.add(new ESLVal("Loc",((Supplier<ESLVal>)() -> { 
+                    if(locX.apply(p).eql($zero).boolVal)
+                      return maxWidth.sub($one);
+                      else
+                        return locX.apply(p);
+                  }).get(),locY.apply(p)));
+                      }
+                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                      return $a;
+                    }}.apply(refSuper("moves").apply(p));
               }
             });
-          ESLVal moves = cache.apply(head,new ESLVal(new Function(new ESLVal("fun38"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal p = $args[0];
-            {ESLVal _v24 = head.apply(p);
-                  
-                  switch(_v24.termName) {
-                  case "Loc": {ESLVal $19 = _v24.termRef(0);
-                    ESLVal $18 = _v24.termRef(1);
-                    
-                    {ESLVal _v78 = $19;
-                    
-                    {ESLVal _v79 = $18;
-                    
-                    return new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                      public ESLVal apply(ESLVal... $args) {
-                        ESLVal $qualArg = $args[0];
-                    {ESLVal _v25 = $qualArg;
-                          
-                          {ESLVal dx = _v25;
-                          
-                          return ESLVal.list(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                            public ESLVal apply(ESLVal... $args) {
-                              ESLVal _v80 = $args[0];
-                          {ESLVal _v26 = _v80;
-                                
-                                {ESLVal dy = _v26;
-                                
-                                return ESLVal.list((dx.eql($zero).and(dy.eql($zero)).not().boolVal) ? ((getSelf().ref("canMove").apply(_v78.add(dx),_v79.add(dy)).boolVal) ? (ESLVal.list(new ESLVal("Loc",((Supplier<ESLVal>)() -> { 
-                                  if(_v78.add(dx).eql($zero).boolVal)
-                                    return maxWidth.sub($one);
-                                    else
-                                      return _v78.add(dx);
-                                }).get(),_v79.add(dy)))) : ($nil)) : ($nil));
-                              }
-                              }
-                            }
-                          }).map(ESLVal.list($one,$zero,$zero.sub($one))).flatten().flatten());
-                        }
-                        }
-                      }
-                    }).map(ESLVal.list($one,$zero,$zero.sub($one))).flatten().flatten();
-                  }
-                  }
-                  }
-                  default: return error(new ESLVal("case error at Pos(11330,11592)").add(ESLVal.list(_v24)));
-                }
-                }
-              }
-            }));
           ESLVal ghostDistance = new ESLVal(new Function(new ESLVal("ghostDistance"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal l = $args[0];
-            return min.apply(new ESLVal(1000.0),new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                    public ESLVal apply(ESLVal... $args) {
-                      ESLVal $qualArg = $args[0];
-                  {ESLVal _v23 = $qualArg;
-                        
-                        {ESLVal g = _v23;
-                        
-                        return ESLVal.list(ESLVal.list(distance.apply(locX.apply(l),locY.apply(l),g.ref("getX").apply(),g.ref("getY").apply())));
+            return min.apply(new ESLVal(1000.0),new java.util.function.Function<ESLVal,ESLVal>() {
+                    public ESLVal apply(ESLVal $l0) {
+                      ESLVal $a = $nil;
+                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                      while(!$l0.isNil()) { 
+                        ESLVal g = $l0.head();
+                        $l0 = $l0.tail();
+                        $v.add(distance.apply(locX.apply(l),locY.apply(l),g.ref("getX").apply(),g.ref("getY").apply()));
                       }
+                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                      return $a;
+                    }}.apply(m.ref("getGhosts").apply()));
+              }
+            });
+          ESLVal dangerous = new ESLVal(new Function(new ESLVal("dangerous"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal dangerZones = $args[0];
+            return new ESLVal(new Function(new ESLVal("fun537"),getSelf()) {
+                    public ESLVal apply(ESLVal... $args) {
+                      ESLVal p = $args[0];
+                  {ESLVal canReach = take.apply(dangerZones,length.apply(p).add($one));
+                        
+                        return exists.apply(new ESLVal(new Function(new ESLVal("fun538"),getSelf()) {
+                          public ESLVal apply(ESLVal... $args) {
+                            ESLVal zone = $args[0];
+                        return member.apply(head.apply(p),zone);
+                          }
+                        }),canReach).not();
                       }
                     }
-                  }).map(m.ref("getGhosts").apply()).flatten().flatten());
+                  });
               }
             });
           ESLVal min = new ESLVal(new Function(new ESLVal("min"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                ESLVal _v74 = $args[0];
-            ESLVal _v73 = $args[1];
-            {ESLVal _v22 = _v73;
+                ESLVal _v48 = $args[0];
+            ESLVal _v47 = $args[1];
+            {ESLVal _v9 = _v47;
                   
-                  if(_v22.isCons())
-                  {ESLVal $16 = _v22.head();
-                    ESLVal $17 = _v22.tail();
+                  if(_v9.isCons())
+                  {ESLVal $22 = _v9.head();
+                    ESLVal $23 = _v9.tail();
                     
-                    {ESLVal f = $16;
+                    {ESLVal f = $22;
                     
-                    {ESLVal _v75 = $17;
+                    {ESLVal _v49 = $23;
                     
-                    if(f.less(_v74).boolVal)
-                    return min.apply(f,_v75);
+                    if(f.less(_v48).boolVal)
+                    return min.apply(f,_v49);
                     else
-                      {ESLVal _v76 = $16;
+                      {ESLVal _v50 = $22;
                         
-                        {ESLVal _v77 = $17;
+                        {ESLVal _v51 = $23;
                         
-                        return min.apply(_v74,_v77);
+                        return min.apply(_v48,_v51);
                       }
                       }
                   }
                   }
                   }
-                else if(_v22.isNil())
-                  return _v74;
-                else return error(new ESLVal("case error at Pos(11764,11855)").add(ESLVal.list(_v22)));
+                else if(_v9.isNil())
+                  return _v48;
+                else return error(new ESLVal("case error at Pos(12370,12461)").add(ESLVal.list(_v9)));
                 }
               }
             });
           ESLVal nextMove = new ESLVal(new Function(new ESLVal("nextMove"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal p = $args[0];
-            {ESLVal _v21 = p;
+            {ESLVal _v8 = p;
                   
-                  return $ndCase.apply(_v21,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
+                  return $ndCase.apply(_v8,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
                     public ESLVal apply(ESLVal... $args) {
-                      ESLVal $13 = $args[0];
-                  ESLVal $14 = $args[1];
-                  ESLVal $15 = $args[2];
-                  ESLVal $12 = $args[3];
-                  {ESLVal p1 = $13;
+                      ESLVal $19 = $args[0];
+                  ESLVal $20 = $args[1];
+                  ESLVal $21 = $args[2];
+                  ESLVal $18 = $args[3];
+                  {ESLVal p1 = $19;
                         
-                        {ESLVal l = $14;
+                        {ESLVal l = $20;
                         
-                        {ESLVal p2 = $15;
+                        {ESLVal p2 = $21;
                         
                         if(length.apply(p2).eql($one).boolVal)
                         return l;
                         else
-                          return $12.apply();
+                          return $18.apply();
                       }
                       }
                       }
                     }
                   }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
                     public ESLVal apply(ESLVal... $args) {
-                      return error(new ESLVal("case error at Pos(11888,11954)").add(ESLVal.list(_v21)));
+                      return error(new ESLVal("case error at Pos(12494,12560)").add(ESLVal.list(_v8)));
                     }
                   }));
                 }
@@ -1022,46 +1114,43 @@ public class Pac {
                 }
               }
             });
-          ESLVal ghostMoves = cache.apply(id,new ESLVal(new Function(new ESLVal("fun39"),getSelf()) {
+          ESLVal ghostMoves = cache.apply(id,new ESLVal(new Function(new ESLVal("fun539"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal l = $args[0];
-            {ESLVal _v18 = l;
+            {ESLVal _v7 = l;
                   
-                  switch(_v18.termName) {
-                  case "Loc": {ESLVal $11 = _v18.termRef(0);
-                    ESLVal $10 = _v18.termRef(1);
+                  switch(_v7.termName) {
+                  case "Loc": {ESLVal $17 = _v7.termRef(0);
+                    ESLVal $16 = _v7.termRef(1);
                     
-                    {ESLVal _v70 = $11;
+                    {ESLVal _v45 = $17;
                     
-                    {ESLVal _v71 = $10;
+                    {ESLVal _v46 = $16;
                     
-                    return new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                      public ESLVal apply(ESLVal... $args) {
-                        ESLVal $qualArg = $args[0];
-                    {ESLVal _v19 = $qualArg;
-                          
-                          {ESLVal dx = _v19;
-                          
-                          return ESLVal.list(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                            public ESLVal apply(ESLVal... $args) {
-                              ESLVal _v72 = $args[0];
-                          {ESLVal _v20 = _v72;
-                                
-                                {ESLVal dy = _v20;
-                                
-                                return ESLVal.list((dx.eql($zero).or(dy.eql($zero)).boolVal) ? ((dx.eql($zero).and(dy.eql($zero)).not().boolVal) ? ((getSelf().ref("canMove").apply(_v70.add(dx),_v71.add(dy)).boolVal) ? (ESLVal.list(new ESLVal("Loc",_v70.add(dx),_v71.add(dy)))) : ($nil)) : ($nil)) : ($nil));
-                              }
-                              }
-                            }
-                          }).map(ESLVal.list($one,$zero,$zero.sub($one))).flatten().flatten());
-                        }
-                        }
+                    return new java.util.function.Function<ESLVal,ESLVal>() {
+                      public ESLVal apply(ESLVal $l0) {
+                        ESLVal $a = $nil;
+                        java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                        while(!$l0.isNil()) { 
+                          ESLVal dx = $l0.head();
+                          $l0 = $l0.tail();
+                          ESLVal $l1 = refSuper("deltas");
+                    while(!$l1.isNil()) {
+                      ESLVal dy = $l1.head();
+                      $l1 = $l1.tail();
+                      if(dx.eql($zero).or(dy.eql($zero)).boolVal) {if(dx.eql($zero).and(dy.eql($zero)).not().boolVal) {if(getSelf().ref("canMove").apply(_v45.add(dx),_v46.add(dy)).boolVal) {$v.add(new ESLVal("Loc",_v45.add(dx),_v46.add(dy)));
                       }
-                    }).map(ESLVal.list($one,$zero,$zero.sub($one))).flatten().flatten();
+                      }
+                      }
+                    }
+                        }
+                        for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                        return $a;
+                      }}.apply(refSuper("deltas"));
                   }
                   }
                   }
-                  default: return error(new ESLVal("case error at Pos(12384,12568)").add(ESLVal.list(_v18)));
+                  default: return error(new ESLVal("case error at Pos(12983,13209)").add(ESLVal.list(_v7)));
                 }
                 }
               }
@@ -1069,52 +1158,46 @@ public class Pac {
           ESLVal getDangerZones = new ESLVal(new Function(new ESLVal("getDangerZones"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal moves = $args[0];
-            LetRec letrec = new LetRec() {
-                  ESLVal ghostLocs = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                      public ESLVal apply(ESLVal... $args) {
-                        ESLVal $qualArg = $args[0];
-                    {ESLVal _v17 = $qualArg;
-                          
-                          {ESLVal g = _v17;
-                          
-                          return ESLVal.list(ESLVal.list(new ESLVal("Loc",g.ref("getX").apply(),g.ref("getY").apply())));
+            { LetRec letrec = new LetRec() {
+                  ESLVal ghostLocs = new java.util.function.Function<ESLVal,ESLVal>() {
+                      public ESLVal apply(ESLVal $l0) {
+                        ESLVal $a = $nil;
+                        java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                        while(!$l0.isNil()) { 
+                          ESLVal g = $l0.head();
+                          $l0 = $l0.tail();
+                          $v.add(new ESLVal("Loc",g.ref("getX").apply(),g.ref("getY").apply()));
                         }
-                        }
-                      }
-                    }).map(m.ref("getGhosts").apply()).flatten().flatten();
+                        for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                        return $a;
+                      }}.apply(m.ref("getGhosts").apply());
                   ESLVal zones = new ESLVal(new Function(new ESLVal("zones"),getSelf()) {
                       public ESLVal apply(ESLVal... $args) {
-                        ESLVal _v67 = $args[0];
-                    ESLVal _v66 = $args[1];
-                    ESLVal _v65 = $args[2];
-                    if(_v66.greql(_v65).boolVal)
+                        ESLVal _v44 = $args[0];
+                    ESLVal _v43 = $args[1];
+                    ESLVal _v42 = $args[2];
+                    if(_v43.greql(_v42).boolVal)
                           return ESLVal.list();
                           else
-                            {ESLVal z = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                                  public ESLVal apply(ESLVal... $args) {
-                                    ESLVal $qualArg = $args[0];
-                                {ESLVal _v15 = $qualArg;
-                                      
-                                      {ESLVal l = _v15;
-                                      
-                                      return ESLVal.list(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                                        public ESLVal apply(ESLVal... $args) {
-                                          ESLVal _v68 = $args[0];
-                                      {ESLVal _v16 = _v68;
-                                            
-                                            {ESLVal _v69 = _v16;
-                                            
-                                            return ESLVal.list(ESLVal.list(_v69));
-                                          }
-                                          }
-                                        }
-                                      }).map(ghostMoves.apply(l)).flatten().flatten());
+                            {ESLVal z = new java.util.function.Function<ESLVal,ESLVal>() {
+                                  public ESLVal apply(ESLVal $l0) {
+                                    ESLVal $a = $nil;
+                                    java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                                    while(!$l0.isNil()) { 
+                                      ESLVal l = $l0.head();
+                                      $l0 = $l0.tail();
+                                      ESLVal $l1 = ghostMoves.apply(l);
+                                while(!$l1.isNil()) {
+                                  ESLVal m = $l1.head();
+                                  $l1 = $l1.tail();
+                                  $v.add(m);
+                                }
                                     }
-                                    }
-                                  }
-                                }).map(_v67).flatten().flatten();
+                                    for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                                    return $a;
+                                  }}.apply(_v44);
                               
-                              return zones.apply(z,_v66.add($one),_v65).cons(z);
+                              return zones.apply(z,_v43.add($one),_v42).cons(z);
                             }
                       }
                     });
@@ -1133,73 +1216,29 @@ public class Pac {
                 
                 ESLVal zones = letrec.get("zones");
                 
-                  return zones.apply(ghostLocs,$zero,moves);
+                  return zones.apply(ghostLocs,$zero,moves);}
                 
               }
             });
           ESLVal eat = new ESLVal(new Function(new ESLVal("eat"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal n = $args[0];
-            {ESLVal dangerZones = getDangerZones.apply(n.add($one));
-                  
-                  LetRec letrec = new LetRec() {
-                  ESLVal eatPlans = new ESLVal(new Function(new ESLVal("eatPlans"),getSelf()) {
-                      public ESLVal apply(ESLVal... $args) {
-                        ESLVal _v61 = $args[0];
-                    ESLVal _v60 = $args[1];
-                    ESLVal _v59 = $args[2];
-                    if(_v60.greql(_v59).boolVal)
-                          return _v61;
-                          else
-                            return eatPlans.apply(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                                public ESLVal apply(ESLVal... $args) {
-                                  ESLVal $qualArg = $args[0];
-                              {ESLVal _v11 = $qualArg;
-                                    
-                                    {ESLVal p = _v11;
-                                    
-                                    return ESLVal.list(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                                      public ESLVal apply(ESLVal... $args) {
-                                        ESLVal _v62 = $args[0];
-                                    {ESLVal _v12 = _v62;
-                                          
-                                          {ESLVal l = _v12;
-                                          
-                                          return ESLVal.list((exists.apply(new ESLVal(new Function(new ESLVal("fun40"),getSelf()) {
-                                            public ESLVal apply(ESLVal... $args) {
-                                              ESLVal zone = $args[0];
-                                          return member.apply(l,zone);
-                                            }
-                                          }),take.apply(dangerZones,_v60.add($one))).not().boolVal) ? ((exists.apply(new ESLVal(new Function(new ESLVal("fun41"),getSelf()) {
-                                            public ESLVal apply(ESLVal... $args) {
-                                              ESLVal _v63 = $args[0];
-                                          return member.apply(l,_v63);
-                                            }
-                                          }),_v61).not().boolVal) ? (ESLVal.list(p.cons(l))) : ($nil)) : ($nil));
-                                        }
-                                        }
-                                      }
-                                    }).map(moves.apply(p)).flatten().flatten());
-                                  }
-                                  }
-                                }
-                              }).map(_v61).flatten().flatten(),_v60.add($one),_v59);
-                      }
-                    });
+            { LetRec letrec = new LetRec() {
                   ESLVal foodCount = new ESLVal(new Function(new ESLVal("foodCount"),getSelf()) {
                       public ESLVal apply(ESLVal... $args) {
                         ESLVal plan = $args[0];
-                    {ESLVal[] count = new ESLVal[]{$zero};
-                          
-                          {{
-                          ESLVal _v10 = plan;
-                          while(_v10.isCons()) {
-                            ESLVal l = _v10.headVal;
-                            count[0] = count[0].add(food.array[locY.apply(l).intVal].array[locX.apply(l).intVal]);
-                            _v10 = _v10.tailVal;}
-                        }
-                        return count[0];}
-                        }
+                    return sum.apply(new java.util.function.Function<ESLVal,ESLVal>() {
+                            public ESLVal apply(ESLVal $l0) {
+                              ESLVal $a = $nil;
+                              java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                              while(!$l0.isNil()) { 
+                                ESLVal l = $l0.head();
+                                $l0 = $l0.tail();
+                                $v.add(food.array[locY.apply(l).intVal].array[locX.apply(l).intVal]);
+                              }
+                              for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                              return $a;
+                            }}.apply(plan));
                       }
                     });
                   ESLVal moreFood = new ESLVal(new Function(new ESLVal("moreFood"),getSelf()) {
@@ -1212,14 +1251,15 @@ public class Pac {
                   ESLVal mostFood = new ESLVal(new Function(new ESLVal("mostFood"),getSelf()) {
                       public ESLVal apply(ESLVal... $args) {
                         ESLVal plans = $args[0];
-                    return max.apply(plans,moreFood);
+                    if(length.apply(head.apply(plans)).less(n).boolVal)
+                          return $null;
+                          else
+                            return max.apply(plans,moreFood);
                       }
                     });
                   
                   public ESLVal get(String name) {
                     switch(name) {
-                      case "eatPlans": return eatPlans;
-                      
                       case "foodCount": return foodCount;
                       
                       case "moreFood": return moreFood;
@@ -1230,137 +1270,187 @@ public class Pac {
                     }
                     }
                   };
-                ESLVal eatPlans = letrec.get("eatPlans");
-                
                 ESLVal foodCount = letrec.get("foodCount");
                 
                 ESLVal moreFood = letrec.get("moreFood");
                 
                 ESLVal mostFood = letrec.get("mostFood");
                 
-                  {ESLVal _v13 = mostFood.apply(eatPlans.apply(ESLVal.list(ESLVal.list(new ESLVal("Loc",getSelf().ref("getX").apply(),getSelf().ref("getY").apply()))),$zero,n));
+                  {ESLVal _v6 = getSelf().ref("plan").apply(n,moreFood,mostFood,dangerous.apply(getDangerZones.apply(n.add($one))),moves,getSelf().ref("initPlans").apply());
                   
-                  {ESLVal p = _v13;
-                  
-                  if(p.eql($null).boolVal)
-                  {print.apply(new ESLVal("Yikes - no plan!"));
-                  return setPlan.apply(ESLVal.list());}
-                  else
-                    {ESLVal _v64 = _v13;
+                  if(_v6.isCons())
+                  {ESLVal $12 = _v6.head();
+                    ESLVal $13 = _v6.tail();
+                    
+                    if($13.isCons())
+                    {ESLVal $14 = $13.head();
+                      ESLVal $15 = $13.tail();
                       
-                      {print.apply(new ESLVal("eat ").add(_v64.add(new ESLVal(" ghosts = ").add(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                      public ESLVal apply(ESLVal... $args) {
-                        ESLVal $qualArg = $args[0];
-                    {ESLVal _v14 = $qualArg;
+                      {ESLVal p = _v6;
+                      
+                      if(p.eql($null).boolVal)
+                      {plan = ESLVal.list();
+                      return $null;}
+                      else
+                        {ESLVal _v38 = _v6;
                           
-                          {ESLVal g = _v14;
-                          
-                          return ESLVal.list(ESLVal.list(new ESLVal("Loc",g.ref("getX").apply(),g.ref("getY").apply())));
+                          {plan = butlast.apply(_v38);
+                        return $null;}
                         }
-                        }
-                      }
-                    }).map(m.ref("getGhosts").apply()).flatten().flatten()))));
-                    return setPlan.apply(butlast.apply(_v64));}
                     }
-                }
-                }
+                    }
+                  else if($13.isNil())
+                    {ESLVal l = $12;
+                      
+                      {plan = ESLVal.list();
+                    return $null;}
+                    }
+                  else {ESLVal p = _v6;
+                      
+                      if(p.eql($null).boolVal)
+                      {plan = ESLVal.list();
+                      return $null;}
+                      else
+                        {ESLVal _v39 = _v6;
+                          
+                          {plan = butlast.apply(_v39);
+                        return $null;}
+                        }
+                    }
+                  }
+                else if(_v6.isNil())
+                  {ESLVal p = _v6;
+                    
+                    if(p.eql($null).boolVal)
+                    {plan = ESLVal.list();
+                    return $null;}
+                    else
+                      {ESLVal _v40 = _v6;
+                        
+                        {plan = butlast.apply(_v40);
+                      return $null;}
+                      }
+                  }
+                else {ESLVal p = _v6;
+                    
+                    if(p.eql($null).boolVal)
+                    {plan = ESLVal.list();
+                    return $null;}
+                    else
+                      {ESLVal _v41 = _v6;
+                        
+                        {plan = butlast.apply(_v41);
+                      return $null;}
+                      }
+                  }
+                }}
                 
-                }
               }
             });
           ESLVal flee = new ESLVal(new Function(new ESLVal("flee"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal n = $args[0];
-            {ESLVal dangerZones = getDangerZones.apply(n.add($one));
-                  
-                  LetRec letrec = new LetRec() {
-                  ESLVal fleePlans = new ESLVal(new Function(new ESLVal("fleePlans"),getSelf()) {
+            { LetRec letrec = new LetRec() {
+                  ESLVal ok = new ESLVal(new Function(new ESLVal("ok"),getSelf()) {
                       public ESLVal apply(ESLVal... $args) {
-                        ESLVal _v56 = $args[0];
-                    ESLVal _v55 = $args[1];
-                    ESLVal _v54 = $args[2];
-                    if(_v55.greql(_v54).boolVal)
-                          return _v56;
+                        ESLVal p1 = $args[0];
+                    ESLVal p2 = $args[1];
+                    return $true;
+                      }
+                    });
+                  ESLVal anything = new ESLVal(new Function(new ESLVal("anything"),getSelf()) {
+                      public ESLVal apply(ESLVal... $args) {
+                        ESLVal plans = $args[0];
+                    if(length.apply(head.apply(plans)).less(n).boolVal)
+                          return $null;
                           else
-                            return fleePlans.apply(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                                public ESLVal apply(ESLVal... $args) {
-                                  ESLVal $qualArg = $args[0];
-                              {ESLVal _v6 = $qualArg;
-                                    
-                                    {ESLVal p = _v6;
-                                    
-                                    return ESLVal.list(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                                      public ESLVal apply(ESLVal... $args) {
-                                        ESLVal _v57 = $args[0];
-                                    {ESLVal _v7 = _v57;
-                                          
-                                          {ESLVal l = _v7;
-                                          
-                                          return ESLVal.list((exists.apply(new ESLVal(new Function(new ESLVal("fun42"),getSelf()) {
-                                            public ESLVal apply(ESLVal... $args) {
-                                              ESLVal zone = $args[0];
-                                          return member.apply(l,zone);
-                                            }
-                                          }),take.apply(dangerZones,_v55.add($one))).not().boolVal) ? ((exists.apply(new ESLVal(new Function(new ESLVal("fun43"),getSelf()) {
-                                            public ESLVal apply(ESLVal... $args) {
-                                              ESLVal _v58 = $args[0];
-                                          return member.apply(l,_v58);
-                                            }
-                                          }),_v56).not().boolVal) ? (ESLVal.list(p.cons(l))) : ($nil)) : ($nil));
-                                        }
-                                        }
-                                      }
-                                    }).map(moves.apply(p)).flatten().flatten());
-                                  }
-                                  }
-                                }
-                              }).map(_v56).flatten().flatten(),_v55.add($one),_v54);
+                            return head.apply(plans);
                       }
                     });
                   
                   public ESLVal get(String name) {
                     switch(name) {
-                      case "fleePlans": return fleePlans;
+                      case "ok": return ok;
+                      
+                      case "anything": return anything;
                       
                       default: throw new Error("cannot find letrec binding");
                     }
                     }
                   };
-                ESLVal fleePlans = letrec.get("fleePlans");
+                ESLVal ok = letrec.get("ok");
                 
-                  {ESLVal _v8 = fleePlans.apply(ESLVal.list(ESLVal.list(new ESLVal("Loc",getSelf().ref("getX").apply(),getSelf().ref("getY").apply()))),$zero,n);
+                ESLVal anything = letrec.get("anything");
+                
+                  {ESLVal _v5 = getSelf().ref("plan").apply(n,ok,anything,dangerous.apply(getDangerZones.apply(n.add($one))),moves,getSelf().ref("initPlans").apply());
                   
-                  if(_v8.isCons())
-                  {ESLVal $8 = _v8.head();
-                    ESLVal $9 = _v8.tail();
+                  if(_v5.isCons())
+                  {ESLVal $8 = _v5.head();
+                    ESLVal $9 = _v5.tail();
                     
-                    {ESLVal p = $8;
-                    
-                    {ESLVal ps = $9;
-                    
-                    {print.apply(new ESLVal("flee ").add(p.add(new ESLVal(" ghosts = ").add(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                    public ESLVal apply(ESLVal... $args) {
-                      ESLVal $qualArg = $args[0];
-                  {ESLVal _v9 = $qualArg;
-                        
-                        {ESLVal g = _v9;
-                        
-                        return ESLVal.list(ESLVal.list(new ESLVal("Loc",g.ref("getX").apply(),g.ref("getY").apply())));
-                      }
-                      }
+                    if($9.isCons())
+                    {ESLVal $10 = $9.head();
+                      ESLVal $11 = $9.tail();
+                      
+                      {ESLVal p = _v5;
+                      
+                      if(p.eql($null).boolVal)
+                      {plan = ESLVal.list();
+                      return $null;}
+                      else
+                        {ESLVal _v34 = _v5;
+                          
+                          {plan = butlast.apply(_v34);
+                        return $null;}
+                        }
                     }
-                  }).map(m.ref("getGhosts").apply()).flatten().flatten()))));
-                  return setPlan.apply(butlast.apply(p));}
+                    }
+                  else if($9.isNil())
+                    {ESLVal l = $8;
+                      
+                      {plan = ESLVal.list();
+                    return $null;}
+                    }
+                  else {ESLVal p = _v5;
+                      
+                      if(p.eql($null).boolVal)
+                      {plan = ESLVal.list();
+                      return $null;}
+                      else
+                        {ESLVal _v35 = _v5;
+                          
+                          {plan = butlast.apply(_v35);
+                        return $null;}
+                        }
+                    }
                   }
+                else if(_v5.isNil())
+                  {ESLVal p = _v5;
+                    
+                    if(p.eql($null).boolVal)
+                    {plan = ESLVal.list();
+                    return $null;}
+                    else
+                      {ESLVal _v36 = _v5;
+                        
+                        {plan = butlast.apply(_v36);
+                      return $null;}
+                      }
                   }
+                else {ESLVal p = _v5;
+                    
+                    if(p.eql($null).boolVal)
+                    {plan = ESLVal.list();
+                    return $null;}
+                    else
+                      {ESLVal _v37 = _v5;
+                        
+                        {plan = butlast.apply(_v37);
+                      return $null;}
+                      }
                   }
-                else if(_v8.isNil())
-                  {print.apply(new ESLVal("Yikes - no plan!"));
-                  return setPlan.apply(ESLVal.list());}
-                else return error(new ESLVal("case error at Pos(14951,15275)").add(ESLVal.list(_v8)));
-                }
+                }}
                 
-                }
               }
             });
           ESLVal doPlan = new ESLVal(new Function(new ESLVal("doPlan"),getSelf()) {
@@ -1368,9 +1458,9 @@ public class Pac {
                 if(plan.eql(ESLVal.list()).boolVal)
                   return replan.apply();
                   else
-                    {ESLVal _v4 = plan;
+                    {ESLVal _v3 = plan;
                       
-                      return $ndCase.apply(_v4,ESLVal.list(new ESLVal("$selectRight",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
+                      return $ndCase.apply(_v3,ESLVal.list(new ESLVal("$selectRight",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
                         public ESLVal apply(ESLVal... $args) {
                           ESLVal $4 = $args[0];
                       ESLVal $5 = $args[1];
@@ -1379,27 +1469,25 @@ public class Pac {
                             
                             {ESLVal l = $5;
                             
-                            {setPlan.apply(p1);
-                          print.apply(new ESLVal("plan = ").add(plan));
-                          {ESLVal _v5 = l;
+                            {plan = p1;
+                          {ESLVal _v4 = l;
                             
-                            switch(_v5.termName) {
-                            case "Loc": {ESLVal $7 = _v5.termRef(0);
-                              ESLVal $6 = _v5.termRef(1);
+                            switch(_v4.termName) {
+                            case "Loc": {ESLVal $7 = _v4.termRef(0);
+                              ESLVal $6 = _v4.termRef(1);
                               
-                              {ESLVal _v52 = $7;
+                              {ESLVal _v32 = $7;
                               
-                              {ESLVal _v53 = $6;
+                              {ESLVal _v33 = $6;
                               
-                              {getSelf().ref("moveTo").apply(_v52,_v53);
-                            print.apply(new ESLVal("move ").add(l));
+                              {getSelf().ref("moveTo").apply(_v32,_v33);
                             Lib.send(gui,"Player",getSelf().ref("getX").apply(),getSelf().ref("getY").apply());
                             m.ref("eat").apply(getSelf().ref("getX").apply(),getSelf().ref("getY").apply());
                             return wait.apply(delay);}
                             }
                             }
                             }
-                            default: return error(new ESLVal("case error at Pos(15468,15791)").add(ESLVal.list(_v5)));
+                            default: return error(new ESLVal("case error at Pos(15076,15359)").add(ESLVal.list(_v4)));
                           }
                           }}
                           }
@@ -1407,7 +1495,7 @@ public class Pac {
                         }
                       }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
                         public ESLVal apply(ESLVal... $args) {
-                          return error(new ESLVal("case error at Pos(15360,15809)").add(ESLVal.list(_v4)));
+                          return error(new ESLVal("case error at Pos(15009,15377)").add(ESLVal.list(_v3)));
                         }
                       }));
                     }
@@ -1422,11 +1510,11 @@ public class Pac {
               }
             });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v27 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v10 = $m;
             
-            {ESLVal _v81 = _v27;
+            {ESLVal _v52 = _v10;
             
-            {sendSuper(_v81);
+            {sendSuper(_v52);
           return $null;}
           }
           }}
@@ -1470,7 +1558,7 @@ public class Pac {
             });
           ESLVal allEaten = new ESLVal(new Function(new ESLVal("allEaten"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                return forallArray.apply(new ESLVal(new Function(new ESLVal("fun44"),getSelf()) {
+                return forallArray.apply(new ESLVal(new Function(new ESLVal("fun540"),getSelf()) {
                     public ESLVal apply(ESLVal... $args) {
                       ESLVal row = $args[0];
                   return forallArray.apply(is0,row,maxWidth);
@@ -1506,18 +1594,18 @@ public class Pac {
             });
           ESLVal repaint = new ESLVal(new Function(new ESLVal("repaint"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                return Lib.send(gui,"State",new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-                    public ESLVal apply(ESLVal... $args) {
-                      ESLVal $qualArg = $args[0];
-                  {ESLVal _v2 = $qualArg;
-                        
-                        {ESLVal g = _v2;
-                        
-                        return ESLVal.list(ESLVal.list(new ESLVal("Point",g,g.ref("ghostType"),g.ref("getX").apply(),g.ref("getY").apply())));
+                return Lib.send(gui,"State",new java.util.function.Function<ESLVal,ESLVal>() {
+                    public ESLVal apply(ESLVal $l0) {
+                      ESLVal $a = $nil;
+                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                      while(!$l0.isNil()) { 
+                        ESLVal g = $l0.head();
+                        $l0 = $l0.tail();
+                        $v.add(new ESLVal("Point",g,g.ref("ghostType"),g.ref("getX").apply(),g.ref("getY").apply()));
                       }
-                      }
-                    }
-                  }).map(ghosts).flatten().flatten(),food);
+                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                      return $a;
+                    }}.apply(ghosts),food);
               }
             });
           ESLVal isWall = new ESLVal(new Function(new ESLVal("isWall"),getSelf()) {
@@ -1560,10 +1648,10 @@ public class Pac {
               }
             });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v3 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v2 = $m;
             
-            switch(_v3.termName) {
-            case "RegisterGhost": {ESLVal $2 = _v3.termRef(0);
+            switch(_v2.termName) {
+            case "RegisterGhost": {ESLVal $2 = _v2.termRef(0);
               
               {ESLVal g = $2;
               
@@ -1572,7 +1660,7 @@ public class Pac {
             return $null;}}
             }
             }
-          case "RegisterPacman": {ESLVal $1 = _v3.termRef(0);
+          case "RegisterPacman": {ESLVal $1 = _v2.termRef(0);
               
               {ESLVal p = $1;
               
@@ -1596,7 +1684,7 @@ public class Pac {
               else
                 return Lib.send(getSelf(),"Move");
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v3)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v2)));
           }
           }}
           public ESLVal get(String name) {
@@ -1642,7 +1730,7 @@ public class Pac {
             if(n.gre(timeLimit).boolVal)
             stopAll.apply();
             else
-              {ESLVal _v51 = $t;
+              {ESLVal _v31 = $t;
                 
                 if($true.boolVal)
                 {}

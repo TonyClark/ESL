@@ -11,16 +11,7 @@ public class Example {
           
           public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
             
-            switch(_v1.termName) {
-            case "Timw": {ESLVal $1 = _v1.termRef(0);
-              
-              {ESLVal n = $1;
-              
-              return $null;
-            }
-            }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
-          }
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -40,7 +31,13 @@ public class Example {
                 {print.apply(new ESLVal("time = ").add(_v2));
                 wait.apply(new ESLVal(10));}
                 else
-                  {}
+                  {ESLVal _v3 = $t;
+                    
+                    if($true.boolVal)
+                    {}
+                    else
+                      {}
+                  }
               }
           }
         }

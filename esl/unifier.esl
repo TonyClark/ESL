@@ -1,0 +1,82 @@
+export encodeUTerms,emptyUEnv,UBool,UCons,UEnv,UFloat,UInt,UNil,UStr,UTerm,UTerm,UVar,deref,newVar,unify,unifyTerms,varCount;
+
+import 'esl/tables.esl','esl/lists.esl';
+
+type UEnv = Table[Int,UTerm];
+
+data UTerm =
+  UInt(Int)
+| UStr(Str)
+| UBool(Bool)
+| UFloat(Float)
+| UTerm(Str,[UTerm])
+| UNil
+| UCons(UTerm,UTerm)
+| UVar(Int);
+
+emptyUEnv::UEnv = emptyTable[Int,UTerm]; 
+
+varCount::Int = 0;
+
+newVar()::Int = {
+  varCount := varCount + 1;
+  varCount-1;
+}
+
+encodeUTerms(ts::[UTerm])::UTerm =
+  case ts {
+    [] -> UNil;
+    t:ts -> UCons(t,encodeUTerms(ts));
+  }
+
+deref(t::UTerm,env::UEnv)::UTerm = { 
+  case t {
+    UVar(n) -> 
+      if hasEntry[Int,UTerm](n,env)
+      then deref(lookup[Int,UTerm](n,env),env);
+      else t;
+    t -> t;
+  }
+}
+
+unifyTerms(ts1::[UTerm],ts2::[UTerm],env::UEnv)::UEnv =
+  case ts1,ts2 {
+    [],[] -> env;
+    [],ts2 -> null[UEnv];
+    ts1,[] -> null[UEnv];
+    t1:ts1,t2:ts2 -> 
+      let env::UEnv = unify(t1,t2,env);
+      in if env = null[UEnv]
+         then env;
+         else unifyTerms(ts1,ts2,env);
+  }
+
+unify(t1::UTerm,t2::UTerm,env::UEnv)::UEnv =
+  let t1::UTerm = deref(t1,env);
+      t2::UTerm = deref(t2,env);
+  in {
+    if t1 = t2
+    then env;
+    else {
+      case t1,t2 {
+        UVar(n),t -> addEntry[Int,UTerm](n,t,env);
+        t,UVar(n) -> addEntry[Int,UTerm](n,t,env);
+        UInt(n1),UInt(n2) when n1 = n2 -> env;
+        UStr(s1),UStr(s2) when s1 = s2 -> env;
+        UBool(b1),UBool(b2) when b1 = b2 -> env;
+        UFloat(f1),UFloat(f2) when f1 = f2 -> env;
+        UTerm(n1,ts1),UTerm(n2,ts2) when n1 = n2 and length[UTerm](ts1) = length[UTerm](ts2) -> unifyTerms(ts1,ts2,env);
+        UTerm(n1,ts1),UTerm(n2,ts2) -> null[UEnv];
+        UNil,t2 -> null[UEnv];
+        t1,UNil -> null[UEnv];
+        UCons(h1,t1),UCons(h2,t2) ->
+          let env::UEnv = unify(h1,h2,env);
+          in if env = null[UEnv]
+             then env;
+             else unify(t1,t2,env);
+        UCons(h1,t1),t2 -> null[UEnv];
+        t1,UCons(h2,t2) -> null[UEnv];
+        t1,t2 -> throw[UEnv]('unknown type of elements for unification: ' + t1 + ' and ' + t2);
+      }
+    }
+  }

@@ -1,0 +1,40 @@
+export main;
+
+import 'esl/lists.esl', 'esl/displays.esl';
+
+nodeColour(n::Node)::Str = propValue(nodeProps(n),'fillcolor'); 
+setNodeColour(n::Node,c::Str)::Node = setNodeProps(n,setProp(nodeProps(n),'fillcolor',c));
+edgeBetween(e::Edge,n1::Node,n2::Node)::Bool = edgeTo(e,n1,n2) or edgeTo(e,n2,n1);
+edgeTo(e::Edge,n1::Node,n2::Node)::Bool = edgeSource(e) = nodeId(n1) and edgeTarget(e) = nodeId(n2); 
+
+kempe(graph::Display,colours::[Str])::Display =
+  // Simple algorithm to colour a planar graph.
+  // This is taken from http://www.cs.princeton.edu/~appel/Color.pdf
+  // graph must be planar and has no more than 3v - 6 edges.
+  case graph {
+    Graph(props,[],edges) -> graph;
+    Graph(props,nodes,edges) ->
+      let degreeLessThan5(n::Node)::Bool = length[Edge]([ e | e <- edges, ?(edgeSource(e) = nodeId(n) or edgeTarget(e) = nodeId(n)) ]) <= 5; in
+      let n::Node = select1[Node](nodes,null[Node],degreeLessThan5); in
+      let es::[Edge] = [ e | e <- edges, ?(edgeSource(e) = nodeId(n) or edgeTarget(e) = nodeId(n)) ]; in
+      let g::Display = kempe(Graph(props,remove[Node](n,nodes),removeAll[Edge](es,edges)),colours); 
+      in case g {
+           Graph(props,nodes,edges) ->
+             let adjacent::[Node] = [ n0 | n0 <- nodes, ?(exists[Edge](fun(e::Edge)::Bool edgeBetween(e,n,n0),es)) ]; in
+             let usedColours::[Str] = [ nodeColour(n) | n <- adjacent ]; in
+             let available::[Str] = removeAll[Str](usedColours,colours);
+             in Graph(props,setNodeColour(n,head[Str](available)):nodes,edges+es);
+      }
+  }
+
+mkPlanar(v::Int)::Display = Graph([],
+  [ Node([Prop('style','filled'),Prop('fillcolor','')],i,HTML('N' + i)) | i <- 0..v ],
+  [ Edge([],source,target,HTML('')) | 
+      i <- 0..random((3*v)-6), 
+      source <- [random(v)], 
+      target <- [random(v)], 
+      ?(source <> target) ]);
+
+act main::Act {} {
+  -> edb <- Show('graph',kempe(mkPlanar(200),['red','green','blue','gold','deeppink']));
+}

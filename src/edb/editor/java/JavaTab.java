@@ -68,16 +68,11 @@ public class JavaTab extends JavaEditor implements EDBMenuProvider {
 		bar.add(format);
 		JButton run = MenuProvider.getImageButton("icons/run.png", "run " + getFile().getName() + " on the Java VM", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.META_MASK),
 		    () -> {
-			    run();
+			    if (isDirty()) {
+				    System.out.println("Save " + getFile() + " before running.");
+			    } else
+				    run();
 		    });
-		run.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (isDirty()) {
-					System.out.println("Save " + getFile() + " before running.");
-				} else
-					run();
-			}
-		});
 		bar.add(run);
 	}
 

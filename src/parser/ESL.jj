@@ -182,6 +182,7 @@ TOKEN : /* OPERATORS */
 | < AND : "and" >
 | < ORELSE : "orelse" >
 | < ANDALSO : "andalso" >
+| < AT : "@" >
 }
 
 TOKEN : /* KEYWORDS */
@@ -197,6 +198,7 @@ TOKEN : /* KEYWORDS */
 | < NEW : "new" >
 | < FUN : "fun" >
 | < GRAB : "grab" >
+| < PLET : "plet" >
 | < LET : "let" >
 | < LETREC : "letrec" >
 | < IN : "in" >
@@ -1326,6 +1328,7 @@ AST exp() :
   | exp = grabExp()
   | exp = probablyExp()
   | exp = letExp()
+  | exp = pletExp()
   | exp = letrecExp()
   | exp = caseExp()
   | exp = forExp()
@@ -1520,6 +1523,7 @@ AST command() :
     command = ifCommand()
   | command = funCommand()
   | command = letCommand()
+  | command = pletCommand()
   | command = letrecCommand()
   | LOOKAHEAD(3)
     command = recordExp() < SEMI >
@@ -2061,6 +2065,50 @@ AST caseExp() :
   }
 }
 
+AST pletExp() :
+{
+  Binding [ ] bindings;
+  AST body;
+}
+{
+  < PLET >
+  {
+    start(token);
+  }
+  bindings = bindings() 
+  < IN > 
+  body = exp()
+  {
+    PLet let = new PLet();
+    end(token, let);
+    let.bindings = bindings;
+    let.exp = body;
+    return let;
+  }
+}
+
+AST pletCommand() :
+{
+  Binding [ ] bindings;
+  AST body;
+}
+{
+  < PLET >
+  {
+    start(token);
+  }
+  bindings = bindings() 
+  < IN > 
+  body = command()
+  {
+    PLet let = new PLet();
+    end(token, let);
+    let.bindings = bindings;
+    let.exp = body;
+    return let;
+  }
+}
+
 AST letExp() :
 {
   Binding [ ] bindings;
@@ -2436,10 +2484,10 @@ AST tableNew() :
     start(token);
   }
   < LSQUARE > 
-  keyType = type()
-  < COMMA >
-  valueType = type()
-  < RSQUARE > 
+  keyType = type() 
+  < COMMA > 
+  valueType = type() 
+  < RSQUARE >
   {
     NewTable newTable = new NewTable();
     end(token, newTable);
@@ -2801,6 +2849,7 @@ AST strExp() :
 
 AST numExp() :
 {
+  boolean isNegative = false;
   ast.data.Int num = new ast.data.Int();
   String n;
 }
@@ -2826,12 +2875,18 @@ AST numExp() :
     else num.value = n.charAt(0);
     return num;
   }
-| 
+|
+  [
+    < MINUS >
+    {
+      isNegative = true;
+    }
+  ]
   < INTEGER_CONSTANT >
   {
     num.setLineStart(getCharStart(token));
     num.setLineEnd(getCharEnd(token));
-    num.value = Integer.parseInt(token.image);
+    num.value = isNegative ? - Integer.parseInt(token.image) : Integer.parseInt(token.image);
   }
   (
     < DOT > 
@@ -2852,6 +2907,30 @@ AST numExp() :
 }
 
 AST compositeExp() :
+{
+  AST left, right;
+  BinExp binExp = new BinExp();
+}
+{
+  left = updateExp()
+  [
+    LOOKAHEAD(2)
+    < AT > right = exp()
+    {
+      binExp.setLineStart(left.getLineStart());
+      binExp.setLineEnd(right.getLineEnd());
+      binExp.left = left;
+      binExp.op = "@";
+      binExp.right = right;
+      left = binExp;
+    }
+  ]
+  {
+    return left;
+  }
+}
+
+AST updateExp() :
 {
   AST exp, value;
 }

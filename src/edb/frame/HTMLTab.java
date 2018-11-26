@@ -19,11 +19,16 @@ import javax.swing.event.HyperlinkListener;
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.BrowserContext;
 import com.teamdev.jxbrowser.chromium.BrowserContextParams;
+import com.teamdev.jxbrowser.chromium.CertificateErrorParams;
+import com.teamdev.jxbrowser.chromium.LoadHandler;
+import com.teamdev.jxbrowser.chromium.LoadParams;
 import com.teamdev.jxbrowser.chromium.events.FinishLoadingEvent;
 import com.teamdev.jxbrowser.chromium.events.LoadAdapter;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 
-public class HTMLTab extends JPanel implements HyperlinkListener, EDBMenuProvider {
+import esl.lib.ESLVal;
+
+public class HTMLTab extends JPanel implements HyperlinkListener, EDBMenuProvider, LoadHandler {
 
 	public static BrowserContext	context	= new BrowserContext(new BrowserContextParams(new File("./docs").getAbsolutePath()));
 
@@ -64,6 +69,7 @@ public class HTMLTab extends JPanel implements HyperlinkListener, EDBMenuProvide
 			});
 		});
 		setLayout(new BorderLayout());
+		browser.setLoadHandler(this);
 		add(view);
 	}
 
@@ -102,12 +108,35 @@ public class HTMLTab extends JPanel implements HyperlinkListener, EDBMenuProvide
 
 	}
 
+	public boolean onLoad(LoadParams params) {
+		if (params.getURL().startsWith("esl:")) {
+			String path = params.getURL().substring(4);
+			EDBFrame.FRAME.load(new File(path));
+			return true;
+		} else if (params.getURL().startsWith("edb:")) {
+			try {
+				String path = params.getURL().substring(4);
+				for (ESLVal v : EDBFrame.FRAME.getBrowserListeners()) {
+					v.actor.send(new ESLVal("BrowserEvent", new ESLVal(path)));
+				}
+			} catch (Exception e) {
+
+			}
+			return true;
+		} else
+			return false;
+	}
+
 	public void setHTML(String html) {
 		browser.loadHTML(html);
 	}
 
 	public void addButton(String label, JButton button) {
 
+	}
+
+	public boolean onCertificateError(CertificateErrorParams arg0) {
+		return false;
 	}
 
 }

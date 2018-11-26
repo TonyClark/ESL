@@ -25,14 +25,14 @@ public class Termites {
               {ESLVal a = newArray(size.intVal);
                 
                 {{
-                ESLVal _v4 = $zero.to(size);
-                while(_v4.isCons()) {
-                  ESLVal x = _v4.headVal;
+                ESLVal _v1 = $zero.to(size);
+                while(_v1.isCons()) {
+                  ESLVal x = _v1.headVal;
                   {a.array[x.intVal] = newArray(size.intVal);
                   {
-                    ESLVal _v5 = $zero.to(size);
-                    while(_v5.isCons()) {
-                      ESLVal y = _v5.headVal;
+                    ESLVal _v2 = $zero.to(size);
+                    while(_v2.isCons()) {
+                      ESLVal y = _v2.headVal;
                       {a.array[x.intVal].array[y.intVal] = ((Supplier<ESLVal>)() -> { 
                         if(random.apply(new ESLVal(100)).less(new ESLVal(30)).boolVal)
                           return twig;
@@ -40,12 +40,12 @@ public class Termites {
                             return background;
                       }).get();
                       Lib.send(grid,"SetColour",x,y,a.array[x.intVal].array[y.intVal]);}
-                      _v5 = _v5.tailVal;}
+                      _v2 = _v2.tailVal;}
                   }}
-                  _v4 = _v4.tailVal;}
+                  _v1 = _v1.tailVal;}
               }
               edb.ref("display").apply(new ESLVal("Termites"),grid);
-              edb.ref("button").apply(new ESLVal("Termites"),new ESLVal("stop"),new ESLVal("icons/stop.png"),new ESLVal("stop application"),new ESLVal(new Function(new ESLVal("fun75"),getSelf()) {
+              edb.ref("button").apply(new ESLVal("Termites"),new ESLVal("stop"),new ESLVal("icons/stop.png"),new ESLVal("stop application"),new ESLVal(new Function(new ESLVal("fun168"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   return stopAll.apply();
                 }
@@ -53,18 +53,18 @@ public class Termites {
               return a;}
               }
             }).get();
-          ESLVal termites = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal $qualArg = $args[0];
-            {ESLVal _v3 = $qualArg;
-                  
-                  {ESLVal n = _v3;
-                  
-                  return ESLVal.list(ESLVal.list(newActor(termite,new ESLVal(new Actor()),n,getSelf())));
+          ESLVal termites = new java.util.function.Function<ESLVal,ESLVal>() {
+              public ESLVal apply(ESLVal $l0) {
+                ESLVal $a = $nil;
+                java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                while(!$l0.isNil()) { 
+                  ESLVal n = $l0.head();
+                  $l0 = $l0.tail();
+                  $v.add(newActor(termite,new ESLVal(new Actor()),n,getSelf()));
                 }
-                }
-              }
-            }).map($zero.to(numOfTermites)).flatten().flatten();
+                for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                return $a;
+              }}.apply($zero.to(numOfTermites));
           ESLVal foundSingleton = new ESLVal(new Function(new ESLVal("foundSingleton"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal x = $args[0];
@@ -137,18 +137,18 @@ public class Termites {
               }
             });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v6 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v3 = $m;
             
-            switch(_v6.termName) {
-            case "TryPickup": {ESLVal $10 = _v6.termRef(0);
-              ESLVal $9 = _v6.termRef(1);
-              ESLVal $8 = _v6.termRef(2);
+            switch(_v3.termName) {
+            case "TryPickup": {ESLVal $9 = _v3.termRef(0);
+              ESLVal $8 = _v3.termRef(1);
+              ESLVal $7 = _v3.termRef(2);
               
-              {ESLVal x = $10;
+              {ESLVal x = $9;
               
-              {ESLVal y = $9;
+              {ESLVal y = $8;
               
-              {ESLVal t = $8;
+              {ESLVal t = $7;
               
               if(foundSingleton.apply(x,y).boolVal)
               {locations.array[x.intVal].array[y.intVal] = background;
@@ -160,15 +160,15 @@ public class Termites {
             }
             }
             }
-          case "FindPile": {ESLVal $7 = _v6.termRef(0);
-              ESLVal $6 = _v6.termRef(1);
-              ESLVal $5 = _v6.termRef(2);
+          case "FindPile": {ESLVal $6 = _v3.termRef(0);
+              ESLVal $5 = _v3.termRef(1);
+              ESLVal $4 = _v3.termRef(2);
               
-              {ESLVal x = $7;
+              {ESLVal x = $6;
               
-              {ESLVal y = $6;
+              {ESLVal y = $5;
               
-              {ESLVal t = $5;
+              {ESLVal t = $4;
               
               if(foundPile.apply(x,y).boolVal)
               return Lib.send(t,"FindSpace");
@@ -178,15 +178,15 @@ public class Termites {
             }
             }
             }
-          case "TryDrop": {ESLVal $4 = _v6.termRef(0);
-              ESLVal $3 = _v6.termRef(1);
-              ESLVal $2 = _v6.termRef(2);
+          case "TryDrop": {ESLVal $3 = _v3.termRef(0);
+              ESLVal $2 = _v3.termRef(1);
+              ESLVal $1 = _v3.termRef(2);
               
-              {ESLVal x = $4;
+              {ESLVal x = $3;
               
-              {ESLVal y = $3;
+              {ESLVal y = $2;
               
-              {ESLVal t = $2;
+              {ESLVal t = $1;
               
               if(locations.array[x.intVal].array[y.intVal].eql(background).boolVal)
               {locations.array[x.intVal].array[y.intVal] = twig;
@@ -198,7 +198,7 @@ public class Termites {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v6)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v3)));
           }
           }}
           public ESLVal get(String name) {
@@ -218,7 +218,7 @@ public class Termites {
   });
   private static ESLVal termite = new ESLVal(new Function(new ESLVal("termite"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
-      ESLVal _v9 = $args[0];
+      ESLVal _v7 = $args[0];
   ESLVal _v8 = $args[1];
   return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("termite")) {
           ESLVal x = random.apply(size);
@@ -256,7 +256,7 @@ public class Termites {
                               y = size.sub($one);
                               return move.apply();}
                               else
-                                return Lib.send(grid,"TermiteAt",_v9,x,y);}
+                                return Lib.send(grid,"TermiteAt",_v7,x,y);}
               }
             });
           ESLVal moveRandom = new ESLVal(new Function(new ESLVal("moveRandom"),getSelf()) {
@@ -266,9 +266,9 @@ public class Termites {
               }
             });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v2 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v4 = $m;
             
-            switch(_v2.termName) {
+            switch(_v4.termName) {
             case "Search": {
               {moveRandom.apply();
             return Lib.send(_v8,"TryPickup",x,y,getSelf());}
@@ -281,18 +281,18 @@ public class Termites {
               {moveRandom.apply();
             return Lib.send(_v8,"TryDrop",x,y,getSelf());}
             }
-          case "GetAway": {ESLVal $1 = _v2.termRef(0);
+          case "GetAway": {ESLVal $10 = _v4.termRef(0);
               
-              switch($1.intVal) {
+              switch($10.intVal) {
               case 0: return Lib.send(getSelf(),"Search");
-              default: {ESLVal n = $1;
+              default: {ESLVal n = $10;
                 
                 {move.apply();
               return Lib.send(getSelf(),"GetAway",n.sub($one));}
               }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v2)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v4)));
           }
           }}
           public ESLVal get(String name) {
@@ -315,9 +315,9 @@ public class Termites {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v5 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v5)));
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -331,7 +331,7 @@ public class Termites {
             if(n.gre(limit).boolVal)
             stopAll.apply();
             else
-              {ESLVal _v7 = $t;
+              {ESLVal _v6 = $t;
                 
                 if($true.boolVal)
                 {}

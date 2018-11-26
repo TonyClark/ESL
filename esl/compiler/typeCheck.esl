@@ -18,7 +18,7 @@
 
 export main,typeCheckModule,typeCheckEntryPoint;
 
-import 'esl/lists.esl','esl/compiler/types.esl','esl/tables.esl'; 
+import 'esl/lists.esl','esl/compiler/types.esl','esl/tables.esl','esl/displays.esl'; 
 
 type Main = Act { }
 
@@ -100,6 +100,11 @@ ppHandlers(handlers::[MType],env::TEnv)::Str =
     [] -> '';
     MessageType(l::Loc,t::Type:ts::[Type]):hs::[MType] -> ppType(t,env) + '; ' + ppHandlers(hs,env);
   }
+ppDecs(decs::[TDec],env::TEnv)::Str =
+  case decs {
+    [] -> '';
+    Dec(l,n,t,d):decs::[TDec] -> n + '::' + ppType(t,env) + '; ' + ppDecs(decs,env);
+  }
   
 ppType(t::Type,env::TEnv)::Str = { if getTypeName(t,env) <> null[Str] then getTypeName(t,env); else
   case t {
@@ -119,7 +124,7 @@ ppType(t::Type,env::TEnv)::Str = { if getTypeName(t,env) <> null[Str] then getTy
     ListType(l::Loc,t::Type) -> '[' + ppType(t,env) + ']';
     NullType(l::Loc) -> 'Null';
     RecType(l::Loc,n::Str,t::Type) -> 'rec ' + n + '.' + ppType(t,env);
-    RecordType(l::Loc,fs::[TDec])  -> '{' + fs + '}';
+    RecordType(l::Loc,fs::[TDec])  -> '{' + ppDecs(fs,env) + '}';
     SetType(l::Loc,t::Type) -> 'Set{'+ ppType(t,env) + '}';
     StrType(l::Loc) -> 'Str';
     TableType(l::Loc,k::Type,v::Type) -> 'Hash[' + ppType(k,env) + ',' + ppType(v,env) + ']';
@@ -190,16 +195,26 @@ checkSingletonTypes(e::TEnv)::Void =
       else checkSingletonTypes(e);
   }
      
-checkSingletonConstructors(e::TEnv)::Void = 
+checkSingletonConstructors(cnstrEnv::TEnv)::Void = 
   
   // Check that no types have the same name...
  
-  case e {
+  case cnstrEnv {
     [][TMap] -> null[Void];
-    Map(n::Str,t::Type):e::TEnv ->
-      if member[Str](n,typeEnvDom(e))
-      then throw[Void]('Duplicate constructor name: ' + n);
-      else checkSingletonConstructors(e);
+    Map(n::Str,t::Type):cnstrEnv::TEnv ->
+      if member[Str](n,typeEnvDom(cnstrEnv))
+      then 
+        letrec
+          throwError(t::Type)::Void = 
+            case t {
+              UnionType(l,ts)    -> throw[Void] TypeError(l,'Duplicate constructor name: ' + n);
+              ForallType(l,ns,t) -> throwError(t);
+              RecType(l,n,t)     -> throwError(t);
+              TypeFun(l,ns,t)    -> throwError(t);
+              t                  -> throw[Void]('Duplicate constructor name: ' + n + ' ' + t);
+            }
+        in throwError(t);
+      else checkSingletonConstructors(cnstrEnv);
   }
 
 
@@ -215,16 +230,12 @@ valueDefs(defs::[TBind])::[TBind] =
  valueDefsToTEnv(defs::[TBind],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::TEnv = { 
    case defs {
      [][TBind] -> [][TMap];
-     FunBind(l::Loc,n::Str,ps::[Pattern],t::Type,st::Type,b::AST,g::AST):ds::[TBind] ->
-     
-       // In principle we should be able to define cases of the same function
-       // on different lines. That would require us to know the types of the
-       // arguments to the function in order to check it. For now, assume just
-       // single defintions with pattern-variables...
-
+     FunBinds(n,FunCase(l,args,t,g,e):cases):ds ->
        Map(n,substTypeEnv(typeEnv,t)):valueDefsToTEnv(ds,selfType,valueEnv,cnstrEnv,typeEnv);
-          
-     Binding(l::Loc,n::Str,t::Type,st::Type,e::AST):ds::[TBind] -> Map(n,substTypeEnv(typeEnv,t)):valueDefsToTEnv(ds,selfType,valueEnv,cnstrEnv,typeEnv);
+     FunBind(l::Loc,n::Str,ps::[Pattern],t::Type,st::Type,b::AST,g::AST):ds::[TBind] ->
+       Map(n,substTypeEnv(typeEnv,t)):valueDefsToTEnv(ds,selfType,valueEnv,cnstrEnv,typeEnv);
+     Binding(l::Loc,n::Str,t::Type,st::Type,e::AST):ds::[TBind] -> 
+       Map(n,substTypeEnv(typeEnv,t)):valueDefsToTEnv(ds,selfType,valueEnv,cnstrEnv,typeEnv);
    }
  }
 
@@ -232,9 +243,26 @@ data TRecord =
   Typed(AST,TEnv,TEnv,TEnv)
 | Undefined;
 
+getCache()::Table[Str,TRecord] =
+  let cache::Table[Str,TRecord] = edb.getProperty[Table[Str,TRecord]]('typeCheckCache');
+  in if cache = null[Table[Str,TRecord]]
+     then emptyTable[Str,TRecord];
+     else cache;
+
+setCache(cache::Table[Str,TRecord])::Void =
+  edb.setProperty[Table[Str,TRecord]]('typeCheckCache',cache);
+
+updateCache(path::Str,record::TRecord,cache::Table[Str,TRecord])::Table[Str,TRecord] = {
+  let cache::Table[Str,TRecord] = addEntry[Str,TRecord](path,record,cache);
+  in {
+    setCache(cache);
+    cache;
+  }
+}
+
 typeCheckModule(path::Str)::Void = {
   print[Str]('[ type check ' + path + ']');
-  typeCheckModuleInternal(path,emptyTable[Str,TRecord],fun(cache::Table[Str,TRecord],valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void null[Void]);
+  typeCheckModuleInternal(path,getCache(),fun(cache::Table[Str,TRecord],valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void null[Void]);
 }
  
 typeCheckModuleInternal(path::Str,cache::Table[Str,TRecord],handler::(Table[Str,TRecord],TEnv,TEnv,TEnv) ->Void)::Void =
@@ -246,12 +274,12 @@ typeCheckModuleInternal(path::Str,cache::Table[Str,TRecord],handler::(Table[Str,
     }
   else 
     let m::AST = parse[AST](path);
-    in typeCheckModuleCache(m,addEntry[Str,TRecord](path,Undefined,cache),fun(cache::Table[Str,TRecord],valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void 
-      handler(addEntry[Str,TRecord](path,Typed(m,valueEnv,cnstrEnv,typeEnv),cache),valueEnv,cnstrEnv,typeEnv));
+    in typeCheckModuleCache(m,updateCache(path,Undefined,cache),fun(cache::Table[Str,TRecord],valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void 
+      handler(updateCache(path,Typed(m,valueEnv,cnstrEnv,typeEnv),cache),valueEnv,cnstrEnv,typeEnv));
 
-typeCheckEntryPoint(module::AST)::Void =
-  typeCheckModuleCache(module,emptyTable[Str,TRecord],fun(cache::Table[Str,TRecord],valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void null[Void]);
-
+typeCheckEntryPoint(module::AST)::Void = {
+  typeCheckModuleCache(module,getCache(),fun(cache::Table[Str,TRecord],valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void null[Void]);
+}
 typeCheckModuleCache(module::AST,cache::Table[Str,TRecord],handler::(Table[Str,TRecord],TEnv,TEnv,TEnv) -> Void)::Void =
   typeCheckModule0(module,cache,fun(cache::Table[Str,TRecord],valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Void 
     case module {
@@ -283,6 +311,7 @@ typeCheckModule0(module::AST,cache::Table[Str,TRecord],handler::(Table[Str,TReco
         Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind]) -> { 
           processImports(imports,cache,fun(cache::Table[Str,TRecord],ivalueEnv::TEnv,icnstrEnv::TEnv,itypeEnv::TEnv)::Void
             let e::TEnv = typeEnv(defs);
+                defs::[TBind] = mergeFunDefs(defs);
             in { 
               checkDupBindings(defs);
               checkFreeTypes(e+itypeEnv+tenv0);
@@ -308,8 +337,6 @@ typeCheckModule0(module::AST,cache::Table[Str,TRecord],handler::(Table[Str,TReco
       }
       }
   in main();
-
-
 
 typeCheckValues(valueDefs::[TBind],selfType::Type,ivalueEnv::TEnv,typeEnv::TEnv,cnstrEnv::TEnv)::TEnv =
 
@@ -338,6 +365,41 @@ typeCheckDef(def::TBind,selfType::Type,baseValueEnv::TEnv,valueEnv::TEnv,cnstrEn
   // Type check any binding that could occur at the top level, in a behaviour definition, a let-binding, a let-rec-binding.
   
   case def {
+    FunBinds(n,cases) -> {
+      letrec
+        checkArities(cases::[FunCase],arity::Int)::Void =
+          case cases {
+            [] -> {}
+            FunCase(l,args,t,g,e):cases ->
+              if arity = -1 or length[Pattern](args) = arity 
+              then checkArities(cases,length[Pattern](args));
+              else throw[Void] TypeError(l,'inconsistent overloaded arity');
+          }
+        checkLoneVars(cases::[FunCase])::Void =
+          case cases {
+            [] -> {}
+            FunCase(l,args,t,g,e):cases -> {
+              for arg::Pattern in args do {
+                checkLoneVar(arg);
+              }
+              checkLoneVars(cases);
+            }
+          }
+        checkLoneVar(p::Pattern)::Void = { 
+          case p {
+            PVar(l,n,VoidType(tl)) ->
+              throw[Void] TypeError(l,'top level variables should be typed.');
+            p -> {}
+          }
+        }
+       in {
+        checkArities(cases,-1);
+        checkLoneVars(cases); // Extend to check that vars all all typed.
+        // extract signatures.
+        // compare signatures.
+        // match signatures with bodies.
+       }
+    }
     FunBind(l::Loc,n::Str,ps::[Pattern],t::Type,st::Type,b::AST,g::AST) -> {
       checkPatterns(l,ps);
       let argTypes::[Type] = map[Pattern,Type](fun(p::Pattern)::Type case p { PVar(l::Loc,n::Str,t::Type) -> substTypeEnv(typeEnv,t); },ps);
@@ -396,6 +458,7 @@ expType(e::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type
     List(l::Loc,es::[AST]) -> listType(l,es,selfType,valueEnv,cnstrEnv,typeEnv);
     Now(l::Loc) -> IntType(l);
     Probably(l::Loc,p::AST,t::Type,e1::AST,e2::AST) -> probablyType(l,p,t,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    PLet(l::Loc,bs::[TBind],e::AST) -> letType(l,bs,e,selfType,valueEnv,cnstrEnv,typeEnv);
     Record(l::Loc,fields::[TBind]) -> recordType(l,fields,selfType,valueEnv,cnstrEnv,typeEnv);
     Ref(l::Loc,e::AST,n::Str) -> refType(l,e,n,selfType,valueEnv,cnstrEnv,typeEnv);
     RefSuper(l::Loc,n::Str) -> refType(l,Var(l,'$super'),n,selfType,valueEnv,cnstrEnv,typeEnv);
@@ -414,6 +477,7 @@ expType(e::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type
     NewJava(l::Loc,path::Str,t::Type,args::[AST]) -> { for a::AST in args do expType(a,selfType,valueEnv,cnstrEnv,typeEnv); substTypeEnv(typeEnv,t); }
     Not(l::Loc,e::AST) -> notType(l,e,selfType,valueEnv,cnstrEnv,typeEnv);
     NullExp(l::Loc) -> ForallType(l,['T'],VarType(l,'T'));
+    Unfold(l::Loc,t::Type,e::AST) -> unfoldTypeExp(l,t,e,selfType,valueEnv,cnstrEnv,typeEnv);
     Update(l::Loc,n::Str,e::AST) -> updateType(l,n,e,selfType,valueEnv,cnstrEnv,typeEnv);
     Var(l::Loc,n::Str) -> varType(l,n,valueEnv);
   }}
@@ -427,6 +491,19 @@ foldType(l::Loc,t::Type,e::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,type
   in if typeEqual(substTypeEnv(typeEnv,t),eType)
      then eType;
      else throw[Type] TypeError(l,'fold type ' + ppType(t,typeEnv) + ' does not equal ' + ppType(eType,typeEnv));
+
+unfoldTypeExp(l::Loc,t::Type,e::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = 
+  let eType::Type = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+      recType::Type = substTypeEnv(typeEnv,t);
+  in {
+    case recType {
+       RecType(rl,n,t) -> 
+         if typeEqual(substType(eType,n,t),eType)
+         then eType;
+         else throw[Type] TypeError(l,'unfold type ' + ppType(substType(eType,n,t),typeEnv) + ' does not equal ' + ppType(eType,typeEnv));
+       t -> throw[Type] TypeError(l,'unfold type expects a rec type' + ppType(recType,typeEnv));
+    }
+  }
 
 arrayUpdateType(l::Loc,a::AST,i::AST,v::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = 
   let aType::Type = expType(a,selfType,valueEnv,cnstrEnv,typeEnv);
@@ -505,6 +582,7 @@ sendType(l::Loc,target::AST,n::Str,args::[AST],selfType::Type,valueEnv::TEnv,cns
              else throw[Type] TypeError(l,'expecting ' + length[Type](ts1) + ' args, but received ' + length[Type](ts2));
         m::MType -> throw[Type] TypeError(l,'cannot find message handler named ' + n + ' in ' + handlers);
       }
+    t -> throw[Type] TypeError(l, 'expecting a behaviour type: ' + typeNF(derefType(expType(target,selfType,valueEnv,cnstrEnv,typeEnv)),typeEnv));
   }
 
 actType(l::Loc,n::AST,args::[TDec],parent::AST,exports::[Str],bindings::[TBind],init::AST,arms::[Arm],selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = 
@@ -980,6 +1058,7 @@ binExpType(l::Loc,e1::AST,op::Str,e2::AST,selfType::Type,valueEnv::TEnv,cnstrEnv
     '<=' -> compareExpType(l,e1,'<=',e2,selfType,valueEnv,cnstrEnv,typeEnv);
     '..' -> dotDotExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
     '%' -> percentExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    '@' -> atExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
     op::Str -> throw[Type] TypeError(l,'unknown operator: ' + op);
   }
 
@@ -989,6 +1068,13 @@ andExpType(l::Loc,e1::AST,e2::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,t
   in if isBoolType(t1) and isBoolType(t2)
      then t1;
      else throw[Type] TypeError(l,'and expects boolean arguments: ' + ppType(t1,typeEnv) + ' ' + ppType(t2,typeEnv));
+
+atExpType(l::Loc,e1::AST,e2::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = 
+  let t1::Type = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      t2::Type = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+  in if typeEqual(t1,t2)
+     then t1;
+     else throw[Type] TypeError(l,'@ expects arguments to be same type: ' + ppType(t1,typeEnv) + ' ' + ppType(t2,typeEnv));
 
 dotDotExpType(l::Loc,e1::AST,e2::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv)::Type = 
   let t1::Type = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
@@ -1189,7 +1275,7 @@ termTypeCheckUnion(t::Type,l::Loc,n::Str,ts::[Type],es::[AST],selfType::Type,val
                         checkTermArgTypes(l,es,ts2,selfType,valueEnv,cnstrEnv,typeEnv);
                         UnionType(l1,terms);
                       }
-                      else throw[Type](n + ' expects ' + length[Type](ts2) + ' args, but you supplied ' + length[AST](es));
+                      else throw[Type] TypeError(l,n + ' expects ' + length[Type](ts2) + ' args, but you supplied ' + length[AST](es));
                }
           else throw[Type] TypeError(l,'generic constructor ' + n + ' expects ' + length[Str](ns) + ' type arguments, but received ' + length[Type](ts));
         UnionType(l1::Loc,terms::[Type]) ->
@@ -1201,7 +1287,7 @@ termTypeCheckUnion(t::Type,l::Loc,n::Str,ts::[Type],es::[AST],selfType::Type,val
               checkTermArgTypes(l,es,ts2,selfType,valueEnv,cnstrEnv,typeEnv);
               t;
              }
-             else throw[Type](n + ' expects ' + length[Type](ts2) + ' args, but you supplied ' + length[AST](es));
+             else throw[Type] TypeError(l,n + ' expects ' + length[Type](ts2) + ' args, but you supplied ' + length[AST](es));
         t::Type -> throw[Type] TypeError(l,'expecting a union type for ' + n + ' but got ' + ppType(t,typeEnv));
        }
 
@@ -1293,6 +1379,7 @@ recTypes(env::TEnv)::TEnv =
     introduceRecTypes(env::TEnv)::TEnv = {
       case env {
         [][TMap] -> env;
+        Map(n::Str,RecordType(l,fs)):e -> Map(n,RecordType(l,fs)):introduceRecTypes(e);
         Map(n::Str,t::Type):e::TEnv ->
           if member[Str](n,typeFV(t))
           then Map(n,RecType(p0,n,t)):introduceRecTypes(e);

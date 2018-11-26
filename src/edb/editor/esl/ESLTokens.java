@@ -5,7 +5,7 @@ import org.fife.ui.rsyntaxtextarea.TokenMap;
 
 public class ESLTokens extends org.fife.ui.rsyntaxtextarea.modes.JavaTokenMaker {
 
-	private TokenMap	highlighters	= getWordsToHighlight();
+	private TokenMap highlighters = getWordsToHighlight();
 
 	public ESLTokens() {
 		super();
@@ -29,6 +29,7 @@ public class ESLTokens extends org.fife.ui.rsyntaxtextarea.modes.JavaTokenMaker 
 		tokenMap.put("do", Token.RESERVED_WORD);
 		tokenMap.put("fun", Token.RESERVED_WORD);
 		tokenMap.put("let", Token.RESERVED_WORD);
+		tokenMap.put("plet", Token.RESERVED_WORD);
 		tokenMap.put("letrec", Token.RESERVED_WORD);
 		tokenMap.put("in", Token.RESERVED_WORD);
 		tokenMap.put("new", Token.RESERVED_WORD);
@@ -73,11 +74,14 @@ public class ESLTokens extends org.fife.ui.rsyntaxtextarea.modes.JavaTokenMaker 
 		tokenMap.put("Array", Token.DATA_TYPE);
 		tokenMap.put("Forall", Token.DATA_TYPE);
 
+		tokenMap.put("?", Token.SEPARATOR);
+		tokenMap.put("<-", Token.SEPARATOR);
+		tokenMap.put("->", Token.SEPARATOR);
+
 		return tokenMap;
 	}
 
-	@Override
-	public void addToken(char[] segment, int start, int end, int tokenType, int startOffset, boolean hyperlink) {
+	public void addTokenOld(char[] segment, int start, int end, int tokenType, int startOffset, boolean hyperlink) {
 		// This assumes all keywords, etc. were parsed as "identifiers."
 		if (tokenType == Token.IDENTIFIER || tokenType == Token.RESERVED_WORD) {
 			int value = highlighters.get(segment, start, end);
@@ -86,6 +90,15 @@ public class ESLTokens extends org.fife.ui.rsyntaxtextarea.modes.JavaTokenMaker 
 			} else
 				tokenType = Token.IDENTIFIER;
 		}
+		super.addToken(segment, start, end, tokenType, startOffset, hyperlink);
+	}
+
+	public void addToken(char[] segment, int start, int end, int tokenType, int startOffset, boolean hyperlink) {
+		// This assumes all keywords, etc. were parsed as "identifiers."
+		int value = highlighters.get(segment, start, end);
+		if (value != -1) {
+			tokenType = value;
+		} else if (tokenType == Token.RESERVED_WORD) tokenType = Token.IDENTIFIER;
 		super.addToken(segment, start, end, tokenType, startOffset, hyperlink);
 	}
 

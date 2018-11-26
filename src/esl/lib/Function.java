@@ -1,8 +1,8 @@
 package esl.lib;
 
-import java.util.Arrays;
+import java.io.Serializable;
 
-public abstract class Function extends Named {
+public abstract class Function extends Named implements Serializable {
 	
 	public ESLVal self;
 

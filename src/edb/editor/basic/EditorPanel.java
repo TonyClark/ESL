@@ -68,7 +68,6 @@ public class EditorPanel extends JPanel implements SearchListener, DocumentListe
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_L, c));
 		}
 
-		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (findDialog.isVisible()) {
 				findDialog.setVisible(false);

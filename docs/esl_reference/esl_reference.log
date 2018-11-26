@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.20)  11 NOV 2018 09:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.20)  26 NOV 2018 16:03
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1112,6 +1112,12 @@ Package tocloft Info: The document has section divisions on input line 51.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/setspace/setspace.sty
 Package: setspace 2011/12/19 v6.7a set line spacing
 )
+(/usr/local/texlive/2018/texmf-dist/tex/latex/tools/verbatim.sty
+Package: verbatim 2014/10/28 v1.5q LaTeX2e package for verbatim enhancements
+\every@verbatim=\toks47
+\verbatim@line=\toks48
+\verbatim@in@stream=\read2
+)
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
 s/tikzlibrarymatrix.code.tex
 File: tikzlibrarymatrix.code.tex 2013/07/12 v3.0.1a (rcs-revision 1.4)
@@ -1143,33 +1149,460 @@ s.code.tex
 \tikz@lib@dec@box=\box76
 )
 (/usr/local/texlive/2018/texmf-dist/tex/generic/pgf/libraries/decorations/pgfli
-brarydecorations.pathmorphing.code.tex))
+brarydecorations.pathmorphing.code.tex)) (./esl_reference.aux)
+\openout1 = `esl_reference.aux'.
 
-./esl_reference.tex:94: LaTeX Error: Missing \begin{document}.
+LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 93.
+LaTeX Font Info:    Try loading font information for OML+txmi on input line 93.
 
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.94 \abstract
-              {
-? 
-./esl_reference.tex:94: Emergency stop.
- ...                                              
-                                                  
-l.94 \abstract
-              {
-You're in trouble here.  Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
 
- 
+(/usr/local/texlive/2018/texmf-dist/tex/latex/txfonts/omltxmi.fd
+File: omltxmi.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    ... okay on input line 93.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 93.
+LaTeX Font Info:    ... okay on input line 93.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 93.
+LaTeX Font Info:    ... okay on input line 93.
+LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 93.
+LaTeX Font Info:    Try loading font information for OMS+txsy on input line 93.
+
+
+(/usr/local/texlive/2018/texmf-dist/tex/latex/txfonts/omstxsy.fd
+File: omstxsy.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    ... okay on input line 93.
+LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 93.
+LaTeX Font Info:    Try loading font information for OMX+txex on input line 93.
+
+
+(/usr/local/texlive/2018/texmf-dist/tex/latex/txfonts/omxtxex.fd
+File: omxtxex.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    ... okay on input line 93.
+LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 93.
+LaTeX Font Info:    Try loading font information for U+txexa on input line 93.
+
+(/usr/local/texlive/2018/texmf-dist/tex/latex/txfonts/utxexa.fd
+File: utxexa.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    ... okay on input line 93.
+LaTeX Font Info:    Try loading font information for OT1+txr on input line 93.
+
+(/usr/local/texlive/2018/texmf-dist/tex/latex/txfonts/ot1txr.fd
+File: ot1txr.fd 2000/12/15 v3.1
+)
+(/usr/local/texlive/2018/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count162
+\scratchdimen=\dimen269
+\scratchbox=\box77
+\nofMPsegments=\count163
+\nofMParguments=\count164
+\everyMPshowfont=\toks49
+\MPscratchCnt=\count165
+\MPscratchDim=\dimen270
+\MPnumerator=\count166
+\makeMPintoPDFobject=\count167
+\everyMPtoPDFconversion=\toks50
+)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: custom
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* hratio: 1:1
+* vratio: 1:1
+* modes: 
+* h-part:(L,W,R)=(37.75394pt, 522.0pt, 37.75394pt)
+* v-part:(T,H,B)=(81.52342pt, 682.0pt, 81.52342pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=522.0pt
+* \textheight=682.0pt
+* \oddsidemargin=-34.51605pt
+* \evensidemargin=-34.51605pt
+* \topmargin=-52.74657pt
+* \headheight=50.0pt
+* \headsep=12.0pt
+* \topskip=10.0pt
+* \footskip=18.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=18.0pt
+* \skip\footins=24.0pt plus 2.0pt minus 12.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumntrue
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+\c@lstlisting=\count168
+ABD: EveryShipout initializing macros
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Try loading font information for U+txmia on input line 109.
+
+
+(/usr/local/texlive/2018/texmf-dist/tex/latex/txfonts/utxmia.fd
+File: utxmia.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Try loading font information for U+msa on input line 109.
+
+(/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 109.
+
+(/usr/local/texlive/2018/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Try loading font information for U+txsyc on input line 109.
+
+
+(/usr/local/texlive/2018/texmf-dist/tex/latex/txfonts/utxsyc.fd
+File: utxsyc.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Try loading font information for U+stmry on input line 109.
+
+
+(/usr/local/texlive/2018/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
+LaTeX Font Info:    Try loading font information for U+wasy on input line 109.
+
+(/usr/local/texlive/2018/texmf-dist/tex/latex/wasysym/uwasy.fd
+File: uwasy.fd 2003/10/30 v2.0 Wasy-2 symbol font definitions
+)
+(./esl_reference.toc)
+\tf@toc=\write5
+\openout5 = `esl_reference.toc'.
+
+<actors.png, id=4, 447.6725pt x 295.1025pt>
+File: actors.png Graphic file (type png)
+<use actors.png>
+Package pdftex.def Info: actors.png  used on input line 123.
+(pdftex.def)             Requested size: 252.0pt x 166.12082pt.
+ [1{/usr/local/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+
+
+]
+Overfull \hbox (0.85245pt too wide) in paragraph at lines 182--183
+\OT1/txr/m/n/10 which pro-duces [][][][], [][][][] and []
+ []
+
+[2 <./actors.png>] [3] [4] [5] [6]
+Underfull \hbox (badness 10000) in paragraph at lines 741--742
+
+ []
+
+[7]
+Overfull \hbox (5.47012pt too wide) in paragraph at lines 792--793
+\OT1/txr/m/n/10 threaded, this means that there can be no doubt re-gard-ing whe
+ther
+ []
+
+[8]
+Overfull \hbox (0.26009pt too wide) in paragraph at lines 950--951
+\OT1/txr/m/n/10 cre-ated that con-cur-rently nav-i-gate the search space. The a
+mount
+ []
+
+[9]
+<qsort.png, id=44, 496.7358pt x 370.0224pt>
+File: qsort.png Graphic file (type png)
+<use qsort.png>
+Package pdftex.def Info: qsort.png  used on input line 1023.
+(pdftex.def)             Requested size: 252.0pt x 187.71521pt.
+<termites_before.png, id=45, 412.4208pt x 416.2752pt>
+File: termites_before.png Graphic file (type png)
+<use termites_before.png>
+Package pdftex.def Info: termites_before.png  used on input line 1035.
+(pdftex.def)             Requested size: 100.79846pt x 101.73741pt.
+<termites_after.png, id=46, 412.4208pt x 413.3844pt>
+File: termites_after.png Graphic file (type png)
+<use termites_after.png>
+Package pdftex.def Info: termites_after.png  used on input line 1037.
+(pdftex.def)             Requested size: 103.32092pt x 103.5603pt.
+<termites.png, id=47, 330.9966pt x 375.3222pt>
+File: termites.png Graphic file (type png)
+<use termites.png>
+Package pdftex.def Info: termites.png  used on input line 1196.
+(pdftex.def)             Requested size: 126.0pt x 142.87018pt.
+ [10]
+<dining1.png, id=51, 282.8166pt x 299.6796pt>
+File: dining1.png Graphic file (type png)
+<use dining1.png>
+Package pdftex.def Info: dining1.png  used on input line 1210.
+(pdftex.def)             Requested size: 123.48138pt x 130.84427pt.
+<dining2.png, id=52, 282.8166pt x 299.6796pt>
+File: dining2.png Graphic file (type png)
+<use dining2.png>
+Package pdftex.def Info: dining2.png  used on input line 1212.
+(pdftex.def)             Requested size: 123.48138pt x 130.84427pt.
+<dining3.png, id=53, 514.5624pt x 542.025pt>
+File: dining3.png Graphic file (type png)
+<use dining3.png>
+Package pdftex.def Info: dining3.png  used on input line 1217.
+(pdftex.def)             Requested size: 123.48138pt x 130.07211pt.
+
+Overfull \hbox (12.13008pt too wide) in paragraph at lines 1219--1220
+\OT1/txr/m/n/10 The im-ple-men-ta-tion of deadlock-free din-ing philoso-phers i
+s shown
+ []
+
+[11 <./qsort.png> <./termites_before.png> <./termites_after.png> <./termites.pn
+g> <./dining1.png> <./dining2.png> <./dining3.png>] [12]
+<segregation1.png, id=67, 791.5974pt x 542.025pt>
+File: segregation1.png Graphic file (type png)
+<use segregation1.png>
+Package pdftex.def Info: segregation1.png  used on input line 1276.
+(pdftex.def)             Requested size: 201.60077pt x 138.03671pt.
+<segregation2.png, id=68, 791.5974pt x 542.025pt>
+File: segregation2.png Graphic file (type png)
+<use segregation2.png>
+Package pdftex.def Info: segregation2.png  used on input line 1280.
+(pdftex.def)             Requested size: 201.60077pt x 138.03671pt.
+ [13 <./segregation1.png> <./segregation2.png>] [14]
+<map_reduce.png, id=78, 808.9422pt x 291.0072pt>
+File: map_reduce.png Graphic file (type png)
+<use map_reduce.png>
+Package pdftex.def Info: map_reduce.png  used on input line 1522.
+(pdftex.def)             Requested size: 252.0pt x 90.6509pt.
+ [15 <./map_reduce.png>]
+Overfull \hbox (3.74008pt too wide) in paragraph at lines 1639--1640
+[]\OT1/txr/m/n/10 Single-argument func-tions with-out side ef-fects can be cach
+ed
+ []
+
+[16]
+Overfull \hbox (2.27007pt too wide) in paragraph at lines 1667--1668
+[]\OT1/txr/m/n/10 Behaviour def-i-ni-tions can ex-tend a par-ent def-i-ni-tion 
+in which
+ []
+
+<pac1.png, id=87, 281.853pt x 261.6174pt>
+File: pac1.png Graphic file (type png)
+<use pac1.png>
+Package pdftex.def Info: pac1.png  used on input line 1673.
+(pdftex.def)             Requested size: 201.60077pt x 187.13086pt.
+<pac2.png, id=88, 281.853pt x 261.6174pt>
+File: pac2.png Graphic file (type png)
+<use pac2.png>
+Package pdftex.def Info: pac2.png  used on input line 1677.
+(pdftex.def)             Requested size: 201.60077pt x 187.13086pt.
+
+Overfull \hbox (1.6001pt too wide) in paragraph at lines 1693--1694
+\OT1/txr/m/n/10 The Pac-man maze is im-ple-mented as an ac-tor with the be-havi
+our
+ []
+
+[17 <./pac1.png> <./pac2.png>] [18]
+
+LaTeX Warning: Float too large for page by 15.57997pt on input line 2028.
+
+
+Overfull \hbox (1.24004pt too wide) in paragraph at lines 2031--2032
+\OT1/txr/m/n/10 chine im-ple-mented be-haviour. Like ghosts, the au-to-matic mo
+ve-
+ []
+
+[19] [20] [21]
+Overfull \hbox (2.14009pt too wide) in paragraph at lines 2088--2089
+\OT1/txr/m/n/10 de-vel-op-ment, how-ever it pro-vides lim-ited sup-port for edi
+t-
+ []
+
+<edb.png, id=107, 798.985pt x 480.79625pt>
+File: edb.png Graphic file (type png)
+<use edb.png>
+Package pdftex.def Info: edb.png  used on input line 2097.
+(pdftex.def)             Requested size: 522.0pt x 314.13518pt.
+<../../icons/load.png, id=108, 256.96pt x 256.96pt>
+File: ../../icons/load.png Graphic file (type png)
+<use ../../icons/load.png>
+Package pdftex.def Info: ../../icons/load.png  used on input line 2110.
+(pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
+<../../icons/new_file.png, id=109, 128.48pt x 128.48pt>
+File: ../../icons/new_file.png Graphic file (type png)
+<use ../../icons/new_file.png>
+Package pdftex.def Info: ../../icons/new_file.png  used on input line 2112.
+(pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
+<../../icons/delete.png, id=110, 128.48pt x 128.48pt>
+File: ../../icons/delete.png Graphic file (type png)
+<use ../../icons/delete.png>
+Package pdftex.def Info: ../../icons/delete.png  used on input line 2114.
+(pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
+<../../icons/stop.png, id=111, 128.48pt x 128.48pt>
+File: ../../icons/stop.png Graphic file (type png)
+<use ../../icons/stop.png>
+Package pdftex.def Info: ../../icons/stop.png  used on input line 2116.
+(pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
+<../../icons/font.png, id=112, 128.48pt x 128.48pt>
+File: ../../icons/font.png Graphic file (type png)
+<use ../../icons/font.png>
+Package pdftex.def Info: ../../icons/font.png  used on input line 2118.
+(pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
+<../../icons/save.png, id=113, 256.96pt x 256.96pt>
+File: ../../icons/save.png Graphic file (type png)
+<use ../../icons/save.png>
+Package pdftex.def Info: ../../icons/save.png  used on input line 2120.
+(pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
+<../../icons/save_as.png, id=114, 128.48pt x 128.48pt>
+File: ../../icons/save_as.png Graphic file (type png)
+<use ../../icons/save_as.png>
+Package pdftex.def Info: ../../icons/save_as.png  used on input line 2122.
+(pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
+<../../icons/clock.png, id=115, 128.48pt x 128.48pt>
+File: ../../icons/clock.png Graphic file (type png)
+<use ../../icons/clock.png>
+Package pdftex.def Info: ../../icons/clock.png  used on input line 2124.
+(pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
+<../../icons/compile.png, id=116, 128.48pt x 128.48pt>
+File: ../../icons/compile.png Graphic file (type png)
+<use ../../icons/compile.png>
+Package pdftex.def Info: ../../icons/compile.png  used on input line 2126.
+(pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
+<../../icons/java_file.png, id=117, 128.48pt x 128.48pt>
+File: ../../icons/java_file.png Graphic file (type png)
+<use ../../icons/java_file.png>
+Package pdftex.def Info: ../../icons/java_file.png  used on input line 2139.
+(pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
+<../../icons/run.png, id=118, 96.36pt x 96.36pt>
+File: ../../icons/run.png Graphic file (type png)
+<use ../../icons/run.png>
+Package pdftex.def Info: ../../icons/run.png  used on input line 2141.
+(pdftex.def)             Requested size: 14.22636pt x 14.22546pt.
+<table.png, id=119, 226.8475pt x 252.945pt>
+File: table.png Graphic file (type png)
+<use table.png>
+Package pdftex.def Info: table.png  used on input line 2196.
+(pdftex.def)             Requested size: 151.20154pt x 168.59613pt.
+[22 <../../icons/load.png> <../../icons/new_file.png> <../../icons/delete.png> 
+<../../icons/stop.png> <../../icons/font.png> <../../icons/save.png> <../../ico
+ns/save_as.png> <../../icons/clock.png> <../../icons/compile.png> <../../icons/
+java_file.png> <../../icons/run.png>]
+<links.png, id=134, 226.8475pt x 249.93375pt>
+File: links.png Graphic file (type png)
+<use links.png>
+Package pdftex.def Info: links.png  used on input line 2236.
+(pdftex.def)             Requested size: 151.20154pt x 166.58904pt.
+ [23 <./edb.png> <./table.png>]
+Overfull \hbox (2.2502pt too wide) in paragraph at lines 2238--2239
+\OT1/txr/m/n/10 Clicking on any of the links (ex-cept [][][][]) prints the num-
+ber. Click-
+ []
+
+<pie.png, id=140, 402.50375pt x 402.50375pt>
+File: pie.png Graphic file (type png)
+<use pie.png>
+Package pdftex.def Info: pie.png  used on input line 2260.
+(pdftex.def)             Requested size: 201.60077pt x 201.60146pt.
+<lines.png, id=141, 692.5875pt x 502.87875pt>
+File: lines.png Graphic file (type png)
+<use lines.png>
+Package pdftex.def Info: lines.png  used on input line 2279.
+(pdftex.def)             Requested size: 252.0pt x 182.96988pt.
+<picture.png, id=142, 303.1325pt x 303.1325pt>
+File: picture.png Graphic file (type png)
+<use picture.png>
+Package pdftex.def Info: picture.png  used on input line 2288.
+(pdftex.def)             Requested size: 151.20154pt x 151.20047pt.
+[24 <./links.png> <./pie.png> <./lines.png> <./picture.png>]
+<example_graph.png, id=150, 236.885pt x 359.3425pt>
+File: example_graph.png Graphic file (type png)
+<use example_graph.png>
+Package pdftex.def Info: example_graph.png  used on input line 2328.
+(pdftex.def)             Requested size: 75.02399pt x 113.81102pt.
+<graph_colour.png, id=151, 531.9875pt x 640.3925pt>
+File: graph_colour.png Graphic file (type png)
+<use graph_colour.png>
+Package pdftex.def Info: graph_colour.png  used on input line 2381.
+(pdftex.def)             Requested size: 226.79846pt x 273.00845pt.
+<film1.png, id=152, 558.085pt x 487.8225pt>
+File: film1.png Graphic file (type png)
+<use film1.png>
+Package pdftex.def Info: film1.png  used on input line 2390.
+(pdftex.def)             Requested size: 226.79846pt x 198.24438pt.
+<film2.png, id=153, 558.085pt x 487.8225pt>
+File: film2.png Graphic file (type png)
+<use film2.png>
+Package pdftex.def Info: film2.png  used on input line 2391.
+(pdftex.def)             Requested size: 226.79846pt x 198.24438pt.
+<film3.png, id=154, 558.085pt x 487.8225pt>
+File: film3.png Graphic file (type png)
+<use film3.png>
+Package pdftex.def Info: film3.png  used on input line 2392.
+(pdftex.def)             Requested size: 226.79846pt x 198.24438pt.
+ [25 <./example_graph.png> <./graph_colour.png> <./film1.png> <./film2.png> <./
+film3.png>]
+[26]
+<sequence.png, id=167, 703.62875pt x 341.275pt>
+File: sequence.png Graphic file (type png)
+<use sequence.png>
+Package pdftex.def Info: sequence.png  used on input line 2458.
+(pdftex.def)             Requested size: 252.0pt x 122.22359pt.
+ [27 <./sequence.png>] [28]
+Overfull \hbox (10.26009pt too wide) in paragraph at lines 2763--2764
+\OT1/txr/m/n/10 shots can be merged and the re-sult-ing com-pos-ite snap-shots 
+merged
+ []
+
+<pred1.png, id=175, 456.70625pt x 585.18625pt>
+File: pred1.png Graphic file (type png)
+<use pred1.png>
+Package pdftex.def Info: pred1.png  used on input line 2799.
+(pdftex.def)             Requested size: 252.0pt x 322.88922pt.
+[29]
+<pred2.png, id=179, 456.70625pt x 585.18625pt>
+File: pred2.png Graphic file (type png)
+<use pred2.png>
+Package pdftex.def Info: pred2.png  used on input line 2802.
+(pdftex.def)             Requested size: 252.0pt x 322.88922pt.
+<pred3.png, id=180, 456.70625pt x 585.18625pt>
+File: pred3.png Graphic file (type png)
+<use pred3.png>
+Package pdftex.def Info: pred3.png  used on input line 2805.
+(pdftex.def)             Requested size: 252.0pt x 322.88922pt.
+<pred4.png, id=181, 456.70625pt x 585.18625pt>
+File: pred4.png Graphic file (type png)
+<use pred4.png>
+Package pdftex.def Info: pred4.png  used on input line 2808.
+(pdftex.def)             Requested size: 252.0pt x 322.88922pt.
+ [30 <./pred1.png> <./pred2.png> <./pred3.png> <./pred4.png>]
+(./esl_reference.bbl) [31
+
+] [32
+
+] [33] (./esl_reference.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 18829 strings out of 492649
- 358597 string characters out of 6129622
- 408432 words of memory out of 5000000
- 22346 multiletter control sequences out of 15000+600000
- 4330 words of font info for 16 fonts, out of 8000000 for 9000
+ 20863 strings out of 492649
+ 383687 string characters out of 6129622
+ 1711499 words of memory out of 5000000
+ 24243 multiletter control sequences out of 15000+600000
+ 39365 words of font info for 104 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 48i,1n,69p,413b,221s stack positions out of 5000i,500n,10000p,200000b,80000s
-./esl_reference.tex:94:  ==> Fatal error occurred, no output PDF file produced!
+ 48i,17n,69p,1065b,1741s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
+exlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/local/tex
+live/2018/texmf-dist/fonts/type1/public/txfonts/rtxi.pfb></usr/local/texlive/20
+18/texmf-dist/fonts/type1/public/txfonts/rtxmi.pfb></usr/local/texlive/2018/tex
+mf-dist/fonts/type1/public/txfonts/rtxr.pfb></usr/local/texlive/2018/texmf-dist
+/fonts/type1/public/txfonts/txsy.pfb></usr/local/texlive/2018/texmf-dist/fonts/
+type1/urw/times/utmb8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/
+times/utmr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmr
+i8a.pfb>
+Output written on esl_reference.pdf (33 pages, 7203307 bytes).
+PDF statistics:
+ 228 PDF objects out of 1000 (max. 8388607)
+ 103 compressed objects within 2 object streams
+ 0 named destinations out of 1000 (max. 500000)
+ 213 words of extra memory for PDF output out of 10000 (max. 10000000)
 

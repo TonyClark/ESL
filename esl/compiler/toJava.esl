@@ -51,6 +51,7 @@ expToJCommand(c::AST,isLast::Bool)::JCommand =
     For(l::Loc,p::Pattern,e::AST,b::AST) -> 
       let opName::Str = newName(); varName::Str = newName();
       in expToJCommand(For(l,PVar(l,varName,null[Type]),e,Let(l,[Binding(l,opName,null[Type],null[Type],FunExp(l,StrExp(l,'forp'),[],null[Type],Case(l,[][TDec],[Var(l,varName)],[BArm(l,[p],BoolExp(l,true),b),BArm(l,[PVar(l,'$$$',null[Type])],BoolExp(l,true),Block(l,[]))])))],Apply(l,Var(l,opName),[]))),isLast);
+    PLet(l::Loc,bs::[TBind],e::AST)                                     -> JPLet([defToField(b) | b::TBind <- bs],expToJCommand(e,isLast));
     e::AST when isLast                                                  -> JReturn(expToJExp(e));
     e::AST                                                              -> JStatement(expToJExp(e)); 
   }
@@ -84,6 +85,7 @@ boolArmsToJBoolArms(arms::[CaseBoolsArm],isLast::Bool)::[JBoolArm] =
 
 opToJOp(op::Str)::Str =
   case op { 
+    '@' -> 'at';
     '+' -> 'add';
     '-' -> 'sub';
     '*' -> 'mul';
@@ -110,6 +112,7 @@ caseToJExp(l::Loc,es::[AST],arms::[Arm])::JExp =
 
 expToJExp(e::AST)::JExp =
   case e {
+    Apply(l::Loc,op::AST,args::[AST])                                                                    -> JApply(expToJExp(op),expsToJExps(args));
     ArrayUpdate(l::Loc,a::AST,i::AST,v::AST)                                                             -> JArrayUpdate(expToJExp(a),expToJExp(i),expToJExp(v)); 
     ArrayRef(l::Loc,a::AST,i::AST)                                                                       -> JArrayRef(expToJExp(a),expToJExp(i));
     IntExp(l::Loc,n::Int)                                                                                -> JConstExp(JConstInt(n));
@@ -138,7 +141,6 @@ expToJExp(e::AST)::JExp =
     Let(l::Loc,bs::[TBind],body::AST)                                                                    -> JCommandExp(expToJCommand(e,true),null[JType]);
     Letrec(l::Loc,bs::[TBind],body::AST)                                                                 -> JCommandExp(expToJCommand(e,true),null[JType]);
     Throw(l::Loc,t::Type,e::AST)                                                                         -> JError(expToJExp(e));
-    Apply(l::Loc,op::AST,args::[AST])                                                                    -> JApply(expToJExp(op),expsToJExps(args));
     BinExp(l::Loc,e1::AST,op::Str,e2::AST)                                                               -> JBinExp(expToJExp(e1),opToJOp(op),expToJExp(e2));
     Become(l::Loc,Apply(al::Loc,b::AST,args::[AST]))                                                     -> JBecome(expToJExp(b),expsToJExps(args));
     Block(l::Loc,[][AST])                                                                                -> JNull;
@@ -147,6 +149,7 @@ expToJExp(e::AST)::JExp =
     If(l::Loc,e1::AST,e2::AST,e3::AST)                                                                   -> JCommandExp(JIfCommand(expToJExp(e1),expToJCommand(e2,true),expToJCommand(e3,true)),null[JType]);
     FunExp(l::Loc,n::AST,args::[TDec],t::Type,body::AST)                                                 -> JFun(expToJExp(n),map[TDec,JDeclaration](fun(d::TDec)::JDeclaration decToJDec(d),args),JFunType([null[JType] | a::TDec <- args],null[JType]),expToJCommand(body,true));
     TermRef(e::AST,i::Int)                                                                               -> JTermRef(expToJExp(e),i);
+    Cmp(l::Loc,e::AST,qs::[Qualifier]) when exists[Qualifier](isBindingQualifier,qs) and forall[Qualifier](isSimpleQualifier,qs) -> JCmpExp(cmpToJCmp(e,qs)); 
     Cmp(l::Loc,e::AST,qs::[Qualifier])                                                                   -> cmpToJExp(e,qs);
     Not(l::Loc,e::AST)                                                                                   -> JNot(expToJExp(e)); 
     New(l::Loc,b::AST,args::[AST])                                                                       -> JNew(expToJExp(b),expsToJExps(args));
@@ -168,6 +171,37 @@ expToJExp(e::AST)::JExp =
     Probably(l::Loc,e::AST,t::Type,e1::AST,e2::AST)                                                      -> JProbably(expToJExp(e),expToJExp(e1),expToJExp(e2));
     Try(l::Loc,e::AST,arms::[Arm])                                                                       -> JTry(expToJExp(e),'$x',expToJCommand(Case(l,[][TDec],[Var(l,'$x')],arms),true)); 
     ActExp(l::Loc,name::AST,decs::[TDec],exports::[Str],parent::AST,defs::[TBind],init::AST,arms::[Arm]) -> actToJava(name,decs,exports,parent,defs,init,arms);
+  }
+
+isSimpleQualifier(q::Qualifier)::Bool = {
+  case q {
+    BQual(l,PVar(vl,n,t),e) -> true;
+    BQual(l,p,e)            -> false;
+    q                       -> true;
+  }
+}
+
+isBindingQualifier(q::Qualifier)::Bool = {
+  case q {
+    BQual(l,p,e)            -> true;
+    q                       -> false;
+  }
+}
+
+cmpToJCmp(e::AST,qs::[Qualifier])::JCmp =
+  letrec 
+    inner(qs::[Qualifier])::JCmp =
+      case qs {
+        [] -> JCmpList(expToJExp(e));
+        BQual(l,PVar(vl,n,t),listExp):qs -> JCmpBind(n,expToJExp(listExp),inner(qs));
+        PQual(l,p):qs -> JCmpIf(expToJExp(p),inner(qs));
+      }
+  in {
+    case qs {
+      [] -> JCmpList(expToJExp(e));
+      BQual(l,PVar(vl,n,t),listExp):qs -> JCmpOuter(n,expToJExp(listExp),inner(qs));
+      PQual(l,p):qs -> JCmpIf(expToJExp(p),cmpToJCmp(e,qs));
+    }
   }
 
 refsToJExps(refs::[DRef])::[JExp] = { 
@@ -233,8 +267,8 @@ cmpToJExp(e::AST,qs::[Qualifier])::JExp =
 
 moduleToJava(module::AST)::JMod =
   case module {
-    Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind]) -> 
-      renameJVarsModule(JModule(name,exports,imports,[ defToField(d) | d::TBind <- defs,?(isBinding(d) or isFunBind(d)) ]));     
+    Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind]) ->  
+      renameJVarsModule(JModule(name,exports,imports,[ defToField(d) | d::TBind <- expandFunDefs(mergeFunDefs(defs)),?(isBinding(d) or isFunBind(d)) ]));     
   }
 
 renameJVarsModule(m::JMod)::JMod  =
@@ -309,6 +343,7 @@ renameJVarsExp(e::JExp,vars::[Str],env::Table[Str,Str])::JExp = {
     JCast(v0::JType,v1::JExp) -> {
       JCast(v0,renameJVarsExp(v1,vars,env));
     }
+    JCmpExp(cmp) -> JCmpExp(renameJVarsCmp(cmp,vars,env));
     JNot(e::JExp) -> JNot(renameJVarsExp(e,vars,env));
     JNew(b::JExp,args::[JExp]) -> JNew(renameJVarsExp(b,vars,env),[ renameJVarsExp(a,vars,env) | a::JExp <- args ]);
     JNewArray(b::JExp) -> JNewArray(renameJVarsExp(b,vars,env));
@@ -332,6 +367,22 @@ renameJVarsExp(e::JExp,vars::[Str],env::Table[Str,Str])::JExp = {
     JGrab(es::[JExp],c::JExp) -> JGrab([ renameJVarsExp(e,vars,env) | e::JExp <- es ],renameJVarsExp(c,vars,env));
   }
   
+}
+
+renameJVarsCmp(c::JCmp,vars::[Str],env::Table[Str,Str])::JCmp = {
+  case c {
+    JCmpList(e)      -> JCmpList(renameJVarsExp(e,vars,env));
+    JCmpOuter(n,e,c) -> 
+      let vars::[Str] = remove[Str](n,vars);
+          env::Table[Str,Str] = addEntry[Str,Str](n,n,env);
+      in JCmpOuter(n,renameJVarsExp(e,vars,env),renameJVarsCmp(c,vars,env));
+    JCmpBind(n,e,c)  -> 
+      let vars::[Str] = remove[Str](n,vars);
+          env::Table[Str,Str] = addEntry[Str,Str](n,n,env);
+      in JCmpBind(n,renameJVarsExp(e,vars,env),renameJVarsCmp(c,vars,env));
+    JCmpIf(e,c)      -> 
+      JCmpIf(renameJVarsExp(e,vars,env),renameJVarsCmp(c,vars,env));
+  }
 }
 
 nameCount::Int = 0;
@@ -374,6 +425,18 @@ renameJVarsCommand(c::JCommand,vars::[Str],env::Table[Str,Str])::JCommand = { //
           let env1::Table[Str,Str] = addEntries[Str,Str](boundNames,newNames,env);
           in JLet([ JField(lookup[Str,Str](n,env1),t,renameJVarsExp(e,vars,env)) | JField(n::Str,t::JType,e::JExp) <- v0],renameJVarsCommand(v1,boundNames + vars,env1));
         else JLet([ JField(n,t,renameJVarsExp(e,vars,env)) | JField(n::Str,t::JType,e::JExp) <- v0 ],renameJVarsCommand(v1,boundNames+vars,env));
+      }
+    }
+    JPLet(v0::[JFieldDef],v1::JCommand) -> { 
+      // Rename if already bound...
+      let boundNames::[Str] = [ n | JField(n::Str,t::JType,e::JExp) <- v0 ];
+      in {
+        if exists[Str](fun(n::Str)::Bool member[Str](n,vars),boundNames)
+        then 
+          let newNames::[Str] = [ newName() | n::Str <- boundNames ]; in 
+          let env1::Table[Str,Str] = addEntries[Str,Str](boundNames,newNames,env);
+          in JPLet([ JField(lookup[Str,Str](n,env1),t,renameJVarsExp(e,vars,env)) | JField(n::Str,t::JType,e::JExp) <- v0],renameJVarsCommand(v1,boundNames + vars,env1));
+        else JPLet([ JField(n,t,renameJVarsExp(e,vars,env)) | JField(n::Str,t::JType,e::JExp) <- v0 ],renameJVarsCommand(v1,boundNames+vars,env));
       }
     }
     JLetRec(v0::[JFieldDef],v1::JCommand) -> { 
