@@ -24,85 +24,85 @@ public class Tables {
       ESLVal ks = $args[0];
   ESLVal vs = $args[1];
   ESLVal t = $args[2];
-  {ESLVal _v1918 = ks;
-        ESLVal _v1917 = vs;
+  {ESLVal _v1881 = ks;
+        ESLVal _v1882 = vs;
         
-        if(_v1918.isCons())
-        {ESLVal $2256 = _v1918.head();
-          ESLVal $2257 = _v1918.tail();
+        if(_v1881.isCons())
+        {ESLVal $2261 = _v1881.head();
+          ESLVal $2262 = _v1881.tail();
           
-          if(_v1917.isCons())
-          {ESLVal $2258 = _v1917.head();
-            ESLVal $2259 = _v1917.tail();
+          if(_v1882.isCons())
+          {ESLVal $2263 = _v1882.head();
+            ESLVal $2264 = _v1882.tail();
             
-            {ESLVal k = $2256;
+            {ESLVal k = $2261;
             
-            {ESLVal _v1920 = $2257;
+            {ESLVal _v1886 = $2262;
             
-            {ESLVal v = $2258;
+            {ESLVal v = $2263;
             
-            {ESLVal _v1921 = $2259;
+            {ESLVal _v1887 = $2264;
             
-            return addEntries.apply(_v1920,_v1921,addEntry.apply(k,v,t));
+            return addEntries.apply(_v1886,_v1887,addEntry.apply(k,v,t));
           }
           }
           }
           }
           }
-        else if(_v1917.isNil())
-          if(_v1917.isCons())
-            {ESLVal $2254 = _v1917.head();
-              ESLVal $2255 = _v1917.tail();
+        else if(_v1882.isNil())
+          if(_v1882.isCons())
+            {ESLVal $2259 = _v1882.head();
+              ESLVal $2260 = _v1882.tail();
               
-              return error(new ESLVal("case error at Pos(479,771)").add(ESLVal.list(_v1918,_v1917)));
+              return error(new ESLVal("case error at Pos(479,771)").add(ESLVal.list(_v1881,_v1882)));
             }
-          else if(_v1917.isNil())
-            {ESLVal _v1922 = _v1918;
-              
-              return error(new ESLVal("ran out of values"));
-            }
-          else return error(new ESLVal("case error at Pos(479,771)").add(ESLVal.list(_v1918,_v1917)));
-        else if(_v1917.isCons())
-            {ESLVal $2254 = _v1917.head();
-              ESLVal $2255 = _v1917.tail();
-              
-              return error(new ESLVal("case error at Pos(479,771)").add(ESLVal.list(_v1918,_v1917)));
-            }
-          else if(_v1917.isNil())
-            {ESLVal _v1923 = _v1918;
+          else if(_v1882.isNil())
+            {ESLVal _v1888 = _v1881;
               
               return error(new ESLVal("ran out of values"));
             }
-          else return error(new ESLVal("case error at Pos(479,771)").add(ESLVal.list(_v1918,_v1917)));
+          else return error(new ESLVal("case error at Pos(479,771)").add(ESLVal.list(_v1881,_v1882)));
+        else if(_v1882.isCons())
+            {ESLVal $2259 = _v1882.head();
+              ESLVal $2260 = _v1882.tail();
+              
+              return error(new ESLVal("case error at Pos(479,771)").add(ESLVal.list(_v1881,_v1882)));
+            }
+          else if(_v1882.isNil())
+            {ESLVal _v1889 = _v1881;
+              
+              return error(new ESLVal("ran out of values"));
+            }
+          else return error(new ESLVal("case error at Pos(479,771)").add(ESLVal.list(_v1881,_v1882)));
         }
-      else if(_v1918.isNil())
-        if(_v1917.isCons())
-          {ESLVal $2260 = _v1917.head();
-            ESLVal $2261 = _v1917.tail();
+      else if(_v1881.isNil())
+        if(_v1882.isCons())
+          {ESLVal $2265 = _v1882.head();
+            ESLVal $2266 = _v1882.tail();
             
-            {ESLVal _v1924 = _v1917;
+            {ESLVal _v1890 = _v1882;
             
             return error(new ESLVal("ran out of keys"));
           }
           }
-        else if(_v1917.isNil())
+        else if(_v1882.isNil())
           return t;
-        else {ESLVal _v1925 = _v1917;
+        else {ESLVal _v1891 = _v1882;
             
             return error(new ESLVal("ran out of keys"));
           }
-      else if(_v1917.isCons())
-          {ESLVal $2254 = _v1917.head();
-            ESLVal $2255 = _v1917.tail();
+      else if(_v1882.isCons())
+          {ESLVal $2259 = _v1882.head();
+            ESLVal $2260 = _v1882.tail();
             
-            return error(new ESLVal("case error at Pos(479,771)").add(ESLVal.list(_v1918,_v1917)));
+            return error(new ESLVal("case error at Pos(479,771)").add(ESLVal.list(_v1881,_v1882)));
           }
-        else if(_v1917.isNil())
-          {ESLVal _v1926 = _v1918;
+        else if(_v1882.isNil())
+          {ESLVal _v1892 = _v1881;
             
             return error(new ESLVal("ran out of values"));
           }
-        else return error(new ESLVal("case error at Pos(479,771)").add(ESLVal.list(_v1918,_v1917)));
+        else return error(new ESLVal("case error at Pos(479,771)").add(ESLVal.list(_v1881,_v1882)));
       }
     }
   });
@@ -110,36 +110,36 @@ public class Tables {
     public ESLVal apply(ESLVal... $args) {
       ESLVal k = $args[0];
   ESLVal table = $args[1];
-  {ESLVal _v1916 = table;
+  {ESLVal _v1883 = table;
         
-        if(_v1916.isCons())
-        {ESLVal $2250 = _v1916.head();
-          ESLVal $2251 = _v1916.tail();
+        if(_v1883.isCons())
+        {ESLVal $2267 = _v1883.head();
+          ESLVal $2268 = _v1883.tail();
           
-          switch($2250.termName) {
-          case "TableEntry": {ESLVal $2253 = $2250.termRef(0);
-            ESLVal $2252 = $2250.termRef(1);
+          switch($2267.termName) {
+          case "TableEntry": {ESLVal $2270 = $2267.termRef(0);
+            ESLVal $2269 = $2267.termRef(1);
             
-            {ESLVal kk = $2253;
+            {ESLVal kk = $2270;
             
-            {ESLVal vv = $2252;
+            {ESLVal vv = $2269;
             
-            {ESLVal _v1919 = $2251;
+            {ESLVal _v1885 = $2268;
             
             if(kk.eql(k).boolVal)
             return new ESLVal("TableEntry",kk,vv);
             else
-              return getEntry.apply(k,_v1919);
+              return getEntry.apply(k,_v1885);
           }
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(843,1057)").add(ESLVal.list(_v1916)));
+          default: return error(new ESLVal("case error at Pos(843,1057)").add(ESLVal.list(_v1883)));
         }
         }
-      else if(_v1916.isNil())
+      else if(_v1883.isNil())
         return $null;
-      else return error(new ESLVal("case error at Pos(843,1057)").add(ESLVal.list(_v1916)));
+      else return error(new ESLVal("case error at Pos(843,1057)").add(ESLVal.list(_v1883)));
       }
     }
   });
@@ -154,26 +154,26 @@ public class Tables {
     public ESLVal apply(ESLVal... $args) {
       ESLVal k = $args[0];
   ESLVal table = $args[1];
-  {ESLVal _v1915 = getEntry.apply(k,table);
+  {ESLVal _v1884 = getEntry.apply(k,table);
         
-        switch(_v1915.termName) {
-        case "TableEntry": {ESLVal $2249 = _v1915.termRef(0);
-          ESLVal $2248 = _v1915.termRef(1);
+        switch(_v1884.termName) {
+        case "TableEntry": {ESLVal $2272 = _v1884.termRef(0);
+          ESLVal $2271 = _v1884.termRef(1);
           
-          {ESLVal kk = $2249;
+          {ESLVal kk = $2272;
           
-          {ESLVal vv = $2248;
+          {ESLVal vv = $2271;
           
           return vv;
         }
         }
         }
-        default: {ESLVal e = _v1915;
+        default: {ESLVal e = _v1884;
           
           if(e.eql($null).boolVal)
           return error(new ESLVal("no key ").add(k.add(new ESLVal(" in table."))));
           else
-            return error(new ESLVal("case error at Pos(1238,1424)").add(ESLVal.list(_v1915)));
+            return error(new ESLVal("case error at Pos(1238,1424)").add(ESLVal.list(_v1884)));
         }
       }
       }

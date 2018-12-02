@@ -17,13 +17,12 @@ import ast.modules.Module;
 import edb.diagrams.dependency.DependencyComponent;
 import edb.diagrams.model.ESLModelComponent;
 import edb.editor.TabbedActor;
+import edb.editor.basic.Editor;
 import edb.editor.basic.FileEditor;
 import edb.editor.basic.MessageHandler;
 import edb.editor.basic.Persistent;
 import edb.editor.filmstrip.Filmstrip;
 import edb.frame.commands.EDBStateCommand;
-import edb.frame.commands.SetCaret;
-import edb.frame.commands.SetFont;
 import edb.frame.commands.SetSelected;
 import edb.tool.DelayedString;
 
@@ -359,6 +358,16 @@ public class EDBTabs extends JTabbedPane {
 			Writable writable = (Writable)c;
 			writable.write(b);
 		} else System.err.write(b);
+	}
+
+	public void allEditorsStopped() {
+		for (int i = 0; i < getTabCount(); i++) {
+			Component c = getComponentAt(i);
+			if (c instanceof Editor) {
+				Editor editor = (Editor) c;
+				editor.handleMessage("Ready");
+			}
+		}
 	}
 
 }

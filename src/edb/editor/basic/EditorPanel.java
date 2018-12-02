@@ -428,8 +428,8 @@ public class EditorPanel extends JPanel implements SearchListener, DocumentListe
 	}
 
 	public void write(int b) {
-		csp.showBottomComponent(outputToolBar);
-		outputToolBar.append(b);
+		if (csp.getDisplayedBottomComponent() != outputToolBar) csp.showBottomComponent(outputToolBar);
+		outputToolBar.write(b);
 	}
 
 }

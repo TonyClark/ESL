@@ -9,37 +9,37 @@ public class Strings {
   public static ESLVal javaString = new ESLVal(new Function(new ESLVal("javaString"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal s = $args[0];
-  LetRec letrec = new LetRec() {
+  { LetRec letrec = new LetRec() {
         ESLVal f = new ESLVal(new Function(new ESLVal("f"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal l = $args[0];
-          {ESLVal _v833 = l;
+          {ESLVal _v795 = l;
                 
-                if(_v833.isCons())
-                {ESLVal $1386 = _v833.head();
-                  ESLVal $1387 = _v833.tail();
+                if(_v795.isCons())
+                {ESLVal $1376 = _v795.head();
+                  ESLVal $1377 = _v795.tail();
                   
-                  switch($1386.intVal) {
-                  case 34: {ESLVal _v842 = $1387;
+                  switch($1376.intVal) {
+                  case 34: {ESLVal _v809 = $1377;
                     
-                    return ESLVal.list(new ESLVal(92),new ESLVal(34)).add(f.apply(_v842));
+                    return ESLVal.list(new ESLVal(92),new ESLVal(34)).add(f.apply(_v809));
                   }
-                case 10: {ESLVal _v841 = $1387;
+                case 10: {ESLVal _v808 = $1377;
                     
-                    return ESLVal.list(new ESLVal(92),new ESLVal(110)).add(f.apply(_v841));
+                    return ESLVal.list(new ESLVal(92),new ESLVal(110)).add(f.apply(_v808));
                   }
-                  default: {ESLVal c = $1386;
+                  default: {ESLVal c = $1376;
                     
-                    {ESLVal _v843 = $1387;
+                    {ESLVal _v810 = $1377;
                     
-                    return f.apply(_v843).cons(c);
+                    return f.apply(_v810).cons(c);
                   }
                   }
                 }
                 }
-              else if(_v833.isNil())
+              else if(_v795.isNil())
                 return $nil;
-              else return error(new ESLVal("case error at Pos(251,429)").add(ESLVal.list(_v833)));
+              else return error(new ESLVal("case error at Pos(251,429)").add(ESLVal.list(_v795)));
               }
             }
           });
@@ -54,7 +54,7 @@ public class Strings {
         };
       ESLVal f = letrec.get("f");
       
-        return f.apply(s.ref("explode")).ref("implode");
+        return f.apply(s.ref("explode")).ref("implode");}
       
     }
   });
@@ -63,36 +63,36 @@ public class Strings {
       ESLVal s = $args[0];
   ESLVal change = $args[1];
   ESLVal insert = $args[2];
-  LetRec letrec = new LetRec() {
+  { LetRec letrec = new LetRec() {
         ESLVal replace = new ESLVal(new Function(new ESLVal("replace"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal chars = $args[0];
-          {ESLVal _v832 = chars;
+          {ESLVal _v796 = chars;
                 
-                if(_v832.isCons())
-                {ESLVal $1384 = _v832.head();
-                  ESLVal $1385 = _v832.tail();
+                if(_v796.isCons())
+                {ESLVal $1378 = _v796.head();
+                  ESLVal $1379 = _v796.tail();
                   
-                  {ESLVal c = $1384;
+                  {ESLVal c = $1378;
                   
-                  {ESLVal _v838 = $1385;
+                  {ESLVal _v805 = $1379;
                   
                   if(c.eql(change).boolVal)
-                  return insert.ref("explode").add(replace.apply(_v838));
+                  return insert.ref("explode").add(replace.apply(_v805));
                   else
-                    {ESLVal _v839 = $1384;
+                    {ESLVal _v806 = $1378;
                       
-                      {ESLVal _v840 = $1385;
+                      {ESLVal _v807 = $1379;
                       
-                      return replace.apply(_v840).cons(_v839);
+                      return replace.apply(_v807).cons(_v806);
                     }
                     }
                 }
                 }
                 }
-              else if(_v832.isNil())
+              else if(_v796.isNil())
                 return $nil;
-              else return error(new ESLVal("case error at Pos(560,738)").add(ESLVal.list(_v832)));
+              else return error(new ESLVal("case error at Pos(560,738)").add(ESLVal.list(_v796)));
               }
             }
           });
@@ -107,7 +107,7 @@ public class Strings {
         };
       ESLVal replace = letrec.get("replace");
       
-        return replace.apply(s.ref("explode")).ref("implode");
+        return replace.apply(s.ref("explode")).ref("implode");}
       
     }
   });
@@ -115,7 +115,7 @@ public class Strings {
     public ESLVal apply(ESLVal... $args) {
       ESLVal c = $args[0];
   ESLVal s = $args[1];
-  LetRec letrec = new LetRec() {
+  { LetRec letrec = new LetRec() {
         ESLVal isNotChar = new ESLVal(new Function(new ESLVal("isNotChar"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal i = $args[0];
@@ -125,45 +125,45 @@ public class Strings {
         ESLVal maybeDropOne = new ESLVal(new Function(new ESLVal("maybeDropOne"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal l = $args[0];
-          {ESLVal _v831 = l;
+          {ESLVal _v797 = l;
                 
-                if(_v831.isCons())
-                {ESLVal $1382 = _v831.head();
-                  ESLVal $1383 = _v831.tail();
+                if(_v797.isCons())
+                {ESLVal $1380 = _v797.head();
+                  ESLVal $1381 = _v797.tail();
                   
-                  {ESLVal h = $1382;
+                  {ESLVal h = $1380;
                   
-                  {ESLVal t = $1383;
+                  {ESLVal t = $1381;
                   
                   return t;
                 }
                 }
                 }
-              else if(_v831.isNil())
+              else if(_v797.isNil())
                 return l;
-              else return error(new ESLVal("case error at Pos(890,936)").add(ESLVal.list(_v831)));
+              else return error(new ESLVal("case error at Pos(890,936)").add(ESLVal.list(_v797)));
               }
             }
           });
         ESLVal splitter = new ESLVal(new Function(new ESLVal("splitter"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
               ESLVal chars = $args[0];
-          {ESLVal _v830 = chars;
+          {ESLVal _v798 = chars;
                 
-                if(_v830.isCons())
-                {ESLVal $1380 = _v830.head();
-                  ESLVal $1381 = _v830.tail();
+                if(_v798.isCons())
+                {ESLVal $1382 = _v798.head();
+                  ESLVal $1383 = _v798.tail();
                   
-                  {ESLVal _v836 = _v830;
+                  {ESLVal _v803 = _v798;
                   
-                  return splitter.apply(maybeDropOne.apply(dropWhile.apply(isNotChar,_v836))).cons(takeWhile.apply(isNotChar,_v836).ref("implode"));
+                  return splitter.apply(maybeDropOne.apply(dropWhile.apply(isNotChar,_v803))).cons(takeWhile.apply(isNotChar,_v803).ref("implode"));
                 }
                 }
-              else if(_v830.isNil())
+              else if(_v798.isNil())
                 return $nil;
-              else {ESLVal _v837 = _v830;
+              else {ESLVal _v804 = _v798;
                   
-                  return splitter.apply(maybeDropOne.apply(dropWhile.apply(isNotChar,_v837))).cons(takeWhile.apply(isNotChar,_v837).ref("implode"));
+                  return splitter.apply(maybeDropOne.apply(dropWhile.apply(isNotChar,_v804))).cons(takeWhile.apply(isNotChar,_v804).ref("implode"));
                 }
               }
             }
@@ -187,7 +187,7 @@ public class Strings {
       
       ESLVal splitter = letrec.get("splitter");
       
-        return splitter.apply(s.ref("explode"));
+        return splitter.apply(s.ref("explode"));}
       
     }
   });
@@ -195,40 +195,40 @@ public class Strings {
     public ESLVal apply(ESLVal... $args) {
       ESLVal c = $args[0];
   ESLVal ss = $args[1];
-  {ESLVal _v829 = ss;
+  {ESLVal _v799 = ss;
         
-        if(_v829.isCons())
-        {ESLVal $1376 = _v829.head();
-          ESLVal $1377 = _v829.tail();
+        if(_v799.isCons())
+        {ESLVal $1384 = _v799.head();
+          ESLVal $1385 = _v799.tail();
           
-          if($1377.isCons())
-          {ESLVal $1378 = $1377.head();
-            ESLVal $1379 = $1377.tail();
+          if($1385.isCons())
+          {ESLVal $1386 = $1385.head();
+            ESLVal $1387 = $1385.tail();
             
-            {ESLVal s = $1376;
+            {ESLVal s = $1384;
             
-            {ESLVal _v834 = $1377;
+            {ESLVal _v801 = $1385;
             
-            return s.add(ESLVal.list(c).ref("implode").add(joinBy.apply(c,_v834)));
+            return s.add(ESLVal.list(c).ref("implode").add(joinBy.apply(c,_v801)));
           }
           }
           }
-        else if($1377.isNil())
-          {ESLVal s = $1376;
+        else if($1385.isNil())
+          {ESLVal s = $1384;
             
             return s;
           }
-        else {ESLVal s = $1376;
+        else {ESLVal s = $1384;
             
-            {ESLVal _v835 = $1377;
+            {ESLVal _v802 = $1385;
             
-            return s.add(ESLVal.list(c).ref("implode").add(joinBy.apply(c,_v835)));
+            return s.add(ESLVal.list(c).ref("implode").add(joinBy.apply(c,_v802)));
           }
           }
         }
-      else if(_v829.isNil())
+      else if(_v799.isNil())
         return new ESLVal("");
-      else return error(new ESLVal("case error at Pos(1223,1330)").add(ESLVal.list(_v829)));
+      else return error(new ESLVal("case error at Pos(1223,1330)").add(ESLVal.list(_v799)));
       }
     }
   });
@@ -281,9 +281,9 @@ public class Strings {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v828 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v800 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v828)));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v800)));
           }}
           public ESLVal get(String name) {
             switch(name) {

@@ -37,7 +37,7 @@ public class Shop {
           ESLVal customers = ESLVal.list();
           ESLVal asTable = new ESLVal(new Function(new ESLVal("asTable"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
-                LetRec letrec = new LetRec() {
+                { LetRec letrec = new LetRec() {
                   ESLVal rows = new ESLVal(new Function(new ESLVal("rows"),getSelf()) {
                       public ESLVal apply(ESLVal... $args) {
                         ESLVal cs = $args[0];
@@ -131,7 +131,7 @@ public class Shop {
                 
                 ESLVal states = letrec.get("states");
                 
-                  return new ESLVal("Table",$nil,ESLVal.list(row.apply(ESLVal.list(tdata.apply(new ESLVal("Table",$nil,rows.apply(take.apply(customers,length.apply(customers).div(new ESLVal(2)))))),tdata.apply(new ESLVal("Table",$nil,rows.apply(drop.apply(customers,length.apply(customers).div(new ESLVal(2))))))))).add(ESLVal.list(row.apply(ESLVal.list(tdata.apply(new ESLVal("HTML",new ESLVal("time = ").add(now()))),tdata.apply(new ESLVal("HTML",new ESLVal("time = ").add(now()))))))));
+                  return new ESLVal("Table",$nil,ESLVal.list(row.apply(ESLVal.list(tdata.apply(new ESLVal("Table",$nil,rows.apply(take.apply(customers,length.apply(customers).div(new ESLVal(2)))))),tdata.apply(new ESLVal("Table",$nil,rows.apply(drop.apply(customers,length.apply(customers).div(new ESLVal(2))))))))).add(ESLVal.list(row.apply(ESLVal.list(tdata.apply(new ESLVal("HTML",new ESLVal("time = ").add(now()))),tdata.apply(new ESLVal("HTML",new ESLVal("time = ").add(now()))))))));}
                 
               }
             });

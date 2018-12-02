@@ -113,7 +113,7 @@ public class ColourGraph {
                     while(!$l0.isNil()) { 
                       ESLVal n0 = $l0.head();
                       $l0 = $l0.tail();
-                      if(exists.apply(new ESLVal(new Function(new ESLVal("fun38"),getSelf()) {
+                      if(exists.apply(new ESLVal(new Function(new ESLVal("fun94"),getSelf()) {
                   public ESLVal apply(ESLVal... $args) {
                     ESLVal e = $args[0];
                 return edgeBetween.apply(e,n,n0);
@@ -230,7 +230,7 @@ public class ColourGraph {
                     while(!$l0.isNil()) { 
                       ESLVal n0 = $l0.head();
                       $l0 = $l0.tail();
-                      if(exists.apply(new ESLVal(new Function(new ESLVal("fun38"),getSelf()) {
+                      if(exists.apply(new ESLVal(new Function(new ESLVal("fun94"),getSelf()) {
                   public ESLVal apply(ESLVal... $args) {
                     ESLVal e = $args[0];
                 return edgeBetween.apply(e,n,n0);
@@ -338,7 +338,10 @@ public class ColourGraph {
           {}
         }
         public ESLVal init() {
-            return Lib.send(edb,"Show",new ESLVal("graph"),kempe.apply(mkPlanar.apply(new ESLVal(200)),ESLVal.list(new ESLVal("red"),new ESLVal("green"),new ESLVal("blue"),new ESLVal("gold"),new ESLVal("deeppink"))));
+            return ((Supplier<ESLVal>)() -> { 
+                {Lib.send(edb,"Show",new ESLVal("graph"),kempe.apply(mkPlanar.apply(new ESLVal(200)),ESLVal.list(new ESLVal("red"),new ESLVal("green"),new ESLVal("blue"),new ESLVal("gold"),new ESLVal("deeppink"))));
+                return stopAll.apply();}
+              }).get();
           }
         });
     }

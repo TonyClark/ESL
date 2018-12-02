@@ -43,6 +43,10 @@ public class HTMLFileTab extends JPanel implements EDBMenuProvider, LoadHandler 
 			forward();
 		});
 		bar.add(forward);
+		JButton reload = MenuProvider.getImageButton("icons/reload.png", "reload", () -> {
+			reload();
+		});
+		bar.add(reload);
 	}
 
 	private void back() {
@@ -51,6 +55,10 @@ public class HTMLFileTab extends JPanel implements EDBMenuProvider, LoadHandler 
 
 	private void forward() {
 		if (browser.canGoForward()) browser.goForward();
+	}
+
+	private void reload() {
+		 browser.reload();
 	}
 
 	public void addButton(String label, JButton button) {

@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="src" path="/xpl"/>
 	<classpathentry kind="lib" path="lib/licence.jar"/>
 	<classpathentry kind="lib" path="lib/jfreesvg-3.2.jar"/>
 	<classpathentry kind="lib" path="lib/jfreechart-1.0.19/lib/jcommon-1.0.23.jar"/>
@@ -62,5 +61,6 @@
 	<classpathentry kind="lib" path="lib/commons-lang3-3.8.jar"/>
 	<classpathentry kind="lib" path="lib/javaGeom-0.11.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/xpl"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

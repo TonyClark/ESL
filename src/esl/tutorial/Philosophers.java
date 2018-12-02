@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 public class Philosophers {
   public static ESLVal getSelf() { return $null; }
   private static ESLVal timeLimit = new ESLVal(5000);
-  private static ESLVal canDeadlock = $false;
+  private static ESLVal canDeadlock = $true;
   private static ESLVal numberOfPhilosophers = new ESLVal(10);
   private static ESLVal eatTime = new ESLVal(50);
   private static ESLVal thinkTime = new ESLVal(50);
@@ -43,7 +43,7 @@ public class Philosophers {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(4335,4378)").add(ESLVal.list(_v1)));
+        default: return error(new ESLVal("case error at Pos(4331,4374)").add(ESLVal.list(_v1)));
       }
       }
     }
@@ -65,7 +65,7 @@ public class Philosophers {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(4459,4502)").add(ESLVal.list(_v2)));
+        default: return error(new ESLVal("case error at Pos(4455,4498)").add(ESLVal.list(_v2)));
       }
       }
     }
@@ -89,7 +89,7 @@ public class Philosophers {
         }
       else if(_v3.isNil())
         return ESLVal.list();
-      else return error(new ESLVal("case error at Pos(4631,4728)").add(ESLVal.list(_v3)));
+      else return error(new ESLVal("case error at Pos(4624,4721)").add(ESLVal.list(_v3)));
       }
     }
   });
@@ -110,7 +110,7 @@ public class Philosophers {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(4767,4926)").add(ESLVal.list(_v4)));
+        default: return error(new ESLVal("case error at Pos(4757,4916)").add(ESLVal.list(_v4)));
       }
       }
     }
@@ -215,7 +215,7 @@ public class Philosophers {
         }
       else if(_v5.isNil())
         return ESLVal.list();
-      else return error(new ESLVal("case error at Pos(7162,7319)").add(ESLVal.list(_v5)));
+      else return error(new ESLVal("case error at Pos(7152,7309)").add(ESLVal.list(_v5)));
       }
     }
   });
@@ -241,7 +241,7 @@ public class Philosophers {
         }
       else if(_v6.isNil())
         return ESLVal.list();
-      else return error(new ESLVal("case error at Pos(7458,7584)").add(ESLVal.list(_v6)));
+      else return error(new ESLVal("case error at Pos(7448,7574)").add(ESLVal.list(_v6)));
       }
     }
   });
@@ -274,7 +274,7 @@ public class Philosophers {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(7824,8066)").add(ESLVal.list(_v7)));
+        default: return error(new ESLVal("case error at Pos(7814,8056)").add(ESLVal.list(_v7)));
       }
       }
     }
@@ -313,12 +313,12 @@ public class Philosophers {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(8246,8462)").add(ESLVal.list(_v8)));
+          default: return error(new ESLVal("case error at Pos(8236,8452)").add(ESLVal.list(_v8)));
         }
         }
       else if(_v8.isNil())
         return ESLVal.list(new ESLVal("Snapshot",$nil,chopsticks));
-      else return error(new ESLVal("case error at Pos(8246,8462)").add(ESLVal.list(_v8)));
+      else return error(new ESLVal("case error at Pos(8236,8452)").add(ESLVal.list(_v8)));
       }
     }
   });
@@ -348,12 +348,12 @@ public class Philosophers {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(8648,8811)").add(ESLVal.list(_v9)));
+          default: return error(new ESLVal("case error at Pos(8638,8801)").add(ESLVal.list(_v9)));
         }
         }
       else if(_v9.isNil())
-        return error(new ESLVal("case error at Pos(8648,8811)").add(ESLVal.list(_v9)));
-      else return error(new ESLVal("case error at Pos(8648,8811)").add(ESLVal.list(_v9)));
+        return error(new ESLVal("case error at Pos(8638,8801)").add(ESLVal.list(_v9)));
+      else return error(new ESLVal("case error at Pos(8638,8801)").add(ESLVal.list(_v9)));
       }
     }
   });
@@ -382,12 +382,12 @@ public class Philosophers {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(8977,9119)").add(ESLVal.list(_v10)));
+          default: return error(new ESLVal("case error at Pos(8967,9109)").add(ESLVal.list(_v10)));
         }
         }
       else if(_v10.isNil())
-        return error(new ESLVal("case error at Pos(8977,9119)").add(ESLVal.list(_v10)));
-      else return error(new ESLVal("case error at Pos(8977,9119)").add(ESLVal.list(_v10)));
+        return error(new ESLVal("case error at Pos(8967,9109)").add(ESLVal.list(_v10)));
+      else return error(new ESLVal("case error at Pos(8967,9109)").add(ESLVal.list(_v10)));
       }
     }
   });
@@ -420,12 +420,12 @@ public class Philosophers {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(9255,9435)").add(ESLVal.list(_v11)));
+          default: return error(new ESLVal("case error at Pos(9245,9425)").add(ESLVal.list(_v11)));
         }
         }
       else if(_v11.isNil())
         return ESLVal.list(new ESLVal("Holds",p,ESLVal.list(c)));
-      else return error(new ESLVal("case error at Pos(9255,9435)").add(ESLVal.list(_v11)));
+      else return error(new ESLVal("case error at Pos(9245,9425)").add(ESLVal.list(_v11)));
       }
     }
   });
@@ -457,12 +457,12 @@ public class Philosophers {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(9542,9746)").add(ESLVal.list(_v12)));
+          default: return error(new ESLVal("case error at Pos(9532,9736)").add(ESLVal.list(_v12)));
         }
         }
       else if(_v12.isNil())
         return holds;
-      else return error(new ESLVal("case error at Pos(9542,9746)").add(ESLVal.list(_v12)));
+      else return error(new ESLVal("case error at Pos(9532,9736)").add(ESLVal.list(_v12)));
       }
     }
   });

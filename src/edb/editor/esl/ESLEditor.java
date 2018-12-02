@@ -9,6 +9,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,8 +57,11 @@ import compiler.FrameVar;
 import edb.editor.basic.EditorTextArea;
 import edb.editor.basic.FileEditor;
 import edb.editor.basic.ParserListener;
+import edb.files.DynamicClassLoader;
 import edb.frame.SystemClipboard;
 import edb.tool.EDB;
+import esl.lib.ESLVal;
+import esl.lib.Lib;
 import instrs.apply.Return;
 import list.Nil;
 import runtime.ESL;
@@ -492,44 +499,40 @@ public class ESLEditor extends FileEditor implements ParserListener {
 	}
 
 	public void run(File file, String configName, Vector<FunBind> tracedFuns, Vector<BArm> tracedArms, Vector<Act> tracedActs) {
-		Module.reset();
-		new Thread(new Runnable() {
-			public void run() {
-				ESL.resetESL();
-				try {
-					String path = getFile().getAbsolutePath();
-					Module module = Module.importModule(path);
-					module.resolve();
-					typeCheck(module);
-					module.configure(configName);
-					module.trace(tracedFuns, tracedArms, tracedActs);
-					// new WalkBindings().walk(module, Builtins.builtinTypes());
-					AST desugared = module.desugar();
-					AST record = new New(0, 0, "", new Ref(0, 0, desugared, Key.getKey("main")));
-					AST block = new Block(0, 0, record, new ast.data.Apply(0, 0, "", new ast.binding.Var(0, 0, "kill", null, null), new Self()));
-					CodeBox codebox = new CodeBox(path, record.maxLocals());
-					block.compile(new Nil<FrameVar>(), Builtins.builtinDynamics(), codebox, true);
-					codebox.add(new Return(-1), new Nil<FrameVar>(), new Nil<DynamicVar>());
+		compile();
+	}
+	
 
-					String name = getFile().getAbsolutePath().substring(path.lastIndexOf(EDB.isMac() ? '/' : '\\') + 1);
-					name = name.substring(0, name.indexOf('.'));
-					System.out.println("[ write asm/" + name + ".asm ]");
-					codebox.write("asm/" + name + ".asm");
-					Actor actor = new Actor(new Behaviour("init", new Key[0], Builtins.builtinEnv(), 0, codebox, true, new Hashtable<String, Closure>(), null));
-					actor.getBehaviour().setSelf(actor);
-					actor.initSystem(codebox);
-					actor.run();
-				} catch (FileNotFoundException fnf) {
-					System.err.println("Import Problem: " + fnf.getMessage());
-				} catch (Exception error) {
-					error.printStackTrace(System.err);
-					System.err.println("Error: " + error.getMessage());
-				} catch (Error error) {
-					error.printStackTrace(System.err);
-					System.err.println("Error: " + error.getMessage());
-				}
+
+	private void compile() {
+		try {
+			if (getModule(false) != null) {
+				Module module = getModule(false);
+				String path = new File(module.getPath()).getAbsolutePath();
+				String edb = new File(".").getCanonicalPath();
+				Path pathAbsolute = Paths.get(path);
+				Path pathBase = Paths.get(edb);
+				Path pathRelative = pathBase.relativize(pathAbsolute);
+				ClassLoader parentClassLoader = Lib.class.getClassLoader();
+				DynamicClassLoader classLoader = new DynamicClassLoader(parentClassLoader);
+				Class<?> compiler = classLoader.loadClass("esl.compiler.Compiler");
+				Field compileFile = compiler.getField("compileFile");
+				ESLVal compileFileFunction = (ESLVal) compileFile.get(null);
+				compileFileFunction.funVal.apply(new ESLVal(EDB.isWindows() ? pathRelative.toString().replace("\\","/") : pathRelative.toString())); 
 			}
-		}).start();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void trace(FunBind fun) {

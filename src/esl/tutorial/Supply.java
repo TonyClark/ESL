@@ -1,29 +1,205 @@
 package esl.tutorial;
 import esl.lib.*;
 import static esl.lib.Lib.*;
-import static esl.Tables.*;
 // import static esl.Lists.*;
+import static esl.Displays.*;
 import java.util.function.Supplier;
 public class Supply {
   public static ESLVal getSelf() { return $null; }
+  private static ESLVal colours = ESLVal.list(new ESLVal("Red",new ESLVal[]{}),new ESLVal("Green",new ESLVal[]{}),new ESLVal("Red",new ESLVal[]{}),new ESLVal("Blue",new ESLVal[]{}),new ESLVal("Blue",new ESLVal[]{}));
+  private static ESLVal jobCurrentTime = new ESLVal(new Function(new ESLVal("jobCurrentTime"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal j = $args[0];
+  {ESLVal _v22 = j;
+        
+        switch(_v22.termName) {
+        case "Job": {ESLVal $114 = _v22.termRef(0);
+          ESLVal $113 = _v22.termRef(1);
+          ESLVal $112 = _v22.termRef(2);
+          ESLVal $111 = _v22.termRef(3);
+          ESLVal $110 = _v22.termRef(4);
+          
+          {ESLVal id = $114;
+          
+          {ESLVal current = $113;
+          
+          {ESLVal shortest = $112;
+          
+          {ESLVal actual = $111;
+          
+          {ESLVal pending = $110;
+          
+          return current;
+        }
+        }
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(769,831)").add(ESLVal.list(_v22)));
+      }
+      }
+    }
+  });
+  private static ESLVal setJobCurrent = new ESLVal(new Function(new ESLVal("setJobCurrent"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal j = $args[0];
+  ESLVal current = $args[1];
+  {ESLVal _v21 = j;
+        
+        switch(_v21.termName) {
+        case "Job": {ESLVal $109 = _v21.termRef(0);
+          ESLVal $108 = _v21.termRef(1);
+          ESLVal $107 = _v21.termRef(2);
+          ESLVal $106 = _v21.termRef(3);
+          ESLVal $105 = _v21.termRef(4);
+          
+          {ESLVal id = $109;
+          
+          {ESLVal n = $108;
+          
+          {ESLVal shortest = $107;
+          
+          {ESLVal actual = $106;
+          
+          {ESLVal pending = $105;
+          
+          return new ESLVal("Job",id,current,shortest,actual,pending);
+        }
+        }
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(885,979)").add(ESLVal.list(_v21)));
+      }
+      }
+    }
+  });
+  private static ESLVal setJobShortest = new ESLVal(new Function(new ESLVal("setJobShortest"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal j = $args[0];
+  ESLVal shortest = $args[1];
+  {ESLVal _v20 = j;
+        
+        switch(_v20.termName) {
+        case "Job": {ESLVal $104 = _v20.termRef(0);
+          ESLVal $103 = _v20.termRef(1);
+          ESLVal $102 = _v20.termRef(2);
+          ESLVal $101 = _v20.termRef(3);
+          ESLVal $100 = _v20.termRef(4);
+          
+          {ESLVal id = $104;
+          
+          {ESLVal n = $103;
+          
+          {ESLVal t = $102;
+          
+          {ESLVal actual = $101;
+          
+          {ESLVal pending = $100;
+          
+          return new ESLVal("Job",id,n,shortest.add(t),actual,pending);
+        }
+        }
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(1034,1124)").add(ESLVal.list(_v20)));
+      }
+      }
+    }
+  });
+  private static ESLVal addJobColours = new ESLVal(new Function(new ESLVal("addJobColours"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal j = $args[0];
+  {ESLVal _v19 = j;
+        
+        switch(_v19.termName) {
+        case "Job": {ESLVal $99 = _v19.termRef(0);
+          ESLVal $98 = _v19.termRef(1);
+          ESLVal $97 = _v19.termRef(2);
+          ESLVal $96 = _v19.termRef(3);
+          ESLVal $95 = _v19.termRef(4);
+          
+          {ESLVal id = $99;
+          
+          {ESLVal n = $98;
+          
+          {ESLVal shortest = $97;
+          
+          {ESLVal actual = $96;
+          
+          {ESLVal pending = $95;
+          
+          return new ESLVal("Job",id,n,shortest,actual,pending.cons(colours));
+        }
+        }
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(1179,1275)").add(ESLVal.list(_v19)));
+      }
+      }
+    }
+  });
+  private static ESLVal jobWaits = new ESLVal(new Function(new ESLVal("jobWaits"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal j = $args[0];
+  {ESLVal _v18 = j;
+        
+        switch(_v18.termName) {
+        case "Job": {ESLVal $94 = _v18.termRef(0);
+          ESLVal $93 = _v18.termRef(1);
+          ESLVal $92 = _v18.termRef(2);
+          ESLVal $91 = _v18.termRef(3);
+          ESLVal $90 = _v18.termRef(4);
+          
+          {ESLVal id = $94;
+          
+          {ESLVal n = $93;
+          
+          {ESLVal shortest = $92;
+          
+          {ESLVal actual = $91;
+          
+          {ESLVal pending = $90;
+          
+          return new ESLVal("Job",id,n,shortest,actual.add($one),pending);
+        }
+        }
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(1330,1420)").add(ESLVal.list(_v18)));
+      }
+      }
+    }
+  });
   private static ESLVal jobId = new ESLVal(new Function(new ESLVal("jobId"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal j = $args[0];
-  {ESLVal _v14 = j;
+  {ESLVal _v17 = j;
         
-        switch(_v14.termName) {
-        case "Job": {ESLVal $55 = _v14.termRef(0);
-          ESLVal $54 = _v14.termRef(1);
-          ESLVal $53 = _v14.termRef(2);
-          ESLVal $52 = _v14.termRef(3);
+        switch(_v17.termName) {
+        case "Job": {ESLVal $89 = _v17.termRef(0);
+          ESLVal $88 = _v17.termRef(1);
+          ESLVal $87 = _v17.termRef(2);
+          ESLVal $86 = _v17.termRef(3);
+          ESLVal $85 = _v17.termRef(4);
           
-          {ESLVal id = $55;
+          {ESLVal id = $89;
           
-          {ESLVal p = $54;
+          {ESLVal n = $88;
           
-          {ESLVal minTime = $53;
+          {ESLVal shortest = $87;
           
-          {ESLVal actualTime = $52;
+          {ESLVal actual = $86;
+          
+          {ESLVal pending = $85;
           
           return id;
         }
@@ -31,605 +207,77 @@ public class Supply {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(660,712)").add(ESLVal.list(_v14)));
+        }
+        default: return error(new ESLVal("case error at Pos(1475,1532)").add(ESLVal.list(_v17)));
       }
       }
     }
   });
-  private static ESLVal chain1 = new ESLVal("Seq",new ESLVal("Processor",new ESLVal("A"),new ESLVal(100),new ESLVal(5),$one),new ESLVal("Seq",new ESLVal("Or",new ESLVal("Processor",new ESLVal("B"),new ESLVal(100),new ESLVal(5),$one),new ESLVal("Processor",new ESLVal("C"),new ESLVal(50),new ESLVal(5),$one)),new ESLVal("Processor",new ESLVal("D"),new ESLVal(20),new ESLVal(5),$one)));
-  private static ESLVal node = new ESLVal(new Function(new ESLVal("node"),getSelf()) {
+  private static ESLVal jobDelay = new ESLVal(new Function(new ESLVal("jobDelay"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
-      ESLVal name = $args[0];
-  ESLVal successor = $args[1];
-  ESLVal processingTime = $args[2];
-  ESLVal maxJobs = $args[3];
-  ESLVal failureRate = $args[4];
-  return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("node")) {
-          ESLVal queue = ESLVal.list();
-          ESLVal waiting = ESLVal.list();
-          ESLVal forwardCompletedJobs = new ESLVal(new Function(new ESLVal("forwardCompletedJobs"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal as = $args[0];
-            {ESLVal _v12 = as;
-                  
-                  if(_v12.isCons())
-                  {ESLVal $47 = _v12.head();
-                    ESLVal $48 = _v12.tail();
-                    
-                    switch($47.termName) {
-                    case "Active": {ESLVal $50 = $47.termRef(0);
-                      ESLVal $49 = $47.termRef(1);
-                      
-                      switch($49.intVal) {
-                      case 0: {ESLVal j = $50;
-                        
-                        {ESLVal _v23 = $48;
-                        
-                        {Lib.send(successor,"Process",j);
-                      return forwardCompletedJobs.apply(_v23);}
-                      }
-                      }
-                      default: {ESLVal a = $47;
-                        
-                        {ESLVal _v24 = $48;
-                        
-                        return forwardCompletedJobs.apply(_v24).cons(a);
-                      }
-                      }
-                    }
-                    }
-                    default: {ESLVal a = $47;
-                      
-                      {ESLVal _v25 = $48;
-                      
-                      return forwardCompletedJobs.apply(_v25).cons(a);
-                    }
-                    }
-                  }
-                  }
-                else if(_v12.isNil())
-                  return ESLVal.list();
-                else return error(new ESLVal("case error at Pos(1104,1278)").add(ESLVal.list(_v12)));
-                }
-              }
-            });
-          ESLVal addWait = new ESLVal(new Function(new ESLVal("addWait"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal j = $args[0];
-            ESLVal jobs = $args[1];
-            {ESLVal _v11 = jobs;
-                  
-                  if(_v11.isCons())
-                  {ESLVal $41 = _v11.head();
-                    ESLVal $42 = _v11.tail();
-                    
-                    switch($41.termName) {
-                    case "Job": {ESLVal $46 = $41.termRef(0);
-                      ESLVal $45 = $41.termRef(1);
-                      ESLVal $44 = $41.termRef(2);
-                      ESLVal $43 = $41.termRef(3);
-                      
-                      {ESLVal id = $46;
-                      
-                      {ESLVal p = $45;
-                      
-                      {ESLVal minTime = $44;
-                      
-                      {ESLVal actualTime = $43;
-                      
-                      {ESLVal _v20 = $42;
-                      
-                      if(id.eql(jobId.apply(j)).boolVal)
-                      {process.apply(j,new ESLVal("End",new ESLVal[]{}));
-                      return _v20;}
-                      else
-                        {ESLVal jj = $41;
-                          
-                          {ESLVal _v21 = $42;
-                          
-                          return addWait.apply(j,_v21).cons(jj);
-                        }
-                        }
-                    }
-                    }
-                    }
-                    }
-                    }
-                    }
-                    default: {ESLVal jj = $41;
-                      
-                      {ESLVal _v22 = $42;
-                      
-                      return addWait.apply(j,_v22).cons(jj);
-                    }
-                    }
-                  }
-                  }
-                else if(_v11.isNil())
-                  return ESLVal.list(j);
-                else return error(new ESLVal("case error at Pos(1322,1503)").add(ESLVal.list(_v11)));
-                }
-              }
-            });
-          ESLVal process = new ESLVal(new Function(new ESLVal("process"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal j = $args[0];
-            ESLVal rest = $args[1];
-            {ESLVal _v10 = j;
-                  
-                  switch(_v10.termName) {
-                  case "Job": {ESLVal $34 = _v10.termRef(0);
-                    ESLVal $33 = _v10.termRef(1);
-                    ESLVal $32 = _v10.termRef(2);
-                    ESLVal $31 = _v10.termRef(3);
-                    
-                    switch($33.termName) {
-                    case "Name": {ESLVal $40 = $33.termRef(0);
-                      
-                      {ESLVal id = $34;
-                      
-                      {ESLVal n = $40;
-                      
-                      {ESLVal m1 = $32;
-                      
-                      {ESLVal m2 = $31;
-                      
-                      if(n.eql(name).boolVal)
-                      {queue = queue.cons(new ESLVal("Active",new ESLVal("Job",id,rest,m1.add(processingTime),m2),processingTime));
-                      return $null;}
-                      else
-                        {ESLVal _v16 = $34;
-                          
-                          {ESLVal _v17 = $40;
-                          
-                          {ESLVal _v18 = $32;
-                          
-                          {ESLVal _v19 = $31;
-                          
-                          return $null;
-                        }
-                        }
-                        }
-                        }
-                    }
-                    }
-                    }
-                    }
-                    }
-                  case "Then": {ESLVal $39 = $33.termRef(0);
-                      ESLVal $38 = $33.termRef(1);
-                      
-                      {ESLVal id = $34;
-                      
-                      {ESLVal p1 = $39;
-                      
-                      {ESLVal p2 = $38;
-                      
-                      {ESLVal m = $32;
-                      
-                      {ESLVal n = $31;
-                      
-                      return process.apply(new ESLVal("Job",id,p1,m,n),new ESLVal("Then",p2,rest));
-                    }
-                    }
-                    }
-                    }
-                    }
-                    }
-                  case "And": {ESLVal $37 = $33.termRef(0);
-                      ESLVal $36 = $33.termRef(1);
-                      
-                      {ESLVal id = $34;
-                      
-                      {ESLVal p1 = $37;
-                      
-                      {ESLVal p2 = $36;
-                      
-                      {ESLVal m = $32;
-                      
-                      {ESLVal n = $31;
-                      
-                      {Lib.send(getSelf(),"Process",new ESLVal("Job",id,new ESLVal("Then",p1,new ESLVal("Join",rest)),m,n));
-                    return Lib.send(getSelf(),"Process",new ESLVal("Job",id,new ESLVal("Then",p2,new ESLVal("Join",rest)),m,n));}
-                    }
-                    }
-                    }
-                    }
-                    }
-                    }
-                  case "Join": {ESLVal $35 = $33.termRef(0);
-                      
-                      {ESLVal id = $34;
-                      
-                      {ESLVal p = $35;
-                      
-                      {ESLVal m = $32;
-                      
-                      {ESLVal n = $31;
-                      
-                      {waiting = addWait.apply(new ESLVal("Job",id,p,m,n),waiting);
-                    return $null;}
-                    }
-                    }
-                    }
-                    }
-                    }
-                    default: return error(new ESLVal("case error at Pos(1545,2084)").add(ESLVal.list(_v10)));
-                  }
-                  }
-                  default: return error(new ESLVal("case error at Pos(1545,2084)").add(ESLVal.list(_v10)));
-                }
-                }
-              }
-            });
-          ESLVal getMaxJobs = new ESLVal(new Function(new ESLVal("getMaxJobs"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal queue = $args[0];
-            ESLVal max = $args[1];
-            if(max.eql($zero).boolVal)
-                  return ESLVal.list();
-                  else
-                    if(queue.eql(ESLVal.list()).boolVal)
-                      return ESLVal.list();
-                      else
-                        return getMaxJobs.apply(tail.apply(queue),max.sub($one)).cons(head.apply(queue));
-              }
-            });
-          ESLVal dropMaxJobs = new ESLVal(new Function(new ESLVal("dropMaxJobs"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal queue = $args[0];
-            ESLVal max = $args[1];
-            if(max.eql($zero).boolVal)
-                  return queue;
-                  else
-                    if(queue.eql(ESLVal.list()).boolVal)
-                      return ESLVal.list();
-                      else
-                        return dropMaxJobs.apply(tail.apply(queue),max.sub($one));
-              }
-            });
-          
-          public ESLVal handle(ESLVal $m) {{ESLVal _v13 = $m;
-            
-            switch(_v13.termName) {
-            case "Process": {ESLVal $51 = _v13.termRef(0);
-              
-              {ESLVal j = $51;
-              
-              return process.apply(j,new ESLVal("End",new ESLVal[]{}));
-            }
-            }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v13)));
-          }
-          }}
-          public ESLVal get(String name) {
-            switch(name) {
-              
-              default: throw new Error("ref illegal " + self + "." + name);
-            }
-          }
-        public void handleTime(ESLVal $t) {
-          {ESLVal n = $t;
-            
-            if($true.boolVal)
-            {queue = forwardCompletedJobs.apply(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal $qualArg = $args[0];
-            {ESLVal _v7 = $qualArg;
-                  
-                  switch(_v7.termName) {
-                  case "Active": {ESLVal $16 = _v7.termRef(0);
-                    ESLVal $15 = _v7.termRef(1);
-                    
-                    switch($16.termName) {
-                    case "Job": {ESLVal $20 = $16.termRef(0);
-                      ESLVal $19 = $16.termRef(1);
-                      ESLVal $18 = $16.termRef(2);
-                      ESLVal $17 = $16.termRef(3);
-                      
-                      {ESLVal id = $20;
-                      
-                      {ESLVal path = $19;
-                      
-                      {ESLVal min = $18;
-                      
-                      {ESLVal process = $17;
-                      
-                      {ESLVal p = $15;
-                      
-                      return ESLVal.list(ESLVal.list(new ESLVal("Active",new ESLVal("Job",id,path,min,process.add($one)),p.sub($one))));
-                    }
-                    }
-                    }
-                    }
-                    }
-                    }
-                    default: {ESLVal _0 = _v7;
-                      
-                      return ESLVal.list();
-                    }
-                  }
-                  }
-                  default: {ESLVal _0 = _v7;
-                    
-                    return ESLVal.list();
-                  }
-                }
-                }
-              }
-            }).map(getMaxJobs.apply(queue,maxJobs)).flatten().flatten().add(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal $qualArg = $args[0];
-            {ESLVal _v8 = $qualArg;
-                  
-                  switch(_v8.termName) {
-                  case "Active": {ESLVal $22 = _v8.termRef(0);
-                    ESLVal $21 = _v8.termRef(1);
-                    
-                    switch($22.termName) {
-                    case "Job": {ESLVal $26 = $22.termRef(0);
-                      ESLVal $25 = $22.termRef(1);
-                      ESLVal $24 = $22.termRef(2);
-                      ESLVal $23 = $22.termRef(3);
-                      
-                      {ESLVal id = $26;
-                      
-                      {ESLVal path = $25;
-                      
-                      {ESLVal min = $24;
-                      
-                      {ESLVal process = $23;
-                      
-                      {ESLVal p = $21;
-                      
-                      return ESLVal.list(ESLVal.list(new ESLVal("Active",new ESLVal("Job",id,path,min,process.add($one)),p)));
-                    }
-                    }
-                    }
-                    }
-                    }
-                    }
-                    default: {ESLVal _0 = _v8;
-                      
-                      return ESLVal.list();
-                    }
-                  }
-                  }
-                  default: {ESLVal _0 = _v8;
-                    
-                    return ESLVal.list();
-                  }
-                }
-                }
-              }
-            }).map(dropMaxJobs.apply(queue,maxJobs)).flatten().flatten()));
-            waiting = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal $qualArg = $args[0];
-            {ESLVal _v9 = $qualArg;
-                  
-                  switch(_v9.termName) {
-                  case "Job": {ESLVal $30 = _v9.termRef(0);
-                    ESLVal $29 = _v9.termRef(1);
-                    ESLVal $28 = _v9.termRef(2);
-                    ESLVal $27 = _v9.termRef(3);
-                    
-                    {ESLVal id = $30;
-                    
-                    {ESLVal path = $29;
-                    
-                    {ESLVal min = $28;
-                    
-                    {ESLVal process = $27;
-                    
-                    return ESLVal.list(ESLVal.list(new ESLVal("Job",id,path,min,process.add($one))));
-                  }
-                  }
-                  }
-                  }
-                  }
-                  default: {ESLVal _0 = _v9;
-                    
-                    return ESLVal.list();
-                  }
-                }
-                }
-              }
-            }).map(waiting).flatten().flatten();}
-            else
-              {}
-          }
-        }
-        public ESLVal init() {
-            return $null;
-          }
-        });
-    }
-  });
-  private static ESLVal alt = new ESLVal(new Function(new ESLVal("alt"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal left = $args[0];
-  ESLVal right = $args[1];
-  return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("alt")) {
-          
-          public ESLVal handle(ESLVal $m) {{ESLVal _v6 = $m;
-            
-            switch(_v6.termName) {
-            case "Process": {ESLVal $14 = _v6.termRef(0);
-              
-              {ESLVal j = $14;
-              
-              {Lib.send(left,"Process",j);
-            return Lib.send(right,"Process",j);}
-            }
-            }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v6)));
-          }
-          }}
-          public ESLVal get(String name) {
-            switch(name) {
-              
-              default: throw new Error("ref illegal " + self + "." + name);
-            }
-          }
-        public void handleTime(ESLVal $t) {
-          {ESLVal n = $t;
-            
-            if($true.boolVal)
-            {}
-            else
-              {}
-          }
-        }
-        public ESLVal init() {
-            return $null;
-          }
-        });
-    }
-  });
-  private static ESLVal sink = new ESLVal(new Function(new ESLVal("sink"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal totalJobs = $args[0];
-  return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("sink")) {
-          ESLVal jobs = ESLVal.list();
-          
-          public ESLVal handle(ESLVal $m) {{ESLVal _v4 = $m;
-            
-            switch(_v4.termName) {
-            case "Process": {ESLVal $13 = _v4.termRef(0);
-              
-              {ESLVal j = $13;
-              
-              {jobs = jobs.cons(j);
-            if(length.apply(jobs).eql(totalJobs).boolVal)
-              {print.apply(new ESLVal("done"));
-              {
-                ESLVal _v5 = jobs;
-                while(_v5.isCons()) {
-                  ESLVal job = _v5.headVal;
-                  print.apply(job);
-                  _v5 = _v5.tailVal;}
-              }
-              return stopAll.apply();}
-              else
-                return $null;}
-            }
-            }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v4)));
-          }
-          }}
-          public ESLVal get(String name) {
-            switch(name) {
-              
-              default: throw new Error("ref illegal " + self + "." + name);
-            }
-          }
-        public void handleTime(ESLVal $t) {
-          {ESLVal n = $t;
-            
-            if($true.boolVal)
-            {}
-            else
-              {}
-          }
-        }
-        public ESLVal init() {
-            return $null;
-          }
-        });
-    }
-  });
-  private static ESLVal createSupplyChain = new ESLVal(new Function(new ESLVal("createSupplyChain"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal c = $args[0];
-  ESLVal successor = $args[1];
-  ESLVal env = $args[2];
-  {ESLVal _v3 = c;
+      ESLVal j = $args[0];
+  {ESLVal _v16 = j;
         
-        switch(_v3.termName) {
-        case "Seq": {ESLVal $12 = _v3.termRef(0);
-          ESLVal $11 = _v3.termRef(1);
+        switch(_v16.termName) {
+        case "Job": {ESLVal $84 = _v16.termRef(0);
+          ESLVal $83 = _v16.termRef(1);
+          ESLVal $82 = _v16.termRef(2);
+          ESLVal $81 = _v16.termRef(3);
+          ESLVal $80 = _v16.termRef(4);
           
-          {ESLVal c1 = $12;
+          {ESLVal id = $84;
           
-          {ESLVal c2 = $11;
+          {ESLVal n = $83;
           
-          return createSupplyChain.apply(c1,createSupplyChain.apply(c2,successor,env),env);
-        }
-        }
-        }
-      case "Or": {ESLVal $10 = _v3.termRef(0);
-          ESLVal $9 = _v3.termRef(1);
+          {ESLVal shortest = $82;
           
-          {ESLVal c1 = $10;
+          {ESLVal actual = $81;
           
-          {ESLVal c2 = $9;
+          {ESLVal pending = $80;
           
-          return newActor(alt,new ESLVal(new Actor()),createSupplyChain.apply(c1,successor,env),createSupplyChain.apply(c2,successor,env));
-        }
-        }
-        }
-      case "Processor": {ESLVal $8 = _v3.termRef(0);
-          ESLVal $7 = _v3.termRef(1);
-          ESLVal $6 = _v3.termRef(2);
-          ESLVal $5 = _v3.termRef(3);
-          
-          {ESLVal n = $8;
-          
-          {ESLVal processingTime = $7;
-          
-          {ESLVal maxJobs = $6;
-          
-          {ESLVal failureRate = $5;
-          
-          return newActor(node,new ESLVal(new Actor()),n,successor,processingTime,maxJobs,failureRate);
+          return actual.sub(shortest);
         }
         }
         }
         }
         }
-      case "Let": {ESLVal $4 = _v3.termRef(0);
-          ESLVal $3 = _v3.termRef(1);
-          ESLVal $2 = _v3.termRef(2);
-          
-          {ESLVal n = $4;
-          
-          {ESLVal c1 = $3;
-          
-          {ESLVal c2 = $2;
-          
-          {ESLVal f = new ESLVal(new Function(new ESLVal("f"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal _v15 = $args[0];
-            return createSupplyChain.apply(c1,_v15,env);
-              }
-            });
-          
-          return createSupplyChain.apply(c2,successor,addEntry.apply(n,f,env));
         }
-        }
-        }
-        }
-        }
-      case "Var": {ESLVal $1 = _v3.termRef(0);
-          
-          {ESLVal n = $1;
-          
-          return lookup.apply(n,env).apply(successor);
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(3384,3921)").add(ESLVal.list(_v3)));
+        default: return error(new ESLVal("case error at Pos(1587,1657)").add(ESLVal.list(_v16)));
       }
       }
     }
   });
-  public static ESLVal main = new ESLVal(new Function(new ESLVal("main"),getSelf()) {
+  private static ESLVal monitor = new ESLVal(new Function(new ESLVal("monitor"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
-      return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("main")) {
+      ESLVal nodes = $args[0];
+  return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("monitor")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v2 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v14 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v2)));
+            switch(_v14.termName) {
+            case "Handles": {ESLVal $79 = _v14.termRef(0);
+              ESLVal $78 = _v14.termRef(1);
+              
+              {ESLVal c = $79;
+              
+              {ESLVal n = $78;
+              
+              if(isMonitoring.boolVal)
+              {{
+                ESLVal _v15 = nodes;
+                while(_v15.isCons()) {
+                  ESLVal node = _v15.headVal;
+                  Lib.send(node,"SetProxy",c,n);
+                  _v15 = _v15.tailVal;}
+              }
+              return $null;}
+              else
+                return $null;
+            }
+            }
+            }
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v14)));
+          }
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -641,19 +289,1001 @@ public class Supply {
           {}
         }
         public ESLVal init() {
+            return $null;
+          }
+        });
+    }
+  });
+  private static ESLVal counter = $zero;
+  private static ESLVal newId = new ESLVal(new Function(new ESLVal("newId"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      return lock(new Function(new ESLVal("grab"),getSelf()) {
+          public ESLVal apply(ESLVal ...args) { 
             return ((Supplier<ESLVal>)() -> { 
-                {ESLVal n = createSupplyChain.apply(chain1,newActor(sink,new ESLVal(new Actor()),new ESLVal(1000)),emptyTable);
+          {counter = counter.add($one);
+          return counter;}
+        }).get();
+          }},counter);
+    }
+  });
+  private static ESLVal leaf = new ESLVal(new Function(new ESLVal("leaf"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal id = $args[0];
+  ESLVal colour = $args[1];
+  ESLVal parent = $args[2];
+  ESLVal pTime = $args[3];
+  ESLVal qLength = $args[4];
+  return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("leaf")) {
+          ESLVal queue = ESLVal.list();
+          ESLVal getColour = new ESLVal(new Function(new ESLVal("getColour"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                return colour;
+              }
+            });
+          ESLVal getId = new ESLVal(new Function(new ESLVal("getId"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                return id;
+              }
+            });
+          ESLVal proxies = newTable();
+          ESLVal process = new ESLVal(new Function(new ESLVal("process"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal jobs = $args[0];
+            {ESLVal _v12 = jobs;
                   
-                  {{
-                  ESLVal _v1 = $zero.to(new ESLVal(1000));
-                  while(_v1.isCons()) {
-                    ESLVal i = _v1.headVal;
-                    Lib.send(n,"Process",new ESLVal("Job",i,new ESLVal("Then",new ESLVal("Name",new ESLVal("A")),new ESLVal("Then",new ESLVal("And",new ESLVal("Name",new ESLVal("B")),new ESLVal("Name",new ESLVal("C"))),new ESLVal("Then",new ESLVal("Name",new ESLVal("D")),new ESLVal("End",new ESLVal[]{})))),$zero,$zero));
-                    _v1 = _v1.tailVal;}
+                  if(_v12.isCons())
+                  {ESLVal $56 = _v12.head();
+                    ESLVal $57 = _v12.tail();
+                    
+                    switch($56.termName) {
+                    case "Job": {ESLVal $62 = $56.termRef(0);
+                      ESLVal $61 = $56.termRef(1);
+                      ESLVal $60 = $56.termRef(2);
+                      ESLVal $59 = $56.termRef(3);
+                      ESLVal $58 = $56.termRef(4);
+                      
+                      {ESLVal _v42 = $62;
+                      
+                      {ESLVal current = $61;
+                      
+                      {ESLVal shortest = $60;
+                      
+                      {ESLVal actual = $59;
+                      
+                      {ESLVal pending = $58;
+                      
+                      {ESLVal _v43 = $57;
+                      
+                      return process.apply(_v43).cons(new ESLVal("Job",_v42,current.sub($one),shortest,actual.add($one),pending));
+                    }
+                    }
+                    }
+                    }
+                    }
+                    }
+                    }
+                    default: return error(new ESLVal("case error at Pos(2573,2719)").add(ESLVal.list(_v12)));
+                  }
+                  }
+                else if(_v12.isNil())
+                  return ESLVal.list();
+                else return error(new ESLVal("case error at Pos(2573,2719)").add(ESLVal.list(_v12)));
                 }
-                return $null;}
+              }
+            });
+          ESLVal isFinished = new ESLVal(new Function(new ESLVal("isFinished"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal j = $args[0];
+            return jobCurrentTime.apply(j).lesseql($zero);
+              }
+            });
+          ESLVal isIncomplete = new ESLVal(new Function(new ESLVal("isIncomplete"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal j = $args[0];
+            return isFinished.apply(j).not();
+              }
+            });
+          
+          public ESLVal handle(ESLVal $m) {{ESLVal _v13 = $m;
+            
+            switch(_v13.termName) {
+            case "Flush": {
+              return proxies.ref("clear").apply();
+            }
+          case "Process": {ESLVal $68 = _v13.termRef(0);
+              
+              switch($68.termName) {
+              case "Job": {ESLVal $73 = $68.termRef(0);
+                ESLVal $72 = $68.termRef(1);
+                ESLVal $71 = $68.termRef(2);
+                ESLVal $70 = $68.termRef(3);
+                ESLVal $69 = $68.termRef(4);
+                
+                if($69.isCons())
+                {ESLVal $74 = $69.head();
+                  ESLVal $75 = $69.tail();
+                  
+                  if($74.isCons())
+                  {ESLVal $76 = $74.head();
+                    ESLVal $77 = $74.tail();
+                    
+                    {ESLVal _v44 = $73;
+                    
+                    {ESLVal current = $72;
+                    
+                    {ESLVal shortest = $71;
+                    
+                    {ESLVal actual = $70;
+                    
+                    {ESLVal c = $76;
+                    
+                    {ESLVal cs = $77;
+                    
+                    {ESLVal pending = $75;
+                    
+                    if(c.eql(colour).boolVal)
+                    {queue = queue.add(ESLVal.list(new ESLVal("Job",_v44,pTime,shortest.add(pTime),actual,pending.cons(cs))));
+                    return $null;}
+                    else
+                      {ESLVal _v45 = $73;
+                        
+                        {ESLVal _v46 = $72;
+                        
+                        {ESLVal _v47 = $71;
+                        
+                        {ESLVal _v48 = $70;
+                        
+                        {ESLVal _v49 = $76;
+                        
+                        {ESLVal _v50 = $77;
+                        
+                        {ESLVal _v51 = $75;
+                        
+                        if(proxies.ref("hasKey").apply(_v49).boolVal)
+                        return Lib.send(proxies.ref("get").apply(_v49),"Process",new ESLVal("Job",_v45,_v46,_v47,_v48,_v51.cons(_v50.cons(_v49))));
+                        else
+                          {ESLVal j = $68;
+                            
+                            return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
+                          }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                else if($74.isNil())
+                  {ESLVal j = $68;
+                    
+                    return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
+                  }
+                else {ESLVal j = $68;
+                    
+                    return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
+                  }
                 }
+              else if($69.isNil())
+                {ESLVal j = $68;
+                  
+                  return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
+                }
+              else {ESLVal j = $68;
+                  
+                  return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
+                }
+              }
+              default: {ESLVal j = $68;
+                
+                return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
+              }
+            }
+            }
+          case "ChildCompleted": {ESLVal $67 = _v13.termRef(0);
+              ESLVal $66 = _v13.termRef(1);
+              ESLVal $65 = _v13.termRef(2);
+              
+              {ESLVal c = $67;
+              
+              {ESLVal n = $66;
+              
+              {ESLVal j = $65;
+              
+              return $null;
+            }
+            }
+            }
+            }
+          case "SetProxy": {ESLVal $64 = _v13.termRef(0);
+              ESLVal $63 = _v13.termRef(1);
+              
+              {ESLVal c = $64;
+              
+              {ESLVal n = $63;
+              
+              return proxies.ref("put").apply(c,n);
+            }
+            }
+            }
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v13)));
+          }
+          }}
+          public ESLVal get(String name) {
+            switch(name) {
+              case "getColour": return getColour;
+              case "getId": return getId;
+              default: throw new Error("ref illegal " + self + "." + name);
+            }
+          }
+        public void handleTime(ESLVal $t) {
+          {ESLVal n = $t;
+            
+            if($true.boolVal)
+            {ESLVal processed = process.apply(take.apply(queue,qLength));
+              ESLVal unprocessed = drop.apply(queue,qLength);
+              
+              {ESLVal completed = select.apply(isFinished,processed);
+              ESLVal incomplete = select.apply(isIncomplete,processed);
+              
+              {queue = incomplete.add(new java.util.function.Function<ESLVal,ESLVal>() {
+              public ESLVal apply(ESLVal $l0) {
+                ESLVal $a = $nil;
+                java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                while(!$l0.isNil()) { 
+                  ESLVal j = $l0.head();
+                  $l0 = $l0.tail();
+                  $v.add(jobWaits.apply(j));
+                }
+                for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                return $a;
+              }}.apply(unprocessed));
+            {
+              ESLVal _v11 = completed;
+              while(_v11.isCons()) {
+                ESLVal j = _v11.headVal;
+                Lib.send(parent,"ChildCompleted",colour,getSelf(),j);
+                _v11 = _v11.tailVal;}
+            }}
+            }
+            }
+            else
+              {}
+          }
+        }
+        public ESLVal init() {
+            return $null;
+          }
+        });
+    }
+  });
+  private static ESLVal container = new ESLVal(new Function(new ESLVal("container"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal id = $args[0];
+  ESLVal depth = $args[1];
+  ESLVal colour = $args[2];
+  ESLVal parent = $args[3];
+  return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("container")) {
+          ESLVal getColour = new ESLVal(new Function(new ESLVal("getColour"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                return colour;
+              }
+            });
+          ESLVal getId = new ESLVal(new Function(new ESLVal("getId"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                return id;
+              }
+            });
+          ESLVal proxies = newTable();
+          ESLVal children = ESLVal.list();
+          ESLVal m = $null;
+          ESLVal process = new ESLVal(new Function(new ESLVal("process"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal j = $args[0];
+            {ESLVal _v8 = j;
+                  
+                  switch(_v8.termName) {
+                  case "Job": {ESLVal $35 = _v8.termRef(0);
+                    ESLVal $34 = _v8.termRef(1);
+                    ESLVal $33 = _v8.termRef(2);
+                    ESLVal $32 = _v8.termRef(3);
+                    ESLVal $31 = _v8.termRef(4);
+                    
+                    if($31.isCons())
+                    {ESLVal $36 = $31.head();
+                      ESLVal $37 = $31.tail();
+                      
+                      if($36.isCons())
+                      {ESLVal $38 = $36.head();
+                        ESLVal $39 = $36.tail();
+                        
+                        {ESLVal _v33 = $35;
+                        
+                        {ESLVal n = $34;
+                        
+                        {ESLVal t0 = $33;
+                        
+                        {ESLVal t1 = $32;
+                        
+                        {ESLVal c = $38;
+                        
+                        {ESLVal cs = $39;
+                        
+                        {ESLVal pending = $37;
+                        
+                        return Lib.send(nth.apply(children,random.apply(length.apply(children))),"Process",j);
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                    else if($36.isNil())
+                      {ESLVal jid = $35;
+                        
+                        {ESLVal n = $34;
+                        
+                        {ESLVal shortest = $33;
+                        
+                        {ESLVal actual = $32;
+                        
+                        {ESLVal pending = $37;
+                        
+                        return Lib.send(parent,"ChildCompleted",colour,getSelf(),new ESLVal("Job",jid,n,shortest,actual,pending));
+                      }
+                      }
+                      }
+                      }
+                      }
+                    else return error(new ESLVal("case error at Pos(4082,4360)").add(ESLVal.list(_v8)));
+                    }
+                  else if($31.isNil())
+                    return error(new ESLVal("case error at Pos(4082,4360)").add(ESLVal.list(_v8)));
+                  else return error(new ESLVal("case error at Pos(4082,4360)").add(ESLVal.list(_v8)));
+                  }
+                  default: return error(new ESLVal("case error at Pos(4082,4360)").add(ESLVal.list(_v8)));
+                }
+                }
+              }
+            });
+          
+          public ESLVal handle(ESLVal $m) {{ESLVal _v9 = $m;
+            
+            switch(_v9.termName) {
+            case "Flush": {
+              {proxies.ref("clear").apply();
+            {{
+              ESLVal _v10 = children;
+              while(_v10.isCons()) {
+                ESLVal n = _v10.headVal;
+                Lib.send(n,"Flush");
+                _v10 = _v10.tailVal;}
+            }
+            return $null;}}
+            }
+          case "SetProxy": {ESLVal $55 = _v9.termRef(0);
+              ESLVal $54 = _v9.termRef(1);
+              
+              {ESLVal c = $55;
+              
+              {ESLVal n = $54;
+              
+              return proxies.ref("put").apply(c,n);
+            }
+            }
+            }
+          case "ChildCompleted": {ESLVal $53 = _v9.termRef(0);
+              ESLVal $52 = _v9.termRef(1);
+              ESLVal $51 = _v9.termRef(2);
+              
+              {ESLVal c = $53;
+              
+              {ESLVal n = $52;
+              
+              {ESLVal j = $51;
+              
+              {Lib.send(m,"Handles",c,n);
+            return process.apply(j);}
+            }
+            }
+            }
+            }
+          case "ProcessFailed": {ESLVal $50 = _v9.termRef(0);
+              
+              {ESLVal j = $50;
+              
+              return process.apply(j);
+            }
+            }
+          case "Process": {ESLVal $40 = _v9.termRef(0);
+              
+              switch($40.termName) {
+              case "Job": {ESLVal $45 = $40.termRef(0);
+                ESLVal $44 = $40.termRef(1);
+                ESLVal $43 = $40.termRef(2);
+                ESLVal $42 = $40.termRef(3);
+                ESLVal $41 = $40.termRef(4);
+                
+                if($41.isCons())
+                {ESLVal $46 = $41.head();
+                  ESLVal $47 = $41.tail();
+                  
+                  if($46.isCons())
+                  {ESLVal $48 = $46.head();
+                    ESLVal $49 = $46.tail();
+                    
+                    {ESLVal _v34 = $45;
+                    
+                    {ESLVal current = $44;
+                    
+                    {ESLVal shortest = $43;
+                    
+                    {ESLVal actual = $42;
+                    
+                    {ESLVal c = $48;
+                    
+                    {ESLVal cs = $49;
+                    
+                    {ESLVal pending = $47;
+                    
+                    if(c.eql(colour).boolVal)
+                    return process.apply(new ESLVal("Job",_v34,current,shortest,actual,pending.cons(cs).cons(colours)));
+                    else
+                      {ESLVal _v35 = $45;
+                        
+                        {ESLVal _v36 = $44;
+                        
+                        {ESLVal _v37 = $43;
+                        
+                        {ESLVal _v38 = $42;
+                        
+                        {ESLVal _v39 = $48;
+                        
+                        {ESLVal _v40 = $49;
+                        
+                        {ESLVal _v41 = $47;
+                        
+                        if(proxies.ref("hasKey").apply(_v39).boolVal)
+                        return Lib.send(proxies.ref("get").apply(_v39),"Process",new ESLVal("Job",_v35,_v36,_v37,_v38,_v41.cons(_v40.cons(_v39))));
+                        else
+                          {ESLVal j = $40;
+                            
+                            return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
+                          }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                else if($46.isNil())
+                  {ESLVal j = $40;
+                    
+                    return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
+                  }
+                else {ESLVal j = $40;
+                    
+                    return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
+                  }
+                }
+              else if($41.isNil())
+                {ESLVal j = $40;
+                  
+                  return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
+                }
+              else {ESLVal j = $40;
+                  
+                  return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
+                }
+              }
+              default: {ESLVal j = $40;
+                
+                return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
+              }
+            }
+            }
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v9)));
+          }
+          }}
+          public ESLVal get(String name) {
+            switch(name) {
+              case "getColour": return getColour;
+              case "getId": return getId;
+              default: throw new Error("ref illegal " + self + "." + name);
+            }
+          }
+        public void handleTime(ESLVal $t) {
+          {ESLVal n = $t;
+            
+            if($true.boolVal)
+            {}
+            else
+              {}
+          }
+        }
+        public ESLVal init() {
+            return ((Supplier<ESLVal>)() -> { 
+                if(depth.eql($zero).boolVal)
+                  {children = new java.util.function.Function<ESLVal,ESLVal>() {
+                    public ESLVal apply(ESLVal $l0) {
+                      ESLVal $a = $nil;
+                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                      while(!$l0.isNil()) { 
+                        ESLVal c = $l0.head();
+                        $l0 = $l0.tail();
+                        ESLVal $l1 = ESLVal.list(new ESLVal(10));
+                  while(!$l1.isNil()) {
+                    ESLVal processing = $l1.head();
+                    $l1 = $l1.tail();
+                    ESLVal $l2 = ESLVal.list(new ESLVal(5));
+                    while(!$l2.isNil()) {
+                      ESLVal queue = $l2.head();
+                      $l2 = $l2.tail();
+                      $v.add(newActor(leaf,new ESLVal(new Actor()),newId.apply(),c,getSelf(),processing,queue));
+                    }
+                  }
+                      }
+                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                      return $a;
+                    }}.apply(colours);
+                  {m = newActor(monitor,new ESLVal(new Actor()),children);
+                  return $null;}}
+                  else
+                    {children = new java.util.function.Function<ESLVal,ESLVal>() {
+                      public ESLVal apply(ESLVal $l0) {
+                        ESLVal $a = $nil;
+                        java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                        while(!$l0.isNil()) { 
+                          ESLVal c = $l0.head();
+                          $l0 = $l0.tail();
+                          ESLVal $l1 = $zero.to(maxChildren.apply());
+                    while(!$l1.isNil()) {
+                      ESLVal numOfChildren = $l1.head();
+                      $l1 = $l1.tail();
+                      $v.add(newActor(container,new ESLVal(new Actor()),newId.apply(),depth.sub($one),c,getSelf()));
+                    }
+                        }
+                        for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                        return $a;
+                      }}.apply(colours);
+                    {m = newActor(monitor,new ESLVal(new Actor()),children);
+                    return $null;}}
               }).get();
+          }
+        });
+    }
+  });
+  private static ESLVal maxChildren = new ESLVal(new Function(new ESLVal("maxChildren"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      return new ESLVal(3);
+    }
+  });
+  private static ESLVal isMonitoring = $false;
+  private static ESLVal minDelay = new ESLVal(new Function(new ESLVal("minDelay"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal jobs = $args[0];
+  ESLVal min = $args[1];
+  {ESLVal _v7 = jobs;
+        
+        if(_v7.isCons())
+        {ESLVal $24 = _v7.head();
+          ESLVal $25 = _v7.tail();
+          
+          switch($24.termName) {
+          case "Job": {ESLVal $30 = $24.termRef(0);
+            ESLVal $29 = $24.termRef(1);
+            ESLVal $28 = $24.termRef(2);
+            ESLVal $27 = $24.termRef(3);
+            ESLVal $26 = $24.termRef(4);
+            
+            {ESLVal id = $30;
+            
+            {ESLVal t = $29;
+            
+            {ESLVal possible = $28;
+            
+            {ESLVal actual = $27;
+            
+            {ESLVal cs = $26;
+            
+            {ESLVal _v30 = $25;
+            
+            if(actual.sub(possible).less(min).boolVal)
+            return minDelay.apply(_v30,actual.sub(possible));
+            else
+              {ESLVal j = $24;
+                
+                {ESLVal _v31 = $25;
+                
+                return minDelay.apply(_v31,min);
+              }
+              }
+          }
+          }
+          }
+          }
+          }
+          }
+          }
+          default: {ESLVal j = $24;
+            
+            {ESLVal _v32 = $25;
+            
+            return minDelay.apply(_v32,min);
+          }
+          }
+        }
+        }
+      else if(_v7.isNil())
+        return min;
+      else return error(new ESLVal("case error at Pos(5488,5656)").add(ESLVal.list(_v7)));
+      }
+    }
+  });
+  private static ESLVal maxDelay = new ESLVal(new Function(new ESLVal("maxDelay"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal jobs = $args[0];
+  ESLVal max = $args[1];
+  {ESLVal _v6 = jobs;
+        
+        if(_v6.isCons())
+        {ESLVal $17 = _v6.head();
+          ESLVal $18 = _v6.tail();
+          
+          switch($17.termName) {
+          case "Job": {ESLVal $23 = $17.termRef(0);
+            ESLVal $22 = $17.termRef(1);
+            ESLVal $21 = $17.termRef(2);
+            ESLVal $20 = $17.termRef(3);
+            ESLVal $19 = $17.termRef(4);
+            
+            {ESLVal id = $23;
+            
+            {ESLVal t = $22;
+            
+            {ESLVal possible = $21;
+            
+            {ESLVal actual = $20;
+            
+            {ESLVal cs = $19;
+            
+            {ESLVal _v27 = $18;
+            
+            if(actual.sub(possible).gre(max).boolVal)
+            return maxDelay.apply(_v27,actual.sub(possible));
+            else
+              {ESLVal j = $17;
+                
+                {ESLVal _v28 = $18;
+                
+                return maxDelay.apply(_v28,max);
+              }
+              }
+          }
+          }
+          }
+          }
+          }
+          }
+          }
+          default: {ESLVal j = $17;
+            
+            {ESLVal _v29 = $18;
+            
+            return maxDelay.apply(_v29,max);
+          }
+          }
+        }
+        }
+      else if(_v6.isNil())
+        return max;
+      else return error(new ESLVal("case error at Pos(5697,5865)").add(ESLVal.list(_v6)));
+      }
+    }
+  });
+  private static ESLVal delayedBy = new ESLVal(new Function(new ESLVal("delayedBy"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal jobs = $args[0];
+  ESLVal delay = $args[1];
+  {ESLVal _v5 = jobs;
+        
+        if(_v5.isCons())
+        {ESLVal $10 = _v5.head();
+          ESLVal $11 = _v5.tail();
+          
+          switch($10.termName) {
+          case "Job": {ESLVal $16 = $10.termRef(0);
+            ESLVal $15 = $10.termRef(1);
+            ESLVal $14 = $10.termRef(2);
+            ESLVal $13 = $10.termRef(3);
+            ESLVal $12 = $10.termRef(4);
+            
+            {ESLVal id = $16;
+            
+            {ESLVal t = $15;
+            
+            {ESLVal possible = $14;
+            
+            {ESLVal actual = $13;
+            
+            {ESLVal cs = $12;
+            
+            {ESLVal _v24 = $11;
+            
+            if(actual.sub(possible).greql(delay).boolVal)
+            return $one.add(delayedBy.apply(_v24,delay));
+            else
+              {ESLVal j = $10;
+                
+                {ESLVal _v25 = $11;
+                
+                return delayedBy.apply(_v25,delay);
+              }
+              }
+          }
+          }
+          }
+          }
+          }
+          }
+          }
+          default: {ESLVal j = $10;
+            
+            {ESLVal _v26 = $11;
+            
+            return delayedBy.apply(_v26,delay);
+          }
+          }
+        }
+        }
+      else if(_v5.isNil())
+        return $zero;
+      else return error(new ESLVal("case error at Pos(5909,6076)").add(ESLVal.list(_v5)));
+      }
+    }
+  });
+  private static ESLVal root = new ESLVal(new Function(new ESLVal("root"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      ESLVal depth = $args[0];
+  ESLVal limit = $args[1];
+  ESLVal nodes = $args[2];
+  return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("root")) {
+          ESLVal getColour = new ESLVal(new Function(new ESLVal("getColour"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                return new ESLVal("Red",new ESLVal[]{});
+              }
+            });
+          ESLVal getId = new ESLVal(new Function(new ESLVal("getId"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                return $zero;
+              }
+            });
+          ESLVal child = newActor(container,new ESLVal(new Actor()),newId.apply(),depth,new ESLVal("Red",new ESLVal[]{}),getSelf());
+          ESLVal jobs = $zero;
+          ESLVal runs = new ESLVal(4);
+          ESLVal completed = ESLVal.list(ESLVal.list());
+          ESLVal counter = $zero;
+          ESLVal pending = ((Supplier<ESLVal>)() -> { 
+              {ESLVal table = newTable();
+                
+                {{
+                ESLVal _v3 = $zero.to(limit);
+                while(_v3.isCons()) {
+                  ESLVal i = _v3.headVal;
+                  {table.ref("put").apply(i,new java.util.function.Function<ESLVal,ESLVal>() {
+                    public ESLVal apply(ESLVal $l0) {
+                      ESLVal $a = $nil;
+                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                      while(!$l0.isNil()) { 
+                        ESLVal j = $l0.head();
+                        $l0 = $l0.tail();
+                        $v.add(new ESLVal("Job",newId.apply(),$zero,$zero,$zero,ESLVal.list(ESLVal.list(new ESLVal("Red",new ESLVal[]{})))));
+                      }
+                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                      return $a;
+                    }}.apply($zero.to(random.apply(nodes).add($one))));
+                  jobs = jobs.add(length.apply(table.ref("get").apply(i)));}
+                  _v3 = _v3.tailVal;}
+              }
+              return table;}
+              }
+            }).get();
+          
+          public ESLVal handle(ESLVal $m) {{ESLVal _v4 = $m;
+            
+            switch(_v4.termName) {
+            case "ChildCompleted": {ESLVal $9 = _v4.termRef(0);
+              ESLVal $8 = _v4.termRef(1);
+              ESLVal $7 = _v4.termRef(2);
+              
+              {ESLVal c = $9;
+              
+              {ESLVal n = $8;
+              
+              {ESLVal j = $7;
+              
+              {completed = tail.apply(completed).cons(head.apply(completed).cons(j));
+            print.apply(length.apply(head.apply(completed)).add(new ESLVal(" of ").add(jobs)));
+            if(length.apply(head.apply(completed)).eql(jobs).boolVal)
+              {print.apply(new ESLVal("completed ").add(jobs.add(new ESLVal(" jobs"))));
+              {ESLVal graph = new ESLVal(new Function(new ESLVal("graph"),getSelf()) {
+                    public ESLVal apply(ESLVal... $args) {
+                      ESLVal completed = $args[0];
+                  return new ESLVal("LineGraph",ESLVal.list(),new ESLVal("Processing ").add(jobs.add(new ESLVal(" jobs over ").add(runs.add(new ESLVal(" runs in ").add(now().div(new ESLVal(1000)).add(new ESLVal(" seconds"))))))),new ESLVal("Delay/10"),new ESLVal("Number of Jobs Delayed by at Least/10"),new ESLVal(1200),new ESLVal(500),new java.util.function.Function<ESLVal,ESLVal>() {
+                          public ESLVal apply(ESLVal $l0) {
+                            ESLVal $a = $nil;
+                            java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                            while(!$l0.isNil()) { 
+                              ESLVal run = $l0.head();
+                              $l0 = $l0.tail();
+                              ESLVal $l1 = ESLVal.list(nth.apply(completed,run));
+                        while(!$l1.isNil()) {
+                          ESLVal jobs = $l1.head();
+                          $l1 = $l1.tail();
+                          $v.add(new ESLVal("GLine",ESLVal.list(),new ESLVal("Run-").add(run.add(((Supplier<ESLVal>)() -> { 
+                            if(run.less(runs.div(new ESLVal(2))).boolVal)
+                              return new ESLVal("(monitored)");
+                              else
+                                return new ESLVal("");
+                          }).get())),new java.util.function.Function<ESLVal,ESLVal>() {
+                            public ESLVal apply(ESLVal $l0) {
+                              ESLVal $a = $nil;
+                              java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                              while(!$l0.isNil()) { 
+                                ESLVal delay = $l0.head();
+                                $l0 = $l0.tail();
+                                if(delay.neql($zero).boolVal) {if(delayedBy.apply(jobs,delay).neql($zero).boolVal) {$v.add(new ESLVal("LPoint",ESLVal.list(),delay.div(new ESLVal(10)),delayedBy.apply(jobs,delay).div(new ESLVal(10))));
+                          }
+                          }
+                              }
+                              for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                              return $a;
+                            }}.apply(minDelay.apply(jobs,new ESLVal(9999)).to(maxDelay.apply(jobs,$zero).add($one)))));
+                        }
+                            }
+                            for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                            return $a;
+                          }}.apply($zero.to(runs)));
+                    }
+                  });
+                
+                if(length.apply(completed).eql(runs).boolVal)
+                {Lib.send(edb,"Show",new ESLVal("Supply Chain Results"),graph.apply(completed));
+                return stopAll.apply();}
+                else
+                  {if(length.apply(completed).greql(runs.div(new ESLVal(2))).boolVal)
+                    isMonitoring = $true;
+                    else
+                      {}
+                  completed = completed.cons(ESLVal.list());
+                  Lib.send(child,"Flush");
+                  {counter = $zero;
+                  return $null;}}
+              }}
+              else
+                return $null;}
+            }
+            }
+            }
+            }
+          case "Flush": {
+              return Lib.send(child,"Flush");
+            }
+          case "SetProxy": {ESLVal $6 = _v4.termRef(0);
+              ESLVal $5 = _v4.termRef(1);
+              
+              {ESLVal c = $6;
+              
+              {ESLVal n = $5;
+              
+              return $null;
+            }
+            }
+            }
+          case "ProcessFailed": {ESLVal $4 = _v4.termRef(0);
+              
+              {ESLVal j = $4;
+              
+              return Lib.send(child,"Process",j);
+            }
+            }
+          case "Process": {ESLVal $3 = _v4.termRef(0);
+              
+              {ESLVal j = $3;
+              
+              return Lib.send(child,"Process",j);
+            }
+            }
+          case "Deprioritize": {ESLVal $2 = _v4.termRef(0);
+              
+              {ESLVal id = $2;
+              
+              return $null;
+            }
+            }
+          case "Prioritize": {ESLVal $1 = _v4.termRef(0);
+              
+              {ESLVal id = $1;
+              
+              return $null;
+            }
+            }
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v4)));
+          }
+          }}
+          public ESLVal get(String name) {
+            switch(name) {
+              case "getColour": return getColour;
+              case "getId": return getId;
+              default: throw new Error("ref illegal " + self + "." + name);
+            }
+          }
+        public void handleTime(ESLVal $t) {
+          {ESLVal n = $t;
+            
+            if(counter.less(limit).boolVal)
+            {{
+              ESLVal _v2 = pending.ref("get").apply(counter);
+              while(_v2.isCons()) {
+                ESLVal j = _v2.headVal;
+                Lib.send(getSelf(),"Process",j);
+                _v2 = _v2.tailVal;}
+            }
+            counter = counter.add($one);}
+            else
+              {ESLVal _v23 = $t;
+                
+                if($true.boolVal)
+                {}
+                else
+                  {}
+              }
+          }
+        }
+        public ESLVal init() {
+            return $null;
+          }
+        });
+    }
+  });
+  public static ESLVal main = new ESLVal(new Function(new ESLVal("main"),getSelf()) {
+    public ESLVal apply(ESLVal... $args) {
+      return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("main")) {
+          ESLVal rootNode = newActor(root,new ESLVal(new Actor()),new ESLVal(2),new ESLVal(200),new ESLVal(25));
+          
+          public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
+            
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
+          }}
+          public ESLVal get(String name) {
+            switch(name) {
+              
+              default: throw new Error("ref illegal " + self + "." + name);
+            }
+          }
+        public void handleTime(ESLVal $t) {
+          {}
+        }
+        public ESLVal init() {
+            return $null;
           }
         });
     }

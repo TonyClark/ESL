@@ -45,7 +45,7 @@ public class Termites {
                   _v1 = _v1.tailVal;}
               }
               edb.ref("display").apply(new ESLVal("Termites"),grid);
-              edb.ref("button").apply(new ESLVal("Termites"),new ESLVal("stop"),new ESLVal("icons/stop.png"),new ESLVal("stop application"),new ESLVal(new Function(new ESLVal("fun168"),getSelf()) {
+              edb.ref("button").apply(new ESLVal("Termites"),new ESLVal("stop"),new ESLVal("icons/stop.png"),new ESLVal("stop application"),new ESLVal(new Function(new ESLVal("fun96"),getSelf()) {
                 public ESLVal apply(ESLVal... $args) {
                   return stopAll.apply();
                 }

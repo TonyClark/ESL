@@ -658,4 +658,8 @@ public class EDBFrame extends JFrame implements EDBMenuProvider, AlienActor, Jav
 		return browserListeners;
 	}
 
+	public void allEditorsStopped() {
+		tabs.allEditorsStopped();
+	}
+
 }

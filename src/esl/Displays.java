@@ -10,41 +10,41 @@ public class Displays {
     public ESLVal apply(ESLVal... $args) {
       ESLVal props = $args[0];
   ESLVal n = $args[1];
-  {ESLVal _v137 = props;
+  {ESLVal _v87 = props;
         
-        return $ndCase.apply(_v137,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
+        return $ndCase.apply(_v87,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            ESLVal $157 = $args[0];
-        ESLVal $158 = $args[1];
-        ESLVal $159 = $args[2];
-        ESLVal $156 = $args[3];
-        switch($158.termName) {
-              case "Prop": {ESLVal $161 = $158.termRef(0);
-                ESLVal $160 = $158.termRef(1);
+            ESLVal $85 = $args[0];
+        ESLVal $86 = $args[1];
+        ESLVal $87 = $args[2];
+        ESLVal $84 = $args[3];
+        switch($86.termName) {
+              case "Prop": {ESLVal $89 = $86.termRef(0);
+                ESLVal $88 = $86.termRef(1);
                 
-                {ESLVal ps1 = $157;
+                {ESLVal ps1 = $85;
                 
-                {ESLVal m = $161;
+                {ESLVal m = $89;
                 
-                {ESLVal v = $160;
+                {ESLVal v = $88;
                 
-                {ESLVal ps2 = $159;
+                {ESLVal ps2 = $87;
                 
                 if(m.eql(n).boolVal)
                 return v;
                 else
-                  return $156.apply();
+                  return $84.apply();
               }
               }
               }
               }
               }
-              default: return $156.apply();
+              default: return $84.apply();
             }
           }
         }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            return error(new ESLVal("case error at Pos(2206,2261)").add(ESLVal.list(_v137)));
+            return error(new ESLVal("case error at Pos(2206,2261)").add(ESLVal.list(_v87)));
           }
         }));
       }
@@ -54,41 +54,41 @@ public class Displays {
     public ESLVal apply(ESLVal... $args) {
       ESLVal props = $args[0];
   ESLVal n = $args[1];
-  {ESLVal _v136 = props;
+  {ESLVal _v88 = props;
         
-        return $ndCase.apply(_v136,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
+        return $ndCase.apply(_v88,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            ESLVal $151 = $args[0];
-        ESLVal $152 = $args[1];
-        ESLVal $153 = $args[2];
-        ESLVal $150 = $args[3];
-        switch($152.termName) {
-              case "Prop": {ESLVal $155 = $152.termRef(0);
-                ESLVal $154 = $152.termRef(1);
+            ESLVal $91 = $args[0];
+        ESLVal $92 = $args[1];
+        ESLVal $93 = $args[2];
+        ESLVal $90 = $args[3];
+        switch($92.termName) {
+              case "Prop": {ESLVal $95 = $92.termRef(0);
+                ESLVal $94 = $92.termRef(1);
                 
-                {ESLVal ps1 = $151;
+                {ESLVal ps1 = $91;
                 
-                {ESLVal m = $155;
+                {ESLVal m = $95;
                 
-                {ESLVal v = $154;
+                {ESLVal v = $94;
                 
-                {ESLVal ps2 = $153;
+                {ESLVal ps2 = $93;
                 
                 if(m.eql(n).boolVal)
                 return $true;
                 else
-                  return $150.apply();
+                  return $90.apply();
               }
               }
               }
               }
               }
-              default: return $150.apply();
+              default: return $90.apply();
             }
           }
         }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            {ESLVal _v138 = _v136;
+            {ESLVal _v97 = _v88;
               
               return $false;
             }
@@ -102,41 +102,41 @@ public class Displays {
       ESLVal props = $args[0];
   ESLVal n = $args[1];
   ESLVal v = $args[2];
-  {ESLVal _v135 = props;
+  {ESLVal _v89 = props;
         
-        return $ndCase.apply(_v135,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
+        return $ndCase.apply(_v89,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            ESLVal $145 = $args[0];
-        ESLVal $146 = $args[1];
-        ESLVal $147 = $args[2];
-        ESLVal $144 = $args[3];
-        switch($146.termName) {
-              case "Prop": {ESLVal $149 = $146.termRef(0);
-                ESLVal $148 = $146.termRef(1);
+            ESLVal $97 = $args[0];
+        ESLVal $98 = $args[1];
+        ESLVal $99 = $args[2];
+        ESLVal $96 = $args[3];
+        switch($98.termName) {
+              case "Prop": {ESLVal $101 = $98.termRef(0);
+                ESLVal $100 = $98.termRef(1);
                 
-                {ESLVal ps1 = $145;
+                {ESLVal ps1 = $97;
                 
-                {ESLVal m = $149;
+                {ESLVal m = $101;
                 
-                {ESLVal v0 = $148;
+                {ESLVal v0 = $100;
                 
-                {ESLVal ps2 = $147;
+                {ESLVal ps2 = $99;
                 
                 if(m.eql(n).boolVal)
                 return ps1.add(ESLVal.list(new ESLVal("Prop",n,v)).add(ps2));
                 else
-                  return $144.apply();
+                  return $96.apply();
               }
               }
               }
               }
               }
-              default: return $144.apply();
+              default: return $96.apply();
             }
           }
         }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
-            return error(new ESLVal("case error at Pos(2419,2497)").add(ESLVal.list(_v135)));
+            return error(new ESLVal("case error at Pos(2419,2497)").add(ESLVal.list(_v89)));
           }
         }));
       }
@@ -145,21 +145,21 @@ public class Displays {
   public static ESLVal edgeSource = new ESLVal(new Function(new ESLVal("edgeSource"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal e = $args[0];
-  {ESLVal _v134 = e;
+  {ESLVal _v90 = e;
         
-        switch(_v134.termName) {
-        case "Edge": {ESLVal $143 = _v134.termRef(0);
-          ESLVal $142 = _v134.termRef(1);
-          ESLVal $141 = _v134.termRef(2);
-          ESLVal $140 = _v134.termRef(3);
+        switch(_v90.termName) {
+        case "Edge": {ESLVal $105 = _v90.termRef(0);
+          ESLVal $104 = _v90.termRef(1);
+          ESLVal $103 = _v90.termRef(2);
+          ESLVal $102 = _v90.termRef(3);
           
-          {ESLVal props = $143;
+          {ESLVal props = $105;
           
-          {ESLVal source = $142;
+          {ESLVal source = $104;
           
-          {ESLVal target = $141;
+          {ESLVal target = $103;
           
-          {ESLVal display = $140;
+          {ESLVal display = $102;
           
           return source;
         }
@@ -167,7 +167,7 @@ public class Displays {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(3349,3404)").add(ESLVal.list(_v134)));
+        default: return error(new ESLVal("case error at Pos(3349,3404)").add(ESLVal.list(_v90)));
       }
       }
     }
@@ -175,21 +175,21 @@ public class Displays {
   public static ESLVal edgeTarget = new ESLVal(new Function(new ESLVal("edgeTarget"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal e = $args[0];
-  {ESLVal _v133 = e;
+  {ESLVal _v91 = e;
         
-        switch(_v133.termName) {
-        case "Edge": {ESLVal $139 = _v133.termRef(0);
-          ESLVal $138 = _v133.termRef(1);
-          ESLVal $137 = _v133.termRef(2);
-          ESLVal $136 = _v133.termRef(3);
+        switch(_v91.termName) {
+        case "Edge": {ESLVal $109 = _v91.termRef(0);
+          ESLVal $108 = _v91.termRef(1);
+          ESLVal $107 = _v91.termRef(2);
+          ESLVal $106 = _v91.termRef(3);
           
-          {ESLVal props = $139;
+          {ESLVal props = $109;
           
-          {ESLVal source = $138;
+          {ESLVal source = $108;
           
-          {ESLVal target = $137;
+          {ESLVal target = $107;
           
-          {ESLVal display = $136;
+          {ESLVal display = $106;
           
           return target;
         }
@@ -197,7 +197,7 @@ public class Displays {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(3448,3503)").add(ESLVal.list(_v133)));
+        default: return error(new ESLVal("case error at Pos(3448,3503)").add(ESLVal.list(_v91)));
       }
       }
     }
@@ -205,25 +205,25 @@ public class Displays {
   public static ESLVal nodeId = new ESLVal(new Function(new ESLVal("nodeId"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal n = $args[0];
-  {ESLVal _v132 = n;
+  {ESLVal _v92 = n;
         
-        switch(_v132.termName) {
-        case "Node": {ESLVal $135 = _v132.termRef(0);
-          ESLVal $134 = _v132.termRef(1);
-          ESLVal $133 = _v132.termRef(2);
+        switch(_v92.termName) {
+        case "Node": {ESLVal $112 = _v92.termRef(0);
+          ESLVal $111 = _v92.termRef(1);
+          ESLVal $110 = _v92.termRef(2);
           
-          {ESLVal props = $135;
+          {ESLVal props = $112;
           
-          {ESLVal id = $134;
+          {ESLVal id = $111;
           
-          {ESLVal display = $133;
+          {ESLVal display = $110;
           
           return id;
         }
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(3547,3587)").add(ESLVal.list(_v132)));
+        default: return error(new ESLVal("case error at Pos(3547,3587)").add(ESLVal.list(_v92)));
       }
       }
     }
@@ -231,25 +231,25 @@ public class Displays {
   public static ESLVal nodeProps = new ESLVal(new Function(new ESLVal("nodeProps"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal n = $args[0];
-  {ESLVal _v131 = n;
+  {ESLVal _v93 = n;
         
-        switch(_v131.termName) {
-        case "Node": {ESLVal $132 = _v131.termRef(0);
-          ESLVal $131 = _v131.termRef(1);
-          ESLVal $130 = _v131.termRef(2);
+        switch(_v93.termName) {
+        case "Node": {ESLVal $115 = _v93.termRef(0);
+          ESLVal $114 = _v93.termRef(1);
+          ESLVal $113 = _v93.termRef(2);
           
-          {ESLVal props = $132;
+          {ESLVal props = $115;
           
-          {ESLVal id = $131;
+          {ESLVal id = $114;
           
-          {ESLVal display = $130;
+          {ESLVal display = $113;
           
           return props;
         }
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(3631,3674)").add(ESLVal.list(_v131)));
+        default: return error(new ESLVal("case error at Pos(3631,3674)").add(ESLVal.list(_v93)));
       }
       }
     }
@@ -258,25 +258,25 @@ public class Displays {
     public ESLVal apply(ESLVal... $args) {
       ESLVal n = $args[0];
   ESLVal props = $args[1];
-  {ESLVal _v130 = n;
+  {ESLVal _v94 = n;
         
-        switch(_v130.termName) {
-        case "Node": {ESLVal $129 = _v130.termRef(0);
-          ESLVal $128 = _v130.termRef(1);
-          ESLVal $127 = _v130.termRef(2);
+        switch(_v94.termName) {
+        case "Node": {ESLVal $118 = _v94.termRef(0);
+          ESLVal $117 = _v94.termRef(1);
+          ESLVal $116 = _v94.termRef(2);
           
-          {ESLVal props0 = $129;
+          {ESLVal props0 = $118;
           
-          {ESLVal id = $128;
+          {ESLVal id = $117;
           
-          {ESLVal display = $127;
+          {ESLVal display = $116;
           
           return new ESLVal("Node",props,id,display);
         }
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(3718,3779)").add(ESLVal.list(_v130)));
+        default: return error(new ESLVal("case error at Pos(3718,3779)").add(ESLVal.list(_v94)));
       }
       }
     }
@@ -284,21 +284,21 @@ public class Displays {
   public static ESLVal edgeProps = new ESLVal(new Function(new ESLVal("edgeProps"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal e = $args[0];
-  {ESLVal _v129 = e;
+  {ESLVal _v95 = e;
         
-        switch(_v129.termName) {
-        case "Edge": {ESLVal $126 = _v129.termRef(0);
-          ESLVal $125 = _v129.termRef(1);
-          ESLVal $124 = _v129.termRef(2);
-          ESLVal $123 = _v129.termRef(3);
+        switch(_v95.termName) {
+        case "Edge": {ESLVal $122 = _v95.termRef(0);
+          ESLVal $121 = _v95.termRef(1);
+          ESLVal $120 = _v95.termRef(2);
+          ESLVal $119 = _v95.termRef(3);
           
-          {ESLVal props = $126;
+          {ESLVal props = $122;
           
-          {ESLVal source = $125;
+          {ESLVal source = $121;
           
-          {ESLVal target = $124;
+          {ESLVal target = $120;
           
-          {ESLVal display = $123;
+          {ESLVal display = $119;
           
           return props;
         }
@@ -306,7 +306,7 @@ public class Displays {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(3823,3877)").add(ESLVal.list(_v129)));
+        default: return error(new ESLVal("case error at Pos(3823,3877)").add(ESLVal.list(_v95)));
       }
       }
     }
@@ -315,21 +315,21 @@ public class Displays {
     public ESLVal apply(ESLVal... $args) {
       ESLVal e = $args[0];
   ESLVal props = $args[1];
-  {ESLVal _v128 = e;
+  {ESLVal _v96 = e;
         
-        switch(_v128.termName) {
-        case "Edge": {ESLVal $122 = _v128.termRef(0);
-          ESLVal $121 = _v128.termRef(1);
-          ESLVal $120 = _v128.termRef(2);
-          ESLVal $119 = _v128.termRef(3);
+        switch(_v96.termName) {
+        case "Edge": {ESLVal $126 = _v96.termRef(0);
+          ESLVal $125 = _v96.termRef(1);
+          ESLVal $124 = _v96.termRef(2);
+          ESLVal $123 = _v96.termRef(3);
           
-          {ESLVal props0 = $122;
+          {ESLVal props0 = $126;
           
-          {ESLVal source = $121;
+          {ESLVal source = $125;
           
-          {ESLVal target = $120;
+          {ESLVal target = $124;
           
-          {ESLVal display = $119;
+          {ESLVal display = $123;
           
           return new ESLVal("Edge",props,source,target,display);
         }
@@ -337,7 +337,7 @@ public class Displays {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(3921,4004)").add(ESLVal.list(_v128)));
+        default: return error(new ESLVal("case error at Pos(3921,4004)").add(ESLVal.list(_v96)));
       }
       }
     }

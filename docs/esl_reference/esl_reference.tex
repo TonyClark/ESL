@@ -128,7 +128,8 @@ This document describes the language ESL and its implementation. ESL is an actor
 
 The Actor Model of Computation is characterised in figure \ref{fig:actors} which shows three actors. Each actor has a local thread of control which selects a message from the head of the mailbox and processes it. When the current message is processed, the thread inspects the mailbox for the next message; if no message is available then the actor becomes idle until a message is received. Each actor has a local state that can be inspected and updated by the methods that handle the messages.
 
-An actor can send messages to any actor that it knows about. An actor will know about an actor if it created the actor or it received the actor as part of a message. A message may contain basic data items, collections of data item, actors, and functions. When a source actor passes a function to a target actor, the source may provide access to its internal state when the target calls the function on its own thread.
+An actor can send messages to any actor that it knows. An actor will know about an actor if it created the actor or it received the actor as part of a message. A message may contain basic data items, collections of data item, actors, and functions. When a source actor passes a function to a target actor, the source context is captured by the function. When the target actor calls such a function, it runs on the target thread whilst accessing the source context that was captured when the function was created.
+
 
 %%% Motivation for ESL
 
@@ -172,25 +173,25 @@ for x::Int in 0..100 do {
 \end{ESL}
 Note that array elements can be updated and passed between actors, therefore they are a basis for race conditions and other concurrency problems. The intention is that arrays are used locally within an actor as efficient indexable storage. If arrays are shared then access should be protected using locks.
 
-ESL provides homogeneous lists whose elements cannot be modified by side effect and are therefore safe to pass between actors. A list is constructed using \code{::} and \code{[ ... ]} and can be decomposed using the operations \code{head} and \code{tail} in addition to pattern matching (see below). For example:
+ESL provides homogeneous lists whose elements cannot be modified by side effect and are therefore safe to pass between actors. A list is constructed using \code{:} and \code{[ ... ]} and can be decomposed using the operations \code{head} and \code{tail} in addition to pattern matching (see below). For example:
 \begin{ESL}
 nums::[Int] = [1,2,3,4,5,6,7,8,9,0];
 print[Int](head[Int](nums));
 print[[Int](tail[Int](nums))
 print[[Int]](head[Int](nums) : tail[Int](tail[Int](nums));
 \end{ESL}
-which produces \code{1}, \code{[2,3,4,5,6,7,8,9,0]} and \code{[1,3,4,5,6,7,8,9,0]} respectively. Note that the operations \code{head} and \code{tail} are supplied with the type of the list element; this is because there operations are {\it polymorphic} as described in section \ref{sec:polymorphism}. The definition of \code{nums} above is equivalent to:
+which produces \code{1}, \code{[2,3,4,5,6,7,8,9,0]} and \code{[1,3,4,5,6,7,8,9,0]}  respectively. Note that the operations \code{head} and \code{tail} are supplied with the type of the list element; this is because there operations are {\it polymorphic} as described in section \ref{sec:polymorphism}. The definition of \code{nums} above is equivalent to:
 \begin{ESL}
 nums::[Int] = 1:2:3:4:5:6:7:8:9:0:[];
 \end{ESL}
 Sets and bags are like lists except the elements are not ordered. Adding an element to a set or bag produces a new set or bag respectively. Adding an element to a set has no effect if the set already contains the element, otherwise both the set and bag are extended:
 \begin{ESL}
-setOfNames::Set{Str} = Set{'Fred','Wilma'};
-bagOfNames::Bag{Str} = Bag{'Fred','Wilma'};
-print[Set{Str}](Set{'Fred' | setOfNames});
-print[Bag{Str}](Bag{'Fred' | setOfNames});
+setOfNames::Set{Str} = set{'Fred','Wilma'};
+bagOfNames::Bag{Str} = bag{'Fred','Wilma'};
+print[Set{Str}](set{'Fred' | setOfNames});
+print[Bag{Str}](bag{'Fred' | setOfNames});
 \end{ESL}
-produces \code{Set\{'Fred','Wilma'\}} and \code{Bag\{'Fred','Wilma','Fred'\}} respectively. Note that extraction from sets and bags occurs via pattern matching is described below.
+produces \code{set\{'Fred','Wilma'\}} and \code{bag\{'Fred','Wilma','Fred'\}} respectively. Note that extraction from sets and bags occurs via pattern matching is described below.
 \begin{figure*}
 \centering
 \begin{tabular}{|c|c|}
@@ -467,6 +468,17 @@ addIf(fun(n::Int)::Bool n > 100,Branch(Leaf(100),Leaf(200)));
 \end{ESL}
 Prints \code{200}.
 
+A case-expression can contain any number of values and patterns providing that the number of values and types of the patterns match up. For example:
+\begin{ESL}
+sameTree(t1::TreeOfInt,t2::TreeOfInt)::Bool =
+  case t1,t2 {
+    Branch(l1,r1),Branch(l2,r2) -> 
+      sameTree(l1,l2) and sameTree(r1,r2);
+    Leaf(n1),Leaf(n2) when n1 = n2 -> true;
+    t1,t2 -> false;
+  }
+\end{ESL}
+
 \section{Sets and Collection Matching}
 
 \label{sec:sets}
@@ -526,7 +538,7 @@ An actor is created with a specific behaviour:
 \begin{ESL}
 s::Sink = new sink;
 \end{ESL}
-Once created, the actor can receive messages. A message is asynchronous: \code{s <- M(100)} and is placed on the input queue of the target actor. Each actor is processing at most one message at any time, and is idle if there are no messages on its queue and it is not currently handling a message. Since all actors run concurrently, there is no guarantee that of message ordering other than messages sent from the same actor will retain the ordering in which they are sent.
+Once created, the actor can receive messages. A message is asynchronous: \code{s <- M(100)} and is placed on the input queue of the target actor. Each actor is processing at most one message at any time, and is idle if there are no messages on its queue and it is not currently handling a message. Since all actors run concurrently, there is no guarantee that of message ordering other than messages sent from the same actor to a target will retain the ordering in which they are sent.
 
 Any number of behaviours can be defined to conform to a behaviour type. The following shows three different implementations of the type \code{A}. The first, \code{a}, just loops indefinitely which an actor can do because all message handling occurs concurrently with other actors. The second, \code{forward} is supplied with a second actor of type \code{A} to which it forwards messages. Finally, \code{broadcast} is supplied with a collection of actors of type \code{A} and will send any message to all of them:
 \begin{ESL}
@@ -561,7 +573,7 @@ act broadcast(as::[A])::A {
     toAll(as,n,b);
   } 
 
-spray::A = new broadcast([new forward(new a) | i <- 0.1000]);
+spray::A = new broadcast([new forward(new a) | i <- 0.100]);
 
 \end{ESL}
 
@@ -691,7 +703,7 @@ in contains([1,2,3,4,5,6,7,8,9],5);
 A letrec-expression can be used to create mutually recursive function definitions:
 \begin{ESL}
 letrec
-  isEvan(n::Int)::Bool = if n = 0 then true else isOdd(n-1);
+  isEven(n::Int)::Bool = if n = 0 then true else isOdd(n-1);
   isOdd(n::Int)::Bool = if n = 0 then false else isEven(n-1);
 in isEven(101);
 \end{ESL}
@@ -729,7 +741,7 @@ act postOffice(people::[Person])::PostOffice {
 
 \section{Modules}
 
-label{sec:modules}
+\label{sec:modules}
 
 ESL is a compiled language. The units of compilation are called modules and are usually contained in text files. A module contains a collection of mutually recursive bindings for types, behaviours, functions and values. A module \code{m} may export some of its bindings so that they can be used by any other module that imports \code{m}. For example a module defined in a file \code{a/b/c.esl} defines two names and exports one of them:
 \begin{ESL}
@@ -1740,7 +1752,7 @@ where \code{max} determines the maximum length of the plan, \code{compare} is a 
 
 The \code{plan} operation is used to automatically generate next moves for players and is implemented differently for ghosts and the Pacman. Some of the player operations can be implemented and then reused across ghosts and players:
 \begin{ESL}
-ct player(x::Int,y::Int,maze::Maze)::Player {
+act player(x::Int,y::Int,maze::Maze)::Player {
 
   // A basic implementation of the player interface...
   
@@ -1804,9 +1816,6 @@ ct player(x::Int,y::Int,maze::Maze)::Player {
 \end{ESL}
 In \code{player} the implementation of \code{plan} uses the supplied arguments to map a collection of plans to a single best plan. A plan is a sequence of locations, in reverse order, that are a legal sequence of moves from some starting position. The operation \code{addMoves} is used by \code{plan} to add a new move to the end of each plan. A check is made in \code{addMoves} to ensure that no plan contains a cycle.
 
-
-*****************
-
 In Pacman there are four types of ghost. Each type has a different behaviour which will be implemented as different sub-behaviours of a common parent behaviour \code{ghost}. The maze is drawn by a Swing-based Java application that will draw the ghosts in different colours, supplied to the Java as integer codes that are the value of \code{ghostType}:
 \begin{ESL}
 Act Ghost extends Player { export ghostType::Int; }
@@ -1816,83 +1825,54 @@ We create an empty behaviour type as placeholder in the hierarchy for players:
 Act Pacman extends Player { }
 \end{ESL}
 
-\begin{figure*}
+\begin{figure*}[t]
 \begin{ESL}
 act ghost(x::Int,y::Int,homeX::Int,homeY::Int,gType::Int,m::Maze)::Ghost extends player(x,y,m) {
-  export ghostType, move;
+  export ghostType, move, deltaOK;
 
   ghostType::Int     = gType;        // The type of the ghost.
   state::GhostState  = Chase;        // Current state, used for planning.
   changeMode::Int    = 15;           // Change the state after this number of moves.
   modeCount::Int     = changeMode;   // Current countdown to change state.
-  maxPlanLength::Int = 8;            // Select the best plan after this number of plan steps.
+
+  switchMode(s::GhostState)::Void = { state := s; modeCount := changeMode; }
+
+  deltaOK(dx::Int,dy::Int)::Bool = super.deltaOK(dx,dy) and (dx = 0 or dy = 0);
 
   move()::Void = 
     letrec 
-      selectMin(r::(Plan,Plan)->Bool,plans::[Plan])::Plan = 
-        select1[Plan](plans,null[Plan],fun(p1::Plan)::Bool 
-          forall[Plan](fun(p2::Plan)::Bool if p1=p2 then true else r(p1,p2),plans));
       planDistance(p::Plan,x::Int,y::Int)::Float = case head[Loc](p) { Loc(x0,y0) -> distance(x,y,x0,y0); }
-      plan(goalX::Int,goalY::Int,plans::Plans)::Plan = 
-        // Create a plan that takes the ghost nearest to the goal position...
-        if length[Loc](head[Plan](plans)) > maxPlanLength
-        then 
-          selectMin(fun(p1::Plan,p2::Plan)::Bool planDistance(p1,goalX,goalY) <= planDistance(p2,goalX,goalY),plans);
-        else 
-          let p::Plan = select1[Plan](plans,null[Plan],fun(p::Plan)::Bool head[Loc](p) = Loc(goalX,goalY));
-          in if p = null[Plan]
-             then plan(goalX,goalY,[ m:p | 
-               p <- plans,m <- moves(p),?(not(exists[Plan](fun(p::Plan)::Bool member[Loc](m,p),plans))) ]);
-             else p;
+      pred(p::Plan)::Bool = true;
+      better(goalX::Int,goalY::Int)::(Plan,Plan) -> Bool = fun(p1::Plan,p2::Plan)::Bool
+        planDistance(p1,goalX,goalY) < planDistance(p2,goalX,goalY);
+      at(goalX::Int,goalY::Int)::(Plans)->Plan = fun(plans::[Plan])::Plan
+        select1[Plan](plans,null[Plan],fun(p::Plan)::Bool  head[Loc](p) = Loc(goalX,goalY));
       getMove(goalX::Int,goalY::Int)::Loc = 
-        // Get a move towards the goal...
-        case plan(goalX,goalY,[[Loc(self.getX(),self.getY())]]) {
-          [Loc(x,y)] -> Loc(x,y);           // Nothing available, no move.
-          p -> last[Loc](butlast[Loc](p));  // Plan is in reverse and contains current location.
+        case self.plan(8,better(goalX,goalY), at(goalX,goalY), pred, self.moves,self.initPlans()) {
+          p when p = null[Plan] -> Loc(self.getX(),self.getY());
+          [l]                   -> Loc(self.getX(),self.getY());
+          p                     -> last[Loc](butlast[Loc](p)); 
         }
-      moves::(Plan) -> [Loc] = cache[Plan,Loc,[Loc]](head[Loc],fun(p::Plan)::[Loc] 
-        // Get the available moves based on the location at the head of the supplied plan...
-        case head[Loc](p) {
-          Loc(x::Int,y::Int) -> 
-            [ Loc(x+dx,y+dy) | dx <- [-1,0,1], dy <- [-1,0,1], ?(not(x=0 and y=0)), ?(self.canMove(x+dx,y+dy)) ];
-        });
-    in {
+    in
       case state {
-        Scatter when modeCount > 0 ->  // Scattering heads towards the home location...
+        Scatter when modeCount > 0 -> 
           case getMove(homeX,homeY) {
-            Loc(x::Int,y::Int) -> {
-              self.moveTo(x,y);
-              modeCount := modeCount - 1;
-            }
+            Loc(x::Int,y::Int) -> { self.moveTo(x,y); modeCount := modeCount - 1; }
           }
-        Scatter -> { // Switch mode to chasing the pacman...
-          state := Chase;
-          modeCount := changeMode;
-        }
-        Chase when modeCount > 0 ->  // Chasing heads towards the pacman...
+        Scatter -> switchMode(Chase);
+        Chase when modeCount > 0 -> 
           case getMove(m.getPacman().getX(),m.getPacman().getY()) {
-            Loc(x::Int,y::Int) -> {
-              self.moveTo(x,y);
-              modeCount := modeCount - 1;
-            }
+            Loc(x::Int,y::Int) -> { self.moveTo(x,y); modeCount := modeCount - 1; }
          }
-        Chase -> { // Switch mode to heading back home...
-          state := Scatter;
-          modeCount := changeMode;
-        }
+        Chase -> switchMode(Scatter);
       }
-    }
-
-  Start -> 
-    m <- RegisterGhost(self);
+  Start ->  m <- RegisterGhost(self);
 }
 \end{ESL}
 \caption{Abstract Ghost Behaviour}
 \label{fig:abstract_ghost}
 \end{figure*}
-
-
-Figure \ref{fig:abstract_ghost} defines an abstract ghost behaviour that inherits the behaviour \code{player}. A ghost exists in one of two states: \code{Chase} and \code{Scatter} which controls whether it is trying to catch the Pacman or trying to reach its home position. It achieves this by creating a plan using the local function \code{plan}. A plan is created by extending a collection of current plans with all the possible legal moves calculated by the function \code{moves}. The length of the plan is controlled by \code{maxPlanLength}; when this is reached, the best plan is selected amongst all the available plans. The best plan is that which minimises the distance to the goal location.
+Figure \ref{fig:abstract_ghost} defines an abstract ghost behaviour that inherits the behaviour \code{player}. A ghost exists in one of two states: \code{Chase} and \code{Scatter} which controls whether it is trying to catch the Pacman or trying to reach its home position. It achieves this by creating a plan using the local function \code{plan}. The best plan is that which minimises the distance to the goal location.
 
 Having defined an abstract ghost behaviour we can extend it to produce four different concrete ghost behaviours. In the real game, the ghosts differ by strategy to catch the Pacman, however we will limit the differences to the home locations:
 \begin{ESL}
@@ -1953,72 +1933,72 @@ act playerPacman(x::Int,y::Int,m::Maze)::Pacman
 \end{ESL}
 \begin{figure*}
 \begin{ESL}
-act autoPacman(x::Int,y::Int,m::Maze)::Pacman extends pacman(x,y,m) { export move;
+act autoPacman(x::Int,y::Int,m::Maze)::Pacman extends pacman(x,y,m) {  export move;
+
   plan::Plan             = [];         // A sequence of locations in reverse order.
   fleeing::Bool          = false;      // Is the pacman in danger of being eaten?
   
-  moves::(Plan) -> [Loc] = cache[Plan,Loc,[Loc]](head[Loc],fun(p::Plan)::[Loc] 
-    case head[Loc](p) {
-      Loc(x::Int,y::Int) ->
-        [ Loc(if x+dx = 0 then maxWidth-1 else x+dx,y+dy) |  dx::Int <- [1,0,-1], dy::Int <- [1,0,-1], 
-            ?(not(dx=0 and dy=0)), 
-            ?(self.canMove(x+dx,y+dy)) ];
-    });
+  moves(p::Plan)::[Loc] = [ Loc(if locX(p) = 0 then maxWidth-1 else locX(p),locY(p)) | p <- super.moves(p) ];
 
   ghostDistance(l::Loc)::Float = min(1000.0,[ distance(locX(l),locY(l),g.getX(),g.getY()) | g::Ghost <- m.getGhosts() ]);
 
-  nextMove(p::Plan)::Loc = case p {  p1 + [l] + p2 when length[Loc](p2) = 1 -> l; }
+  dangerous(dangerZones::[[Loc]])::(Plan) -> Bool = fun(p::Plan)::Bool
+    let canReach::[[Loc]] = take[[Loc]](dangerZones,length[Loc](p)+1);
+    in not(exists[[Loc]](fun(zone::[Loc])::Bool member[Loc](head[Loc](p),zone),canReach));
+  
+  nextMove(p::Plan)::Loc = case p { p1 + [l] + p2 when length[Loc](p2) = 1 -> l; }
       
-  move()::Void =
+  move()::Void = 
     let d::Float = ghostDistance(Loc(self.getX(),self.getY()));
     in if d < 5.0 and not(fleeing) then { flee(7); fleeing := true; doPlan(); } 
        else if d > 5.0 and fleeing then { eat(9); fleeing := false; doPlan(); } 
        else doPlan();
 
   ghostMoves::(Loc) -> [Loc] = cache[Loc,Loc,[Loc]](id[Loc],fun(l::Loc)::[Loc]
-    case l { Loc(x::Int,y::Int) ->
-      [ Loc(x+dx,y+dy) | dx <- [1,0,-1], dy <- [1,0,-1], ?(dx=0 or dy=0), ?(not(dx=0 and dy=0)), ?(self.canMove(x+dx,y+dy)) ];
+    case l {
+      Loc(x::Int,y::Int) -> [ Loc(x+dx,y+dy) | 
+        dx <- super.deltas, dy <- super.deltas, ?(dx=0 or dy=0), ?(not(dx=0 and dy=0)), ?(self.canMove(x+dx,y+dy)) ];
     });
 
   getDangerZones(moves::Int)::[[Loc]] = 
-    letrec ghostLocs::[Loc] = [ Loc(g.getX(),g.getY()) | g::Ghost <- m.getGhosts() ];
-           zones(zone::[Loc],i::Int,max::Int)::[[Loc]] =
-             if i >= max then []; else let z::[Loc] = [ m  | l::Loc <- zone, m::Loc <- ghostMoves(l) ]; in z:zones(z,i+1,max);
+    letrec 
+      ghostLocs::[Loc] = [ Loc(g.getX(),g.getY()) | g::Ghost <- m.getGhosts() ];
+      zones(zone::[Loc],i::Int,max::Int)::[[Loc]] =
+        if i >= max then []; else let z::[Loc] = [ m  | l::Loc <- zone, m::Loc <- ghostMoves(l) ]; in z:zones(z,i+1,max);
     in zones(ghostLocs,0,moves);
 
   eat(n::Int)::Void =
-    letrec dangerZones::[[Loc]] = getDangerZones(n+1);
-           eatPlans(plans::Plans,i::Int,max::Int)::Plans =
-             if i >= max then plans;
-             else eatPlans([ l:p |  p <- plans, l <- moves(p),
-               ?(not(exists[[Loc]](fun(zone::[Loc])::Bool member[Loc](l,zone),take[[Loc]](dangerZones,i+1)))),
-               ?(not(exists[Plan](fun(p::Plan)::Bool member[Loc](l,p),plans)))
-             ],i+1,max);
-       foodCount(plan::Plan)::Int = let count::Int=0; in { for l in plan do count := count + food[locY(l)][locX(l)]; count;}
-       moreFood(plan1::Plan,plan2::Plan)::Bool = foodCount(plan1) > foodCount(plan2);
-       mostFood(plans::Plans)::Plan = max[Plan](plans,moreFood);
-    in case mostFood(eatPlans([[Loc(self.getX(),self.getY())]],0,n)) {
-         p when p = null[Plan] -> { print[Str]('Yikes - no plan!'); plan := []; }
-         p -> plan := butlast[Loc](p);
-       }
+    letrec
+      foodCount(plan::Plan)::Int = sum([ food[locY(l)][locX(l)] | l <- plan ]);
+      moreFood(plan1::Plan,plan2::Plan)::Bool = foodCount(plan1) > foodCount(plan2);
+      mostFood(plans::Plans)::Plan = if length[Loc](head[Plan](plans)) < n then null[Plan]; else max[Plan](plans,moreFood);
+    in case self.plan(n,moreFood,mostFood,dangerous(getDangerZones(n+1)),moves,self.initPlans()) {
+      p when p = null[Plan] -> plan := [];
+      [l]                   -> plan := [];
+      p                     -> plan := butlast[Loc](p);
+    }
 
-  flee(n::Int)::Void = 
-    letrec dangerZones::[[Loc]] = getDangerZones(n+1); 
-           fleePlans(plans::Plans,i::Int,max::Int)::Plans =
-             if i >= max  then plans;
-             else fleePlans([ l:p | p::Plan <- plans, l::Loc <- moves(p),
-               ?(not(exists[[Loc]](fun(zone::[Loc])::Bool member[Loc](l,zone),take[[Loc]](dangerZones,i+1)))),
-               ?(not(exists[Plan](fun(p::Plan)::Bool member[Loc](l,p),plans)))
-             ],i+1,max);
-    in case fleePlans([[Loc(self.getX(),self.getY())]],0,n) {
-         [] -> { print[Str]('Yikes - no plan!'); plan := []; }
-         p:ps -> plan := butlast[Loc](p);
-       }
+  flee(n::Int)::Void =
+    letrec
+      ok(p1::Plan,p2::Plan)::Bool = true;
+      anything(plans::Plans)::Plan = if length[Loc](head[Plan](plans)) < n then null[Plan]; else head[Plan](plans);
+    in case self.plan(n,ok,anything,dangerous(getDangerZones(n+1)),moves,self.initPlans()) {
+      p when p = null[Plan] -> plan := [];
+      [l]                   -> plan := [];
+      p                     -> plan := butlast[Loc](p);
+    }
 
   doPlan()::Void =
-    if plan = [] then replan(); else case plan {
-      p1 + [l] -> { plan := p1; case l { Loc(x,y) -> { self.moveTo(x,y);  gui <- Player(self.getX(),self.getY()); } }
-    }
+    if plan = [] then replan();
+    else 
+      case plan {
+        p1 + [l] -> { 
+          plan := p1;
+          case l { 
+             Loc(x,y) -> { self.moveTo(x,y); gui <- Player(self.getX(),self.getY()); m.eat(self.getX(),self.getY()); }
+          }
+        }
+      }
 
   replan()::Void = if fleeing then flee(7); else eat(9);
 }
@@ -2028,43 +2008,11 @@ act autoPacman(x::Int,y::Int,m::Maze)::Pacman extends pacman(x,y,m) { export mov
 \end{figure*}
 
 
-An alternative implementation of the player provides a machine implemented behaviour. Like ghosts, the automatic movement is defined by a simple planner that tries to maximise the amount of food that is eaten whilst avoiding ghosts.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-The following variables control the game:
-\begin{ESL}
-cellWidth::Int         = 20;    // Used to convert the (mouseX,mouseY) positions.
-cellHeight::Int        = 20;    // Used to convert the (mouseX,mouseY) positions.
-maxWidth::Int          = 29;    // Max number of horizontal locations in the maze.
-maxHeight::Int         = 27;    // Max number of vertical locations in the maze.
-delay::Int             = 100;   // Used to slow down the game.
-cellEmpty::Int         = 0;     // Code for an empty cell.
-legalCell::Int         = 2;     // No occupation above this code.
-homeCell::Int          = 3;     // Code for ghost home.
-hWall::Int             = 4;     // Code for a horizontal wall.
-vWall::Int             = 5;     // Code for a vertical wall.
-topLeftCorner::Int     = 6;     // Code for a top-left corner.
-topRightCorner::Int    = 7;     // Code for a top-right corner.
-bottomLeftCorner::Int  = 8;     // Code for a bottom-left corner.
-bottomRightCorner::Int = 9;     // Code for a bottom-right corner.
-timeLimit::Int         = 70000; // How long to run the game.
-\end{ESL}
-
+An alternative implementation of the player provides a machine implemented behaviour. Like ghosts, the automatic movement is defined by a simple planner that tries to maximise the amount of food that is eaten whilst avoiding ghosts. In order to avoid the ghosts, the Pacman must work out the {\it danger zones} which are those locations that the ghosts can reach:
+\begin{center}
+\includegraphics[width=0.8\columnwidth]{pac3}
+\end{center} 
+When the Pacman creates a plan, those plans whose locations stray into danger zones are discarded. The implementation is shown in figure \ref{fig:auto_pacman}.
 
 
 \section{EDB}
@@ -2279,6 +2227,255 @@ producing:
 \includegraphics[width=\columnwidth]{lines}
 \end{center}
 
+\subsubsection{Supply Chains}
+
+\label{sec:supply_chains}
+
+Line graphs can be used to present information about a simulation. For example, a supply chain network involves a collection of processing nodes. A job must visit a sequence of processing nodes. When a job is received at a node, it is added to the processing queue. Each time unit, a node can work on a limited number of jobs based on its processing capacity. Jobs stay at a processing node until they are completed and then move on until they have visited all the nodes in their plan, at which point they are completed. We might be interested in experimenting with queue lengths or the number of processing nodes of a given type that are required in order to prevent delays becoming too large.
+
+Consider the following diagram that shows a job being processed through a number of nested nodes:
+\begin{center}
+\includegraphics[width=\columnwidth]{supply}
+\end{center}
+The job must be processed by nodes labelled \code{Red}, \code{Green} and \code{Blue} in that order. When the job arrives at a composite node, it must be processed by the nested nodes in the same order. Each leaf node has a queue and a processing capacity. Where a container has more than one child of the same colour, it can choose where to send the job. Without further information, the parent just chooses a child of the right colour at random. 
+
+When a job has been processed by a leaf node for the appropriate number of cycles it is sent back to the parent for further processing as defined by its processing path. This can be implemented in ESL and the delays shown using a line graph. The types are defined as follows:
+\begin{ESL}
+data Colour =
+  Red
+| Green
+| Blue;
+
+type ShortestTime = Int;
+type ActualTime   = Int;
+type ProcessTime  = Int;
+type CurrentTime  = Int;
+type QueueLength  = Int;
+type Id           = Int;
+type Stack[T]     = [T];
+type Colours      = [Colour];
+type Jobs         = [Job];
+type Processors   = [Processor];
+\end{ESL}
+The list \code{colours} define the sequence of nodes that must be visited by each job:
+\begin{ESL}
+colours::Colours = [Red,Green,Blue,Blue,Red,Green,Green];
+\end{ESL}
+In the list above, a job must be processed by a node of the appropriate colour in the order given at each level.
+
+Jobs have the form \code{Job(i,tc,ts,ta,cs)} where \code{i} is a job identifier, \code{tc} is the time left on the current processing node, \code{ts} is the current aggregate shortest processing time, \code{ta} is the current actual processing time, and \code{cs} is a stack of colour paths. The value \code{ta - ts} defines the delay in job processing for the job. The value \code{cs} defines the processing that has yet to take place, for example:
+\begin{ESL}
+[[Red],[Green,Red]]
+\end{ESL}
+means that the job must be processed on a \code{Red} node at the current level and then be processed by \code{Green} then \code{Red} at the parent level. Each time the job descends to a nested level, the value \code{cs} is extended at the head by \code{colours}.
+
+Jobs are defined as a data type as follows together with some useful processing functions:
+\begin{ESL}
+data Job = Job(Id,CurrentTime,ShortestTime,ActualTime,Stack[Colours]);
+
+jobCurrentTime(j::Job)::Int = 
+  case j { 
+    Job(id,current,shortest,actual,pending) -> current; 
+  }
+setJobCurrent(j::Job,current::CurrentTime)::Job = 
+  case j { 
+    Job(id,n,shortest,actual,pending) -> 
+      Job(id,current,shortest,actual,pending); 
+  } 
+setJobShortest(j::Job,shortest::ShortestTime)::Job = 
+  case j { Job(id,n,t,actual,pending) -> 
+    Job(id,n,shortest+t,actual,pending); 
+  } 
+addJobColours(j::Job)::Job = 
+  case j { Job(id,n,shortest,actual,pending) -> 
+    Job(id,n,shortest,actual,colours:pending); 
+  } 
+jobWaits(j::Job)::Job = 
+  case j { 
+    Job(id,n,shortest,actual,pending) -> 
+      Job(id,n,shortest,actual+1,pending); 
+  } 
+\end{ESL}
+Processing nodes are defined as follows, where \code{Node} is used as the top-most supply-chain network node:
+\begin{ESL}
+Act Node {
+  ChildCompleted(Job);
+  Time(Int);
+  Process(Job);
+}
+
+Act Processor extends Node {
+  export getColour::()->Colour;
+}
+\end{ESL}
+A \code{leaf} actor is has a queue that manages a collection of jobs. Each leaf node is capable of performing \code{qLength} jobs at any time unit, and requires each job to be processed for \code{pTime} processing units. Once the leaf has completed a job, it will inform its \code{parent}:
+\begin{ESL}
+act leaf(colour::Colour,
+         parent::Node,
+         pTime::ProcessTime,
+         qLength::QueueLength)::Processor {
+  export getColour;
+  queue::Jobs = [];
+  getColour()::Colour = colour;
+  process(jobs::Jobs)::Jobs = 
+    [ Job(id,current-1,shortest,actual+1,pending) |
+      Job(id,current,shortest,actual,pending) <- jobs];
+  isFinished(j::Job)::Bool = jobCurrentTime(j) <= 0;
+  incomplete(j::Job)::Bool = not(isFinished(j));
+
+  Process(j::Job) ->  
+    queue := queue + 
+      [setJobShortest(setJobCurrent(j,pTime),pTime)];
+
+  ChildCompleted(j::Job) -> {}
+  
+  Time(n::Int) -> {
+    let processed::Jobs = process(take[Job](queue,qLength));
+        unprocessed::Jobs = drop[Job](queue,qLength); in
+    let completed::Jobs = select[Job](isFinished,processed);
+        incomplete::Jobs =select[Job](incomplete,processed);
+    in {
+      queue := incomplete + 
+        [ jobWaits(j) | j <- unprocessed ];
+      for j::Job in completed do {
+        parent <- ChildCompleted(j);
+      }
+    }
+  }
+}
+\end{ESL}
+A container creates some children depending on the level of \code{depth} which controls how deeply nested the supply chain network is:
+\begin{ESL}
+act container(depth::Int,
+              colour::Colour,
+              parent::Node)::Processor { 
+  export getColour;
+
+  getColour()::Colour = colour;
+  pTime()::Int = 50; 
+  qLength()::Int = 3; 
+  maxChildren()::Int = 3; 
+  children::Processors = [];
+
+  process(j::Job)::Void = 
+    case j {
+      Job(id,n,t0,t1,[]:pending) -> 
+        parent <- ChildCompleted(Job(id,n,t0,t1,pending));
+      Job(id,n,t0,t1,(c:cs):pending) -> 
+        let ps::Processors = 
+              [ p | p <- children, ?(p.getColour() = c) ];
+        in (nth[Processor](ps,random(length[Processor](ps)))) <- Process(Job(id,0,t0,t1,cs:pending));
+    }
+
+  -> {
+    if depth = 0
+    then children := 
+           [ new leaf(c,self,pTime(),qLength()) | 
+               c <- colours, 
+               i <- 0..maxChildren() ];
+    else children := 
+           [ new container(depth-1,c,self) | 
+               c <- colours, 
+               i <- 0..maxChildren() ];
+  } 
+
+  ChildCompleted(j::Job) -> process(j);
+  
+  Process(j::Job) -> process(addJobColours(j));
+
+  Time(n::Int) -> {}
+  
+}
+\end{ESL}
+The ESL application will create and run a supply-chain network and display the results in terms of the number of jobs that have been delayed. The delay statistics are defined as follows:
+\begin{ESL}
+minDelay(jobs::Jobs,min::Int)::Int =
+  case jobs {
+    [] -> min;
+    Job(id,t,ts,ta,cs):jobs when (ta - ts) < min -> 
+      minDelay(jobs,actual-possible);
+    j:jobs -> minDelay(jobs,min);
+  }
+
+maxDelay(jobs::Jobs,max::Int)::Int =
+  case jobs {
+    [] -> max;
+    Job(id,t,ts,ta,cs):jobs when (ta - ts) > max -> 
+      maxDelay(jobs,actual-possible);
+    j:jobs -> maxDelay(jobs,max);
+  }
+
+delayedBy(jobs::Jobs,delay::Int)::Int =
+  case jobs {
+    [] -> 0;
+    Job(id,t,ts,ta,cs):jobs when (ta - ts) >= delay -> 
+      1 + delayedBy(jobs,delay);
+    j:jobs -> delayedBy(jobs,delay);
+  }
+\end{ESL}
+The \code{root} node creates a single container, supplies jobs at a given rate and then displays the results when all the completed jobs are received:
+\begin{ESL}
+act root(depth::Int,limit::Int,nodes::Int)::Node {
+
+  child::Processor = new container(depth,Red,self);
+  jobs::Int = 0;
+  completed::Jobs = [];
+  delays()::[Int] = 
+    minDelay(completed,9999)..maxDelay(completed,0)+1
+
+  ChildCompleted(j::Job) -> {
+    completed := j:completed;
+    if length[Job](completed) = jobs and now > limit
+    then {
+      print[Str]('completed ' + jobs + ' jobs');
+      let 
+        graph::Display = 
+          LineGraph([],'
+                    Processing ' + jobs + ' Jobs in ' + 
+                      (now/1000) + 
+                      ' seconds',
+                    'Delay',
+                    'Number of Jobs Delayed by at Least',
+                    1200,500,[
+            GLine([],'Jobs',[
+              LPoint([],delay,delayedBy(completed,delay)) | 
+                delay <- delays(), 
+                ?(delay <> 0), 
+                ?(delay % 10 = 0), 
+                ?(delayedBy(completed,delay) <> 0) ])]);
+      in {
+        edb <- Show('Supply Chain Results',graph);
+        stopAll();
+      }
+    } else {}
+  }
+
+  Process(j::Job) -> child <- Process(j);
+
+  Time(n::Int) when n < limit -> {
+    for i in 0..nodes do {
+      jobs := jobs + 1;
+      self <- Process(Job(jobs,0,0,0,[]));
+    }
+  }
+
+  Time(n::Int) -> {}
+}
+\end{ESL}
+Given the following:
+\begin{ESL}
+rootNode::Node = new root(2,5000,30);
+\end{ESL}
+produces the results shown in figure \ref{fig:supply}.
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{supply_results}
+\caption{Supply Chain Delays}
+\label{fig:supply}
+\end{figure*}
+
+
+
 \subsection{Pictures}
 
 \label{sec:picture}
@@ -2304,6 +2501,244 @@ picture::Display = Picture(500,500,[
 
 edb <- Show('mypicture',picture);
 \end{ESL}
+The following example shows how pictures can be combined with filmstrips to produce an animation. A junction is controlled by traffic lights:
+\begin{center}
+\includegraphics[width=\columnwidth]{traffic_start}
+\end{center}
+Red cars arrive on the right and green cars on the left. The junction is controlled by traffic lights. Red cars arrive more frequently, and a monitor is used to detect when the queues at the junction are building up so that queues are managed effectively by changing the lights:
+\begin{center}
+\includegraphics[width=\columnwidth]{traffic}
+\end{center}
+The ESL junction simulation runs and captures the state of the junction as a sequence of actions. The actions are then transformed into a sequence of pictures that can be displayed as a filmstrip. The implementation of the simulation is as follows:
+\begin{ESL}
+Act Main { Time(Int); }
+
+Act TrafficLights { 
+  export left::TrafficLight; right::TrafficLight; 
+}
+
+Act TrafficLight { 
+  export colour::Str; change::()->Void; 
+}
+
+Act Approach { 
+  export getQueue::()->Int; prioritise::()->Bool; 
+         move::()->Void; Time(Int); 
+}
+
+Act Monitor { Time(Int); }
+
+data Action = 
+   MoveLeft
+|  MoveRight
+|  ArriveLeft
+|  ArriveRight;
+
+data MonitorState = PriorityRight | Even | Stuck;
+\end{ESL}
+Traffic lights are defined as passive behaviours that will be changed by the junction monitor:
+\begin{ESL}
+act light(c::Str)::TrafficLight {
+  export colour, change;
+  colour::Str = c;
+  change()::Void =
+    case colour {
+      'RED' -> colour := 'GREEN';
+      'GREEN' -> colour := 'RED';
+    }
+}
+
+act trafficLights(l::TrafficLight,
+                  r::TrafficLight)::TrafficLights {
+  export left,right;
+  left::TrafficLight = l;
+  right::TrafficLight = r;
+}
+\end{ESL}
+There are two approaches at the junction. Each approach is implemented as a separate actor with a traffic light. The approach has a queue that is a sequence of integers. The head integer defines the current number of cars waiting at the approach. When a car arrives or leaves, the head is duplicated and changed so that the queue contains a historic record that can be used by the monitor to calculate the build-up of cars. When anything changes, the action is saved on a list of actions that will be used to create pictures:
+\begin{ESL}
+act approach(id::Str,
+             light::TrafficLight,
+             probOfNewCar::Int)::Approach {
+
+  export getQueue,move,prioritise;
+
+  queue::[Int] = [0];   // A historical record of the cars at the approach.
+  
+  getQueue()::Int =
+    grab(queue) {
+      head[Int](queue);
+    }
+    
+  prioritise()::Bool =
+    grab(queue) {
+      if length[Int](queue) > qtLimit
+      then forall[Int](fun(n::Int)::Bool 
+             n > qLimit,take[Int](queue,qtLimit));
+      else false;
+    }
+    
+  move()::Void =
+    grab(queue,actions) {
+      if light.colour = 'GREEN'
+      then 
+        if head[Int](queue) > 0
+        then {
+          queue := (head[Int](queue) - 1) : queue;
+          actions := actions + 
+            [if id='left' then MoveLeft else MoveRight];
+        } else {}
+      else {}
+    }
+  
+  Time(n::Int) -> {
+    probably(probOfNewCar) { 
+      grab(queue,actions) { 
+        queue := (head[Int](queue) + 1) : queue;
+        actions := actions + 
+          [if id='left' then ArriveLeft else ArriveRight];
+      }
+    }
+    move();
+  }
+}
+\end{ESL}
+The junction monitor controls the traffic lights to try to minimise the length of the queues. Where there is a conflict the monitor prioritises the right hand side:
+\begin{ESL}
+act mon(left::Approach,
+        right::Approach,
+        lights::TrafficLights)::Monitor {
+
+  queueRight()::Bool = right.getQueue() > 0;
+  
+  allowRight()::Void = 
+    if lights.right.colour = 'RED' 
+    then {
+      lights.right.change();
+      lights.left.change();
+    } else {}
+    
+  allowLeft()::Void = 
+    if lights.left.colour = 'RED' 
+    then {
+      lights.left.change();
+      lights.right.change();
+    } else {}
+  
+  Time(n::Int) -> 
+    case monitorState {
+      PriorityRight ->
+        if right.prioritise()
+        then allowRight();
+        else 
+          if left.prioritise()
+          then allowLeft();
+          else
+            if queueRight()
+            then allowRight();
+            else allowLeft();
+      Even -> probably(50) allowLeft(); else allowRight();
+    }
+}
+\end{ESL}
+The junction is created as a collection of elements:
+\begin{ESL}
+l1::TrafficLight      = new light('RED');
+l2::TrafficLight      = new light('GREEN');
+left::Approach        = new approach('left',l1,20);
+right::Approach       = new approach('right',l2,30);
+lights::TrafficLights = new trafficLights(l1,l2);
+m::Monitor            = new mon(left,right,lights);
+\end{ESL}
+After running the junction simulation for a given length of time, \code{actions} contains a record of all the steps taken. Each action can be transformed into a picture that shows the state of the junction at that instant:
+\begin{ESL}
+edb <- Filmstrip('Traffic Filmstrip',actionsToPictures(0,0,0,0,actions));
+\end{ESL}
+where the function 'code{actionsToPictures} is defined in figure \ref{fig:actionsToPictures}.
+
+\begin{figure*}
+\begin{FigESL}
+leftColour::Str               = 'fill:green;stroke:green;';  rightColour::Str              = 'fill:red;stroke:red;';
+dHd::([Display]) -> Display   = head[Display];               dTl::([Display]) -> [Display] = tail[Display];
+
+carSize::Int        = 30;           carGap::Int    = 2;                                leftCarY::Int  = (border+(width/4));
+maxCarsWaiting::Int = 7;            width::Int     = 4*carSize;                        rightCarY::Int = (border+width-(width/4));
+border::Int         = 50;           waits::Int     = (carSize+carGap)*maxCarsWaiting;  pWidth::Int    = 1500;
+neckLength::Int.    = 100;          neckWidth::Int = carSize+10;                       pHeight::Int   = 1000;
+gapLength::Int      = 150;          gapWidth::Int  = 100;                              black::Str     = 'stroke:black;';
+
+leftTop::PictureElement     = Line(border,border,border+waits,border,black);
+leftBottom::PictureElement  = Line(border,border+width,border+waits,border+width,black);
+rightTop::PictureElement    = Line(border+waits+gapLength,border,border+waits+gapLength+waits,border,black);
+rightBottom::PictureElement = Line(border+waits+gapLength,width+border,border+waits+gapLength+waits,width+border,black);
+neck::[PictureElement]      = topNeck+bottomNeck;
+centre::PictureElement      = Line(border,border+width/2,border+(waits*2)+gapLength,border+width/2,'stroke:grey;stroke-dasharray:5,5;');
+road::[PictureElement]      = [leftTop,leftBottom]+neck+[rightTop,rightBottom]+[centre];
+
+topNeck::[PictureElement] = [
+  Line(border+waits,border,border+waits+(gapLength-neckLength)/2,border+(width-neckWidth)/2,black),
+  Line(border+waits+(gapLength-neckLength)/2,border+(width-neckWidth)/2,border+waits+gapLength-(gapLength-neckLength)/2,border+(width-neckWidth)/2,black),
+  Line(border+waits+gapLength-(gapLength-neckLength)/2,border+(width-neckWidth)/2,border+waits+gapLength,border,black)];
+  
+bottomNeck::[PictureElement] = [
+  Line(border+waits,border+width,border+waits+(gapLength-neckLength)/2,border+width-(width-neckWidth)/2,black),
+  Line(border+waits+(gapLength-neckLength)/2,width+border-(width-neckWidth)/2,border+waits+gapLength-(gapLength-neckLength)/2,width+border-(width-neckWidth)/2,black),
+  Line(border+waits+gapLength-(gapLength-neckLength)/2,width+border-(width-neckWidth)/2,border+waits+gapLength,border+width,black)];
+  
+addCarOnRight(pos::Int,label::Int,d::Display)::Display  = case d { Picture(x,y,ps) -> Picture(x,y,carOnRight(pos,label)+ps); }
+addCarOnLeft(pos::Int,label::Int,d::Display)::Display   = case d { Picture(x,y,ps) -> Picture(x,y,carOnLeft(pos,label)+ps); }
+addCarAtNeckLeft(label::Int,d::Display)::Display       = case d { Picture(x,y,es) -> Picture(x,y,neckCarLeft(label)+es); }
+addCarAtNeckRight(label::Int,d::Display)::Display      = case d { Picture(x,y,es) -> Picture(x,y,neckCarRight(label)+es); }
+
+actionsToPictures(qLeft::Int,qRight::Int,startL::Int,startR::Int,as::[Action])::[Display] =
+  case as {
+    [] -> [];
+    ArriveLeft:as -> picture(qLeft+1,qRight,startL,startR):actionsToPictures(qLeft+1,qRight,startL,startR,as);
+    ArriveRight:as -> picture(qLeft,qRight+1,startL,startR):actionsToPictures(qLeft,qRight+1,startL,startR,as);
+    MoveLeft:as -> movesRight(startL+1,picture(qLeft-1,qRight,startL+1,startR):actionsToPictures(qLeft-1,qRight,startL+1,startR,as));
+    MoveRight:as ->  movesLeft(startR+1,picture(qLeft,qRight-1,startL,startR+1):actionsToPictures(qLeft,qRight-1,startL,startR+1,as));
+  }
+  
+movesRight(label::Int,ps::[Display])::[Display] = addCarAtNeckLeft(label,dHd(ps)):exitRight(0,label,dTl(ps));
+movesLeft(label::Int,ps::[Display])::[Display]  = addCarAtNeckRight(label,dHd(ps)):exitLeft(0,label,dTl(ps));
+  
+exitRight(pos::Int,label::Int,ds::[Display])::[Display] =
+  if (pos = maxCarsWaiting) or (ds = []) then ds; else addCarOnRight(pos,label,dHd(ds)):exitRight(pos+1,label,dTl(ds));
+exitLeft(pos::Int,label::Int,ds::[Display])::[Display] =
+  if (pos = maxCarsWaiting) or (ds = []) then ds; else addCarOnLeft(pos,label,dHd(ds)):exitLeft(pos+1,label,dTl(ds));
+  
+carOnRight(pos::Int,label::Int)::[PictureElement] = [
+  Circle(border+waits+gapLength+carSize+(carSize*pos),border+width/4,carSize/2,leftColour),
+  Text(border+waits+gapLength+carSize+(carSize*pos)-5,5+border+width/4,label+'','')]; 
+  
+carOnLeft(pos::Int,label::Int)::[PictureElement] = [
+  Circle(border+waits-(carSize+(carSize*pos)),border+(3*(width/4)),carSize/2,rightColour),
+  Text(border+waits-((carSize+(carSize*pos))+5),5+border+(3*(width/4)),label+'','')];
+  
+neckCarLeft(label::Int)::[PictureElement] = [
+  Circle(border+waits+(gapLength/2),border+width/2,carSize/2,leftColour),
+  Text(border+waits+(gapLength/2)-5,5+border+width/2,''+label,'')];
+  
+neckCarRight(label::Int)::[PictureElement] = [
+  Circle(border+waits+(gapLength/2),border+width/2,carSize/2,rightColour),
+  Text(border+waits+(gapLength/2)-5,5+border+width/2,''+label,'')];
+
+qLeftPicture(cars::Int,startL::Int)::[PictureElement]      = if cars = 0 then []; else leftQCarPicture(cars-1,startL+cars)+qLeftPicture(cars-1,startL); 
+qRightPicture(cars::Int,startRight::Int)::[PictureElement] =  if cars = 0 then []; else rightQCarPicture(cars-1,startRight+cars) + qRightPicture(cars-1,startRight);
+  
+leftQCarPicture(position::Int,label::Int)::[PictureElement] = 
+  let x::Int = border+waits-(((carSize+carGap)*position)+carSize); 
+      y::Int = leftCarY;
+  in [Circle(x,y,carSize/2,leftColour), Text(x-5,y+5,''+label,'')];  
+     
+rightQCarPicture(position::Int,label::Int)::[PictureElement] =
+  let x::Int = border+waits+gapLength+((carSize+carGap)*position)+carSize; 
+      y::Int = rightCarY;
+  in [Circle(x,y,carSize/2,rightColour), Text(x-5,y+5,''+label,'')];
+
+picture(qLeft::Int,qRight::Int,startL::Int,startR::Int)::Display = Picture(pWidth,pHeight,road+qLeftPicture(qLeft,startL) + qRightPicture(qRight,startR));
+\end{FigESL}
+\end{figure*}
 
 \subsection{Graphs}
 
@@ -2812,11 +3247,34 @@ The resulting list of displays is then presented as a filmstrip. The following s
 
 \label{sec:java_interface}
 
-An instance of such a class is created in ESL using \code{new} and registered with EDB using:
+A Java class can be instantiated and used as an ESL actor. The class must implement the following interface:
+\begin{lstlisting}[language=Java,basicstyle=\footnotesize\ttfamily]
+public interface esl.lib.AlienActor  {
+  public ESLVal alienRef(String name);
+  public void alienSend(ESLVal message);
+  public void stop();
+}
+\end{lstlisting}
+The class may be instantiated via the following:
+\begin{ESL}
+new 'a.b.C'[T](x,y,z)
+\end{ESL}
+where \code{a.b.C} is the package path for the class \code{C}, \code{T} is a behaviour type describing the messages and names handled by the operation \code{alienSend} and \code{alienRef}. The arguments \code{(x,y,z)} are optional and are the ESL values supplied to the constructor for \code{C}.
+
+EDB will display a Swing component when it is supplied to the operation:
+\code{edb.display}:
 \begin{ESL}
 edb.display::Forall[T] (Str,T) -> Void
 \end{ESL}
-for example: \code{edb.display[G]('TabName',graphics)}
+ans where the second argument is an instance of a class that implements the following interface:
+\begin{lstlisting}[language=Java,basicstyle=\footnotesize\ttfamily]
+public interface esl.lib.AlienActor  {
+  public ESLVal alienRef(String name);
+  public void alienSend(ESLVal message);
+  public void stop();
+}
+\end{lstlisting}
+
 
 \section{Compilation}
 

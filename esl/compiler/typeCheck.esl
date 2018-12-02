@@ -707,7 +707,7 @@ updateType(l::Loc,n::Str,e::AST,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typ
      then throw[Type] TypeError(l,'unbound variable ' + n);
      else 
        let valueType::Type = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
-       in if typeEqual(valueType,t)
+       in if subType(valueType,t)
           then valueType;
           else throw[Type] TypeError(l,'type of variable ' + n + '::' + ppType(t,typeEnv) + ' does not agree with value type ' + ppType(valueType,typeEnv));
 
@@ -797,6 +797,7 @@ refType(l::Loc,e::AST,n::Str,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEn
     TableType(l::Loc,k::Type,v::Type) when n = 'keys' -> ListType(l,k);
     TableType(l::Loc,k::Type,v::Type) when n = 'vals' -> ListType(l,v);
     TableType(l::Loc,k::Type,v::Type) when n = 'hasKey' -> FunType(l,[k],BoolType(l));
+    TableType(l::Loc,k::Type,v::Type) when n = 'clear' -> FunType(l,[],VoidType(l));
     ListType(ll::Loc,t::Type) when n = 'implode' -> StrType(ll);
     RecordType(rl::Loc,fs::[TDec]) -> findField(fs);
     ActType(al::Loc,exports::[TDec],handlers::[MType]) ->
@@ -990,7 +991,7 @@ getGenericTermPatternType(l::Loc,t::Type,genericArgs::[Type],selfType::Type,valu
   }
 
 nilType(l::Loc,listType::Type,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv,f::(Type,TEnv)->Type)::Type = 
-  case listType {
+  case typeNF(listType,typeEnv) {
     ListType(ltl::Loc,et::Type) -> f(ForallType(l,['T'],ListType(l,VarType(l,'T'))),valueEnv);
     TypeClosure(g) -> nilType(l,g(),selfType,valueEnv,cnstrEnv,typeEnv,f);
     listType::Type -> throw[Type] TypeError(l,'expecting a list type: ' + ppType(listType,typeEnv));
@@ -1009,7 +1010,7 @@ emptySetType(l::Loc,setType::Type,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,t
   }   
 
 consPatternType(l::Loc,h::Pattern,t::Pattern,listType::Type,selfType::Type,valueEnv::TEnv,cnstrEnv::TEnv,typeEnv::TEnv,f::(Type,TEnv)->Type)::Type = 
-  case listType {
+  case typeNF(listType,typeEnv) {
     ListType(ltl::Loc,et::Type) ->
       patternType(l,h,substTypeEnv(typeEnv,et),selfType,valueEnv,cnstrEnv,typeEnv,fun(headType::Type,valueEnv::TEnv)::Type
         patternType(l,t,listType,selfType,valueEnv,cnstrEnv,typeEnv,fun(tt::Type,valueEnv::TEnv)::Type {

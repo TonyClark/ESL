@@ -1,7 +1,7 @@
 export main;
 
 min(x::Int,y::Int)::Int = if x < y then x; else y;
-max(x::Int,y::Int)::Int = if x > y then x; else y; 
+max(x::Int,y::Int)::Int = if x > y then x; else y;  
 
 type GUI = Act{ export size::Int; width::Int; height::Int; ballSize::Int; isOccupied::(Int,Int,Int)->Bool; Time(Int); Draw(Int,Int,Int); }
 

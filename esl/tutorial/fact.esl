@@ -116,7 +116,7 @@ act main::Customer {
   counter::Int = 0;
   count::Int = 1;
   f::Fact = new fact;
-  numberOfFacts::Int = 2;
+  numberOfFacts::Int = 20;
   computeFact(n::Int)::Void = {
     addStart(n,counter,self,f);
     counter := counter + 1;
@@ -128,8 +128,9 @@ act main::Customer {
     [Sequence(actors,select[Message](messageBefore(t),ms)) | t <- 1..numberOfFacts];
   -> {
     id := addActor('Main');
-    computeFact(3);
-    computeFact(3);
+    for i in 0..20 do {
+      computeFact(i);
+    }
   }
   Value(threadId::Int,time::Int,n::Int) -> {
     setDeath(id,time);

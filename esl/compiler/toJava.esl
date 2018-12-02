@@ -52,6 +52,7 @@ expToJCommand(c::AST,isLast::Bool)::JCommand =
       let opName::Str = newName(); varName::Str = newName();
       in expToJCommand(For(l,PVar(l,varName,null[Type]),e,Let(l,[Binding(l,opName,null[Type],null[Type],FunExp(l,StrExp(l,'forp'),[],null[Type],Case(l,[][TDec],[Var(l,varName)],[BArm(l,[p],BoolExp(l,true),b),BArm(l,[PVar(l,'$$$',null[Type])],BoolExp(l,true),Block(l,[]))])))],Apply(l,Var(l,opName),[]))),isLast);
     PLet(l::Loc,bs::[TBind],e::AST)                                     -> JPLet([defToField(b) | b::TBind <- bs],expToJCommand(e,isLast));
+    //Send(l,target,message) when isLast                                 -> { print[Str]('send last ' + c); JReturn(expToJExp(c)); }
     e::AST when isLast                                                  -> JReturn(expToJExp(e));
     e::AST                                                              -> JStatement(expToJExp(e)); 
   }

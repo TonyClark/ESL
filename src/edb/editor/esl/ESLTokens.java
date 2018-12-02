@@ -73,6 +73,7 @@ public class ESLTokens extends org.fife.ui.rsyntaxtextarea.modes.JavaTokenMaker 
 		tokenMap.put("Bag", Token.DATA_TYPE);
 		tokenMap.put("Array", Token.DATA_TYPE);
 		tokenMap.put("Forall", Token.DATA_TYPE);
+		tokenMap.put("Hash", Token.DATA_TYPE);
 
 		tokenMap.put("?", Token.SEPARATOR);
 		tokenMap.put("<-", Token.SEPARATOR);

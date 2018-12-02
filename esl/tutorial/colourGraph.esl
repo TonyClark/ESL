@@ -36,5 +36,8 @@ mkPlanar(v::Int)::Display = Graph([],
       ?(source <> target) ]);
 
 act main::Act {} {
-  -> edb <- Show('graph',kempe(mkPlanar(200),['red','green','blue','gold','deeppink']));
+  -> {
+    edb <- Show('graph',kempe(mkPlanar(200),['red','green','blue','gold','deeppink']));
+    stopAll();
+  }
 }

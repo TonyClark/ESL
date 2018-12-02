@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.20)  26 NOV 2018 16:03
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.6.20)  1 DEC 2018 15:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1290,23 +1290,23 @@ Package pdftex.def Info: actors.png  used on input line 123.
 
 
 ]
-Overfull \hbox (0.85245pt too wide) in paragraph at lines 182--183
+Overfull \hbox (0.85245pt too wide) in paragraph at lines 183--184
 \OT1/txr/m/n/10 which pro-duces [][][][], [][][][] and []
  []
 
 [2 <./actors.png>] [3] [4] [5] [6]
-Underfull \hbox (badness 10000) in paragraph at lines 741--742
+Underfull \hbox (badness 10000) in paragraph at lines 753--754
 
  []
 
 [7]
-Overfull \hbox (5.47012pt too wide) in paragraph at lines 792--793
+Overfull \hbox (5.47012pt too wide) in paragraph at lines 804--805
 \OT1/txr/m/n/10 threaded, this means that there can be no doubt re-gard-ing whe
 ther
  []
 
 [8]
-Overfull \hbox (0.26009pt too wide) in paragraph at lines 950--951
+Overfull \hbox (0.26009pt too wide) in paragraph at lines 962--963
 \OT1/txr/m/n/10 cre-ated that con-cur-rently nav-i-gate the search space. The a
 mount
  []
@@ -1315,41 +1315,41 @@ mount
 <qsort.png, id=44, 496.7358pt x 370.0224pt>
 File: qsort.png Graphic file (type png)
 <use qsort.png>
-Package pdftex.def Info: qsort.png  used on input line 1023.
+Package pdftex.def Info: qsort.png  used on input line 1035.
 (pdftex.def)             Requested size: 252.0pt x 187.71521pt.
 <termites_before.png, id=45, 412.4208pt x 416.2752pt>
 File: termites_before.png Graphic file (type png)
 <use termites_before.png>
-Package pdftex.def Info: termites_before.png  used on input line 1035.
+Package pdftex.def Info: termites_before.png  used on input line 1047.
 (pdftex.def)             Requested size: 100.79846pt x 101.73741pt.
 <termites_after.png, id=46, 412.4208pt x 413.3844pt>
 File: termites_after.png Graphic file (type png)
 <use termites_after.png>
-Package pdftex.def Info: termites_after.png  used on input line 1037.
+Package pdftex.def Info: termites_after.png  used on input line 1049.
 (pdftex.def)             Requested size: 103.32092pt x 103.5603pt.
-<termites.png, id=47, 330.9966pt x 375.3222pt>
+ [10]
+<termites.png, id=50, 330.9966pt x 375.3222pt>
 File: termites.png Graphic file (type png)
 <use termites.png>
-Package pdftex.def Info: termites.png  used on input line 1196.
+Package pdftex.def Info: termites.png  used on input line 1208.
 (pdftex.def)             Requested size: 126.0pt x 142.87018pt.
- [10]
 <dining1.png, id=51, 282.8166pt x 299.6796pt>
 File: dining1.png Graphic file (type png)
 <use dining1.png>
-Package pdftex.def Info: dining1.png  used on input line 1210.
+Package pdftex.def Info: dining1.png  used on input line 1222.
 (pdftex.def)             Requested size: 123.48138pt x 130.84427pt.
 <dining2.png, id=52, 282.8166pt x 299.6796pt>
 File: dining2.png Graphic file (type png)
 <use dining2.png>
-Package pdftex.def Info: dining2.png  used on input line 1212.
+Package pdftex.def Info: dining2.png  used on input line 1224.
 (pdftex.def)             Requested size: 123.48138pt x 130.84427pt.
 <dining3.png, id=53, 514.5624pt x 542.025pt>
 File: dining3.png Graphic file (type png)
 <use dining3.png>
-Package pdftex.def Info: dining3.png  used on input line 1217.
+Package pdftex.def Info: dining3.png  used on input line 1229.
 (pdftex.def)             Requested size: 123.48138pt x 130.07211pt.
 
-Overfull \hbox (12.13008pt too wide) in paragraph at lines 1219--1220
+Overfull \hbox (12.13008pt too wide) in paragraph at lines 1231--1232
 \OT1/txr/m/n/10 The im-ple-men-ta-tion of deadlock-free din-ing philoso-phers i
 s shown
  []
@@ -1359,27 +1359,27 @@ g> <./dining1.png> <./dining2.png> <./dining3.png>] [12]
 <segregation1.png, id=67, 791.5974pt x 542.025pt>
 File: segregation1.png Graphic file (type png)
 <use segregation1.png>
-Package pdftex.def Info: segregation1.png  used on input line 1276.
+Package pdftex.def Info: segregation1.png  used on input line 1288.
 (pdftex.def)             Requested size: 201.60077pt x 138.03671pt.
 <segregation2.png, id=68, 791.5974pt x 542.025pt>
 File: segregation2.png Graphic file (type png)
 <use segregation2.png>
-Package pdftex.def Info: segregation2.png  used on input line 1280.
+Package pdftex.def Info: segregation2.png  used on input line 1292.
 (pdftex.def)             Requested size: 201.60077pt x 138.03671pt.
  [13 <./segregation1.png> <./segregation2.png>] [14]
 <map_reduce.png, id=78, 808.9422pt x 291.0072pt>
 File: map_reduce.png Graphic file (type png)
 <use map_reduce.png>
-Package pdftex.def Info: map_reduce.png  used on input line 1522.
+Package pdftex.def Info: map_reduce.png  used on input line 1534.
 (pdftex.def)             Requested size: 252.0pt x 90.6509pt.
  [15 <./map_reduce.png>]
-Overfull \hbox (3.74008pt too wide) in paragraph at lines 1639--1640
+Overfull \hbox (3.74008pt too wide) in paragraph at lines 1651--1652
 []\OT1/txr/m/n/10 Single-argument func-tions with-out side ef-fects can be cach
 ed
  []
 
 [16]
-Overfull \hbox (2.27007pt too wide) in paragraph at lines 1667--1668
+Overfull \hbox (2.27007pt too wide) in paragraph at lines 1679--1680
 []\OT1/txr/m/n/10 Behaviour def-i-ni-tions can ex-tend a par-ent def-i-ni-tion 
 in which
  []
@@ -1387,206 +1387,251 @@ in which
 <pac1.png, id=87, 281.853pt x 261.6174pt>
 File: pac1.png Graphic file (type png)
 <use pac1.png>
-Package pdftex.def Info: pac1.png  used on input line 1673.
+Package pdftex.def Info: pac1.png  used on input line 1685.
 (pdftex.def)             Requested size: 201.60077pt x 187.13086pt.
 <pac2.png, id=88, 281.853pt x 261.6174pt>
 File: pac2.png Graphic file (type png)
 <use pac2.png>
-Package pdftex.def Info: pac2.png  used on input line 1677.
+Package pdftex.def Info: pac2.png  used on input line 1689.
 (pdftex.def)             Requested size: 201.60077pt x 187.13086pt.
 
-Overfull \hbox (1.6001pt too wide) in paragraph at lines 1693--1694
+Overfull \hbox (1.6001pt too wide) in paragraph at lines 1705--1706
 \OT1/txr/m/n/10 The Pac-man maze is im-ple-mented as an ac-tor with the be-havi
 our
  []
 
 [17 <./pac1.png> <./pac2.png>] [18]
 
-LaTeX Warning: Float too large for page by 15.57997pt on input line 2028.
+LaTeX Warning: Float too large for page by 6.07999pt on input line 2008.
 
 
-Overfull \hbox (1.24004pt too wide) in paragraph at lines 2031--2032
+Overfull \hbox (1.24004pt too wide) in paragraph at lines 2011--2012
 \OT1/txr/m/n/10 chine im-ple-mented be-haviour. Like ghosts, the au-to-matic mo
 ve-
  []
 
-[19] [20] [21]
-Overfull \hbox (2.14009pt too wide) in paragraph at lines 2088--2089
+<pac3.png, id=97, 281.853pt x 261.6174pt>
+File: pac3.png Graphic file (type png)
+<use pac3.png>
+Package pdftex.def Info: pac3.png  used on input line 2013.
+(pdftex.def)             Requested size: 201.60077pt x 187.13086pt.
+[19 <./pac3.png>]
+Overfull \hbox (2.14009pt too wide) in paragraph at lines 2036--2037
 \OT1/txr/m/n/10 de-vel-op-ment, how-ever it pro-vides lim-ited sup-port for edi
 t-
  []
 
-<edb.png, id=107, 798.985pt x 480.79625pt>
+<edb.png, id=103, 798.985pt x 480.79625pt>
 File: edb.png Graphic file (type png)
 <use edb.png>
-Package pdftex.def Info: edb.png  used on input line 2097.
+Package pdftex.def Info: edb.png  used on input line 2045.
 (pdftex.def)             Requested size: 522.0pt x 314.13518pt.
-<../../icons/load.png, id=108, 256.96pt x 256.96pt>
+<../../icons/load.png, id=104, 256.96pt x 256.96pt>
 File: ../../icons/load.png Graphic file (type png)
 <use ../../icons/load.png>
-Package pdftex.def Info: ../../icons/load.png  used on input line 2110.
+Package pdftex.def Info: ../../icons/load.png  used on input line 2058.
 (pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
-<../../icons/new_file.png, id=109, 128.48pt x 128.48pt>
+<../../icons/new_file.png, id=105, 128.48pt x 128.48pt>
 File: ../../icons/new_file.png Graphic file (type png)
 <use ../../icons/new_file.png>
-Package pdftex.def Info: ../../icons/new_file.png  used on input line 2112.
+Package pdftex.def Info: ../../icons/new_file.png  used on input line 2060.
 (pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
-<../../icons/delete.png, id=110, 128.48pt x 128.48pt>
+<../../icons/delete.png, id=106, 128.48pt x 128.48pt>
 File: ../../icons/delete.png Graphic file (type png)
 <use ../../icons/delete.png>
-Package pdftex.def Info: ../../icons/delete.png  used on input line 2114.
+Package pdftex.def Info: ../../icons/delete.png  used on input line 2062.
 (pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
-<../../icons/stop.png, id=111, 128.48pt x 128.48pt>
+<../../icons/stop.png, id=107, 128.48pt x 128.48pt>
 File: ../../icons/stop.png Graphic file (type png)
 <use ../../icons/stop.png>
-Package pdftex.def Info: ../../icons/stop.png  used on input line 2116.
+Package pdftex.def Info: ../../icons/stop.png  used on input line 2064.
 (pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
-<../../icons/font.png, id=112, 128.48pt x 128.48pt>
+<../../icons/font.png, id=108, 128.48pt x 128.48pt>
 File: ../../icons/font.png Graphic file (type png)
 <use ../../icons/font.png>
-Package pdftex.def Info: ../../icons/font.png  used on input line 2118.
+Package pdftex.def Info: ../../icons/font.png  used on input line 2066.
 (pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
-<../../icons/save.png, id=113, 256.96pt x 256.96pt>
+<../../icons/save.png, id=109, 256.96pt x 256.96pt>
 File: ../../icons/save.png Graphic file (type png)
 <use ../../icons/save.png>
-Package pdftex.def Info: ../../icons/save.png  used on input line 2120.
+Package pdftex.def Info: ../../icons/save.png  used on input line 2068.
 (pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
-<../../icons/save_as.png, id=114, 128.48pt x 128.48pt>
+<../../icons/save_as.png, id=110, 128.48pt x 128.48pt>
 File: ../../icons/save_as.png Graphic file (type png)
 <use ../../icons/save_as.png>
-Package pdftex.def Info: ../../icons/save_as.png  used on input line 2122.
+Package pdftex.def Info: ../../icons/save_as.png  used on input line 2070.
 (pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
-<../../icons/clock.png, id=115, 128.48pt x 128.48pt>
+<../../icons/clock.png, id=111, 128.48pt x 128.48pt>
 File: ../../icons/clock.png Graphic file (type png)
 <use ../../icons/clock.png>
-Package pdftex.def Info: ../../icons/clock.png  used on input line 2124.
+Package pdftex.def Info: ../../icons/clock.png  used on input line 2072.
 (pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
-<../../icons/compile.png, id=116, 128.48pt x 128.48pt>
+<../../icons/compile.png, id=112, 128.48pt x 128.48pt>
 File: ../../icons/compile.png Graphic file (type png)
 <use ../../icons/compile.png>
-Package pdftex.def Info: ../../icons/compile.png  used on input line 2126.
+Package pdftex.def Info: ../../icons/compile.png  used on input line 2074.
 (pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
-<../../icons/java_file.png, id=117, 128.48pt x 128.48pt>
+[20 <../../icons/load.png> <../../icons/new_file.png> <../../icons/delete.png> 
+<../../icons/stop.png> <../../icons/font.png> <../../icons/save.png> <../../ico
+ns/save_as.png> <../../icons/clock.png> <../../icons/compile.png>] [21]
+<../../icons/java_file.png, id=128, 128.48pt x 128.48pt>
 File: ../../icons/java_file.png Graphic file (type png)
 <use ../../icons/java_file.png>
-Package pdftex.def Info: ../../icons/java_file.png  used on input line 2139.
+Package pdftex.def Info: ../../icons/java_file.png  used on input line 2087.
 (pdftex.def)             Requested size: 14.22636pt x 14.22498pt.
-<../../icons/run.png, id=118, 96.36pt x 96.36pt>
+<../../icons/run.png, id=129, 96.36pt x 96.36pt>
 File: ../../icons/run.png Graphic file (type png)
 <use ../../icons/run.png>
-Package pdftex.def Info: ../../icons/run.png  used on input line 2141.
+Package pdftex.def Info: ../../icons/run.png  used on input line 2089.
 (pdftex.def)             Requested size: 14.22636pt x 14.22546pt.
-<table.png, id=119, 226.8475pt x 252.945pt>
+
+[22 <./edb.png> <../../icons/java_file.png> <../../icons/run.png>]
+<table.png, id=136, 226.8475pt x 252.945pt>
 File: table.png Graphic file (type png)
 <use table.png>
-Package pdftex.def Info: table.png  used on input line 2196.
+Package pdftex.def Info: table.png  used on input line 2144.
 (pdftex.def)             Requested size: 151.20154pt x 168.59613pt.
-[22 <../../icons/load.png> <../../icons/new_file.png> <../../icons/delete.png> 
-<../../icons/stop.png> <../../icons/font.png> <../../icons/save.png> <../../ico
-ns/save_as.png> <../../icons/clock.png> <../../icons/compile.png> <../../icons/
-java_file.png> <../../icons/run.png>]
-<links.png, id=134, 226.8475pt x 249.93375pt>
+<links.png, id=137, 226.8475pt x 249.93375pt>
 File: links.png Graphic file (type png)
 <use links.png>
-Package pdftex.def Info: links.png  used on input line 2236.
+Package pdftex.def Info: links.png  used on input line 2184.
 (pdftex.def)             Requested size: 151.20154pt x 166.58904pt.
- [23 <./edb.png> <./table.png>]
-Overfull \hbox (2.2502pt too wide) in paragraph at lines 2238--2239
+
+Overfull \hbox (2.2502pt too wide) in paragraph at lines 2186--2187
 \OT1/txr/m/n/10 Clicking on any of the links (ex-cept [][][][]) prints the num-
 ber. Click-
  []
 
-<pie.png, id=140, 402.50375pt x 402.50375pt>
+<pie.png, id=138, 402.50375pt x 402.50375pt>
 File: pie.png Graphic file (type png)
 <use pie.png>
-Package pdftex.def Info: pie.png  used on input line 2260.
+Package pdftex.def Info: pie.png  used on input line 2208.
 (pdftex.def)             Requested size: 201.60077pt x 201.60146pt.
-<lines.png, id=141, 692.5875pt x 502.87875pt>
+[23 <./table.png> <./links.png> <./pie.png>]
+<lines.png, id=145, 692.5875pt x 502.87875pt>
 File: lines.png Graphic file (type png)
 <use lines.png>
-Package pdftex.def Info: lines.png  used on input line 2279.
+Package pdftex.def Info: lines.png  used on input line 2227.
 (pdftex.def)             Requested size: 252.0pt x 182.96988pt.
-<picture.png, id=142, 303.1325pt x 303.1325pt>
+<supply.png, id=146, 686.565pt x 404.2302pt>
+File: supply.png Graphic file (type png)
+<use supply.png>
+Package pdftex.def Info: supply.png  used on input line 2238.
+(pdftex.def)             Requested size: 252.0pt x 148.36623pt.
+ [24 <./lines.png> <./supply.png>]
+[25]
+<supply_results.png, id=156, 1203.49625pt x 510.90875pt>
+File: supply_results.png Graphic file (type png)
+<use supply_results.png>
+Package pdftex.def Info: supply_results.png  used on input line 2472.
+(pdftex.def)             Requested size: 522.0pt x 221.60425pt.
+<picture.png, id=157, 303.1325pt x 303.1325pt>
 File: picture.png Graphic file (type png)
 <use picture.png>
-Package pdftex.def Info: picture.png  used on input line 2288.
+Package pdftex.def Info: picture.png  used on input line 2485.
 (pdftex.def)             Requested size: 151.20154pt x 151.20047pt.
-[24 <./links.png> <./pie.png> <./lines.png> <./picture.png>]
-<example_graph.png, id=150, 236.885pt x 359.3425pt>
+<traffic_start.png, id=158, 644.4075pt x 152.57pt>
+File: traffic_start.png Graphic file (type png)
+<use traffic_start.png>
+Package pdftex.def Info: traffic_start.png  used on input line 2506.
+(pdftex.def)             Requested size: 252.0pt x 59.66269pt.
+<traffic.png, id=159, 629.35126pt x 139.52126pt>
+File: traffic.png Graphic file (type png)
+<use traffic.png>
+Package pdftex.def Info: traffic.png  used on input line 2510.
+(pdftex.def)             Requested size: 252.0pt x 55.86499pt.
+
+Overfull \hbox (11.49008pt too wide) in paragraph at lines 2539--2540
+\OT1/txr/m/n/10 Traffic lights are de-fined as pas-sive be-haviours that will b
+e changed
+ []
+
+[26 <./picture.png> <./traffic_start.png> <./traffic.png>] [27 <./supply_result
+s.png>]
+
+LaTeX Warning: Reference `fig:actionsToPictures' on page 28 undefined on input 
+line 2657.
+
+<example_graph.png, id=170, 236.885pt x 359.3425pt>
 File: example_graph.png Graphic file (type png)
 <use example_graph.png>
-Package pdftex.def Info: example_graph.png  used on input line 2328.
+Package pdftex.def Info: example_graph.png  used on input line 2763.
 (pdftex.def)             Requested size: 75.02399pt x 113.81102pt.
-<graph_colour.png, id=151, 531.9875pt x 640.3925pt>
+<graph_colour.png, id=171, 531.9875pt x 640.3925pt>
 File: graph_colour.png Graphic file (type png)
 <use graph_colour.png>
-Package pdftex.def Info: graph_colour.png  used on input line 2381.
+Package pdftex.def Info: graph_colour.png  used on input line 2816.
 (pdftex.def)             Requested size: 226.79846pt x 273.00845pt.
-<film1.png, id=152, 558.085pt x 487.8225pt>
+<film1.png, id=172, 558.085pt x 487.8225pt>
 File: film1.png Graphic file (type png)
 <use film1.png>
-Package pdftex.def Info: film1.png  used on input line 2390.
+Package pdftex.def Info: film1.png  used on input line 2825.
 (pdftex.def)             Requested size: 226.79846pt x 198.24438pt.
-<film2.png, id=153, 558.085pt x 487.8225pt>
+<film2.png, id=173, 558.085pt x 487.8225pt>
 File: film2.png Graphic file (type png)
 <use film2.png>
-Package pdftex.def Info: film2.png  used on input line 2391.
+Package pdftex.def Info: film2.png  used on input line 2826.
 (pdftex.def)             Requested size: 226.79846pt x 198.24438pt.
-<film3.png, id=154, 558.085pt x 487.8225pt>
+<film3.png, id=174, 558.085pt x 487.8225pt>
 File: film3.png Graphic file (type png)
 <use film3.png>
-Package pdftex.def Info: film3.png  used on input line 2392.
+Package pdftex.def Info: film3.png  used on input line 2827.
 (pdftex.def)             Requested size: 226.79846pt x 198.24438pt.
- [25 <./example_graph.png> <./graph_colour.png> <./film1.png> <./film2.png> <./
-film3.png>]
-[26]
-<sequence.png, id=167, 703.62875pt x 341.275pt>
+[28 <./example_graph.png> <./graph_colour.png>] [29] [30 <./film1.png> <./film2
+.png>]
+<sequence.png, id=188, 703.62875pt x 341.275pt>
 File: sequence.png Graphic file (type png)
 <use sequence.png>
-Package pdftex.def Info: sequence.png  used on input line 2458.
+Package pdftex.def Info: sequence.png  used on input line 2893.
 (pdftex.def)             Requested size: 252.0pt x 122.22359pt.
- [27 <./sequence.png>] [28]
-Overfull \hbox (10.26009pt too wide) in paragraph at lines 2763--2764
+ [31 <./film3.png> <./sequence.png>] [32] [33]
+Overfull \hbox (10.26009pt too wide) in paragraph at lines 3198--3199
 \OT1/txr/m/n/10 shots can be merged and the re-sult-ing com-pos-ite snap-shots 
 merged
  []
 
-<pred1.png, id=175, 456.70625pt x 585.18625pt>
+<pred1.png, id=201, 456.70625pt x 585.18625pt>
 File: pred1.png Graphic file (type png)
 <use pred1.png>
-Package pdftex.def Info: pred1.png  used on input line 2799.
+Package pdftex.def Info: pred1.png  used on input line 3234.
 (pdftex.def)             Requested size: 252.0pt x 322.88922pt.
-[29]
-<pred2.png, id=179, 456.70625pt x 585.18625pt>
+<pred2.png, id=202, 456.70625pt x 585.18625pt>
 File: pred2.png Graphic file (type png)
 <use pred2.png>
-Package pdftex.def Info: pred2.png  used on input line 2802.
+Package pdftex.def Info: pred2.png  used on input line 3237.
 (pdftex.def)             Requested size: 252.0pt x 322.88922pt.
-<pred3.png, id=180, 456.70625pt x 585.18625pt>
+<pred3.png, id=203, 456.70625pt x 585.18625pt>
 File: pred3.png Graphic file (type png)
 <use pred3.png>
-Package pdftex.def Info: pred3.png  used on input line 2805.
+Package pdftex.def Info: pred3.png  used on input line 3240.
 (pdftex.def)             Requested size: 252.0pt x 322.88922pt.
-<pred4.png, id=181, 456.70625pt x 585.18625pt>
+[34 <./pred1.png> <./pred2.png>]
+<pred4.png, id=209, 456.70625pt x 585.18625pt>
 File: pred4.png Graphic file (type png)
 <use pred4.png>
-Package pdftex.def Info: pred4.png  used on input line 2808.
+Package pdftex.def Info: pred4.png  used on input line 3243.
 (pdftex.def)             Requested size: 252.0pt x 322.88922pt.
- [30 <./pred1.png> <./pred2.png> <./pred3.png> <./pred4.png>]
-(./esl_reference.bbl) [31
 
-] [32
+(/usr/local/texlive/2018/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2015/06/04 1.6 listings language file
+)
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 3252.
 
-] [33] (./esl_reference.aux)
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+(./esl_reference.bbl) [35 <./pred3.png> <./pred4.png>] [36
+
+] [37]
+(./esl_reference.aux)
+
+LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 20863 strings out of 492649
- 383687 string characters out of 6129622
- 1711499 words of memory out of 5000000
- 24243 multiletter control sequences out of 15000+600000
+ 21071 strings out of 492649
+ 386500 string characters out of 6129622
+ 1840460 words of memory out of 5000000
+ 24442 multiletter control sequences out of 15000+600000
  39365 words of font info for 104 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  48i,17n,69p,1065b,1741s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1599,10 +1644,10 @@ mf-dist/fonts/type1/public/txfonts/rtxr.pfb></usr/local/texlive/2018/texmf-dist
 type1/urw/times/utmb8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/
 times/utmr8a.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/urw/times/utmr
 i8a.pfb>
-Output written on esl_reference.pdf (33 pages, 7203307 bytes).
+Output written on esl_reference.pdf (37 pages, 7429377 bytes).
 PDF statistics:
- 228 PDF objects out of 1000 (max. 8388607)
- 103 compressed objects within 2 object streams
+ 253 PDF objects out of 1000 (max. 8388607)
+ 114 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 213 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 238 words of extra memory for PDF output out of 10000 (max. 10000000)
 

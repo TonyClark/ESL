@@ -556,6 +556,12 @@ public class ESLVal implements Serializable {
 			}
 			return vals;
 		}
+		if (name.equals("clear")) { return new ESLVal(new Function(new ESLVal("clear"), this) {
+			public ESLVal apply(ESLVal... args) {
+				table.clear();
+				return ESLVal.this;
+			}
+		}); }
 		throw new Error("unknown field for table " + name);
 	}
 
@@ -761,11 +767,11 @@ public class ESLVal implements Serializable {
 		case RECORD:
 			return record.hashCode();
 		}
-		throw new Error("cannot caklculate hash code for : " + this);
+		throw new Error("cannot calculate hash code for : " + this);
 	}
 
 	public ESLVal take(int i) {
-		if (i <= 0)
+		if (i <= 0 || isNil())
 			return $nil;
 		else {
 			return new ESLVal(headVal, tailVal.take(i - 1));
@@ -773,7 +779,7 @@ public class ESLVal implements Serializable {
 	}
 
 	public ESLVal drop(int i) {
-		if (i == 0)
+		if (i == 0 || isNil())
 			return this;
 		else {
 			return tailVal.drop(i - 1);

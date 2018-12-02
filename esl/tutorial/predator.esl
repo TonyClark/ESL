@@ -169,11 +169,11 @@ act prey(x::Int,y::Int)::Prey {
 
 }
 
-size::Int = 30;                    // Controls the size of the grid elements.
+size::Int = 60;                    // Controls the size of the grid elements.
 width::Int = 10;                   // The width of the world.
 height::Int = 10;                  // The height of the world.
 numOfPredators::Int = 3;           // Total number of predators.
-numOfRocks::Int = random(10) + 5;  // The number of rocks in the world.
+numOfRocks::Int = random(30) + 5;  // The number of rocks in the world.
 points::[Point] = 
   letrec generate(ps::[Point],n::Int)::[Point] = 
     if n = 0
@@ -187,7 +187,7 @@ points::[Point] =
   in generate([],numOfPredators+1+numOfRocks);
 pointX(p::Point)::Int = case p { Point(x,y) -> x; }
 pointY(p::Point)::Int = case p { Point(x,y) -> y; }
-limit::Int = 3000;
+limit::Int = 10000;
 turn::Int = 0;
 
 rocks::[Point] = drop[Point](points,numOfPredators+1);
@@ -304,6 +304,7 @@ act main::Main {
   Time(n::Int) -> {
    let film::[Display] = omega[Message](messages,messageId,mapBoth,mergeDisplays,mapBoard(emptyBoard));
    in {
+     print[Str]('create filmstrip...');
      edb <- Filmstrip('predator',film);
      stopAll();
    }

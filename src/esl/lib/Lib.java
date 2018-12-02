@@ -858,6 +858,7 @@ public class Lib {
 		} catch (ClassNotFoundException e) {
 			throw new Error("cannot find class named " + className);
 		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
 			throw new Error("cannot instantiate class " + className);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
@@ -1030,6 +1031,7 @@ public class Lib {
 			}
 			actor.stop();
 			threadPool.shutdownNow();
+			EDBFrame.FRAME.allEditorsStopped();
 		}
 	}
 

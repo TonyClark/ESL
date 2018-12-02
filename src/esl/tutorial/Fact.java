@@ -93,13 +93,13 @@ public class Fact {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("fact")) {
           ESLVal id = $zero;
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v7 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v8 = $m;
             
-            switch(_v7.termName) {
-            case "Get": {ESLVal $46 = _v7.termRef(0);
-              ESLVal $45 = _v7.termRef(1);
-              ESLVal $44 = _v7.termRef(2);
-              ESLVal $43 = _v7.termRef(3);
+            switch(_v8.termName) {
+            case "Get": {ESLVal $46 = _v8.termRef(0);
+              ESLVal $45 = _v8.termRef(1);
+              ESLVal $44 = _v8.termRef(2);
+              ESLVal $43 = _v8.termRef(3);
               
               switch($46.intVal) {
               case 0: {ESLVal threadId = $45;
@@ -132,7 +132,7 @@ public class Fact {
               }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v7)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v8)));
           }
           }}
           public ESLVal get(String name) {
@@ -166,12 +166,12 @@ public class Fact {
   return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("cust")) {
           ESLVal id = $zero;
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v6 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v7 = $m;
             
-            switch(_v6.termName) {
-            case "Value": {ESLVal $42 = _v6.termRef(0);
-              ESLVal $41 = _v6.termRef(1);
-              ESLVal $40 = _v6.termRef(2);
+            switch(_v7.termName) {
+            case "Value": {ESLVal $42 = _v7.termRef(0);
+              ESLVal $41 = _v7.termRef(1);
+              ESLVal $40 = _v7.termRef(2);
               
               {ESLVal threadId = $42;
               
@@ -186,7 +186,7 @@ public class Fact {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v6)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v7)));
           }
           }}
           public ESLVal get(String name) {
@@ -216,11 +216,11 @@ public class Fact {
   private static ESLVal translate = new ESLVal(new Function(new ESLVal("translate"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal msIn = $args[0];
-  {ESLVal _v5 = msIn;
+  {ESLVal _v6 = msIn;
         
-        if(_v5.isCons())
-        {ESLVal $18 = _v5.head();
-          ESLVal $19 = _v5.tail();
+        if(_v6.isCons())
+        {ESLVal $18 = _v6.head();
+          ESLVal $19 = _v6.tail();
           
           switch($18.termName) {
           case "Start": {ESLVal $39 = $18.termRef(0);
@@ -327,12 +327,12 @@ public class Fact {
           }
           }
           }
-          default: return error(new ESLVal("case error at Pos(2253,2880)").add(ESLVal.list(_v5)));
+          default: return error(new ESLVal("case error at Pos(2253,2880)").add(ESLVal.list(_v6)));
         }
         }
-      else if(_v5.isNil())
+      else if(_v6.isNil())
         return ESLVal.list();
-      else return error(new ESLVal("case error at Pos(2253,2880)").add(ESLVal.list(_v5)));
+      else return error(new ESLVal("case error at Pos(2253,2880)").add(ESLVal.list(_v6)));
       }
     }
   });
@@ -340,11 +340,11 @@ public class Fact {
     public ESLVal apply(ESLVal... $args) {
       ESLVal id = $args[0];
   ESLVal as = $args[1];
-  {ESLVal _v4 = as;
+  {ESLVal _v5 = as;
         
-        if(_v4.isCons())
-        {ESLVal $12 = _v4.head();
-          ESLVal $13 = _v4.tail();
+        if(_v5.isCons())
+        {ESLVal $12 = _v5.head();
+          ESLVal $13 = _v5.tail();
           
           switch($12.termName) {
           case "Actor": {ESLVal $17 = $12.termRef(0);
@@ -367,9 +367,9 @@ public class Fact {
             else
               {ESLVal a = $12;
                 
-                {ESLVal _v8 = $13;
+                {ESLVal _v9 = $13;
                 
-                return getActor.apply(id,_v8);
+                return getActor.apply(id,_v9);
               }
               }
           }
@@ -387,9 +387,9 @@ public class Fact {
           }
         }
         }
-      else if(_v4.isNil())
-        return error(new ESLVal("case error at Pos(2925,3031)").add(ESLVal.list(_v4)));
-      else return error(new ESLVal("case error at Pos(2925,3031)").add(ESLVal.list(_v4)));
+      else if(_v5.isNil())
+        return error(new ESLVal("case error at Pos(2925,3031)").add(ESLVal.list(_v5)));
+      else return error(new ESLVal("case error at Pos(2925,3031)").add(ESLVal.list(_v5)));
       }
     }
   });
@@ -397,13 +397,13 @@ public class Fact {
     public ESLVal apply(ESLVal... $args) {
       ESLVal a = $args[0];
   ESLVal t = $args[1];
-  {ESLVal _v3 = a;
+  {ESLVal _v4 = a;
         
-        switch(_v3.termName) {
-        case "Actor": {ESLVal $11 = _v3.termRef(0);
-          ESLVal $10 = _v3.termRef(1);
-          ESLVal $9 = _v3.termRef(2);
-          ESLVal $8 = _v3.termRef(3);
+        switch(_v4.termName) {
+        case "Actor": {ESLVal $11 = _v4.termRef(0);
+          ESLVal $10 = _v4.termRef(1);
+          ESLVal $9 = _v4.termRef(2);
+          ESLVal $8 = _v4.termRef(3);
           
           {ESLVal i = $11;
           
@@ -419,7 +419,7 @@ public class Fact {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(3075,3138)").add(ESLVal.list(_v3)));
+        default: return error(new ESLVal("case error at Pos(3075,3138)").add(ESLVal.list(_v4)));
       }
       }
     }
@@ -450,7 +450,7 @@ public class Fact {
           ESLVal counter = $zero;
           ESLVal count = $one;
           ESLVal f = newActor(fact,new ESLVal(new Actor()));
-          ESLVal numberOfFacts = new ESLVal(2);
+          ESLVal numberOfFacts = new ESLVal(20);
           ESLVal computeFact = new ESLVal(new Function(new ESLVal("computeFact"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal n = $args[0];
@@ -484,7 +484,7 @@ public class Fact {
                   }
                   }
                   }
-                  default: return error(new ESLVal("case error at Pos(3654,3689)").add(ESLVal.list(_v1)));
+                  default: return error(new ESLVal("case error at Pos(3655,3690)").add(ESLVal.list(_v1)));
                 }
                 }
               }
@@ -492,7 +492,7 @@ public class Fact {
           ESLVal messageBefore = new ESLVal(new Function(new ESLVal("messageBefore"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal time = $args[0];
-            return new ESLVal(new Function(new ESLVal("fun74"),getSelf()) {
+            return new ESLVal(new Function(new ESLVal("fun56"),getSelf()) {
                     public ESLVal apply(ESLVal... $args) {
                       ESLVal m = $args[0];
                   return messageTime.apply(m).less(time);
@@ -518,12 +518,12 @@ public class Fact {
               }
             });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v2 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v3 = $m;
             
-            switch(_v2.termName) {
-            case "Value": {ESLVal $7 = _v2.termRef(0);
-              ESLVal $6 = _v2.termRef(1);
-              ESLVal $5 = _v2.termRef(2);
+            switch(_v3.termName) {
+            case "Value": {ESLVal $7 = _v3.termRef(0);
+              ESLVal $6 = _v3.termRef(1);
+              ESLVal $5 = _v3.termRef(2);
               
               {ESLVal threadId = $7;
               
@@ -542,7 +542,7 @@ public class Fact {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v2)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v3)));
           }
           }}
           public ESLVal get(String name) {
@@ -557,8 +557,14 @@ public class Fact {
         public ESLVal init() {
             return ((Supplier<ESLVal>)() -> { 
                 {id = addActor.apply(new ESLVal("Main"));
-                computeFact.apply(new ESLVal(3));
-                return computeFact.apply(new ESLVal(3));}
+                {{
+                  ESLVal _v2 = $zero.to(new ESLVal(20));
+                  while(_v2.isCons()) {
+                    ESLVal i = _v2.headVal;
+                    computeFact.apply(i);
+                    _v2 = _v2.tailVal;}
+                }
+                return $null;}}
               }).get();
           }
         });

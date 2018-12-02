@@ -20,32 +20,32 @@ public class Lists {
       ESLVal l = $args[0];
   ESLVal d = $args[1];
   ESLVal p = $args[2];
-  {ESLVal _v110 = l;
+  {ESLVal _v11 = l;
         
-        if(_v110.isCons())
-        {ESLVal $108 = _v110.head();
-          ESLVal $109 = _v110.tail();
+        if(_v11.isCons())
+        {ESLVal $12 = _v11.head();
+          ESLVal $13 = _v11.tail();
           
-          {ESLVal h = $108;
+          {ESLVal h = $12;
           
-          {ESLVal t = $109;
+          {ESLVal t = $13;
           
           if(p.apply(h).boolVal)
           return h;
           else
-            {ESLVal _v152 = $108;
+            {ESLVal _v85 = $12;
               
-              {ESLVal _v153 = $109;
+              {ESLVal _v86 = $13;
               
-              return select1.apply(_v153,d,p);
+              return select1.apply(_v86,d,p);
             }
             }
         }
         }
         }
-      else if(_v110.isNil())
+      else if(_v11.isNil())
         return d;
-      else return error(new ESLVal("case error at Pos(515,613)").add(ESLVal.list(_v110)));
+      else return error(new ESLVal("case error at Pos(515,613)").add(ESLVal.list(_v11)));
       }
     }
   });
@@ -53,23 +53,23 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal f = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v109 = l;
+  {ESLVal _v12 = l;
         
-        if(_v109.isCons())
-        {ESLVal $106 = _v109.head();
-          ESLVal $107 = _v109.tail();
+        if(_v12.isCons())
+        {ESLVal $14 = _v12.head();
+          ESLVal $15 = _v12.tail();
           
-          {ESLVal m = $106;
+          {ESLVal m = $14;
           
-          {ESLVal ms = $107;
+          {ESLVal ms = $15;
           
           return map.apply(f,ms).cons(f.apply(m));
         }
         }
         }
-      else if(_v109.isNil())
+      else if(_v12.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(651,719)").add(ESLVal.list(_v109)));
+      else return error(new ESLVal("case error at Pos(651,719)").add(ESLVal.list(_v12)));
       }
     }
   });
@@ -78,32 +78,32 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal v = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v108 = l;
+  {ESLVal _v13 = l;
         
-        if(_v108.isCons())
-        {ESLVal $104 = _v108.head();
-          ESLVal $105 = _v108.tail();
+        if(_v13.isCons())
+        {ESLVal $16 = _v13.head();
+          ESLVal $17 = _v13.tail();
           
-          {ESLVal h = $104;
+          {ESLVal h = $16;
           
-          {ESLVal t = $105;
+          {ESLVal t = $17;
           
           if(h.eql(v).boolVal)
           return remove.apply(v,t);
           else
-            {ESLVal _v150 = $104;
+            {ESLVal _v83 = $16;
               
-              {ESLVal _v151 = $105;
+              {ESLVal _v84 = $17;
               
-              return remove.apply(v,_v151).cons(_v150);
+              return remove.apply(v,_v84).cons(_v83);
             }
             }
         }
         }
         }
-      else if(_v108.isNil())
+      else if(_v13.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(868,979)").add(ESLVal.list(_v108)));
+      else return error(new ESLVal("case error at Pos(868,979)").add(ESLVal.list(_v13)));
       }
     }
   });
@@ -111,32 +111,32 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal v = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v107 = l;
+  {ESLVal _v14 = l;
         
-        if(_v107.isCons())
-        {ESLVal $102 = _v107.head();
-          ESLVal $103 = _v107.tail();
+        if(_v14.isCons())
+        {ESLVal $18 = _v14.head();
+          ESLVal $19 = _v14.tail();
           
-          {ESLVal h = $102;
+          {ESLVal h = $18;
           
-          {ESLVal t = $103;
+          {ESLVal t = $19;
           
           if(h.eql(v).boolVal)
           return t;
           else
-            {ESLVal _v148 = $102;
+            {ESLVal _v81 = $18;
               
-              {ESLVal _v149 = $103;
+              {ESLVal _v82 = $19;
               
-              return remove1.apply(v,_v149).cons(_v148);
+              return remove1.apply(v,_v82).cons(_v81);
             }
             }
         }
         }
         }
-      else if(_v107.isNil())
+      else if(_v14.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(1014,1113)").add(ESLVal.list(_v107)));
+      else return error(new ESLVal("case error at Pos(1014,1113)").add(ESLVal.list(_v14)));
       }
     }
   });
@@ -144,23 +144,23 @@ public class Lists {
   public static ESLVal lengthSemantics = new ESLVal(new Function(new ESLVal("lengthSemantics"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
-  {ESLVal _v106 = l;
+  {ESLVal _v15 = l;
         
-        if(_v106.isCons())
-        {ESLVal $100 = _v106.head();
-          ESLVal $101 = _v106.tail();
+        if(_v15.isCons())
+        {ESLVal $20 = _v15.head();
+          ESLVal $21 = _v15.tail();
           
-          {ESLVal h = $100;
+          {ESLVal h = $20;
           
-          {ESLVal t = $101;
+          {ESLVal t = $21;
           
           return $one.add(length.apply(t));
         }
         }
         }
-      else if(_v106.isNil())
+      else if(_v15.isNil())
         return $zero;
-      else return error(new ESLVal("case error at Pos(1252,1306)").add(ESLVal.list(_v106)));
+      else return error(new ESLVal("case error at Pos(1252,1306)").add(ESLVal.list(_v15)));
       }
     }
   });
@@ -168,23 +168,23 @@ public class Lists {
   public static ESLVal flattenSemantics = new ESLVal(new Function(new ESLVal("flattenSemantics"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal lists = $args[0];
-  {ESLVal _v105 = lists;
+  {ESLVal _v16 = lists;
         
-        if(_v105.isCons())
-        {ESLVal $98 = _v105.head();
-          ESLVal $99 = _v105.tail();
+        if(_v16.isCons())
+        {ESLVal $22 = _v16.head();
+          ESLVal $23 = _v16.tail();
           
-          {ESLVal h = $98;
+          {ESLVal h = $22;
           
-          {ESLVal t = $99;
+          {ESLVal t = $23;
           
           return h.add(flatten.apply(t));
         }
         }
         }
-      else if(_v105.isNil())
+      else if(_v16.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(1786,1852)").add(ESLVal.list(_v105)));
+      else return error(new ESLVal("case error at Pos(1786,1852)").add(ESLVal.list(_v16)));
       }
     }
   });
@@ -192,15 +192,15 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal x = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v104 = l;
+  {ESLVal _v17 = l;
         
-        if(_v104.isCons())
-        {ESLVal $96 = _v104.head();
-          ESLVal $97 = _v104.tail();
+        if(_v17.isCons())
+        {ESLVal $24 = _v17.head();
+          ESLVal $25 = _v17.tail();
           
-          {ESLVal h = $96;
+          {ESLVal h = $24;
           
-          {ESLVal t = $97;
+          {ESLVal t = $25;
           
           if(h.eql(x).boolVal)
           return $one.add(count.apply(x,t));
@@ -209,9 +209,9 @@ public class Lists {
         }
         }
         }
-      else if(_v104.isNil())
+      else if(_v17.isNil())
         return $zero;
-      else return error(new ESLVal("case error at Pos(1893,1981)").add(ESLVal.list(_v104)));
+      else return error(new ESLVal("case error at Pos(1893,1981)").add(ESLVal.list(_v17)));
       }
     }
   });
@@ -219,48 +219,48 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal list = $args[0];
   ESLVal prefix = $args[1];
-  {ESLVal _v103 = list;
-        ESLVal _v102 = prefix;
+  {ESLVal _v18 = list;
+        ESLVal _v19 = prefix;
         
-        if(_v103.isCons())
-        {ESLVal $92 = _v103.head();
-          ESLVal $93 = _v103.tail();
+        if(_v18.isCons())
+        {ESLVal $28 = _v18.head();
+          ESLVal $29 = _v18.tail();
           
-          if(_v102.isCons())
-          {ESLVal $94 = _v102.head();
-            ESLVal $95 = _v102.tail();
+          if(_v19.isCons())
+          {ESLVal $30 = _v19.head();
+            ESLVal $31 = _v19.tail();
             
-            {ESLVal x = $92;
+            {ESLVal x = $28;
             
-            {ESLVal _v146 = $93;
+            {ESLVal _v79 = $29;
             
-            {ESLVal y = $94;
+            {ESLVal y = $30;
             
-            {ESLVal _v147 = $95;
+            {ESLVal _v80 = $31;
             
             if(x.eql(y).boolVal)
-            return hasPrefix.apply(_v146,_v147);
+            return hasPrefix.apply(_v79,_v80);
             else
-              if(_v102.isCons())
-                {ESLVal $90 = _v102.head();
-                  ESLVal $91 = _v102.tail();
+              if(_v19.isCons())
+                {ESLVal $26 = _v19.head();
+                  ESLVal $27 = _v19.tail();
                   
-                  {ESLVal l1 = _v103;
+                  {ESLVal l1 = _v18;
                   
-                  {ESLVal l2 = _v102;
+                  {ESLVal l2 = _v19;
                   
                   return $false;
                 }
                 }
                 }
-              else if(_v102.isNil())
-                {ESLVal l1 = _v103;
+              else if(_v19.isNil())
+                {ESLVal l1 = _v18;
                   
                   return $true;
                 }
-              else {ESLVal l1 = _v103;
+              else {ESLVal l1 = _v18;
                   
-                  {ESLVal l2 = _v102;
+                  {ESLVal l2 = _v19;
                   
                   return $false;
                 }
@@ -270,101 +270,101 @@ public class Lists {
           }
           }
           }
-        else if(_v102.isNil())
-          if(_v102.isCons())
-            {ESLVal $90 = _v102.head();
-              ESLVal $91 = _v102.tail();
+        else if(_v19.isNil())
+          if(_v19.isCons())
+            {ESLVal $26 = _v19.head();
+              ESLVal $27 = _v19.tail();
               
-              {ESLVal l1 = _v103;
+              {ESLVal l1 = _v18;
               
-              {ESLVal l2 = _v102;
+              {ESLVal l2 = _v19;
               
               return $false;
             }
             }
             }
-          else if(_v102.isNil())
-            {ESLVal l1 = _v103;
+          else if(_v19.isNil())
+            {ESLVal l1 = _v18;
               
               return $true;
             }
-          else {ESLVal l1 = _v103;
+          else {ESLVal l1 = _v18;
               
-              {ESLVal l2 = _v102;
-              
-              return $false;
-            }
-            }
-        else if(_v102.isCons())
-            {ESLVal $90 = _v102.head();
-              ESLVal $91 = _v102.tail();
-              
-              {ESLVal l1 = _v103;
-              
-              {ESLVal l2 = _v102;
+              {ESLVal l2 = _v19;
               
               return $false;
             }
             }
+        else if(_v19.isCons())
+            {ESLVal $26 = _v19.head();
+              ESLVal $27 = _v19.tail();
+              
+              {ESLVal l1 = _v18;
+              
+              {ESLVal l2 = _v19;
+              
+              return $false;
             }
-          else if(_v102.isNil())
-            {ESLVal l1 = _v103;
+            }
+            }
+          else if(_v19.isNil())
+            {ESLVal l1 = _v18;
               
               return $true;
             }
-          else {ESLVal l1 = _v103;
+          else {ESLVal l1 = _v18;
               
-              {ESLVal l2 = _v102;
+              {ESLVal l2 = _v19;
               
               return $false;
             }
             }
         }
-      else if(_v103.isNil())
-        if(_v102.isCons())
-          {ESLVal $90 = _v102.head();
-            ESLVal $91 = _v102.tail();
+      else if(_v18.isNil())
+        if(_v19.isCons())
+          {ESLVal $26 = _v19.head();
+            ESLVal $27 = _v19.tail();
             
-            {ESLVal l1 = _v103;
+            {ESLVal l1 = _v18;
             
-            {ESLVal l2 = _v102;
+            {ESLVal l2 = _v19;
             
             return $false;
           }
           }
           }
-        else if(_v102.isNil())
-          {ESLVal l1 = _v103;
+        else if(_v19.isNil())
+          {ESLVal l1 = _v18;
             
             return $true;
           }
-        else {ESLVal l1 = _v103;
+        else {ESLVal l1 = _v18;
             
-            {ESLVal l2 = _v102;
-            
-            return $false;
-          }
-          }
-      else if(_v102.isCons())
-          {ESLVal $90 = _v102.head();
-            ESLVal $91 = _v102.tail();
-            
-            {ESLVal l1 = _v103;
-            
-            {ESLVal l2 = _v102;
+            {ESLVal l2 = _v19;
             
             return $false;
           }
           }
+      else if(_v19.isCons())
+          {ESLVal $26 = _v19.head();
+            ESLVal $27 = _v19.tail();
+            
+            {ESLVal l1 = _v18;
+            
+            {ESLVal l2 = _v19;
+            
+            return $false;
           }
-        else if(_v102.isNil())
-          {ESLVal l1 = _v103;
+          }
+          }
+        else if(_v19.isNil())
+          {ESLVal l1 = _v18;
             
             return $true;
           }
-        else {ESLVal l1 = _v103;
+        else {ESLVal l1 = _v18;
             
-            {ESLVal l2 = _v102;
+            {ESLVal l2 = _v19;
             
             return $false;
           }
@@ -377,15 +377,15 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
   ESLVal n = $args[1];
-  {ESLVal _v101 = l;
+  {ESLVal _v20 = l;
         
-        if(_v101.isCons())
-        {ESLVal $88 = _v101.head();
-          ESLVal $89 = _v101.tail();
+        if(_v20.isCons())
+        {ESLVal $32 = _v20.head();
+          ESLVal $33 = _v20.tail();
           
-          {ESLVal h = $88;
+          {ESLVal h = $32;
           
-          {ESLVal t = $89;
+          {ESLVal t = $33;
           
           if(n.eql($zero).boolVal)
           return h;
@@ -394,9 +394,9 @@ public class Lists {
         }
         }
         }
-      else if(_v101.isNil())
+      else if(_v20.isNil())
         return error(new ESLVal("cannot take nth element."));
-      else return error(new ESLVal("case error at Pos(2295,2410)").add(ESLVal.list(_v101)));
+      else return error(new ESLVal("case error at Pos(2295,2410)").add(ESLVal.list(_v20)));
       }
     }
   });
@@ -407,23 +407,23 @@ public class Lists {
   if(n.eql($zero).boolVal)
         return $nil;
         else
-          {ESLVal _v100 = l;
+          {ESLVal _v21 = l;
             
-            if(_v100.isCons())
-            {ESLVal $86 = _v100.head();
-              ESLVal $87 = _v100.tail();
+            if(_v21.isCons())
+            {ESLVal $34 = _v21.head();
+              ESLVal $35 = _v21.tail();
               
-              {ESLVal h = $86;
+              {ESLVal h = $34;
               
-              {ESLVal t = $87;
+              {ESLVal t = $35;
               
               return take.apply(t,n.sub($one)).cons(h);
             }
             }
             }
-          else if(_v100.isNil())
+          else if(_v21.isNil())
             return error(new ESLVal("cannot take element ").add(n));
-          else return error(new ESLVal("case error at Pos(2482,2584)").add(ESLVal.list(_v100)));
+          else return error(new ESLVal("case error at Pos(2482,2584)").add(ESLVal.list(_v21)));
           }
     }
   });
@@ -434,23 +434,23 @@ public class Lists {
   if(n.eql($zero).boolVal)
         return l;
         else
-          {ESLVal _v99 = l;
+          {ESLVal _v22 = l;
             
-            if(_v99.isCons())
-            {ESLVal $84 = _v99.head();
-              ESLVal $85 = _v99.tail();
+            if(_v22.isCons())
+            {ESLVal $36 = _v22.head();
+              ESLVal $37 = _v22.tail();
               
-              {ESLVal h = $84;
+              {ESLVal h = $36;
               
-              {ESLVal t = $85;
+              {ESLVal t = $37;
               
               return drop.apply(t,n.sub($one));
             }
             }
             }
-          else if(_v99.isNil())
+          else if(_v22.isNil())
             return error(new ESLVal("cannot drop element ").add(n));
-          else return error(new ESLVal("case error at Pos(2652,2747)").add(ESLVal.list(_v99)));
+          else return error(new ESLVal("case error at Pos(2652,2747)").add(ESLVal.list(_v22)));
           }
     }
   });
@@ -459,15 +459,15 @@ public class Lists {
       ESLVal n = $args[0];
   ESLVal o = $args[1];
   ESLVal l = $args[2];
-  {ESLVal _v98 = l;
+  {ESLVal _v23 = l;
         
-        if(_v98.isCons())
-        {ESLVal $82 = _v98.head();
-          ESLVal $83 = _v98.tail();
+        if(_v23.isCons())
+        {ESLVal $38 = _v23.head();
+          ESLVal $39 = _v23.tail();
           
-          {ESLVal h = $82;
+          {ESLVal h = $38;
           
-          {ESLVal t = $83;
+          {ESLVal t = $39;
           
           if(h.eql(o).boolVal)
           return subst.apply(n,o,t).cons(n);
@@ -476,75 +476,75 @@ public class Lists {
         }
         }
         }
-      else if(_v98.isNil())
+      else if(_v23.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(2789,2893)").add(ESLVal.list(_v98)));
+      else return error(new ESLVal("case error at Pos(2789,2893)").add(ESLVal.list(_v23)));
       }
     }
   });
-  public static ESLVal head = new ESLVal(new Function(new ESLVal("fun72"),getSelf()) {
+  public static ESLVal head = new ESLVal(new Function(new ESLVal("fun80"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
-  {ESLVal _v97 = l;
+  {ESLVal _v24 = l;
         
-        if(_v97.isCons())
-        {ESLVal $80 = _v97.head();
-          ESLVal $81 = _v97.tail();
+        if(_v24.isCons())
+        {ESLVal $40 = _v24.head();
+          ESLVal $41 = _v24.tail();
           
-          {ESLVal h = $80;
+          {ESLVal h = $40;
           
-          {ESLVal t = $81;
+          {ESLVal t = $41;
           
           return h;
         }
         }
         }
-      else if(_v97.isNil())
+      else if(_v24.isNil())
         return error(new ESLVal("cannot take the head of []"));
-      else return error(new ESLVal("case error at Pos(2966,3045)").add(ESLVal.list(_v97)));
+      else return error(new ESLVal("case error at Pos(2966,3045)").add(ESLVal.list(_v24)));
       }
     }
   });
-  public static ESLVal tail = new ESLVal(new Function(new ESLVal("fun73"),getSelf()) {
+  public static ESLVal tail = new ESLVal(new Function(new ESLVal("fun81"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
-  {ESLVal _v96 = l;
+  {ESLVal _v25 = l;
         
-        if(_v96.isCons())
-        {ESLVal $78 = _v96.head();
-          ESLVal $79 = _v96.tail();
+        if(_v25.isCons())
+        {ESLVal $42 = _v25.head();
+          ESLVal $43 = _v25.tail();
           
-          {ESLVal h = $78;
+          {ESLVal h = $42;
           
-          {ESLVal t = $79;
+          {ESLVal t = $43;
           
           return t;
         }
         }
         }
-      else if(_v96.isNil())
+      else if(_v25.isNil())
         return error(new ESLVal("cannot take the tail of []"));
-      else return error(new ESLVal("case error at Pos(3122,3203)").add(ESLVal.list(_v96)));
+      else return error(new ESLVal("case error at Pos(3122,3203)").add(ESLVal.list(_v25)));
       }
     }
   });
   public static ESLVal isNil = new ESLVal(new Function(new ESLVal("isNil"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
-  {ESLVal _v95 = l;
+  {ESLVal _v26 = l;
         
-        if(_v95.isCons())
-        {ESLVal $76 = _v95.head();
-          ESLVal $77 = _v95.tail();
+        if(_v26.isCons())
+        {ESLVal $44 = _v26.head();
+          ESLVal $45 = _v26.tail();
           
-          {ESLVal _v144 = _v95;
+          {ESLVal _v77 = _v26;
           
           return $false;
         }
         }
-      else if(_v95.isNil())
+      else if(_v26.isNil())
         return $true;
-      else {ESLVal _v145 = _v95;
+      else {ESLVal _v78 = _v26;
           
           return $false;
         }
@@ -556,111 +556,111 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal e = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v94 = l;
+  {ESLVal _v27 = l;
         
-        if(_v94.isCons())
-        {ESLVal $74 = _v94.head();
-          ESLVal $75 = _v94.tail();
+        if(_v27.isCons())
+        {ESLVal $46 = _v27.head();
+          ESLVal $47 = _v27.tail();
           
-          {ESLVal x = $74;
+          {ESLVal x = $46;
           
-          {ESLVal xs = $75;
+          {ESLVal xs = $47;
           
           if(x.eql(e).boolVal)
           return $true;
           else
-            {ESLVal _v142 = $74;
+            {ESLVal _v75 = $46;
               
-              {ESLVal _v143 = $75;
+              {ESLVal _v76 = $47;
               
-              return member.apply(e,_v143);
+              return member.apply(e,_v76);
             }
             }
         }
         }
         }
-      else if(_v94.isNil())
+      else if(_v27.isNil())
         return $false;
-      else return error(new ESLVal("case error at Pos(3439,3544)").add(ESLVal.list(_v94)));
+      else return error(new ESLVal("case error at Pos(3439,3544)").add(ESLVal.list(_v27)));
       }
     }
   });
   public static ESLVal reverse = new ESLVal(new Function(new ESLVal("reverse"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
-  {ESLVal _v93 = l;
+  {ESLVal _v28 = l;
         
-        if(_v93.isCons())
-        {ESLVal $72 = _v93.head();
-          ESLVal $73 = _v93.tail();
+        if(_v28.isCons())
+        {ESLVal $48 = _v28.head();
+          ESLVal $49 = _v28.tail();
           
-          {ESLVal x = $72;
+          {ESLVal x = $48;
           
-          {ESLVal xs = $73;
+          {ESLVal xs = $49;
           
           return reverse.apply(xs).add(ESLVal.list(x));
         }
         }
         }
-      else if(_v93.isNil())
+      else if(_v28.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(3576,3650)").add(ESLVal.list(_v93)));
+      else return error(new ESLVal("case error at Pos(3576,3650)").add(ESLVal.list(_v28)));
       }
     }
   });
-  public static ESLVal exists = new ESLVal(new Function(new ESLVal("fun74"),getSelf()) {
+  public static ESLVal exists = new ESLVal(new Function(new ESLVal("fun82"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal pred = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v92 = l;
+  {ESLVal _v29 = l;
         
-        if(_v92.isCons())
-        {ESLVal $70 = _v92.head();
-          ESLVal $71 = _v92.tail();
+        if(_v29.isCons())
+        {ESLVal $50 = _v29.head();
+          ESLVal $51 = _v29.tail();
           
-          {ESLVal x = $70;
+          {ESLVal x = $50;
           
-          {ESLVal xs = $71;
+          {ESLVal xs = $51;
           
           if(pred.apply(x).boolVal)
           return $true;
           else
-            {ESLVal _v140 = $70;
+            {ESLVal _v73 = $50;
               
-              {ESLVal _v141 = $71;
+              {ESLVal _v74 = $51;
               
-              return exists.apply(pred,_v141);
+              return exists.apply(pred,_v74);
             }
             }
         }
         }
         }
-      else if(_v92.isNil())
+      else if(_v29.isNil())
         return $false;
-      else return error(new ESLVal("case error at Pos(3758,3869)").add(ESLVal.list(_v92)));
+      else return error(new ESLVal("case error at Pos(3758,3869)").add(ESLVal.list(_v29)));
       }
     }
   });
-  public static ESLVal forall = new ESLVal(new Function(new ESLVal("fun75"),getSelf()) {
+  public static ESLVal forall = new ESLVal(new Function(new ESLVal("fun83"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal pred = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v91 = l;
+  {ESLVal _v30 = l;
         
-        if(_v91.isCons())
-        {ESLVal $68 = _v91.head();
-          ESLVal $69 = _v91.tail();
+        if(_v30.isCons())
+        {ESLVal $52 = _v30.head();
+          ESLVal $53 = _v30.tail();
           
-          {ESLVal x = $68;
+          {ESLVal x = $52;
           
-          {ESLVal xs = $69;
+          {ESLVal xs = $53;
           
           if(pred.apply(x).boolVal)
           return forall.apply(pred,xs);
           else
-            {ESLVal _v138 = $68;
+            {ESLVal _v71 = $52;
               
-              {ESLVal _v139 = $69;
+              {ESLVal _v72 = $53;
               
               return $false;
             }
@@ -668,9 +668,9 @@ public class Lists {
         }
         }
         }
-      else if(_v91.isNil())
+      else if(_v30.isNil())
         return $true;
-      else return error(new ESLVal("case error at Pos(3976,4087)").add(ESLVal.list(_v91)));
+      else return error(new ESLVal("case error at Pos(3976,4087)").add(ESLVal.list(_v30)));
       }
     }
   });
@@ -680,32 +680,32 @@ public class Lists {
       ESLVal l = $args[0];
   ESLVal n = $args[1];
   ESLVal x = $args[2];
-  {ESLVal _v90 = l;
+  {ESLVal _v31 = l;
         
-        if(_v90.isCons())
-        {ESLVal $66 = _v90.head();
-          ESLVal $67 = _v90.tail();
+        if(_v31.isCons())
+        {ESLVal $54 = _v31.head();
+          ESLVal $55 = _v31.tail();
           
-          {ESLVal h = $66;
+          {ESLVal h = $54;
           
-          {ESLVal t = $67;
+          {ESLVal t = $55;
           
           if(n.eql($zero).boolVal)
           return t.cons(x);
           else
-            {ESLVal _v136 = $66;
+            {ESLVal _v69 = $54;
               
-              {ESLVal _v137 = $67;
+              {ESLVal _v70 = $55;
               
-              return replaceNth.apply(_v137,n.sub($one),x).cons(_v136);
+              return replaceNth.apply(_v70,n.sub($one),x).cons(_v69);
             }
             }
         }
         }
         }
-      else if(_v90.isNil())
+      else if(_v31.isNil())
         return error(new ESLVal("cannot replace nth of []"));
-      else return error(new ESLVal("case error at Pos(4265,4408)").add(ESLVal.list(_v90)));
+      else return error(new ESLVal("case error at Pos(4265,4408)").add(ESLVal.list(_v31)));
       }
     }
   });
@@ -713,32 +713,32 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal t = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v89 = l;
+  {ESLVal _v32 = l;
         
-        if(_v89.isCons())
-        {ESLVal $64 = _v89.head();
-          ESLVal $65 = _v89.tail();
+        if(_v32.isCons())
+        {ESLVal $56 = _v32.head();
+          ESLVal $57 = _v32.tail();
           
-          {ESLVal h = $64;
+          {ESLVal h = $56;
           
-          {ESLVal _v133 = $65;
+          {ESLVal _v66 = $57;
           
           if(h.eql(t).boolVal)
           return $zero;
           else
-            {ESLVal _v134 = $64;
+            {ESLVal _v67 = $56;
               
-              {ESLVal _v135 = $65;
+              {ESLVal _v68 = $57;
               
-              return $one.add(indexOf.apply(t,_v135));
+              return $one.add(indexOf.apply(t,_v68));
             }
             }
         }
         }
         }
-      else if(_v89.isNil())
+      else if(_v32.isNil())
         return $zero.sub($one);
-      else return error(new ESLVal("case error at Pos(4443,4544)").add(ESLVal.list(_v89)));
+      else return error(new ESLVal("case error at Pos(4443,4544)").add(ESLVal.list(_v32)));
       }
     }
   });
@@ -746,32 +746,32 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal p = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v88 = l;
+  {ESLVal _v33 = l;
         
-        if(_v88.isCons())
-        {ESLVal $62 = _v88.head();
-          ESLVal $63 = _v88.tail();
+        if(_v33.isCons())
+        {ESLVal $58 = _v33.head();
+          ESLVal $59 = _v33.tail();
           
-          {ESLVal h = $62;
+          {ESLVal h = $58;
           
-          {ESLVal t = $63;
+          {ESLVal t = $59;
           
           if(p.apply(h).boolVal)
           return select.apply(p,t).cons(h);
           else
-            {ESLVal _v131 = $62;
+            {ESLVal _v64 = $58;
               
-              {ESLVal _v132 = $63;
+              {ESLVal _v65 = $59;
               
-              return select.apply(p,_v132);
+              return select.apply(p,_v65);
             }
             }
         }
         }
         }
-      else if(_v88.isNil())
+      else if(_v33.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(4588,4702)").add(ESLVal.list(_v88)));
+      else return error(new ESLVal("case error at Pos(4588,4702)").add(ESLVal.list(_v33)));
       }
     }
   });
@@ -779,11 +779,11 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal p = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v87 = l;
+  {ESLVal _v34 = l;
         
-        if(_v87.isCons())
-        {ESLVal $60 = _v87.head();
-          ESLVal $61 = _v87.tail();
+        if(_v34.isCons())
+        {ESLVal $60 = _v34.head();
+          ESLVal $61 = _v34.tail();
           
           {ESLVal h = $60;
           
@@ -792,19 +792,19 @@ public class Lists {
           if(p.apply(h).boolVal)
           return reject.apply(p,t);
           else
-            {ESLVal _v129 = $60;
+            {ESLVal _v62 = $60;
               
-              {ESLVal _v130 = $61;
+              {ESLVal _v63 = $61;
               
-              return reject.apply(p,_v130).cons(_v129);
+              return reject.apply(p,_v63).cons(_v62);
             }
             }
         }
         }
         }
-      else if(_v87.isNil())
+      else if(_v34.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(4746,4860)").add(ESLVal.list(_v87)));
+      else return error(new ESLVal("case error at Pos(4746,4860)").add(ESLVal.list(_v34)));
       }
     }
   });
@@ -812,40 +812,40 @@ public class Lists {
   public static ESLVal lastSemantics = new ESLVal(new Function(new ESLVal("lastSemantics"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
-  {ESLVal _v86 = l;
+  {ESLVal _v35 = l;
         
-        if(_v86.isCons())
-        {ESLVal $56 = _v86.head();
-          ESLVal $57 = _v86.tail();
+        if(_v35.isCons())
+        {ESLVal $62 = _v35.head();
+          ESLVal $63 = _v35.tail();
           
-          if($57.isCons())
-          {ESLVal $58 = $57.head();
-            ESLVal $59 = $57.tail();
+          if($63.isCons())
+          {ESLVal $64 = $63.head();
+            ESLVal $65 = $63.tail();
             
-            {ESLVal h = $56;
+            {ESLVal h = $62;
             
-            {ESLVal _v127 = $57;
+            {ESLVal _v60 = $63;
             
-            return last.apply(_v127);
+            return last.apply(_v60);
           }
           }
           }
-        else if($57.isNil())
-          {ESLVal x = $56;
+        else if($63.isNil())
+          {ESLVal x = $62;
             
             return x;
           }
-        else {ESLVal h = $56;
+        else {ESLVal h = $62;
             
-            {ESLVal _v128 = $57;
+            {ESLVal _v61 = $63;
             
-            return last.apply(_v128);
+            return last.apply(_v61);
           }
           }
         }
-      else if(_v86.isNil())
+      else if(_v35.isNil())
         return error(new ESLVal("cannot find last element of emply list"));
-      else return error(new ESLVal("case error at Pos(4987,5117)").add(ESLVal.list(_v86)));
+      else return error(new ESLVal("case error at Pos(4987,5117)").add(ESLVal.list(_v35)));
       }
     }
   });
@@ -853,40 +853,40 @@ public class Lists {
   public static ESLVal butlastSemantics = new ESLVal(new Function(new ESLVal("butlastSemantics"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal l = $args[0];
-  {ESLVal _v85 = l;
+  {ESLVal _v36 = l;
         
-        if(_v85.isCons())
-        {ESLVal $52 = _v85.head();
-          ESLVal $53 = _v85.tail();
+        if(_v36.isCons())
+        {ESLVal $66 = _v36.head();
+          ESLVal $67 = _v36.tail();
           
-          if($53.isCons())
-          {ESLVal $54 = $53.head();
-            ESLVal $55 = $53.tail();
+          if($67.isCons())
+          {ESLVal $68 = $67.head();
+            ESLVal $69 = $67.tail();
             
-            {ESLVal h = $52;
+            {ESLVal h = $66;
             
-            {ESLVal _v125 = $53;
+            {ESLVal _v58 = $67;
             
-            return butlast.apply(_v125).cons(h);
+            return butlast.apply(_v58).cons(h);
           }
           }
           }
-        else if($53.isNil())
-          {ESLVal x = $52;
+        else if($67.isNil())
+          {ESLVal x = $66;
             
             return $nil;
           }
-        else {ESLVal h = $52;
+        else {ESLVal h = $66;
             
-            {ESLVal _v126 = $53;
+            {ESLVal _v59 = $67;
             
-            return butlast.apply(_v126).cons(h);
+            return butlast.apply(_v59).cons(h);
           }
           }
         }
-      else if(_v85.isNil())
+      else if(_v36.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(5260,5349)").add(ESLVal.list(_v85)));
+      else return error(new ESLVal("case error at Pos(5260,5349)").add(ESLVal.list(_v36)));
       }
     }
   });
@@ -894,32 +894,32 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal x = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v84 = l;
+  {ESLVal _v37 = l;
         
-        if(_v84.isCons())
-        {ESLVal $50 = _v84.head();
-          ESLVal $51 = _v84.tail();
+        if(_v37.isCons())
+        {ESLVal $70 = _v37.head();
+          ESLVal $71 = _v37.tail();
           
-          {ESLVal h = $50;
+          {ESLVal h = $70;
           
-          {ESLVal t = $51;
+          {ESLVal t = $71;
           
           if(h.eql(x).boolVal)
           return $one.add(occurrences.apply(x,t));
           else
-            {ESLVal _v123 = $50;
+            {ESLVal _v56 = $70;
               
-              {ESLVal _v124 = $51;
+              {ESLVal _v57 = $71;
               
-              return occurrences.apply(x,_v124);
+              return occurrences.apply(x,_v57);
             }
             }
         }
         }
         }
-      else if(_v84.isNil())
+      else if(_v37.isNil())
         return $zero;
-      else return error(new ESLVal("case error at Pos(5388,5509)").add(ESLVal.list(_v84)));
+      else return error(new ESLVal("case error at Pos(5388,5509)").add(ESLVal.list(_v37)));
       }
     }
   });
@@ -927,15 +927,15 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal pred = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v83 = l;
+  {ESLVal _v38 = l;
         
-        if(_v83.isCons())
-        {ESLVal $48 = _v83.head();
-          ESLVal $49 = _v83.tail();
+        if(_v38.isCons())
+        {ESLVal $72 = _v38.head();
+          ESLVal $73 = _v38.tail();
           
-          {ESLVal h = $48;
+          {ESLVal h = $72;
           
-          {ESLVal t = $49;
+          {ESLVal t = $73;
           
           if(pred.apply(h).boolVal)
           return filter.apply(pred,t).cons(h);
@@ -944,39 +944,39 @@ public class Lists {
         }
         }
         }
-      else if(_v83.isNil())
+      else if(_v38.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(5557,5688)").add(ESLVal.list(_v83)));
+      else return error(new ESLVal("case error at Pos(5557,5688)").add(ESLVal.list(_v38)));
       }
     }
   });
   public static ESLVal foldr = new ESLVal(new Function(new ESLVal("foldr"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
-      ESLVal _v122 = $args[0];
-  ESLVal _v121 = $args[1];
-  ESLVal _v120 = $args[2];
-  ESLVal _v119 = $args[3];
-  {ESLVal _v82 = _v119;
+      ESLVal _v52 = $args[0];
+  ESLVal _v53 = $args[1];
+  ESLVal _v54 = $args[2];
+  ESLVal _v55 = $args[3];
+  {ESLVal _v39 = _v55;
         
-        if(_v82.isCons())
-        {ESLVal $46 = _v82.head();
-          ESLVal $47 = _v82.tail();
+        if(_v39.isCons())
+        {ESLVal $74 = _v39.head();
+          ESLVal $75 = _v39.tail();
           
-          {ESLVal h = $46;
+          {ESLVal h = $74;
           
-          {ESLVal t = $47;
+          {ESLVal t = $75;
           
-          return _v121.apply(_v122.apply(h),foldr.apply(_v122,_v121,_v120,t));
+          return _v53.apply(_v52.apply(h),foldr.apply(_v52,_v53,_v54,t));
         }
         }
         }
-      else if(_v82.isNil())
-        return _v120;
-      else return error(new ESLVal("case error at Pos(5755,5845)").add(ESLVal.list(_v82)));
+      else if(_v39.isNil())
+        return _v54;
+      else return error(new ESLVal("case error at Pos(5755,5845)").add(ESLVal.list(_v39)));
       }
     }
   });
-  public static ESLVal id = new ESLVal(new Function(new ESLVal("fun76"),getSelf()) {
+  public static ESLVal id = new ESLVal(new Function(new ESLVal("fun84"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal x = $args[0];
   return x;
@@ -985,7 +985,7 @@ public class Lists {
   public static ESLVal sum = new ESLVal(new Function(new ESLVal("sum"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal list = $args[0];
-  return foldr.apply(id,new ESLVal(new Function(new ESLVal("fun77"),getSelf()) {
+  return foldr.apply(id,new ESLVal(new Function(new ESLVal("fun85"),getSelf()) {
           public ESLVal apply(ESLVal... $args) {
             ESLVal x = $args[0];
         ESLVal y = $args[1];
@@ -997,23 +997,23 @@ public class Lists {
   public static ESLVal removeDups = new ESLVal(new Function(new ESLVal("removeDups"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal list = $args[0];
-  {ESLVal _v81 = list;
+  {ESLVal _v40 = list;
         
-        if(_v81.isCons())
-        {ESLVal $44 = _v81.head();
-          ESLVal $45 = _v81.tail();
+        if(_v40.isCons())
+        {ESLVal $76 = _v40.head();
+          ESLVal $77 = _v40.tail();
           
-          {ESLVal x = $44;
+          {ESLVal x = $76;
           
-          {ESLVal l = $45;
+          {ESLVal l = $77;
           
           return removeDups.apply(remove.apply(x,l)).cons(x);
         }
         }
         }
-      else if(_v81.isNil())
+      else if(_v40.isNil())
         return ESLVal.list();
-      else return error(new ESLVal("case error at Pos(6005,6086)").add(ESLVal.list(_v81)));
+      else return error(new ESLVal("case error at Pos(6005,6086)").add(ESLVal.list(_v40)));
       }
     }
   });
@@ -1023,13 +1023,13 @@ public class Lists {
   { LetRec letrec = new LetRec() {
         ESLVal pre = new ESLVal(new Function(new ESLVal("pre"),getSelf()) {
             public ESLVal apply(ESLVal... $args) {
-              ESLVal _v118 = $args[0];
-          ESLVal _v117 = $args[1];
-          {print.apply(_v117);
-              if(_v117.eql(ESLVal.list()).boolVal)
-                return _v118;
+              ESLVal _v50 = $args[0];
+          ESLVal _v51 = $args[1];
+          {print.apply(_v51);
+              if(_v51.eql(ESLVal.list()).boolVal)
+                return _v50;
                 else
-                  return pre.apply(_v118.add(ESLVal.list(last.apply(_v118).add(ESLVal.list(head.apply(_v117))))),tail.apply(_v117));}
+                  return pre.apply(_v50.add(ESLVal.list(last.apply(_v50).add(ESLVal.list(head.apply(_v51))))),tail.apply(_v51));}
             }
           });
         
@@ -1051,22 +1051,22 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal p = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v80 = l;
+  {ESLVal _v41 = l;
         
-        if(_v80.isCons())
-        {ESLVal $42 = _v80.head();
-          ESLVal $43 = _v80.tail();
+        if(_v41.isCons())
+        {ESLVal $78 = _v41.head();
+          ESLVal $79 = _v41.tail();
           
-          {ESLVal t = $42;
+          {ESLVal t = $78;
           
-          {ESLVal _v114 = $43;
+          {ESLVal _v47 = $79;
           
           if(p.apply(t).boolVal)
-          return takeWhile.apply(p,_v114).cons(t);
+          return takeWhile.apply(p,_v47).cons(t);
           else
-            {ESLVal _v115 = $42;
+            {ESLVal _v48 = $78;
               
-              {ESLVal _v116 = $43;
+              {ESLVal _v49 = $79;
               
               return $nil;
             }
@@ -1074,9 +1074,9 @@ public class Lists {
         }
         }
         }
-      else if(_v80.isNil())
+      else if(_v41.isNil())
         return $nil;
-      else return error(new ESLVal("case error at Pos(6368,6476)").add(ESLVal.list(_v80)));
+      else return error(new ESLVal("case error at Pos(6368,6476)").add(ESLVal.list(_v41)));
       }
     }
   });
@@ -1084,31 +1084,31 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal p = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v79 = l;
+  {ESLVal _v42 = l;
         
-        if(_v79.isCons())
-        {ESLVal $40 = _v79.head();
-          ESLVal $41 = _v79.tail();
+        if(_v42.isCons())
+        {ESLVal $80 = _v42.head();
+          ESLVal $81 = _v42.tail();
           
-          {ESLVal t = $40;
+          {ESLVal t = $80;
           
-          {ESLVal _v111 = $41;
+          {ESLVal _v44 = $81;
           
           if(p.apply(t).boolVal)
-          return dropWhile.apply(p,_v111);
+          return dropWhile.apply(p,_v44);
           else
-            {ESLVal _v112 = _v79;
+            {ESLVal _v45 = _v42;
               
-              return _v112;
+              return _v45;
             }
         }
         }
         }
-      else if(_v79.isNil())
+      else if(_v42.isNil())
         return $nil;
-      else {ESLVal _v113 = _v79;
+      else {ESLVal _v46 = _v42;
           
-          return _v113;
+          return _v46;
         }
       }
     }
@@ -1117,23 +1117,23 @@ public class Lists {
     public ESLVal apply(ESLVal... $args) {
       ESLVal removables = $args[0];
   ESLVal l = $args[1];
-  {ESLVal _v78 = removables;
+  {ESLVal _v43 = removables;
         
-        if(_v78.isCons())
-        {ESLVal $38 = _v78.head();
-          ESLVal $39 = _v78.tail();
+        if(_v43.isCons())
+        {ESLVal $82 = _v43.head();
+          ESLVal $83 = _v43.tail();
           
-          {ESLVal t = $38;
+          {ESLVal t = $82;
           
-          {ESLVal r = $39;
+          {ESLVal r = $83;
           
           return removeAll.apply(r,remove.apply(t,l));
         }
         }
         }
-      else if(_v78.isNil())
+      else if(_v43.isNil())
         return l;
-      else return error(new ESLVal("case error at Pos(6669,6757)").add(ESLVal.list(_v78)));
+      else return error(new ESLVal("case error at Pos(6669,6757)").add(ESLVal.list(_v43)));
       }
     }
   });

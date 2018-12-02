@@ -49,7 +49,7 @@ public class ESLTab extends ESLEditor implements EDBMenuProvider {
 			saveAs();
 		});
 		bar.add(saveAs);
-		JButton run = MenuProvider.getImageButton("icons/run.png", "run on the ESL VM", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.META_MASK), () -> {
+		JButton run = MenuProvider.getImageButton("icons/run.png", "run " + getFile().getName(), KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.META_MASK), () -> {
 			run();
 		});
 		bar.add(run);

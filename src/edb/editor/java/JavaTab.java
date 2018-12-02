@@ -71,7 +71,7 @@ public class JavaTab extends JavaEditor implements EDBMenuProvider {
 			    if (isDirty()) {
 				    System.out.println("Save " + getFile() + " before running.");
 			    } else
-				    run();
+				    new Thread(() -> run()).start();
 		    });
 		bar.add(run);
 	}
@@ -102,9 +102,10 @@ public class JavaTab extends JavaEditor implements EDBMenuProvider {
 			Lib.reset();
 			ClassLoader parentClassLoader = Lib.class.getClassLoader();
 			DynamicClassLoader classLoader = new DynamicClassLoader(parentClassLoader);
-			System.err.println("load " + packagePath + "." + name);
+			System.out.println("load " + packagePath + "." + name);
 			Class<?> _class = classLoader.loadClass(packagePath + "." + name);
 			Method method = _class.getMethod("main", String[].class);
+			handleMessage("Running....");
 			method.invoke(null, new Object[] { new String[] {} });
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
 			e1.printStackTrace();
