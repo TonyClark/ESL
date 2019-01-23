@@ -18,6 +18,7 @@ import edb.diagrams.dependency.DependencyComponent;
 import edb.diagrams.model.ESLModelComponent;
 import edb.editor.TabbedActor;
 import edb.editor.basic.Editor;
+import edb.editor.basic.EditorPanel;
 import edb.editor.basic.FileEditor;
 import edb.editor.basic.MessageHandler;
 import edb.editor.basic.Persistent;
@@ -77,8 +78,8 @@ public class EDBTabs extends JTabbedPane {
 	public void addStateCommands(Vector<EDBStateCommand> commands) {
 		for (int i = 0; i < getTabCount(); i++) {
 			Component c = getComponentAt(i);
-			if(c instanceof Save) {
-				Save save = (Save)c;
+			if (c instanceof Save) {
+				Save save = (Save) c;
 				save.save(commands);
 			}
 		}
@@ -310,8 +311,7 @@ public class EDBTabs extends JTabbedPane {
 			add(label, label, new HTMLTab(html));
 			setSelectedIndex(indexOfTab(label));
 		} else {
-			setSelectedIndex(indexOfTab(label));
-			HTMLTab tab = (HTMLTab) getSelectedComponent();
+			HTMLTab tab = (HTMLTab) getComponentAt(i);
 			tab.setHTML(html);
 		}
 	}
@@ -354,10 +354,11 @@ public class EDBTabs extends JTabbedPane {
 
 	public void write(int b) {
 		Component c = this.getSelectedComponent();
-		if(c instanceof Writable) {
-			Writable writable = (Writable)c;
+		if (c instanceof Writable) {
+			Writable writable = (Writable) c;
 			writable.write(b);
-		} else System.err.write(b);
+		} else
+			System.err.write(b);
 	}
 
 	public void allEditorsStopped() {
@@ -368,6 +369,15 @@ public class EDBTabs extends JTabbedPane {
 				editor.handleMessage("Ready");
 			}
 		}
+	}
+
+	public EditorPanel getEditorPanel() {
+		Component c = this.getSelectedComponent();
+		if (c instanceof Editor) {
+			Editor editor = (Editor) c;
+			return editor.getEditorPanel();
+		} else
+			return null;
 	}
 
 }

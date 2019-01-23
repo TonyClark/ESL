@@ -3,10 +3,14 @@ package esl.lib;
 import java.io.Serializable;
 
 public abstract class Function extends Named implements Serializable {
-	
+
 	public ESLVal self;
 
-	public Function(ESLVal name,ESLVal self) {
+	public Function() {
+		super();
+	}
+
+	public Function(ESLVal name, ESLVal self) {
 		super(name);
 		this.self = self;
 	}

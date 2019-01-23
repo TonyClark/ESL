@@ -19,13 +19,13 @@ public class ExtendedAct extends Type {
 	@Override
 	public void check(Env<String, Type> env) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void FV(HashSet<String> vars) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

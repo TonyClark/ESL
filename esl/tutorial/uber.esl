@@ -1,0 +1,287 @@
+export main; 
+
+import 'esl/lists.esl', 'esl/displays.esl', 'esl/lists.esl';
+
+// This file provides an example of obervers. A taxi cab is an observable
+// actor whose behaviour is described by a state machine that is observed
+// by a single taxi firm called Uber. The observations are used to allocate
+// jobs to the taxis which otherwise behave completely independently.
+
+data Maybe[T] = 
+  // A data type that allows data to be optional...
+  Something(T) 
+| Nothing;
+
+Act Main { Time(Int); }
+
+Act Cab {
+  export 
+    observeState::()->CabState; 
+    observeMessage::(CabMessage) -> Maybe[CabMessage];
+  Move;
+  Customer(Int,Int,Int,Int);
+}
+
+data CabState =
+  Empty(Loc,Direction,Plan)
+| Full(Loc,Direction,Plan);
+
+data Loc = Loc(Int,Int);
+
+type Plan = [Loc];
+
+data Direction = North | East | South | West;
+
+data CabMessage = 
+  ChangeDir(Direction)
+| MoveDir(Direction)
+| Move
+| Pickup
+| DropOff
+| Customer(Int,Int,Int,Int);
+  
+act cab(x0::Int,y0::Int)::Cab {
+  export observeState,observeMessage;
+  x::Int               = x0;
+  y::Int               = y0;
+  direction::Direction = North; 
+  plan::[Loc]          = [];
+  isEmpty::Bool        = true;
+  observeState()::CabState = 
+    if isEmpty 
+    then Empty(Loc(x,y),direction,plan); 
+    else Full(Loc(x,y),direction,plan);
+  observeMessage(m::CabMessage)::Maybe[CabMessage] = 
+    case m {
+      ChangeDir(d) -> Something[CabMessage](m);
+      MoveDir(d)   -> Something[CabMessage](m);
+      Pickup             -> Something[CabMessage](m);
+      DropOff            -> Something[CabMessage](m);
+      m                  -> Nothing[CabMessage];
+    }
+  Customer(xStart::Int,yStart::Int,xEnd::Int,yEnd::Int) -> { 
+    plan := [Loc(xStart,yStart),Loc(xEnd,yEnd)];
+    self <- Move;
+  }
+  Pickup  -> isEmpty := false;
+  DropOff -> isEmpty := true;
+  Move -> 
+    case plan {
+      [] -> {}
+      Loc(tx,ty):locs when tx = x and ty = y and isEmpty -> {
+        plan := locs;
+        self <- Pickup;
+        self <- Move;
+      }
+      Loc(tx,ty):locs when tx = x and ty = y and not(isEmpty) -> {
+        plan := locs;
+        self <- DropOff;
+        self <- Move;
+      }
+      Loc(tx,ty):locs when x > tx -> self <- MoveDir(West);
+      Loc(tx,ty):locs when x < tx -> self <- MoveDir(East);
+      Loc(tx,ty):locs when y > ty -> self <- MoveDir(North);
+      Loc(tx,ty):locs when y < ty -> self <- MoveDir(South);
+    }
+  MoveDir(North) when direction = North -> { y := y - 1; self <- Move; }
+  MoveDir(South) when direction = South -> { y := y + 1; self <- Move; }
+  MoveDir(East) when direction  = East  -> { x := x + 1; self <- Move; }
+  MoveDir(West) when direction  = West  -> { x := x - 1; self <- Move; } 
+  MoveDir(d::Direction) -> {
+    self <- ChangeDir(d);
+    self <- MoveDir(d);
+  }
+  ChangeDir(d::Direction) -> direction := d;
+}
+
+Act Uber {
+  Start(Cab,Int,CabState);
+  Transition(Cab,Int,CabMessage,CabState);
+  NewJob;
+}
+
+data CabDisplay = CabDisplay(Int,Int,Direction,Bool,Plan);
+
+data Job = Job(Int,Int,Int,Int);
+
+Act Screen {
+  Show([CabDisplay],[Loc],[Loc]);
+}
+
+data DirectedLoc = DLoc(Int,Int,Direction);
+
+act screenBehaviour(width::Int,height::Int)::Screen {
+  scale::Int             = 38;
+  scaleText::Str         = scale + 'px';
+  cellScale::Str         = (scale + 10) + 'px';
+  frontTaxi::Display     = HTML('&#128662;'); 
+  sideTaxi::Display      = HTML('&#128661;'); 
+  customer::Display      = HTML('&#128587;'); 
+  target::Display        = HTML('&#127919;'); 
+  upArrow::Display       = HTML('&#8593;');
+  downArrow::Display     = HTML('&#8595;');
+  rightArrow::Display    = HTML('&#8594');
+  leftArrow::Display     = HTML('&#8592;');
+  space::Display         = HTML('&nbsp;');
+  tableProps::[Property] = [Prop('border','1'),Prop('cellpadding','0')];
+  rowProps::[Property]   = [Prop('align','center'),
+                            Prop('style','font-size:'+scaleText+';'),
+                            Prop('width',cellScale),
+                            Prop('height',cellScale)];
+  Show(display::[CabDisplay],jobs::[Loc],targets::[Loc]) -> { 
+    letrec
+      path(p1::Loc,p2::Loc)::[DirectedLoc] = 
+        if p1 = p2
+        then [];
+        else {
+          case p1,p2 {
+            Loc(x1,y1),Loc(x2,y2) when x1 = x2 and y1 < y2 -> DLoc(x1,y1,South):path(Loc(x1,y1+1),p2);
+            Loc(x1,y1),Loc(x2,y2) when x1 = x2 and y1 > y2 -> DLoc(x1,y1,North):path(Loc(x1,y1-1),p2);
+            Loc(x1,y1),Loc(x2,y2) when x1 < x2 -> DLoc(x1,y1,East):path(Loc(x1+1,y1),p2);
+            Loc(x1,y1),Loc(x2,y2) when x1 > x2 -> DLoc(x1,y1,West):path(Loc(x1-1,y1),p2);
+          }
+        }
+      paths::[DirectedLoc] = 
+        [ l | CabDisplay(cx,cy,d,f,[l1]) <- display, l <- path(Loc(cx,cy),l1) ] +
+        [ l | CabDisplay(cx,cy,d,f,[l1,l2]) <- display, l <- path(Loc(cx,cy),l1) + path(l1,l2) ];
+      getDisplay(x::Int,y::Int)::Display = 
+        let
+          at(d::CabDisplay)::Bool = 
+            case d { 
+              CabDisplay(dx,dy,d,f,p) -> dx = x and dy = y; 
+              d -> false; 
+            } in
+        let d::CabDisplay = select1[CabDisplay](display,null[CabDisplay],at);
+        in { 
+          if d = null[CabDisplay]
+          then 
+            if member[Loc](Loc(x,y),jobs) 
+            then customer;
+            else 
+              if member[Loc](Loc(x,y),targets) 
+              then target;
+              else 
+                if member[DirectedLoc](DLoc(x,y,North),paths)
+                then upArrow;
+                else  
+                  if member[DirectedLoc](DLoc(x,y,South),paths)
+                  then downArrow;
+                  else 
+                    if member[DirectedLoc](DLoc(x,y,East),paths)
+                    then rightArrow;
+                    else  
+                      if member[DirectedLoc](DLoc(x,y,West),paths)
+                      then leftArrow;
+                      else space;
+          else 
+            case d {
+              CabDisplay(x,y,North,b,p) -> frontTaxi;
+              CabDisplay(x,y,East,b,p)  -> sideTaxi;
+              CabDisplay(x,y,West,b,p)  -> sideTaxi;
+              CabDisplay(x,y,South,b,p) -> frontTaxi;
+            }
+        }
+     in {
+      edb <- Show('Uber',Table(tableProps,[ Row([], [ Data(rowProps, getDisplay(col,row)) | col <- 0..width ]) | row <- 0..height ]));
+      wait(300);
+     }
+  }
+}
+
+act uberBehaviour(width::Int,height::Int)::Uber {
+  maxJobs::Int                  = 2;
+  pending::[Cab]                = [];
+  jobs::[Job]                   = [];
+  customers::[Loc]              = [];
+  targets::[Loc]                = [];
+  screen::Screen                = new screenBehaviour(width,height);
+  display::Hash[Cab,CabDisplay] = new Hash[Cab,CabDisplay];
+  movedCabs::[Cab]              = [];
+  checkJobs()::Void = {
+    if pending <> [] and jobs <> []
+    then allocateJob();
+    else {}
+  }
+  allocateJob()::Void = {
+    case head[Job](jobs) {
+      Job(xStart,yStart,xEnd,yEnd) -> {
+        head[Cab](pending) <- Customer(xStart,yStart,xEnd,yEnd);
+        pending := tail[Cab](pending);
+        jobs := tail[Job](jobs);
+      }
+    }
+  }
+  Start(c::Cab,t::Int,s::CabState) -> {
+    case s {
+      Empty(Loc(x,y),d,p) -> display.put(c,CabDisplay(x,y,d,false,p));
+    }
+    screen <- Show(display.vals,customers,targets);
+    pending := pending + [c];
+    checkJobs();
+  }
+  Transition(c::Cab,t::Int,m::CabMessage,s::CabState) -> { 
+    case s {
+      Empty(Loc(x,y),d,p) -> display.put(c,CabDisplay(x,y,d,false,p));
+      Full(Loc(x,y),d,p)  -> display.put(c,CabDisplay(x,y,d,true,p));
+    }
+    case m {
+      Pickup -> {
+        case s {
+          Full(Loc(x,y),d,p) -> customers := remove[Loc](Loc(x,y),customers);
+        }
+      }
+      DropOff -> {
+        case s {
+          Empty(Loc(x,y),d,p) -> targets := remove[Loc](Loc(x,y),targets);
+        }
+        pending := pending + [c];
+        checkJobs();
+      }
+      ChangeDir(d) -> {}
+      m -> {
+        if member[Cab](c,movedCabs)
+        then {
+          movedCabs := [];
+          screen <- Show(display.vals,customers,targets);
+        } else movedCabs := c:movedCabs;
+      }
+    }
+  }
+  NewJob when length[Loc](jobs) < maxJobs -> {
+    let xStart::Int = random(width);
+        yStart::Int = random(height);
+        xEnd::Int   = random(width);
+        yEnd::Int   = random(height);
+    in {
+      customers := customers + [Loc(xStart,yStart)]; 
+      targets   := targets + [Loc(xEnd,yEnd)]; 
+      jobs      := jobs + [Job(xStart,yStart,xEnd,yEnd)];
+      checkJobs();
+    }
+  }
+  NewJob -> {}
+}
+
+act main::Main {
+
+  noOfCabs :: Int = 2;
+  width::Int      = 10;
+  height::Int     = 10;
+  uber::Uber      = new uberBehaviour(width,height);
+  cabs::[Cab]     = [ new cab(random(width),random(height)) | n <- 0..noOfCabs ];
+  limit::Int      = 40000;
+
+  -> {
+    for c in cabs do {
+      c.addObserver(uber);
+    }
+  }
+
+  Time(n::Int) when n < limit -> 
+    probably(5) {
+      uber <- NewJob;
+    }
+
+  Time(n::Int) -> stopAll();
+  
+}

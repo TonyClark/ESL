@@ -205,6 +205,7 @@ TOKEN : /* KEYWORDS */
 | < CASE : "case" >
 | < FOR : "for" >
 | < DO : "do" >
+| < DEC : "dec" >
 | < TRY : "try" >
 | < CATCH : "catch" >
 | < THROW : "throw" >
@@ -315,19 +316,39 @@ Module module(String name) :
   Imports is;
   Export es;
   Binding [ ] bs;
+  Dec [ ] ds;
+  BindingsOrDecs bod;
 }
 {
   es = exports() 
   is = imports() 
-  bs = bindings() 
+  bod = bindingsOrDecs() 
   < EOF >
   {
     Module m = new Module();
+    bs = bod.getBindings();
+    ds = bod.getDecs();
     m.name = name;
     m.imports = is;
     m.exports = es;
     m.defs = bs;
+    m.decs = ds;
     return m;
+  }
+}
+
+BindingsOrDecs bindingsOrDecs() :
+{
+  Vector < Binding > bindings = new Vector < Binding > ();
+  Vector < Dec > decs = new Vector < Dec > ();
+}
+{
+  (
+    binding(bindings)
+  | declaration(decs)
+  )*
+  {
+    return new BindingsOrDecs(asArray(bindings, Binding.class), asArray(decs, Dec.class));
   }
 }
 
@@ -373,12 +394,14 @@ Binding [ ] bindings() :
 Binding [ ] bindingsWithError() :
 {
   Vector < Binding > bindings = new Vector < Binding > ();
+  Vector < Dec > decs = new Vector < Dec > ();
 }
 {
   try
   {
     (
-    LOOKAHEAD(2)
+    declaration(decs)
+  | 
     binding(bindings)
     ) *
   }
@@ -388,6 +411,35 @@ Binding [ ] bindingsWithError() :
   }
   {
     return asArray(bindings, Binding.class);
+  }
+}
+
+void declaration(Vector < Dec > decs) :
+{
+  Dec d;
+  String name;
+  Type [ ] domain = new Type[] { };
+  Type range;
+}
+{
+  < DEC > 
+  name = name() 
+  < LPAREN >
+  {
+    start(token);
+  }
+  [ domain = types() ] 
+  < RPAREN > 
+  < COLONCOLON > 
+  range = type() 
+  < SEMI >
+  {
+    ast.types.Fun fun = new ast.types.Fun();
+    end(token, fun);
+    fun.domain = domain;
+    fun.range = range;
+    Dec dec = new Dec(fun.getLineStart(), fun.getLineEnd(), "", name, fun);
+    decs.add(dec);
   }
 }
 
@@ -3452,19 +3504,21 @@ Type unionType() :
   {
     start(token);
   }
-  < LCURL > 
-  term = termType()
-  {
-    types.add(term);
-  }
-  (
-    LOOKAHEAD(2)
-    < COMMA > 
+  < LCURL >
+  [
     term = termType()
     {
       types.add(term);
     }
-  )*
+    (
+      LOOKAHEAD(2)
+      < COMMA > 
+      term = termType()
+      {
+        types.add(term);
+      }
+    )*
+  ]
   < RCURL >
   {
     ast.types.Union union = new ast.types.Union();

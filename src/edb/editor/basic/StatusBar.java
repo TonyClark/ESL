@@ -36,5 +36,9 @@ class StatusBar extends JPanel implements MessageHandler {
 	public void handleMessage(String message) {
 		label.setText(message);
 	}
+	
+	public String getMessage() {
+		return label.getText();
+	}
 
 }

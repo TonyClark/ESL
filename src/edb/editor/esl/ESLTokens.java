@@ -31,6 +31,7 @@ public class ESLTokens extends org.fife.ui.rsyntaxtextarea.modes.JavaTokenMaker 
 		tokenMap.put("let", Token.RESERVED_WORD);
 		tokenMap.put("plet", Token.RESERVED_WORD);
 		tokenMap.put("letrec", Token.RESERVED_WORD);
+		tokenMap.put("dec", Token.RESERVED_WORD);
 		tokenMap.put("in", Token.RESERVED_WORD);
 		tokenMap.put("new", Token.RESERVED_WORD);
 		tokenMap.put("become", Token.RESERVED_WORD);

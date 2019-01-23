@@ -1,14 +1,228 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{30}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
+\bibitem[Barat et~al.(2016{\natexlab{a}})Barat, Kulkarni, Clark, and
+  Barn]{DBLP:conf/icsoft/BaratKCB16}
+Souvik Barat, Vinay Kulkarni, Tony Clark, and Balbir Barn.
+\newblock A simulation-based aid for organisational decision-making.
+\newblock In \emph{Proceedings of the 11th International Joint Conference on
+  Software Technologies {(ICSOFT} 2016) - Volume 2: ICSOFT-PT, Lisbon,
+  Portugal, July 24 - 26, 2016.}, pages 109--116, 2016{\natexlab{a}}.
+
+\bibitem[Barat et~al.(2016{\natexlab{b}})Barat, Kulkarni, Clark, and
+  Barn]{DBLP:conf/ifip8-1/BaratKCB16}
+Souvik Barat, Vinay Kulkarni, Tony Clark, and Balbir Barn.
+\newblock Enterprise modeling as a decision making aid: {A} systematic mapping
+  study.
+\newblock In \emph{The Practice of Enterprise Modeling - 9th {IFIP} {WG} 8.1.
+  2016}, pages 289--298, 2016{\natexlab{b}}.
+
+\bibitem[Barat et~al.(2017{\natexlab{a}})Barat, Kulkarni, Clark, and
+  Barn]{DBLP:conf/ifip8-1/BaratKCB17}
+Souvik Barat, Vinay Kulkarni, Tony Clark, and Balbir Barn.
+\newblock A method for effective use of enterprise modelling techniques in
+  complex dynamic decision making.
+\newblock In \emph{The Practice of Enterprise Modeling - 10th {IFIP} {WG} 8.1.
+  2017}, pages 319--330, 2017{\natexlab{a}}.
+
+\bibitem[Barat et~al.(2017{\natexlab{b}})Barat, Kulkarni, Clark, and
+  Barn]{DBLP:conf/modelsward/BaratKCB17}
+Souvik Barat, Vinay Kulkarni, Tony Clark, and Balbir Barn.
+\newblock A model based realisation of actor model to conceptualise an aid for
+  complex dynamic decision-making.
+\newblock In \emph{{MODELSWARD} 2017}, pages 605--616, 2017{\natexlab{b}}.
+
+\bibitem[Barat et~al.(2017{\natexlab{c}})Barat, Kulkarni, Clark, and
+  Barn]{DBLP:conf/modelsward/BaratKCB17a}
+Souvik Barat, Vinay Kulkarni, Tony Clark, and Balbir Barn.
+\newblock A model based approach for complex dynamic decision-making.
+\newblock In \emph{{MODELSWARD} 2017, Revised Selected Papers}, pages 94--118,
+  2017{\natexlab{c}}.
+
+\bibitem[Barat et~al.(2017{\natexlab{d}})Barat, Kulkarni, Clark, and
+  Barn]{DBLP:conf/wsc/BaratKCB17}
+Souvik Barat, Vinay Kulkarni, Tony Clark, and Balbir Barn.
+\newblock An actor-model based bottom-up simulation - an experiment on indian
+  demonetisation initiative.
+\newblock In \emph{2017 Winter Simulation Conference, {WSC} 2017}, pages
+  860--871, 2017{\natexlab{d}}.
+
+\bibitem[Barn et~al.(2014{\natexlab{a}})Barn, Clark, and
+  Kulkarni]{DBLP:conf/icsoft/BarnCK14}
+Balbir~S. Barn, Tony Clark, and Vinay Kulkarni.
+\newblock Next generation enterprise modelling - the role of organizational
+  theory and multi-agent systems.
+\newblock In \emph{{ICSOFT-EA} 2014}, pages 482--487, 2014{\natexlab{a}}.
+
+\bibitem[Barn et~al.(2014{\natexlab{b}})Barn, Clark, and
+  Kulkarni]{DBLP:conf/icsoft/BarnCK14a}
+Balbir~S. Barn, Tony Clark, and Vinay Kulkarni.
+\newblock Can organisational theory and multi-agent systems influence next
+  generation enterprise modelling?
+\newblock In \emph{Software Technologies - 9th International Joint Conference,
+  {ICSOFT} 2014, Vienna, Austria, August 29-31, 2014, Revised Selected Papers},
+  pages 202--216, 2014{\natexlab{b}}.
+
+\bibitem[Clark(2018)]{DBLP:journals/emisaij/Clark18}
+Tony Clark.
+\newblock Introduction to the special issue on model-driven organisations.
+\newblock \emph{Enterprise Modelling and Information Systems Architectures},
+  13:\penalty0 3:1--3:3, 2018.
+\newblock \doi{10.18417/emisa.13.3}.
+\newblock URL \url{https://doi.org/10.18417/emisa.13.3}.
+
+\bibitem[Clark and Barn(2013{\natexlab{a}})]{DBLP:journals/emisaij/ClarkB13}
+Tony Clark and Balbir Barn.
+\newblock Goal driven architecture development using {LEAP}.
+\newblock \emph{Enterprise Modelling and Information Systems Architectures},
+  8\penalty0 (1):\penalty0 40--61, 2013{\natexlab{a}}.
+\newblock URL \url{https://www.emisa-journal.org/emisa/article/view/101}.
+
+\bibitem[Clark and Barn(2011)]{DBLP:conf/sose/ClarkB11}
+Tony Clark and Balbir~S. Barn.
+\newblock Event driven architecture modelling and simulation.
+\newblock In \emph{{IEEE} 6th International Symposium on Service Oriented
+  System Engineering, {SOSE} 2011, Irvine, CA, USA, December 12-14, 2011},
+  pages 43--54, 2011.
+
+\bibitem[Clark and Barn(2012)]{DBLP:conf/indiaSE/ClarkB12}
+Tony Clark and Balbir~S. Barn.
+\newblock A common basis for modelling service-oriented and event-driven
+  architecture.
+\newblock In \emph{Proceeding of the 5th Annual India Software Engineering
+  Conference, {ISEC} 2012, Kanpur, India, February 22-25, 2012}, pages 23--32,
+  2012.
+
+\bibitem[Clark and Barn(2013{\natexlab{b}})]{DBLP:journals/ijsi/ClarkB13}
+Tony Clark and Balbir~S. Barn.
+\newblock Dynamic reconfiguration of event driven architecture using reflection
+  and higher-order functions.
+\newblock \emph{Int. J. Software and Informatics}, 7\penalty0 (2):\penalty0
+  137--168, 2013{\natexlab{b}}.
+\newblock URL
+  \url{http://www.ijsi.org/ch/reader/view\_abstract.aspx?file\_no=i157}.
+
+\bibitem[Clark and Barn(2015)]{DBLP:conf/modelsward/ClarkB15}
+Tony Clark and Balbir~S. Barn.
+\newblock Using a projectional editor to implement interactive model navigation
+  and view control.
+\newblock In \emph{{MODELSWARD} 2015.}, pages 338--345, 2015.
+
+\bibitem[Clark et~al.(2014)Clark, Kulkarni, Barn, France, Frank, and
+  Turk]{DBLP:conf/hicss/ClarkKBFFT14}
+Tony Clark, Vinay Kulkarni, Balbir Barn, Robert~B. France, Ulrich Frank, and
+  Dan Turk.
+\newblock Towards the model driven organization.
+\newblock In \emph{47th {HICSS} 2014}, pages 4817--4826, 2014.
+
+\bibitem[Clark et~al.(2015)Clark, Kramer, and
+  Oussena]{DBLP:journals/corr/ClarkKO15}
+Tony Clark, Dean Kramer, and Samia Oussena.
+\newblock Model driven reactive applications.
+\newblock \emph{CoRR}, abs/1506.03380, 2015.
+\newblock URL \url{http://arxiv.org/abs/1506.03380}.
+
+\bibitem[Clark et~al.(2017{\natexlab{a}})Clark, Barn, Kulkarni, and
+  Barat]{DBLP:conf/isdevel/ClarkBKB17}
+Tony Clark, Balbir Barn, Vinay Kulkarni, and Souvik Barat.
+\newblock Querying histories of organisation simulations.
+\newblock In \emph{Information Systems Development 2017}, 2017{\natexlab{a}}.
+
+\bibitem[Clark et~al.(2017{\natexlab{b}})Clark, Kulkarni, Barat, and
+  Barn]{DBLP:conf/indiaSE/ClarkKBB17}
+Tony Clark, Vinay Kulkarni, Souvik Barat, and Balbir Barn.
+\newblock Actor monitors for adaptive behaviour.
+\newblock In \emph{{ISEC} 2017}, pages 85--95, 2017{\natexlab{b}}.
+
+\bibitem[Clark et~al.(2017{\natexlab{c}})Clark, Kulkarni, Barat, and
+  Barn]{DBLP:conf/models/ClarkKBB17}
+Tony Clark, Vinay Kulkarni, Souvik Barat, and Balbir Barn.
+\newblock Generating filmstrip models from actor-based systems.
+\newblock In \emph{Proceedings of {MODELS} 2017 Satellite Event}, pages
+  576--582, 2017{\natexlab{c}}.
+
+\bibitem[Clark et~al.(2017{\natexlab{d}})Clark, Kulkarni, Barat, and
+  Barn]{DBLP:conf/paams/ClarkKBB17}
+Tony Clark, Vinay Kulkarni, Souvik Barat, and Balbir Barn.
+\newblock {ESL:} an actor-based platform for developing emergent behaviour
+  organisation simulations.
+\newblock In \emph{Advances in Practical Applications of Cyber-Physical
+  Multi-Agent Systems 2017}, pages 311--315, 2017{\natexlab{d}}.
+
+\bibitem[Clark et~al.(2017{\natexlab{e}})Clark, Kulkarni, Barn, and
+  Barat]{DBLP:conf/er/ClarkKBB17}
+Tony Clark, Vinay Kulkarni, Balbir Barn, and Souvik Barat.
+\newblock The construction and interrogation of actor based simulation
+  histories.
+\newblock In \emph{{ER} Forum 2017}, pages 320--333, 2017{\natexlab{e}}.
+
+\bibitem[Clark et~al.(2018{\natexlab{a}})Clark, Kulkarni, Barat, and
+  Barn]{DBLP:conf/indiaSE/ClarkKBB18}
+Tony Clark, Vinay Kulkarni, Souvik Barat, and Balbir Barn.
+\newblock Actor-based methods, concepts and tools for analysing emergent
+  behaviour: An introduction to a model based approach.
+\newblock In \emph{Proceedings of the 11th Innovations in Software Engineering
+  Conference, {ISEC} 2018}, pages 21:1--21:2, 2018{\natexlab{a}}.
+
+\bibitem[Clark et~al.(2018{\natexlab{b}})Clark, Kulkarni, Barat, and
+  Barn]{DBLP:series/lncs/ClarkKBB18}
+Tony Clark, Vinay Kulkarni, Souvik Barat, and Balbir Barn.
+\newblock A homogeneous actor-based monitor language for adaptive behaviour.
+\newblock In \emph{Programming with Actors - State-of-the-Art and Research
+  Perspectives}, pages 216--244. 2018{\natexlab{b}}.
+
 \bibitem[Karmani et~al.(2009)Karmani, Shali, and Agha]{karmani2009actor}
 Rajesh~K Karmani, Amin Shali, and Gul Agha.
 \newblock Actor frameworks for the jvm platform: a comparative analysis.
 \newblock In \emph{Proceedings of the 7th International Conference on
   Principles and Practice of Programming in Java}, pages 11--20. ACM, 2009.
+
+\bibitem[Kulkarni et~al.(2013)Kulkarni, Roychoudhury, Sunkle, Clark, and
+  Barn]{DBLP:conf/modelsward/KulkarniRSCB13}
+Vinay Kulkarni, Suman Roychoudhury, Sagar Sunkle, Tony Clark, and Balbir Barn.
+\newblock Modelling and enterprises - the past, the present and the future.
+\newblock In \emph{{MODELSWARD} 2013}, pages 95--100, 2013.
+
+\bibitem[Kulkarni et~al.(2014)Kulkarni, Clark, Barat, and
+  Barn]{DBLP:conf/er/KulkarniCBB14}
+Vinay Kulkarni, Tony Clark, Souvik Barat, and Balbir Barn.
+\newblock Model based enterprise simulation and analysis - {A} pragmatic
+  approach reducing the burden on experts.
+\newblock In \emph{Advances in Conceptual Modeling - {ER} 2014 Workshops},
+  pages 3--12, 2014.
+
+\bibitem[Kulkarni et~al.(2015{\natexlab{a}})Kulkarni, Barat, Clark, and
+  Barn]{DBLP:conf/caise/KulkarniBCB15}
+Vinay Kulkarni, Souvik Barat, Tony Clark, and Balbir Barn.
+\newblock A wide-spectrum approach to modelling and analysis of organisation
+  for machine-assisted decision-making.
+\newblock In \emph{Enterprise and Organizational Modeling and Simulation - 11th
+  International Workshop, {EOMAS} 2015, Held at CAiSE 2015, Stockholm, Sweden,
+  June 8-9, 2015, Selected Papers}, pages 87--101, 2015{\natexlab{a}}.
+
+\bibitem[Kulkarni et~al.(2015{\natexlab{b}})Kulkarni, Barat, Clark, and
+  Barn]{DBLP:conf/summersim/KulkarniBCB15}
+Vinay Kulkarni, Souvik Barat, Tony Clark, and Balbir Barn.
+\newblock Using simulation to address intrinsic complexity in multi-modelling
+  of enterprises for decision making.
+\newblock In \emph{SummerSim 2015}, pages 9:1--9:11, 2015{\natexlab{b}}.
+
+\bibitem[Kulkarni et~al.(2015{\natexlab{c}})Kulkarni, Barat, Clark, and
+  Barn]{DBLP:conf/models/KulkarniBCB15}
+Vinay Kulkarni, Souvik Barat, Tony Clark, and Balbir~S. Barn.
+\newblock Toward overcoming accidental complexity in organisational
+  decision-making.
+\newblock In \emph{MoDELS 2015}, pages 368--377, 2015{\natexlab{c}}.
+
+\bibitem[Nwokeji et~al.(2015)Nwokeji, Clark, Barn, and
+  Kulkarni]{DBLP:conf/sac/NwokejiCBK15}
+Joshua~Chibuike Nwokeji, Tony Clark, Balbir~S. Barn, and Vinay Kulkarni.
+\newblock A conceptual framework for enterprise agility.
+\newblock In \emph{Proceedings of the 30th Annual {ACM} Symposium on Applied
+  Computing, Salamanca, Spain, April 13-17, 2015}, pages 1242--1244, 2015.
 
 \end{thebibliography}

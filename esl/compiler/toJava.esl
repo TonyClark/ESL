@@ -1,10 +1,22 @@
-export moduleToJava, main;
+/********************************************************************************************************************************
+ *                                                                                                                              *
+ *                                                Transformation to Java                                                        *
+ *                                                ======================                                                        *
+ *                                                                                                                              *
+ *   The ESL compiler produces Java code. A compilation unit is an ESL module which can be translated to a Java module by       *
+ *   moduleToJava. The transformation expects the types associated with the expressions in the ESL module to be available       *
+ *   via the edb property $TYPEINFO. The resulting Java module will subsequently be written out as Java source code.            *
+ *                                                                                                                              *
+ ********************************************************************************************************************************/
+ 
+ export moduleToJava, main;
 
 import 
   'esl/tables.esl',
   'esl/lists.esl',
   'esl/compiler/cases.esl', 
-  'esl/compiler/types.esl';
+  'esl/compiler/types.esl',
+  'esl/compiler/info.esl';
  
 defToField(d::TBind)::JFieldDef = {
   case d {
@@ -15,6 +27,16 @@ defToField(d::TBind)::JFieldDef = {
     FunBind(l::Loc,n::Str,args::[Pattern],t::Type,st::Type,e::AST,g::AST) ->
       let formals::[TDec] = [ Dec(l,n,t,st) | PVar(l::Loc,n::Str,t::Type) <- args ]; 
       in JField(n,null[JType],expToJExp(FunExp(l,StrExp(l,n),formals,t,If(l,g,e,Throw(l,t,StrExp(l,'guard failed for ' + n)))))); 
+    d -> throw[JFieldDef] ('unexpected definition to translate to Java: ' + d);
+  }  
+} 
+ 
+defToMethod(d::TBind)::JMethodDef = {
+  case d {
+    FunBind(l,n,args::[Pattern],t,st,body,guard) ->  
+      let formals::[JDeclaration] = [ JDec(n,null[JType]) | PVar(l,n,t) <- args ]; 
+      in JMethod(n,formals,expToJCommand(body,true));
+    d -> throw[JMethodDef] ('cannot transform definition ' + d + ' to a method');
   }  
 } 
 
@@ -106,12 +128,13 @@ opToJOp(op::Str)::Str =
     'orelse' -> 'orelse';
   }
 
-caseToJExp(l::Loc,es::[AST],arms::[Arm])::JExp =
-  let bindings::[TBind] = [ Binding(l,newName(),null[Type],null[Type],e)  | e::AST <- es ]; in
+caseToJExp(l::Loc,es::[AST],arms::[Arm])::JExp = { 
+  let bindings::[TBind] = [ Binding(l,newName(),null[Type],null[Type],e)  | e::AST <- es ]; in 
   let names::[Str] = [ n | Binding(l::Loc,n::Str,dt::Type,t::Type,e::AST) <- bindings ];
   in expToJExp(Let(l,bindings,translateCases(Case(l,[],[Var(l,n) | n::Str <- names],arms))));
+}
 
-expToJExp(e::AST)::JExp =
+expToJExp(e::AST)::JExp = { 
   case e {
     Apply(l::Loc,op::AST,args::[AST])                                                                    -> JApply(expToJExp(op),expsToJExps(args));
     ArrayUpdate(l::Loc,a::AST,i::AST,v::AST)                                                             -> JArrayUpdate(expToJExp(a),expToJExp(i),expToJExp(v)); 
@@ -150,6 +173,7 @@ expToJExp(e::AST)::JExp =
     If(l::Loc,e1::AST,e2::AST,e3::AST)                                                                   -> JCommandExp(JIfCommand(expToJExp(e1),expToJCommand(e2,true),expToJCommand(e3,true)),null[JType]);
     FunExp(l::Loc,n::AST,args::[TDec],t::Type,body::AST)                                                 -> JFun(expToJExp(n),map[TDec,JDeclaration](fun(d::TDec)::JDeclaration decToJDec(d),args),JFunType([null[JType] | a::TDec <- args],null[JType]),expToJCommand(body,true));
     TermRef(e::AST,i::Int)                                                                               -> JTermRef(expToJExp(e),i);
+    Cmp(l,e,PQual(ql,p):qs)                                                                              -> expToJExp(If(ql,p,Cmp(l,e,qs),List(l,[])));
     Cmp(l::Loc,e::AST,qs::[Qualifier]) when exists[Qualifier](isBindingQualifier,qs) and forall[Qualifier](isSimpleQualifier,qs) -> JCmpExp(cmpToJCmp(e,qs)); 
     Cmp(l::Loc,e::AST,qs::[Qualifier])                                                                   -> cmpToJExp(e,qs);
     Not(l::Loc,e::AST)                                                                                   -> JNot(expToJExp(e)); 
@@ -171,8 +195,9 @@ expToJExp(e::AST)::JExp =
     Update(l::Loc,n::Str,v::AST)                                                                         -> JCommandExp(expToJCommand(e,true),null[JType]);
     Probably(l::Loc,e::AST,t::Type,e1::AST,e2::AST)                                                      -> JProbably(expToJExp(e),expToJExp(e1),expToJExp(e2));
     Try(l::Loc,e::AST,arms::[Arm])                                                                       -> JTry(expToJExp(e),'$x',expToJCommand(Case(l,[][TDec],[Var(l,'$x')],arms),true)); 
-    ActExp(l::Loc,name::AST,decs::[TDec],exports::[Str],parent::AST,defs::[TBind],init::AST,arms::[Arm]) -> actToJava(name,decs,exports,parent,defs,init,arms);
+    ActExp(l::Loc,name::AST,decs::[TDec],exports::[Str],parent::AST,defs::[TBind],init::AST,arms::[Arm]) -> actToJava(name,decs,exports,parent,expandFunDefs(mergeFunDefs(defs)),init,arms);
   }
+}
 
 isSimpleQualifier(q::Qualifier)::Bool = {
   case q {
@@ -218,12 +243,37 @@ actToJava(name::AST,decs::[TDec],exports::[Str],parent::AST,defs::[TBind],init::
   then simpleActToJava(name,decs,exports,defs,init,arms);
   else extendedActToJava(name,decs,exports,parent,defs,init,arms);
 
+wrapListeners(exports::[Str],body::AST)::AST = 
+  let p0::Loc = Pos(0,0); t0::Type = null[Type];
+  in if member[Str]('observeState',exports) 
+     then Block(p0,[body,Let(p0,[Binding(p0,'$s',t0,t0,Apply(p0,Var(p0,'observeState'),[]))],
+            For(p0,
+              PVar(p0,'$o',t0),
+              Var(p0,'$observers'),
+              Case(p0,[],[Apply(p0,Var(p0,'observeMessage'),[Var(p0,'$m')])],[
+                BArm(p0,[PTerm(p0,'Something',[],[PVar(p0,'$x',null[Type])])],BoolExp(p0,true),Send(p0,Var(p0,'$o'),Term(p0,'Transition',[],[Self(p0),Now(p0),Var(p0,'$x'),Var(p0,'$s')]))),
+                BArm(p0,[PTerm(p0,'Nothing',[],[])],BoolExp(p0,true),Block(p0,[]))
+              ])))]); 
+     else body;
+
+addObserverJField::JFieldDef = JField('addObserver',null[JType],
+  JFun(JConstExp(JConstStr('addObserver')),[JDec('o',null[JType])],null[JType],
+    JBlock([
+      JUpdate('$observers',JBinExp(JVar('o',null[JType]),'cons',JVar('$observers',null[JType]))),
+      JReturn(JSend(JVar('o',null[JType]),'Start',[JSelf,JNow,JApply(JVar('observeState',null[JType]),[])]))
+    ])));
+
 simpleActToJava(name::AST,decs::[TDec],exports::[Str],defs::[TBind],init::AST,arms::[Arm])::JExp = 
   let timeArms::[Arm] = select[Arm](isTimeArm,arms); in
   let nonTimeArms::[Arm] = reject[Arm](isTimeArm,arms); in
   let timeCommand::JCommand = if timeArms = [] then JBlock([]); else timeArmsToJCommand(timeArms); in
-  let f::AST = FunExp(Pos(0,0),name,[Dec(Pos(0,0),'$m',null[Type],null[Type])],VoidType(Pos(0,0)),Case(Pos(0,0),[][TDec],[Var(Pos(0,0),'$m')],nonTimeArms));
-  in JBehaviour(exports,[defToField(b) | b::TBind <- defs],expToJExp(init),expToJExp(f),timeCommand); 
+  let observers::[JFieldDef] = if member[Str]('observeState',exports) then [JField('$observers',null[JType],JList(null[JType],[]))]; else []; in
+  let addObserver::[JFieldDef] = if member[Str]('observeState',exports) then [addObserverJField]; else []; in
+  let xAdd::[Str] = if member[Str]('observeState',exports) then ['addObserver']; else []; in
+  let f::AST = FunExp(Pos(0,0),name,[Dec(Pos(0,0),'$m',null[Type],null[Type])],VoidType(Pos(0,0)),wrapListeners(exports,Case(Pos(0,0),[][TDec],[Var(Pos(0,0),'$m')],nonTimeArms)));
+      methods::[TBind] = [ m | m <- defs, ?(isFunBind(m)) ];
+      fields::[TBind] = [ f | f <- defs, ?(isBinding(f)) ];
+  in JBehaviour(exports+xAdd,[defToField(b) | b::TBind <- fields]+observers+addObserver,[ defToMethod(m) | m <- methods ],expToJExp(init),expToJExp(f),timeCommand); 
 
 extendedActToJava(name::AST,decs::[TDec],exports::[Str],parent::AST,defs::[TBind],init::AST,arms::[Arm])::JExp = 
   let p0::Loc = Pos(0,0); in
@@ -232,8 +282,10 @@ extendedActToJava(name::AST,decs::[TDec],exports::[Str],parent::AST,defs::[TBind
   let messageSuper::Arm = BArm(p0,[PVar(p0,'$m',null[Type])],BoolExp(p0,true),Block(p0,[SendSuper(p0,Var(p0,'$m')),NullExp(p0)])); in
   let nonTimeArms::[Arm] = reject[Arm](isTimeArm,arms) + [messageSuper]; in
   let timeCommand::JCommand = if timeArms = [] then JBlock([]); else timeArmsToJCommand(timeArms); in
-  let f::AST = FunExp(Pos(0,0),name,[Dec(Pos(0,0),'$m',null[Type],null[Type])],VoidType(Pos(0,0)),Case(Pos(0,0),[][TDec],[Var(Pos(0,0),'$m')],nonTimeArms));
-  in JExtendedBehaviour(exports,expToJExp(parent),[defToField(b) | b::TBind <- defs],expToJExp(init),expToJExp(f),timeCommand); 
+  let f::AST = FunExp(Pos(0,0),name,[Dec(Pos(0,0),'$m',null[Type],null[Type])],VoidType(Pos(0,0)),wrapListeners(exports,Case(Pos(0,0),[][TDec],[Var(Pos(0,0),'$m')],nonTimeArms)));
+      methods::[TBind] = [ m | m <- defs, ?(isFunBind(m)) ];
+      fields::[TBind] = [ f | f <- defs, ?(isBinding(f)) ];
+  in JExtendedBehaviour(exports,expToJExp(parent),[defToField(b) | b::TBind <- fields],[ defToMethod(m) | m <- methods ],expToJExp(init),expToJExp(f),timeCommand); 
 
 isTimeArm(a::Arm)::Bool =
   case a {
@@ -269,17 +321,24 @@ cmpToJExp(e::AST,qs::[Qualifier])::JExp =
 moduleToJava(module::AST)::JMod =
   case module {
     Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind]) ->  
-      renameJVarsModule(JModule(name,exports,imports,[ defToField(d) | d::TBind <- expandFunDefs(mergeFunDefs(defs)),?(isBinding(d) or isFunBind(d)) ]));     
+      let defs::[TBind] = expandFunDefs(mergeFunDefs(defs)); in
+      let methods::[TBind] = [ m | m <- defs, ?(isFunBind(m)) ];
+          fields::[TBind] = [ f | f <- defs, ?(isBinding(f)) ];
+      in {
+        renameJVarsModule(JModule(name,exports,imports,[ defToMethod(m) | m <- methods ],[ defToField(d) | d::TBind <- fields ]));     
+      }
   }
 
 renameJVarsModule(m::JMod)::JMod  =
   case m {
-    JModule(name::Str,exports::[Str],imports::[Str],fs::[JFieldDef]) -> 
-      let fieldNames::[Str] = [ n | JField(n::Str,t::JType,e::JExp) <- fs ];
-      in JModule(name,exports,imports,[ JField(n,t,renameJVarsExp(e,fieldNames,emptyTable[Str,Str])) | JField(n::Str,t::JType,e::JExp) <- fs ]);
+    JModule(name::Str,exports::[Str],imports::[Str],ms::[JMethodDef],fs::[JFieldDef]) -> 
+      let fieldNames::[Str] = [ n | JField(n::Str,t::JType,e::JExp) <- fs ]; in
+      let newFields::[JFieldDef] = [ JField(n,t,renameJVarsExp(e,fieldNames,emptyTable[Str,Str])) | JField(n::Str,t::JType,e::JExp) <- fs ];
+          newMethods::[JMethodDef] = [ JMethod(n,args,renameJVarsCommand(body,fieldNames+[ n | JDec(n,t) <- args ],emptyTable[Str,Str])) | JMethod(n,args,body) <- ms ];
+      in JModule(name,exports,imports,newMethods,newFields);
   }
 
-renameJVarsExp(e::JExp,vars::[Str],env::Table[Str,Str])::JExp = {
+renameJVarsExp(e::JExp,vars::[Str],env::Table[Str,Str])::JExp =
   case e {
     JFun(v0::JExp,v1::[JDeclaration],v2::JType,v3::JCommand) -> {
       let boundNames::[Str] = [ n | JDec(n::Str,t::JType) <- v1 ];
@@ -359,16 +418,32 @@ renameJVarsExp(e::JExp,vars::[Str],env::Table[Str,Str])::JExp = {
     JSelf -> JSelf;
     JRef(e::JExp,n::Str) -> JRef(renameJVarsExp(e,vars,env),n);
     JRefSuper(n::Str) -> JRefSuper(n);
-    JBehaviour(es::[Str],fs::[JFieldDef],init::JExp,handler::JExp,time::JCommand) ->
-      JBehaviour(es,[ JField(n,t,renameJVarsExp(e,vars,env)) | JField(n::Str,t::JType,e::JExp) <- fs ],renameJVarsExp(init,vars,env),renameJVarsExp(handler,vars,env),renameJVarsCommand(time,vars,env));
-    JExtendedBehaviour(es::[Str],parent::JExp,fs::[JFieldDef],init::JExp,handler::JExp,time::JCommand) ->
-      JExtendedBehaviour(es,renameJVarsExp(parent,vars,env),[ JField(n,t,renameJVarsExp(e,vars,env)) | JField(n::Str,t::JType,e::JExp) <- fs ],renameJVarsExp(init,vars,env),renameJVarsExp(handler,vars,env),renameJVarsCommand(time,vars,env));
+    JBehaviour(es::[Str],fs::[JFieldDef],methods,init::JExp,handler::JExp,time::JCommand) ->
+      let newFields::[JFieldDef] = [ JField(n,t,renameJVarsExp(e,vars,env)) | JField(n::Str,t::JType,e::JExp) <- fs ];
+          newMethods::[JMethodDef] = [ renameJVarsMethod(m,vars,env) | m <- methods ];
+      in JBehaviour(es,newFields,newMethods,renameJVarsExp(init,vars,env),renameJVarsExp(handler,vars,env),renameJVarsCommand(time,vars,env));
+    JExtendedBehaviour(es::[Str],parent::JExp,fs::[JFieldDef],methods,init::JExp,handler::JExp,time::JCommand) ->
+      let newFields::[JFieldDef] = [ JField(n,t,renameJVarsExp(e,vars,env)) | JField(n::Str,t::JType,e::JExp) <- fs ];
+          newMethods::[JMethodDef] = [ renameJVarsMethod(m,vars,env) | m <- methods ];
+      in JExtendedBehaviour(es,renameJVarsExp(parent,vars,env),newFields,newMethods,renameJVarsExp(init,vars,env),renameJVarsExp(handler,vars,env),renameJVarsCommand(time,vars,env));
     JTry(e::JExp,n::Str,c::JCommand) -> JTry(renameJVarsExp(e,vars,env),n,renameJVarsCommand(c,vars,env));
     JProbably(e::JExp,e1::JExp,e2::JExp) -> JProbably(renameJVarsExp(e,vars,env),renameJVarsExp(e1,vars,env),renameJVarsExp(e2,vars,env));
     JGrab(es::[JExp],c::JExp) -> JGrab([ renameJVarsExp(e,vars,env) | e::JExp <- es ],renameJVarsExp(c,vars,env));
   }
-  
-}
+
+renameJVarsMethod(m::JMethodDef,vars::[Str],env::Table[Str,Str])::JMethodDef = 
+  case m {
+    JMethod(name,args,body) ->
+      let boundNames::[Str] = [ n | JDec(n::Str,t::JType) <- args ];
+      in {
+        if exists[Str](fun(n::Str)::Bool member[Str](n,boundNames),vars)
+        then 
+          let newNames::[Str] = [ newName() | n::Str <- boundNames ]; in 
+          let env1::Table[Str,Str] = addEntries[Str,Str](boundNames,newNames,env);
+          in JMethod(name,[ JDec(n,null[JType]) | n::Str <- newNames ],renameJVarsCommand(body,boundNames + vars,env1));
+        else JMethod(name,args,renameJVarsCommand(body,boundNames + vars,env));
+      }
+  }
 
 renameJVarsCmp(c::JCmp,vars::[Str],env::Table[Str,Str])::JCmp = {
   case c {

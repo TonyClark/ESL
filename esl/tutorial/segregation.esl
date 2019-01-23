@@ -4,7 +4,7 @@ import 'esl/lists.esl';
 
 type Main = Act { }
 
-type Agent = Act { export toString::()->Str; getX::()->Int; getY::()->Int; setX::(Int)->Void; setY::(Int)->Void; }
+type Agent = Act { export getX::()->Int; getY::()->Int; setX::(Int)->Void; setY::(Int)->Void; }
 
 type Grid = Act { SetColour(Int,Int,Str); Swap(Int,Int,Int,Int); } 
 
@@ -18,14 +18,12 @@ coordY(p::Loc)::Int = case p { Coord(x::Int,y::Int) -> y; }
 
 act agent(x::Int,y::Int)::Agent {
 
-  export getX,getY,setX,setY,toString;
+  export getX,getY,setX,setY;
 
   getX()::Int = x;
   getY()::Int = y;
   setX(x0::Int)::Void = x := x0;
   setY(y0::Int)::Void = y := y0;
-
-  toString()::Str = 'Agent(' + x + ',' + y + ')';
 
   -> population <- Move(self);
   
@@ -35,8 +33,8 @@ intToFloat::(Int)->Float = builtin[(Int)->Float]('runtime.actors.Builtins','intT
 round::(Float)->Int = builtin[(Float)->Int]('runtime.actors.Builtins','round',1); 
 
 diffLimit::Float = 25.00;
-width::Int     = 1000;
-height::Int    = 600;
+width::Int     = 500; //1000;
+height::Int    = 500; //600;
 redpc::Int     = 40;
 emptypc::Int   = 5;
 empty::Int     = 0;

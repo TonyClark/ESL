@@ -128,7 +128,12 @@ public class HTMLTab extends JPanel implements HyperlinkListener, EDBMenuProvide
 	}
 
 	public void setHTML(String html) {
-		browser.loadHTML(html);
+		new Thread(new Runnable() {
+			public void run() {
+				browser.loadHTML(html);
+			}
+		}).start();
+
 	}
 
 	public void addButton(String label, JButton button) {

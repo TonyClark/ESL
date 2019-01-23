@@ -1,6 +1,6 @@
 export main;
 
-data Direction = Left | Right | Final;
+data Direction = Left | Right | Final; 
 
 Act QSort { Sorted([Int],Direction); }
 

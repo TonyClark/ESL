@@ -5,8372 +5,27 @@ import static esl.lib.Lib.*;
 import static esl.compiler.Types.*;
 import static esl.Tables.*;
 import static esl.Displays.*;
-import java.util.function.Supplier;
+import static esl.compiler.UnusedVars.*;
+import static esl.compiler.Warnings.*;
+import static esl.compiler.Strings.*;
+import static esl.compiler.Info.*;
 public class TypeCheck {
   public static ESLVal getSelf() { return $null; }
-  private static ESLVal ppPattern = new ESLVal(new Function(new ESLVal("ppPattern"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal p = $args[0];
-  {ESLVal _v811 = p;
-        
-        switch(_v811.termName) {
-        case "PAdd": {ESLVal $1420 = _v811.termRef(0);
-          ESLVal $1419 = _v811.termRef(1);
-          ESLVal $1418 = _v811.termRef(2);
-          
-          {ESLVal l = $1420;
-          
-          {ESLVal p1 = $1419;
-          
-          {ESLVal p2 = $1418;
-          
-          return ppPattern.apply(p1).add(new ESLVal(" + ").add(ppPattern.apply(p2)));
-        }
-        }
-        }
-        }
-      case "PVar": {ESLVal $1417 = _v811.termRef(0);
-          ESLVal $1416 = _v811.termRef(1);
-          ESLVal $1415 = _v811.termRef(2);
-          
-          {ESLVal l = $1417;
-          
-          {ESLVal n = $1416;
-          
-          {ESLVal t = $1415;
-          
-          return n;
-        }
-        }
-        }
-        }
-      case "PTerm": {ESLVal $1412 = _v811.termRef(0);
-          ESLVal $1411 = _v811.termRef(1);
-          ESLVal $1410 = _v811.termRef(2);
-          ESLVal $1409 = _v811.termRef(3);
-          
-          if($1410.isCons())
-          {ESLVal $1413 = $1410.head();
-            ESLVal $1414 = $1410.tail();
-            
-            {ESLVal l = $1412;
-            
-            {ESLVal n = $1411;
-            
-            {ESLVal ts = $1410;
-            
-            {ESLVal ps = $1409;
-            
-            return n.add(ppTypes.apply(ts,ESLVal.list()).add(new ESLVal("").add(ppPatterns.apply(ps))));
-          }
-          }
-          }
-          }
-          }
-        else if($1410.isNil())
-          {ESLVal l = $1412;
-            
-            {ESLVal n = $1411;
-            
-            {ESLVal ps = $1409;
-            
-            return n.add(ppPatterns.apply(ps));
-          }
-          }
-          }
-        else {ESLVal l = $1412;
-            
-            {ESLVal n = $1411;
-            
-            {ESLVal ts = $1410;
-            
-            {ESLVal ps = $1409;
-            
-            return n.add(ppTypes.apply(ts,ESLVal.list()).add(new ESLVal("").add(ppPatterns.apply(ps))));
-          }
-          }
-          }
-          }
-        }
-      case "PApplyType": {ESLVal $1408 = _v811.termRef(0);
-          ESLVal $1407 = _v811.termRef(1);
-          ESLVal $1406 = _v811.termRef(2);
-          
-          {ESLVal l = $1408;
-          
-          {ESLVal _v1879 = $1407;
-          
-          {ESLVal ts = $1406;
-          
-          return ppPattern.apply(_v1879).add(ppTypes.apply(ts,ESLVal.list()));
-        }
-        }
-        }
-        }
-      case "PNil": {ESLVal $1405 = _v811.termRef(0);
-          
-          {ESLVal l = $1405;
-          
-          return new ESLVal("[]");
-        }
-        }
-      case "PEmptySet": {ESLVal $1404 = _v811.termRef(0);
-          
-          {ESLVal l = $1404;
-          
-          return new ESLVal("Set{}");
-        }
-        }
-      case "PEmptyBag": {ESLVal $1403 = _v811.termRef(0);
-          
-          {ESLVal l = $1403;
-          
-          return new ESLVal("Bag{}");
-        }
-        }
-      case "PInt": {ESLVal $1402 = _v811.termRef(0);
-          ESLVal $1401 = _v811.termRef(1);
-          
-          {ESLVal l = $1402;
-          
-          {ESLVal n = $1401;
-          
-          return new ESLVal("").add(n);
-        }
-        }
-        }
-      case "PBool": {ESLVal $1400 = _v811.termRef(0);
-          ESLVal $1399 = _v811.termRef(1);
-          
-          {ESLVal l = $1400;
-          
-          {ESLVal b = $1399;
-          
-          return new ESLVal("").add(b);
-        }
-        }
-        }
-      case "PStr": {ESLVal $1398 = _v811.termRef(0);
-          ESLVal $1397 = _v811.termRef(1);
-          
-          {ESLVal l = $1398;
-          
-          {ESLVal s = $1397;
-          
-          return s;
-        }
-        }
-        }
-      case "PCons": {ESLVal $1396 = _v811.termRef(0);
-          ESLVal $1395 = _v811.termRef(1);
-          ESLVal $1394 = _v811.termRef(2);
-          
-          {ESLVal l = $1396;
-          
-          {ESLVal h = $1395;
-          
-          {ESLVal t = $1394;
-          
-          return ppPattern.apply(h).add(new ESLVal(":").add(ppPattern.apply(t)));
-        }
-        }
-        }
-        }
-      case "PSetCons": {ESLVal $1393 = _v811.termRef(0);
-          ESLVal $1392 = _v811.termRef(1);
-          ESLVal $1391 = _v811.termRef(2);
-          
-          {ESLVal l = $1393;
-          
-          {ESLVal p1 = $1392;
-          
-          {ESLVal p2 = $1391;
-          
-          return new ESLVal("Set{").add(ppPattern.apply(p1).add(new ESLVal(" | ").add(ppPattern.apply(p2).add(new ESLVal("}")))));
-        }
-        }
-        }
-        }
-      case "PBagCons": {ESLVal $1390 = _v811.termRef(0);
-          ESLVal $1389 = _v811.termRef(1);
-          ESLVal $1388 = _v811.termRef(2);
-          
-          {ESLVal l = $1390;
-          
-          {ESLVal p1 = $1389;
-          
-          {ESLVal p2 = $1388;
-          
-          return new ESLVal("Bag{").add(ppPattern.apply(p1).add(new ESLVal(" | ").add(ppPattern.apply(p2).add(new ESLVal("}")))));
-        }
-        }
-        }
-        }
-        default: {ESLVal _v1880 = _v811;
-          
-          return new ESLVal("<unknown: ").add(_v1880.add(new ESLVal(">")));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal ppPatterns = new ESLVal(new Function(new ESLVal("ppPatterns"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal ps = $args[0];
-  return map.apply(ppPattern,ps);
-    }
-  });
   private static ESLVal p0 = new ESLVal("Pos",$zero,$zero);
-  private static ESLVal actType0 = new ESLVal("ActType",p0,ESLVal.list(),ESLVal.list());
+  private static ESLVal actType0 = new ESLVal("ActType",p0,$nil,$nil);
   private static ESLVal contentType = new ESLVal("UnionType",p0,ESLVal.list(new ESLVal("TermType",p0,new ESLVal("RawText"),ESLVal.list(new ESLVal("StrType",p0))),new ESLVal("TermType",p0,new ESLVal("ESLSource"),ESLVal.list(new ESLVal("StrType",p0),new ESLVal("StrType",p0))),new ESLVal("TermType",p0,new ESLVal("JavaSource"),ESLVal.list(new ESLVal("StrType",p0),new ESLVal("StrType",p0),new ESLVal("StrType",p0)))));
   private static ESLVal editMessage = new ESLVal("MessageType",p0,ESLVal.list(new ESLVal("TermType",p0,new ESLVal("Edit"),ESLVal.list(contentType))));
-  private static ESLVal env0 = ESLVal.list(new ESLVal("Map",new ESLVal("edb"),new ESLVal("ActType",p0,ESLVal.list(new ESLVal("Dec",p0,new ESLVal("button"),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("StrType",p0),new ESLVal("StrType",p0),new ESLVal("StrType",p0),new ESLVal("StrType",p0),new ESLVal("FunType",p0,ESLVal.list(),new ESLVal("VoidType",p0))),new ESLVal("VoidType",p0)),$null),new ESLVal("Dec",p0,new ESLVal("display"),new ESLVal("ForallType",p0,ESLVal.list(new ESLVal("T")),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("StrType",p0),new ESLVal("VarType",p0,new ESLVal("T"))),new ESLVal("VarType",p0,new ESLVal("T")))),$null)),ESLVal.list(editMessage))),new ESLVal("Map",new ESLVal("kill"),new ESLVal("ForallType",p0,ESLVal.list(new ESLVal("T")),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("VarType",p0,new ESLVal("T"))),new ESLVal("VoidType",p0)))),new ESLVal("Map",new ESLVal("print"),new ESLVal("ForallType",p0,ESLVal.list(new ESLVal("T")),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("VarType",p0,new ESLVal("T"))),new ESLVal("VoidType",p0)))),new ESLVal("Map",new ESLVal("parse"),new ESLVal("ForallType",p0,ESLVal.list(new ESLVal("T")),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("StrType",p0)),new ESLVal("VarType",p0,new ESLVal("T"))))),new ESLVal("Map",new ESLVal("random"),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("IntType",p0)),new ESLVal("IntType",p0))),new ESLVal("Map",new ESLVal("wait"),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("IntType",p0)),new ESLVal("VoidType",p0))),new ESLVal("Map",new ESLVal("stopAll"),new ESLVal("FunType",p0,ESLVal.list(),new ESLVal("VoidType",p0))),new ESLVal("Map",new ESLVal("isqrt"),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("IntType",p0)),new ESLVal("FloatType",p0))),new ESLVal("Map",new ESLVal("builtin"),new ESLVal("ForallType",p0,ESLVal.list(new ESLVal("T")),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("StrType",p0),new ESLVal("StrType",p0),new ESLVal("IntType",p0)),new ESLVal("VarType",p0,new ESLVal("T"))))));
+  private static ESLVal env0 = ESLVal.list(new ESLVal("Map",new ESLVal("edb"),new ESLVal("ActType",p0,ESLVal.list(new ESLVal("Dec",p0,new ESLVal("button"),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("StrType",p0),new ESLVal("StrType",p0),new ESLVal("StrType",p0),new ESLVal("StrType",p0),new ESLVal("FunType",p0,$nil,new ESLVal("VoidType",p0))),new ESLVal("VoidType",p0)),$null),new ESLVal("Dec",p0,new ESLVal("display"),new ESLVal("ForallType",p0,ESLVal.list(new ESLVal("T")),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("StrType",p0),new ESLVal("VarType",p0,new ESLVal("T"))),new ESLVal("VarType",p0,new ESLVal("T")))),$null)),ESLVal.list(editMessage))),new ESLVal("Map",new ESLVal("kill"),new ESLVal("ForallType",p0,ESLVal.list(new ESLVal("T")),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("VarType",p0,new ESLVal("T"))),new ESLVal("VoidType",p0)))),new ESLVal("Map",new ESLVal("print"),new ESLVal("ForallType",p0,ESLVal.list(new ESLVal("T")),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("VarType",p0,new ESLVal("T"))),new ESLVal("VoidType",p0)))),new ESLVal("Map",new ESLVal("parse"),new ESLVal("ForallType",p0,ESLVal.list(new ESLVal("T")),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("StrType",p0)),new ESLVal("VarType",p0,new ESLVal("T"))))),new ESLVal("Map",new ESLVal("random"),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("IntType",p0)),new ESLVal("IntType",p0))),new ESLVal("Map",new ESLVal("wait"),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("IntType",p0)),new ESLVal("VoidType",p0))),new ESLVal("Map",new ESLVal("stopAll"),new ESLVal("FunType",p0,$nil,new ESLVal("VoidType",p0))),new ESLVal("Map",new ESLVal("isqrt"),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("IntType",p0)),new ESLVal("FloatType",p0))),new ESLVal("Map",new ESLVal("round"),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("FloatType",p0)),new ESLVal("IntType",p0))),new ESLVal("Map",new ESLVal("builtin"),new ESLVal("ForallType",p0,ESLVal.list(new ESLVal("T")),new ESLVal("FunType",p0,ESLVal.list(new ESLVal("StrType",p0),new ESLVal("StrType",p0),new ESLVal("IntType",p0)),new ESLVal("VarType",p0,new ESLVal("T"))))));
   private static ESLVal cnstrEnv0 = ESLVal.list(new ESLVal("Map",new ESLVal("Time"),new ESLVal("UnionType",p0,ESLVal.list(new ESLVal("TermType",p0,new ESLVal("Time"),ESLVal.list(new ESLVal("IntType",p0)))))));
   private static ESLVal tenv0 = ESLVal.list(new ESLVal("Map",new ESLVal("EditType"),contentType),new ESLVal("Map",new ESLVal("Time"),new ESLVal("UnionType",p0,ESLVal.list(new ESLVal("TermType",p0,new ESLVal("Time"),ESLVal.list(new ESLVal("IntType",p0)))))),new ESLVal("Map",new ESLVal("Point"),new ESLVal("UnionType",p0,ESLVal.list(new ESLVal("TermType",p0,new ESLVal("Point"),ESLVal.list(new ESLVal("IntType",p0),new ESLVal("IntType",p0)))))));
-  private static ESLVal ppTypeEnv = new ESLVal(new Function(new ESLVal("ppTypeEnv"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal env = $args[0];
-  {ESLVal[] s = new ESLVal[]{new ESLVal("[")};
-        
-        {{
-        ESLVal _v814 = env;
-        while(_v814.isCons()) {
-          ESLVal _v813 = _v814.headVal;
-          {ESLVal _v812 = new ESLVal(new Function(new ESLVal("forp"),getSelf()) {
-                public ESLVal apply(ESLVal... $args) {
-                  {ESLVal _v815 = _v813;
-                    
-                    switch(_v815.termName) {
-                    case "Map": {ESLVal $1422 = _v815.termRef(0);
-                      ESLVal $1421 = _v815.termRef(1);
-                      
-                      {ESLVal n = $1422;
-                      
-                      {ESLVal t = $1421;
-                      
-                      {s[0] = s[0].add(n.add(new ESLVal("->").add(ppType.apply(t,env).add(new ESLVal(",")))));
-                    return $null;}
-                    }
-                    }
-                    }
-                    default: {ESLVal $$$ = _v815;
-                      
-                      return $null;
-                    }
-                  }
-                  }
-                }
-              });
-            
-            _v812.apply();
-          }
-          _v814 = _v814.tailVal;}
-      }
-      return s[0].add(new ESLVal("]"));}
-      }
-    }
-  });
-  private static ESLVal ppTypes = new ESLVal(new Function(new ESLVal("ppTypes"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal ts = $args[0];
-  ESLVal env = $args[1];
-  return map.apply(ppType0.apply(env),ts);
-    }
-  });
-  private static ESLVal getTypeName = new ESLVal(new Function(new ESLVal("getTypeName"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal t0 = $args[0];
-  ESLVal env = $args[1];
-  {ESLVal[] name = new ESLVal[]{$null};
-        
-        {{
-        ESLVal _v818 = env;
-        while(_v818.isCons()) {
-          ESLVal _v817 = _v818.headVal;
-          {ESLVal _v816 = new ESLVal(new Function(new ESLVal("forp"),getSelf()) {
-                public ESLVal apply(ESLVal... $args) {
-                  {ESLVal _v819 = _v817;
-                    
-                    switch(_v819.termName) {
-                    case "Map": {ESLVal $1424 = _v819.termRef(0);
-                      ESLVal $1423 = _v819.termRef(1);
-                      
-                      {ESLVal n = $1424;
-                      
-                      {ESLVal t = $1423;
-                      
-                      if(typeEqual.apply(t0,t).boolVal)
-                      {name[0] = n;
-                      return $null;}
-                      else
-                        return $null;
-                    }
-                    }
-                    }
-                    default: {ESLVal $$$ = _v819;
-                      
-                      return $null;
-                    }
-                  }
-                  }
-                }
-              });
-            
-            _v816.apply();
-          }
-          _v818 = _v818.tailVal;}
-      }
-      return name[0];}
-      }
-    }
-  });
-  private static ESLVal ppType0 = new ESLVal(new Function(new ESLVal("ppType0"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal env = $args[0];
-  return new ESLVal(new Function(new ESLVal("fun503"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            ESLVal t = $args[0];
-        return ppType.apply(t,env);
-          }
-        });
-    }
-  });
-  private static ESLVal ppHandlers = new ESLVal(new Function(new ESLVal("ppHandlers"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal handlers = $args[0];
-  ESLVal env = $args[1];
-  {ESLVal _v820 = handlers;
-        
-        if(_v820.isCons())
-        {ESLVal $1425 = _v820.head();
-          ESLVal $1426 = _v820.tail();
-          
-          switch($1425.termName) {
-          case "MessageType": {ESLVal $1428 = $1425.termRef(0);
-            ESLVal $1427 = $1425.termRef(1);
-            
-            if($1427.isCons())
-            {ESLVal $1429 = $1427.head();
-              ESLVal $1430 = $1427.tail();
-              
-              {ESLVal l = $1428;
-              
-              {ESLVal t = $1429;
-              
-              {ESLVal ts = $1430;
-              
-              {ESLVal hs = $1426;
-              
-              return ppType.apply(t,env).add(new ESLVal("; ").add(ppHandlers.apply(hs,env)));
-            }
-            }
-            }
-            }
-            }
-          else if($1427.isNil())
-            return error(new ESLVal("case error at Pos(5370,5504)").add(ESLVal.list(_v820)));
-          else return error(new ESLVal("case error at Pos(5370,5504)").add(ESLVal.list(_v820)));
-          }
-          default: return error(new ESLVal("case error at Pos(5370,5504)").add(ESLVal.list(_v820)));
-        }
-        }
-      else if(_v820.isNil())
-        return new ESLVal("");
-      else return error(new ESLVal("case error at Pos(5370,5504)").add(ESLVal.list(_v820)));
-      }
-    }
-  });
-  private static ESLVal ppDecs = new ESLVal(new Function(new ESLVal("ppDecs"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal decs = $args[0];
-  ESLVal env = $args[1];
-  {ESLVal _v821 = decs;
-        
-        if(_v821.isCons())
-        {ESLVal $1431 = _v821.head();
-          ESLVal $1432 = _v821.tail();
-          
-          switch($1431.termName) {
-          case "Dec": {ESLVal $1436 = $1431.termRef(0);
-            ESLVal $1435 = $1431.termRef(1);
-            ESLVal $1434 = $1431.termRef(2);
-            ESLVal $1433 = $1431.termRef(3);
-            
-            {ESLVal l = $1436;
-            
-            {ESLVal n = $1435;
-            
-            {ESLVal t = $1434;
-            
-            {ESLVal d = $1433;
-            
-            {ESLVal _v1878 = $1432;
-            
-            return n.add(new ESLVal("::").add(ppType.apply(t,env).add(new ESLVal("; ").add(ppDecs.apply(_v1878,env)))));
-          }
-          }
-          }
-          }
-          }
-          }
-          default: return error(new ESLVal("case error at Pos(5545,5659)").add(ESLVal.list(_v821)));
-        }
-        }
-      else if(_v821.isNil())
-        return new ESLVal("");
-      else return error(new ESLVal("case error at Pos(5545,5659)").add(ESLVal.list(_v821)));
-      }
-    }
-  });
-  private static ESLVal ppType = new ESLVal(new Function(new ESLVal("ppType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal t = $args[0];
-  ESLVal env = $args[1];
-  if(getTypeName.apply(t,env).neql($null).boolVal)
-        return getTypeName.apply(t,env);
-        else
-          {ESLVal _v822 = t;
-            
-            switch(_v822.termName) {
-            case "ActType": {ESLVal $1500 = _v822.termRef(0);
-              ESLVal $1499 = _v822.termRef(1);
-              ESLVal $1498 = _v822.termRef(2);
-              
-              {ESLVal l = $1500;
-              
-              {ESLVal decs = $1499;
-              
-              {ESLVal handlers = $1498;
-              
-              return new ESLVal("Act { ").add(ppHandlers.apply(handlers,env).add(new ESLVal(" }")));
-            }
-            }
-            }
-            }
-          case "ApplyType": {ESLVal $1497 = _v822.termRef(0);
-              ESLVal $1496 = _v822.termRef(1);
-              ESLVal $1495 = _v822.termRef(2);
-              
-              {ESLVal l = $1497;
-              
-              {ESLVal n = $1496;
-              
-              {ESLVal args = $1495;
-              
-              return n.add(map.apply(ppType0.apply(env),args));
-            }
-            }
-            }
-            }
-          case "ApplyTypeFun": {ESLVal $1494 = _v822.termRef(0);
-              ESLVal $1493 = _v822.termRef(1);
-              ESLVal $1492 = _v822.termRef(2);
-              
-              {ESLVal l = $1494;
-              
-              {ESLVal op = $1493;
-              
-              {ESLVal args = $1492;
-              
-              return ppType.apply(op,env).add(map.apply(ppType0.apply(env),args));
-            }
-            }
-            }
-            }
-          case "ArrayType": {ESLVal $1491 = _v822.termRef(0);
-              ESLVal $1490 = _v822.termRef(1);
-              
-              {ESLVal l = $1491;
-              
-              {ESLVal _v1877 = $1490;
-              
-              return new ESLVal("Array[").add(ppType.apply(_v1877,env).add(new ESLVal("]")));
-            }
-            }
-            }
-          case "BagType": {ESLVal $1489 = _v822.termRef(0);
-              ESLVal $1488 = _v822.termRef(1);
-              
-              {ESLVal l = $1489;
-              
-              {ESLVal _v1876 = $1488;
-              
-              return new ESLVal("Set{").add(ppType.apply(_v1876,env).add(new ESLVal("}")));
-            }
-            }
-            }
-          case "BoolType": {ESLVal $1487 = _v822.termRef(0);
-              
-              {ESLVal l = $1487;
-              
-              return new ESLVal("Bool");
-            }
-            }
-          case "ExtendedAct": {ESLVal $1486 = _v822.termRef(0);
-              ESLVal $1485 = _v822.termRef(1);
-              ESLVal $1484 = _v822.termRef(2);
-              ESLVal $1483 = _v822.termRef(3);
-              
-              {ESLVal l = $1486;
-              
-              {ESLVal parent = $1485;
-              
-              {ESLVal decs = $1484;
-              
-              {ESLVal handlers = $1483;
-              
-              return new ESLVal("Act extends ").add(ppType.apply(parent,env).add(new ESLVal(" { ").add(ppHandlers.apply(handlers,env).add(new ESLVal(" }")))));
-            }
-            }
-            }
-            }
-            }
-          case "FloatType": {ESLVal $1482 = _v822.termRef(0);
-              
-              {ESLVal l = $1482;
-              
-              return new ESLVal("Float");
-            }
-            }
-          case "FieldType": {ESLVal $1481 = _v822.termRef(0);
-              ESLVal $1480 = _v822.termRef(1);
-              ESLVal $1479 = _v822.termRef(2);
-              
-              {ESLVal l = $1481;
-              
-              {ESLVal n = $1480;
-              
-              {ESLVal _v1875 = $1479;
-              
-              return n.add(new ESLVal("::").add(ppType.apply(_v1875,env)));
-            }
-            }
-            }
-            }
-          case "ForallType": {ESLVal $1478 = _v822.termRef(0);
-              ESLVal $1477 = _v822.termRef(1);
-              ESLVal $1476 = _v822.termRef(2);
-              
-              {ESLVal l = $1478;
-              
-              {ESLVal ns = $1477;
-              
-              {ESLVal _v1874 = $1476;
-              
-              return new ESLVal("Forall").add(ns.add(new ESLVal(".").add(ppType.apply(_v1874,env))));
-            }
-            }
-            }
-            }
-          case "FunType": {ESLVal $1475 = _v822.termRef(0);
-              ESLVal $1474 = _v822.termRef(1);
-              ESLVal $1473 = _v822.termRef(2);
-              
-              {ESLVal l = $1475;
-              
-              {ESLVal d = $1474;
-              
-              {ESLVal r = $1473;
-              
-              return map.apply(ppType0.apply(env),d).add(new ESLVal("->").add(ppType.apply(r,env)));
-            }
-            }
-            }
-            }
-          case "TaggedFunType": {ESLVal $1472 = _v822.termRef(0);
-              ESLVal $1471 = _v822.termRef(1);
-              ESLVal $1470 = _v822.termRef(2);
-              ESLVal $1469 = _v822.termRef(3);
-              
-              {ESLVal l = $1472;
-              
-              {ESLVal d = $1471;
-              
-              {ESLVal p = $1470;
-              
-              {ESLVal r = $1469;
-              
-              return map.apply(ppType0.apply(env),d).add(new ESLVal("->").add(ppType.apply(r,env)));
-            }
-            }
-            }
-            }
-            }
-          case "IntType": {ESLVal $1468 = _v822.termRef(0);
-              
-              {ESLVal l = $1468;
-              
-              return new ESLVal("Int");
-            }
-            }
-          case "ListType": {ESLVal $1467 = _v822.termRef(0);
-              ESLVal $1466 = _v822.termRef(1);
-              
-              {ESLVal l = $1467;
-              
-              {ESLVal _v1873 = $1466;
-              
-              return new ESLVal("[").add(ppType.apply(_v1873,env).add(new ESLVal("]")));
-            }
-            }
-            }
-          case "NullType": {ESLVal $1465 = _v822.termRef(0);
-              
-              {ESLVal l = $1465;
-              
-              return new ESLVal("Null");
-            }
-            }
-          case "RecType": {ESLVal $1464 = _v822.termRef(0);
-              ESLVal $1463 = _v822.termRef(1);
-              ESLVal $1462 = _v822.termRef(2);
-              
-              {ESLVal l = $1464;
-              
-              {ESLVal n = $1463;
-              
-              {ESLVal _v1872 = $1462;
-              
-              return new ESLVal("rec ").add(n.add(new ESLVal(".").add(ppType.apply(_v1872,env))));
-            }
-            }
-            }
-            }
-          case "RecordType": {ESLVal $1461 = _v822.termRef(0);
-              ESLVal $1460 = _v822.termRef(1);
-              
-              {ESLVal l = $1461;
-              
-              {ESLVal fs = $1460;
-              
-              return new ESLVal("{").add(ppDecs.apply(fs,env).add(new ESLVal("}")));
-            }
-            }
-            }
-          case "SetType": {ESLVal $1459 = _v822.termRef(0);
-              ESLVal $1458 = _v822.termRef(1);
-              
-              {ESLVal l = $1459;
-              
-              {ESLVal _v1871 = $1458;
-              
-              return new ESLVal("Set{").add(ppType.apply(_v1871,env).add(new ESLVal("}")));
-            }
-            }
-            }
-          case "StrType": {ESLVal $1457 = _v822.termRef(0);
-              
-              {ESLVal l = $1457;
-              
-              return new ESLVal("Str");
-            }
-            }
-          case "TableType": {ESLVal $1456 = _v822.termRef(0);
-              ESLVal $1455 = _v822.termRef(1);
-              ESLVal $1454 = _v822.termRef(2);
-              
-              {ESLVal l = $1456;
-              
-              {ESLVal k = $1455;
-              
-              {ESLVal v = $1454;
-              
-              return new ESLVal("Hash[").add(ppType.apply(k,env).add(new ESLVal(",").add(ppType.apply(v,env).add(new ESLVal("]")))));
-            }
-            }
-            }
-            }
-          case "TermType": {ESLVal $1453 = _v822.termRef(0);
-              ESLVal $1452 = _v822.termRef(1);
-              ESLVal $1451 = _v822.termRef(2);
-              
-              {ESLVal l = $1453;
-              
-              {ESLVal n = $1452;
-              
-              {ESLVal ts = $1451;
-              
-              return n.add(map.apply(ppType0.apply(env),ts));
-            }
-            }
-            }
-            }
-          case "TypeFun": {ESLVal $1450 = _v822.termRef(0);
-              ESLVal $1449 = _v822.termRef(1);
-              ESLVal $1448 = _v822.termRef(2);
-              
-              {ESLVal l = $1450;
-              
-              {ESLVal ns = $1449;
-              
-              {ESLVal _v1870 = $1448;
-              
-              return new ESLVal("Fun").add(ns.add(new ESLVal(".").add(ppType.apply(_v1870,env))));
-            }
-            }
-            }
-            }
-          case "UnfoldType": {ESLVal $1447 = _v822.termRef(0);
-              ESLVal $1446 = _v822.termRef(1);
-              
-              {ESLVal l = $1447;
-              
-              {ESLVal _v1869 = $1446;
-              
-              return new ESLVal("unfold ").add(ppType.apply(_v1869,env));
-            }
-            }
-            }
-          case "UnionType": {ESLVal $1445 = _v822.termRef(0);
-              ESLVal $1444 = _v822.termRef(1);
-              
-              {ESLVal l = $1445;
-              
-              {ESLVal ts = $1444;
-              
-              return new ESLVal("union ").add(map.apply(ppType0.apply(env),ts));
-            }
-            }
-            }
-          case "VarType": {ESLVal $1443 = _v822.termRef(0);
-              ESLVal $1442 = _v822.termRef(1);
-              
-              {ESLVal l = $1443;
-              
-              {ESLVal n = $1442;
-              
-              return n;
-            }
-            }
-            }
-          case "VoidType": {ESLVal $1441 = _v822.termRef(0);
-              
-              {ESLVal l = $1441;
-              
-              return new ESLVal("Void");
-            }
-            }
-          case "UnionRef": {ESLVal $1440 = _v822.termRef(0);
-              ESLVal $1439 = _v822.termRef(1);
-              ESLVal $1438 = _v822.termRef(2);
-              
-              {ESLVal l = $1440;
-              
-              {ESLVal _v1868 = $1439;
-              
-              {ESLVal n = $1438;
-              
-              return ppType.apply(_v1868,env).add(new ESLVal(".").add(n));
-            }
-            }
-            }
-            }
-          case "TypeClosure": {ESLVal $1437 = _v822.termRef(0);
-              
-              {ESLVal f = $1437;
-              
-              return f.add(new ESLVal(""));
-            }
-            }
-            default: {ESLVal x = _v822;
-              
-              return new ESLVal("<unknown ").add(x.add(new ESLVal(">")));
-            }
-          }
-          }
-    }
-  });
-  private static ESLVal typeEnv = new ESLVal(new Function(new ESLVal("typeEnv"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal defs = $args[0];
-  {ESLVal _v823 = defs;
-        
-        if(_v823.isCons())
-        {ESLVal $1501 = _v823.head();
-          ESLVal $1502 = _v823.tail();
-          
-          switch($1501.termName) {
-          case "TypeBind": {ESLVal $1510 = $1501.termRef(0);
-            ESLVal $1509 = $1501.termRef(1);
-            ESLVal $1508 = $1501.termRef(2);
-            ESLVal $1507 = $1501.termRef(3);
-            
-            {ESLVal l = $1510;
-            
-            {ESLVal n = $1509;
-            
-            {ESLVal t = $1508;
-            
-            {ESLVal e = $1507;
-            
-            {ESLVal ds = $1502;
-            
-            return typeEnv.apply(ds).cons(new ESLVal("Map",n,t));
-          }
-          }
-          }
-          }
-          }
-          }
-        case "DataBind": {ESLVal $1506 = $1501.termRef(0);
-            ESLVal $1505 = $1501.termRef(1);
-            ESLVal $1504 = $1501.termRef(2);
-            ESLVal $1503 = $1501.termRef(3);
-            
-            {ESLVal l = $1506;
-            
-            {ESLVal n = $1505;
-            
-            {ESLVal t = $1504;
-            
-            {ESLVal e = $1503;
-            
-            {ESLVal ds = $1502;
-            
-            return typeEnv.apply(ds).cons(new ESLVal("Map",n,t));
-          }
-          }
-          }
-          }
-          }
-          }
-          default: {ESLVal b = $1501;
-            
-            {ESLVal ds = $1502;
-            
-            return typeEnv.apply(ds);
-          }
-          }
-        }
-        }
-      else if(_v823.isNil())
-        return $nil;
-      else return error(new ESLVal("case error at Pos(7732,7975)").add(ESLVal.list(_v823)));
-      }
-    }
-  });
-  private static ESLVal cnstrEnv = new ESLVal(new Function(new ESLVal("cnstrEnv"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal defs = $args[0];
-  ESLVal env = $args[1];
-  {ESLVal _v824 = defs;
-        
-        if(_v824.isCons())
-        {ESLVal $1511 = _v824.head();
-          ESLVal $1512 = _v824.tail();
-          
-          switch($1511.termName) {
-          case "TypeBind": {ESLVal $1520 = $1511.termRef(0);
-            ESLVal $1519 = $1511.termRef(1);
-            ESLVal $1518 = $1511.termRef(2);
-            ESLVal $1517 = $1511.termRef(3);
-            
-            switch($1518.termName) {
-            case "RecType": {ESLVal $1525 = $1518.termRef(0);
-              ESLVal $1524 = $1518.termRef(1);
-              ESLVal $1523 = $1518.termRef(2);
-              
-              switch($1523.termName) {
-              case "UnionType": {ESLVal $1527 = $1523.termRef(0);
-                ESLVal $1526 = $1523.termRef(1);
-                
-                {ESLVal l = $1520;
-                
-                {ESLVal n = $1519;
-                
-                {ESLVal ll = $1525;
-                
-                {ESLVal m = $1524;
-                
-                {ESLVal lll = $1527;
-                
-                {ESLVal ts = $1526;
-                
-                {ESLVal e = $1517;
-                
-                {ESLVal ds = $1512;
-                
-                return getConstructors.apply(l,lookupType.apply(n,env),lookupType.apply(n,env)).add(cnstrEnv.apply(ds,env));
-              }
-              }
-              }
-              }
-              }
-              }
-              }
-              }
-              }
-              default: {ESLVal l = $1520;
-                
-                {ESLVal n = $1519;
-                
-                {ESLVal t = $1518;
-                
-                {ESLVal e = $1517;
-                
-                {ESLVal ds = $1512;
-                
-                return cnstrEnv.apply(ds,env);
-              }
-              }
-              }
-              }
-              }
-            }
-            }
-          case "UnionType": {ESLVal $1522 = $1518.termRef(0);
-              ESLVal $1521 = $1518.termRef(1);
-              
-              {ESLVal l = $1520;
-              
-              {ESLVal n = $1519;
-              
-              {ESLVal lll = $1522;
-              
-              {ESLVal ts = $1521;
-              
-              {ESLVal e = $1517;
-              
-              {ESLVal ds = $1512;
-              
-              return getConstructors.apply(l,lookupType.apply(n,env),lookupType.apply(n,env)).add(cnstrEnv.apply(ds,env));
-            }
-            }
-            }
-            }
-            }
-            }
-            }
-            default: {ESLVal l = $1520;
-              
-              {ESLVal n = $1519;
-              
-              {ESLVal t = $1518;
-              
-              {ESLVal e = $1517;
-              
-              {ESLVal ds = $1512;
-              
-              return cnstrEnv.apply(ds,env);
-            }
-            }
-            }
-            }
-            }
-          }
-          }
-        case "DataBind": {ESLVal $1516 = $1511.termRef(0);
-            ESLVal $1515 = $1511.termRef(1);
-            ESLVal $1514 = $1511.termRef(2);
-            ESLVal $1513 = $1511.termRef(3);
-            
-            {ESLVal l = $1516;
-            
-            {ESLVal n = $1515;
-            
-            {ESLVal t = $1514;
-            
-            {ESLVal e = $1513;
-            
-            {ESLVal ds = $1512;
-            
-            return getConstructors.apply(l,lookupType.apply(n,env),lookupType.apply(n,env)).add(cnstrEnv.apply(ds,env));
-          }
-          }
-          }
-          }
-          }
-          }
-          default: {ESLVal b = $1511;
-            
-            {ESLVal ds = $1512;
-            
-            return cnstrEnv.apply(ds,env);
-          }
-          }
-        }
-        }
-      else if(_v824.isNil())
-        return $nil;
-      else return error(new ESLVal("case error at Pos(8107,8740)").add(ESLVal.list(_v824)));
-      }
-    }
-  });
-  private static ESLVal getConstructors = new ESLVal(new Function(new ESLVal("getConstructors"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal l = $args[0];
-  ESLVal dataType = $args[1];
-  ESLVal t = $args[2];
-  {ESLVal _v825 = t;
-        
-        switch(_v825.termName) {
-        case "RecType": {ESLVal $1535 = _v825.termRef(0);
-          ESLVal $1534 = _v825.termRef(1);
-          ESLVal $1533 = _v825.termRef(2);
-          
-          {ESLVal _v1865 = $1535;
-          
-          {ESLVal n = $1534;
-          
-          {ESLVal _v1866 = $1533;
-          
-          return getConstructors.apply(_v1865,dataType,_v1866);
-        }
-        }
-        }
-        }
-      case "TypeFun": {ESLVal $1532 = _v825.termRef(0);
-          ESLVal $1531 = _v825.termRef(1);
-          ESLVal $1530 = _v825.termRef(2);
-          
-          {ESLVal _v1863 = $1532;
-          
-          {ESLVal ns = $1531;
-          
-          {ESLVal _v1864 = $1530;
-          
-          return getConstructors.apply(_v1863,dataType,_v1864);
-        }
-        }
-        }
-        }
-      case "UnionType": {ESLVal $1529 = _v825.termRef(0);
-          ESLVal $1528 = _v825.termRef(1);
-          
-          {ESLVal _v1860 = $1529;
-          
-          {ESLVal ts = $1528;
-          
-          return map.apply(new ESLVal(new Function(new ESLVal("fun504"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1861 = $args[0];
-          {ESLVal _v826 = _v1861;
-                
-                switch(_v826.termName) {
-                case "TermType": {ESLVal $1538 = _v826.termRef(0);
-                  ESLVal $1537 = _v826.termRef(1);
-                  ESLVal $1536 = _v826.termRef(2);
-                  
-                  {ESLVal _v1862 = $1538;
-                  
-                  {ESLVal n = $1537;
-                  
-                  {ESLVal tts = $1536;
-                  
-                  return new ESLVal("Map",n,dataType);
-                }
-                }
-                }
-                }
-                default: return error(new ESLVal("case error at Pos(9259,9325)").add(ESLVal.list(_v826)));
-              }
-              }
-            }
-          }),ts);
-        }
-        }
-        }
-        default: {ESLVal _v1867 = _v825;
-          
-          return error(new ESLVal("TypeError",l,new ESLVal("cannot extract constructors from ").add(ppType.apply(_v1867,ESLVal.list()))));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal checkFreeTypes = new ESLVal(new Function(new ESLVal("checkFreeTypes"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal e = $args[0];
-  {ESLVal dom = typeEnvDom.apply(e);
-        ESLVal ran = typeEnvRan.apply(e);
-        
-        {ESLVal freeNames = removeAll.apply(dom,flatten.apply(map.apply(typeFV,ran)));
-        
-        if(freeNames.eql($nil).boolVal)
-        return $null;
-        else
-          return error(new ESLVal("TypeError",new ESLVal("Pos",$zero,$zero),new ESLVal("Unbound Types: ").add(freeNames)));
-      }
-      }
-    }
-  });
-  private static ESLVal checkSingletonTypes = new ESLVal(new Function(new ESLVal("checkSingletonTypes"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal e = $args[0];
-  {ESLVal _v827 = e;
-        
-        if(_v827.isCons())
-        {ESLVal $1539 = _v827.head();
-          ESLVal $1540 = _v827.tail();
-          
-          switch($1539.termName) {
-          case "Map": {ESLVal $1542 = $1539.termRef(0);
-            ESLVal $1541 = $1539.termRef(1);
-            
-            {ESLVal n = $1542;
-            
-            {ESLVal t = $1541;
-            
-            {ESLVal _v1859 = $1540;
-            
-            if(member.apply(n,typeEnvDom.apply(_v1859)).boolVal)
-            return error(new ESLVal("TypeError",new ESLVal("Pos",$zero,$zero),new ESLVal("Duplicate type name: ").add(n)));
-            else
-              return checkSingletonTypes.apply(_v1859);
-          }
-          }
-          }
-          }
-          default: return error(new ESLVal("case error at Pos(10029,10250)").add(ESLVal.list(_v827)));
-        }
-        }
-      else if(_v827.isNil())
-        return $null;
-      else return error(new ESLVal("case error at Pos(10029,10250)").add(ESLVal.list(_v827)));
-      }
-    }
-  });
-  private static ESLVal checkSingletonConstructors = new ESLVal(new Function(new ESLVal("checkSingletonConstructors"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1851 = $args[0];
-  {ESLVal _v828 = _v1851;
-        
-        if(_v828.isCons())
-        {ESLVal $1543 = _v828.head();
-          ESLVal $1544 = _v828.tail();
-          
-          switch($1543.termName) {
-          case "Map": {ESLVal $1546 = $1543.termRef(0);
-            ESLVal $1545 = $1543.termRef(1);
-            
-            {ESLVal n = $1546;
-            
-            {ESLVal t = $1545;
-            
-            {ESLVal _v1852 = $1544;
-            
-            if(member.apply(n,typeEnvDom.apply(_v1852)).boolVal)
-            { LetRec letrec = new LetRec() {
-              ESLVal throwError = new ESLVal(new Function(new ESLVal("throwError"),getSelf()) {
-                  public ESLVal apply(ESLVal... $args) {
-                    ESLVal _v1853 = $args[0];
-                {ESLVal _v829 = _v1853;
-                      
-                      switch(_v829.termName) {
-                      case "UnionType": {ESLVal $1557 = _v829.termRef(0);
-                        ESLVal $1556 = _v829.termRef(1);
-                        
-                        {ESLVal l = $1557;
-                        
-                        {ESLVal ts = $1556;
-                        
-                        return error(new ESLVal("TypeError",l,new ESLVal("Duplicate constructor name: ").add(n)));
-                      }
-                      }
-                      }
-                    case "ForallType": {ESLVal $1555 = _v829.termRef(0);
-                        ESLVal $1554 = _v829.termRef(1);
-                        ESLVal $1553 = _v829.termRef(2);
-                        
-                        {ESLVal l = $1555;
-                        
-                        {ESLVal ns = $1554;
-                        
-                        {ESLVal _v1857 = $1553;
-                        
-                        return throwError.apply(_v1857);
-                      }
-                      }
-                      }
-                      }
-                    case "RecType": {ESLVal $1552 = _v829.termRef(0);
-                        ESLVal $1551 = _v829.termRef(1);
-                        ESLVal $1550 = _v829.termRef(2);
-                        
-                        {ESLVal l = $1552;
-                        
-                        {ESLVal _v1855 = $1551;
-                        
-                        {ESLVal _v1856 = $1550;
-                        
-                        return throwError.apply(_v1856);
-                      }
-                      }
-                      }
-                      }
-                    case "TypeFun": {ESLVal $1549 = _v829.termRef(0);
-                        ESLVal $1548 = _v829.termRef(1);
-                        ESLVal $1547 = _v829.termRef(2);
-                        
-                        {ESLVal l = $1549;
-                        
-                        {ESLVal ns = $1548;
-                        
-                        {ESLVal _v1854 = $1547;
-                        
-                        return throwError.apply(_v1854);
-                      }
-                      }
-                      }
-                      }
-                      default: {ESLVal _v1858 = _v829;
-                        
-                        return error(new ESLVal("Duplicate constructor name: ").add(n.add(new ESLVal(" ").add(_v1858))));
-                      }
-                    }
-                    }
-                  }
-                });
-              
-              public ESLVal get(String name) {
-                switch(name) {
-                  case "throwError": return throwError;
-                  
-                  default: throw new Error("cannot find letrec binding");
-                }
-                }
-              };
-            ESLVal throwError = letrec.get("throwError");
-            
-              return throwError.apply(t);}
-            
-            else
-              return checkSingletonConstructors.apply(_v1852);
-          }
-          }
-          }
-          }
-          default: return error(new ESLVal("case error at Pos(10363,11018)").add(ESLVal.list(_v828)));
-        }
-        }
-      else if(_v828.isNil())
-        return $null;
-      else return error(new ESLVal("case error at Pos(10363,11018)").add(ESLVal.list(_v828)));
-      }
-    }
-  });
-  private static ESLVal valueDefs = new ESLVal(new Function(new ESLVal("valueDefs"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal defs = $args[0];
-  {ESLVal _v830 = defs;
-        
-        if(_v830.isCons())
-        {ESLVal $1558 = _v830.head();
-          ESLVal $1559 = _v830.tail();
-          
-          switch($1558.termName) {
-          case "TypeBind": {ESLVal $1571 = $1558.termRef(0);
-            ESLVal $1570 = $1558.termRef(1);
-            ESLVal $1569 = $1558.termRef(2);
-            ESLVal $1568 = $1558.termRef(3);
-            
-            {ESLVal l = $1571;
-            
-            {ESLVal n = $1570;
-            
-            {ESLVal t = $1569;
-            
-            {ESLVal e = $1568;
-            
-            {ESLVal ds = $1559;
-            
-            return valueDefs.apply(ds);
-          }
-          }
-          }
-          }
-          }
-          }
-        case "DataBind": {ESLVal $1567 = $1558.termRef(0);
-            ESLVal $1566 = $1558.termRef(1);
-            ESLVal $1565 = $1558.termRef(2);
-            ESLVal $1564 = $1558.termRef(3);
-            
-            {ESLVal l1 = $1567;
-            
-            {ESLVal n = $1566;
-            
-            {ESLVal t = $1565;
-            
-            {ESLVal e = $1564;
-            
-            {ESLVal ds = $1559;
-            
-            return valueDefs.apply(ds);
-          }
-          }
-          }
-          }
-          }
-          }
-        case "CnstrBind": {ESLVal $1563 = $1558.termRef(0);
-            ESLVal $1562 = $1558.termRef(1);
-            ESLVal $1561 = $1558.termRef(2);
-            ESLVal $1560 = $1558.termRef(3);
-            
-            {ESLVal l1 = $1563;
-            
-            {ESLVal n = $1562;
-            
-            {ESLVal t = $1561;
-            
-            {ESLVal e = $1560;
-            
-            {ESLVal ds = $1559;
-            
-            return valueDefs.apply(ds);
-          }
-          }
-          }
-          }
-          }
-          }
-          default: {ESLVal b = $1558;
-            
-            {ESLVal ds = $1559;
-            
-            return valueDefs.apply(ds).cons(b);
-          }
-          }
-        }
-        }
-      else if(_v830.isNil())
-        return $nil;
-      else return error(new ESLVal("case error at Pos(11059,11369)").add(ESLVal.list(_v830)));
-      }
-    }
-  });
-  private static ESLVal valueDefsToTEnv = new ESLVal(new Function(new ESLVal("valueDefsToTEnv"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1846 = $args[0];
-  ESLVal _v1847 = $args[1];
-  ESLVal _v1848 = $args[2];
-  ESLVal _v1849 = $args[3];
-  ESLVal _v1850 = $args[4];
-  {ESLVal _v831 = _v1846;
-        
-        if(_v831.isCons())
-        {ESLVal $1572 = _v831.head();
-          ESLVal $1573 = _v831.tail();
-          
-          switch($1572.termName) {
-          case "FunBinds": {ESLVal $1587 = $1572.termRef(0);
-            ESLVal $1586 = $1572.termRef(1);
-            
-            if($1586.isCons())
-            {ESLVal $1588 = $1586.head();
-              ESLVal $1589 = $1586.tail();
-              
-              switch($1588.termName) {
-              case "FunCase": {ESLVal $1594 = $1588.termRef(0);
-                ESLVal $1593 = $1588.termRef(1);
-                ESLVal $1592 = $1588.termRef(2);
-                ESLVal $1591 = $1588.termRef(3);
-                ESLVal $1590 = $1588.termRef(4);
-                
-                {ESLVal n = $1587;
-                
-                {ESLVal l = $1594;
-                
-                {ESLVal args = $1593;
-                
-                {ESLVal t = $1592;
-                
-                {ESLVal g = $1591;
-                
-                {ESLVal e = $1590;
-                
-                {ESLVal cases = $1589;
-                
-                {ESLVal ds = $1573;
-                
-                return valueDefsToTEnv.apply(ds,_v1847,_v1848,_v1849,_v1850).cons(new ESLVal("Map",n,substTypeEnv.apply(_v1850,t)));
-              }
-              }
-              }
-              }
-              }
-              }
-              }
-              }
-              }
-              default: return error(new ESLVal("case error at Pos(11476,12009)").add(ESLVal.list(_v831)));
-            }
-            }
-          else if($1586.isNil())
-            return error(new ESLVal("case error at Pos(11476,12009)").add(ESLVal.list(_v831)));
-          else return error(new ESLVal("case error at Pos(11476,12009)").add(ESLVal.list(_v831)));
-          }
-        case "FunBind": {ESLVal $1585 = $1572.termRef(0);
-            ESLVal $1584 = $1572.termRef(1);
-            ESLVal $1583 = $1572.termRef(2);
-            ESLVal $1582 = $1572.termRef(3);
-            ESLVal $1581 = $1572.termRef(4);
-            ESLVal $1580 = $1572.termRef(5);
-            ESLVal $1579 = $1572.termRef(6);
-            
-            {ESLVal l = $1585;
-            
-            {ESLVal n = $1584;
-            
-            {ESLVal ps = $1583;
-            
-            {ESLVal t = $1582;
-            
-            {ESLVal st = $1581;
-            
-            {ESLVal b = $1580;
-            
-            {ESLVal g = $1579;
-            
-            {ESLVal ds = $1573;
-            
-            return valueDefsToTEnv.apply(ds,_v1847,_v1848,_v1849,_v1850).cons(new ESLVal("Map",n,substTypeEnv.apply(_v1850,t)));
-          }
-          }
-          }
-          }
-          }
-          }
-          }
-          }
-          }
-        case "Binding": {ESLVal $1578 = $1572.termRef(0);
-            ESLVal $1577 = $1572.termRef(1);
-            ESLVal $1576 = $1572.termRef(2);
-            ESLVal $1575 = $1572.termRef(3);
-            ESLVal $1574 = $1572.termRef(4);
-            
-            {ESLVal l = $1578;
-            
-            {ESLVal n = $1577;
-            
-            {ESLVal t = $1576;
-            
-            {ESLVal st = $1575;
-            
-            {ESLVal e = $1574;
-            
-            {ESLVal ds = $1573;
-            
-            return valueDefsToTEnv.apply(ds,_v1847,_v1848,_v1849,_v1850).cons(new ESLVal("Map",n,substTypeEnv.apply(_v1850,t)));
-          }
-          }
-          }
-          }
-          }
-          }
-          }
-          default: return error(new ESLVal("case error at Pos(11476,12009)").add(ESLVal.list(_v831)));
-        }
-        }
-      else if(_v831.isNil())
-        return $nil;
-      else return error(new ESLVal("case error at Pos(11476,12009)").add(ESLVal.list(_v831)));
-      }
-    }
-  });
-  private static ESLVal getCache = new ESLVal(new Function(new ESLVal("getCache"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      {ESLVal cache = edb.ref("getProperty").apply(new ESLVal("typeCheckCache"));
-        
-        if(cache.eql($null).boolVal)
-        return emptyTable;
-        else
-          return cache;
-      }
-    }
-  });
-  private static ESLVal setCache = new ESLVal(new Function(new ESLVal("setCache"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal cache = $args[0];
-  return edb.ref("setProperty").apply(new ESLVal("typeCheckCache"),cache);
-    }
-  });
-  private static ESLVal updateCache = new ESLVal(new Function(new ESLVal("updateCache"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal path = $args[0];
-  ESLVal record = $args[1];
-  ESLVal cache = $args[2];
-  {ESLVal _v1845 = addEntry.apply(path,record,cache);
-        
-        {setCache.apply(_v1845);
-      return _v1845;}
-      }
-    }
-  });
-  public static ESLVal typeCheckModule = new ESLVal(new Function(new ESLVal("typeCheckModule"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal path = $args[0];
-  {print.apply(new ESLVal("[ type check ").add(path.add(new ESLVal("]"))));
-      return typeCheckModuleInternal.apply(path,getCache.apply(),new ESLVal(new Function(new ESLVal("fun505"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            ESLVal _v1841 = $args[0];
-        ESLVal _v1842 = $args[1];
-        ESLVal _v1843 = $args[2];
-        ESLVal _v1844 = $args[3];
-        return $null;
-          }
-        }));}
-    }
-  });
-  private static ESLVal typeCheckModuleInternal = new ESLVal(new Function(new ESLVal("typeCheckModuleInternal"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal path = $args[0];
-  ESLVal cache = $args[1];
-  ESLVal handler = $args[2];
-  if(hasEntry.apply(path,cache).boolVal)
-        {ESLVal _v832 = lookup.apply(path,cache);
-          
-          switch(_v832.termName) {
-          case "Typed": {ESLVal $1598 = _v832.termRef(0);
-            ESLVal $1597 = _v832.termRef(1);
-            ESLVal $1596 = _v832.termRef(2);
-            ESLVal $1595 = _v832.termRef(3);
-            
-            {ESLVal m = $1598;
-            
-            {ESLVal vEnv = $1597;
-            
-            {ESLVal cEnv = $1596;
-            
-            {ESLVal tEnv = $1595;
-            
-            return handler.apply(cache,vEnv,cEnv,tEnv);
-          }
-          }
-          }
-          }
-          }
-        case "Undefined": {
-            return error(new ESLVal("recursive reference to ").add(path));
-          }
-          default: return error(new ESLVal("case error at Pos(13000,13234)").add(ESLVal.list(_v832)));
-        }
-        }
-        else
-          {ESLVal m = parse.apply(path);
-            
-            return typeCheckModuleCache.apply(m,updateCache.apply(path,new ESLVal("Undefined",new ESLVal[]{}),cache),new ESLVal(new Function(new ESLVal("fun506"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal _v1837 = $args[0];
-            ESLVal _v1838 = $args[1];
-            ESLVal _v1839 = $args[2];
-            ESLVal _v1840 = $args[3];
-            return handler.apply(updateCache.apply(path,new ESLVal("Typed",m,_v1838,_v1839,_v1840),_v1837),_v1838,_v1839,_v1840);
-              }
-            }));
-          }
-    }
-  });
-  public static ESLVal typeCheckEntryPoint = new ESLVal(new Function(new ESLVal("typeCheckEntryPoint"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal module = $args[0];
-  return typeCheckModuleCache.apply(module,getCache.apply(),new ESLVal(new Function(new ESLVal("fun507"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            ESLVal _v1833 = $args[0];
-        ESLVal _v1834 = $args[1];
-        ESLVal _v1835 = $args[2];
-        ESLVal _v1836 = $args[3];
-        return $null;
-          }
-        }));
-    }
-  });
-  private static ESLVal typeCheckModuleCache = new ESLVal(new Function(new ESLVal("typeCheckModuleCache"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal module = $args[0];
-  ESLVal cache = $args[1];
-  ESLVal handler = $args[2];
-  return typeCheckModule0.apply(module,cache,new ESLVal(new Function(new ESLVal("fun508"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            ESLVal _v1829 = $args[0];
-        ESLVal _v1830 = $args[1];
-        ESLVal _v1831 = $args[2];
-        ESLVal _v1832 = $args[3];
-        {ESLVal _v833 = module;
-              
-              switch(_v833.termName) {
-              case "Module": {ESLVal $1605 = _v833.termRef(0);
-                ESLVal $1604 = _v833.termRef(1);
-                ESLVal $1603 = _v833.termRef(2);
-                ESLVal $1602 = _v833.termRef(3);
-                ESLVal $1601 = _v833.termRef(4);
-                ESLVal $1600 = _v833.termRef(5);
-                ESLVal $1599 = _v833.termRef(6);
-                
-                {ESLVal path = $1605;
-                
-                {ESLVal name = $1604;
-                
-                {ESLVal exports = $1603;
-                
-                {ESLVal imports = $1602;
-                
-                {ESLVal x = $1601;
-                
-                {ESLVal y = $1600;
-                
-                {ESLVal defs = $1599;
-                
-                return handler.apply(_v1829,restrictTypeEnv.apply(_v1830,exports),restrictTypeEnv.apply(_v1831,exports),restrictTypeEnv.apply(_v1832,exports));
-              }
-              }
-              }
-              }
-              }
-              }
-              }
-              }
-              default: return error(new ESLVal("case error at Pos(13946,14204)").add(ESLVal.list(_v833)));
-            }
-            }
-          }
-        }));
-    }
-  });
-  private static ESLVal typeCheckModule0 = new ESLVal(new Function(new ESLVal("typeCheckModule0"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal module = $args[0];
-  ESLVal cache = $args[1];
-  ESLVal handler = $args[2];
-  { LetRec letrec = new LetRec() {
-        ESLVal _v1806 = new ESLVal(new Function(new ESLVal("processImports"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1816 = $args[0];
-          ESLVal _v1817 = $args[1];
-          ESLVal _v1818 = $args[2];
-          {ESLVal _v834 = _v1816;
-                
-                if(_v834.isCons())
-                {ESLVal $1606 = _v834.head();
-                  ESLVal $1607 = _v834.tail();
-                  
-                  {ESLVal path = $1606;
-                  
-                  {ESLVal _v1819 = $1607;
-                  
-                  {ESLVal _v1820 = _v1819;
-                  
-                  return typeCheckModuleInternal.apply(path,_v1817,new ESLVal(new Function(new ESLVal("fun509"),getSelf()) {
-                    public ESLVal apply(ESLVal... $args) {
-                      ESLVal _v1821 = $args[0];
-                  ESLVal _v1822 = $args[1];
-                  ESLVal _v1823 = $args[2];
-                  ESLVal _v1824 = $args[3];
-                  return _v1806.apply(_v1820,_v1821,new ESLVal(new Function(new ESLVal("fun510"),getSelf()) {
-                          public ESLVal apply(ESLVal... $args) {
-                            ESLVal _v1825 = $args[0];
-                        ESLVal _v1826 = $args[1];
-                        ESLVal _v1827 = $args[2];
-                        ESLVal _v1828 = $args[3];
-                        return _v1818.apply(_v1825,_v1826.add(_v1822),_v1827.add(_v1823),_v1828.add(_v1824));
-                          }
-                        }));
-                    }
-                  }));
-                }
-                }
-                }
-                }
-              else if(_v834.isNil())
-                return _v1818.apply(_v1817,$nil,$nil,$nil);
-              else return error(new ESLVal("case error at Pos(14584,15141)").add(ESLVal.list(_v834)));
-              }
-            }
-          });
-        ESLVal _v1807 = new ESLVal(new Function(new ESLVal("main"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              {ESLVal _v835 = module;
-                
-                switch(_v835.termName) {
-                case "Module": {ESLVal $1614 = _v835.termRef(0);
-                  ESLVal $1613 = _v835.termRef(1);
-                  ESLVal $1612 = _v835.termRef(2);
-                  ESLVal $1611 = _v835.termRef(3);
-                  ESLVal $1610 = _v835.termRef(4);
-                  ESLVal $1609 = _v835.termRef(5);
-                  ESLVal $1608 = _v835.termRef(6);
-                  
-                  {ESLVal path = $1614;
-                  
-                  {ESLVal name = $1613;
-                  
-                  {ESLVal exports = $1612;
-                  
-                  {ESLVal imports = $1611;
-                  
-                  {ESLVal x = $1610;
-                  
-                  {ESLVal y = $1609;
-                  
-                  {ESLVal defs = $1608;
-                  
-                  return _v1806.apply(imports,cache,new ESLVal(new Function(new ESLVal("fun511"),getSelf()) {
-                    public ESLVal apply(ESLVal... $args) {
-                      ESLVal _v1808 = $args[0];
-                  ESLVal _v1809 = $args[1];
-                  ESLVal _v1810 = $args[2];
-                  ESLVal _v1811 = $args[3];
-                  {ESLVal _v1812 = typeEnv.apply(defs);
-                        ESLVal _v1813 = mergeFunDefs.apply(defs);
-                        
-                        {checkDupBindings.apply(_v1813);
-                      checkFreeTypes.apply(_v1812.add(_v1811.add(tenv0)));
-                      checkSingletonTypes.apply(_v1812);
-                      {ESLVal _v1814 = recTypes.apply(_v1812.add(_v1811.add(tenv0)));
-                        
-                        {ESLVal _v1815 = cnstrEnv.apply(_v1813,_v1814).add(_v1810.add(cnstrEnv0));
-                        
-                        {checkSingletonConstructors.apply(_v1815);
-                      {ESLVal valueEnv = typeCheckValues.apply(valueDefs.apply(_v1813),new ESLVal("NullType",p0),_v1809,_v1814,_v1815);
-                        
-                        return handler.apply(_v1808,valueEnv,_v1815,_v1814);
-                      }}
-                      }
-                      }}
-                      }
-                    }
-                  }));
-                }
-                }
-                }
-                }
-                }
-                }
-                }
-                }
-                default: return error(new ESLVal("case error at Pos(15170,16712)").add(ESLVal.list(_v835)));
-              }
-              }
-            }
-          });
-        
-        public ESLVal get(String name) {
-          switch(name) {
-            case "_v1806": return _v1806;
-            
-            case "_v1807": return _v1807;
-            
-            default: throw new Error("cannot find letrec binding");
-          }
-          }
-        };
-      ESLVal _v1806 = letrec.get("_v1806");
-      
-      ESLVal _v1807 = letrec.get("_v1807");
-      
-        return _v1807.apply();}
-      
-    }
-  });
-  private static ESLVal typeCheckValues = new ESLVal(new Function(new ESLVal("typeCheckValues"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1801 = $args[0];
-  ESLVal _v1802 = $args[1];
-  ESLVal _v1803 = $args[2];
-  ESLVal _v1804 = $args[3];
-  ESLVal _v1805 = $args[4];
-  {ESLVal valueEnv = valueDefsToTEnv.apply(_v1801,_v1802,$nil,_v1805,_v1804).add(_v1803.add(env0));
-        
-        {{
-        ESLVal _v836 = _v1801;
-        while(_v836.isCons()) {
-          ESLVal def = _v836.headVal;
-          typeCheckDef.apply(def,_v1802,valueEnv,valueEnv,_v1805,_v1804);
-          _v836 = _v836.tailVal;}
-      }
-      return valueEnv;}
-      }
-    }
-  });
-  private static ESLVal genericize = new ESLVal(new Function(new ESLVal("genericize"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal l = $args[0];
-  ESLVal t = $args[1];
-  if(length.apply(typeFV.apply(t)).eql($zero).boolVal)
-        return t;
-        else
-          return new ESLVal("ForallType",l,typeFV.apply(t),t);
-    }
-  });
-  private static ESLVal checkPatterns = new ESLVal(new Function(new ESLVal("checkPatterns"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal l = $args[0];
-  ESLVal ps = $args[1];
-  {ESLVal names = new java.util.function.Function<ESLVal,ESLVal>() {
-            public ESLVal apply(ESLVal $l0) {
-              ESLVal $a = $nil;
-              java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
-              while(!$l0.isNil()) { 
-                ESLVal p = $l0.head();
-                $l0 = $l0.tail();
-                ESLVal $l1 = patternNames.apply(p);
-          while(!$l1.isNil()) {
-            ESLVal n = $l1.head();
-            $l1 = $l1.tail();
-            $v.add(n);
-          }
-              }
-              for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
-              return $a;
-            }}.apply(ps);
-        
-        if(removeDups.apply(names).neql(names).boolVal)
-        return error(new ESLVal("TypeError",l,new ESLVal("duplicate pattern variables")));
-        else
-          return $null;
-      }
-    }
-  });
-  private static ESLVal typeCheckDef = new ESLVal(new Function(new ESLVal("typeCheckDef"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1777 = $args[0];
-  ESLVal _v1778 = $args[1];
-  ESLVal _v1779 = $args[2];
-  ESLVal _v1780 = $args[3];
-  ESLVal _v1781 = $args[4];
-  ESLVal _v1782 = $args[5];
-  {ESLVal _v837 = _v1777;
-        
-        switch(_v837.termName) {
-        case "FunBinds": {ESLVal $1628 = _v837.termRef(0);
-          ESLVal $1627 = _v837.termRef(1);
-          
-          {ESLVal n = $1628;
-          
-          {ESLVal cases = $1627;
-          
-          { LetRec letrec = new LetRec() {
-          ESLVal checkArities = new ESLVal(new Function(new ESLVal("checkArities"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal _v1798 = $args[0];
-            ESLVal _v1799 = $args[1];
-            {ESLVal _v841 = _v1798;
-                  
-                  if(_v841.isCons())
-                  {ESLVal $1638 = _v841.head();
-                    ESLVal $1639 = _v841.tail();
-                    
-                    switch($1638.termName) {
-                    case "FunCase": {ESLVal $1644 = $1638.termRef(0);
-                      ESLVal $1643 = $1638.termRef(1);
-                      ESLVal $1642 = $1638.termRef(2);
-                      ESLVal $1641 = $1638.termRef(3);
-                      ESLVal $1640 = $1638.termRef(4);
-                      
-                      {ESLVal l = $1644;
-                      
-                      {ESLVal args = $1643;
-                      
-                      {ESLVal t = $1642;
-                      
-                      {ESLVal g = $1641;
-                      
-                      {ESLVal e = $1640;
-                      
-                      {ESLVal _v1800 = $1639;
-                      
-                      if(_v1799.eql(new ESLVal(-1)).or(length.apply(args).eql(_v1799)).boolVal)
-                      return checkArities.apply(_v1800,length.apply(args));
-                      else
-                        return error(new ESLVal("TypeError",l,new ESLVal("inconsistent overloaded arity")));
-                    }
-                    }
-                    }
-                    }
-                    }
-                    }
-                    }
-                    default: return error(new ESLVal("case error at Pos(17919,18208)").add(ESLVal.list(_v841)));
-                  }
-                  }
-                else if(_v841.isNil())
-                  return $null;
-                else return error(new ESLVal("case error at Pos(17919,18208)").add(ESLVal.list(_v841)));
-                }
-              }
-            });
-          ESLVal checkLoneVars = new ESLVal(new Function(new ESLVal("checkLoneVars"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal _v1796 = $args[0];
-            {ESLVal _v842 = _v1796;
-                  
-                  if(_v842.isCons())
-                  {ESLVal $1645 = _v842.head();
-                    ESLVal $1646 = _v842.tail();
-                    
-                    switch($1645.termName) {
-                    case "FunCase": {ESLVal $1651 = $1645.termRef(0);
-                      ESLVal $1650 = $1645.termRef(1);
-                      ESLVal $1649 = $1645.termRef(2);
-                      ESLVal $1648 = $1645.termRef(3);
-                      ESLVal $1647 = $1645.termRef(4);
-                      
-                      {ESLVal l = $1651;
-                      
-                      {ESLVal args = $1650;
-                      
-                      {ESLVal t = $1649;
-                      
-                      {ESLVal g = $1648;
-                      
-                      {ESLVal e = $1647;
-                      
-                      {ESLVal _v1797 = $1646;
-                      
-                      {{
-                      ESLVal _v843 = args;
-                      while(_v843.isCons()) {
-                        ESLVal arg = _v843.headVal;
-                        checkLoneVar.apply(arg);
-                        _v843 = _v843.tailVal;}
-                    }
-                    return checkLoneVars.apply(_v1797);}
-                    }
-                    }
-                    }
-                    }
-                    }
-                    }
-                    }
-                    default: return error(new ESLVal("case error at Pos(18267,18502)").add(ESLVal.list(_v842)));
-                  }
-                  }
-                else if(_v842.isNil())
-                  return $null;
-                else return error(new ESLVal("case error at Pos(18267,18502)").add(ESLVal.list(_v842)));
-                }
-              }
-            });
-          ESLVal checkLoneVar = new ESLVal(new Function(new ESLVal("checkLoneVar"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal p = $args[0];
-            {ESLVal _v844 = p;
-                  
-                  switch(_v844.termName) {
-                  case "PVar": {ESLVal $1654 = _v844.termRef(0);
-                    ESLVal $1653 = _v844.termRef(1);
-                    ESLVal $1652 = _v844.termRef(2);
-                    
-                    switch($1652.termName) {
-                    case "VoidType": {ESLVal $1655 = $1652.termRef(0);
-                      
-                      {ESLVal l = $1654;
-                      
-                      {ESLVal _v1793 = $1653;
-                      
-                      {ESLVal tl = $1655;
-                      
-                      return error(new ESLVal("TypeError",l,new ESLVal("top level variables should be typed.")));
-                    }
-                    }
-                    }
-                    }
-                    default: {ESLVal _v1794 = _v844;
-                      
-                      return $null;
-                    }
-                  }
-                  }
-                  default: {ESLVal _v1795 = _v844;
-                    
-                    return $null;
-                  }
-                }
-                }
-              }
-            });
-          
-          public ESLVal get(String name) {
-            switch(name) {
-              case "checkArities": return checkArities;
-              
-              case "checkLoneVars": return checkLoneVars;
-              
-              case "checkLoneVar": return checkLoneVar;
-              
-              default: throw new Error("cannot find letrec binding");
-            }
-            }
-          };
-        ESLVal checkArities = letrec.get("checkArities");
-        
-        ESLVal checkLoneVars = letrec.get("checkLoneVars");
-        
-        ESLVal checkLoneVar = letrec.get("checkLoneVar");
-        
-          {checkArities.apply(cases,new ESLVal(-1));
-        return checkLoneVars.apply(cases);}}
-        
-        }
-        }
-        }
-      case "FunBind": {ESLVal $1626 = _v837.termRef(0);
-          ESLVal $1625 = _v837.termRef(1);
-          ESLVal $1624 = _v837.termRef(2);
-          ESLVal $1623 = _v837.termRef(3);
-          ESLVal $1622 = _v837.termRef(4);
-          ESLVal $1621 = _v837.termRef(5);
-          ESLVal $1620 = _v837.termRef(6);
-          
-          {ESLVal l = $1626;
-          
-          {ESLVal n = $1625;
-          
-          {ESLVal ps = $1624;
-          
-          {ESLVal t = $1623;
-          
-          {ESLVal st = $1622;
-          
-          {ESLVal b = $1621;
-          
-          {ESLVal g = $1620;
-          
-          {checkPatterns.apply(l,ps);
-        {ESLVal argTypes = map.apply(new ESLVal(new Function(new ESLVal("fun512"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal p = $args[0];
-            {ESLVal _v838 = p;
-                  
-                  switch(_v838.termName) {
-                  case "PVar": {ESLVal $1631 = _v838.termRef(0);
-                    ESLVal $1630 = _v838.termRef(1);
-                    ESLVal $1629 = _v838.termRef(2);
-                    
-                    {ESLVal _v1787 = $1631;
-                    
-                    {ESLVal _v1788 = $1630;
-                    
-                    {ESLVal _v1789 = $1629;
-                    
-                    return substTypeEnv.apply(_v1782,_v1789);
-                  }
-                  }
-                  }
-                  }
-                  default: return error(new ESLVal("case error at Pos(19134,19200)").add(ESLVal.list(_v838)));
-                }
-                }
-              }
-            }),ps);
-          ESLVal argNames = map.apply(new ESLVal(new Function(new ESLVal("fun513"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal p = $args[0];
-            {ESLVal _v839 = p;
-                  
-                  switch(_v839.termName) {
-                  case "PVar": {ESLVal $1634 = _v839.termRef(0);
-                    ESLVal $1633 = _v839.termRef(1);
-                    ESLVal $1632 = _v839.termRef(2);
-                    
-                    {ESLVal _v1784 = $1634;
-                    
-                    {ESLVal _v1785 = $1633;
-                    
-                    {ESLVal _v1786 = $1632;
-                    
-                    return _v1785;
-                  }
-                  }
-                  }
-                  }
-                  default: return error(new ESLVal("case error at Pos(19272,19316)").add(ESLVal.list(_v839)));
-                }
-                }
-              }
-            }),ps);
-          
-          {ESLVal bodyType = guardedExpType.apply(l,g,b,_v1778,zipTypeEnv.apply(argNames,argTypes).add(_v1779),_v1781,_v1782);
-          
-          {ESLVal fType = ((Supplier<ESLVal>)() -> { 
-              {ESLVal _v840 = t;
-                
-                switch(_v840.termName) {
-                case "ForallType": {ESLVal $1637 = _v840.termRef(0);
-                  ESLVal $1636 = _v840.termRef(1);
-                  ESLVal $1635 = _v840.termRef(2);
-                  
-                  {ESLVal _v1790 = $1637;
-                  
-                  {ESLVal ns = $1636;
-                  
-                  {ESLVal _v1791 = $1635;
-                  
-                  return genericize.apply(_v1790,new ESLVal("FunType",_v1790,argTypes,bodyType));
-                }
-                }
-                }
-                }
-                default: {ESLVal _v1792 = _v840;
-                  
-                  return new ESLVal("FunType",l,argTypes,bodyType);
-                }
-              }
-              }
-            }).get();
-          ESLVal dType = substTypeEnv.apply(_v1782,t);
-          
-          if(subType.apply(fType,dType).boolVal)
-          return $null;
-          else
-            return error(new ESLVal("TypeError",l,new ESLVal("type of ").add(n.add(new ESLVal("::").add(ppType.apply(fType,_v1782).add(new ESLVal(" does not match declaration ").add(ppType.apply(dType,_v1782))))))));
-        }
-        }
-        }}
-        }
-        }
-        }
-        }
-        }
-        }
-        }
-        }
-      case "Binding": {ESLVal $1619 = _v837.termRef(0);
-          ESLVal $1618 = _v837.termRef(1);
-          ESLVal $1617 = _v837.termRef(2);
-          ESLVal $1616 = _v837.termRef(3);
-          ESLVal $1615 = _v837.termRef(4);
-          
-          {ESLVal l = $1619;
-          
-          {ESLVal n = $1618;
-          
-          {ESLVal dt = $1617;
-          
-          {ESLVal st = $1616;
-          
-          {ESLVal e = $1615;
-          
-          {ESLVal valueType = expType.apply(e,_v1778,_v1779,_v1781,_v1782);
-          
-          {ESLVal valueFV = typeFV.apply(valueType);
-          ESLVal declaredType = lookupType.apply(n,_v1780);
-          
-          {ESLVal _v1783 = ((Supplier<ESLVal>)() -> { 
-              if(valueFV.eql($nil).boolVal)
-                return valueType;
-                else
-                  return new ESLVal("ForallType",l,valueFV,valueType);
-            }).get();
-          
-          if(subType.apply(_v1783,declaredType).boolVal)
-          return $null;
-          else
-            return error(new ESLVal("TypeError",l,new ESLVal("type of ").add(n.add(new ESLVal(" ").add(ppType.apply(_v1783,_v1782).add(new ESLVal(" does not match declared type = ").add(ppType.apply(declaredType,_v1782))))))));
-        }
-        }
-        }
-        }
-        }
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(17800,20723)").add(ESLVal.list(_v837)));
-      }
-      }
-    }
-  });
-  private static ESLVal guardedExpType = new ESLVal(new Function(new ESLVal("guardedExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1770 = $args[0];
-  ESLVal _v1771 = $args[1];
-  ESLVal _v1772 = $args[2];
-  ESLVal _v1773 = $args[3];
-  ESLVal _v1774 = $args[4];
-  ESLVal _v1775 = $args[5];
-  ESLVal _v1776 = $args[6];
-  {ESLVal bt = expType.apply(_v1771,_v1773,_v1774,_v1775,_v1776);
-        
-        if(isBoolType.apply(bt).boolVal)
-        return expType.apply(_v1772,_v1773,_v1774,_v1775,_v1776);
-        else
-          return error(new ESLVal("TypeError",_v1770,new ESLVal("guarded expression requires a boolean value: ").add(ppType.apply(bt,_v1776))));
-      }
-    }
-  });
-  private static ESLVal expType = new ESLVal(new Function(new ESLVal("expType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1748 = $args[0];
-  ESLVal _v1749 = $args[1];
-  ESLVal _v1750 = $args[2];
-  ESLVal _v1751 = $args[3];
-  ESLVal _v1752 = $args[4];
-  {ESLVal _v845 = _v1748;
-        
-        switch(_v845.termName) {
-        case "ActExp": {ESLVal $1791 = _v845.termRef(0);
-          ESLVal $1790 = _v845.termRef(1);
-          ESLVal $1789 = _v845.termRef(2);
-          ESLVal $1788 = _v845.termRef(3);
-          ESLVal $1787 = _v845.termRef(4);
-          ESLVal $1786 = _v845.termRef(5);
-          ESLVal $1785 = _v845.termRef(6);
-          ESLVal $1784 = _v845.termRef(7);
-          
-          {ESLVal l = $1791;
-          
-          {ESLVal n = $1790;
-          
-          {ESLVal args = $1789;
-          
-          {ESLVal exports = $1788;
-          
-          {ESLVal parent = $1787;
-          
-          {ESLVal bindings = $1786;
-          
-          {ESLVal init = $1785;
-          
-          {ESLVal arms = $1784;
-          
-          return actType.apply(l,n,args,parent,exports,bindings,init,arms,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-        }
-        }
-        }
-        }
-        }
-      case "Apply": {ESLVal $1783 = _v845.termRef(0);
-          ESLVal $1782 = _v845.termRef(1);
-          ESLVal $1781 = _v845.termRef(2);
-          
-          {ESLVal l = $1783;
-          
-          {ESLVal op = $1782;
-          
-          {ESLVal args = $1781;
-          
-          return applyType.apply(l,op,args,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "ApplyTypeExp": {ESLVal $1780 = _v845.termRef(0);
-          ESLVal $1779 = _v845.termRef(1);
-          ESLVal $1778 = _v845.termRef(2);
-          
-          {ESLVal l = $1780;
-          
-          {ESLVal _v1769 = $1779;
-          
-          {ESLVal ts = $1778;
-          
-          return applyTypeExp.apply(l,_v1769,ts,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "ArrayUpdate": {ESLVal $1777 = _v845.termRef(0);
-          ESLVal $1776 = _v845.termRef(1);
-          ESLVal $1775 = _v845.termRef(2);
-          ESLVal $1774 = _v845.termRef(3);
-          
-          {ESLVal l = $1777;
-          
-          {ESLVal a = $1776;
-          
-          {ESLVal i = $1775;
-          
-          {ESLVal v = $1774;
-          
-          return arrayUpdateType.apply(l,a,i,v,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-        }
-      case "ArrayRef": {ESLVal $1773 = _v845.termRef(0);
-          ESLVal $1772 = _v845.termRef(1);
-          ESLVal $1771 = _v845.termRef(2);
-          
-          {ESLVal l = $1773;
-          
-          {ESLVal a = $1772;
-          
-          {ESLVal i = $1771;
-          
-          return arrayRefType.apply(l,a,i,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "BagExp": {ESLVal $1770 = _v845.termRef(0);
-          ESLVal $1769 = _v845.termRef(1);
-          
-          {ESLVal l = $1770;
-          
-          {ESLVal es = $1769;
-          
-          return bagType.apply(l,es,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-      case "Become": {ESLVal $1768 = _v845.termRef(0);
-          ESLVal $1767 = _v845.termRef(1);
-          
-          {ESLVal l = $1768;
-          
-          {ESLVal _v1768 = $1767;
-          
-          return becomeType.apply(l,_v1768,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-      case "BinExp": {ESLVal $1766 = _v845.termRef(0);
-          ESLVal $1765 = _v845.termRef(1);
-          ESLVal $1764 = _v845.termRef(2);
-          ESLVal $1763 = _v845.termRef(3);
-          
-          {ESLVal l = $1766;
-          
-          {ESLVal e1 = $1765;
-          
-          {ESLVal op = $1764;
-          
-          {ESLVal e2 = $1763;
-          
-          return binExpType.apply(l,e1,op,e2,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-        }
-      case "Block": {ESLVal $1762 = _v845.termRef(0);
-          ESLVal $1761 = _v845.termRef(1);
-          
-          {ESLVal l = $1762;
-          
-          {ESLVal es = $1761;
-          
-          return blockType.apply(l,es,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-      case "BoolExp": {ESLVal $1760 = _v845.termRef(0);
-          ESLVal $1759 = _v845.termRef(1);
-          
-          {ESLVal l = $1760;
-          
-          {ESLVal b = $1759;
-          
-          return new ESLVal("BoolType",l);
-        }
-        }
-        }
-      case "Case": {ESLVal $1758 = _v845.termRef(0);
-          ESLVal $1757 = _v845.termRef(1);
-          ESLVal $1756 = _v845.termRef(2);
-          ESLVal $1755 = _v845.termRef(3);
-          
-          {ESLVal l = $1758;
-          
-          {ESLVal decs = $1757;
-          
-          {ESLVal es = $1756;
-          
-          {ESLVal arms = $1755;
-          
-          return caseType.apply(l,es,arms,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-        }
-      case "Cmp": {ESLVal $1754 = _v845.termRef(0);
-          ESLVal $1753 = _v845.termRef(1);
-          ESLVal $1752 = _v845.termRef(2);
-          
-          {ESLVal l = $1754;
-          
-          {ESLVal _v1767 = $1753;
-          
-          {ESLVal qs = $1752;
-          
-          return cmpType.apply(l,_v1767,qs,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "Grab": {ESLVal $1751 = _v845.termRef(0);
-          ESLVal $1750 = _v845.termRef(1);
-          ESLVal $1749 = _v845.termRef(2);
-          
-          {ESLVal l = $1751;
-          
-          {ESLVal refs = $1750;
-          
-          {ESLVal _v1766 = $1749;
-          
-          return expType.apply(_v1766,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "FloatExp": {ESLVal $1748 = _v845.termRef(0);
-          ESLVal $1747 = _v845.termRef(1);
-          
-          {ESLVal l = $1748;
-          
-          {ESLVal f = $1747;
-          
-          return new ESLVal("FloatType",l);
-        }
-        }
-        }
-      case "Fold": {ESLVal $1746 = _v845.termRef(0);
-          ESLVal $1745 = _v845.termRef(1);
-          ESLVal $1744 = _v845.termRef(2);
-          
-          {ESLVal l = $1746;
-          
-          {ESLVal t = $1745;
-          
-          {ESLVal _v1765 = $1744;
-          
-          return foldType.apply(l,t,_v1765,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "For": {ESLVal $1743 = _v845.termRef(0);
-          ESLVal $1742 = _v845.termRef(1);
-          ESLVal $1741 = _v845.termRef(2);
-          ESLVal $1740 = _v845.termRef(3);
-          
-          {ESLVal l = $1743;
-          
-          {ESLVal p = $1742;
-          
-          {ESLVal list = $1741;
-          
-          {ESLVal _v1764 = $1740;
-          
-          return forType.apply(l,p,list,_v1764,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-        }
-      case "FunExp": {ESLVal $1739 = _v845.termRef(0);
-          ESLVal $1738 = _v845.termRef(1);
-          ESLVal $1737 = _v845.termRef(2);
-          ESLVal $1736 = _v845.termRef(3);
-          ESLVal $1735 = _v845.termRef(4);
-          
-          {ESLVal l = $1739;
-          
-          {ESLVal n = $1738;
-          
-          {ESLVal args = $1737;
-          
-          {ESLVal t = $1736;
-          
-          {ESLVal _v1763 = $1735;
-          
-          return funType.apply(l,n,args,t,_v1763,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-        }
-        }
-      case "If": {ESLVal $1734 = _v845.termRef(0);
-          ESLVal $1733 = _v845.termRef(1);
-          ESLVal $1732 = _v845.termRef(2);
-          ESLVal $1731 = _v845.termRef(3);
-          
-          {ESLVal l = $1734;
-          
-          {ESLVal e1 = $1733;
-          
-          {ESLVal e2 = $1732;
-          
-          {ESLVal e3 = $1731;
-          
-          return ifType.apply(l,e1,e2,e3,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-        }
-      case "IntExp": {ESLVal $1730 = _v845.termRef(0);
-          ESLVal $1729 = _v845.termRef(1);
-          
-          {ESLVal l = $1730;
-          
-          {ESLVal n = $1729;
-          
-          return new ESLVal("IntType",l);
-        }
-        }
-        }
-      case "Let": {ESLVal $1728 = _v845.termRef(0);
-          ESLVal $1727 = _v845.termRef(1);
-          ESLVal $1726 = _v845.termRef(2);
-          
-          {ESLVal l = $1728;
-          
-          {ESLVal bs = $1727;
-          
-          {ESLVal _v1762 = $1726;
-          
-          return letType.apply(l,bs,_v1762,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "Letrec": {ESLVal $1725 = _v845.termRef(0);
-          ESLVal $1724 = _v845.termRef(1);
-          ESLVal $1723 = _v845.termRef(2);
-          
-          {ESLVal l = $1725;
-          
-          {ESLVal bs = $1724;
-          
-          {ESLVal _v1761 = $1723;
-          
-          return letrecType.apply(l,bs,_v1761,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "List": {ESLVal $1722 = _v845.termRef(0);
-          ESLVal $1721 = _v845.termRef(1);
-          
-          {ESLVal l = $1722;
-          
-          {ESLVal es = $1721;
-          
-          return listType.apply(l,es,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-      case "Now": {ESLVal $1720 = _v845.termRef(0);
-          
-          {ESLVal l = $1720;
-          
-          return new ESLVal("IntType",l);
-        }
-        }
-      case "Probably": {ESLVal $1719 = _v845.termRef(0);
-          ESLVal $1718 = _v845.termRef(1);
-          ESLVal $1717 = _v845.termRef(2);
-          ESLVal $1716 = _v845.termRef(3);
-          ESLVal $1715 = _v845.termRef(4);
-          
-          {ESLVal l = $1719;
-          
-          {ESLVal p = $1718;
-          
-          {ESLVal t = $1717;
-          
-          {ESLVal e1 = $1716;
-          
-          {ESLVal e2 = $1715;
-          
-          return probablyType.apply(l,p,t,e1,e2,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-        }
-        }
-      case "PLet": {ESLVal $1714 = _v845.termRef(0);
-          ESLVal $1713 = _v845.termRef(1);
-          ESLVal $1712 = _v845.termRef(2);
-          
-          {ESLVal l = $1714;
-          
-          {ESLVal bs = $1713;
-          
-          {ESLVal _v1760 = $1712;
-          
-          return letType.apply(l,bs,_v1760,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "Record": {ESLVal $1711 = _v845.termRef(0);
-          ESLVal $1710 = _v845.termRef(1);
-          
-          {ESLVal l = $1711;
-          
-          {ESLVal fields = $1710;
-          
-          return recordType.apply(l,fields,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-      case "Ref": {ESLVal $1709 = _v845.termRef(0);
-          ESLVal $1708 = _v845.termRef(1);
-          ESLVal $1707 = _v845.termRef(2);
-          
-          {ESLVal l = $1709;
-          
-          {ESLVal _v1759 = $1708;
-          
-          {ESLVal n = $1707;
-          
-          return refType.apply(l,_v1759,n,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "RefSuper": {ESLVal $1706 = _v845.termRef(0);
-          ESLVal $1705 = _v845.termRef(1);
-          
-          {ESLVal l = $1706;
-          
-          {ESLVal n = $1705;
-          
-          return refType.apply(l,new ESLVal("Var",l,new ESLVal("$super")),n,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-      case "Self": {ESLVal $1704 = _v845.termRef(0);
-          
-          {ESLVal l = $1704;
-          
-          return _v1749;
-        }
-        }
-      case "Send": {ESLVal $1699 = _v845.termRef(0);
-          ESLVal $1698 = _v845.termRef(1);
-          ESLVal $1697 = _v845.termRef(2);
-          
-          switch($1697.termName) {
-          case "Term": {ESLVal $1703 = $1697.termRef(0);
-            ESLVal $1702 = $1697.termRef(1);
-            ESLVal $1701 = $1697.termRef(2);
-            ESLVal $1700 = $1697.termRef(3);
-            
-            {ESLVal l = $1699;
-            
-            {ESLVal target = $1698;
-            
-            {ESLVal tl = $1703;
-            
-            {ESLVal n = $1702;
-            
-            {ESLVal ts = $1701;
-            
-            {ESLVal args = $1700;
-            
-            return sendType.apply(l,target,n,args,_v1749,_v1750,_v1751,_v1752);
-          }
-          }
-          }
-          }
-          }
-          }
-          }
-          default: return error(new ESLVal("case error at Pos(21201,25254)").add(ESLVal.list(_v845)));
-        }
-        }
-      case "SendTimeSuper": {ESLVal $1696 = _v845.termRef(0);
-          
-          {ESLVal l = $1696;
-          
-          return new ESLVal("VoidType",l);
-        }
-        }
-      case "SendSuper": {ESLVal $1695 = _v845.termRef(0);
-          ESLVal $1694 = _v845.termRef(1);
-          
-          {ESLVal l = $1695;
-          
-          {ESLVal _v1758 = $1694;
-          
-          return new ESLVal("VoidType",l);
-        }
-        }
-        }
-      case "SetExp": {ESLVal $1693 = _v845.termRef(0);
-          ESLVal $1692 = _v845.termRef(1);
-          
-          {ESLVal l = $1693;
-          
-          {ESLVal es = $1692;
-          
-          return setType.apply(l,es,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-      case "StrExp": {ESLVal $1691 = _v845.termRef(0);
-          ESLVal $1690 = _v845.termRef(1);
-          
-          {ESLVal l = $1691;
-          
-          {ESLVal s = $1690;
-          
-          return new ESLVal("StrType",l);
-        }
-        }
-        }
-      case "Term": {ESLVal $1689 = _v845.termRef(0);
-          ESLVal $1688 = _v845.termRef(1);
-          ESLVal $1687 = _v845.termRef(2);
-          ESLVal $1686 = _v845.termRef(3);
-          
-          {ESLVal l = $1689;
-          
-          {ESLVal n = $1688;
-          
-          {ESLVal ts = $1687;
-          
-          {ESLVal es = $1686;
-          
-          return termType.apply(l,n,ts,es,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-        }
-      case "Throw": {ESLVal $1685 = _v845.termRef(0);
-          ESLVal $1684 = _v845.termRef(1);
-          ESLVal $1683 = _v845.termRef(2);
-          
-          {ESLVal l = $1685;
-          
-          {ESLVal t = $1684;
-          
-          {ESLVal _v1757 = $1683;
-          
-          return throwType.apply(l,t,_v1757,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "Try": {ESLVal $1682 = _v845.termRef(0);
-          ESLVal $1681 = _v845.termRef(1);
-          ESLVal $1680 = _v845.termRef(2);
-          
-          {ESLVal l = $1682;
-          
-          {ESLVal _v1756 = $1681;
-          
-          {ESLVal arms = $1680;
-          
-          return tryType.apply(l,_v1756,arms,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "New": {ESLVal $1679 = _v845.termRef(0);
-          ESLVal $1678 = _v845.termRef(1);
-          ESLVal $1677 = _v845.termRef(2);
-          
-          {ESLVal l = $1679;
-          
-          {ESLVal b = $1678;
-          
-          {ESLVal args = $1677;
-          
-          return newType.apply(l,b,args,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "NewArray": {ESLVal $1676 = _v845.termRef(0);
-          ESLVal $1675 = _v845.termRef(1);
-          ESLVal $1674 = _v845.termRef(2);
-          
-          {ESLVal l = $1676;
-          
-          {ESLVal t = $1675;
-          
-          {ESLVal i = $1674;
-          
-          return newArrayType.apply(l,t,i,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "NewTable": {ESLVal $1673 = _v845.termRef(0);
-          ESLVal $1672 = _v845.termRef(1);
-          ESLVal $1671 = _v845.termRef(2);
-          
-          {ESLVal l = $1673;
-          
-          {ESLVal key = $1672;
-          
-          {ESLVal value = $1671;
-          
-          return new ESLVal("TableType",l,substTypeEnv.apply(_v1752,key),substTypeEnv.apply(_v1752,value));
-        }
-        }
-        }
-        }
-      case "NewJava": {ESLVal $1670 = _v845.termRef(0);
-          ESLVal $1669 = _v845.termRef(1);
-          ESLVal $1668 = _v845.termRef(2);
-          ESLVal $1667 = _v845.termRef(3);
-          
-          {ESLVal l = $1670;
-          
-          {ESLVal path = $1669;
-          
-          {ESLVal t = $1668;
-          
-          {ESLVal args = $1667;
-          
-          {{
-          ESLVal _v846 = args;
-          while(_v846.isCons()) {
-            ESLVal a = _v846.headVal;
-            expType.apply(a,_v1749,_v1750,_v1751,_v1752);
-            _v846 = _v846.tailVal;}
-        }
-        return substTypeEnv.apply(_v1752,t);}
-        }
-        }
-        }
-        }
-        }
-      case "Not": {ESLVal $1666 = _v845.termRef(0);
-          ESLVal $1665 = _v845.termRef(1);
-          
-          {ESLVal l = $1666;
-          
-          {ESLVal _v1755 = $1665;
-          
-          return notType.apply(l,_v1755,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-      case "NullExp": {ESLVal $1664 = _v845.termRef(0);
-          
-          {ESLVal l = $1664;
-          
-          return new ESLVal("ForallType",l,ESLVal.list(new ESLVal("T")),new ESLVal("VarType",l,new ESLVal("T")));
-        }
-        }
-      case "Unfold": {ESLVal $1663 = _v845.termRef(0);
-          ESLVal $1662 = _v845.termRef(1);
-          ESLVal $1661 = _v845.termRef(2);
-          
-          {ESLVal l = $1663;
-          
-          {ESLVal t = $1662;
-          
-          {ESLVal _v1754 = $1661;
-          
-          return unfoldTypeExp.apply(l,t,_v1754,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "Update": {ESLVal $1660 = _v845.termRef(0);
-          ESLVal $1659 = _v845.termRef(1);
-          ESLVal $1658 = _v845.termRef(2);
-          
-          {ESLVal l = $1660;
-          
-          {ESLVal n = $1659;
-          
-          {ESLVal _v1753 = $1658;
-          
-          return updateType.apply(l,n,_v1753,_v1749,_v1750,_v1751,_v1752);
-        }
-        }
-        }
-        }
-      case "Var": {ESLVal $1657 = _v845.termRef(0);
-          ESLVal $1656 = _v845.termRef(1);
-          
-          {ESLVal l = $1657;
-          
-          {ESLVal n = $1656;
-          
-          return varType.apply(l,n,_v1750);
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(21201,25254)").add(ESLVal.list(_v845)));
-      }
-      }
-    }
-  });
-  private static ESLVal throwType = new ESLVal(new Function(new ESLVal("throwType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1741 = $args[0];
-  ESLVal _v1742 = $args[1];
-  ESLVal _v1743 = $args[2];
-  ESLVal _v1744 = $args[3];
-  ESLVal _v1745 = $args[4];
-  ESLVal _v1746 = $args[5];
-  ESLVal _v1747 = $args[6];
-  {ESLVal valType = expType.apply(_v1743,_v1744,_v1745,_v1746,_v1747);
-        
-        return substTypeEnv.apply(_v1747,_v1742);
-      }
-    }
-  });
-  private static ESLVal foldType = new ESLVal(new Function(new ESLVal("foldType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1734 = $args[0];
-  ESLVal _v1735 = $args[1];
-  ESLVal _v1736 = $args[2];
-  ESLVal _v1737 = $args[3];
-  ESLVal _v1738 = $args[4];
-  ESLVal _v1739 = $args[5];
-  ESLVal _v1740 = $args[6];
-  {ESLVal eType = expType.apply(_v1736,_v1737,_v1738,_v1739,_v1740);
-        
-        if(typeEqual.apply(substTypeEnv.apply(_v1740,_v1735),eType).boolVal)
-        return eType;
-        else
-          return error(new ESLVal("TypeError",_v1734,new ESLVal("fold type ").add(ppType.apply(_v1735,_v1740).add(new ESLVal(" does not equal ").add(ppType.apply(eType,_v1740))))));
-      }
-    }
-  });
-  private static ESLVal unfoldTypeExp = new ESLVal(new Function(new ESLVal("unfoldTypeExp"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1725 = $args[0];
-  ESLVal _v1726 = $args[1];
-  ESLVal _v1727 = $args[2];
-  ESLVal _v1728 = $args[3];
-  ESLVal _v1729 = $args[4];
-  ESLVal _v1730 = $args[5];
-  ESLVal _v1731 = $args[6];
-  {ESLVal eType = expType.apply(_v1727,_v1728,_v1729,_v1730,_v1731);
-        ESLVal recType = substTypeEnv.apply(_v1731,_v1726);
-        
-        {ESLVal _v847 = recType;
-        
-        switch(_v847.termName) {
-        case "RecType": {ESLVal $1794 = _v847.termRef(0);
-          ESLVal $1793 = _v847.termRef(1);
-          ESLVal $1792 = _v847.termRef(2);
-          
-          {ESLVal rl = $1794;
-          
-          {ESLVal n = $1793;
-          
-          {ESLVal _v1732 = $1792;
-          
-          if(typeEqual.apply(substType.apply(eType,n,_v1732),eType).boolVal)
-          return eType;
-          else
-            return error(new ESLVal("TypeError",_v1725,new ESLVal("unfold type ").add(ppType.apply(substType.apply(eType,n,_v1732),_v1731).add(new ESLVal(" does not equal ").add(ppType.apply(eType,_v1731))))));
-        }
-        }
-        }
-        }
-        default: {ESLVal _v1733 = _v847;
-          
-          return error(new ESLVal("TypeError",_v1725,new ESLVal("unfold type expects a rec type").add(ppType.apply(recType,_v1731))));
-        }
-      }
-      }
-      }
-    }
-  });
-  private static ESLVal arrayUpdateType = new ESLVal(new Function(new ESLVal("arrayUpdateType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1717 = $args[0];
-  ESLVal _v1718 = $args[1];
-  ESLVal _v1719 = $args[2];
-  ESLVal _v1720 = $args[3];
-  ESLVal _v1721 = $args[4];
-  ESLVal _v1722 = $args[5];
-  ESLVal _v1723 = $args[6];
-  ESLVal _v1724 = $args[7];
-  {ESLVal aType = expType.apply(_v1718,_v1721,_v1722,_v1723,_v1724);
-        ESLVal iType = expType.apply(_v1719,_v1721,_v1722,_v1723,_v1724);
-        ESLVal vType = expType.apply(_v1720,_v1721,_v1722,_v1723,_v1724);
-        
-        {ESLVal _v848 = aType;
-        
-        switch(_v848.termName) {
-        case "ArrayType": {ESLVal $1796 = _v848.termRef(0);
-          ESLVal $1795 = _v848.termRef(1);
-          
-          {ESLVal al = $1796;
-          
-          {ESLVal t = $1795;
-          
-          if(isIntType.apply(iType).boolVal)
-          if(typeEqual.apply(vType,t).boolVal)
-            return aType;
-            else
-              return error(new ESLVal("TypeError",_v1717,new ESLVal("value type ").add(vType.add(new ESLVal(" does not match array type ").add(t)))));
-          else
-            return error(new ESLVal("TypeError",_v1717,new ESLVal("array index should be an integer ").add(_v1719)));
-        }
-        }
-        }
-        default: {ESLVal t = _v848;
-          
-          return error(new ESLVal("TypeError",_v1717,new ESLVal("expecting an array ").add(aType)));
-        }
-      }
-      }
-      }
-    }
-  });
-  private static ESLVal arrayRefType = new ESLVal(new Function(new ESLVal("arrayRefType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1710 = $args[0];
-  ESLVal _v1711 = $args[1];
-  ESLVal _v1712 = $args[2];
-  ESLVal _v1713 = $args[3];
-  ESLVal _v1714 = $args[4];
-  ESLVal _v1715 = $args[5];
-  ESLVal _v1716 = $args[6];
-  {ESLVal aType = expType.apply(_v1711,_v1713,_v1714,_v1715,_v1716);
-        ESLVal iType = expType.apply(_v1712,_v1713,_v1714,_v1715,_v1716);
-        
-        {ESLVal _v849 = aType;
-        
-        switch(_v849.termName) {
-        case "ArrayType": {ESLVal $1798 = _v849.termRef(0);
-          ESLVal $1797 = _v849.termRef(1);
-          
-          {ESLVal al = $1798;
-          
-          {ESLVal t = $1797;
-          
-          if(isIntType.apply(iType).boolVal)
-          return t;
-          else
-            return error(new ESLVal("TypeError",_v1710,new ESLVal("array index should be an integer ").add(_v1712)));
-        }
-        }
-        }
-        default: {ESLVal t = _v849;
-          
-          return error(new ESLVal("TypeError",_v1710,new ESLVal("expecting an array ").add(aType)));
-        }
-      }
-      }
-      }
-    }
-  });
-  private static ESLVal newArrayType = new ESLVal(new Function(new ESLVal("newArrayType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1703 = $args[0];
-  ESLVal _v1704 = $args[1];
-  ESLVal _v1705 = $args[2];
-  ESLVal _v1706 = $args[3];
-  ESLVal _v1707 = $args[4];
-  ESLVal _v1708 = $args[5];
-  ESLVal _v1709 = $args[6];
-  {ESLVal i = expType.apply(_v1705,_v1706,_v1707,_v1708,_v1709);
-        
-        if(isIntType.apply(i).boolVal)
-        return new ESLVal("ArrayType",_v1703,substTypeEnv.apply(_v1709,_v1704));
-        else
-          return error(new ESLVal("TypeError",_v1703,new ESLVal("expecting an integer type: ").add(i)));
-      }
-    }
-  });
-  private static ESLVal becomeType = new ESLVal(new Function(new ESLVal("becomeType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1697 = $args[0];
-  ESLVal _v1698 = $args[1];
-  ESLVal _v1699 = $args[2];
-  ESLVal _v1700 = $args[3];
-  ESLVal _v1701 = $args[4];
-  ESLVal _v1702 = $args[5];
-  {ESLVal bType = expType.apply(_v1698,_v1699,_v1700,_v1701,_v1702);
-        
-        if(typeEqual.apply(bType,_v1699).boolVal)
-        return bType;
-        else
-          return error(new ESLVal("TypeError",_v1697,new ESLVal("expecting become to match self type: ").add(ppType.apply(bType,_v1702).add(new ESLVal(" ").add(ppType.apply(_v1699,_v1702))))));
-      }
-    }
-  });
-  private static ESLVal probablyType = new ESLVal(new Function(new ESLVal("probablyType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1685 = $args[0];
-  ESLVal _v1686 = $args[1];
-  ESLVal _v1687 = $args[2];
-  ESLVal _v1688 = $args[3];
-  ESLVal _v1689 = $args[4];
-  ESLVal _v1690 = $args[5];
-  ESLVal _v1691 = $args[6];
-  ESLVal _v1692 = $args[7];
-  ESLVal _v1693 = $args[8];
-  {ESLVal pt = expType.apply(_v1686,_v1690,_v1691,_v1692,_v1693);
-        
-        if(isIntType.apply(pt).boolVal)
-        {ESLVal _v1694 = substTypeEnv.apply(_v1693,_v1687);
-          ESLVal _v1695 = expType.apply(_v1688,_v1690,_v1691,_v1692,_v1693);
-          ESLVal _v1696 = expType.apply(_v1689,_v1690,_v1691,_v1692,_v1693);
-          
-          if(typeEqual.apply(_v1694,_v1695).and(typeEqual.apply(_v1694,_v1696)).boolVal)
-          return _v1694;
-          else
-            return error(new ESLVal("TypeError",_v1685,new ESLVal("expecting probably arm types to agree: ").add(ppType.apply(_v1695,_v1693).add(new ESLVal(" ").add(ppType.apply(_v1694,_v1693).add(new ESLVal(" ").add(ppType.apply(_v1696,_v1693))))))));
-        }
-        else
-          return error(new ESLVal("TypeError",_v1685,new ESLVal("expecting an integer: ").add(ppType.apply(pt,_v1693))));
-      }
-    }
-  });
-  private static ESLVal newType = new ESLVal(new Function(new ESLVal("newType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1678 = $args[0];
-  ESLVal _v1679 = $args[1];
-  ESLVal _v1680 = $args[2];
-  ESLVal _v1681 = $args[3];
-  ESLVal _v1682 = $args[4];
-  ESLVal _v1683 = $args[5];
-  ESLVal _v1684 = $args[6];
-  return expType.apply(new ESLVal("Apply",_v1678,_v1679,_v1680),_v1681,_v1682,_v1683,_v1684);
-    }
-  });
-  private static ESLVal sendType = new ESLVal(new Function(new ESLVal("sendType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1660 = $args[0];
-  ESLVal _v1661 = $args[1];
-  ESLVal _v1662 = $args[2];
-  ESLVal _v1663 = $args[3];
-  ESLVal _v1664 = $args[4];
-  ESLVal _v1665 = $args[5];
-  ESLVal _v1666 = $args[6];
-  ESLVal _v1667 = $args[7];
-  {ESLVal _v850 = typeNF.apply(derefType.apply(expType.apply(_v1661,_v1664,_v1665,_v1666,_v1667)),_v1667);
-        
-        switch(_v850.termName) {
-        case "ActType": {ESLVal $1801 = _v850.termRef(0);
-          ESLVal $1800 = _v850.termRef(1);
-          ESLVal $1799 = _v850.termRef(2);
-          
-          {ESLVal al = $1801;
-          
-          {ESLVal exports = $1800;
-          
-          {ESLVal handlers = $1799;
-          
-          { LetRec letrec = new LetRec() {
-          ESLVal findHandler = new ESLVal(new Function(new ESLVal("findHandler"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal _v1668 = $args[0];
-            {ESLVal _v851 = _v1668;
-                  
-                  if(_v851.isCons())
-                  {ESLVal $1802 = _v851.head();
-                    ESLVal $1803 = _v851.tail();
-                    
-                    switch($1802.termName) {
-                    case "MessageType": {ESLVal $1805 = $1802.termRef(0);
-                      ESLVal $1804 = $1802.termRef(1);
-                      
-                      if($1804.isCons())
-                      {ESLVal $1806 = $1804.head();
-                        ESLVal $1807 = $1804.tail();
-                        
-                        switch($1806.termName) {
-                        case "TermType": {ESLVal $1810 = $1806.termRef(0);
-                          ESLVal $1809 = $1806.termRef(1);
-                          ESLVal $1808 = $1806.termRef(2);
-                          
-                          if($1807.isCons())
-                          {ESLVal $1811 = $1807.head();
-                            ESLVal $1812 = $1807.tail();
-                            
-                            {ESLVal m = $1802;
-                            
-                            {ESLVal _v1669 = $1803;
-                            
-                            return findHandler.apply(_v1669);
-                          }
-                          }
-                          }
-                        else if($1807.isNil())
-                          {ESLVal ml = $1805;
-                            
-                            {ESLVal tl = $1810;
-                            
-                            {ESLVal m = $1809;
-                            
-                            {ESLVal ts = $1808;
-                            
-                            {ESLVal rest = $1803;
-                            
-                            if(m.eql(_v1662).boolVal)
-                            return head.apply(_v1668);
-                            else
-                              {ESLVal _v1670 = $1802;
-                                
-                                {ESLVal _v1671 = $1803;
-                                
-                                return findHandler.apply(_v1671);
-                              }
-                              }
-                          }
-                          }
-                          }
-                          }
-                          }
-                        else {ESLVal m = $1802;
-                            
-                            {ESLVal _v1672 = $1803;
-                            
-                            return findHandler.apply(_v1672);
-                          }
-                          }
-                        }
-                        default: {ESLVal m = $1802;
-                          
-                          {ESLVal _v1673 = $1803;
-                          
-                          return findHandler.apply(_v1673);
-                        }
-                        }
-                      }
-                      }
-                    else if($1804.isNil())
-                      {ESLVal m = $1802;
-                        
-                        {ESLVal _v1674 = $1803;
-                        
-                        return findHandler.apply(_v1674);
-                      }
-                      }
-                    else {ESLVal m = $1802;
-                        
-                        {ESLVal _v1675 = $1803;
-                        
-                        return findHandler.apply(_v1675);
-                      }
-                      }
-                    }
-                    default: {ESLVal m = $1802;
-                      
-                      {ESLVal _v1676 = $1803;
-                      
-                      return findHandler.apply(_v1676);
-                    }
-                    }
-                  }
-                  }
-                else if(_v851.isNil())
-                  return error(new ESLVal("TypeError",_v1660,new ESLVal("cannot find message handler named ").add(_v1662)));
-                else return error(new ESLVal("case error at Pos(29449,29756)").add(ESLVal.list(_v851)));
-                }
-              }
-            });
-          
-          public ESLVal get(String name) {
-            switch(name) {
-              case "findHandler": return findHandler;
-              
-              default: throw new Error("cannot find letrec binding");
-            }
-            }
-          };
-        ESLVal findHandler = letrec.get("findHandler");
-        
-          {ESLVal _v852 = findHandler.apply(handlers);
-          
-          switch(_v852.termName) {
-          case "MessageType": {ESLVal $1814 = _v852.termRef(0);
-            ESLVal $1813 = _v852.termRef(1);
-            
-            if($1813.isCons())
-            {ESLVal $1815 = $1813.head();
-              ESLVal $1816 = $1813.tail();
-              
-              switch($1815.termName) {
-              case "TermType": {ESLVal $1819 = $1815.termRef(0);
-                ESLVal $1818 = $1815.termRef(1);
-                ESLVal $1817 = $1815.termRef(2);
-                
-                if($1816.isCons())
-                {ESLVal $1820 = $1816.head();
-                  ESLVal $1821 = $1816.tail();
-                  
-                  {ESLVal m = _v852;
-                  
-                  return error(new ESLVal("TypeError",_v1660,new ESLVal("cannot find message handler named ").add(_v1662.add(new ESLVal(" in ").add(handlers)))));
-                }
-                }
-              else if($1816.isNil())
-                {ESLVal ml = $1814;
-                  
-                  {ESLVal tl = $1819;
-                  
-                  {ESLVal _v1677 = $1818;
-                  
-                  {ESLVal ts1 = $1817;
-                  
-                  {ESLVal ts2 = expTypes.apply(_v1663,_v1664,_v1665,_v1666,_v1667);
-                  
-                  if(length.apply(ts1).eql(length.apply(ts2)).boolVal)
-                  if(subTypes.apply(ts2,ts1).boolVal)
-                    {expType.apply(_v1661,_v1664,_v1665,_v1666,_v1667);
-                    return new ESLVal("VoidType",_v1660);}
-                    else
-                      return error(new ESLVal("TypeError",_v1660,new ESLVal("message argument types ").add(ppTypes.apply(ts2,_v1667).add(new ESLVal(" do not match expected types ").add(ppTypes.apply(ts1,_v1667))))));
-                  else
-                    return error(new ESLVal("TypeError",_v1660,new ESLVal("expecting ").add(length.apply(ts1).add(new ESLVal(" args, but received ").add(length.apply(ts2))))));
-                }
-                }
-                }
-                }
-                }
-              else {ESLVal m = _v852;
-                  
-                  return error(new ESLVal("TypeError",_v1660,new ESLVal("cannot find message handler named ").add(_v1662.add(new ESLVal(" in ").add(handlers)))));
-                }
-              }
-              default: {ESLVal m = _v852;
-                
-                return error(new ESLVal("TypeError",_v1660,new ESLVal("cannot find message handler named ").add(_v1662.add(new ESLVal(" in ").add(handlers)))));
-              }
-            }
-            }
-          else if($1813.isNil())
-            {ESLVal m = _v852;
-              
-              return error(new ESLVal("TypeError",_v1660,new ESLVal("cannot find message handler named ").add(_v1662.add(new ESLVal(" in ").add(handlers)))));
-            }
-          else {ESLVal m = _v852;
-              
-              return error(new ESLVal("TypeError",_v1660,new ESLVal("cannot find message handler named ").add(_v1662.add(new ESLVal(" in ").add(handlers)))));
-            }
-          }
-          default: {ESLVal m = _v852;
-            
-            return error(new ESLVal("TypeError",_v1660,new ESLVal("cannot find message handler named ").add(_v1662.add(new ESLVal(" in ").add(handlers)))));
-          }
-        }
-        }}
-        
-        }
-        }
-        }
-        }
-        default: {ESLVal t = _v850;
-          
-          return error(new ESLVal("TypeError",_v1660,new ESLVal("expecting a behaviour type: ").add(typeNF.apply(derefType.apply(expType.apply(_v1661,_v1664,_v1665,_v1666,_v1667)),_v1667))));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal actType = new ESLVal(new Function(new ESLVal("actType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1606 = $args[0];
-  ESLVal _v1607 = $args[1];
-  ESLVal _v1608 = $args[2];
-  ESLVal _v1609 = $args[3];
-  ESLVal _v1610 = $args[4];
-  ESLVal _v1611 = $args[5];
-  ESLVal _v1612 = $args[6];
-  ESLVal _v1613 = $args[7];
-  ESLVal _v1614 = $args[8];
-  ESLVal _v1615 = $args[9];
-  ESLVal _v1616 = $args[10];
-  ESLVal _v1617 = $args[11];
-  { LetRec letrec = new LetRec() {
-        ESLVal findLoc = new ESLVal(new Function(new ESLVal("findLoc"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1649 = $args[0];
-          ESLVal _v1650 = $args[1];
-          {ESLVal _v853 = _v1650;
-                
-                if(_v853.isCons())
-                {ESLVal $1822 = _v853.head();
-                  ESLVal $1823 = _v853.tail();
-                  
-                  switch($1822.termName) {
-                  case "Binding": {ESLVal $1835 = $1822.termRef(0);
-                    ESLVal $1834 = $1822.termRef(1);
-                    ESLVal $1833 = $1822.termRef(2);
-                    ESLVal $1832 = $1822.termRef(3);
-                    ESLVal $1831 = $1822.termRef(4);
-                    
-                    {ESLVal _v1654 = $1835;
-                    
-                    {ESLVal m = $1834;
-                    
-                    {ESLVal t = $1833;
-                    
-                    {ESLVal st = $1832;
-                    
-                    {ESLVal e = $1831;
-                    
-                    {ESLVal _v1655 = $1823;
-                    
-                    if(m.eql(_v1649).boolVal)
-                    return _v1654;
-                    else
-                      {ESLVal b = $1822;
-                        
-                        {ESLVal _v1656 = $1823;
-                        
-                        return findLoc.apply(_v1649,_v1656);
-                      }
-                      }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                case "FunBind": {ESLVal $1830 = $1822.termRef(0);
-                    ESLVal $1829 = $1822.termRef(1);
-                    ESLVal $1828 = $1822.termRef(2);
-                    ESLVal $1827 = $1822.termRef(3);
-                    ESLVal $1826 = $1822.termRef(4);
-                    ESLVal $1825 = $1822.termRef(5);
-                    ESLVal $1824 = $1822.termRef(6);
-                    
-                    {ESLVal _v1651 = $1830;
-                    
-                    {ESLVal m = $1829;
-                    
-                    {ESLVal ps = $1828;
-                    
-                    {ESLVal t = $1827;
-                    
-                    {ESLVal st = $1826;
-                    
-                    {ESLVal g = $1825;
-                    
-                    {ESLVal e = $1824;
-                    
-                    {ESLVal _v1652 = $1823;
-                    
-                    if(m.eql(_v1649).boolVal)
-                    return _v1651;
-                    else
-                      {ESLVal b = $1822;
-                        
-                        {ESLVal _v1653 = $1823;
-                        
-                        return findLoc.apply(_v1649,_v1653);
-                      }
-                      }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  default: {ESLVal b = $1822;
-                    
-                    {ESLVal _v1657 = $1823;
-                    
-                    return findLoc.apply(_v1649,_v1657);
-                  }
-                  }
-                }
-                }
-              else if(_v853.isNil())
-                return p0;
-              else return error(new ESLVal("case error at Pos(31239,31543)").add(ESLVal.list(_v853)));
-              }
-            }
-          });
-        ESLVal findType = new ESLVal(new Function(new ESLVal("findType"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1640 = $args[0];
-          ESLVal _v1641 = $args[1];
-          {ESLVal _v854 = _v1641;
-                
-                if(_v854.isCons())
-                {ESLVal $1836 = _v854.head();
-                  ESLVal $1837 = _v854.tail();
-                  
-                  switch($1836.termName) {
-                  case "Binding": {ESLVal $1849 = $1836.termRef(0);
-                    ESLVal $1848 = $1836.termRef(1);
-                    ESLVal $1847 = $1836.termRef(2);
-                    ESLVal $1846 = $1836.termRef(3);
-                    ESLVal $1845 = $1836.termRef(4);
-                    
-                    {ESLVal _v1645 = $1849;
-                    
-                    {ESLVal m = $1848;
-                    
-                    {ESLVal t = $1847;
-                    
-                    {ESLVal st = $1846;
-                    
-                    {ESLVal e = $1845;
-                    
-                    {ESLVal _v1646 = $1837;
-                    
-                    if(m.eql(_v1640).boolVal)
-                    return substTypeEnv.apply(_v1617,t);
-                    else
-                      {ESLVal b = $1836;
-                        
-                        {ESLVal _v1647 = $1837;
-                        
-                        return findType.apply(_v1640,_v1647);
-                      }
-                      }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                case "FunBind": {ESLVal $1844 = $1836.termRef(0);
-                    ESLVal $1843 = $1836.termRef(1);
-                    ESLVal $1842 = $1836.termRef(2);
-                    ESLVal $1841 = $1836.termRef(3);
-                    ESLVal $1840 = $1836.termRef(4);
-                    ESLVal $1839 = $1836.termRef(5);
-                    ESLVal $1838 = $1836.termRef(6);
-                    
-                    {ESLVal _v1642 = $1844;
-                    
-                    {ESLVal m = $1843;
-                    
-                    {ESLVal ps = $1842;
-                    
-                    {ESLVal t = $1841;
-                    
-                    {ESLVal st = $1840;
-                    
-                    {ESLVal g = $1839;
-                    
-                    {ESLVal e = $1838;
-                    
-                    {ESLVal _v1643 = $1837;
-                    
-                    if(m.eql(_v1640).boolVal)
-                    return substTypeEnv.apply(_v1617,t);
-                    else
-                      {ESLVal b = $1836;
-                        
-                        {ESLVal _v1644 = $1837;
-                        
-                        return findType.apply(_v1640,_v1644);
-                      }
-                      }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  default: {ESLVal b = $1836;
-                    
-                    {ESLVal _v1648 = $1837;
-                    
-                    return findType.apply(_v1640,_v1648);
-                  }
-                  }
-                }
-                }
-              else if(_v854.isNil())
-                return $null;
-              else return error(new ESLVal("case error at Pos(31597,31954)").add(ESLVal.list(_v854)));
-              }
-            }
-          });
-        ESLVal decs = new ESLVal(new Function(new ESLVal("decs"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1636 = $args[0];
-          {ESLVal _v855 = _v1636;
-                
-                if(_v855.isCons())
-                {ESLVal $1850 = _v855.head();
-                  ESLVal $1851 = _v855.tail();
-                  
-                  {ESLVal m = $1850;
-                  
-                  {ESLVal _v1637 = $1851;
-                  
-                  {ESLVal _v1638 = findType.apply(m,_v1611);
-                  ESLVal _v1639 = findLoc.apply(m,_v1611);
-                  
-                  if(_v1638.eql($null).boolVal)
-                  return error(new ESLVal("TypeError",_v1639,new ESLVal("cannot find exported name ").add(m)));
-                  else
-                    return decs.apply(_v1637).cons(new ESLVal("Dec",_v1639,m,_v1638,_v1638));
-                }
-                }
-                }
-                }
-              else if(_v855.isNil())
-                return $nil;
-              else return error(new ESLVal("case error at Pos(31996,32327)").add(ESLVal.list(_v855)));
-              }
-            }
-          });
-        ESLVal getMessageTypes = new ESLVal(new Function(new ESLVal("getMessageTypes"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1633 = $args[0];
-          {ESLVal _v856 = _v1633;
-                
-                if(_v856.isCons())
-                {ESLVal $1852 = _v856.head();
-                  ESLVal $1853 = _v856.tail();
-                  
-                  switch($1852.termName) {
-                  case "BArm": {ESLVal $1857 = $1852.termRef(0);
-                    ESLVal $1856 = $1852.termRef(1);
-                    ESLVal $1855 = $1852.termRef(2);
-                    ESLVal $1854 = $1852.termRef(3);
-                    
-                    {ESLVal _v1634 = $1857;
-                    
-                    {ESLVal ps = $1856;
-                    
-                    {ESLVal g = $1855;
-                    
-                    {ESLVal e = $1854;
-                    
-                    {ESLVal _v1635 = $1853;
-                    
-                    return getMessageTypes.apply(_v1635).cons(getMessageType.apply(ps));
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  default: return error(new ESLVal("case error at Pos(32378,32533)").add(ESLVal.list(_v856)));
-                }
-                }
-              else if(_v856.isNil())
-                return $nil;
-              else return error(new ESLVal("case error at Pos(32378,32533)").add(ESLVal.list(_v856)));
-              }
-            }
-          });
-        ESLVal getMessageType = new ESLVal(new Function(new ESLVal("getMessageType"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal ps = $args[0];
-          {ESLVal _v857 = ps;
-                
-                if(_v857.isCons())
-                {ESLVal $1858 = _v857.head();
-                  ESLVal $1859 = _v857.tail();
-                  
-                  switch($1858.termName) {
-                  case "PTerm": {ESLVal $1863 = $1858.termRef(0);
-                    ESLVal $1862 = $1858.termRef(1);
-                    ESLVal $1861 = $1858.termRef(2);
-                    ESLVal $1860 = $1858.termRef(3);
-                    
-                    if($1859.isCons())
-                    {ESLVal $1864 = $1859.head();
-                      ESLVal $1865 = $1859.tail();
-                      
-                      return error(new ESLVal("case error at Pos(32583,32854)").add(ESLVal.list(_v857)));
-                    }
-                  else if($1859.isNil())
-                    {ESLVal pl = $1863;
-                      
-                      {ESLVal termName = $1862;
-                      
-                      {ESLVal targs = $1861;
-                      
-                      {ESLVal _v1632 = $1860;
-                      
-                      {ESLVal ts = map.apply(new ESLVal(new Function(new ESLVal("fun514"),getSelf()) {
-                          public ESLVal apply(ESLVal... $args) {
-                            ESLVal p = $args[0];
-                        return getPatternType.apply(_v1606,p,_v1614,_v1615,_v1616,_v1617);
-                          }
-                        }),_v1632);
-                      
-                      return new ESLVal("MessageType",pl,ESLVal.list(new ESLVal("TermType",pl,termName,ts)));
-                    }
-                    }
-                    }
-                    }
-                    }
-                  else return error(new ESLVal("case error at Pos(32583,32854)").add(ESLVal.list(_v857)));
-                  }
-                  default: return error(new ESLVal("case error at Pos(32583,32854)").add(ESLVal.list(_v857)));
-                }
-                }
-              else if(_v857.isNil())
-                return error(new ESLVal("case error at Pos(32583,32854)").add(ESLVal.list(_v857)));
-              else return error(new ESLVal("case error at Pos(32583,32854)").add(ESLVal.list(_v857)));
-              }
-            }
-          });
-        ESLVal typeCheckArms = new ESLVal(new Function(new ESLVal("typeCheckArms"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1627 = $args[0];
-          ESLVal _v1628 = $args[1];
-          ESLVal _v1629 = $args[2];
-          {ESLVal _v858 = _v1627;
-                
-                if(_v858.isCons())
-                {ESLVal $1866 = _v858.head();
-                  ESLVal $1867 = _v858.tail();
-                  
-                  switch($1866.termName) {
-                  case "BArm": {ESLVal $1871 = $1866.termRef(0);
-                    ESLVal $1870 = $1866.termRef(1);
-                    ESLVal $1869 = $1866.termRef(2);
-                    ESLVal $1868 = $1866.termRef(3);
-                    
-                    {ESLVal _v1630 = $1871;
-                    
-                    {ESLVal ps = $1870;
-                    
-                    {ESLVal g = $1869;
-                    
-                    {ESLVal e = $1868;
-                    
-                    {ESLVal _v1631 = $1867;
-                    
-                    {typeCheckArm.apply(_v1630,ps,g,e,_v1628,_v1629);
-                  return typeCheckArms.apply(_v1631,_v1628,_v1629);}
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  default: return error(new ESLVal("case error at Pos(32930,33157)").add(ESLVal.list(_v858)));
-                }
-                }
-              else if(_v858.isNil())
-                return $null;
-              else return error(new ESLVal("case error at Pos(32930,33157)").add(ESLVal.list(_v858)));
-              }
-            }
-          });
-        ESLVal typeCheckArm = new ESLVal(new Function(new ESLVal("typeCheckArm"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1618 = $args[0];
-          ESLVal _v1619 = $args[1];
-          ESLVal _v1620 = $args[2];
-          ESLVal _v1621 = $args[3];
-          ESLVal _v1622 = $args[4];
-          ESLVal _v1623 = $args[5];
-          {ESLVal _v859 = _v1619;
-                
-                if(_v859.isCons())
-                {ESLVal $1872 = _v859.head();
-                  ESLVal $1873 = _v859.tail();
-                  
-                  switch($1872.termName) {
-                  case "PTerm": {ESLVal $1877 = $1872.termRef(0);
-                    ESLVal $1876 = $1872.termRef(1);
-                    ESLVal $1875 = $1872.termRef(2);
-                    ESLVal $1874 = $1872.termRef(3);
-                    
-                    if($1873.isCons())
-                    {ESLVal $1878 = $1873.head();
-                      ESLVal $1879 = $1873.tail();
-                      
-                      return error(new ESLVal("case error at Pos(33256,33705)").add(ESLVal.list(_v859)));
-                    }
-                  else if($1873.isNil())
-                    {ESLVal pl = $1877;
-                      
-                      {ESLVal termName = $1876;
-                      
-                      {ESLVal targs = $1875;
-                      
-                      {ESLVal _v1624 = $1874;
-                      
-                      {ESLVal ts = map.apply(new ESLVal(new Function(new ESLVal("fun515"),getSelf()) {
-                          public ESLVal apply(ESLVal... $args) {
-                            ESLVal p = $args[0];
-                        return getPatternType.apply(_v1618,p,_v1622,_v1623,_v1616,_v1617);
-                          }
-                        }),_v1624);
-                      
-                      {patternTypes.apply(_v1618,_v1624,ts,_v1622,_v1623,_v1616,_v1617,new ESLVal(new Function(new ESLVal("fun516"),getSelf()) {
-                      public ESLVal apply(ESLVal... $args) {
-                        ESLVal _v1625 = $args[0];
-                    ESLVal _v1626 = $args[1];
-                    return expType.apply(_v1621,_v1622,_v1626,_v1616,_v1617);
-                      }
-                    }));
-                    return $null;}
-                    }
-                    }
-                    }
-                    }
-                    }
-                  else return error(new ESLVal("case error at Pos(33256,33705)").add(ESLVal.list(_v859)));
-                  }
-                  default: return error(new ESLVal("case error at Pos(33256,33705)").add(ESLVal.list(_v859)));
-                }
-                }
-              else if(_v859.isNil())
-                return error(new ESLVal("case error at Pos(33256,33705)").add(ESLVal.list(_v859)));
-              else return error(new ESLVal("case error at Pos(33256,33705)").add(ESLVal.list(_v859)));
-              }
-            }
-          });
-        
-        public ESLVal get(String name) {
-          switch(name) {
-            case "findLoc": return findLoc;
-            
-            case "findType": return findType;
-            
-            case "decs": return decs;
-            
-            case "getMessageTypes": return getMessageTypes;
-            
-            case "getMessageType": return getMessageType;
-            
-            case "typeCheckArms": return typeCheckArms;
-            
-            case "typeCheckArm": return typeCheckArm;
-            
-            default: throw new Error("cannot find letrec binding");
-          }
-          }
-        };
-      ESLVal findLoc = letrec.get("findLoc");
-      
-      ESLVal findType = letrec.get("findType");
-      
-      ESLVal decs = letrec.get("decs");
-      
-      ESLVal getMessageTypes = letrec.get("getMessageTypes");
-      
-      ESLVal getMessageType = letrec.get("getMessageType");
-      
-      ESLVal typeCheckArms = letrec.get("typeCheckArms");
-      
-      ESLVal typeCheckArm = letrec.get("typeCheckArm");
-      
-        {ESLVal parentType = ((Supplier<ESLVal>)() -> { 
-            if(_v1609.eql($null).boolVal)
-              return actType0;
-              else
-                return expType.apply(_v1609,_v1614,_v1615,_v1616,_v1617);
-          }).get();
-        ESLVal localEnv = parBind.apply(_v1611,_v1614,_v1615,_v1616,_v1617);
-        
-        {ESLVal exportedDecs = decs.apply(_v1610);
-        
-        {ESLVal messageTypes = getMessageTypes.apply(_v1613);
-        
-        {ESLVal _v1658 = new ESLVal("ExtendedAct",_v1606,parentType,exportedDecs,messageTypes);
-        ESLVal _v1659 = ESLVal.list(new ESLVal("Map",new ESLVal("$super"),parentType));
-        
-        {typeCheckExports.apply(_v1606,exportedDecs,_v1611,_v1658,localEnv.add(_v1615),_v1617,_v1616);
-      typeCheckValues.apply(valueDefs.apply(_v1611),_v1658,_v1659.add(localEnv.add(_v1615)),_v1617,_v1616);
-      expType.apply(_v1612,_v1658,_v1659.add(localEnv.add(_v1615)),_v1616,_v1617);
-      typeCheckArms.apply(_v1613,_v1658,_v1659.add(localEnv.add(_v1615)));
-      return _v1658;}
-      }
-      }
-      }
-      }}
-      
-    }
-  });
-  private static ESLVal typeCheckExports = new ESLVal(new Function(new ESLVal("typeCheckExports"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1599 = $args[0];
-  ESLVal _v1600 = $args[1];
-  ESLVal _v1601 = $args[2];
-  ESLVal _v1602 = $args[3];
-  ESLVal _v1603 = $args[4];
-  ESLVal _v1604 = $args[5];
-  ESLVal _v1605 = $args[6];
-  {{
-        ESLVal _v860 = _v1600;
-        while(_v860.isCons()) {
-          ESLVal e = _v860.headVal;
-          if(exists.apply(new ESLVal(new Function(new ESLVal("fun517"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal b = $args[0];
-          return bindingName.apply(b).eql(decName.apply(e)).and(typeEqual.apply(lookupType.apply(decName.apply(e),_v1603),decType.apply(e)));
-            }
-          }),_v1601).boolVal)
-            {}
-            else
-              error(new ESLVal("TypeError",_v1599,new ESLVal(" cannot find export for ").add(decName.apply(e))));
-          _v860 = _v860.tailVal;}
-      }
-      return $null;}
-    }
-  });
-  private static ESLVal bTypeExports = new ESLVal(new Function(new ESLVal("bTypeExports"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal t = $args[0];
-  {ESLVal _v861 = t;
-        
-        switch(_v861.termName) {
-        case "ExtendedAct": {ESLVal $1890 = _v861.termRef(0);
-          ESLVal $1889 = _v861.termRef(1);
-          ESLVal $1888 = _v861.termRef(2);
-          ESLVal $1887 = _v861.termRef(3);
-          
-          {ESLVal l = $1890;
-          
-          {ESLVal parent = $1889;
-          
-          {ESLVal exports = $1888;
-          
-          {ESLVal message = $1887;
-          
-          return bTypeExports.apply(parent).add(exports);
-        }
-        }
-        }
-        }
-        }
-      case "ActType": {ESLVal $1886 = _v861.termRef(0);
-          ESLVal $1885 = _v861.termRef(1);
-          ESLVal $1884 = _v861.termRef(2);
-          
-          {ESLVal l = $1886;
-          
-          {ESLVal exports = $1885;
-          
-          {ESLVal message = $1884;
-          
-          return exports;
-        }
-        }
-        }
-        }
-      case "TypeClosure": {ESLVal $1883 = _v861.termRef(0);
-          
-          {ESLVal f = $1883;
-          
-          return bTypeExports.apply(f.apply());
-        }
-        }
-      case "RecType": {ESLVal $1882 = _v861.termRef(0);
-          ESLVal $1881 = _v861.termRef(1);
-          ESLVal $1880 = _v861.termRef(2);
-          
-          {ESLVal l = $1882;
-          
-          {ESLVal n = $1881;
-          
-          {ESLVal _v1598 = $1880;
-          
-          return bTypeExports.apply(substType.apply(new ESLVal("RecType",l,n,_v1598),n,_v1598));
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(35101,35511)").add(ESLVal.list(_v861)));
-      }
-      }
-    }
-  });
-  private static ESLVal cmpType = new ESLVal(new Function(new ESLVal("cmpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1584 = $args[0];
-  ESLVal _v1585 = $args[1];
-  ESLVal _v1586 = $args[2];
-  ESLVal _v1587 = $args[3];
-  ESLVal _v1588 = $args[4];
-  ESLVal _v1589 = $args[5];
-  ESLVal _v1590 = $args[6];
-  {ESLVal _v862 = _v1586;
-        
-        if(_v862.isCons())
-        {ESLVal $1891 = _v862.head();
-          ESLVal $1892 = _v862.tail();
-          
-          switch($1891.termName) {
-          case "BQual": {ESLVal $1897 = $1891.termRef(0);
-            ESLVal $1896 = $1891.termRef(1);
-            ESLVal $1895 = $1891.termRef(2);
-            
-            {ESLVal _v1593 = $1897;
-            
-            {ESLVal p = $1896;
-            
-            {ESLVal list = $1895;
-            
-            {ESLVal _v1594 = $1892;
-            
-            {ESLVal lType = expType.apply(list,_v1587,_v1588,_v1589,_v1590);
-            
-            {ESLVal _v863 = lType;
-            
-            switch(_v863.termName) {
-            case "ListType": {ESLVal $1899 = _v863.termRef(0);
-              ESLVal $1898 = _v863.termRef(1);
-              
-              {ESLVal ll = $1899;
-              
-              {ESLVal t = $1898;
-              
-              {ESLVal _v1595 = _v1594;
-              
-              return patternType.apply(_v1593,p,substTypeEnv.apply(_v1590,t),_v1587,_v1588,_v1589,_v1590,new ESLVal(new Function(new ESLVal("fun518"),getSelf()) {
-                public ESLVal apply(ESLVal... $args) {
-                  ESLVal _v1596 = $args[0];
-              ESLVal _v1597 = $args[1];
-              return cmpType.apply(_v1593,_v1585,_v1595,_v1587,_v1597,_v1589,_v1590);
-                }
-              }));
-            }
-            }
-            }
-            }
-            default: {ESLVal t = _v863;
-              
-              return error(new ESLVal("TypeError",_v1593,new ESLVal("qualifier binding expects a list: ").add(ppType.apply(t,_v1590))));
-            }
-          }
-          }
-          }
-          }
-          }
-          }
-          }
-          }
-        case "PQual": {ESLVal $1894 = $1891.termRef(0);
-            ESLVal $1893 = $1891.termRef(1);
-            
-            {ESLVal _v1591 = $1894;
-            
-            {ESLVal b = $1893;
-            
-            {ESLVal _v1592 = $1892;
-            
-            {ESLVal bType = expType.apply(b,_v1587,_v1588,_v1589,_v1590);
-            
-            if(isBoolType.apply(bType).boolVal)
-            return cmpType.apply(_v1591,_v1585,_v1592,_v1587,_v1588,_v1589,_v1590);
-            else
-              return error(new ESLVal("TypeError",_v1591,new ESLVal("qualifier expects a boolean type: ").add(ppType.apply(bType,_v1590))));
-          }
-          }
-          }
-          }
-          }
-          default: return error(new ESLVal("case error at Pos(35622,36608)").add(ESLVal.list(_v862)));
-        }
-        }
-      else if(_v862.isNil())
-        {ESLVal t = expType.apply(_v1585,_v1587,_v1588,_v1589,_v1590);
-          
-          return new ESLVal("ListType",_v1584,t);
-        }
-      else return error(new ESLVal("case error at Pos(35622,36608)").add(ESLVal.list(_v862)));
-      }
-    }
-  });
-  private static ESLVal updateType = new ESLVal(new Function(new ESLVal("updateType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1577 = $args[0];
-  ESLVal _v1578 = $args[1];
-  ESLVal _v1579 = $args[2];
-  ESLVal _v1580 = $args[3];
-  ESLVal _v1581 = $args[4];
-  ESLVal _v1582 = $args[5];
-  ESLVal _v1583 = $args[6];
-  {ESLVal t = lookupType.apply(_v1578,_v1581);
-        
-        if(t.eql($null).boolVal)
-        return error(new ESLVal("TypeError",_v1577,new ESLVal("unbound variable ").add(_v1578)));
-        else
-          {ESLVal valueType = expType.apply(_v1579,_v1580,_v1581,_v1582,_v1583);
-            
-            if(subType.apply(valueType,t).boolVal)
-            return valueType;
-            else
-              return error(new ESLVal("TypeError",_v1577,new ESLVal("type of variable ").add(_v1578.add(new ESLVal("::").add(ppType.apply(t,_v1583).add(new ESLVal(" does not agree with value type ").add(ppType.apply(valueType,_v1583))))))));
-          }
-      }
-    }
-  });
-  private static ESLVal letType = new ESLVal(new Function(new ESLVal("letType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1570 = $args[0];
-  ESLVal _v1571 = $args[1];
-  ESLVal _v1572 = $args[2];
-  ESLVal _v1573 = $args[3];
-  ESLVal _v1574 = $args[4];
-  ESLVal _v1575 = $args[5];
-  ESLVal _v1576 = $args[6];
-  {ESLVal env = parBind.apply(_v1571,_v1573,_v1574,_v1575,_v1576);
-        
-        {{
-        ESLVal _v864 = _v1571;
-        while(_v864.isCons()) {
-          ESLVal b = _v864.headVal;
-          typeCheckDef.apply(b,_v1573,_v1574,env.add(_v1574),_v1575,_v1576);
-          _v864 = _v864.tailVal;}
-      }
-      return expType.apply(_v1572,_v1573,env.add(_v1574),_v1575,_v1576);}
-      }
-    }
-  });
-  private static ESLVal letrecType = new ESLVal(new Function(new ESLVal("letrecType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1563 = $args[0];
-  ESLVal _v1564 = $args[1];
-  ESLVal _v1565 = $args[2];
-  ESLVal _v1566 = $args[3];
-  ESLVal _v1567 = $args[4];
-  ESLVal _v1568 = $args[5];
-  ESLVal _v1569 = $args[6];
-  {ESLVal env = recBind.apply(_v1564,_v1566,_v1567,_v1568,_v1569);
-        
-        {{
-        ESLVal _v865 = _v1564;
-        while(_v865.isCons()) {
-          ESLVal b = _v865.headVal;
-          typeCheckDef.apply(b,_v1566,env.add(_v1567),env.add(_v1567),_v1568,_v1569);
-          _v865 = _v865.tailVal;}
-      }
-      return expType.apply(_v1565,_v1566,env.add(_v1567),_v1568,_v1569);}
-      }
-    }
-  });
-  private static ESLVal checkDupBindings = new ESLVal(new Function(new ESLVal("checkDupBindings"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal bs = $args[0];
-  {ESLVal _v866 = bs;
-        
-        if(_v866.isCons())
-        {ESLVal $1900 = _v866.head();
-          ESLVal $1901 = _v866.tail();
-          
-          {ESLVal b = $1900;
-          
-          {ESLVal _v1562 = $1901;
-          
-          if(member.apply(bindingName.apply(b),new java.util.function.Function<ESLVal,ESLVal>() {
-          public ESLVal apply(ESLVal $l0) {
-            ESLVal $a = $nil;
-            java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
-            while(!$l0.isNil()) { 
-              ESLVal b = $l0.head();
-              $l0 = $l0.tail();
-              $v.add(bindingName.apply(b));
-            }
-            for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
-            return $a;
-          }}.apply(_v1562)).boolVal)
-          return error(new ESLVal("TypeError",bindingLoc.apply(b),new ESLVal("duplicate definitions for ").add(bindingName.apply(b))));
-          else
-            return checkDupBindings.apply(_v1562);
-        }
-        }
-        }
-      else if(_v866.isNil())
-        return $null;
-      else return error(new ESLVal("case error at Pos(37854,38119)").add(ESLVal.list(_v866)));
-      }
-    }
-  });
-  private static ESLVal parBind = new ESLVal(new Function(new ESLVal("parBind"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1557 = $args[0];
-  ESLVal _v1558 = $args[1];
-  ESLVal _v1559 = $args[2];
-  ESLVal _v1560 = $args[3];
-  ESLVal _v1561 = $args[4];
-  {checkDupBindings.apply(_v1557);
-      return valueDefsToTEnv.apply(valueDefs.apply(_v1557),_v1558,_v1559,_v1560,_v1561);}
-    }
-  });
-  private static ESLVal recBind = new ESLVal(new Function(new ESLVal("recBind"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1552 = $args[0];
-  ESLVal _v1553 = $args[1];
-  ESLVal _v1554 = $args[2];
-  ESLVal _v1555 = $args[3];
-  ESLVal _v1556 = $args[4];
-  return valueDefsToTEnv.apply(valueDefs.apply(_v1552),_v1553,_v1554,_v1555,_v1556);
-    }
-  });
-  private static ESLVal caseType = new ESLVal(new Function(new ESLVal("caseType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1545 = $args[0];
-  ESLVal _v1546 = $args[1];
-  ESLVal _v1547 = $args[2];
-  ESLVal _v1548 = $args[3];
-  ESLVal _v1549 = $args[4];
-  ESLVal _v1550 = $args[5];
-  ESLVal _v1551 = $args[6];
-  {ESLVal ts1 = expTypes.apply(_v1546,_v1548,_v1549,_v1550,_v1551);
-        
-        {ESLVal ts2 = armTypes.apply(_v1547,ts1,_v1548,_v1549,_v1550,_v1551);
-        
-        if(allEqualTypes.apply(head.apply(ts2),tail.apply(ts2)).boolVal)
-        return head.apply(ts2);
-        else
-          return error(new ESLVal("TypeError",_v1545,new ESLVal("case arm types do not agree: ").add(ppTypes.apply(ts1,_v1551).add(new ESLVal(" ").add(ppTypes.apply(ts2,_v1551))))));
-      }
-      }
-    }
-  });
-  private static ESLVal tryType = new ESLVal(new Function(new ESLVal("tryType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1538 = $args[0];
-  ESLVal _v1539 = $args[1];
-  ESLVal _v1540 = $args[2];
-  ESLVal _v1541 = $args[3];
-  ESLVal _v1542 = $args[4];
-  ESLVal _v1543 = $args[5];
-  ESLVal _v1544 = $args[6];
-  {ESLVal ts1 = expTypes.apply(ESLVal.list(_v1539),_v1541,_v1542,_v1543,_v1544);
-        
-        {ESLVal ts2 = armTypes.apply(_v1540,ts1,_v1541,_v1542,_v1543,_v1544);
-        
-        if(allEqualTypes.apply(head.apply(ts2),tail.apply(ts2)).boolVal)
-        return head.apply(ts2);
-        else
-          return error(new ESLVal("TypeError",_v1538,new ESLVal("try arm types do not agree: ").add(ppTypes.apply(ts1,_v1544).add(new ESLVal(" ").add(ppTypes.apply(ts2,_v1544))))));
-      }
-      }
-    }
-  });
-  private static ESLVal armTypes = new ESLVal(new Function(new ESLVal("armTypes"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1531 = $args[0];
-  ESLVal _v1532 = $args[1];
-  ESLVal _v1533 = $args[2];
-  ESLVal _v1534 = $args[3];
-  ESLVal _v1535 = $args[4];
-  ESLVal _v1536 = $args[5];
-  {ESLVal _v867 = _v1531;
-        
-        if(_v867.isCons())
-        {ESLVal $1902 = _v867.head();
-          ESLVal $1903 = _v867.tail();
-          
-          {ESLVal a = $1902;
-          
-          {ESLVal _v1537 = $1903;
-          
-          return armTypes.apply(_v1537,_v1532,_v1533,_v1534,_v1535,_v1536).cons(armType.apply(a,_v1532,_v1533,_v1534,_v1535,_v1536));
-        }
-        }
-        }
-      else if(_v867.isNil())
-        return $nil;
-      else return error(new ESLVal("case error at Pos(39484,39653)").add(ESLVal.list(_v867)));
-      }
-    }
-  });
-  private static ESLVal armType = new ESLVal(new Function(new ESLVal("armType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1523 = $args[0];
-  ESLVal _v1524 = $args[1];
-  ESLVal _v1525 = $args[2];
-  ESLVal _v1526 = $args[3];
-  ESLVal _v1527 = $args[4];
-  ESLVal _v1528 = $args[5];
-  {ESLVal _v868 = _v1523;
-        
-        switch(_v868.termName) {
-        case "BArm": {ESLVal $1907 = _v868.termRef(0);
-          ESLVal $1906 = _v868.termRef(1);
-          ESLVal $1905 = _v868.termRef(2);
-          ESLVal $1904 = _v868.termRef(3);
-          
-          {ESLVal l = $1907;
-          
-          {ESLVal ps = $1906;
-          
-          {ESLVal guard = $1905;
-          
-          {ESLVal exp = $1904;
-          
-          {checkPatterns.apply(l,ps);
-        if(length.apply(ps).eql(length.apply(_v1524)).boolVal)
-          return patternTypes.apply(l,ps,_v1524,_v1525,_v1526,_v1527,_v1528,new ESLVal(new Function(new ESLVal("fun519"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal _v1529 = $args[0];
-            ESLVal _v1530 = $args[1];
-            return guardedExpType.apply(l,guard,exp,_v1525,_v1530,_v1527,_v1528);
-              }
-            }));
-          else
-            return error(new ESLVal("TypeError",l,new ESLVal("number of patterns ").add(length.apply(ps).add(new ESLVal(" does not match supplied values: ").add(length.apply(_v1524))))));}
-        }
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(39755,40216)").add(ESLVal.list(_v868)));
-      }
-      }
-    }
-  });
-  private static ESLVal refType = new ESLVal(new Function(new ESLVal("refType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1484 = $args[0];
-  ESLVal _v1485 = $args[1];
-  ESLVal _v1486 = $args[2];
-  ESLVal _v1487 = $args[3];
-  ESLVal _v1488 = $args[4];
-  ESLVal _v1489 = $args[5];
-  ESLVal _v1490 = $args[6];
-  { LetRec letrec = new LetRec() {
-        ESLVal t = derefType.apply(expType.apply(_v1485,_v1487,_v1488,_v1489,_v1490));
-        ESLVal findExport = new ESLVal(new Function(new ESLVal("findExport"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal decs = $args[0];
-          {ESLVal _v869 = decs;
-                
-                if(_v869.isCons())
-                {ESLVal $1908 = _v869.head();
-                  ESLVal $1909 = _v869.tail();
-                  
-                  switch($1908.termName) {
-                  case "Dec": {ESLVal $1913 = $1908.termRef(0);
-                    ESLVal $1912 = $1908.termRef(1);
-                    ESLVal $1911 = $1908.termRef(2);
-                    ESLVal $1910 = $1908.termRef(3);
-                    
-                    {ESLVal _v1496 = $1913;
-                    
-                    {ESLVal m = $1912;
-                    
-                    {ESLVal t = $1911;
-                    
-                    {ESLVal st = $1910;
-                    
-                    {ESLVal _v1497 = $1909;
-                    
-                    if(m.eql(_v1486).boolVal)
-                    return t;
-                    else
-                      {ESLVal d = $1908;
-                        
-                        {ESLVal _v1498 = $1909;
-                        
-                        return findExport.apply(_v1498);
-                      }
-                      }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  default: {ESLVal d = $1908;
-                    
-                    {ESLVal _v1499 = $1909;
-                    
-                    return findExport.apply(_v1499);
-                  }
-                  }
-                }
-                }
-              else if(_v869.isNil())
-                return $null;
-              else return error(new ESLVal("case error at Pos(40444,40617)").add(ESLVal.list(_v869)));
-              }
-            }
-          });
-        ESLVal findField = new ESLVal(new Function(new ESLVal("findField"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal fs = $args[0];
-          {ESLVal _v870 = fs;
-                
-                if(_v870.isCons())
-                {ESLVal $1914 = _v870.head();
-                  ESLVal $1915 = _v870.tail();
-                  
-                  switch($1914.termName) {
-                  case "Dec": {ESLVal $1919 = $1914.termRef(0);
-                    ESLVal $1918 = $1914.termRef(1);
-                    ESLVal $1917 = $1914.termRef(2);
-                    ESLVal $1916 = $1914.termRef(3);
-                    
-                    {ESLVal _v1491 = $1919;
-                    
-                    {ESLVal m = $1918;
-                    
-                    {ESLVal t = $1917;
-                    
-                    {ESLVal ds = $1916;
-                    
-                    {ESLVal _v1492 = $1915;
-                    
-                    if(m.eql(_v1486).boolVal)
-                    return t;
-                    else
-                      {ESLVal _v1493 = $1914;
-                        
-                        {ESLVal _v1494 = $1915;
-                        
-                        return findField.apply(_v1494);
-                      }
-                      }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  default: {ESLVal t = $1914;
-                    
-                    {ESLVal _v1495 = $1915;
-                    
-                    return findField.apply(_v1495);
-                  }
-                  }
-                }
-                }
-              else if(_v870.isNil())
-                return error(new ESLVal("TypeError",_v1484,new ESLVal("cannot find field name ").add(_v1486)));
-              else return error(new ESLVal("case error at Pos(40658,40866)").add(ESLVal.list(_v870)));
-              }
-            }
-          });
-        
-        public ESLVal get(String name) {
-          switch(name) {
-            case "t": return t;
-            
-            case "findExport": return findExport;
-            
-            case "findField": return findField;
-            
-            default: throw new Error("cannot find letrec binding");
-          }
-          }
-        };
-      ESLVal t = letrec.get("t");
-      
-      ESLVal findExport = letrec.get("findExport");
-      
-      ESLVal findField = letrec.get("findField");
-      
-        {ESLVal _v871 = typeNF.apply(t,_v1490);
-        
-        switch(_v871.termName) {
-        case "StrType": {ESLVal $1930 = _v871.termRef(0);
-          
-          {ESLVal sl = $1930;
-          
-          if(_v1486.eql(new ESLVal("explode")).boolVal)
-          return new ESLVal("ListType",sl,new ESLVal("IntType",sl));
-          else
-            {ESLVal _v1520 = $1930;
-              
-              if(_v1486.eql(new ESLVal("writeDate")).boolVal)
-              return new ESLVal("FloatType",_v1520);
-              else
-                {ESLVal _v1521 = _v871;
-                  
-                  return error(new ESLVal("TypeError",_v1484,new ESLVal("expecting a record type, but received ").add(ppType.apply(_v1521,_v1490))));
-                }
-            }
-        }
-        }
-      case "TableType": {ESLVal $1929 = _v871.termRef(0);
-          ESLVal $1928 = _v871.termRef(1);
-          ESLVal $1927 = _v871.termRef(2);
-          
-          {ESLVal _v1503 = $1929;
-          
-          {ESLVal k = $1928;
-          
-          {ESLVal v = $1927;
-          
-          if(_v1486.eql(new ESLVal("get")).boolVal)
-          return new ESLVal("FunType",_v1503,ESLVal.list(k),v);
-          else
-            {ESLVal _v1504 = $1929;
-              
-              {ESLVal _v1505 = $1928;
-              
-              {ESLVal _v1506 = $1927;
-              
-              if(_v1486.eql(new ESLVal("put")).boolVal)
-              return new ESLVal("FunType",_v1504,ESLVal.list(_v1505,_v1506),t);
-              else
-                {ESLVal _v1507 = $1929;
-                  
-                  {ESLVal _v1508 = $1928;
-                  
-                  {ESLVal _v1509 = $1927;
-                  
-                  if(_v1486.eql(new ESLVal("keys")).boolVal)
-                  return new ESLVal("ListType",_v1507,_v1508);
-                  else
-                    {ESLVal _v1510 = $1929;
-                      
-                      {ESLVal _v1511 = $1928;
-                      
-                      {ESLVal _v1512 = $1927;
-                      
-                      if(_v1486.eql(new ESLVal("vals")).boolVal)
-                      return new ESLVal("ListType",_v1510,_v1512);
-                      else
-                        {ESLVal _v1513 = $1929;
-                          
-                          {ESLVal _v1514 = $1928;
-                          
-                          {ESLVal _v1515 = $1927;
-                          
-                          if(_v1486.eql(new ESLVal("hasKey")).boolVal)
-                          return new ESLVal("FunType",_v1513,ESLVal.list(_v1514),new ESLVal("BoolType",_v1513));
-                          else
-                            {ESLVal _v1516 = $1929;
-                              
-                              {ESLVal _v1517 = $1928;
-                              
-                              {ESLVal _v1518 = $1927;
-                              
-                              if(_v1486.eql(new ESLVal("clear")).boolVal)
-                              return new ESLVal("FunType",_v1516,ESLVal.list(),new ESLVal("VoidType",_v1516));
-                              else
-                                {ESLVal _v1519 = _v871;
-                                  
-                                  return error(new ESLVal("TypeError",_v1516,new ESLVal("expecting a record type, but received ").add(ppType.apply(_v1519,_v1490))));
-                                }
-                            }
-                            }
-                            }
-                        }
-                        }
-                        }
-                    }
-                    }
-                    }
-                }
-                }
-                }
-            }
-            }
-            }
-        }
-        }
-        }
-        }
-      case "ListType": {ESLVal $1926 = _v871.termRef(0);
-          ESLVal $1925 = _v871.termRef(1);
-          
-          {ESLVal ll = $1926;
-          
-          {ESLVal _v1501 = $1925;
-          
-          if(_v1486.eql(new ESLVal("implode")).boolVal)
-          return new ESLVal("StrType",ll);
-          else
-            {ESLVal _v1502 = _v871;
-              
-              return error(new ESLVal("TypeError",_v1484,new ESLVal("expecting a record type, but received ").add(ppType.apply(_v1502,_v1490))));
-            }
-        }
-        }
-        }
-      case "RecordType": {ESLVal $1924 = _v871.termRef(0);
-          ESLVal $1923 = _v871.termRef(1);
-          
-          {ESLVal rl = $1924;
-          
-          {ESLVal fs = $1923;
-          
-          return findField.apply(fs);
-        }
-        }
-        }
-      case "ActType": {ESLVal $1922 = _v871.termRef(0);
-          ESLVal $1921 = _v871.termRef(1);
-          ESLVal $1920 = _v871.termRef(2);
-          
-          {ESLVal al = $1922;
-          
-          {ESLVal exports = $1921;
-          
-          {ESLVal handlers = $1920;
-          
-          {ESLVal _v1500 = findExport.apply(exports);
-          
-          if(_v1500.eql($null).boolVal)
-          return error(new ESLVal("TypeError",_v1484,new ESLVal("behaviour type does not export ").add(_v1486)));
-          else
-            return substTypeEnv.apply(_v1490,_v1500);
-        }
-        }
-        }
-        }
-        }
-        default: {ESLVal _v1522 = _v871;
-          
-          return error(new ESLVal("TypeError",_v1484,new ESLVal("expecting a record type, but received ").add(ppType.apply(_v1522,_v1490))));
-        }
-      }
-      }}
-      
-    }
-  });
-  private static ESLVal derefType = new ESLVal(new Function(new ESLVal("derefType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal t = $args[0];
-  {ESLVal _v872 = t;
-        
-        switch(_v872.termName) {
-        case "TypeClosure": {ESLVal $1931 = _v872.termRef(0);
-          
-          {ESLVal f = $1931;
-          
-          return derefType.apply(f.apply());
-        }
-        }
-        default: {ESLVal _v1483 = _v872;
-          
-          return _v1483;
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal recordType = new ESLVal(new Function(new ESLVal("recordType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1471 = $args[0];
-  ESLVal _v1472 = $args[1];
-  ESLVal _v1473 = $args[2];
-  ESLVal _v1474 = $args[3];
-  ESLVal _v1475 = $args[4];
-  ESLVal _v1476 = $args[5];
-  { LetRec letrec = new LetRec() {
-        ESLVal fieldTypes = new ESLVal(new Function(new ESLVal("fieldTypes"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1477 = $args[0];
-          {ESLVal _v873 = _v1477;
-                
-                if(_v873.isCons())
-                {ESLVal $1932 = _v873.head();
-                  ESLVal $1933 = _v873.tail();
-                  
-                  switch($1932.termName) {
-                  case "Binding": {ESLVal $1938 = $1932.termRef(0);
-                    ESLVal $1937 = $1932.termRef(1);
-                    ESLVal $1936 = $1932.termRef(2);
-                    ESLVal $1935 = $1932.termRef(3);
-                    ESLVal $1934 = $1932.termRef(4);
-                    
-                    {ESLVal _v1478 = $1938;
-                    
-                    {ESLVal n = $1937;
-                    
-                    {ESLVal t = $1936;
-                    
-                    {ESLVal st = $1935;
-                    
-                    {ESLVal e = $1934;
-                    
-                    {ESLVal _v1479 = $1933;
-                    
-                    {ESLVal _v1480 = expType.apply(e,_v1473,_v1474,_v1475,_v1476);
-                    
-                    return fieldTypes.apply(_v1479).cons(new ESLVal("Dec",_v1478,n,_v1480,_v1480));
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  default: {ESLVal _v1481 = _v873;
-                    
-                    return error(new ESLVal("TypeError",_v1471,new ESLVal("unknown field representation: ").add(_v1481)));
-                  }
-                }
-                }
-              else if(_v873.isNil())
-                return $nil;
-              else {ESLVal _v1482 = _v873;
-                  
-                  return error(new ESLVal("TypeError",_v1471,new ESLVal("unknown field representation: ").add(_v1482)));
-                }
-              }
-            }
-          });
-        
-        public ESLVal get(String name) {
-          switch(name) {
-            case "fieldTypes": return fieldTypes;
-            
-            default: throw new Error("cannot find letrec binding");
-          }
-          }
-        };
-      ESLVal fieldTypes = letrec.get("fieldTypes");
-      
-        return new ESLVal("RecordType",_v1471,fieldTypes.apply(_v1472));}
-      
-    }
-  });
-  private static ESLVal forType = new ESLVal(new Function(new ESLVal("forType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1459 = $args[0];
-  ESLVal _v1460 = $args[1];
-  ESLVal _v1461 = $args[2];
-  ESLVal _v1462 = $args[3];
-  ESLVal _v1463 = $args[4];
-  ESLVal _v1464 = $args[5];
-  ESLVal _v1465 = $args[6];
-  ESLVal _v1466 = $args[7];
-  {ESLVal _v1467 = expType.apply(_v1461,_v1463,_v1464,_v1465,_v1466);
-        
-        {ESLVal _v874 = _v1467;
-        
-        switch(_v874.termName) {
-        case "ListType": {ESLVal $1940 = _v874.termRef(0);
-          ESLVal $1939 = _v874.termRef(1);
-          
-          {ESLVal _v1468 = $1940;
-          
-          {ESLVal t = $1939;
-          
-          return patternType.apply(_v1468,_v1460,t,_v1463,_v1464,_v1465,_v1466,new ESLVal(new Function(new ESLVal("fun520"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1469 = $args[0];
-          ESLVal _v1470 = $args[1];
-          return expType.apply(_v1462,_v1463,_v1470,_v1465,_v1466);
-            }
-          }));
-        }
-        }
-        }
-        default: {ESLVal t = _v874;
-          
-          return error(new ESLVal("TypeError",_v1459,new ESLVal("for type expects a list: ").add(_v1461)));
-        }
-      }
-      }
-      }
-    }
-  });
-  private static ESLVal patternTypes = new ESLVal(new Function(new ESLVal("patternTypes"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1433 = $args[0];
-  ESLVal _v1434 = $args[1];
-  ESLVal _v1435 = $args[2];
-  ESLVal _v1436 = $args[3];
-  ESLVal _v1437 = $args[4];
-  ESLVal _v1438 = $args[5];
-  ESLVal _v1439 = $args[6];
-  ESLVal _v1440 = $args[7];
-  {ESLVal _v875 = _v1434;
-        ESLVal _v876 = _v1435;
-        
-        if(_v875.isCons())
-        {ESLVal $1941 = _v875.head();
-          ESLVal $1942 = _v875.tail();
-          
-          if(_v876.isCons())
-          {ESLVal $1943 = _v876.head();
-            ESLVal $1944 = _v876.tail();
-            
-            {ESLVal p = $1941;
-            
-            {ESLVal _v1441 = $1942;
-            
-            {ESLVal t = $1943;
-            
-            {ESLVal _v1442 = $1944;
-            
-            {ESLVal _v1443 = _v1441;
-            ESLVal _v1444 = _v1442;
-            
-            return patternType.apply(_v1433,p,t,_v1436,_v1437,_v1438,_v1439,new ESLVal(new Function(new ESLVal("fun521"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal _v1445 = $args[0];
-            ESLVal _v1446 = $args[1];
-            return patternTypes.apply(_v1433,_v1443,_v1444,_v1436,_v1446,_v1438,_v1439,new ESLVal(new Function(new ESLVal("fun522"),getSelf()) {
-                    public ESLVal apply(ESLVal... $args) {
-                      ESLVal _v1447 = $args[0];
-                  ESLVal _v1448 = $args[1];
-                  return _v1440.apply(_v1447.cons(_v1445),_v1448);
-                    }
-                  }));
-              }
-            }));
-          }
-          }
-          }
-          }
-          }
-          }
-        else if(_v876.isNil())
-          {ESLVal _v1449 = _v875;
-            
-            {ESLVal _v1450 = _v876;
-            
-            return error(new ESLVal("TypeError",_v1433,new ESLVal("somthing wrong with ").add(_v1449.add(new ESLVal(" ").add(_v1450)))));
-          }
-          }
-        else {ESLVal _v1451 = _v875;
-            
-            {ESLVal _v1452 = _v876;
-            
-            return error(new ESLVal("TypeError",_v1433,new ESLVal("somthing wrong with ").add(_v1451.add(new ESLVal(" ").add(_v1452)))));
-          }
-          }
-        }
-      else if(_v875.isNil())
-        if(_v876.isCons())
-          {ESLVal $1945 = _v876.head();
-            ESLVal $1946 = _v876.tail();
-            
-            {ESLVal _v1453 = _v875;
-            
-            {ESLVal _v1454 = _v876;
-            
-            return error(new ESLVal("TypeError",_v1433,new ESLVal("somthing wrong with ").add(_v1453.add(new ESLVal(" ").add(_v1454)))));
-          }
-          }
-          }
-        else if(_v876.isNil())
-          return _v1440.apply($nil,_v1437);
-        else {ESLVal _v1455 = _v875;
-            
-            {ESLVal _v1456 = _v876;
-            
-            return error(new ESLVal("TypeError",_v1433,new ESLVal("somthing wrong with ").add(_v1455.add(new ESLVal(" ").add(_v1456)))));
-          }
-          }
-      else {ESLVal _v1457 = _v875;
-          
-          {ESLVal _v1458 = _v876;
-          
-          return error(new ESLVal("TypeError",_v1433,new ESLVal("somthing wrong with ").add(_v1457.add(new ESLVal(" ").add(_v1458)))));
-        }
-        }
-      }
-    }
-  });
-  private static ESLVal getPatternType = new ESLVal(new Function(new ESLVal("getPatternType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1412 = $args[0];
-  ESLVal _v1413 = $args[1];
-  ESLVal _v1414 = $args[2];
-  ESLVal _v1415 = $args[3];
-  ESLVal _v1416 = $args[4];
-  ESLVal _v1417 = $args[5];
-  {ESLVal _v877 = _v1413;
-        
-        switch(_v877.termName) {
-        case "PApplyType": {ESLVal $1975 = _v877.termRef(0);
-          ESLVal $1974 = _v877.termRef(1);
-          ESLVal $1973 = _v877.termRef(2);
-          
-          {ESLVal _v1430 = $1975;
-          
-          {ESLVal _v1431 = $1974;
-          
-          {ESLVal args = $1973;
-          
-          return error(new ESLVal("should this happen?"));
-        }
-        }
-        }
-        }
-      case "PBool": {ESLVal $1972 = _v877.termRef(0);
-          ESLVal $1971 = _v877.termRef(1);
-          
-          {ESLVal _v1429 = $1972;
-          
-          {ESLVal b = $1971;
-          
-          return new ESLVal("BoolType",_v1429);
-        }
-        }
-        }
-      case "PCons": {ESLVal $1970 = _v877.termRef(0);
-          ESLVal $1969 = _v877.termRef(1);
-          ESLVal $1968 = _v877.termRef(2);
-          
-          {ESLVal _v1428 = $1970;
-          
-          {ESLVal hd = $1969;
-          
-          {ESLVal tl = $1968;
-          
-          return getPatternType.apply(_v1428,tl,_v1414,_v1415,_v1416,_v1417);
-        }
-        }
-        }
-        }
-      case "PBagCons": {ESLVal $1967 = _v877.termRef(0);
-          ESLVal $1966 = _v877.termRef(1);
-          ESLVal $1965 = _v877.termRef(2);
-          
-          {ESLVal _v1427 = $1967;
-          
-          {ESLVal hd = $1966;
-          
-          {ESLVal tl = $1965;
-          
-          return getPatternType.apply(_v1427,tl,_v1414,_v1415,_v1416,_v1417);
-        }
-        }
-        }
-        }
-      case "PSetCons": {ESLVal $1964 = _v877.termRef(0);
-          ESLVal $1963 = _v877.termRef(1);
-          ESLVal $1962 = _v877.termRef(2);
-          
-          {ESLVal _v1426 = $1964;
-          
-          {ESLVal hd = $1963;
-          
-          {ESLVal tl = $1962;
-          
-          return getPatternType.apply(_v1426,tl,_v1414,_v1415,_v1416,_v1417);
-        }
-        }
-        }
-        }
-      case "PNil": {ESLVal $1961 = _v877.termRef(0);
-          
-          {ESLVal _v1425 = $1961;
-          
-          return new ESLVal("ForallType",_v1425,ESLVal.list(new ESLVal("T")),new ESLVal("ListType",_v1425,new ESLVal("VarType",_v1425,new ESLVal("T"))));
-        }
-        }
-      case "PNull": {ESLVal $1960 = _v877.termRef(0);
-          
-          {ESLVal _v1424 = $1960;
-          
-          return new ESLVal("ForallType",_v1424,ESLVal.list(new ESLVal("T")),new ESLVal("VarType",_v1424,new ESLVal("T")));
-        }
-        }
-      case "PEmptyBag": {ESLVal $1959 = _v877.termRef(0);
-          
-          {ESLVal _v1423 = $1959;
-          
-          return new ESLVal("ForallType",_v1423,ESLVal.list(new ESLVal("T")),new ESLVal("BagType",_v1423,new ESLVal("VarType",_v1423,new ESLVal("T"))));
-        }
-        }
-      case "PEmptySet": {ESLVal $1958 = _v877.termRef(0);
-          
-          {ESLVal _v1422 = $1958;
-          
-          return new ESLVal("ForallType",_v1422,ESLVal.list(new ESLVal("T")),new ESLVal("SetType",_v1422,new ESLVal("VarType",_v1422,new ESLVal("T"))));
-        }
-        }
-      case "PInt": {ESLVal $1957 = _v877.termRef(0);
-          ESLVal $1956 = _v877.termRef(1);
-          
-          {ESLVal _v1421 = $1957;
-          
-          {ESLVal n = $1956;
-          
-          return new ESLVal("IntType",_v1421);
-        }
-        }
-        }
-      case "PVar": {ESLVal $1955 = _v877.termRef(0);
-          ESLVal $1954 = _v877.termRef(1);
-          ESLVal $1953 = _v877.termRef(2);
-          
-          {ESLVal _v1420 = $1955;
-          
-          {ESLVal n = $1954;
-          
-          {ESLVal pt = $1953;
-          
-          return substTypeEnv.apply(_v1417,pt);
-        }
-        }
-        }
-        }
-      case "PStr": {ESLVal $1952 = _v877.termRef(0);
-          ESLVal $1951 = _v877.termRef(1);
-          
-          {ESLVal _v1419 = $1952;
-          
-          {ESLVal s = $1951;
-          
-          return new ESLVal("StrType",_v1419);
-        }
-        }
-        }
-      case "PTerm": {ESLVal $1950 = _v877.termRef(0);
-          ESLVal $1949 = _v877.termRef(1);
-          ESLVal $1948 = _v877.termRef(2);
-          ESLVal $1947 = _v877.termRef(3);
-          
-          {ESLVal _v1418 = $1950;
-          
-          {ESLVal n = $1949;
-          
-          {ESLVal ts = $1948;
-          
-          {ESLVal ps = $1947;
-          
-          return lookupType.apply(n,_v1416);
-        }
-        }
-        }
-        }
-        }
-        default: {ESLVal _v1432 = _v877;
-          
-          return error(new ESLVal("TypeError",_v1412,new ESLVal("unknown type of pattern: ").add(_v1432)));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal patternType = new ESLVal(new Function(new ESLVal("patternType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1382 = $args[0];
-  ESLVal _v1383 = $args[1];
-  ESLVal _v1384 = $args[2];
-  ESLVal _v1385 = $args[3];
-  ESLVal _v1386 = $args[4];
-  ESLVal _v1387 = $args[5];
-  ESLVal _v1388 = $args[6];
-  ESLVal _v1389 = $args[7];
-  {ESLVal _v878 = _v1383;
-        
-        switch(_v878.termName) {
-        case "PAdd": {ESLVal $2007 = _v878.termRef(0);
-          ESLVal $2006 = _v878.termRef(1);
-          ESLVal $2005 = _v878.termRef(2);
-          
-          {ESLVal _v1410 = $2007;
-          
-          {ESLVal p1 = $2006;
-          
-          {ESLVal p2 = $2005;
-          
-          return addPatternType.apply(_v1410,p1,p2,_v1384,_v1385,_v1386,_v1387,_v1388,_v1389);
-        }
-        }
-        }
-        }
-      case "PApplyType": {ESLVal $2004 = _v878.termRef(0);
-          ESLVal $2003 = _v878.termRef(1);
-          ESLVal $2002 = _v878.termRef(2);
-          
-          {ESLVal _v1408 = $2004;
-          
-          {ESLVal _v1409 = $2003;
-          
-          {ESLVal args = $2002;
-          
-          return applyTypePatternType.apply(_v1408,_v1409,substTypesEnv.apply(_v1388,args),_v1384,_v1385,_v1386,_v1387,_v1388,_v1389);
-        }
-        }
-        }
-        }
-      case "PBool": {ESLVal $2001 = _v878.termRef(0);
-          ESLVal $2000 = _v878.termRef(1);
-          
-          {ESLVal _v1407 = $2001;
-          
-          {ESLVal b = $2000;
-          
-          if(isBoolType.apply(_v1384).boolVal)
-          return _v1389.apply(new ESLVal("BoolType",_v1407),_v1386);
-          else
-            return error(new ESLVal("TypeError",_v1407,new ESLVal("type mismatch: Bool and ").add(ppType.apply(_v1384,_v1388))));
-        }
-        }
-        }
-      case "PBagCons": {ESLVal $1999 = _v878.termRef(0);
-          ESLVal $1998 = _v878.termRef(1);
-          ESLVal $1997 = _v878.termRef(2);
-          
-          {ESLVal _v1404 = $1999;
-          
-          {ESLVal hd = $1998;
-          
-          {ESLVal tl = $1997;
-          
-          return bagConsPatternType.apply(_v1404,hd,tl,_v1384,_v1385,_v1386,_v1387,_v1388,new ESLVal(new Function(new ESLVal("fun523"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1405 = $args[0];
-          ESLVal _v1406 = $args[1];
-          return _v1389.apply(new ESLVal("ListType",_v1404,_v1405),_v1406);
-            }
-          }));
-        }
-        }
-        }
-        }
-      case "PSetCons": {ESLVal $1996 = _v878.termRef(0);
-          ESLVal $1995 = _v878.termRef(1);
-          ESLVal $1994 = _v878.termRef(2);
-          
-          {ESLVal _v1401 = $1996;
-          
-          {ESLVal hd = $1995;
-          
-          {ESLVal tl = $1994;
-          
-          return setConsPatternType.apply(_v1401,hd,tl,_v1384,_v1385,_v1386,_v1387,_v1388,new ESLVal(new Function(new ESLVal("fun524"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1402 = $args[0];
-          ESLVal _v1403 = $args[1];
-          return _v1389.apply(new ESLVal("ListType",_v1401,_v1402),_v1403);
-            }
-          }));
-        }
-        }
-        }
-        }
-      case "PCons": {ESLVal $1993 = _v878.termRef(0);
-          ESLVal $1992 = _v878.termRef(1);
-          ESLVal $1991 = _v878.termRef(2);
-          
-          {ESLVal _v1398 = $1993;
-          
-          {ESLVal hd = $1992;
-          
-          {ESLVal tl = $1991;
-          
-          return consPatternType.apply(_v1398,hd,tl,_v1384,_v1385,_v1386,_v1387,_v1388,new ESLVal(new Function(new ESLVal("fun525"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1399 = $args[0];
-          ESLVal _v1400 = $args[1];
-          return _v1389.apply(new ESLVal("ListType",_v1398,_v1399),_v1400);
-            }
-          }));
-        }
-        }
-        }
-        }
-      case "PNil": {ESLVal $1990 = _v878.termRef(0);
-          
-          {ESLVal _v1397 = $1990;
-          
-          return nilType.apply(_v1397,_v1384,_v1385,_v1386,_v1387,_v1388,_v1389);
-        }
-        }
-      case "PNull": {ESLVal $1989 = _v878.termRef(0);
-          
-          {ESLVal _v1396 = $1989;
-          
-          return _v1389.apply(_v1384,_v1386);
-        }
-        }
-      case "PEmptyBag": {ESLVal $1988 = _v878.termRef(0);
-          
-          {ESLVal _v1395 = $1988;
-          
-          return emptyBagType.apply(_v1395,_v1384,_v1385,_v1386,_v1387,_v1388,_v1389);
-        }
-        }
-      case "PEmptySet": {ESLVal $1987 = _v878.termRef(0);
-          
-          {ESLVal _v1394 = $1987;
-          
-          return emptySetType.apply(_v1394,_v1384,_v1385,_v1386,_v1387,_v1388,_v1389);
-        }
-        }
-      case "PInt": {ESLVal $1986 = _v878.termRef(0);
-          ESLVal $1985 = _v878.termRef(1);
-          
-          {ESLVal _v1393 = $1986;
-          
-          {ESLVal n = $1985;
-          
-          if(isIntType.apply(_v1384).boolVal)
-          return _v1389.apply(new ESLVal("IntType",_v1393),_v1386);
-          else
-            return error(new ESLVal("TypeError",_v1393,new ESLVal("type mismatch: Int and ").add(ppType.apply(_v1384,_v1388))));
-        }
-        }
-        }
-      case "PVar": {ESLVal $1984 = _v878.termRef(0);
-          ESLVal $1983 = _v878.termRef(1);
-          ESLVal $1982 = _v878.termRef(2);
-          
-          {ESLVal _v1392 = $1984;
-          
-          {ESLVal n = $1983;
-          
-          {ESLVal pt = $1982;
-          
-          return _v1389.apply(_v1384,ESLVal.list(new ESLVal("Map",n,_v1384)).add(_v1386));
-        }
-        }
-        }
-        }
-      case "PStr": {ESLVal $1981 = _v878.termRef(0);
-          ESLVal $1980 = _v878.termRef(1);
-          
-          {ESLVal _v1391 = $1981;
-          
-          {ESLVal s = $1980;
-          
-          if(isStrType.apply(_v1384).boolVal)
-          return _v1389.apply(new ESLVal("StrType",_v1391),_v1386);
-          else
-            return error(new ESLVal("TypeError",_v1391,new ESLVal("type mismatch: Str and ").add(ppType.apply(_v1384,_v1388))));
-        }
-        }
-        }
-      case "PTerm": {ESLVal $1979 = _v878.termRef(0);
-          ESLVal $1978 = _v878.termRef(1);
-          ESLVal $1977 = _v878.termRef(2);
-          ESLVal $1976 = _v878.termRef(3);
-          
-          {ESLVal _v1390 = $1979;
-          
-          {ESLVal n = $1978;
-          
-          {ESLVal ts = $1977;
-          
-          {ESLVal ps = $1976;
-          
-          return termPatternType.apply(_v1390,n,substTypesEnv.apply(_v1388,ts),ps,_v1384,_v1385,_v1386,_v1387,_v1388,_v1389);
-        }
-        }
-        }
-        }
-        }
-        default: {ESLVal _v1411 = _v878;
-          
-          return error(new ESLVal("TypeError",_v1382,new ESLVal("unknown type of pattern: ").add(_v1411)));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal addPatternType = new ESLVal(new Function(new ESLVal("addPatternType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1344 = $args[0];
-  ESLVal _v1345 = $args[1];
-  ESLVal _v1346 = $args[2];
-  ESLVal _v1347 = $args[3];
-  ESLVal _v1348 = $args[4];
-  ESLVal _v1349 = $args[5];
-  ESLVal _v1350 = $args[6];
-  ESLVal _v1351 = $args[7];
-  ESLVal _v1352 = $args[8];
-  return patternType.apply(_v1344,_v1345,_v1347,_v1348,_v1349,_v1350,_v1351,new ESLVal(new Function(new ESLVal("fun526"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            ESLVal _v1353 = $args[0];
-        ESLVal _v1354 = $args[1];
-        return patternType.apply(_v1344,_v1346,_v1347,_v1348,_v1354,_v1350,_v1351,new ESLVal(new Function(new ESLVal("fun527"),getSelf()) {
-                public ESLVal apply(ESLVal... $args) {
-                  ESLVal _v1355 = $args[0];
-              ESLVal _v1356 = $args[1];
-              {ESLVal _v879 = _v1347;
-                    
-                    switch(_v879.termName) {
-                    case "ListType": {ESLVal $2010 = _v879.termRef(0);
-                      ESLVal $2009 = _v879.termRef(1);
-                      
-                      {ESLVal tl = $2010;
-                      
-                      {ESLVal t = $2009;
-                      
-                      {ESLVal _v880 = _v1345;
-                      ESLVal _v881 = _v1346;
-                      
-                      switch(_v880.termName) {
-                      case "PCons": {ESLVal $2043 = _v880.termRef(0);
-                        ESLVal $2042 = _v880.termRef(1);
-                        ESLVal $2041 = _v880.termRef(2);
-                        
-                        switch($2041.termName) {
-                        case "PNil": {ESLVal $2044 = $2041.termRef(0);
-                          
-                          switch(_v881.termName) {
-                          case "PVar": {ESLVal $2047 = _v881.termRef(0);
-                            ESLVal $2046 = _v881.termRef(1);
-                            ESLVal $2045 = _v881.termRef(2);
-                            
-                            {ESLVal l1 = $2043;
-                            
-                            {ESLVal p = $2042;
-                            
-                            {ESLVal l3 = $2044;
-                            
-                            {ESLVal l4 = $2047;
-                            
-                            {ESLVal n2 = $2046;
-                            
-                            {ESLVal t2 = $2045;
-                            
-                            return _v1352.apply(_v1347,_v1356);
-                          }
-                          }
-                          }
-                          }
-                          }
-                          }
-                          }
-                          default: {ESLVal _v1376 = _v880;
-                            
-                            {ESLVal _v1377 = _v881;
-                            
-                            return error(new ESLVal("TypeError",_v1344,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
-                          }
-                          }
-                        }
-                        }
-                        default: {ESLVal _v1378 = _v880;
-                          
-                          {ESLVal _v1379 = _v881;
-                          
-                          return error(new ESLVal("TypeError",_v1344,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
-                        }
-                        }
-                      }
-                      }
-                    case "PVar": {ESLVal $2026 = _v880.termRef(0);
-                        ESLVal $2025 = _v880.termRef(1);
-                        ESLVal $2024 = _v880.termRef(2);
-                        
-                        switch(_v881.termName) {
-                        case "PCons": {ESLVal $2039 = _v881.termRef(0);
-                          ESLVal $2038 = _v881.termRef(1);
-                          ESLVal $2037 = _v881.termRef(2);
-                          
-                          switch($2037.termName) {
-                          case "PNil": {ESLVal $2040 = $2037.termRef(0);
-                            
-                            {ESLVal l1 = $2026;
-                            
-                            {ESLVal n = $2025;
-                            
-                            {ESLVal _v1371 = $2024;
-                            
-                            {ESLVal l2 = $2039;
-                            
-                            {ESLVal p = $2038;
-                            
-                            {ESLVal l3 = $2040;
-                            
-                            return _v1352.apply(_v1347,_v1356);
-                          }
-                          }
-                          }
-                          }
-                          }
-                          }
-                          }
-                          default: {ESLVal _v1372 = _v880;
-                            
-                            {ESLVal _v1373 = _v881;
-                            
-                            return error(new ESLVal("TypeError",_v1344,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
-                          }
-                          }
-                        }
-                        }
-                      case "PAdd": {ESLVal $2029 = _v881.termRef(0);
-                          ESLVal $2028 = _v881.termRef(1);
-                          ESLVal $2027 = _v881.termRef(2);
-                          
-                          switch($2028.termName) {
-                          case "PCons": {ESLVal $2032 = $2028.termRef(0);
-                            ESLVal $2031 = $2028.termRef(1);
-                            ESLVal $2030 = $2028.termRef(2);
-                            
-                            switch($2030.termName) {
-                            case "PNil": {ESLVal $2033 = $2030.termRef(0);
-                              
-                              switch($2027.termName) {
-                              case "PVar": {ESLVal $2036 = $2027.termRef(0);
-                                ESLVal $2035 = $2027.termRef(1);
-                                ESLVal $2034 = $2027.termRef(2);
-                                
-                                {ESLVal l1 = $2026;
-                                
-                                {ESLVal n1 = $2025;
-                                
-                                {ESLVal t1 = $2024;
-                                
-                                {ESLVal l2 = $2029;
-                                
-                                {ESLVal l3 = $2032;
-                                
-                                {ESLVal p = $2031;
-                                
-                                {ESLVal l5 = $2033;
-                                
-                                {ESLVal l6 = $2036;
-                                
-                                {ESLVal n3 = $2035;
-                                
-                                {ESLVal t3 = $2034;
-                                
-                                return _v1352.apply(_v1347,_v1356);
-                              }
-                              }
-                              }
-                              }
-                              }
-                              }
-                              }
-                              }
-                              }
-                              }
-                              }
-                              default: {ESLVal _v1365 = _v880;
-                                
-                                {ESLVal _v1366 = _v881;
-                                
-                                return error(new ESLVal("TypeError",_v1344,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
-                              }
-                              }
-                            }
-                            }
-                            default: {ESLVal _v1367 = _v880;
-                              
-                              {ESLVal _v1368 = _v881;
-                              
-                              return error(new ESLVal("TypeError",_v1344,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
-                            }
-                            }
-                          }
-                          }
-                          default: {ESLVal _v1369 = _v880;
-                            
-                            {ESLVal _v1370 = _v881;
-                            
-                            return error(new ESLVal("TypeError",_v1344,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
-                          }
-                          }
-                        }
-                        }
-                        default: {ESLVal _v1374 = _v880;
-                          
-                          {ESLVal _v1375 = _v881;
-                          
-                          return error(new ESLVal("TypeError",_v1344,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
-                        }
-                        }
-                      }
-                      }
-                    case "PAdd": {ESLVal $2013 = _v880.termRef(0);
-                        ESLVal $2012 = _v880.termRef(1);
-                        ESLVal $2011 = _v880.termRef(2);
-                        
-                        switch($2012.termName) {
-                        case "PVar": {ESLVal $2016 = $2012.termRef(0);
-                          ESLVal $2015 = $2012.termRef(1);
-                          ESLVal $2014 = $2012.termRef(2);
-                          
-                          switch($2011.termName) {
-                          case "PCons": {ESLVal $2019 = $2011.termRef(0);
-                            ESLVal $2018 = $2011.termRef(1);
-                            ESLVal $2017 = $2011.termRef(2);
-                            
-                            switch($2017.termName) {
-                            case "PNil": {ESLVal $2020 = $2017.termRef(0);
-                              
-                              switch(_v881.termName) {
-                              case "PVar": {ESLVal $2023 = _v881.termRef(0);
-                                ESLVal $2022 = _v881.termRef(1);
-                                ESLVal $2021 = _v881.termRef(2);
-                                
-                                {ESLVal l1 = $2013;
-                                
-                                {ESLVal l2 = $2016;
-                                
-                                {ESLVal n1 = $2015;
-                                
-                                {ESLVal t1 = $2014;
-                                
-                                {ESLVal l3 = $2019;
-                                
-                                {ESLVal p = $2018;
-                                
-                                {ESLVal l5 = $2020;
-                                
-                                {ESLVal l6 = $2023;
-                                
-                                {ESLVal n3 = $2022;
-                                
-                                {ESLVal t3 = $2021;
-                                
-                                return _v1352.apply(_v1347,_v1356);
-                              }
-                              }
-                              }
-                              }
-                              }
-                              }
-                              }
-                              }
-                              }
-                              }
-                              }
-                              default: {ESLVal _v1357 = _v880;
-                                
-                                {ESLVal _v1358 = _v881;
-                                
-                                return error(new ESLVal("TypeError",_v1344,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
-                              }
-                              }
-                            }
-                            }
-                            default: {ESLVal _v1359 = _v880;
-                              
-                              {ESLVal _v1360 = _v881;
-                              
-                              return error(new ESLVal("TypeError",_v1344,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
-                            }
-                            }
-                          }
-                          }
-                          default: {ESLVal _v1361 = _v880;
-                            
-                            {ESLVal _v1362 = _v881;
-                            
-                            return error(new ESLVal("TypeError",_v1344,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
-                          }
-                          }
-                        }
-                        }
-                        default: {ESLVal _v1363 = _v880;
-                          
-                          {ESLVal _v1364 = _v881;
-                          
-                          return error(new ESLVal("TypeError",_v1344,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
-                        }
-                        }
-                      }
-                      }
-                      default: {ESLVal _v1380 = _v880;
-                        
-                        {ESLVal _v1381 = _v881;
-                        
-                        return error(new ESLVal("TypeError",_v1344,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
-                      }
-                      }
-                    }
-                    }
-                    }
-                    }
-                    }
-                  case "TypeClosure": {ESLVal $2008 = _v879.termRef(0);
-                      
-                      {ESLVal g = $2008;
-                      
-                      return addPatternType.apply(_v1344,_v1345,_v1346,g.apply(),_v1348,_v1356,_v1350,_v1351,_v1352);
-                    }
-                    }
-                    default: {ESLVal t = _v879;
-                      
-                      return error(new ESLVal("TypeError",_v1344,new ESLVal("+ expects lists: ").add(ppType.apply(_v1347,_v1351))));
-                    }
-                  }
-                  }
-                }
-              }));
-          }
-        }));
-    }
-  });
-  private static ESLVal applyTypePatternType = new ESLVal(new Function(new ESLVal("applyTypePatternType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1331 = $args[0];
-  ESLVal _v1332 = $args[1];
-  ESLVal _v1333 = $args[2];
-  ESLVal _v1334 = $args[3];
-  ESLVal _v1335 = $args[4];
-  ESLVal _v1336 = $args[5];
-  ESLVal _v1337 = $args[6];
-  ESLVal _v1338 = $args[7];
-  ESLVal _v1339 = $args[8];
-  return patternType.apply(_v1331,_v1332,_v1334,_v1335,_v1336,_v1337,_v1338,new ESLVal(new Function(new ESLVal("fun528"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            ESLVal _v1340 = $args[0];
-        ESLVal _v1341 = $args[1];
-        {ESLVal _v882 = typeNF.apply(_v1340,_v1338);
-              
-              switch(_v882.termName) {
-              case "TypeFun": {ESLVal $2053 = _v882.termRef(0);
-                ESLVal $2052 = _v882.termRef(1);
-                ESLVal $2051 = _v882.termRef(2);
-                
-                {ESLVal fl = $2053;
-                
-                {ESLVal ns = $2052;
-                
-                {ESLVal t = $2051;
-                
-                if(length.apply(_v1333).eql(length.apply(ns)).boolVal)
-                {ESLVal _v1343 = substTypeEnv.apply(zipTypeEnv.apply(ns,_v1333).add(_v1338),t);
-                  
-                  if(typeEqual.apply(_v1343,_v1334).boolVal)
-                  return _v1339.apply(_v1343,_v1341);
-                  else
-                    return error(new ESLVal("TypeError",_v1331,new ESLVal("value type ").add(ppType.apply(_v1334,_v1338).add(new ESLVal(" does not match pattern type ").add(ppType.apply(_v1343,_v1338).add(new ESLVal(" ").add(ppTypeEnv.apply(_v1338))))))));
-                }
-                else
-                  return error(new ESLVal("TypeError",_v1331,new ESLVal("expecting ").add(length.apply(ns).add(new ESLVal(" args, but suplied with ").add(length.apply(_v1333))))));
-              }
-              }
-              }
-              }
-            case "ForallType": {ESLVal $2050 = _v882.termRef(0);
-                ESLVal $2049 = _v882.termRef(1);
-                ESLVal $2048 = _v882.termRef(2);
-                
-                {ESLVal fl = $2050;
-                
-                {ESLVal ns = $2049;
-                
-                {ESLVal t = $2048;
-                
-                if(length.apply(_v1333).eql(length.apply(ns)).boolVal)
-                {ESLVal _v1342 = substTypeEnv.apply(zipTypeEnv.apply(ns,_v1333).add(_v1338),t);
-                  
-                  if(typeEqual.apply(_v1342,_v1334).boolVal)
-                  return _v1339.apply(_v1342,_v1341);
-                  else
-                    return error(new ESLVal("TypeError",_v1331,new ESLVal("value type ").add(ppType.apply(_v1334,_v1338).add(new ESLVal(" does not match pattern type ").add(ppType.apply(_v1342,_v1338).add(new ESLVal(" ").add(ppTypeEnv.apply(_v1338))))))));
-                }
-                else
-                  return error(new ESLVal("TypeError",_v1331,new ESLVal("expecting ").add(length.apply(ns).add(new ESLVal(" args, but suplied with ").add(length.apply(_v1333))))));
-              }
-              }
-              }
-              }
-              default: {ESLVal t = _v882;
-                
-                return _v1339.apply(t,_v1341);
-              }
-            }
-            }
-          }
-        }));
-    }
-  });
-  private static ESLVal termPatternType = new ESLVal(new Function(new ESLVal("termPatternType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1314 = $args[0];
-  ESLVal _v1315 = $args[1];
-  ESLVal _v1316 = $args[2];
-  ESLVal _v1317 = $args[3];
-  ESLVal _v1318 = $args[4];
-  ESLVal _v1319 = $args[5];
-  ESLVal _v1320 = $args[6];
-  ESLVal _v1321 = $args[7];
-  ESLVal _v1322 = $args[8];
-  ESLVal _v1323 = $args[9];
-  {ESLVal _v1324 = getTermPatternType.apply(_v1314,_v1315,_v1316,_v1319,_v1320,_v1321,_v1322);
-        
-        if(typeEqual.apply(_v1324,_v1318).boolVal)
-        {ESLVal _v883 = typeNF.apply(_v1318,_v1322);
-          
-          switch(_v883.termName) {
-          case "UnionType": {ESLVal $2055 = _v883.termRef(0);
-            ESLVal $2054 = _v883.termRef(1);
-            
-            {ESLVal ul = $2055;
-            
-            {ESLVal cs = $2054;
-            
-            { LetRec letrec = new LetRec() {
-            ESLVal getCnstrArgs = new ESLVal(new Function(new ESLVal("getCnstrArgs"),getSelf()) {
-                public ESLVal apply(ESLVal... $args) {
-                  ESLVal _v1325 = $args[0];
-              {ESLVal _v884 = _v1325;
-                    
-                    if(_v884.isCons())
-                    {ESLVal $2056 = _v884.head();
-                      ESLVal $2057 = _v884.tail();
-                      
-                      switch($2056.termName) {
-                      case "TermType": {ESLVal $2060 = $2056.termRef(0);
-                        ESLVal $2059 = $2056.termRef(1);
-                        ESLVal $2058 = $2056.termRef(2);
-                        
-                        {ESLVal tl = $2060;
-                        
-                        {ESLVal m = $2059;
-                        
-                        {ESLVal args = $2058;
-                        
-                        {ESLVal _v1326 = $2057;
-                        
-                        if(m.eql(_v1315).boolVal)
-                        return args;
-                        else
-                          {ESLVal t = $2056;
-                            
-                            {ESLVal _v1327 = $2057;
-                            
-                            return getCnstrArgs.apply(_v1327);
-                          }
-                          }
-                      }
-                      }
-                      }
-                      }
-                      }
-                      default: {ESLVal t = $2056;
-                        
-                        {ESLVal _v1328 = $2057;
-                        
-                        return getCnstrArgs.apply(_v1328);
-                      }
-                      }
-                    }
-                    }
-                  else if(_v884.isNil())
-                    return error(new ESLVal("TypeError",_v1314,new ESLVal("cannot find constructor for ").add(_v1315)));
-                  else return error(new ESLVal("case error at Pos(50159,50418)").add(ESLVal.list(_v884)));
-                  }
-                }
-              });
-            
-            public ESLVal get(String name) {
-              switch(name) {
-                case "getCnstrArgs": return getCnstrArgs;
-                
-                default: throw new Error("cannot find letrec binding");
-              }
-              }
-            };
-          ESLVal getCnstrArgs = letrec.get("getCnstrArgs");
-          
-            {ESLVal argTypes = getCnstrArgs.apply(cs);
-            
-            if(length.apply(_v1317).eql(length.apply(argTypes)).boolVal)
-            return patternTypes.apply(_v1314,_v1317,argTypes,_v1319,_v1320,_v1321,_v1322,new ESLVal(new Function(new ESLVal("fun529"),getSelf()) {
-                public ESLVal apply(ESLVal... $args) {
-                  ESLVal _v1329 = $args[0];
-              ESLVal _v1330 = $args[1];
-              return _v1323.apply(typeNF.apply(_v1318,_v1322),_v1330);
-                }
-              }));
-            else
-              return error(new ESLVal("TypeError",_v1314,new ESLVal("arity mismatch.")));
-          }}
-          
-          }
-          }
-          }
-          default: {ESLVal t = _v883;
-            
-            return error(new ESLVal("TypeError",_v1314,new ESLVal("expecting a data type: ").add(_v1318)));
-          }
-        }
-        }
-        else
-          return error(new ESLVal("TypeError",_v1314,new ESLVal("term pattern type ").add(ppType.apply(_v1324,_v1322).add(new ESLVal(" does not match supplied value type ").add(ppType.apply(_v1318,_v1322))))));
-      }
-    }
-  });
-  private static ESLVal typeNF = new ESLVal(new Function(new ESLVal("typeNF"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1307 = $args[0];
-  ESLVal _v1308 = $args[1];
-  {ESLVal _v885 = substTypeEnv.apply(_v1308,_v1307);
-        
-        switch(_v885.termName) {
-        case "ApplyTypeFun": {ESLVal $2071 = _v885.termRef(0);
-          ESLVal $2070 = _v885.termRef(1);
-          ESLVal $2069 = _v885.termRef(2);
-          
-          {ESLVal l = $2071;
-          
-          {ESLVal op = $2070;
-          
-          {ESLVal args = $2069;
-          
-          {ESLVal _v887 = typeNF.apply(op,_v1308);
-          
-          switch(_v887.termName) {
-          case "TypeFun": {ESLVal $2077 = _v887.termRef(0);
-            ESLVal $2076 = _v887.termRef(1);
-            ESLVal $2075 = _v887.termRef(2);
-            
-            {ESLVal _v1310 = $2077;
-            
-            {ESLVal ns = $2076;
-            
-            {ESLVal _v1311 = $2075;
-            
-            if(length.apply(args).eql(length.apply(ns)).boolVal)
-            return typeNF.apply(substTypeEnv.apply(zipTypeEnv.apply(ns,args),_v1311),_v1308);
-            else
-              return error(new ESLVal("TypeError",_v1310,new ESLVal("function arity error")));
-          }
-          }
-          }
-          }
-          default: {ESLVal _v1312 = _v887;
-            
-            return error(new ESLVal("TypeError",l,new ESLVal("expecting a type function: ").add(ppType.apply(typeNF.apply(op,_v1308),_v1308))));
-          }
-        }
-        }
-        }
-        }
-        }
-        }
-      case "TypeClosure": {ESLVal $2068 = _v885.termRef(0);
-          
-          {ESLVal f = $2068;
-          
-          return typeNF.apply(f.apply(),_v1308);
-        }
-        }
-      case "RecType": {ESLVal $2067 = _v885.termRef(0);
-          ESLVal $2066 = _v885.termRef(1);
-          ESLVal $2065 = _v885.termRef(2);
-          
-          {ESLVal l = $2067;
-          
-          {ESLVal n = $2066;
-          
-          {ESLVal _v1309 = $2065;
-          
-          return typeNF.apply(substType.apply(new ESLVal("RecType",l,n,_v1309),n,_v1309),_v1308);
-        }
-        }
-        }
-        }
-      case "ExtendedAct": {ESLVal $2064 = _v885.termRef(0);
-          ESLVal $2063 = _v885.termRef(1);
-          ESLVal $2062 = _v885.termRef(2);
-          ESLVal $2061 = _v885.termRef(3);
-          
-          {ESLVal l1 = $2064;
-          
-          {ESLVal parent = $2063;
-          
-          {ESLVal decs1 = $2062;
-          
-          {ESLVal ms1 = $2061;
-          
-          {ESLVal _v886 = typeNF.apply(parent,_v1308);
-          
-          switch(_v886.termName) {
-          case "ActType": {ESLVal $2074 = _v886.termRef(0);
-            ESLVal $2073 = _v886.termRef(1);
-            ESLVal $2072 = _v886.termRef(2);
-            
-            {ESLVal l2 = $2074;
-            
-            {ESLVal decs2 = $2073;
-            
-            {ESLVal ms2 = $2072;
-            
-            return new ESLVal("ActType",l1,decs2.add(decs1),ms2.add(ms1));
-          }
-          }
-          }
-          }
-          default: return error(new ESLVal("case error at Pos(51735,51870)").add(ESLVal.list(_v886)));
-        }
-        }
-        }
-        }
-        }
-        }
-        }
-        default: {ESLVal _v1313 = _v885;
-          
-          return _v1313;
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal getTermPatternType = new ESLVal(new Function(new ESLVal("getTermPatternType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1300 = $args[0];
-  ESLVal _v1301 = $args[1];
-  ESLVal _v1302 = $args[2];
-  ESLVal _v1303 = $args[3];
-  ESLVal _v1304 = $args[4];
-  ESLVal _v1305 = $args[5];
-  ESLVal _v1306 = $args[6];
-  {ESLVal t = lookupType.apply(_v1301,_v1305);
-        
-        if(t.eql($null).boolVal)
-        return error(new ESLVal("TypeError",_v1300,new ESLVal("unknown constructor ").add(_v1301)));
-        else
-          if(length.apply(_v1302).gre($zero).boolVal)
-            return getGenericTermPatternType.apply(_v1300,t,_v1302,_v1303,_v1304,_v1305,_v1306);
-            else
-              return t;
-      }
-    }
-  });
-  private static ESLVal getGenericTermPatternType = new ESLVal(new Function(new ESLVal("getGenericTermPatternType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1291 = $args[0];
-  ESLVal _v1292 = $args[1];
-  ESLVal _v1293 = $args[2];
-  ESLVal _v1294 = $args[3];
-  ESLVal _v1295 = $args[4];
-  ESLVal _v1296 = $args[5];
-  ESLVal _v1297 = $args[6];
-  {ESLVal _v888 = _v1292;
-        
-        switch(_v888.termName) {
-        case "RecType": {ESLVal $2083 = _v888.termRef(0);
-          ESLVal $2082 = _v888.termRef(1);
-          ESLVal $2081 = _v888.termRef(2);
-          
-          {ESLVal rl = $2083;
-          
-          {ESLVal rn = $2082;
-          
-          {ESLVal rt = $2081;
-          
-          return getGenericTermPatternType.apply(_v1291,substType.apply(new ESLVal("RecType",rl,rn,rt),rn,rt),_v1293,_v1294,_v1295,_v1296,_v1297);
-        }
-        }
-        }
-        }
-      case "TypeFun": {ESLVal $2080 = _v888.termRef(0);
-          ESLVal $2079 = _v888.termRef(1);
-          ESLVal $2078 = _v888.termRef(2);
-          
-          {ESLVal al = $2080;
-          
-          {ESLVal ns = $2079;
-          
-          {ESLVal _v1298 = $2078;
-          
-          if(length.apply(ns).eql(length.apply(_v1293)).boolVal)
-          {ESLVal e = zipTypeEnv.apply(ns,_v1293);
-            
-            return substTypeEnv.apply(e.add(_v1297),_v1298);
-          }
-          else
-            return error(new ESLVal("TypeError",_v1291,new ESLVal("generic constructor mismatch")));
-        }
-        }
-        }
-        }
-        default: {ESLVal _v1299 = _v888;
-          
-          return error(new ESLVal("TypeError",_v1291,new ESLVal("expecting a generic type: ").add(ppType.apply(_v1299,_v1297))));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal nilType = new ESLVal(new Function(new ESLVal("nilType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1283 = $args[0];
-  ESLVal _v1284 = $args[1];
-  ESLVal _v1285 = $args[2];
-  ESLVal _v1286 = $args[3];
-  ESLVal _v1287 = $args[4];
-  ESLVal _v1288 = $args[5];
-  ESLVal _v1289 = $args[6];
-  {ESLVal _v889 = typeNF.apply(_v1284,_v1288);
-        
-        switch(_v889.termName) {
-        case "ListType": {ESLVal $2086 = _v889.termRef(0);
-          ESLVal $2085 = _v889.termRef(1);
-          
-          {ESLVal ltl = $2086;
-          
-          {ESLVal et = $2085;
-          
-          return _v1289.apply(new ESLVal("ForallType",_v1283,ESLVal.list(new ESLVal("T")),new ESLVal("ListType",_v1283,new ESLVal("VarType",_v1283,new ESLVal("T")))),_v1286);
-        }
-        }
-        }
-      case "TypeClosure": {ESLVal $2084 = _v889.termRef(0);
-          
-          {ESLVal g = $2084;
-          
-          return nilType.apply(_v1283,g.apply(),_v1285,_v1286,_v1287,_v1288,_v1289);
-        }
-        }
-        default: {ESLVal _v1290 = _v889;
-          
-          return error(new ESLVal("TypeError",_v1283,new ESLVal("expecting a list type: ").add(ppType.apply(_v1290,_v1288))));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal emptyBagType = new ESLVal(new Function(new ESLVal("emptyBagType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1275 = $args[0];
-  ESLVal _v1276 = $args[1];
-  ESLVal _v1277 = $args[2];
-  ESLVal _v1278 = $args[3];
-  ESLVal _v1279 = $args[4];
-  ESLVal _v1280 = $args[5];
-  ESLVal _v1281 = $args[6];
-  {ESLVal _v890 = _v1276;
-        
-        switch(_v890.termName) {
-        case "BagType": {ESLVal $2088 = _v890.termRef(0);
-          ESLVal $2087 = _v890.termRef(1);
-          
-          {ESLVal ltl = $2088;
-          
-          {ESLVal et = $2087;
-          
-          return _v1281.apply(new ESLVal("ForallType",_v1275,ESLVal.list(new ESLVal("T")),new ESLVal("BagType",_v1275,new ESLVal("VarType",_v1275,new ESLVal("T")))),_v1278);
-        }
-        }
-        }
-        default: {ESLVal _v1282 = _v890;
-          
-          return error(new ESLVal("TypeError",_v1275,new ESLVal("expecting a bag type: ").add(ppType.apply(_v1282,_v1280))));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal emptySetType = new ESLVal(new Function(new ESLVal("emptySetType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1267 = $args[0];
-  ESLVal _v1268 = $args[1];
-  ESLVal _v1269 = $args[2];
-  ESLVal _v1270 = $args[3];
-  ESLVal _v1271 = $args[4];
-  ESLVal _v1272 = $args[5];
-  ESLVal _v1273 = $args[6];
-  {ESLVal _v891 = _v1268;
-        
-        switch(_v891.termName) {
-        case "SetType": {ESLVal $2090 = _v891.termRef(0);
-          ESLVal $2089 = _v891.termRef(1);
-          
-          {ESLVal ltl = $2090;
-          
-          {ESLVal et = $2089;
-          
-          return _v1273.apply(new ESLVal("ForallType",_v1267,ESLVal.list(new ESLVal("T")),new ESLVal("SetType",_v1267,new ESLVal("VarType",_v1267,new ESLVal("T")))),_v1270);
-        }
-        }
-        }
-        default: {ESLVal _v1274 = _v891;
-          
-          return error(new ESLVal("TypeError",_v1267,new ESLVal("expecting a set type: ").add(ppType.apply(_v1274,_v1272))));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal consPatternType = new ESLVal(new Function(new ESLVal("consPatternType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1253 = $args[0];
-  ESLVal _v1254 = $args[1];
-  ESLVal _v1255 = $args[2];
-  ESLVal _v1256 = $args[3];
-  ESLVal _v1257 = $args[4];
-  ESLVal _v1258 = $args[5];
-  ESLVal _v1259 = $args[6];
-  ESLVal _v1260 = $args[7];
-  ESLVal _v1261 = $args[8];
-  {ESLVal _v892 = typeNF.apply(_v1256,_v1260);
-        
-        switch(_v892.termName) {
-        case "ListType": {ESLVal $2093 = _v892.termRef(0);
-          ESLVal $2092 = _v892.termRef(1);
-          
-          {ESLVal ltl = $2093;
-          
-          {ESLVal et = $2092;
-          
-          return patternType.apply(_v1253,_v1254,substTypeEnv.apply(_v1260,et),_v1257,_v1258,_v1259,_v1260,new ESLVal(new Function(new ESLVal("fun530"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1262 = $args[0];
-          ESLVal _v1263 = $args[1];
-          return patternType.apply(_v1253,_v1255,_v1256,_v1257,_v1263,_v1259,_v1260,new ESLVal(new Function(new ESLVal("fun531"),getSelf()) {
-                  public ESLVal apply(ESLVal... $args) {
-                    ESLVal _v1264 = $args[0];
-                ESLVal _v1265 = $args[1];
-                return _v1261.apply(_v1262,_v1265);
-                  }
-                }));
-            }
-          }));
-        }
-        }
-        }
-      case "TypeClosure": {ESLVal $2091 = _v892.termRef(0);
-          
-          {ESLVal g = $2091;
-          
-          return consPatternType.apply(_v1253,_v1254,_v1255,g.apply(),_v1257,_v1258,_v1259,_v1260,_v1261);
-        }
-        }
-        default: {ESLVal _v1266 = _v892;
-          
-          return error(new ESLVal("TypeError",_v1253,new ESLVal("expecting a list type: ").add(ppType.apply(_v1266,_v1260))));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal bagConsPatternType = new ESLVal(new Function(new ESLVal("bagConsPatternType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1239 = $args[0];
-  ESLVal _v1240 = $args[1];
-  ESLVal _v1241 = $args[2];
-  ESLVal _v1242 = $args[3];
-  ESLVal _v1243 = $args[4];
-  ESLVal _v1244 = $args[5];
-  ESLVal _v1245 = $args[6];
-  ESLVal _v1246 = $args[7];
-  ESLVal _v1247 = $args[8];
-  {ESLVal _v893 = _v1242;
-        
-        switch(_v893.termName) {
-        case "BagType": {ESLVal $2095 = _v893.termRef(0);
-          ESLVal $2094 = _v893.termRef(1);
-          
-          {ESLVal ltl = $2095;
-          
-          {ESLVal et = $2094;
-          
-          return patternType.apply(_v1239,_v1240,substTypeEnv.apply(_v1246,et),_v1243,_v1244,_v1245,_v1246,new ESLVal(new Function(new ESLVal("fun532"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1248 = $args[0];
-          ESLVal _v1249 = $args[1];
-          return patternType.apply(_v1239,_v1241,_v1242,_v1243,_v1249,_v1245,_v1246,new ESLVal(new Function(new ESLVal("fun533"),getSelf()) {
-                  public ESLVal apply(ESLVal... $args) {
-                    ESLVal _v1250 = $args[0];
-                ESLVal _v1251 = $args[1];
-                return _v1247.apply(_v1248,_v1251);
-                  }
-                }));
-            }
-          }));
-        }
-        }
-        }
-        default: {ESLVal _v1252 = _v893;
-          
-          return error(new ESLVal("TypeError",_v1239,new ESLVal("expecting a bag type: ").add(ppType.apply(_v1252,_v1246))));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal setConsPatternType = new ESLVal(new Function(new ESLVal("setConsPatternType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1225 = $args[0];
-  ESLVal _v1226 = $args[1];
-  ESLVal _v1227 = $args[2];
-  ESLVal _v1228 = $args[3];
-  ESLVal _v1229 = $args[4];
-  ESLVal _v1230 = $args[5];
-  ESLVal _v1231 = $args[6];
-  ESLVal _v1232 = $args[7];
-  ESLVal _v1233 = $args[8];
-  {ESLVal _v894 = _v1228;
-        
-        switch(_v894.termName) {
-        case "SetType": {ESLVal $2097 = _v894.termRef(0);
-          ESLVal $2096 = _v894.termRef(1);
-          
-          {ESLVal ltl = $2097;
-          
-          {ESLVal et = $2096;
-          
-          return patternType.apply(_v1225,_v1226,substTypeEnv.apply(_v1232,et),_v1229,_v1230,_v1231,_v1232,new ESLVal(new Function(new ESLVal("fun534"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1234 = $args[0];
-          ESLVal _v1235 = $args[1];
-          return patternType.apply(_v1225,_v1227,_v1228,_v1229,_v1235,_v1231,_v1232,new ESLVal(new Function(new ESLVal("fun535"),getSelf()) {
-                  public ESLVal apply(ESLVal... $args) {
-                    ESLVal _v1236 = $args[0];
-                ESLVal _v1237 = $args[1];
-                return _v1233.apply(_v1234,_v1237);
-                  }
-                }));
-            }
-          }));
-        }
-        }
-        }
-        default: {ESLVal _v1238 = _v894;
-          
-          return error(new ESLVal("TypeError",_v1225,new ESLVal("expecting a set type: ").add(ppType.apply(_v1238,_v1232))));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal binExpType = new ESLVal(new Function(new ESLVal("binExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1216 = $args[0];
-  ESLVal _v1217 = $args[1];
-  ESLVal _v1218 = $args[2];
-  ESLVal _v1219 = $args[3];
-  ESLVal _v1220 = $args[4];
-  ESLVal _v1221 = $args[5];
-  ESLVal _v1222 = $args[6];
-  ESLVal _v1223 = $args[7];
-  {ESLVal _v895 = _v1218;
-        
-        switch(_v895.strVal) {
-        case "+": return plusExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "-": return subExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "*": return mulExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "/": return divExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case ":": return consExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "=": return eqlExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "<>": return neqlExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "and": return andExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "andalso": return andExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "or": return orExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "orelse": return orExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case ">": return compareExpType.apply(_v1216,_v1217,new ESLVal(">"),_v1219,_v1220,_v1221,_v1222,_v1223);
-      case ">=": return compareExpType.apply(_v1216,_v1217,new ESLVal(">="),_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "<": return compareExpType.apply(_v1216,_v1217,new ESLVal("<"),_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "<=": return compareExpType.apply(_v1216,_v1217,new ESLVal("<="),_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "..": return dotDotExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "%": return percentExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-      case "@": return atExpType.apply(_v1216,_v1217,_v1219,_v1220,_v1221,_v1222,_v1223);
-        default: {ESLVal _v1224 = _v895;
-          
-          return error(new ESLVal("TypeError",_v1216,new ESLVal("unknown operator: ").add(_v1224)));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal andExpType = new ESLVal(new Function(new ESLVal("andExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1209 = $args[0];
-  ESLVal _v1210 = $args[1];
-  ESLVal _v1211 = $args[2];
-  ESLVal _v1212 = $args[3];
-  ESLVal _v1213 = $args[4];
-  ESLVal _v1214 = $args[5];
-  ESLVal _v1215 = $args[6];
-  {ESLVal t1 = expType.apply(_v1210,_v1212,_v1213,_v1214,_v1215);
-        ESLVal t2 = expType.apply(_v1211,_v1212,_v1213,_v1214,_v1215);
-        
-        if(isBoolType.apply(t1).and(isBoolType.apply(t2)).boolVal)
-        return t1;
-        else
-          return error(new ESLVal("TypeError",_v1209,new ESLVal("and expects boolean arguments: ").add(ppType.apply(t1,_v1215).add(new ESLVal(" ").add(ppType.apply(t2,_v1215))))));
-      }
-    }
-  });
-  private static ESLVal atExpType = new ESLVal(new Function(new ESLVal("atExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1202 = $args[0];
-  ESLVal _v1203 = $args[1];
-  ESLVal _v1204 = $args[2];
-  ESLVal _v1205 = $args[3];
-  ESLVal _v1206 = $args[4];
-  ESLVal _v1207 = $args[5];
-  ESLVal _v1208 = $args[6];
-  {ESLVal t1 = expType.apply(_v1203,_v1205,_v1206,_v1207,_v1208);
-        ESLVal t2 = expType.apply(_v1204,_v1205,_v1206,_v1207,_v1208);
-        
-        if(typeEqual.apply(t1,t2).boolVal)
-        return t1;
-        else
-          return error(new ESLVal("TypeError",_v1202,new ESLVal("@ expects arguments to be same type: ").add(ppType.apply(t1,_v1208).add(new ESLVal(" ").add(ppType.apply(t2,_v1208))))));
-      }
-    }
-  });
-  private static ESLVal dotDotExpType = new ESLVal(new Function(new ESLVal("dotDotExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1195 = $args[0];
-  ESLVal _v1196 = $args[1];
-  ESLVal _v1197 = $args[2];
-  ESLVal _v1198 = $args[3];
-  ESLVal _v1199 = $args[4];
-  ESLVal _v1200 = $args[5];
-  ESLVal _v1201 = $args[6];
-  {ESLVal t1 = expType.apply(_v1196,_v1198,_v1199,_v1200,_v1201);
-        ESLVal t2 = expType.apply(_v1197,_v1198,_v1199,_v1200,_v1201);
-        
-        if(isIntType.apply(t1).and(isIntType.apply(t2)).boolVal)
-        return new ESLVal("ListType",_v1195,new ESLVal("IntType",_v1195));
-        else
-          return error(new ESLVal("TypeError",_v1195,new ESLVal(".. expects integer arguments: ").add(ppType.apply(t1,_v1201).add(new ESLVal(" ").add(ppType.apply(t2,_v1201))))));
-      }
-    }
-  });
-  private static ESLVal percentExpType = new ESLVal(new Function(new ESLVal("percentExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1188 = $args[0];
-  ESLVal _v1189 = $args[1];
-  ESLVal _v1190 = $args[2];
-  ESLVal _v1191 = $args[3];
-  ESLVal _v1192 = $args[4];
-  ESLVal _v1193 = $args[5];
-  ESLVal _v1194 = $args[6];
-  {ESLVal t1 = expType.apply(_v1189,_v1191,_v1192,_v1193,_v1194);
-        ESLVal t2 = expType.apply(_v1190,_v1191,_v1192,_v1193,_v1194);
-        
-        if(isIntType.apply(t1).and(isIntType.apply(t2)).boolVal)
-        return new ESLVal("IntType",_v1188);
-        else
-          return error(new ESLVal("TypeError",_v1188,new ESLVal("% expects integer arguments: ").add(ppType.apply(t1,_v1194).add(new ESLVal(" ").add(ppType.apply(t2,_v1194))))));
-      }
-    }
-  });
-  private static ESLVal compareExpType = new ESLVal(new Function(new ESLVal("compareExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1180 = $args[0];
-  ESLVal _v1181 = $args[1];
-  ESLVal _v1182 = $args[2];
-  ESLVal _v1183 = $args[3];
-  ESLVal _v1184 = $args[4];
-  ESLVal _v1185 = $args[5];
-  ESLVal _v1186 = $args[6];
-  ESLVal _v1187 = $args[7];
-  {ESLVal t1 = expType.apply(_v1181,_v1184,_v1185,_v1186,_v1187);
-        ESLVal t2 = expType.apply(_v1183,_v1184,_v1185,_v1186,_v1187);
-        
-        if(isNumType.apply(t1).and(isNumType.apply(t2)).boolVal)
-        return new ESLVal("BoolType",_v1180);
-        else
-          return error(new ESLVal("TypeError",_v1180,_v1182.add(new ESLVal(" expects numeric arguments: ").add(ppType.apply(t1,_v1187).add(new ESLVal(" ").add(ppType.apply(t2,_v1187)))))));
-      }
-    }
-  });
-  private static ESLVal orExpType = new ESLVal(new Function(new ESLVal("orExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1173 = $args[0];
-  ESLVal _v1174 = $args[1];
-  ESLVal _v1175 = $args[2];
-  ESLVal _v1176 = $args[3];
-  ESLVal _v1177 = $args[4];
-  ESLVal _v1178 = $args[5];
-  ESLVal _v1179 = $args[6];
-  {ESLVal t1 = expType.apply(_v1174,_v1176,_v1177,_v1178,_v1179);
-        ESLVal t2 = expType.apply(_v1175,_v1176,_v1177,_v1178,_v1179);
-        
-        if(isBoolType.apply(t1).and(isBoolType.apply(t2)).boolVal)
-        return t1;
-        else
-          return error(new ESLVal("TypeError",_v1173,new ESLVal("or expects boolean arguments: ").add(ppType.apply(t1,_v1179).add(new ESLVal(" ").add(ppType.apply(t2,_v1179))))));
-      }
-    }
-  });
-  private static ESLVal eqlExpType = new ESLVal(new Function(new ESLVal("eqlExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1166 = $args[0];
-  ESLVal _v1167 = $args[1];
-  ESLVal _v1168 = $args[2];
-  ESLVal _v1169 = $args[3];
-  ESLVal _v1170 = $args[4];
-  ESLVal _v1171 = $args[5];
-  ESLVal _v1172 = $args[6];
-  {ESLVal t1 = expType.apply(_v1167,_v1169,_v1170,_v1171,_v1172);
-        ESLVal t2 = expType.apply(_v1168,_v1169,_v1170,_v1171,_v1172);
-        
-        if(typeEqual.apply(t1,t2).boolVal)
-        return new ESLVal("BoolType",_v1166);
-        else
-          return error(new ESLVal("TypeError",_v1166,new ESLVal("= expects types to agree: ").add(ppType.apply(t1,_v1172).add(new ESLVal(" <> ").add(ppType.apply(t2,_v1172))))));
-      }
-    }
-  });
-  private static ESLVal neqlExpType = new ESLVal(new Function(new ESLVal("neqlExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1159 = $args[0];
-  ESLVal _v1160 = $args[1];
-  ESLVal _v1161 = $args[2];
-  ESLVal _v1162 = $args[3];
-  ESLVal _v1163 = $args[4];
-  ESLVal _v1164 = $args[5];
-  ESLVal _v1165 = $args[6];
-  {ESLVal t1 = expType.apply(_v1160,_v1162,_v1163,_v1164,_v1165);
-        ESLVal t2 = expType.apply(_v1161,_v1162,_v1163,_v1164,_v1165);
-        
-        if(typeEqual.apply(t1,t2).boolVal)
-        return new ESLVal("BoolType",_v1159);
-        else
-          return error(new ESLVal("TypeError",_v1159,new ESLVal("<> expects types to agree: ").add(ppType.apply(t1,_v1165).add(new ESLVal(" <> ").add(ppType.apply(t2,_v1165))))));
-      }
-    }
-  });
-  private static ESLVal consExpType = new ESLVal(new Function(new ESLVal("consExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1151 = $args[0];
-  ESLVal _v1152 = $args[1];
-  ESLVal _v1153 = $args[2];
-  ESLVal _v1154 = $args[3];
-  ESLVal _v1155 = $args[4];
-  ESLVal _v1156 = $args[5];
-  ESLVal _v1157 = $args[6];
-  {ESLVal t1 = typeNF.apply(expType.apply(_v1152,_v1154,_v1155,_v1156,_v1157),_v1157);
-        ESLVal t2 = typeNF.apply(expType.apply(_v1153,_v1154,_v1155,_v1156,_v1157),_v1157);
-        
-        {ESLVal _v896 = t2;
-        ESLVal _v897 = t1;
-        
-        switch(_v896.termName) {
-        case "ListType": {ESLVal $2099 = _v896.termRef(0);
-          ESLVal $2098 = _v896.termRef(1);
-          
-          {ESLVal _v1158 = $2099;
-          
-          {ESLVal elementType = $2098;
-          
-          {ESLVal headType = _v897;
-          
-          if(subType.apply(headType,elementType).boolVal)
-          return t2;
-          else
-            return error(new ESLVal("TypeError",_v1158,new ESLVal(": expects head type ").add(ppType.apply(headType,_v1157).add(new ESLVal(" and element type ").add(ppType.apply(elementType,_v1157).add(new ESLVal(" to agree")))))));
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(60925,61206)").add(ESLVal.list(_v896,_v897)));
-      }
-      }
-      }
-    }
-  });
-  private static ESLVal divExpType = new ESLVal(new Function(new ESLVal("divExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1138 = $args[0];
-  ESLVal _v1139 = $args[1];
-  ESLVal _v1140 = $args[2];
-  ESLVal _v1141 = $args[3];
-  ESLVal _v1142 = $args[4];
-  ESLVal _v1143 = $args[5];
-  ESLVal _v1144 = $args[6];
-  {ESLVal t1 = expType.apply(_v1139,_v1141,_v1142,_v1143,_v1144);
-        ESLVal t2 = expType.apply(_v1140,_v1141,_v1142,_v1143,_v1144);
-        
-        {ESLVal _v898 = t1;
-        ESLVal _v899 = t2;
-        
-        switch(_v898.termName) {
-        case "IntType": {ESLVal $2102 = _v898.termRef(0);
-          
-          switch(_v899.termName) {
-          case "IntType": {ESLVal $2103 = _v899.termRef(0);
-            
-            {ESLVal l1 = $2102;
-            
-            {ESLVal l2 = $2103;
-            
-            return t1;
-          }
-          }
-          }
-          default: {ESLVal _v1147 = _v898;
-            
-            {ESLVal _v1148 = _v899;
-            
-            return error(new ESLVal("TypeError",_v1138,new ESLVal("incomptible types for /: ").add(ppType.apply(_v1147,_v1144).add(new ESLVal(" and ").add(ppType.apply(_v1148,_v1144))))));
-          }
-          }
-        }
-        }
-      case "FloatType": {ESLVal $2100 = _v898.termRef(0);
-          
-          switch(_v899.termName) {
-          case "FloatType": {ESLVal $2101 = _v899.termRef(0);
-            
-            {ESLVal l1 = $2100;
-            
-            {ESLVal l2 = $2101;
-            
-            return t1;
-          }
-          }
-          }
-          default: {ESLVal _v1145 = _v898;
-            
-            {ESLVal _v1146 = _v899;
-            
-            return error(new ESLVal("TypeError",_v1138,new ESLVal("incomptible types for /: ").add(ppType.apply(_v1145,_v1144).add(new ESLVal(" and ").add(ppType.apply(_v1146,_v1144))))));
-          }
-          }
-        }
-        }
-        default: {ESLVal _v1149 = _v898;
-          
-          {ESLVal _v1150 = _v899;
-          
-          return error(new ESLVal("TypeError",_v1138,new ESLVal("incomptible types for /: ").add(ppType.apply(_v1149,_v1144).add(new ESLVal(" and ").add(ppType.apply(_v1150,_v1144))))));
-        }
-        }
-      }
-      }
-      }
-    }
-  });
-  private static ESLVal mulExpType = new ESLVal(new Function(new ESLVal("mulExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1125 = $args[0];
-  ESLVal _v1126 = $args[1];
-  ESLVal _v1127 = $args[2];
-  ESLVal _v1128 = $args[3];
-  ESLVal _v1129 = $args[4];
-  ESLVal _v1130 = $args[5];
-  ESLVal _v1131 = $args[6];
-  {ESLVal t1 = expType.apply(_v1126,_v1128,_v1129,_v1130,_v1131);
-        ESLVal t2 = expType.apply(_v1127,_v1128,_v1129,_v1130,_v1131);
-        
-        {ESLVal _v900 = t1;
-        ESLVal _v901 = t2;
-        
-        switch(_v900.termName) {
-        case "IntType": {ESLVal $2107 = _v900.termRef(0);
-          
-          switch(_v901.termName) {
-          case "IntType": {ESLVal $2109 = _v901.termRef(0);
-            
-            {ESLVal l1 = $2107;
-            
-            {ESLVal l2 = $2109;
-            
-            return t1;
-          }
-          }
-          }
-        case "FloatType": {ESLVal $2108 = _v901.termRef(0);
-            
-            {ESLVal l1 = $2107;
-            
-            {ESLVal l2 = $2108;
-            
-            return t2;
-          }
-          }
-          }
-          default: {ESLVal _v1134 = _v900;
-            
-            {ESLVal _v1135 = _v901;
-            
-            return error(new ESLVal("TypeError",_v1125,new ESLVal("incomptible types for *: ").add(ppType.apply(_v1134,_v1131).add(new ESLVal(" and ").add(ppType.apply(_v1135,_v1131))))));
-          }
-          }
-        }
-        }
-      case "FloatType": {ESLVal $2104 = _v900.termRef(0);
-          
-          switch(_v901.termName) {
-          case "FloatType": {ESLVal $2106 = _v901.termRef(0);
-            
-            {ESLVal l1 = $2104;
-            
-            {ESLVal l2 = $2106;
-            
-            return t1;
-          }
-          }
-          }
-        case "IntType": {ESLVal $2105 = _v901.termRef(0);
-            
-            {ESLVal l1 = $2104;
-            
-            {ESLVal l2 = $2105;
-            
-            return t1;
-          }
-          }
-          }
-          default: {ESLVal _v1132 = _v900;
-            
-            {ESLVal _v1133 = _v901;
-            
-            return error(new ESLVal("TypeError",_v1125,new ESLVal("incomptible types for *: ").add(ppType.apply(_v1132,_v1131).add(new ESLVal(" and ").add(ppType.apply(_v1133,_v1131))))));
-          }
-          }
-        }
-        }
-        default: {ESLVal _v1136 = _v900;
-          
-          {ESLVal _v1137 = _v901;
-          
-          return error(new ESLVal("TypeError",_v1125,new ESLVal("incomptible types for *: ").add(ppType.apply(_v1136,_v1131).add(new ESLVal(" and ").add(ppType.apply(_v1137,_v1131))))));
-        }
-        }
-      }
-      }
-      }
-    }
-  });
-  private static ESLVal subExpType = new ESLVal(new Function(new ESLVal("subExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1112 = $args[0];
-  ESLVal _v1113 = $args[1];
-  ESLVal _v1114 = $args[2];
-  ESLVal _v1115 = $args[3];
-  ESLVal _v1116 = $args[4];
-  ESLVal _v1117 = $args[5];
-  ESLVal _v1118 = $args[6];
-  {ESLVal t1 = expType.apply(_v1113,_v1115,_v1116,_v1117,_v1118);
-        ESLVal t2 = expType.apply(_v1114,_v1115,_v1116,_v1117,_v1118);
-        
-        {ESLVal _v902 = t1;
-        ESLVal _v903 = t2;
-        
-        switch(_v902.termName) {
-        case "IntType": {ESLVal $2113 = _v902.termRef(0);
-          
-          switch(_v903.termName) {
-          case "IntType": {ESLVal $2115 = _v903.termRef(0);
-            
-            {ESLVal l1 = $2113;
-            
-            {ESLVal l2 = $2115;
-            
-            return t1;
-          }
-          }
-          }
-        case "FloatType": {ESLVal $2114 = _v903.termRef(0);
-            
-            {ESLVal l1 = $2113;
-            
-            {ESLVal l2 = $2114;
-            
-            return t2;
-          }
-          }
-          }
-          default: {ESLVal _v1121 = _v902;
-            
-            {ESLVal _v1122 = _v903;
-            
-            return error(new ESLVal("TypeError",_v1112,new ESLVal("incomptible types for -: ").add(ppType.apply(_v1121,_v1118).add(new ESLVal(" and ").add(ppType.apply(_v1122,_v1118))))));
-          }
-          }
-        }
-        }
-      case "FloatType": {ESLVal $2110 = _v902.termRef(0);
-          
-          switch(_v903.termName) {
-          case "FloatType": {ESLVal $2112 = _v903.termRef(0);
-            
-            {ESLVal l1 = $2110;
-            
-            {ESLVal l2 = $2112;
-            
-            return t1;
-          }
-          }
-          }
-        case "IntType": {ESLVal $2111 = _v903.termRef(0);
-            
-            {ESLVal l1 = $2110;
-            
-            {ESLVal l2 = $2111;
-            
-            return t1;
-          }
-          }
-          }
-          default: {ESLVal _v1119 = _v902;
-            
-            {ESLVal _v1120 = _v903;
-            
-            return error(new ESLVal("TypeError",_v1112,new ESLVal("incomptible types for -: ").add(ppType.apply(_v1119,_v1118).add(new ESLVal(" and ").add(ppType.apply(_v1120,_v1118))))));
-          }
-          }
-        }
-        }
-        default: {ESLVal _v1123 = _v902;
-          
-          {ESLVal _v1124 = _v903;
-          
-          return error(new ESLVal("TypeError",_v1112,new ESLVal("incomptible types for -: ").add(ppType.apply(_v1123,_v1118).add(new ESLVal(" and ").add(ppType.apply(_v1124,_v1118))))));
-        }
-        }
-      }
-      }
-      }
-    }
-  });
-  private static ESLVal plusExpType = new ESLVal(new Function(new ESLVal("plusExpType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1071 = $args[0];
-  ESLVal _v1072 = $args[1];
-  ESLVal _v1073 = $args[2];
-  ESLVal _v1074 = $args[3];
-  ESLVal _v1075 = $args[4];
-  ESLVal _v1076 = $args[5];
-  ESLVal _v1077 = $args[6];
-  {ESLVal t1 = expType.apply(_v1072,_v1074,_v1075,_v1076,_v1077);
-        ESLVal t2 = expType.apply(_v1073,_v1074,_v1075,_v1076,_v1077);
-        
-        {ESLVal _v904 = t1;
-        ESLVal _v905 = t2;
-        
-        switch(_v904.termName) {
-        case "StrType": {ESLVal $2129 = _v904.termRef(0);
-          
-          {ESLVal _v1106 = $2129;
-          
-          {ESLVal _v1107 = _v905;
-          
-          return t1;
-        }
-        }
-        }
-      case "IntType": {ESLVal $2127 = _v904.termRef(0);
-          
-          switch(_v905.termName) {
-          case "IntType": {ESLVal $2128 = _v905.termRef(0);
-            
-            {ESLVal l1 = $2127;
-            
-            {ESLVal l2 = $2128;
-            
-            return t1;
-          }
-          }
-          }
-          default: switch(_v905.termName) {
-            case "StrType": {ESLVal $2116 = _v905.termRef(0);
-              
-              {ESLVal _v1102 = _v904;
-              
-              {ESLVal _v1103 = $2116;
-              
-              return t2;
-            }
-            }
-            }
-            default: {ESLVal _v1104 = _v904;
-              
-              {ESLVal _v1105 = _v905;
-              
-              return error(new ESLVal("TypeError",_v1071,new ESLVal("incomptible types for +: ").add(ppType.apply(_v1104,_v1077).add(new ESLVal(" and ").add(ppType.apply(_v1105,_v1077))))));
-            }
-            }
-          }
-        }
-        }
-      case "FloatType": {ESLVal $2125 = _v904.termRef(0);
-          
-          switch(_v905.termName) {
-          case "FloatType": {ESLVal $2126 = _v905.termRef(0);
-            
-            {ESLVal l1 = $2125;
-            
-            {ESLVal l2 = $2126;
-            
-            return t1;
-          }
-          }
-          }
-          default: switch(_v905.termName) {
-            case "StrType": {ESLVal $2116 = _v905.termRef(0);
-              
-              {ESLVal _v1098 = _v904;
-              
-              {ESLVal _v1099 = $2116;
-              
-              return t2;
-            }
-            }
-            }
-            default: {ESLVal _v1100 = _v904;
-              
-              {ESLVal _v1101 = _v905;
-              
-              return error(new ESLVal("TypeError",_v1071,new ESLVal("incomptible types for +: ").add(ppType.apply(_v1100,_v1077).add(new ESLVal(" and ").add(ppType.apply(_v1101,_v1077))))));
-            }
-            }
-          }
-        }
-        }
-      case "ListType": {ESLVal $2122 = _v904.termRef(0);
-          ESLVal $2121 = _v904.termRef(1);
-          
-          switch(_v905.termName) {
-          case "ListType": {ESLVal $2124 = _v905.termRef(0);
-            ESLVal $2123 = _v905.termRef(1);
-            
-            {ESLVal l1 = $2122;
-            
-            {ESLVal _v1088 = $2121;
-            
-            {ESLVal l2 = $2124;
-            
-            {ESLVal _v1089 = $2123;
-            
-            if(typeEqual.apply(_v1088,_v1089).boolVal)
-            return new ESLVal("ListType",l1,_v1088);
-            else
-              switch(_v905.termName) {
-                case "StrType": {ESLVal $2116 = _v905.termRef(0);
-                  
-                  {ESLVal _v1090 = _v904;
-                  
-                  {ESLVal _v1091 = $2116;
-                  
-                  return _v1089;
-                }
-                }
-                }
-                default: {ESLVal _v1092 = _v904;
-                  
-                  {ESLVal _v1093 = _v905;
-                  
-                  return error(new ESLVal("TypeError",_v1071,new ESLVal("incomptible types for +: ").add(ppType.apply(_v1092,_v1077).add(new ESLVal(" and ").add(ppType.apply(_v1093,_v1077))))));
-                }
-                }
-              }
-          }
-          }
-          }
-          }
-          }
-          default: switch(_v905.termName) {
-            case "StrType": {ESLVal $2116 = _v905.termRef(0);
-              
-              {ESLVal _v1094 = _v904;
-              
-              {ESLVal _v1095 = $2116;
-              
-              return t2;
-            }
-            }
-            }
-            default: {ESLVal _v1096 = _v904;
-              
-              {ESLVal _v1097 = _v905;
-              
-              return error(new ESLVal("TypeError",_v1071,new ESLVal("incomptible types for +: ").add(ppType.apply(_v1096,_v1077).add(new ESLVal(" and ").add(ppType.apply(_v1097,_v1077))))));
-            }
-            }
-          }
-        }
-        }
-      case "SetType": {ESLVal $2118 = _v904.termRef(0);
-          ESLVal $2117 = _v904.termRef(1);
-          
-          switch(_v905.termName) {
-          case "SetType": {ESLVal $2120 = _v905.termRef(0);
-            ESLVal $2119 = _v905.termRef(1);
-            
-            {ESLVal l1 = $2118;
-            
-            {ESLVal _v1078 = $2117;
-            
-            {ESLVal l2 = $2120;
-            
-            {ESLVal _v1079 = $2119;
-            
-            if(typeEqual.apply(_v1078,_v1079).boolVal)
-            return new ESLVal("SetType",l1,_v1078);
-            else
-              switch(_v905.termName) {
-                case "StrType": {ESLVal $2116 = _v905.termRef(0);
-                  
-                  {ESLVal _v1080 = _v904;
-                  
-                  {ESLVal _v1081 = $2116;
-                  
-                  return _v1079;
-                }
-                }
-                }
-                default: {ESLVal _v1082 = _v904;
-                  
-                  {ESLVal _v1083 = _v905;
-                  
-                  return error(new ESLVal("TypeError",_v1071,new ESLVal("incomptible types for +: ").add(ppType.apply(_v1082,_v1077).add(new ESLVal(" and ").add(ppType.apply(_v1083,_v1077))))));
-                }
-                }
-              }
-          }
-          }
-          }
-          }
-          }
-          default: switch(_v905.termName) {
-            case "StrType": {ESLVal $2116 = _v905.termRef(0);
-              
-              {ESLVal _v1084 = _v904;
-              
-              {ESLVal _v1085 = $2116;
-              
-              return t2;
-            }
-            }
-            }
-            default: {ESLVal _v1086 = _v904;
-              
-              {ESLVal _v1087 = _v905;
-              
-              return error(new ESLVal("TypeError",_v1071,new ESLVal("incomptible types for +: ").add(ppType.apply(_v1086,_v1077).add(new ESLVal(" and ").add(ppType.apply(_v1087,_v1077))))));
-            }
-            }
-          }
-        }
-        }
-        default: switch(_v905.termName) {
-          case "StrType": {ESLVal $2116 = _v905.termRef(0);
-            
-            {ESLVal _v1108 = _v904;
-            
-            {ESLVal _v1109 = $2116;
-            
-            return t2;
-          }
-          }
-          }
-          default: {ESLVal _v1110 = _v904;
-            
-            {ESLVal _v1111 = _v905;
-            
-            return error(new ESLVal("TypeError",_v1071,new ESLVal("incomptible types for +: ").add(ppType.apply(_v1110,_v1077).add(new ESLVal(" and ").add(ppType.apply(_v1111,_v1077))))));
-          }
-          }
-        }
-      }
-      }
-      }
-    }
-  });
-  private static ESLVal applyTypeExp = new ESLVal(new Function(new ESLVal("applyTypeExp"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1060 = $args[0];
-  ESLVal _v1061 = $args[1];
-  ESLVal _v1062 = $args[2];
-  ESLVal _v1063 = $args[3];
-  ESLVal _v1064 = $args[4];
-  ESLVal _v1065 = $args[5];
-  ESLVal _v1066 = $args[6];
-  {ESLVal _v1067 = substTypesEnv.apply(_v1066,_v1062);
-        ESLVal _v1068 = expType.apply(_v1061,_v1063,_v1064,_v1065,_v1066);
-        
-        {ESLVal _v906 = _v1068;
-        
-        switch(_v906.termName) {
-        case "ForallType": {ESLVal $2132 = _v906.termRef(0);
-          ESLVal $2131 = _v906.termRef(1);
-          ESLVal $2130 = _v906.termRef(2);
-          
-          {ESLVal l1 = $2132;
-          
-          {ESLVal ns = $2131;
-          
-          {ESLVal _v1069 = $2130;
-          
-          if(length.apply(ns).eql(length.apply(_v1067)).boolVal)
-          {ESLVal env = zipTypeEnv.apply(ns,_v1067);
-            
-            return substTypeEnv.apply(env.add(_v1064),_v1069);
-          }
-          else
-            return error(new ESLVal("TypeError",_v1060,new ESLVal("universal type expects ").add(length.apply(ns).add(new ESLVal(" types, but supplied with ").add(length.apply(_v1067))))));
-        }
-        }
-        }
-        }
-        default: {ESLVal _v1070 = _v906;
-          
-          return error(new ESLVal("TypeError",_v1060,new ESLVal("expecting a universal type: ").add(_v1070)));
-        }
-      }
-      }
-      }
-    }
-  });
-  private static ESLVal expTypes = new ESLVal(new Function(new ESLVal("expTypes"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1055 = $args[0];
-  ESLVal _v1056 = $args[1];
-  ESLVal _v1057 = $args[2];
-  ESLVal _v1058 = $args[3];
-  ESLVal _v1059 = $args[4];
-  return map.apply(new ESLVal(new Function(new ESLVal("fun536"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            ESLVal e = $args[0];
-        return expType.apply(e,_v1056,_v1057,_v1058,_v1059);
-          }
-        }),_v1055);
-    }
-  });
-  private static ESLVal applyType = new ESLVal(new Function(new ESLVal("applyType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1048 = $args[0];
-  ESLVal _v1049 = $args[1];
-  ESLVal _v1050 = $args[2];
-  ESLVal _v1051 = $args[3];
-  ESLVal _v1052 = $args[4];
-  ESLVal _v1053 = $args[5];
-  ESLVal _v1054 = $args[6];
-  {ESLVal _v907 = typeNF.apply(expType.apply(_v1049,_v1051,_v1052,_v1053,_v1054),_v1054);
-        
-        switch(_v907.termName) {
-        case "FunType": {ESLVal $2135 = _v907.termRef(0);
-          ESLVal $2134 = _v907.termRef(1);
-          ESLVal $2133 = _v907.termRef(2);
-          
-          {ESLVal l1 = $2135;
-          
-          {ESLVal domain = $2134;
-          
-          {ESLVal range = $2133;
-          
-          {ESLVal supplied = expTypes.apply(_v1050,_v1051,_v1052,_v1053,_v1054);
-          
-          if(length.apply(domain).eql(length.apply(supplied)).boolVal)
-          if(subTypes.apply(supplied,domain).boolVal)
-            return range;
-            else
-              return error(new ESLVal("TypeError",_v1048,new ESLVal("supplied argument types ").add(ppTypes.apply(supplied,_v1054).add(new ESLVal(" do not match function domain ").add(ppTypes.apply(domain,_v1054))))));
-          else
-            return error(new ESLVal("TypeError",_v1048,new ESLVal("expecting ").add(length.apply(domain).add(new ESLVal(" args, but supplied with ").add(length.apply(supplied))))));
-        }
-        }
-        }
-        }
-        }
-        default: {ESLVal t = _v907;
-          
-          return error(new ESLVal("TypeError",_v1048,new ESLVal("unknown type for apply: ").add(ppType.apply(t,_v1054))));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal ifType = new ESLVal(new Function(new ESLVal("ifType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1040 = $args[0];
-  ESLVal _v1041 = $args[1];
-  ESLVal _v1042 = $args[2];
-  ESLVal _v1043 = $args[3];
-  ESLVal _v1044 = $args[4];
-  ESLVal _v1045 = $args[5];
-  ESLVal _v1046 = $args[6];
-  ESLVal _v1047 = $args[7];
-  {ESLVal testType = expType.apply(_v1041,_v1044,_v1045,_v1046,_v1047);
-        
-        if(isBoolType.apply(testType).boolVal)
-        {ESLVal conseqType = expType.apply(_v1042,_v1044,_v1045,_v1046,_v1047);
-          ESLVal altType = expType.apply(_v1043,_v1044,_v1045,_v1046,_v1047);
-          
-          if(typeEqual.apply(conseqType,altType).boolVal)
-          return conseqType;
-          else
-            return error(new ESLVal("TypeError",_v1040,new ESLVal("conseq and alt types do not agree: ").add(ppType.apply(conseqType,_v1047).add(new ESLVal(" ").add(ppType.apply(altType,_v1047))))));
-        }
-        else
-          return error(new ESLVal("if expects a bool ").add(ppType.apply(testType,_v1047)));
-      }
-    }
-  });
-  private static ESLVal checkDecs = new ESLVal(new Function(new ESLVal("checkDecs"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal ds = $args[0];
-  {ESLVal _v908 = ds;
-        
-        if(_v908.isCons())
-        {ESLVal $2136 = _v908.head();
-          ESLVal $2137 = _v908.tail();
-          
-          {ESLVal d = $2136;
-          
-          {ESLVal _v1039 = $2137;
-          
-          if(member.apply(decName.apply(d),new java.util.function.Function<ESLVal,ESLVal>() {
-          public ESLVal apply(ESLVal $l0) {
-            ESLVal $a = $nil;
-            java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
-            while(!$l0.isNil()) { 
-              ESLVal d = $l0.head();
-              $l0 = $l0.tail();
-              $v.add(decName.apply(d));
-            }
-            for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
-            return $a;
-          }}.apply(_v1039)).boolVal)
-          return error(new ESLVal("TypeError",decLoc.apply(d),new ESLVal(" duplicate argument ").add(decName.apply(d))));
-          else
-            return checkDecs.apply(_v1039);
-        }
-        }
-        }
-      else if(_v908.isNil())
-        return $null;
-      else return error(new ESLVal("case error at Pos(66072,66305)").add(ESLVal.list(_v908)));
-      }
-    }
-  });
-  private static ESLVal funType = new ESLVal(new Function(new ESLVal("funType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1028 = $args[0];
-  ESLVal _v1029 = $args[1];
-  ESLVal _v1030 = $args[2];
-  ESLVal _v1031 = $args[3];
-  ESLVal _v1032 = $args[4];
-  ESLVal _v1033 = $args[5];
-  ESLVal _v1034 = $args[6];
-  ESLVal _v1035 = $args[7];
-  ESLVal _v1036 = $args[8];
-  {checkDecs.apply(_v1030);
-      {ESLVal nType = expType.apply(_v1029,_v1033,_v1034,_v1035,_v1036);
-        
-        if(isStrType.apply(nType).boolVal)
-        {ESLVal declaredType = substTypeEnv.apply(_v1036,_v1031);
-          
-          return decTypes.apply(_v1030,_v1034,_v1036,new ESLVal(new Function(new ESLVal("fun537"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1037 = $args[0];
-          ESLVal _v1038 = $args[1];
-          {ESLVal actualRange = expType.apply(_v1032,_v1033,_v1038,_v1035,_v1036);
-                
-                if(subType.apply(new ESLVal("FunType",_v1028,_v1037,actualRange),declaredType).boolVal)
-                return new ESLVal("FunType",_v1028,_v1037,actualRange);
-                else
-                  return error(new ESLVal("TypeError",_v1028,new ESLVal("function declared type ").add(ppType.apply(declaredType,_v1036).add(new ESLVal(" but is ").add(ppType.apply(new ESLVal("FunType",_v1028,_v1037,actualRange),_v1036))))));
-              }
-            }
-          }));
-        }
-        else
-          return error(new ESLVal("TypeError",_v1028,new ESLVal("expecting a string for a function name: ").add(_v1029)));
-      }}
-    }
-  });
-  private static ESLVal decTypes = new ESLVal(new Function(new ESLVal("decTypes"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1021 = $args[0];
-  ESLVal _v1022 = $args[1];
-  ESLVal _v1023 = $args[2];
-  ESLVal _v1024 = $args[3];
-  { LetRec letrec = new LetRec() {
-        ESLVal processDecs = new ESLVal(new Function(new ESLVal("processDecs"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v1025 = $args[0];
-          ESLVal _v1026 = $args[1];
-          {ESLVal _v909 = _v1025;
-                
-                if(_v909.isCons())
-                {ESLVal $2138 = _v909.head();
-                  ESLVal $2139 = _v909.tail();
-                  
-                  switch($2138.termName) {
-                  case "Dec": {ESLVal $2143 = $2138.termRef(0);
-                    ESLVal $2142 = $2138.termRef(1);
-                    ESLVal $2141 = $2138.termRef(2);
-                    ESLVal $2140 = $2138.termRef(3);
-                    
-                    {ESLVal l = $2143;
-                    
-                    {ESLVal n = $2142;
-                    
-                    {ESLVal t = $2141;
-                    
-                    {ESLVal st = $2140;
-                    
-                    {ESLVal _v1027 = $2139;
-                    
-                    return processDecs.apply(_v1027,_v1026.cons(new ESLVal("Map",n,substTypeEnv.apply(_v1023,t))));
-                  }
-                  }
-                  }
-                  }
-                  }
-                  }
-                  default: return error(new ESLVal("case error at Pos(67498,67723)").add(ESLVal.list(_v909)));
-                }
-                }
-              else if(_v909.isNil())
-                return _v1024.apply(reverse.apply(typeEnvRan.apply(_v1026)),_v1026.add(_v1022));
-              else return error(new ESLVal("case error at Pos(67498,67723)").add(ESLVal.list(_v909)));
-              }
-            }
-          });
-        
-        public ESLVal get(String name) {
-          switch(name) {
-            case "processDecs": return processDecs;
-            
-            default: throw new Error("cannot find letrec binding");
-          }
-          }
-        };
-      ESLVal processDecs = letrec.get("processDecs");
-      
-        return processDecs.apply(_v1021,$nil);}
-      
-    }
-  });
-  private static ESLVal termType = new ESLVal(new Function(new ESLVal("termType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1013 = $args[0];
-  ESLVal _v1014 = $args[1];
-  ESLVal _v1015 = $args[2];
-  ESLVal _v1016 = $args[3];
-  ESLVal _v1017 = $args[4];
-  ESLVal _v1018 = $args[5];
-  ESLVal _v1019 = $args[6];
-  ESLVal _v1020 = $args[7];
-  {ESLVal t0 = lookupType.apply(_v1014,_v1019);
-        
-        if(t0.eql($null).boolVal)
-        return error(new ESLVal("TypeError",_v1013,new ESLVal("cannot find cnstr ").add(_v1014)));
-        else
-          {ESLVal t = unfoldIf.apply(t0);
-            
-            return termTypeCheckUnion.apply(t,_v1013,_v1014,_v1015,_v1016,_v1017,_v1018,_v1019,_v1020);
-          }
-      }
-    }
-  });
-  private static ESLVal termTypeCheckUnion = new ESLVal(new Function(new ESLVal("termTypeCheckUnion"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v1002 = $args[0];
-  ESLVal _v1003 = $args[1];
-  ESLVal _v1004 = $args[2];
-  ESLVal _v1005 = $args[3];
-  ESLVal _v1006 = $args[4];
-  ESLVal _v1007 = $args[5];
-  ESLVal _v1008 = $args[6];
-  ESLVal _v1009 = $args[7];
-  ESLVal _v1010 = $args[8];
-  if(_v1002.eql($null).boolVal)
-        return error(new ESLVal("TypeError",_v1003,new ESLVal("cannot find constructor ").add(_v1004)));
-        else
-          {ESLVal _v910 = _v1002;
-            
-            switch(_v910.termName) {
-            case "TypeFun": {ESLVal $2148 = _v910.termRef(0);
-              ESLVal $2147 = _v910.termRef(1);
-              ESLVal $2146 = _v910.termRef(2);
-              
-              {ESLVal lf = $2148;
-              
-              {ESLVal ns = $2147;
-              
-              {ESLVal body = $2146;
-              
-              if(length.apply(ns).eql(length.apply(_v1005)).boolVal)
-              {ESLVal args = map.apply(new ESLVal(new Function(new ESLVal("fun538"),getSelf()) {
-                    public ESLVal apply(ESLVal... $args) {
-                      ESLVal _v1011 = $args[0];
-                  return substTypeEnv.apply(_v1010,_v1011);
-                    }
-                  }),_v1005);
-                
-                {ESLVal _v911 = substTypeEnv.apply(zipTypeEnv.apply(ns,args),body);
-                
-                switch(_v911.termName) {
-                case "UnionType": {ESLVal $2150 = _v911.termRef(0);
-                  ESLVal $2149 = _v911.termRef(1);
-                  
-                  {ESLVal l1 = $2150;
-                  
-                  {ESLVal terms = $2149;
-                  
-                  {ESLVal ts2 = findTermArgTypes.apply(_v1004,terms);
-                  
-                  if(length.apply(_v1006).eql(length.apply(ts2)).boolVal)
-                  {checkTermArgTypes.apply(_v1003,_v1006,ts2,_v1007,_v1008,_v1009,_v1010);
-                  return new ESLVal("UnionType",l1,terms);}
-                  else
-                    return error(new ESLVal("TypeError",_v1003,_v1004.add(new ESLVal(" expects ").add(length.apply(ts2).add(new ESLVal(" args, but you supplied ").add(length.apply(_v1006)))))));
-                }
-                }
-                }
-                }
-                default: return error(new ESLVal("case error at Pos(68596,69158)").add(ESLVal.list(_v911)));
-              }
-              }
-              }
-              else
-                return error(new ESLVal("TypeError",_v1003,new ESLVal("generic constructor ").add(_v1004.add(new ESLVal(" expects ").add(length.apply(ns).add(new ESLVal(" type arguments, but received ").add(length.apply(_v1005))))))));
-            }
-            }
-            }
-            }
-          case "UnionType": {ESLVal $2145 = _v910.termRef(0);
-              ESLVal $2144 = _v910.termRef(1);
-              
-              {ESLVal l1 = $2145;
-              
-              {ESLVal terms = $2144;
-              
-              {ESLVal ts2 = findTermArgTypes.apply(_v1004,terms);
-              
-              if(length.apply(_v1005).neql($zero).boolVal)
-              return error(new ESLVal("TypeError",_v1003,new ESLVal("generic application of non-generic constructior: ").add(_v1004)));
-              else
-                if(length.apply(_v1006).eql(length.apply(ts2)).boolVal)
-                  {checkTermArgTypes.apply(_v1003,_v1006,ts2,_v1007,_v1008,_v1009,_v1010);
-                  return _v1002;}
-                  else
-                    return error(new ESLVal("TypeError",_v1003,_v1004.add(new ESLVal(" expects ").add(length.apply(ts2).add(new ESLVal(" args, but you supplied ").add(length.apply(_v1006)))))));
-            }
-            }
-            }
-            }
-            default: {ESLVal _v1012 = _v910;
-              
-              return error(new ESLVal("TypeError",_v1003,new ESLVal("expecting a union type for ").add(_v1004.add(new ESLVal(" but got ").add(ppType.apply(_v1012,_v1010))))));
-            }
-          }
-          }
-    }
-  });
-  private static ESLVal unfoldIf = new ESLVal(new Function(new ESLVal("unfoldIf"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal t = $args[0];
-  {ESLVal _v912 = t;
-        
-        switch(_v912.termName) {
-        case "RecType": {ESLVal $2153 = _v912.termRef(0);
-          ESLVal $2152 = _v912.termRef(1);
-          ESLVal $2151 = _v912.termRef(2);
-          
-          {ESLVal l = $2153;
-          
-          {ESLVal n = $2152;
-          
-          {ESLVal _v1000 = $2151;
-          
-          return unfoldIf.apply(unfoldType.apply(l,n,_v1000));
-        }
-        }
-        }
-        }
-        default: {ESLVal _v1001 = _v912;
-          
-          return _v1001;
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal findTermArgTypes = new ESLVal(new Function(new ESLVal("findTermArgTypes"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal n = $args[0];
-  ESLVal terms = $args[1];
-  {ESLVal _v913 = terms;
-        
-        if(_v913.isCons())
-        {ESLVal $2154 = _v913.head();
-          ESLVal $2155 = _v913.tail();
-          
-          switch($2154.termName) {
-          case "TermType": {ESLVal $2158 = $2154.termRef(0);
-            ESLVal $2157 = $2154.termRef(1);
-            ESLVal $2156 = $2154.termRef(2);
-            
-            {ESLVal l = $2158;
-            
-            {ESLVal nn = $2157;
-            
-            {ESLVal ts = $2156;
-            
-            {ESLVal _v998 = $2155;
-            
-            if(nn.eql(n).boolVal)
-            return ts;
-            else
-              {ESLVal t = $2154;
-                
-                {ESLVal _v999 = $2155;
-                
-                return findTermArgTypes.apply(n,_v999);
-              }
-              }
-          }
-          }
-          }
-          }
-          }
-          default: {ESLVal t = $2154;
-            
-            {ESLVal ts = $2155;
-            
-            return findTermArgTypes.apply(n,ts);
-          }
-          }
-        }
-        }
-      else if(_v913.isNil())
-        return error(new ESLVal("cannot find constructor ").add(n));
-      else return error(new ESLVal("case error at Pos(70166,70366)").add(ESLVal.list(_v913)));
-      }
-    }
-  });
-  private static ESLVal checkTermArgTypes = new ESLVal(new Function(new ESLVal("checkTermArgTypes"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v989 = $args[0];
-  ESLVal _v990 = $args[1];
-  ESLVal _v991 = $args[2];
-  ESLVal _v992 = $args[3];
-  ESLVal _v993 = $args[4];
-  ESLVal _v994 = $args[5];
-  ESLVal _v995 = $args[6];
-  {ESLVal _v914 = _v990;
-        ESLVal _v915 = _v991;
-        
-        if(_v914.isCons())
-        {ESLVal $2159 = _v914.head();
-          ESLVal $2160 = _v914.tail();
-          
-          if(_v915.isCons())
-          {ESLVal $2161 = _v915.head();
-            ESLVal $2162 = _v915.tail();
-            
-            {ESLVal e = $2159;
-            
-            {ESLVal _v996 = $2160;
-            
-            {ESLVal t = $2161;
-            
-            {ESLVal _v997 = $2162;
-            
-            {ESLVal tt = expType.apply(e,_v992,_v993,_v994,_v995);
-            
-            if(typeEqual.apply(t,tt).boolVal)
-            return checkTermArgTypes.apply(_v989,_v996,_v997,_v992,_v993,_v994,_v995);
-            else
-              return error(new ESLVal("TypeError",_v989,new ESLVal("expected constructor arg type ").add(ppType.apply(t,_v995).add(new ESLVal(" but supplied ").add(ppType.apply(tt,_v995))))));
-          }
-          }
-          }
-          }
-          }
-          }
-        else if(_v915.isNil())
-          return error(new ESLVal("case error at Pos(70484,70906)").add(ESLVal.list(_v914,_v915)));
-        else return error(new ESLVal("case error at Pos(70484,70906)").add(ESLVal.list(_v914,_v915)));
-        }
-      else if(_v914.isNil())
-        if(_v915.isCons())
-          {ESLVal $2163 = _v915.head();
-            ESLVal $2164 = _v915.tail();
-            
-            return error(new ESLVal("case error at Pos(70484,70906)").add(ESLVal.list(_v914,_v915)));
-          }
-        else if(_v915.isNil())
-          return $null;
-        else return error(new ESLVal("case error at Pos(70484,70906)").add(ESLVal.list(_v914,_v915)));
-      else return error(new ESLVal("case error at Pos(70484,70906)").add(ESLVal.list(_v914,_v915)));
-      }
-    }
-  });
-  private static ESLVal notType = new ESLVal(new Function(new ESLVal("notType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v982 = $args[0];
-  ESLVal _v983 = $args[1];
-  ESLVal _v984 = $args[2];
-  ESLVal _v985 = $args[3];
-  ESLVal _v986 = $args[4];
-  ESLVal _v987 = $args[5];
-  {ESLVal _v916 = expType.apply(_v983,_v984,_v985,_v986,_v987);
-        
-        switch(_v916.termName) {
-        case "BoolType": {ESLVal $2165 = _v916.termRef(0);
-          
-          {ESLVal _v988 = $2165;
-          
-          return new ESLVal("BoolType",_v988);
-        }
-        }
-        default: {ESLVal t = _v916;
-          
-          return error(new ESLVal("TypeError",_v982,new ESLVal("expecting a boolean: ").add(ppType.apply(t,_v987))));
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal varType = new ESLVal(new Function(new ESLVal("varType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal l = $args[0];
-  ESLVal n = $args[1];
-  ESLVal valueEnv = $args[2];
-  {ESLVal t = lookupType.apply(n,valueEnv);
-        
-        if(t.eql($null).boolVal)
-        return error(new ESLVal("TypeError",l,new ESLVal("unbound variable ").add(n)));
-        else
-          {ESLVal _v917 = t;
-            
-            switch(_v917.termName) {
-            case "TypeClosure": {ESLVal $2166 = _v917.termRef(0);
-              
-              {ESLVal f = $2166;
-              
-              return f.apply();
-            }
-            }
-            default: {ESLVal _v981 = _v917;
-              
-              return _v981;
-            }
-          }
-          }
-      }
-    }
-  });
-  private static ESLVal blockType = new ESLVal(new Function(new ESLVal("blockType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v975 = $args[0];
-  ESLVal _v976 = $args[1];
-  ESLVal _v977 = $args[2];
-  ESLVal _v978 = $args[3];
-  ESLVal _v979 = $args[4];
-  ESLVal _v980 = $args[5];
-  {ESLVal[] t = new ESLVal[]{new ESLVal("VoidType",_v975)};
-        
-        {{
-        ESLVal _v918 = _v976;
-        while(_v918.isCons()) {
-          ESLVal e = _v918.headVal;
-          t[0] = expType.apply(e,_v977,_v978,_v979,_v980);
-          _v918 = _v918.tailVal;}
-      }
-      return t[0];}
-      }
-    }
-  });
-  private static ESLVal listType = new ESLVal(new Function(new ESLVal("listType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v969 = $args[0];
-  ESLVal _v970 = $args[1];
-  ESLVal _v971 = $args[2];
-  ESLVal _v972 = $args[3];
-  ESLVal _v973 = $args[4];
-  ESLVal _v974 = $args[5];
-  if(_v970.eql($nil).boolVal)
-        return new ESLVal("ForallType",_v969,ESLVal.list(new ESLVal("T")),new ESLVal("ListType",_v969,new ESLVal("VarType",_v969,new ESLVal("T"))));
-        else
-          {ESLVal ts = map.apply(new ESLVal(new Function(new ESLVal("fun539"),getSelf()) {
-                public ESLVal apply(ESLVal... $args) {
-                  ESLVal e = $args[0];
-              return expType.apply(e,_v971,_v972,_v973,_v974);
-                }
-              }),_v970);
-            
-            if(allEqualTypes.apply(head.apply(ts),tail.apply(ts)).boolVal)
-            return new ESLVal("ListType",_v969,head.apply(ts));
-            else
-              return error(new ESLVal("TypeError",_v969,new ESLVal("lists should have elements of the same type: ").add(_v970)));
-          }
-    }
-  });
-  private static ESLVal setType = new ESLVal(new Function(new ESLVal("setType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v963 = $args[0];
-  ESLVal _v964 = $args[1];
-  ESLVal _v965 = $args[2];
-  ESLVal _v966 = $args[3];
-  ESLVal _v967 = $args[4];
-  ESLVal _v968 = $args[5];
-  if(_v964.eql($nil).boolVal)
-        return new ESLVal("ForallType",_v963,ESLVal.list(new ESLVal("T")),new ESLVal("SetType",_v963,new ESLVal("VarType",_v963,new ESLVal("T"))));
-        else
-          {ESLVal ts = map.apply(new ESLVal(new Function(new ESLVal("fun540"),getSelf()) {
-                public ESLVal apply(ESLVal... $args) {
-                  ESLVal e = $args[0];
-              return expType.apply(e,_v965,_v966,_v967,_v968);
-                }
-              }),_v964);
-            
-            if(allEqualTypes.apply(head.apply(ts),tail.apply(ts)).boolVal)
-            return new ESLVal("SetType",_v963,head.apply(ts));
-            else
-              return error(new ESLVal("TypeError",_v963,new ESLVal("sets should have elements of the same type: ").add(_v964)));
-          }
-    }
-  });
-  private static ESLVal bagType = new ESLVal(new Function(new ESLVal("bagType"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal _v957 = $args[0];
-  ESLVal _v958 = $args[1];
-  ESLVal _v959 = $args[2];
-  ESLVal _v960 = $args[3];
-  ESLVal _v961 = $args[4];
-  ESLVal _v962 = $args[5];
-  if(_v958.eql($nil).boolVal)
-        return new ESLVal("ForallType",_v957,ESLVal.list(new ESLVal("T")),new ESLVal("BagType",_v957,new ESLVal("VarType",_v957,new ESLVal("T"))));
-        else
-          {ESLVal ts = map.apply(new ESLVal(new Function(new ESLVal("fun541"),getSelf()) {
-                public ESLVal apply(ESLVal... $args) {
-                  ESLVal e = $args[0];
-              return expType.apply(e,_v959,_v960,_v961,_v962);
-                }
-              }),_v958);
-            
-            if(allEqualTypes.apply(head.apply(ts),tail.apply(ts)).boolVal)
-            return new ESLVal("BagType",_v957,head.apply(ts));
-            else
-              return error(new ESLVal("TypeError",_v957,new ESLVal("bags should have elements of the same type: ").add(_v958)));
-          }
-    }
-  });
-  private static ESLVal recTypes = new ESLVal(new Function(new ESLVal("recTypes"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal env = $args[0];
-  { LetRec letrec = new LetRec() {
-        ESLVal fixEnv = new ESLVal(new Function(new ESLVal("fixEnv"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v956 = $args[0];
-          {ESLVal[] e = new ESLVal[]{$null};
-                
-                {ESLVal fenv = new java.util.function.Function<ESLVal,ESLVal>() {
-                    public ESLVal apply(ESLVal $l0) {
-                      ESLVal $a = $nil;
-                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
-                      while(!$l0.isNil()) { 
-                        ESLVal t = $l0.head();
-                        $l0 = $l0.tail();
-                        ESLVal $l1 = typeFV.apply(t);
-                  while(!$l1.isNil()) {
-                    ESLVal n = $l1.head();
-                    $l1 = $l1.tail();
-                    $v.add(new ESLVal("Map",n,new ESLVal("TypeClosure",new ESLVal(new Function(new ESLVal("lookup: ").add(n),getSelf()) {
-                      public ESLVal apply(ESLVal... $args) {
-                        return lookupType.apply(n,e[0]);
-                      }
-                    }))));
-                  }
-                      }
-                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
-                      return $a;
-                    }}.apply(typeEnvRan.apply(_v956));
-                
-                {ESLVal env1 = substOnce.apply(_v956,fenv);
-                
-                {e[0] = env1;
-              return env1;}
-              }
-              }
-              }
-            }
-          });
-        ESLVal introduceRecTypes = new ESLVal(new Function(new ESLVal("introduceRecTypes"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v955 = $args[0];
-          {ESLVal _v919 = _v955;
-                
-                if(_v919.isCons())
-                {ESLVal $2167 = _v919.head();
-                  ESLVal $2168 = _v919.tail();
-                  
-                  switch($2167.termName) {
-                  case "Map": {ESLVal $2170 = $2167.termRef(0);
-                    ESLVal $2169 = $2167.termRef(1);
-                    
-                    switch($2169.termName) {
-                    case "RecordType": {ESLVal $2172 = $2169.termRef(0);
-                      ESLVal $2171 = $2169.termRef(1);
-                      
-                      {ESLVal n = $2170;
-                      
-                      {ESLVal l = $2172;
-                      
-                      {ESLVal fs = $2171;
-                      
-                      {ESLVal e = $2168;
-                      
-                      return introduceRecTypes.apply(e).cons(new ESLVal("Map",n,new ESLVal("RecordType",l,fs)));
-                    }
-                    }
-                    }
-                    }
-                    }
-                    default: {ESLVal n = $2170;
-                      
-                      {ESLVal t = $2169;
-                      
-                      {ESLVal e = $2168;
-                      
-                      if(member.apply(n,typeFV.apply(t)).boolVal)
-                      return introduceRecTypes.apply(e).cons(new ESLVal("Map",n,new ESLVal("RecType",p0,n,t)));
-                      else
-                        return introduceRecTypes.apply(e).cons(new ESLVal("Map",n,t));
-                    }
-                    }
-                    }
-                  }
-                  }
-                  default: return error(new ESLVal("case error at Pos(73455,73769)").add(ESLVal.list(_v919)));
-                }
-                }
-              else if(_v919.isNil())
-                return _v955;
-              else return error(new ESLVal("case error at Pos(73455,73769)").add(ESLVal.list(_v919)));
-              }
-            }
-          });
-        ESLVal substOnce = new ESLVal(new Function(new ESLVal("substOnce"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v953 = $args[0];
-          ESLVal _v954 = $args[1];
-          {ESLVal map1 = new ESLVal(new Function(new ESLVal("map1"),getSelf()) {
-                    public ESLVal apply(ESLVal... $args) {
-                      ESLVal m = $args[0];
-                  {ESLVal _v920 = m;
-                        
-                        switch(_v920.termName) {
-                        case "Map": {ESLVal $2174 = _v920.termRef(0);
-                          ESLVal $2173 = _v920.termRef(1);
-                          
-                          {ESLVal n = $2174;
-                          
-                          {ESLVal t = $2173;
-                          
-                          return new ESLVal("Map",n,substTypeEnv.apply(new java.util.function.Function<ESLVal,ESLVal>() {
-                            public ESLVal apply(ESLVal $l0) {
-                              ESLVal $a = $nil;
-                              java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
-                              while(!$l0.isNil()) { 
-                                ESLVal n = $l0.head();
-                                $l0 = $l0.tail();
-                                $v.add(new ESLVal("Map",n,lookupType.apply(n,_v954)));
-                              }
-                              for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
-                              return $a;
-                            }}.apply(typeFV.apply(t)),t));
-                        }
-                        }
-                        }
-                        default: return error(new ESLVal("case error at Pos(73879,74010)").add(ESLVal.list(_v920)));
-                      }
-                      }
-                    }
-                  });
-                
-                return map.apply(map1,_v953);
-              }
-            }
-          });
-        
-        public ESLVal get(String name) {
-          switch(name) {
-            case "fixEnv": return fixEnv;
-            
-            case "introduceRecTypes": return introduceRecTypes;
-            
-            case "substOnce": return substOnce;
-            
-            default: throw new Error("cannot find letrec binding");
-          }
-          }
-        };
-      ESLVal fixEnv = letrec.get("fixEnv");
-      
-      ESLVal introduceRecTypes = letrec.get("introduceRecTypes");
-      
-      ESLVal substOnce = letrec.get("substOnce");
-      
-        return fixEnv.apply(introduceRecTypes.apply(env));}
-      
-    }
-  });
-  private static ESLVal typeFV = new ESLVal(new Function(new ESLVal("typeFV"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal t = $args[0];
-  return removeDups.apply(varTypeNames.apply(typeFV1.apply(t,$nil)));
-    }
-  });
-  private static ESLVal varTypeNames = new ESLVal(new Function(new ESLVal("varTypeNames"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal vs = $args[0];
-  return map.apply(varTypeName,vs);
-    }
-  });
-  private static ESLVal varTypeName = new ESLVal(new Function(new ESLVal("varTypeName"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal t = $args[0];
-  {ESLVal _v921 = t;
-        
-        switch(_v921.termName) {
-        case "VarType": {ESLVal $2176 = _v921.termRef(0);
-          ESLVal $2175 = _v921.termRef(1);
-          
-          {ESLVal l = $2176;
-          
-          {ESLVal n = $2175;
-          
-          return n;
-        }
-        }
-        }
-        default: {ESLVal x = _v921;
-          
-          return new ESLVal("<var>");
-        }
-      }
-      }
-    }
-  });
-  private static ESLVal tdecsFV1 = new ESLVal(new Function(new ESLVal("tdecsFV1"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal decs = $args[0];
-  ESLVal fv = $args[1];
-  {ESLVal _v922 = decs;
-        
-        if(_v922.isCons())
-        {ESLVal $2177 = _v922.head();
-          ESLVal $2178 = _v922.tail();
-          
-          {ESLVal d = $2177;
-          
-          {ESLVal ds = $2178;
-          
-          return tdecFV1.apply(d,tdecsFV1.apply(ds,fv));
-        }
-        }
-        }
-      else if(_v922.isNil())
-        return fv;
-      else return error(new ESLVal("case error at Pos(74396,74485)").add(ESLVal.list(_v922)));
-      }
-    }
-  });
-  private static ESLVal tdecFV1 = new ESLVal(new Function(new ESLVal("tdecFV1"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal d = $args[0];
-  ESLVal fv = $args[1];
-  {ESLVal _v923 = d;
-        
-        switch(_v923.termName) {
-        case "Dec": {ESLVal $2182 = _v923.termRef(0);
-          ESLVal $2181 = _v923.termRef(1);
-          ESLVal $2180 = _v923.termRef(2);
-          ESLVal $2179 = _v923.termRef(3);
-          
-          {ESLVal l = $2182;
-          
-          {ESLVal n = $2181;
-          
-          {ESLVal t = $2180;
-          
-          {ESLVal st = $2179;
-          
-          return typeFV1.apply(t,fv);
-        }
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(74529,74608)").add(ESLVal.list(_v923)));
-      }
-      }
-    }
-  });
-  private static ESLVal handlersFV1 = new ESLVal(new Function(new ESLVal("handlersFV1"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal handlers = $args[0];
-  ESLVal fv = $args[1];
-  {ESLVal _v924 = handlers;
-        
-        if(_v924.isCons())
-        {ESLVal $2183 = _v924.head();
-          ESLVal $2184 = _v924.tail();
-          
-          {ESLVal m = $2183;
-          
-          {ESLVal hs = $2184;
-          
-          return handlerFV1.apply(m,handlersFV1.apply(hs,fv));
-        }
-        }
-        }
-      else if(_v924.isNil())
-        return fv;
-      else return error(new ESLVal("case error at Pos(74666,74768)").add(ESLVal.list(_v924)));
-      }
-    }
-  });
-  private static ESLVal handlerFV1 = new ESLVal(new Function(new ESLVal("handlerFV1"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal m = $args[0];
-  ESLVal fv = $args[1];
-  {ESLVal _v925 = m;
-        
-        switch(_v925.termName) {
-        case "MessageType": {ESLVal $2186 = _v925.termRef(0);
-          ESLVal $2185 = _v925.termRef(1);
-          
-          {ESLVal l = $2186;
-          
-          {ESLVal ts = $2185;
-          
-          return typesFV1.apply(ts,fv);
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(74816,74892)").add(ESLVal.list(_v925)));
-      }
-      }
-    }
-  });
-  private static ESLVal typesFV1 = new ESLVal(new Function(new ESLVal("typesFV1"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal ts = $args[0];
-  ESLVal fv = $args[1];
-  {ESLVal _v926 = ts;
-        
-        if(_v926.isCons())
-        {ESLVal $2187 = _v926.head();
-          ESLVal $2188 = _v926.tail();
-          
-          {ESLVal t = $2187;
-          
-          {ESLVal _v952 = $2188;
-          
-          return typeFV1.apply(t,typesFV1.apply(_v952,fv));
-        }
-        }
-        }
-      else if(_v926.isNil())
-        return fv;
-      else return error(new ESLVal("case error at Pos(74941,75028)").add(ESLVal.list(_v926)));
-      }
-    }
-  });
-  private static ESLVal typeFV1 = new ESLVal(new Function(new ESLVal("typeFV1"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal t = $args[0];
-  ESLVal fv = $args[1];
-  {ESLVal _v927 = t;
-        
-        switch(_v927.termName) {
-        case "ArrayType": {ESLVal $2248 = _v927.termRef(0);
-          ESLVal $2247 = _v927.termRef(1);
-          
-          {ESLVal l = $2248;
-          
-          {ESLVal _v951 = $2247;
-          
-          return typeFV1.apply(_v951,fv);
-        }
-        }
-        }
-      case "ActType": {ESLVal $2246 = _v927.termRef(0);
-          ESLVal $2245 = _v927.termRef(1);
-          ESLVal $2244 = _v927.termRef(2);
-          
-          {ESLVal l = $2246;
-          
-          {ESLVal decs = $2245;
-          
-          {ESLVal handlers = $2244;
-          
-          return tdecsFV1.apply(decs,handlersFV1.apply(handlers,fv));
-        }
-        }
-        }
-        }
-      case "ExtendedAct": {ESLVal $2243 = _v927.termRef(0);
-          ESLVal $2242 = _v927.termRef(1);
-          ESLVal $2241 = _v927.termRef(2);
-          ESLVal $2240 = _v927.termRef(3);
-          
-          {ESLVal l = $2243;
-          
-          {ESLVal parent = $2242;
-          
-          {ESLVal decs = $2241;
-          
-          {ESLVal handlers = $2240;
-          
-          return tdecsFV1.apply(decs,handlersFV1.apply(handlers,typeFV1.apply(parent,fv)));
-        }
-        }
-        }
-        }
-        }
-      case "ApplyType": {ESLVal $2239 = _v927.termRef(0);
-          ESLVal $2238 = _v927.termRef(1);
-          ESLVal $2237 = _v927.termRef(2);
-          
-          {ESLVal l = $2239;
-          
-          {ESLVal n = $2238;
-          
-          {ESLVal types = $2237;
-          
-          return typesFV1.apply(types,fv.cons(new ESLVal("VarType",l,n)));
-        }
-        }
-        }
-        }
-      case "ApplyTypeFun": {ESLVal $2236 = _v927.termRef(0);
-          ESLVal $2235 = _v927.termRef(1);
-          ESLVal $2234 = _v927.termRef(2);
-          
-          {ESLVal l = $2236;
-          
-          {ESLVal op = $2235;
-          
-          {ESLVal args = $2234;
-          
-          return typesFV1.apply(args,typeFV1.apply(op,fv));
-        }
-        }
-        }
-        }
-      case "BoolType": {ESLVal $2233 = _v927.termRef(0);
-          
-          {ESLVal l = $2233;
-          
-          return fv;
-        }
-        }
-      case "FieldType": {ESLVal $2232 = _v927.termRef(0);
-          ESLVal $2231 = _v927.termRef(1);
-          ESLVal $2230 = _v927.termRef(2);
-          
-          {ESLVal l = $2232;
-          
-          {ESLVal n = $2231;
-          
-          {ESLVal _v950 = $2230;
-          
-          return typeFV1.apply(_v950,fv);
-        }
-        }
-        }
-        }
-      case "FloatType": {ESLVal $2229 = _v927.termRef(0);
-          
-          {ESLVal l = $2229;
-          
-          return fv;
-        }
-        }
-      case "ForallType": {ESLVal $2228 = _v927.termRef(0);
-          ESLVal $2227 = _v927.termRef(1);
-          ESLVal $2226 = _v927.termRef(2);
-          
-          {ESLVal l = $2228;
-          
-          {ESLVal ns = $2227;
-          
-          {ESLVal _v947 = $2226;
-          
-          return filter.apply(new ESLVal(new Function(new ESLVal("fun542"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v948 = $args[0];
-          {ESLVal _v931 = _v948;
-                
-                switch(_v931.termName) {
-                case "VarType": {ESLVal $2258 = _v931.termRef(0);
-                  ESLVal $2257 = _v931.termRef(1);
-                  
-                  {ESLVal _v949 = $2258;
-                  
-                  {ESLVal n = $2257;
-                  
-                  return member.apply(n,ns).not();
-                }
-                }
-                }
-                default: return error(new ESLVal("case error at Pos(75867,75927)").add(ESLVal.list(_v931)));
-              }
-              }
-            }
-          }),typeFV1.apply(_v947,$nil)).add(fv);
-        }
-        }
-        }
-        }
-      case "FunType": {ESLVal $2225 = _v927.termRef(0);
-          ESLVal $2224 = _v927.termRef(1);
-          ESLVal $2223 = _v927.termRef(2);
-          
-          {ESLVal l = $2225;
-          
-          {ESLVal d = $2224;
-          
-          {ESLVal r = $2223;
-          
-          return typesFV1.apply(d,typeFV1.apply(r,fv));
-        }
-        }
-        }
-        }
-      case "IntType": {ESLVal $2222 = _v927.termRef(0);
-          
-          {ESLVal l = $2222;
-          
-          return fv;
-        }
-        }
-      case "ListType": {ESLVal $2221 = _v927.termRef(0);
-          ESLVal $2220 = _v927.termRef(1);
-          
-          {ESLVal l = $2221;
-          
-          {ESLVal _v946 = $2220;
-          
-          return typeFV1.apply(_v946,fv);
-        }
-        }
-        }
-      case "BagType": {ESLVal $2219 = _v927.termRef(0);
-          ESLVal $2218 = _v927.termRef(1);
-          
-          {ESLVal l = $2219;
-          
-          {ESLVal _v945 = $2218;
-          
-          return typeFV1.apply(_v945,fv);
-        }
-        }
-        }
-      case "SetType": {ESLVal $2217 = _v927.termRef(0);
-          ESLVal $2216 = _v927.termRef(1);
-          
-          {ESLVal l = $2217;
-          
-          {ESLVal _v944 = $2216;
-          
-          return typeFV1.apply(_v944,fv);
-        }
-        }
-        }
-      case "NullType": {ESLVal $2215 = _v927.termRef(0);
-          
-          {ESLVal l = $2215;
-          
-          return fv;
-        }
-        }
-      case "RecordType": {ESLVal $2214 = _v927.termRef(0);
-          ESLVal $2213 = _v927.termRef(1);
-          
-          {ESLVal l = $2214;
-          
-          {ESLVal fs = $2213;
-          
-          return typesFV1.apply(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal $qualArg = $args[0];
-          {ESLVal _v930 = $qualArg;
-                
-                switch(_v930.termName) {
-                case "Dec": {ESLVal $2256 = _v930.termRef(0);
-                  ESLVal $2255 = _v930.termRef(1);
-                  ESLVal $2254 = _v930.termRef(2);
-                  ESLVal $2253 = _v930.termRef(3);
-                  
-                  {ESLVal _v942 = $2256;
-                  
-                  {ESLVal n = $2255;
-                  
-                  {ESLVal _v943 = $2254;
-                  
-                  {ESLVal dt = $2253;
-                  
-                  return ESLVal.list(ESLVal.list(_v943));
-                }
-                }
-                }
-                }
-                }
-                default: {ESLVal _0 = _v930;
-                  
-                  return ESLVal.list();
-                }
-              }
-              }
-            }
-          }).map(fs).flatten().flatten(),fv);
-        }
-        }
-        }
-      case "RecType": {ESLVal $2212 = _v927.termRef(0);
-          ESLVal $2211 = _v927.termRef(1);
-          ESLVal $2210 = _v927.termRef(2);
-          
-          {ESLVal l = $2212;
-          
-          {ESLVal a = $2211;
-          
-          {ESLVal _v939 = $2210;
-          
-          return filter.apply(new ESLVal(new Function(new ESLVal("fun543"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v940 = $args[0];
-          {ESLVal _v929 = _v940;
-                
-                switch(_v929.termName) {
-                case "VarType": {ESLVal $2252 = _v929.termRef(0);
-                  ESLVal $2251 = _v929.termRef(1);
-                  
-                  {ESLVal _v941 = $2252;
-                  
-                  {ESLVal n = $2251;
-                  
-                  return n.eql(a).not();
-                }
-                }
-                }
-                default: return error(new ESLVal("case error at Pos(76368,76416)").add(ESLVal.list(_v929)));
-              }
-              }
-            }
-          }),typeFV1.apply(_v939,$nil)).add(fv);
-        }
-        }
-        }
-        }
-      case "StrType": {ESLVal $2209 = _v927.termRef(0);
-          
-          {ESLVal l = $2209;
-          
-          return fv;
-        }
-        }
-      case "TableType": {ESLVal $2208 = _v927.termRef(0);
-          ESLVal $2207 = _v927.termRef(1);
-          ESLVal $2206 = _v927.termRef(2);
-          
-          {ESLVal l = $2208;
-          
-          {ESLVal k = $2207;
-          
-          {ESLVal v = $2206;
-          
-          return typeFV1.apply(k,typeFV1.apply(v,fv));
-        }
-        }
-        }
-        }
-      case "TypeClosure": {ESLVal $2205 = _v927.termRef(0);
-          
-          {ESLVal f = $2205;
-          
-          return $nil;
-        }
-        }
-      case "TermType": {ESLVal $2204 = _v927.termRef(0);
-          ESLVal $2203 = _v927.termRef(1);
-          ESLVal $2202 = _v927.termRef(2);
-          
-          {ESLVal l = $2204;
-          
-          {ESLVal n = $2203;
-          
-          {ESLVal ts = $2202;
-          
-          return typesFV1.apply(ts,fv);
-        }
-        }
-        }
-        }
-      case "TypeFun": {ESLVal $2201 = _v927.termRef(0);
-          ESLVal $2200 = _v927.termRef(1);
-          ESLVal $2199 = _v927.termRef(2);
-          
-          {ESLVal l = $2201;
-          
-          {ESLVal ns = $2200;
-          
-          {ESLVal _v936 = $2199;
-          
-          return filter.apply(new ESLVal(new Function(new ESLVal("fun544"),getSelf()) {
-            public ESLVal apply(ESLVal... $args) {
-              ESLVal _v937 = $args[0];
-          {ESLVal _v928 = _v937;
-                
-                switch(_v928.termName) {
-                case "VarType": {ESLVal $2250 = _v928.termRef(0);
-                  ESLVal $2249 = _v928.termRef(1);
-                  
-                  {ESLVal _v938 = $2250;
-                  
-                  {ESLVal n = $2249;
-                  
-                  return member.apply(n,ns).not();
-                }
-                }
-                }
-                default: return error(new ESLVal("case error at Pos(76712,76772)").add(ESLVal.list(_v928)));
-              }
-              }
-            }
-          }),typeFV1.apply(_v936,$nil)).add(fv);
-        }
-        }
-        }
-        }
-      case "UnfoldType": {ESLVal $2198 = _v927.termRef(0);
-          ESLVal $2197 = _v927.termRef(1);
-          
-          {ESLVal l = $2198;
-          
-          {ESLVal _v935 = $2197;
-          
-          return typeFV1.apply(_v935,fv);
-        }
-        }
-        }
-      case "UnionType": {ESLVal $2196 = _v927.termRef(0);
-          ESLVal $2195 = _v927.termRef(1);
-          
-          {ESLVal l = $2196;
-          
-          {ESLVal ts = $2195;
-          
-          return typesFV1.apply(ts,fv);
-        }
-        }
-        }
-      case "VarType": {ESLVal $2194 = _v927.termRef(0);
-          ESLVal $2193 = _v927.termRef(1);
-          
-          {ESLVal l = $2194;
-          
-          {ESLVal n = $2193;
-          
-          return fv.cons(t);
-        }
-        }
-        }
-      case "VoidType": {ESLVal $2192 = _v927.termRef(0);
-          
-          {ESLVal l = $2192;
-          
-          return fv;
-        }
-        }
-      case "UnionRef": {ESLVal $2191 = _v927.termRef(0);
-          ESLVal $2190 = _v927.termRef(1);
-          ESLVal $2189 = _v927.termRef(2);
-          
-          {ESLVal l = $2191;
-          
-          {ESLVal _v934 = $2190;
-          
-          {ESLVal n = $2189;
-          
-          return typeFV1.apply(_v934,fv);
-        }
-        }
-        }
-        }
-        default: {ESLVal x = _v927;
-          
-          return error(x);
-        }
-      }
-      }
-    }
-  });
   public static ESLVal main = new ESLVal(new Function(new ESLVal("main"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v933 = $m;
+
+          public ESLVal handle(ESLVal $m) {{ESLVal _v142 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v933)));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v142)));
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -8382,16 +37,16 @@ public class TypeCheck {
           {}
         }
         public ESLVal init() {
-            return ((Supplier<ESLVal>)() -> { 
+            return new SerializableSupplier<ESLVal>() { public ESLVal get() { 
                 {new Function(new ESLVal("try"),getSelf()) {
                   public ESLVal apply(ESLVal... args) { 
                     try { 
-                      return typeCheckModule.apply(new ESLVal("esl/compiler/test1.esl"));
+                      return typeCheckModule(new ESLVal("esl/compiler/test1.esl"));
                     } catch(ESLError $exception) {
                       ESLVal $x = $exception.value;
-                      {ESLVal _v932 = $x;
+                      {ESLVal _v141 = $x;
                   
-                  {ESLVal message = _v932;
+                  {ESLVal message = _v141;
                   
                   return print.apply(new ESLVal("Type Error: ").add(message));
                 }
@@ -8401,11 +56,9131 @@ public class TypeCheck {
                 }.apply();
                 print.apply(new ESLVal("DONE"));
                 return stopAll.apply();}
-              }).get();
+              }}.get();
           }
         });
     }
   });
+private static ESLVal ppPattern(ESLVal p) {
+    
+    {ESLVal _v1 = p;
+      
+      switch(_v1.termName) {
+      case "PAdd": {ESLVal $33 = _v1.termRef(0);
+        ESLVal $32 = _v1.termRef(1);
+        ESLVal $31 = _v1.termRef(2);
+        
+        {ESLVal l = $33;
+        
+        {ESLVal p1 = $32;
+        
+        {ESLVal p2 = $31;
+        
+        return ppPattern(p1).add(new ESLVal(" + ").add(ppPattern(p2)));
+      }
+      }
+      }
+      }
+    case "PVar": {ESLVal $30 = _v1.termRef(0);
+        ESLVal $29 = _v1.termRef(1);
+        ESLVal $28 = _v1.termRef(2);
+        
+        {ESLVal l = $30;
+        
+        {ESLVal n = $29;
+        
+        {ESLVal t = $28;
+        
+        return n;
+      }
+      }
+      }
+      }
+    case "PTerm": {ESLVal $25 = _v1.termRef(0);
+        ESLVal $24 = _v1.termRef(1);
+        ESLVal $23 = _v1.termRef(2);
+        ESLVal $22 = _v1.termRef(3);
+        
+        if($23.isCons())
+        {ESLVal $26 = $23.head();
+          ESLVal $27 = $23.tail();
+          
+          {ESLVal l = $25;
+          
+          {ESLVal n = $24;
+          
+          {ESLVal ts = $23;
+          
+          {ESLVal ps = $22;
+          
+          return n.add(ppTypes(ts,$nil).add(new ESLVal("").add(ppPatterns(ps))));
+        }
+        }
+        }
+        }
+        }
+      else if($23.isNil())
+        {ESLVal l = $25;
+          
+          {ESLVal n = $24;
+          
+          {ESLVal ps = $22;
+          
+          return n.add(ppPatterns(ps));
+        }
+        }
+        }
+      else {ESLVal l = $25;
+          
+          {ESLVal n = $24;
+          
+          {ESLVal ts = $23;
+          
+          {ESLVal ps = $22;
+          
+          return n.add(ppTypes(ts,$nil).add(new ESLVal("").add(ppPatterns(ps))));
+        }
+        }
+        }
+        }
+      }
+    case "PApplyType": {ESLVal $21 = _v1.termRef(0);
+        ESLVal $20 = _v1.termRef(1);
+        ESLVal $19 = _v1.termRef(2);
+        
+        {ESLVal l = $21;
+        
+        {ESLVal _v592 = $20;
+        
+        {ESLVal ts = $19;
+        
+        return ppPattern(_v592).add(ppTypes(ts,$nil));
+      }
+      }
+      }
+      }
+    case "PNil": {ESLVal $18 = _v1.termRef(0);
+        
+        {ESLVal l = $18;
+        
+        return new ESLVal("[]");
+      }
+      }
+    case "PEmptySet": {ESLVal $17 = _v1.termRef(0);
+        
+        {ESLVal l = $17;
+        
+        return new ESLVal("Set{}");
+      }
+      }
+    case "PEmptyBag": {ESLVal $16 = _v1.termRef(0);
+        
+        {ESLVal l = $16;
+        
+        return new ESLVal("Bag{}");
+      }
+      }
+    case "PInt": {ESLVal $15 = _v1.termRef(0);
+        ESLVal $14 = _v1.termRef(1);
+        
+        {ESLVal l = $15;
+        
+        {ESLVal n = $14;
+        
+        return new ESLVal("").add(n);
+      }
+      }
+      }
+    case "PBool": {ESLVal $13 = _v1.termRef(0);
+        ESLVal $12 = _v1.termRef(1);
+        
+        {ESLVal l = $13;
+        
+        {ESLVal b = $12;
+        
+        return new ESLVal("").add(b);
+      }
+      }
+      }
+    case "PStr": {ESLVal $11 = _v1.termRef(0);
+        ESLVal $10 = _v1.termRef(1);
+        
+        {ESLVal l = $11;
+        
+        {ESLVal s = $10;
+        
+        return s;
+      }
+      }
+      }
+    case "PCons": {ESLVal $9 = _v1.termRef(0);
+        ESLVal $8 = _v1.termRef(1);
+        ESLVal $7 = _v1.termRef(2);
+        
+        {ESLVal l = $9;
+        
+        {ESLVal h = $8;
+        
+        {ESLVal t = $7;
+        
+        return ppPattern(h).add(new ESLVal(":").add(ppPattern(t)));
+      }
+      }
+      }
+      }
+    case "PSetCons": {ESLVal $6 = _v1.termRef(0);
+        ESLVal $5 = _v1.termRef(1);
+        ESLVal $4 = _v1.termRef(2);
+        
+        {ESLVal l = $6;
+        
+        {ESLVal p1 = $5;
+        
+        {ESLVal p2 = $4;
+        
+        return new ESLVal("Set{").add(ppPattern(p1).add(new ESLVal(" | ").add(ppPattern(p2).add(new ESLVal("}")))));
+      }
+      }
+      }
+      }
+    case "PBagCons": {ESLVal $3 = _v1.termRef(0);
+        ESLVal $2 = _v1.termRef(1);
+        ESLVal $1 = _v1.termRef(2);
+        
+        {ESLVal l = $3;
+        
+        {ESLVal p1 = $2;
+        
+        {ESLVal p2 = $1;
+        
+        return new ESLVal("Bag{").add(ppPattern(p1).add(new ESLVal(" | ").add(ppPattern(p2).add(new ESLVal("}")))));
+      }
+      }
+      }
+      }
+      default: {ESLVal _v593 = _v1;
+        
+        return new ESLVal("<unknown: ").add(_v593.add(new ESLVal(">")));
+      }
+    }
+    }
+  }
+  private static ESLVal ppPattern = new ESLVal(new Function(new ESLVal("ppPattern"),null) { public ESLVal apply(ESLVal... args) { return ppPattern(args[0]); }});
+  private static ESLVal ppPatterns(ESLVal ps) {
+    
+    return map(ppPattern,ps);
+  }
+  private static ESLVal ppPatterns = new ESLVal(new Function(new ESLVal("ppPatterns"),null) { public ESLVal apply(ESLVal... args) { return ppPatterns(args[0]); }});
+  private static ESLVal ppTypeEnv(ESLVal env) {
+    
+    {ESLVal[] s = new ESLVal[]{new ESLVal("[")};
+      
+      {{
+      ESLVal _v4 = env;
+      while(_v4.isCons()) {
+        ESLVal _v3 = _v4.headVal;
+        {ESLVal _v2 = new ESLVal(new Function(new ESLVal("forp"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                {ESLVal _v5 = _v3;
+                  
+                  switch(_v5.termName) {
+                  case "Map": {ESLVal $35 = _v5.termRef(0);
+                    ESLVal $34 = _v5.termRef(1);
+                    
+                    {ESLVal n = $35;
+                    
+                    {ESLVal t = $34;
+                    
+                    {s[0] = s[0].add(n.add(new ESLVal("->").add(ppType(t,env).add(new ESLVal(",")))));
+                  return $null;}
+                  }
+                  }
+                  }
+                  default: {ESLVal $$$ = _v5;
+                    
+                    return $null;
+                  }
+                }
+                }
+              }
+            });
+          
+          _v2.apply();
+        }
+        _v4 = _v4.tailVal;}
+    }
+    return s[0].add(new ESLVal("]"));}
+    }
+  }
+  private static ESLVal ppTypeEnv = new ESLVal(new Function(new ESLVal("ppTypeEnv"),null) { public ESLVal apply(ESLVal... args) { return ppTypeEnv(args[0]); }});
+  private static ESLVal ppTypes(ESLVal ts,ESLVal env) {
+    
+    return map(ppType0(env),ts);
+  }
+  private static ESLVal ppTypes = new ESLVal(new Function(new ESLVal("ppTypes"),null) { public ESLVal apply(ESLVal... args) { return ppTypes(args[0],args[1]); }});
+  private static ESLVal getTypeName(ESLVal t0,ESLVal env) {
+    
+    {ESLVal[] name = new ESLVal[]{$null};
+      
+      {{
+      ESLVal _v8 = env;
+      while(_v8.isCons()) {
+        ESLVal _v7 = _v8.headVal;
+        {ESLVal _v6 = new ESLVal(new Function(new ESLVal("forp"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                {ESLVal _v9 = _v7;
+                  
+                  switch(_v9.termName) {
+                  case "Map": {ESLVal $37 = _v9.termRef(0);
+                    ESLVal $36 = _v9.termRef(1);
+                    
+                    {ESLVal n = $37;
+                    
+                    {ESLVal t = $36;
+                    
+                    if(typeEqual(t0,t).boolVal)
+                    {name[0] = n;
+                    return $null;}
+                    else
+                      return $null;
+                  }
+                  }
+                  }
+                  default: {ESLVal $$$ = _v9;
+                    
+                    return $null;
+                  }
+                }
+                }
+              }
+            });
+          
+          _v6.apply();
+        }
+        _v8 = _v8.tailVal;}
+    }
+    return name[0];}
+    }
+  }
+  private static ESLVal getTypeName = new ESLVal(new Function(new ESLVal("getTypeName"),null) { public ESLVal apply(ESLVal... args) { return getTypeName(args[0],args[1]); }});
+  private static ESLVal ppType0(ESLVal env) {
+    
+    return new ESLVal(new Function(new ESLVal("fun171"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          ESLVal t = $args[0];
+      return ppType(t,env);
+        }
+      });
+  }
+  private static ESLVal ppType0 = new ESLVal(new Function(new ESLVal("ppType0"),null) { public ESLVal apply(ESLVal... args) { return ppType0(args[0]); }});
+  private static ESLVal ppHandlers(ESLVal handlers,ESLVal env) {
+    
+    {ESLVal _v10 = handlers;
+      
+      if(_v10.isCons())
+      {ESLVal $38 = _v10.head();
+        ESLVal $39 = _v10.tail();
+        
+        switch($38.termName) {
+        case "MessageType": {ESLVal $41 = $38.termRef(0);
+          ESLVal $40 = $38.termRef(1);
+          
+          if($40.isCons())
+          {ESLVal $42 = $40.head();
+            ESLVal $43 = $40.tail();
+            
+            {ESLVal l = $41;
+            
+            {ESLVal t = $42;
+            
+            {ESLVal ts = $43;
+            
+            {ESLVal hs = $39;
+            
+            return ppType(t,env).add(new ESLVal("; ").add(ppHandlers(hs,env)));
+          }
+          }
+          }
+          }
+          }
+        else if($40.isNil())
+          return error(new ESLVal("case error at Pos(5559,5693)").add(ESLVal.list(_v10)));
+        else return error(new ESLVal("case error at Pos(5559,5693)").add(ESLVal.list(_v10)));
+        }
+        default: return error(new ESLVal("case error at Pos(5559,5693)").add(ESLVal.list(_v10)));
+      }
+      }
+    else if(_v10.isNil())
+      return new ESLVal("");
+    else return error(new ESLVal("case error at Pos(5559,5693)").add(ESLVal.list(_v10)));
+    }
+  }
+  private static ESLVal ppHandlers = new ESLVal(new Function(new ESLVal("ppHandlers"),null) { public ESLVal apply(ESLVal... args) { return ppHandlers(args[0],args[1]); }});
+  private static ESLVal ppDecs(ESLVal decs,ESLVal env) {
+    
+    {ESLVal _v11 = decs;
+      
+      if(_v11.isCons())
+      {ESLVal $44 = _v11.head();
+        ESLVal $45 = _v11.tail();
+        
+        switch($44.termName) {
+        case "Dec": {ESLVal $49 = $44.termRef(0);
+          ESLVal $48 = $44.termRef(1);
+          ESLVal $47 = $44.termRef(2);
+          ESLVal $46 = $44.termRef(3);
+          
+          {ESLVal l = $49;
+          
+          {ESLVal n = $48;
+          
+          {ESLVal t = $47;
+          
+          {ESLVal d = $46;
+          
+          {ESLVal _v591 = $45;
+          
+          return n.add(new ESLVal("::").add(ppType(t,env).add(new ESLVal("; ").add(ppDecs(_v591,env)))));
+        }
+        }
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(5734,5848)").add(ESLVal.list(_v11)));
+      }
+      }
+    else if(_v11.isNil())
+      return new ESLVal("");
+    else return error(new ESLVal("case error at Pos(5734,5848)").add(ESLVal.list(_v11)));
+    }
+  }
+  private static ESLVal ppDecs = new ESLVal(new Function(new ESLVal("ppDecs"),null) { public ESLVal apply(ESLVal... args) { return ppDecs(args[0],args[1]); }});
+  private static ESLVal ppType(ESLVal t,ESLVal env) {
+    
+    if(getTypeName(t,env).neql($null).boolVal)
+      return getTypeName(t,env);
+      else
+        {ESLVal _v12 = t;
+          
+          switch(_v12.termName) {
+          case "ActType": {ESLVal $119 = _v12.termRef(0);
+            ESLVal $118 = _v12.termRef(1);
+            ESLVal $117 = _v12.termRef(2);
+            
+            {ESLVal l = $119;
+            
+            {ESLVal decs = $118;
+            
+            {ESLVal handlers = $117;
+            
+            return new ESLVal("Act { ").add(ppHandlers(handlers,env).add(new ESLVal(" }")));
+          }
+          }
+          }
+          }
+        case "ApplyType": {ESLVal $116 = _v12.termRef(0);
+            ESLVal $115 = _v12.termRef(1);
+            ESLVal $114 = _v12.termRef(2);
+            
+            {ESLVal l = $116;
+            
+            {ESLVal n = $115;
+            
+            {ESLVal args = $114;
+            
+            return n.add(map(ppType0(env),args));
+          }
+          }
+          }
+          }
+        case "ApplyTypeFun": {ESLVal $113 = _v12.termRef(0);
+            ESLVal $112 = _v12.termRef(1);
+            ESLVal $111 = _v12.termRef(2);
+            
+            {ESLVal l = $113;
+            
+            {ESLVal op = $112;
+            
+            {ESLVal args = $111;
+            
+            return ppType(op,env).add(map(ppType0(env),args));
+          }
+          }
+          }
+          }
+        case "ArrayType": {ESLVal $110 = _v12.termRef(0);
+            ESLVal $109 = _v12.termRef(1);
+            
+            {ESLVal l = $110;
+            
+            {ESLVal _v590 = $109;
+            
+            return new ESLVal("Array[").add(ppType(_v590,env).add(new ESLVal("]")));
+          }
+          }
+          }
+        case "BagType": {ESLVal $108 = _v12.termRef(0);
+            ESLVal $107 = _v12.termRef(1);
+            
+            {ESLVal l = $108;
+            
+            {ESLVal _v589 = $107;
+            
+            return new ESLVal("Set{").add(ppType(_v589,env).add(new ESLVal("}")));
+          }
+          }
+          }
+        case "BoolType": {ESLVal $106 = _v12.termRef(0);
+            
+            {ESLVal l = $106;
+            
+            return new ESLVal("Bool");
+          }
+          }
+        case "ExtendedAct": {ESLVal $105 = _v12.termRef(0);
+            ESLVal $104 = _v12.termRef(1);
+            ESLVal $103 = _v12.termRef(2);
+            ESLVal $102 = _v12.termRef(3);
+            
+            {ESLVal l = $105;
+            
+            {ESLVal parent = $104;
+            
+            {ESLVal decs = $103;
+            
+            {ESLVal handlers = $102;
+            
+            return new ESLVal("Act extends ").add(ppType(parent,env).add(new ESLVal(" { ").add(ppHandlers(handlers,env).add(new ESLVal(" }")))));
+          }
+          }
+          }
+          }
+          }
+        case "FloatType": {ESLVal $101 = _v12.termRef(0);
+            
+            {ESLVal l = $101;
+            
+            return new ESLVal("Float");
+          }
+          }
+        case "FieldType": {ESLVal $100 = _v12.termRef(0);
+            ESLVal $99 = _v12.termRef(1);
+            ESLVal $98 = _v12.termRef(2);
+            
+            {ESLVal l = $100;
+            
+            {ESLVal n = $99;
+            
+            {ESLVal _v588 = $98;
+            
+            return n.add(new ESLVal("::").add(ppType(_v588,env)));
+          }
+          }
+          }
+          }
+        case "ForallType": {ESLVal $97 = _v12.termRef(0);
+            ESLVal $96 = _v12.termRef(1);
+            ESLVal $95 = _v12.termRef(2);
+            
+            {ESLVal l = $97;
+            
+            {ESLVal ns = $96;
+            
+            {ESLVal _v587 = $95;
+            
+            return new ESLVal("Forall").add(ns.add(new ESLVal(".").add(ppType(_v587,env))));
+          }
+          }
+          }
+          }
+        case "FunType": {ESLVal $94 = _v12.termRef(0);
+            ESLVal $93 = _v12.termRef(1);
+            ESLVal $92 = _v12.termRef(2);
+            
+            {ESLVal l = $94;
+            
+            {ESLVal d = $93;
+            
+            {ESLVal r = $92;
+            
+            return map(ppType0(env),d).add(new ESLVal("->").add(ppType(r,env)));
+          }
+          }
+          }
+          }
+        case "TaggedFunType": {ESLVal $91 = _v12.termRef(0);
+            ESLVal $90 = _v12.termRef(1);
+            ESLVal $89 = _v12.termRef(2);
+            ESLVal $88 = _v12.termRef(3);
+            
+            {ESLVal l = $91;
+            
+            {ESLVal d = $90;
+            
+            {ESLVal p = $89;
+            
+            {ESLVal r = $88;
+            
+            return map(ppType0(env),d).add(new ESLVal("->").add(ppType(r,env)));
+          }
+          }
+          }
+          }
+          }
+        case "IntType": {ESLVal $87 = _v12.termRef(0);
+            
+            {ESLVal l = $87;
+            
+            return new ESLVal("Int");
+          }
+          }
+        case "ListType": {ESLVal $86 = _v12.termRef(0);
+            ESLVal $85 = _v12.termRef(1);
+            
+            {ESLVal l = $86;
+            
+            {ESLVal _v586 = $85;
+            
+            return new ESLVal("[").add(ppType(_v586,env).add(new ESLVal("]")));
+          }
+          }
+          }
+        case "NullType": {ESLVal $84 = _v12.termRef(0);
+            
+            {ESLVal l = $84;
+            
+            return new ESLVal("Null");
+          }
+          }
+        case "ObserverType": {ESLVal $83 = _v12.termRef(0);
+            ESLVal $82 = _v12.termRef(1);
+            ESLVal $81 = _v12.termRef(2);
+            
+            {ESLVal l = $83;
+            
+            {ESLVal s = $82;
+            
+            {ESLVal m = $81;
+            
+            return new ESLVal("Observer[").add(ppType(s,env).add(new ESLVal(",").add(ppType(m,env).add(new ESLVal("]")))));
+          }
+          }
+          }
+          }
+        case "ObservedType": {ESLVal $80 = _v12.termRef(0);
+            ESLVal $79 = _v12.termRef(1);
+            ESLVal $78 = _v12.termRef(2);
+            
+            {ESLVal l = $80;
+            
+            {ESLVal s = $79;
+            
+            {ESLVal m = $78;
+            
+            return new ESLVal("Observed[").add(ppType(s,env).add(new ESLVal(",").add(ppType(m,env).add(new ESLVal("]")))));
+          }
+          }
+          }
+          }
+        case "RecType": {ESLVal $77 = _v12.termRef(0);
+            ESLVal $76 = _v12.termRef(1);
+            ESLVal $75 = _v12.termRef(2);
+            
+            {ESLVal l = $77;
+            
+            {ESLVal n = $76;
+            
+            {ESLVal _v585 = $75;
+            
+            return new ESLVal("rec ").add(n.add(new ESLVal(".").add(ppType(_v585,env))));
+          }
+          }
+          }
+          }
+        case "RecordType": {ESLVal $74 = _v12.termRef(0);
+            ESLVal $73 = _v12.termRef(1);
+            
+            {ESLVal l = $74;
+            
+            {ESLVal fs = $73;
+            
+            return new ESLVal("{").add(ppDecs(fs,env).add(new ESLVal("}")));
+          }
+          }
+          }
+        case "SetType": {ESLVal $72 = _v12.termRef(0);
+            ESLVal $71 = _v12.termRef(1);
+            
+            {ESLVal l = $72;
+            
+            {ESLVal _v584 = $71;
+            
+            return new ESLVal("Set{").add(ppType(_v584,env).add(new ESLVal("}")));
+          }
+          }
+          }
+        case "StrType": {ESLVal $70 = _v12.termRef(0);
+            
+            {ESLVal l = $70;
+            
+            return new ESLVal("Str");
+          }
+          }
+        case "TableType": {ESLVal $69 = _v12.termRef(0);
+            ESLVal $68 = _v12.termRef(1);
+            ESLVal $67 = _v12.termRef(2);
+            
+            {ESLVal l = $69;
+            
+            {ESLVal k = $68;
+            
+            {ESLVal v = $67;
+            
+            return new ESLVal("Hash[").add(ppType(k,env).add(new ESLVal(",").add(ppType(v,env).add(new ESLVal("]")))));
+          }
+          }
+          }
+          }
+        case "TermType": {ESLVal $66 = _v12.termRef(0);
+            ESLVal $65 = _v12.termRef(1);
+            ESLVal $64 = _v12.termRef(2);
+            
+            {ESLVal l = $66;
+            
+            {ESLVal n = $65;
+            
+            {ESLVal ts = $64;
+            
+            return n.add(map(ppType0(env),ts));
+          }
+          }
+          }
+          }
+        case "TypeFun": {ESLVal $63 = _v12.termRef(0);
+            ESLVal $62 = _v12.termRef(1);
+            ESLVal $61 = _v12.termRef(2);
+            
+            {ESLVal l = $63;
+            
+            {ESLVal ns = $62;
+            
+            {ESLVal _v583 = $61;
+            
+            return new ESLVal("Fun").add(ns.add(new ESLVal(".").add(ppType(_v583,env))));
+          }
+          }
+          }
+          }
+        case "UnfoldType": {ESLVal $60 = _v12.termRef(0);
+            ESLVal $59 = _v12.termRef(1);
+            
+            {ESLVal l = $60;
+            
+            {ESLVal _v582 = $59;
+            
+            return new ESLVal("unfold ").add(ppType(_v582,env));
+          }
+          }
+          }
+        case "UnionType": {ESLVal $58 = _v12.termRef(0);
+            ESLVal $57 = _v12.termRef(1);
+            
+            {ESLVal l = $58;
+            
+            {ESLVal ts = $57;
+            
+            return new ESLVal("union ").add(map(ppType0(env),ts));
+          }
+          }
+          }
+        case "VarType": {ESLVal $56 = _v12.termRef(0);
+            ESLVal $55 = _v12.termRef(1);
+            
+            {ESLVal l = $56;
+            
+            {ESLVal n = $55;
+            
+            return n;
+          }
+          }
+          }
+        case "VoidType": {ESLVal $54 = _v12.termRef(0);
+            
+            {ESLVal l = $54;
+            
+            return new ESLVal("Void");
+          }
+          }
+        case "UnionRef": {ESLVal $53 = _v12.termRef(0);
+            ESLVal $52 = _v12.termRef(1);
+            ESLVal $51 = _v12.termRef(2);
+            
+            {ESLVal l = $53;
+            
+            {ESLVal _v581 = $52;
+            
+            {ESLVal n = $51;
+            
+            return ppType(_v581,env).add(new ESLVal(".").add(n));
+          }
+          }
+          }
+          }
+        case "TypeClosure": {ESLVal $50 = _v12.termRef(0);
+            
+            {ESLVal f = $50;
+            
+            return f.add(new ESLVal(""));
+          }
+          }
+          default: {ESLVal x = _v12;
+            
+            return new ESLVal("<unknown ").add(x.add(new ESLVal(">")));
+          }
+        }
+        }
+  }
+  private static ESLVal ppType = new ESLVal(new Function(new ESLVal("ppType"),null) { public ESLVal apply(ESLVal... args) { return ppType(args[0],args[1]); }});
+  private static ESLVal typeEnv(ESLVal defs) {
+    
+    {ESLVal _v13 = defs;
+      
+      if(_v13.isCons())
+      {ESLVal $120 = _v13.head();
+        ESLVal $121 = _v13.tail();
+        
+        switch($120.termName) {
+        case "TypeBind": {ESLVal $129 = $120.termRef(0);
+          ESLVal $128 = $120.termRef(1);
+          ESLVal $127 = $120.termRef(2);
+          ESLVal $126 = $120.termRef(3);
+          
+          {ESLVal l = $129;
+          
+          {ESLVal n = $128;
+          
+          {ESLVal t = $127;
+          
+          {ESLVal e = $126;
+          
+          {ESLVal ds = $121;
+          
+          return typeEnv(ds).cons(new ESLVal("Map",n,t));
+        }
+        }
+        }
+        }
+        }
+        }
+      case "DataBind": {ESLVal $125 = $120.termRef(0);
+          ESLVal $124 = $120.termRef(1);
+          ESLVal $123 = $120.termRef(2);
+          ESLVal $122 = $120.termRef(3);
+          
+          {ESLVal l = $125;
+          
+          {ESLVal n = $124;
+          
+          {ESLVal t = $123;
+          
+          {ESLVal e = $122;
+          
+          {ESLVal ds = $121;
+          
+          return typeEnv(ds).cons(new ESLVal("Map",n,t));
+        }
+        }
+        }
+        }
+        }
+        }
+        default: {ESLVal b = $120;
+          
+          {ESLVal ds = $121;
+          
+          return typeEnv(ds);
+        }
+        }
+      }
+      }
+    else if(_v13.isNil())
+      return $nil;
+    else return error(new ESLVal("case error at Pos(8122,8365)").add(ESLVal.list(_v13)));
+    }
+  }
+  private static ESLVal typeEnv = new ESLVal(new Function(new ESLVal("typeEnv"),null) { public ESLVal apply(ESLVal... args) { return typeEnv(args[0]); }});
+  private static ESLVal cnstrEnv(ESLVal defs,ESLVal env) {
+    
+    {ESLVal _v14 = defs;
+      
+      if(_v14.isCons())
+      {ESLVal $130 = _v14.head();
+        ESLVal $131 = _v14.tail();
+        
+        switch($130.termName) {
+        case "TypeBind": {ESLVal $139 = $130.termRef(0);
+          ESLVal $138 = $130.termRef(1);
+          ESLVal $137 = $130.termRef(2);
+          ESLVal $136 = $130.termRef(3);
+          
+          switch($137.termName) {
+          case "RecType": {ESLVal $144 = $137.termRef(0);
+            ESLVal $143 = $137.termRef(1);
+            ESLVal $142 = $137.termRef(2);
+            
+            switch($142.termName) {
+            case "UnionType": {ESLVal $146 = $142.termRef(0);
+              ESLVal $145 = $142.termRef(1);
+              
+              {ESLVal l = $139;
+              
+              {ESLVal n = $138;
+              
+              {ESLVal ll = $144;
+              
+              {ESLVal m = $143;
+              
+              {ESLVal lll = $146;
+              
+              {ESLVal ts = $145;
+              
+              {ESLVal e = $136;
+              
+              {ESLVal ds = $131;
+              
+              return getConstructors(l,lookupType(n,env),lookupType(n,env)).add(cnstrEnv(ds,env));
+            }
+            }
+            }
+            }
+            }
+            }
+            }
+            }
+            }
+            default: {ESLVal l = $139;
+              
+              {ESLVal n = $138;
+              
+              {ESLVal t = $137;
+              
+              {ESLVal e = $136;
+              
+              {ESLVal ds = $131;
+              
+              return cnstrEnv(ds,env);
+            }
+            }
+            }
+            }
+            }
+          }
+          }
+        case "UnionType": {ESLVal $141 = $137.termRef(0);
+            ESLVal $140 = $137.termRef(1);
+            
+            {ESLVal l = $139;
+            
+            {ESLVal n = $138;
+            
+            {ESLVal lll = $141;
+            
+            {ESLVal ts = $140;
+            
+            {ESLVal e = $136;
+            
+            {ESLVal ds = $131;
+            
+            return getConstructors(l,lookupType(n,env),lookupType(n,env)).add(cnstrEnv(ds,env));
+          }
+          }
+          }
+          }
+          }
+          }
+          }
+          default: {ESLVal l = $139;
+            
+            {ESLVal n = $138;
+            
+            {ESLVal t = $137;
+            
+            {ESLVal e = $136;
+            
+            {ESLVal ds = $131;
+            
+            return cnstrEnv(ds,env);
+          }
+          }
+          }
+          }
+          }
+        }
+        }
+      case "DataBind": {ESLVal $135 = $130.termRef(0);
+          ESLVal $134 = $130.termRef(1);
+          ESLVal $133 = $130.termRef(2);
+          ESLVal $132 = $130.termRef(3);
+          
+          {ESLVal l = $135;
+          
+          {ESLVal n = $134;
+          
+          {ESLVal t = $133;
+          
+          {ESLVal e = $132;
+          
+          {ESLVal ds = $131;
+          
+          return getConstructors(l,lookupType(n,env),lookupType(n,env)).add(cnstrEnv(ds,env));
+        }
+        }
+        }
+        }
+        }
+        }
+        default: {ESLVal b = $130;
+          
+          {ESLVal ds = $131;
+          
+          return cnstrEnv(ds,env);
+        }
+        }
+      }
+      }
+    else if(_v14.isNil())
+      return $nil;
+    else return error(new ESLVal("case error at Pos(8497,9130)").add(ESLVal.list(_v14)));
+    }
+  }
+  private static ESLVal cnstrEnv = new ESLVal(new Function(new ESLVal("cnstrEnv"),null) { public ESLVal apply(ESLVal... args) { return cnstrEnv(args[0],args[1]); }});
+  private static ESLVal getConstructors(ESLVal l,ESLVal dataType,ESLVal t) {
+    
+    {ESLVal _v15 = t;
+      
+      switch(_v15.termName) {
+      case "RecType": {ESLVal $154 = _v15.termRef(0);
+        ESLVal $153 = _v15.termRef(1);
+        ESLVal $152 = _v15.termRef(2);
+        
+        {ESLVal _v578 = $154;
+        
+        {ESLVal n = $153;
+        
+        {ESLVal _v579 = $152;
+        
+        return getConstructors(_v578,dataType,_v579);
+      }
+      }
+      }
+      }
+    case "TypeFun": {ESLVal $151 = _v15.termRef(0);
+        ESLVal $150 = _v15.termRef(1);
+        ESLVal $149 = _v15.termRef(2);
+        
+        {ESLVal _v576 = $151;
+        
+        {ESLVal ns = $150;
+        
+        {ESLVal _v577 = $149;
+        
+        return getConstructors(_v576,dataType,_v577);
+      }
+      }
+      }
+      }
+    case "UnionType": {ESLVal $148 = _v15.termRef(0);
+        ESLVal $147 = _v15.termRef(1);
+        
+        {ESLVal _v573 = $148;
+        
+        {ESLVal ts = $147;
+        
+        return map(new ESLVal(new Function(new ESLVal("fun172"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v574 = $args[0];
+        {ESLVal _v16 = _v574;
+              
+              switch(_v16.termName) {
+              case "TermType": {ESLVal $157 = _v16.termRef(0);
+                ESLVal $156 = _v16.termRef(1);
+                ESLVal $155 = _v16.termRef(2);
+                
+                {ESLVal _v575 = $157;
+                
+                {ESLVal n = $156;
+                
+                {ESLVal tts = $155;
+                
+                return new ESLVal("Map",n,dataType);
+              }
+              }
+              }
+              }
+              default: return error(new ESLVal("case error at Pos(9649,9715)").add(ESLVal.list(_v16)));
+            }
+            }
+          }
+        }),ts);
+      }
+      }
+      }
+      default: {ESLVal _v580 = _v15;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("cannot extract constructors from ").add(ppType(_v580,$nil))));
+      }
+    }
+    }
+  }
+  private static ESLVal getConstructors = new ESLVal(new Function(new ESLVal("getConstructors"),null) { public ESLVal apply(ESLVal... args) { return getConstructors(args[0],args[1],args[2]); }});
+  private static ESLVal checkFreeTypes(ESLVal e) {
+    
+    {ESLVal dom = typeEnvDom(e);
+      ESLVal ran = typeEnvRan(e);
+      
+      {ESLVal freeNames = removeAll(dom,flatten.apply(map(typeFV,ran)));
+      
+      if(freeNames.eql($nil).boolVal)
+      return $null;
+      else
+        return error(new ESLVal("TypeError",new ESLVal("Pos",$zero,$zero),new ESLVal("Unbound Types: ").add(freeNames)));
+    }
+    }
+  }
+  private static ESLVal checkFreeTypes = new ESLVal(new Function(new ESLVal("checkFreeTypes"),null) { public ESLVal apply(ESLVal... args) { return checkFreeTypes(args[0]); }});
+  private static ESLVal checkSingletonTypes(ESLVal e) {
+    
+    {ESLVal _v17 = e;
+      
+      if(_v17.isCons())
+      {ESLVal $158 = _v17.head();
+        ESLVal $159 = _v17.tail();
+        
+        switch($158.termName) {
+        case "Map": {ESLVal $161 = $158.termRef(0);
+          ESLVal $160 = $158.termRef(1);
+          
+          {ESLVal n = $161;
+          
+          {ESLVal t = $160;
+          
+          {ESLVal _v572 = $159;
+          
+          if(member.apply(n,typeEnvDom(_v572)).boolVal)
+          return error(new ESLVal("TypeError",new ESLVal("Pos",$zero,$zero),new ESLVal("Duplicate type name: ").add(n)));
+          else
+            return checkSingletonTypes(_v572);
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(10419,10640)").add(ESLVal.list(_v17)));
+      }
+      }
+    else if(_v17.isNil())
+      return $null;
+    else return error(new ESLVal("case error at Pos(10419,10640)").add(ESLVal.list(_v17)));
+    }
+  }
+  private static ESLVal checkSingletonTypes = new ESLVal(new Function(new ESLVal("checkSingletonTypes"),null) { public ESLVal apply(ESLVal... args) { return checkSingletonTypes(args[0]); }});
+  private static ESLVal checkSingletonConstructors(ESLVal cnstrEnv) {
+    
+    {ESLVal _v18 = cnstrEnv;
+      
+      if(_v18.isCons())
+      {ESLVal $162 = _v18.head();
+        ESLVal $163 = _v18.tail();
+        
+        switch($162.termName) {
+        case "Map": {ESLVal $165 = $162.termRef(0);
+          ESLVal $164 = $162.termRef(1);
+          
+          {ESLVal n = $165;
+          
+          {ESLVal t = $164;
+          
+          {ESLVal _v565 = $163;
+          
+          if(member.apply(n,typeEnvDom(_v565)).boolVal)
+          { LetRec letrec = new LetRec() {
+            ESLVal throwError = new ESLVal(new Function(new ESLVal("throwError"),getSelf()) {
+                public ESLVal apply(ESLVal... $args) {
+                  ESLVal _v566 = $args[0];
+              {ESLVal _v19 = _v566;
+                    
+                    switch(_v19.termName) {
+                    case "UnionType": {ESLVal $176 = _v19.termRef(0);
+                      ESLVal $175 = _v19.termRef(1);
+                      
+                      {ESLVal l = $176;
+                      
+                      {ESLVal ts = $175;
+                      
+                      return error(new ESLVal("TypeError",l,new ESLVal("Duplicate constructor name: ").add(n)));
+                    }
+                    }
+                    }
+                  case "ForallType": {ESLVal $174 = _v19.termRef(0);
+                      ESLVal $173 = _v19.termRef(1);
+                      ESLVal $172 = _v19.termRef(2);
+                      
+                      {ESLVal l = $174;
+                      
+                      {ESLVal ns = $173;
+                      
+                      {ESLVal _v570 = $172;
+                      
+                      return throwError.apply(_v570);
+                    }
+                    }
+                    }
+                    }
+                  case "RecType": {ESLVal $171 = _v19.termRef(0);
+                      ESLVal $170 = _v19.termRef(1);
+                      ESLVal $169 = _v19.termRef(2);
+                      
+                      {ESLVal l = $171;
+                      
+                      {ESLVal _v568 = $170;
+                      
+                      {ESLVal _v569 = $169;
+                      
+                      return throwError.apply(_v569);
+                    }
+                    }
+                    }
+                    }
+                  case "TypeFun": {ESLVal $168 = _v19.termRef(0);
+                      ESLVal $167 = _v19.termRef(1);
+                      ESLVal $166 = _v19.termRef(2);
+                      
+                      {ESLVal l = $168;
+                      
+                      {ESLVal ns = $167;
+                      
+                      {ESLVal _v567 = $166;
+                      
+                      return throwError.apply(_v567);
+                    }
+                    }
+                    }
+                    }
+                    default: {ESLVal _v571 = _v19;
+                      
+                      return error(new ESLVal("Duplicate constructor name: ").add(n.add(new ESLVal(" ").add(_v571))));
+                    }
+                  }
+                  }
+                }
+              });
+            
+            public ESLVal get(String name) {
+              switch(name) {
+                case "throwError": return throwError;
+                
+                default: throw new Error("cannot find letrec binding");
+              }
+              }
+            };
+          ESLVal throwError = letrec.get("throwError");
+          
+            return throwError.apply(t);}
+          
+          else
+            return checkSingletonConstructors(_v565);
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(10753,11408)").add(ESLVal.list(_v18)));
+      }
+      }
+    else if(_v18.isNil())
+      return $null;
+    else return error(new ESLVal("case error at Pos(10753,11408)").add(ESLVal.list(_v18)));
+    }
+  }
+  private static ESLVal checkSingletonConstructors = new ESLVal(new Function(new ESLVal("checkSingletonConstructors"),null) { public ESLVal apply(ESLVal... args) { return checkSingletonConstructors(args[0]); }});
+  private static ESLVal valueDefs(ESLVal defs) {
+    
+    {ESLVal _v20 = defs;
+      
+      if(_v20.isCons())
+      {ESLVal $177 = _v20.head();
+        ESLVal $178 = _v20.tail();
+        
+        switch($177.termName) {
+        case "TypeBind": {ESLVal $190 = $177.termRef(0);
+          ESLVal $189 = $177.termRef(1);
+          ESLVal $188 = $177.termRef(2);
+          ESLVal $187 = $177.termRef(3);
+          
+          {ESLVal l = $190;
+          
+          {ESLVal n = $189;
+          
+          {ESLVal t = $188;
+          
+          {ESLVal e = $187;
+          
+          {ESLVal ds = $178;
+          
+          return valueDefs(ds);
+        }
+        }
+        }
+        }
+        }
+        }
+      case "DataBind": {ESLVal $186 = $177.termRef(0);
+          ESLVal $185 = $177.termRef(1);
+          ESLVal $184 = $177.termRef(2);
+          ESLVal $183 = $177.termRef(3);
+          
+          {ESLVal l1 = $186;
+          
+          {ESLVal n = $185;
+          
+          {ESLVal t = $184;
+          
+          {ESLVal e = $183;
+          
+          {ESLVal ds = $178;
+          
+          return valueDefs(ds);
+        }
+        }
+        }
+        }
+        }
+        }
+      case "CnstrBind": {ESLVal $182 = $177.termRef(0);
+          ESLVal $181 = $177.termRef(1);
+          ESLVal $180 = $177.termRef(2);
+          ESLVal $179 = $177.termRef(3);
+          
+          {ESLVal l1 = $182;
+          
+          {ESLVal n = $181;
+          
+          {ESLVal t = $180;
+          
+          {ESLVal e = $179;
+          
+          {ESLVal ds = $178;
+          
+          return valueDefs(ds);
+        }
+        }
+        }
+        }
+        }
+        }
+        default: {ESLVal b = $177;
+          
+          {ESLVal ds = $178;
+          
+          return valueDefs(ds).cons(b);
+        }
+        }
+      }
+      }
+    else if(_v20.isNil())
+      return $nil;
+    else return error(new ESLVal("case error at Pos(11448,11758)").add(ESLVal.list(_v20)));
+    }
+  }
+  private static ESLVal valueDefs = new ESLVal(new Function(new ESLVal("valueDefs"),null) { public ESLVal apply(ESLVal... args) { return valueDefs(args[0]); }});
+  private static ESLVal valueDefsToTEnv(ESLVal defs,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v21 = defs;
+      
+      if(_v21.isCons())
+      {ESLVal $191 = _v21.head();
+        ESLVal $192 = _v21.tail();
+        
+        switch($191.termName) {
+        case "FunBinds": {ESLVal $206 = $191.termRef(0);
+          ESLVal $205 = $191.termRef(1);
+          
+          if($205.isCons())
+          {ESLVal $207 = $205.head();
+            ESLVal $208 = $205.tail();
+            
+            switch($207.termName) {
+            case "FunCase": {ESLVal $213 = $207.termRef(0);
+              ESLVal $212 = $207.termRef(1);
+              ESLVal $211 = $207.termRef(2);
+              ESLVal $210 = $207.termRef(3);
+              ESLVal $209 = $207.termRef(4);
+              
+              switch($211.termName) {
+              case "FunType": {ESLVal $216 = $211.termRef(0);
+                ESLVal $215 = $211.termRef(1);
+                ESLVal $214 = $211.termRef(2);
+                
+                {ESLVal n = $206;
+                
+                {ESLVal l = $213;
+                
+                {ESLVal args = $212;
+                
+                {ESLVal fl = $216;
+                
+                {ESLVal d = $215;
+                
+                {ESLVal r = $214;
+                
+                {ESLVal g = $210;
+                
+                {ESLVal e = $209;
+                
+                {ESLVal cases = $208;
+                
+                {ESLVal ds = $192;
+                
+                return valueDefsToTEnv(ds,selfType,valueEnv,cnstrEnv,typeEnv).cons(new ESLVal("Map",n,substTypeEnv(typeEnv,new ESLVal("FunType",fl,new SerializableFunction<ESLVal,ESLVal>() {
+                  public ESLVal apply(ESLVal $l0) {
+                    ESLVal $a = $nil;
+                    java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                    while(!$l0.isNil()) { 
+                      ESLVal p = $l0.head();
+                      $l0 = $l0.tail();
+                      $v.add(getPatternType(l,p,selfType,valueEnv,cnstrEnv,typeEnv));
+                    }
+                    for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                    return $a;
+                  }}.apply(args),r))));
+              }
+              }
+              }
+              }
+              }
+              }
+              }
+              }
+              }
+              }
+              }
+              default: return error(new ESLVal("case error at Pos(11865,12495)").add(ESLVal.list(_v21)));
+            }
+            }
+            default: return error(new ESLVal("case error at Pos(11865,12495)").add(ESLVal.list(_v21)));
+          }
+          }
+        else if($205.isNil())
+          return error(new ESLVal("case error at Pos(11865,12495)").add(ESLVal.list(_v21)));
+        else return error(new ESLVal("case error at Pos(11865,12495)").add(ESLVal.list(_v21)));
+        }
+      case "FunBind": {ESLVal $204 = $191.termRef(0);
+          ESLVal $203 = $191.termRef(1);
+          ESLVal $202 = $191.termRef(2);
+          ESLVal $201 = $191.termRef(3);
+          ESLVal $200 = $191.termRef(4);
+          ESLVal $199 = $191.termRef(5);
+          ESLVal $198 = $191.termRef(6);
+          
+          {ESLVal l = $204;
+          
+          {ESLVal n = $203;
+          
+          {ESLVal ps = $202;
+          
+          {ESLVal t = $201;
+          
+          {ESLVal st = $200;
+          
+          {ESLVal b = $199;
+          
+          {ESLVal g = $198;
+          
+          {ESLVal ds = $192;
+          
+          return valueDefsToTEnv(ds,selfType,valueEnv,cnstrEnv,typeEnv).cons(new ESLVal("Map",n,substTypeEnv(typeEnv,t)));
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+      case "Binding": {ESLVal $197 = $191.termRef(0);
+          ESLVal $196 = $191.termRef(1);
+          ESLVal $195 = $191.termRef(2);
+          ESLVal $194 = $191.termRef(3);
+          ESLVal $193 = $191.termRef(4);
+          
+          {ESLVal l = $197;
+          
+          {ESLVal n = $196;
+          
+          {ESLVal t = $195;
+          
+          {ESLVal st = $194;
+          
+          {ESLVal e = $193;
+          
+          {ESLVal ds = $192;
+          
+          return valueDefsToTEnv(ds,selfType,valueEnv,cnstrEnv,typeEnv).cons(new ESLVal("Map",n,substTypeEnv(typeEnv,t)));
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(11865,12495)").add(ESLVal.list(_v21)));
+      }
+      }
+    else if(_v21.isNil())
+      return $nil;
+    else return error(new ESLVal("case error at Pos(11865,12495)").add(ESLVal.list(_v21)));
+    }
+  }
+  private static ESLVal valueDefsToTEnv = new ESLVal(new Function(new ESLVal("valueDefsToTEnv"),null) { public ESLVal apply(ESLVal... args) { return valueDefsToTEnv(args[0],args[1],args[2],args[3],args[4]); }});
+  private static ESLVal recordJustType(ESLVal e,ESLVal t) {
+    
+    {setTypeInfo(e,new ESLVal("JustType",t));
+    return t;}
+  }
+  private static ESLVal recordJustType = new ESLVal(new Function(new ESLVal("recordJustType"),null) { public ESLVal apply(ESLVal... args) { return recordJustType(args[0],args[1]); }});
+  public static ESLVal typeCheckModule(ESLVal path) {
+    
+    {print.apply(new ESLVal("[ type check ").add(path.add(new ESLVal("]"))));
+    return typeCheckModuleInternal(path,getCache(),new ESLVal(new Function(new ESLVal("fun173"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          ESLVal cache = $args[0];
+      ESLVal valueEnv = $args[1];
+      ESLVal cnstrEnv = $args[2];
+      ESLVal typeEnv = $args[3];
+      return $null;
+        }
+      }));}
+  }
+  public static ESLVal typeCheckModule = new ESLVal(new Function(new ESLVal("typeCheckModule"),null) { public ESLVal apply(ESLVal... args) { return typeCheckModule(args[0]); }});
+  private static ESLVal typeCheckModuleInternal(ESLVal path,ESLVal cache,ESLVal handler) {
+    
+    if(hasEntry(path,cache).boolVal)
+      {ESLVal _v22 = lookup(path,cache);
+        
+        switch(_v22.termName) {
+        case "Typed": {ESLVal $220 = _v22.termRef(0);
+          ESLVal $219 = _v22.termRef(1);
+          ESLVal $218 = _v22.termRef(2);
+          ESLVal $217 = _v22.termRef(3);
+          
+          {ESLVal names = $220;
+          
+          {ESLVal vEnv = $219;
+          
+          {ESLVal cEnv = $218;
+          
+          {ESLVal tEnv = $217;
+          
+          return handler.apply(cache,vEnv,cEnv,tEnv);
+        }
+        }
+        }
+        }
+        }
+      case "Undefined": {
+          return error(new ESLVal("recursive reference to ").add(path));
+        }
+        default: return error(new ESLVal("case error at Pos(12983,13215)").add(ESLVal.list(_v22)));
+      }
+      }
+      else
+        {ESLVal m = parse.apply(path);
+          
+          return typeCheckModuleCache(m,updateCache(path,new ESLVal("Undefined",new ESLVal[]{}),cache),new ESLVal(new Function(new ESLVal("fun174"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal _v561 = $args[0];
+          ESLVal _v562 = $args[1];
+          ESLVal _v563 = $args[2];
+          ESLVal _v564 = $args[3];
+          return handler.apply(updateCache(path,new ESLVal("Typed",moduleExportedMethodNames(m),_v562,_v563,_v564),_v561),_v562,_v563,_v564);
+            }
+          }));
+        }
+  }
+  private static ESLVal typeCheckModuleInternal = new ESLVal(new Function(new ESLVal("typeCheckModuleInternal"),null) { public ESLVal apply(ESLVal... args) { return typeCheckModuleInternal(args[0],args[1],args[2]); }});
+  public static ESLVal typeCheckEntryPoint(ESLVal module) {
+    
+    return typeCheckModuleCache(module,getCache(),new ESLVal(new Function(new ESLVal("fun175"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          ESLVal cache = $args[0];
+      ESLVal valueEnv = $args[1];
+      ESLVal cnstrEnv = $args[2];
+      ESLVal typeEnv = $args[3];
+      return $null;
+        }
+      }));
+  }
+  public static ESLVal typeCheckEntryPoint = new ESLVal(new Function(new ESLVal("typeCheckEntryPoint"),null) { public ESLVal apply(ESLVal... args) { return typeCheckEntryPoint(args[0]); }});
+  private static ESLVal typeCheckModuleCache(ESLVal module,ESLVal cache,ESLVal handler) {
+    
+    return typeCheckModule0(module,cache,new ESLVal(new Function(new ESLVal("fun176"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          ESLVal _v557 = $args[0];
+      ESLVal _v558 = $args[1];
+      ESLVal _v559 = $args[2];
+      ESLVal _v560 = $args[3];
+      {ESLVal _v23 = module;
+            
+            switch(_v23.termName) {
+            case "Module": {ESLVal $227 = _v23.termRef(0);
+              ESLVal $226 = _v23.termRef(1);
+              ESLVal $225 = _v23.termRef(2);
+              ESLVal $224 = _v23.termRef(3);
+              ESLVal $223 = _v23.termRef(4);
+              ESLVal $222 = _v23.termRef(5);
+              ESLVal $221 = _v23.termRef(6);
+              
+              {ESLVal path = $227;
+              
+              {ESLVal name = $226;
+              
+              {ESLVal exports = $225;
+              
+              {ESLVal imports = $224;
+              
+              {ESLVal decs = $223;
+              
+              {ESLVal y = $222;
+              
+              {ESLVal defs = $221;
+              
+              return handler.apply(_v557,restrictTypeEnv(_v558,exports),restrictTypeEnv(_v559,exports),restrictTypeEnv(_v560,exports));
+            }
+            }
+            }
+            }
+            }
+            }
+            }
+            }
+            default: return error(new ESLVal("case error at Pos(14234,14497)").add(ESLVal.list(_v23)));
+          }
+          }
+        }
+      }));
+  }
+  private static ESLVal typeCheckModuleCache = new ESLVal(new Function(new ESLVal("typeCheckModuleCache"),null) { public ESLVal apply(ESLVal... args) { return typeCheckModuleCache(args[0],args[1],args[2]); }});
+  private static ESLVal typeCheckModule0(ESLVal module,ESLVal cache,ESLVal handler) {
+    
+    { LetRec letrec = new LetRec() {
+      ESLVal _v536 = new ESLVal(new Function(new ESLVal("processImports"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v544 = $args[0];
+        ESLVal _v545 = $args[1];
+        ESLVal _v546 = $args[2];
+        {ESLVal _v24 = _v544;
+              
+              if(_v24.isCons())
+              {ESLVal $228 = _v24.head();
+                ESLVal $229 = _v24.tail();
+                
+                {ESLVal path = $228;
+                
+                {ESLVal _v547 = $229;
+                
+                {ESLVal _v548 = _v547;
+                
+                return typeCheckModuleInternal(path,_v545,new ESLVal(new Function(new ESLVal("fun177"),getSelf()) {
+                  public ESLVal apply(ESLVal... $args) {
+                    ESLVal _v549 = $args[0];
+                ESLVal _v550 = $args[1];
+                ESLVal _v551 = $args[2];
+                ESLVal _v552 = $args[3];
+                return _v536.apply(_v548,_v549,new ESLVal(new Function(new ESLVal("fun178"),getSelf()) {
+                        public ESLVal apply(ESLVal... $args) {
+                          ESLVal _v553 = $args[0];
+                      ESLVal _v554 = $args[1];
+                      ESLVal _v555 = $args[2];
+                      ESLVal _v556 = $args[3];
+                      return _v546.apply(_v553,_v554.add(_v550),_v555.add(_v551),_v556.add(_v552));
+                        }
+                      }));
+                  }
+                }));
+              }
+              }
+              }
+              }
+            else if(_v24.isNil())
+              return _v546.apply(_v545,$nil,$nil,$nil);
+            else return error(new ESLVal("case error at Pos(14877,15434)").add(ESLVal.list(_v24)));
+            }
+          }
+        });
+      ESLVal _v537 = new ESLVal(new Function(new ESLVal("main"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            {ESLVal _v25 = module;
+              
+              switch(_v25.termName) {
+              case "Module": {ESLVal $236 = _v25.termRef(0);
+                ESLVal $235 = _v25.termRef(1);
+                ESLVal $234 = _v25.termRef(2);
+                ESLVal $233 = _v25.termRef(3);
+                ESLVal $232 = _v25.termRef(4);
+                ESLVal $231 = _v25.termRef(5);
+                ESLVal $230 = _v25.termRef(6);
+                
+                {ESLVal path = $236;
+                
+                {ESLVal name = $235;
+                
+                {ESLVal exports = $234;
+                
+                {ESLVal imports = $233;
+                
+                {ESLVal decs = $232;
+                
+                {ESLVal y = $231;
+                
+                {ESLVal defs = $230;
+                
+                return _v536.apply(imports,cache,new ESLVal(new Function(new ESLVal("fun179"),getSelf()) {
+                  public ESLVal apply(ESLVal... $args) {
+                    ESLVal _v538 = $args[0];
+                ESLVal _v539 = $args[1];
+                ESLVal _v540 = $args[2];
+                ESLVal _v541 = $args[3];
+                {ESLVal _v542 = typeEnv(defs);
+                      ESLVal _v543 = mergeFunDefs(defs);
+                      
+                      {print.apply(new ESLVal("decs = ").add(decs));
+                    resetInfo();
+                    resetTypeInfo();
+                    resetWarnings();
+                    checkUnusedVars(module);
+                    checkDupBindings(_v543);
+                    checkFreeTypes(_v542.add(_v541.add(tenv0)));
+                    checkSingletonTypes(_v542);
+                    {ESLVal typeEnv = recTypes(_v542.add(_v541.add(tenv0)));
+                      
+                      {ESLVal cnstrEnv = cnstrEnv(_v543,typeEnv).add(_v540.add(cnstrEnv0));
+                      
+                      {checkSingletonConstructors(cnstrEnv);
+                    {ESLVal valueEnv = typeCheckValues(valueDefs(_v543),theTypeNull,_v539,typeEnv,cnstrEnv);
+                      
+                      return handler.apply(_v538,valueEnv,cnstrEnv,typeEnv);
+                    }}
+                    }
+                    }}
+                    }
+                  }
+                }));
+              }
+              }
+              }
+              }
+              }
+              }
+              }
+              }
+              default: return error(new ESLVal("case error at Pos(15463,17172)").add(ESLVal.list(_v25)));
+            }
+            }
+          }
+        });
+      
+      public ESLVal get(String name) {
+        switch(name) {
+          case "_v536": return _v536;
+          
+          case "_v537": return _v537;
+          
+          default: throw new Error("cannot find letrec binding");
+        }
+        }
+      };
+    ESLVal _v536 = letrec.get("_v536");
+    
+    ESLVal _v537 = letrec.get("_v537");
+    
+      return _v537.apply();}
+    
+  }
+  private static ESLVal typeCheckModule0 = new ESLVal(new Function(new ESLVal("typeCheckModule0"),null) { public ESLVal apply(ESLVal... args) { return typeCheckModule0(args[0],args[1],args[2]); }});
+  private static ESLVal typeCheckValues(ESLVal valueDefs,ESLVal selfType,ESLVal ivalueEnv,ESLVal typeEnv,ESLVal cnstrEnv) {
+    
+    {ESLVal valueEnv = valueDefsToTEnv(valueDefs,selfType,$nil,cnstrEnv,typeEnv).add(ivalueEnv.add(env0));
+      
+      {{
+      ESLVal _v26 = valueDefs;
+      while(_v26.isCons()) {
+        ESLVal def = _v26.headVal;
+        typeCheckDef(def,selfType,valueEnv,valueEnv,cnstrEnv,typeEnv);
+        _v26 = _v26.tailVal;}
+    }
+    return valueEnv;}
+    }
+  }
+  private static ESLVal typeCheckValues = new ESLVal(new Function(new ESLVal("typeCheckValues"),null) { public ESLVal apply(ESLVal... args) { return typeCheckValues(args[0],args[1],args[2],args[3],args[4]); }});
+  private static ESLVal genericize(ESLVal l,ESLVal t) {
+    
+    if(length.apply(typeFV(t)).eql($zero).boolVal)
+      return t;
+      else
+        return new ESLVal("ForallType",l,typeFV(t),t);
+  }
+  private static ESLVal genericize = new ESLVal(new Function(new ESLVal("genericize"),null) { public ESLVal apply(ESLVal... args) { return genericize(args[0],args[1]); }});
+  private static ESLVal checkPatterns(ESLVal l,ESLVal ps) {
+    
+    {ESLVal names = new SerializableFunction<ESLVal,ESLVal>() {
+          public ESLVal apply(ESLVal $l0) {
+            ESLVal $a = $nil;
+            java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+            while(!$l0.isNil()) { 
+              ESLVal p = $l0.head();
+              $l0 = $l0.tail();
+              ESLVal $l1 = patternNames(p);
+        while(!$l1.isNil()) {
+          ESLVal n = $l1.head();
+          $l1 = $l1.tail();
+          $v.add(n);
+        }
+            }
+            for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+            return $a;
+          }}.apply(ps);
+      
+      if(removeDups(names).neql(names).boolVal)
+      return error(new ESLVal("TypeError",l,new ESLVal("duplicate pattern variables")));
+      else
+        return $null;
+    }
+  }
+  private static ESLVal checkPatterns = new ESLVal(new Function(new ESLVal("checkPatterns"),null) { public ESLVal apply(ESLVal... args) { return checkPatterns(args[0],args[1]); }});
+  private static ESLVal typeCheckDef(ESLVal def,ESLVal selfType,ESLVal baseValueEnv,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v27 = def;
+      
+      switch(_v27.termName) {
+      case "FunBinds": {ESLVal $250 = _v27.termRef(0);
+        ESLVal $249 = _v27.termRef(1);
+        
+        {ESLVal n = $250;
+        
+        {ESLVal cases = $249;
+        
+        { LetRec letrec = new LetRec() {
+        ESLVal checkArities = new ESLVal(new Function(new ESLVal("checkArities"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal _v533 = $args[0];
+          ESLVal _v534 = $args[1];
+          {ESLVal _v31 = _v533;
+                
+                if(_v31.isCons())
+                {ESLVal $260 = _v31.head();
+                  ESLVal $261 = _v31.tail();
+                  
+                  switch($260.termName) {
+                  case "FunCase": {ESLVal $266 = $260.termRef(0);
+                    ESLVal $265 = $260.termRef(1);
+                    ESLVal $264 = $260.termRef(2);
+                    ESLVal $263 = $260.termRef(3);
+                    ESLVal $262 = $260.termRef(4);
+                    
+                    {ESLVal l = $266;
+                    
+                    {ESLVal args = $265;
+                    
+                    {ESLVal t = $264;
+                    
+                    {ESLVal g = $263;
+                    
+                    {ESLVal e = $262;
+                    
+                    {ESLVal _v535 = $261;
+                    
+                    if(_v534.eql(new ESLVal(-1)).or(length.apply(args).eql(_v534)).boolVal)
+                    return checkArities.apply(_v535,length.apply(args));
+                    else
+                      return error(new ESLVal("TypeError",l,new ESLVal("inconsistent overloaded arity")));
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  }
+                  default: return error(new ESLVal("case error at Pos(18378,18670)").add(ESLVal.list(_v31)));
+                }
+                }
+              else if(_v31.isNil())
+                return _v534;
+              else return error(new ESLVal("case error at Pos(18378,18670)").add(ESLVal.list(_v31)));
+              }
+            }
+          });
+        ESLVal funCaseLoc = new ESLVal(new Function(new ESLVal("funCaseLoc"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal f = $args[0];
+          {ESLVal _v32 = f;
+                
+                switch(_v32.termName) {
+                case "FunCase": {ESLVal $271 = _v32.termRef(0);
+                  ESLVal $270 = _v32.termRef(1);
+                  ESLVal $269 = _v32.termRef(2);
+                  ESLVal $268 = _v32.termRef(3);
+                  ESLVal $267 = _v32.termRef(4);
+                  
+                  {ESLVal l = $271;
+                  
+                  {ESLVal ps = $270;
+                  
+                  {ESLVal t = $269;
+                  
+                  {ESLVal g = $268;
+                  
+                  {ESLVal e = $267;
+                  
+                  return l;
+                }
+                }
+                }
+                }
+                }
+                }
+                default: return error(new ESLVal("case error at Pos(18709,18745)").add(ESLVal.list(_v32)));
+              }
+              }
+            }
+          });
+        ESLVal funCasePatterns = new ESLVal(new Function(new ESLVal("funCasePatterns"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal f = $args[0];
+          {ESLVal _v33 = f;
+                
+                switch(_v33.termName) {
+                case "FunCase": {ESLVal $276 = _v33.termRef(0);
+                  ESLVal $275 = _v33.termRef(1);
+                  ESLVal $274 = _v33.termRef(2);
+                  ESLVal $273 = _v33.termRef(3);
+                  ESLVal $272 = _v33.termRef(4);
+                  
+                  {ESLVal l = $276;
+                  
+                  {ESLVal ps = $275;
+                  
+                  {ESLVal t = $274;
+                  
+                  {ESLVal g = $273;
+                  
+                  {ESLVal e = $272;
+                  
+                  return ps;
+                }
+                }
+                }
+                }
+                }
+                }
+                default: return error(new ESLVal("case error at Pos(18795,18832)").add(ESLVal.list(_v33)));
+              }
+              }
+            }
+          });
+        ESLVal funCaseGuard = new ESLVal(new Function(new ESLVal("funCaseGuard"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal f = $args[0];
+          {ESLVal _v34 = f;
+                
+                switch(_v34.termName) {
+                case "FunCase": {ESLVal $281 = _v34.termRef(0);
+                  ESLVal $280 = _v34.termRef(1);
+                  ESLVal $279 = _v34.termRef(2);
+                  ESLVal $278 = _v34.termRef(3);
+                  ESLVal $277 = _v34.termRef(4);
+                  
+                  {ESLVal l = $281;
+                  
+                  {ESLVal ps = $280;
+                  
+                  {ESLVal t = $279;
+                  
+                  {ESLVal g = $278;
+                  
+                  {ESLVal e = $277;
+                  
+                  return g;
+                }
+                }
+                }
+                }
+                }
+                }
+                default: return error(new ESLVal("case error at Pos(18873,18909)").add(ESLVal.list(_v34)));
+              }
+              }
+            }
+          });
+        ESLVal funCaseBody = new ESLVal(new Function(new ESLVal("funCaseBody"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal f = $args[0];
+          {ESLVal _v35 = f;
+                
+                switch(_v35.termName) {
+                case "FunCase": {ESLVal $286 = _v35.termRef(0);
+                  ESLVal $285 = _v35.termRef(1);
+                  ESLVal $284 = _v35.termRef(2);
+                  ESLVal $283 = _v35.termRef(3);
+                  ESLVal $282 = _v35.termRef(4);
+                  
+                  {ESLVal l = $286;
+                  
+                  {ESLVal ps = $285;
+                  
+                  {ESLVal t = $284;
+                  
+                  {ESLVal g = $283;
+                  
+                  {ESLVal e = $282;
+                  
+                  return e;
+                }
+                }
+                }
+                }
+                }
+                }
+                default: return error(new ESLVal("case error at Pos(18949,18985)").add(ESLVal.list(_v35)));
+              }
+              }
+            }
+          });
+        ESLVal checkCases = new ESLVal(new Function(new ESLVal("checkCases"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal _v531 = $args[0];
+          {ESLVal ts = new SerializableFunction<ESLVal,ESLVal>() {
+                    public ESLVal apply(ESLVal $l0) {
+                      ESLVal $a = $nil;
+                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                      while(!$l0.isNil()) { 
+                        ESLVal p = $l0.head();
+                        $l0 = $l0.tail();
+                        $v.add(getPatternType(patternLoc(p),p,selfType,valueEnv,cnstrEnv,typeEnv));
+                      }
+                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                      return $a;
+                    }}.apply(funCasePatterns.apply(head.apply(_v531)));
+                
+                {ESLVal _v532 = zipTypeEnv(new SerializableFunction<ESLVal,ESLVal>() {
+                    public ESLVal apply(ESLVal $l0) {
+                      ESLVal $a = $nil;
+                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                      while(!$l0.isNil()) { 
+                        ESLVal i = $l0.head();
+                        $l0 = $l0.tail();
+                        $v.add(new ESLVal("$v").add(i));
+                      }
+                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                      return $a;
+                    }}.apply($zero.to(length.apply(ts))),new SerializableFunction<ESLVal,ESLVal>() {
+                    public ESLVal apply(ESLVal $l0) {
+                      ESLVal $a = $nil;
+                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                      while(!$l0.isNil()) { 
+                        ESLVal t = $l0.head();
+                        $l0 = $l0.tail();
+                        $v.add(typeNF(t,typeEnv));
+                      }
+                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                      return $a;
+                    }}.apply(ts)).add(valueEnv);
+                
+                {ESLVal caseExp = new ESLVal("Case",funCaseLoc.apply(head.apply(_v531)),$nil,new SerializableFunction<ESLVal,ESLVal>() {
+                    public ESLVal apply(ESLVal $l0) {
+                      ESLVal $a = $nil;
+                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                      while(!$l0.isNil()) { 
+                        ESLVal i = $l0.head();
+                        $l0 = $l0.tail();
+                        $v.add(new ESLVal("Var",patternLoc(nth.apply(funCasePatterns.apply(head.apply(_v531)),i)),new ESLVal("$v").add(i)));
+                      }
+                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                      return $a;
+                    }}.apply($zero.to(length.apply(ts))),new SerializableFunction<ESLVal,ESLVal>() {
+                    public ESLVal apply(ESLVal $l0) {
+                      ESLVal $a = $nil;
+                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                      while(!$l0.isNil()) { 
+                        ESLVal c = $l0.head();
+                        $l0 = $l0.tail();
+                        $v.add(new ESLVal("BArm",funCaseLoc.apply(c),funCasePatterns.apply(c),funCaseGuard.apply(c),funCaseBody.apply(c)));
+                      }
+                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                      return $a;
+                    }}.apply(_v531));
+                
+                return expType(caseExp,selfType,_v532,cnstrEnv,typeEnv);
+              }
+              }
+              }
+            }
+          });
+        
+        public ESLVal get(String name) {
+          switch(name) {
+            case "checkArities": return checkArities;
+            
+            case "funCaseLoc": return funCaseLoc;
+            
+            case "funCasePatterns": return funCasePatterns;
+            
+            case "funCaseGuard": return funCaseGuard;
+            
+            case "funCaseBody": return funCaseBody;
+            
+            case "checkCases": return checkCases;
+            
+            default: throw new Error("cannot find letrec binding");
+          }
+          }
+        };
+      ESLVal checkArities = letrec.get("checkArities");
+      
+      ESLVal funCaseLoc = letrec.get("funCaseLoc");
+      
+      ESLVal funCasePatterns = letrec.get("funCasePatterns");
+      
+      ESLVal funCaseGuard = letrec.get("funCaseGuard");
+      
+      ESLVal funCaseBody = letrec.get("funCaseBody");
+      
+      ESLVal checkCases = letrec.get("checkCases");
+      
+        {checkArities.apply(cases,new ESLVal(-1));
+      return checkCases.apply(cases);}}
+      
+      }
+      }
+      }
+    case "FunBind": {ESLVal $248 = _v27.termRef(0);
+        ESLVal $247 = _v27.termRef(1);
+        ESLVal $246 = _v27.termRef(2);
+        ESLVal $245 = _v27.termRef(3);
+        ESLVal $244 = _v27.termRef(4);
+        ESLVal $243 = _v27.termRef(5);
+        ESLVal $242 = _v27.termRef(6);
+        
+        {ESLVal l = $248;
+        
+        {ESLVal n = $247;
+        
+        {ESLVal ps = $246;
+        
+        {ESLVal t = $245;
+        
+        {ESLVal st = $244;
+        
+        {ESLVal b = $243;
+        
+        {ESLVal g = $242;
+        
+        {checkPatterns(l,ps);
+      {ESLVal argTypes = map(new ESLVal(new Function(new ESLVal("fun180"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal p = $args[0];
+          {ESLVal _v28 = p;
+                
+                switch(_v28.termName) {
+                case "PVar": {ESLVal $253 = _v28.termRef(0);
+                  ESLVal $252 = _v28.termRef(1);
+                  ESLVal $251 = _v28.termRef(2);
+                  
+                  {ESLVal _v525 = $253;
+                  
+                  {ESLVal _v526 = $252;
+                  
+                  {ESLVal _v527 = $251;
+                  
+                  return substTypeEnv(typeEnv,_v527);
+                }
+                }
+                }
+                }
+                default: return error(new ESLVal("case error at Pos(19899,19965)").add(ESLVal.list(_v28)));
+              }
+              }
+            }
+          }),ps);
+        ESLVal argNames = map(new ESLVal(new Function(new ESLVal("fun181"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal p = $args[0];
+          {ESLVal _v29 = p;
+                
+                switch(_v29.termName) {
+                case "PVar": {ESLVal $256 = _v29.termRef(0);
+                  ESLVal $255 = _v29.termRef(1);
+                  ESLVal $254 = _v29.termRef(2);
+                  
+                  {ESLVal _v522 = $256;
+                  
+                  {ESLVal _v523 = $255;
+                  
+                  {ESLVal _v524 = $254;
+                  
+                  return _v523;
+                }
+                }
+                }
+                }
+                default: return error(new ESLVal("case error at Pos(20037,20081)").add(ESLVal.list(_v29)));
+              }
+              }
+            }
+          }),ps);
+        
+        {ESLVal bodyType = guardedExpType(l,g,b,selfType,zipTypeEnv(argNames,argTypes).add(baseValueEnv),cnstrEnv,typeEnv);
+        
+        {ESLVal fType = new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+            {ESLVal _v30 = t;
+              
+              switch(_v30.termName) {
+              case "ForallType": {ESLVal $259 = _v30.termRef(0);
+                ESLVal $258 = _v30.termRef(1);
+                ESLVal $257 = _v30.termRef(2);
+                
+                {ESLVal _v528 = $259;
+                
+                {ESLVal ns = $258;
+                
+                {ESLVal _v529 = $257;
+                
+                return genericize(_v528,new ESLVal("FunType",_v528,argTypes,bodyType));
+              }
+              }
+              }
+              }
+              default: {ESLVal _v530 = _v30;
+                
+                return new ESLVal("FunType",l,argTypes,bodyType);
+              }
+            }
+            }
+          }}.get();
+        ESLVal dType = substTypeEnv(typeEnv,t);
+        
+        if(subType(fType,dType).boolVal)
+        return $null;
+        else
+          return error(new ESLVal("TypeError",l,new ESLVal("type of ").add(n.add(new ESLVal("::").add(ppType(fType,typeEnv).add(new ESLVal(" does not match declaration ").add(ppType(dType,typeEnv))))))));
+      }
+      }
+      }}
+      }
+      }
+      }
+      }
+      }
+      }
+      }
+      }
+    case "Binding": {ESLVal $241 = _v27.termRef(0);
+        ESLVal $240 = _v27.termRef(1);
+        ESLVal $239 = _v27.termRef(2);
+        ESLVal $238 = _v27.termRef(3);
+        ESLVal $237 = _v27.termRef(4);
+        
+        {ESLVal l = $241;
+        
+        {ESLVal n = $240;
+        
+        {ESLVal dt = $239;
+        
+        {ESLVal st = $238;
+        
+        {ESLVal e = $237;
+        
+        {ESLVal valueType = expType(e,selfType,baseValueEnv,cnstrEnv,typeEnv);
+        
+        {ESLVal valueFV = typeFV(valueType);
+        ESLVal declaredType = lookupType(n,valueEnv);
+        
+        {ESLVal _v521 = new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+            if(valueFV.eql($nil).boolVal)
+              return valueType;
+              else
+                return new ESLVal("ForallType",l,valueFV,valueType);
+          }}.get();
+        
+        if(subType(_v521,declaredType).boolVal)
+        return $null;
+        else
+          return error(new ESLVal("TypeError",l,new ESLVal("type of ").add(n.add(new ESLVal(" ").add(ppType(_v521,typeEnv).add(new ESLVal(" does not match declared type = ").add(ppType(declaredType,typeEnv))))))));
+      }
+      }
+      }
+      }
+      }
+      }
+      }
+      }
+      }
+      default: {ESLVal b = _v27;
+        
+        return print.apply(new ESLVal("unexpected binding ").add(b));
+      }
+    }
+    }
+  }
+  private static ESLVal typeCheckDef = new ESLVal(new Function(new ESLVal("typeCheckDef"),null) { public ESLVal apply(ESLVal... args) { return typeCheckDef(args[0],args[1],args[2],args[3],args[4],args[5]); }});
+  private static ESLVal guardedExpType(ESLVal l,ESLVal g,ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal bt = expType(g,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(isBoolType(bt).boolVal)
+      return expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("guarded expression requires a boolean value: ").add(ppType(bt,typeEnv))));
+    }
+  }
+  private static ESLVal guardedExpType = new ESLVal(new Function(new ESLVal("guardedExpType"),null) { public ESLVal apply(ESLVal... args) { return guardedExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal expType(ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t = expType1(e,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(hasTypeInfo(e).boolVal)
+      return t;
+      else
+        return recordJustType(e,t);
+    }
+  }
+  private static ESLVal expType = new ESLVal(new Function(new ESLVal("expType"),null) { public ESLVal apply(ESLVal... args) { return expType(args[0],args[1],args[2],args[3],args[4]); }});
+  private static ESLVal expType1(ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v36 = e;
+      
+      switch(_v36.termName) {
+      case "ActExp": {ESLVal $422 = _v36.termRef(0);
+        ESLVal $421 = _v36.termRef(1);
+        ESLVal $420 = _v36.termRef(2);
+        ESLVal $419 = _v36.termRef(3);
+        ESLVal $418 = _v36.termRef(4);
+        ESLVal $417 = _v36.termRef(5);
+        ESLVal $416 = _v36.termRef(6);
+        ESLVal $415 = _v36.termRef(7);
+        
+        {ESLVal l = $422;
+        
+        {ESLVal n = $421;
+        
+        {ESLVal args = $420;
+        
+        {ESLVal exports = $419;
+        
+        {ESLVal parent = $418;
+        
+        {ESLVal bindings = $417;
+        
+        {ESLVal init = $416;
+        
+        {ESLVal arms = $415;
+        
+        return actType(l,n,args,parent,exports,mergeFunDefs(bindings),init,arms,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+      }
+      }
+      }
+      }
+      }
+    case "Apply": {ESLVal $414 = _v36.termRef(0);
+        ESLVal $413 = _v36.termRef(1);
+        ESLVal $412 = _v36.termRef(2);
+        
+        {ESLVal l = $414;
+        
+        {ESLVal op = $413;
+        
+        {ESLVal args = $412;
+        
+        return applyType(l,op,args,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "ApplyTypeExp": {ESLVal $411 = _v36.termRef(0);
+        ESLVal $410 = _v36.termRef(1);
+        ESLVal $409 = _v36.termRef(2);
+        
+        {ESLVal l = $411;
+        
+        {ESLVal _v520 = $410;
+        
+        {ESLVal ts = $409;
+        
+        return applyTypeExp(l,_v520,ts,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "ArrayUpdate": {ESLVal $408 = _v36.termRef(0);
+        ESLVal $407 = _v36.termRef(1);
+        ESLVal $406 = _v36.termRef(2);
+        ESLVal $405 = _v36.termRef(3);
+        
+        {ESLVal l = $408;
+        
+        {ESLVal a = $407;
+        
+        {ESLVal i = $406;
+        
+        {ESLVal v = $405;
+        
+        return arrayUpdateType(l,a,i,v,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+      }
+    case "ArrayRef": {ESLVal $404 = _v36.termRef(0);
+        ESLVal $403 = _v36.termRef(1);
+        ESLVal $402 = _v36.termRef(2);
+        
+        {ESLVal l = $404;
+        
+        {ESLVal a = $403;
+        
+        {ESLVal i = $402;
+        
+        return arrayRefType(l,a,i,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "BagExp": {ESLVal $401 = _v36.termRef(0);
+        ESLVal $400 = _v36.termRef(1);
+        
+        {ESLVal l = $401;
+        
+        {ESLVal es = $400;
+        
+        return bagType(l,es,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+    case "Become": {ESLVal $399 = _v36.termRef(0);
+        ESLVal $398 = _v36.termRef(1);
+        
+        {ESLVal l = $399;
+        
+        {ESLVal _v519 = $398;
+        
+        return becomeType(l,_v519,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+    case "BinExp": {ESLVal $397 = _v36.termRef(0);
+        ESLVal $396 = _v36.termRef(1);
+        ESLVal $395 = _v36.termRef(2);
+        ESLVal $394 = _v36.termRef(3);
+        
+        {ESLVal l = $397;
+        
+        {ESLVal e1 = $396;
+        
+        {ESLVal op = $395;
+        
+        {ESLVal e2 = $394;
+        
+        return binExpType(l,e1,op,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+      }
+    case "Block": {ESLVal $393 = _v36.termRef(0);
+        ESLVal $392 = _v36.termRef(1);
+        
+        {ESLVal l = $393;
+        
+        {ESLVal es = $392;
+        
+        return blockType(l,es,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+    case "BoolExp": {ESLVal $391 = _v36.termRef(0);
+        ESLVal $390 = _v36.termRef(1);
+        
+        {ESLVal l = $391;
+        
+        {ESLVal b = $390;
+        
+        return theTypeBool;
+      }
+      }
+      }
+    case "Case": {ESLVal $389 = _v36.termRef(0);
+        ESLVal $388 = _v36.termRef(1);
+        ESLVal $387 = _v36.termRef(2);
+        ESLVal $386 = _v36.termRef(3);
+        
+        {ESLVal l = $389;
+        
+        {ESLVal decs = $388;
+        
+        {ESLVal es = $387;
+        
+        {ESLVal arms = $386;
+        
+        return caseType(l,es,arms,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+      }
+    case "Cmp": {ESLVal $385 = _v36.termRef(0);
+        ESLVal $384 = _v36.termRef(1);
+        ESLVal $383 = _v36.termRef(2);
+        
+        {ESLVal l = $385;
+        
+        {ESLVal _v518 = $384;
+        
+        {ESLVal qs = $383;
+        
+        return cmpType(l,_v518,qs,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "Grab": {ESLVal $382 = _v36.termRef(0);
+        ESLVal $381 = _v36.termRef(1);
+        ESLVal $380 = _v36.termRef(2);
+        
+        {ESLVal l = $382;
+        
+        {ESLVal refs = $381;
+        
+        {ESLVal _v517 = $380;
+        
+        return expType(_v517,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "FloatExp": {ESLVal $379 = _v36.termRef(0);
+        ESLVal $378 = _v36.termRef(1);
+        
+        {ESLVal l = $379;
+        
+        {ESLVal f = $378;
+        
+        return theTypeFloat;
+      }
+      }
+      }
+    case "Fold": {ESLVal $377 = _v36.termRef(0);
+        ESLVal $376 = _v36.termRef(1);
+        ESLVal $375 = _v36.termRef(2);
+        
+        {ESLVal l = $377;
+        
+        {ESLVal t = $376;
+        
+        {ESLVal _v516 = $375;
+        
+        return foldType(l,t,_v516,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "For": {ESLVal $374 = _v36.termRef(0);
+        ESLVal $373 = _v36.termRef(1);
+        ESLVal $372 = _v36.termRef(2);
+        ESLVal $371 = _v36.termRef(3);
+        
+        {ESLVal l = $374;
+        
+        {ESLVal p = $373;
+        
+        {ESLVal list = $372;
+        
+        {ESLVal _v515 = $371;
+        
+        return forType(l,p,list,_v515,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+      }
+    case "FunExp": {ESLVal $370 = _v36.termRef(0);
+        ESLVal $369 = _v36.termRef(1);
+        ESLVal $368 = _v36.termRef(2);
+        ESLVal $367 = _v36.termRef(3);
+        ESLVal $366 = _v36.termRef(4);
+        
+        {ESLVal l = $370;
+        
+        {ESLVal n = $369;
+        
+        {ESLVal args = $368;
+        
+        {ESLVal t = $367;
+        
+        {ESLVal _v514 = $366;
+        
+        return funType(l,n,args,t,_v514,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+      }
+      }
+    case "If": {ESLVal $365 = _v36.termRef(0);
+        ESLVal $364 = _v36.termRef(1);
+        ESLVal $363 = _v36.termRef(2);
+        ESLVal $362 = _v36.termRef(3);
+        
+        {ESLVal l = $365;
+        
+        {ESLVal e1 = $364;
+        
+        {ESLVal e2 = $363;
+        
+        {ESLVal e3 = $362;
+        
+        return ifType(l,e1,e2,e3,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+      }
+    case "IntExp": {ESLVal $361 = _v36.termRef(0);
+        ESLVal $360 = _v36.termRef(1);
+        
+        {ESLVal l = $361;
+        
+        {ESLVal n = $360;
+        
+        return theTypeInt;
+      }
+      }
+      }
+    case "Let": {ESLVal $359 = _v36.termRef(0);
+        ESLVal $358 = _v36.termRef(1);
+        ESLVal $357 = _v36.termRef(2);
+        
+        {ESLVal l = $359;
+        
+        {ESLVal bs = $358;
+        
+        {ESLVal _v513 = $357;
+        
+        return letType(l,bs,_v513,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "Letrec": {ESLVal $356 = _v36.termRef(0);
+        ESLVal $355 = _v36.termRef(1);
+        ESLVal $354 = _v36.termRef(2);
+        
+        {ESLVal l = $356;
+        
+        {ESLVal bs = $355;
+        
+        {ESLVal _v512 = $354;
+        
+        return letrecType(l,bs,_v512,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "List": {ESLVal $353 = _v36.termRef(0);
+        ESLVal $352 = _v36.termRef(1);
+        
+        {ESLVal l = $353;
+        
+        {ESLVal es = $352;
+        
+        return listType(l,es,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+    case "Now": {ESLVal $351 = _v36.termRef(0);
+        
+        {ESLVal l = $351;
+        
+        return theTypeInt;
+      }
+      }
+    case "Probably": {ESLVal $350 = _v36.termRef(0);
+        ESLVal $349 = _v36.termRef(1);
+        ESLVal $348 = _v36.termRef(2);
+        ESLVal $347 = _v36.termRef(3);
+        ESLVal $346 = _v36.termRef(4);
+        
+        {ESLVal l = $350;
+        
+        {ESLVal p = $349;
+        
+        {ESLVal t = $348;
+        
+        {ESLVal e1 = $347;
+        
+        {ESLVal e2 = $346;
+        
+        return probablyType(l,p,t,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+      }
+      }
+    case "PLet": {ESLVal $345 = _v36.termRef(0);
+        ESLVal $344 = _v36.termRef(1);
+        ESLVal $343 = _v36.termRef(2);
+        
+        {ESLVal l = $345;
+        
+        {ESLVal bs = $344;
+        
+        {ESLVal _v511 = $343;
+        
+        return letType(l,bs,_v511,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "Record": {ESLVal $342 = _v36.termRef(0);
+        ESLVal $341 = _v36.termRef(1);
+        
+        {ESLVal l = $342;
+        
+        {ESLVal fields = $341;
+        
+        return recordType(l,fields,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+    case "Ref": {ESLVal $340 = _v36.termRef(0);
+        ESLVal $339 = _v36.termRef(1);
+        ESLVal $338 = _v36.termRef(2);
+        
+        {ESLVal l = $340;
+        
+        {ESLVal _v510 = $339;
+        
+        {ESLVal n = $338;
+        
+        return refType(l,_v510,n,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "RefSuper": {ESLVal $337 = _v36.termRef(0);
+        ESLVal $336 = _v36.termRef(1);
+        
+        {ESLVal l = $337;
+        
+        {ESLVal n = $336;
+        
+        return refType(l,new ESLVal("Var",l,new ESLVal("$super")),n,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+    case "Self": {ESLVal $335 = _v36.termRef(0);
+        
+        {ESLVal l = $335;
+        
+        return selfType;
+      }
+      }
+    case "Send": {ESLVal $330 = _v36.termRef(0);
+        ESLVal $329 = _v36.termRef(1);
+        ESLVal $328 = _v36.termRef(2);
+        
+        switch($328.termName) {
+        case "Term": {ESLVal $334 = $328.termRef(0);
+          ESLVal $333 = $328.termRef(1);
+          ESLVal $332 = $328.termRef(2);
+          ESLVal $331 = $328.termRef(3);
+          
+          {ESLVal l = $330;
+          
+          {ESLVal target = $329;
+          
+          {ESLVal tl = $334;
+          
+          {ESLVal n = $333;
+          
+          {ESLVal ts = $332;
+          
+          {ESLVal args = $331;
+          
+          return sendType(l,target,n,args,selfType,valueEnv,cnstrEnv,typeEnv);
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(22389,27313)").add(ESLVal.list(_v36)));
+      }
+      }
+    case "SendTimeSuper": {ESLVal $327 = _v36.termRef(0);
+        
+        {ESLVal l = $327;
+        
+        return theTypeVoid;
+      }
+      }
+    case "SendSuper": {ESLVal $326 = _v36.termRef(0);
+        ESLVal $325 = _v36.termRef(1);
+        
+        {ESLVal l = $326;
+        
+        {ESLVal _v509 = $325;
+        
+        return theTypeVoid;
+      }
+      }
+      }
+    case "SetExp": {ESLVal $324 = _v36.termRef(0);
+        ESLVal $323 = _v36.termRef(1);
+        
+        {ESLVal l = $324;
+        
+        {ESLVal es = $323;
+        
+        return setType(l,es,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+    case "StrExp": {ESLVal $322 = _v36.termRef(0);
+        ESLVal $321 = _v36.termRef(1);
+        
+        {ESLVal l = $322;
+        
+        {ESLVal s = $321;
+        
+        return theTypeStr;
+      }
+      }
+      }
+    case "Term": {ESLVal $320 = _v36.termRef(0);
+        ESLVal $319 = _v36.termRef(1);
+        ESLVal $318 = _v36.termRef(2);
+        ESLVal $317 = _v36.termRef(3);
+        
+        {ESLVal l = $320;
+        
+        {ESLVal n = $319;
+        
+        {ESLVal ts = $318;
+        
+        {ESLVal es = $317;
+        
+        return termType(l,n,ts,es,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+      }
+    case "Throw": {ESLVal $316 = _v36.termRef(0);
+        ESLVal $315 = _v36.termRef(1);
+        ESLVal $314 = _v36.termRef(2);
+        
+        {ESLVal l = $316;
+        
+        {ESLVal t = $315;
+        
+        {ESLVal _v508 = $314;
+        
+        return throwType(l,t,_v508,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "Try": {ESLVal $313 = _v36.termRef(0);
+        ESLVal $312 = _v36.termRef(1);
+        ESLVal $311 = _v36.termRef(2);
+        
+        {ESLVal l = $313;
+        
+        {ESLVal _v507 = $312;
+        
+        {ESLVal arms = $311;
+        
+        return tryType(l,_v507,arms,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "New": {ESLVal $310 = _v36.termRef(0);
+        ESLVal $309 = _v36.termRef(1);
+        ESLVal $308 = _v36.termRef(2);
+        
+        {ESLVal l = $310;
+        
+        {ESLVal b = $309;
+        
+        {ESLVal args = $308;
+        
+        return newType(l,b,args,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "NewArray": {ESLVal $307 = _v36.termRef(0);
+        ESLVal $306 = _v36.termRef(1);
+        ESLVal $305 = _v36.termRef(2);
+        
+        {ESLVal l = $307;
+        
+        {ESLVal t = $306;
+        
+        {ESLVal i = $305;
+        
+        return newArrayType(l,t,i,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "NewTable": {ESLVal $304 = _v36.termRef(0);
+        ESLVal $303 = _v36.termRef(1);
+        ESLVal $302 = _v36.termRef(2);
+        
+        {ESLVal l = $304;
+        
+        {ESLVal key = $303;
+        
+        {ESLVal value = $302;
+        
+        return new ESLVal("TableType",l,substTypeEnv(typeEnv,key),substTypeEnv(typeEnv,value));
+      }
+      }
+      }
+      }
+    case "NewJava": {ESLVal $301 = _v36.termRef(0);
+        ESLVal $300 = _v36.termRef(1);
+        ESLVal $299 = _v36.termRef(2);
+        ESLVal $298 = _v36.termRef(3);
+        
+        {ESLVal l = $301;
+        
+        {ESLVal path = $300;
+        
+        {ESLVal t = $299;
+        
+        {ESLVal args = $298;
+        
+        {{
+        ESLVal _v37 = args;
+        while(_v37.isCons()) {
+          ESLVal a = _v37.headVal;
+          expType(a,selfType,valueEnv,cnstrEnv,typeEnv);
+          _v37 = _v37.tailVal;}
+      }
+      return substTypeEnv(typeEnv,t);}
+      }
+      }
+      }
+      }
+      }
+    case "Not": {ESLVal $297 = _v36.termRef(0);
+        ESLVal $296 = _v36.termRef(1);
+        
+        {ESLVal l = $297;
+        
+        {ESLVal _v506 = $296;
+        
+        return notType(l,_v506,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+    case "NullExp": {ESLVal $295 = _v36.termRef(0);
+        
+        {ESLVal l = $295;
+        
+        return new ESLVal("ForallType",l,ESLVal.list(new ESLVal("T")),new ESLVal("VarType",l,new ESLVal("T")));
+      }
+      }
+    case "Unfold": {ESLVal $294 = _v36.termRef(0);
+        ESLVal $293 = _v36.termRef(1);
+        ESLVal $292 = _v36.termRef(2);
+        
+        {ESLVal l = $294;
+        
+        {ESLVal t = $293;
+        
+        {ESLVal _v505 = $292;
+        
+        return unfoldTypeExp(l,t,_v505,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "Update": {ESLVal $291 = _v36.termRef(0);
+        ESLVal $290 = _v36.termRef(1);
+        ESLVal $289 = _v36.termRef(2);
+        
+        {ESLVal l = $291;
+        
+        {ESLVal n = $290;
+        
+        {ESLVal _v504 = $289;
+        
+        return updateType(l,n,_v504,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "Var": {ESLVal $288 = _v36.termRef(0);
+        ESLVal $287 = _v36.termRef(1);
+        
+        {ESLVal l = $288;
+        
+        {ESLVal n = $287;
+        
+        return varType(l,n,valueEnv,typeEnv);
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(22389,27313)").add(ESLVal.list(_v36)));
+    }
+    }
+  }
+  private static ESLVal expType1 = new ESLVal(new Function(new ESLVal("expType1"),null) { public ESLVal apply(ESLVal... args) { return expType1(args[0],args[1],args[2],args[3],args[4]); }});
+  private static ESLVal throwType(ESLVal l,ESLVal t,ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal valType = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      return substTypeEnv(typeEnv,t);
+    }
+  }
+  private static ESLVal throwType = new ESLVal(new Function(new ESLVal("throwType"),null) { public ESLVal apply(ESLVal... args) { return throwType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal foldType(ESLVal l,ESLVal t,ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal eType = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(typeEqual(substTypeEnv(typeEnv,t),eType).boolVal)
+      return eType;
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("fold type ").add(ppType(t,typeEnv).add(new ESLVal(" does not equal ").add(ppType(eType,typeEnv))))));
+    }
+  }
+  private static ESLVal foldType = new ESLVal(new Function(new ESLVal("foldType"),null) { public ESLVal apply(ESLVal... args) { return foldType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal unfoldTypeExp(ESLVal l,ESLVal t,ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal eType = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal recType = substTypeEnv(typeEnv,t);
+      
+      {ESLVal _v38 = recType;
+      
+      switch(_v38.termName) {
+      case "RecType": {ESLVal $425 = _v38.termRef(0);
+        ESLVal $424 = _v38.termRef(1);
+        ESLVal $423 = _v38.termRef(2);
+        
+        {ESLVal rl = $425;
+        
+        {ESLVal n = $424;
+        
+        {ESLVal _v502 = $423;
+        
+        if(typeEqual(substType(eType,n,_v502),eType).boolVal)
+        return eType;
+        else
+          return error(new ESLVal("TypeError",l,new ESLVal("unfold type ").add(ppType(substType(eType,n,_v502),typeEnv).add(new ESLVal(" does not equal ").add(ppType(eType,typeEnv))))));
+      }
+      }
+      }
+      }
+      default: {ESLVal _v503 = _v38;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("unfold type expects a rec type").add(ppType(recType,typeEnv))));
+      }
+    }
+    }
+    }
+  }
+  private static ESLVal unfoldTypeExp = new ESLVal(new Function(new ESLVal("unfoldTypeExp"),null) { public ESLVal apply(ESLVal... args) { return unfoldTypeExp(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal arrayUpdateType(ESLVal l,ESLVal a,ESLVal i,ESLVal v,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal aType = expType(a,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal iType = expType(i,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal vType = expType(v,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {ESLVal _v39 = aType;
+      
+      switch(_v39.termName) {
+      case "ArrayType": {ESLVal $427 = _v39.termRef(0);
+        ESLVal $426 = _v39.termRef(1);
+        
+        {ESLVal al = $427;
+        
+        {ESLVal t = $426;
+        
+        if(isIntType(iType).boolVal)
+        if(typeEqual(vType,t).boolVal)
+          return aType;
+          else
+            return error(new ESLVal("TypeError",l,new ESLVal("value type ").add(vType.add(new ESLVal(" does not match array type ").add(t)))));
+        else
+          return error(new ESLVal("TypeError",l,new ESLVal("array index should be an integer ").add(i)));
+      }
+      }
+      }
+      default: {ESLVal t = _v39;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting an array ").add(aType)));
+      }
+    }
+    }
+    }
+  }
+  private static ESLVal arrayUpdateType = new ESLVal(new Function(new ESLVal("arrayUpdateType"),null) { public ESLVal apply(ESLVal... args) { return arrayUpdateType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]); }});
+  private static ESLVal arrayRefType(ESLVal l,ESLVal a,ESLVal i,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal aType = expType(a,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal iType = expType(i,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {ESLVal _v40 = aType;
+      
+      switch(_v40.termName) {
+      case "ArrayType": {ESLVal $429 = _v40.termRef(0);
+        ESLVal $428 = _v40.termRef(1);
+        
+        {ESLVal al = $429;
+        
+        {ESLVal t = $428;
+        
+        if(isIntType(iType).boolVal)
+        return t;
+        else
+          return error(new ESLVal("TypeError",l,new ESLVal("array index should be an integer ").add(i)));
+      }
+      }
+      }
+      default: {ESLVal t = _v40;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting an array ").add(aType)));
+      }
+    }
+    }
+    }
+  }
+  private static ESLVal arrayRefType = new ESLVal(new Function(new ESLVal("arrayRefType"),null) { public ESLVal apply(ESLVal... args) { return arrayRefType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal newArrayType(ESLVal l,ESLVal t,ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal i = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(isIntType(i).boolVal)
+      return new ESLVal("ArrayType",l,substTypeEnv(typeEnv,t));
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting an integer type: ").add(i)));
+    }
+  }
+  private static ESLVal newArrayType = new ESLVal(new Function(new ESLVal("newArrayType"),null) { public ESLVal apply(ESLVal... args) { return newArrayType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal becomeType(ESLVal l,ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal bType = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(typeEqual(bType,selfType).boolVal)
+      return bType;
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting become to match self type: ").add(ppType(bType,typeEnv).add(new ESLVal(" ").add(ppType(selfType,typeEnv))))));
+    }
+  }
+  private static ESLVal becomeType = new ESLVal(new Function(new ESLVal("becomeType"),null) { public ESLVal apply(ESLVal... args) { return becomeType(args[0],args[1],args[2],args[3],args[4],args[5]); }});
+  private static ESLVal probablyType(ESLVal l,ESLVal p,ESLVal t,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal pt = expType(p,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(isIntType(pt).boolVal)
+      {ESLVal _v499 = substTypeEnv(typeEnv,t);
+        ESLVal _v500 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+        ESLVal _v501 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+        
+        if(typeEqual(_v499,_v500).and(typeEqual(_v499,_v501)).boolVal)
+        return _v499;
+        else
+          return error(new ESLVal("TypeError",l,new ESLVal("expecting probably arm types to agree: ").add(ppType(_v500,typeEnv).add(new ESLVal(" ").add(ppType(_v499,typeEnv).add(new ESLVal(" ").add(ppType(_v501,typeEnv))))))));
+      }
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting an integer: ").add(ppType(pt,typeEnv))));
+    }
+  }
+  private static ESLVal probablyType = new ESLVal(new Function(new ESLVal("probablyType"),null) { public ESLVal apply(ESLVal... args) { return probablyType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8]); }});
+  private static ESLVal newType(ESLVal l,ESLVal b,ESLVal args,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    return expType(new ESLVal("Apply",l,b,args),selfType,valueEnv,cnstrEnv,typeEnv);
+  }
+  private static ESLVal newType = new ESLVal(new Function(new ESLVal("newType"),null) { public ESLVal apply(ESLVal... args) { return newType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal sendType(ESLVal l,ESLVal target,ESLVal n,ESLVal args,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v41 = typeNF(derefType(expType(target,selfType,valueEnv,cnstrEnv,typeEnv)),typeEnv);
+      
+      switch(_v41.termName) {
+      case "ActType": {ESLVal $432 = _v41.termRef(0);
+        ESLVal $431 = _v41.termRef(1);
+        ESLVal $430 = _v41.termRef(2);
+        
+        {ESLVal al = $432;
+        
+        {ESLVal exports = $431;
+        
+        {ESLVal handlers = $430;
+        
+        { LetRec letrec = new LetRec() {
+        ESLVal findHandler = new ESLVal(new Function(new ESLVal("findHandler"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal _v489 = $args[0];
+          {ESLVal _v42 = _v489;
+                
+                if(_v42.isCons())
+                {ESLVal $433 = _v42.head();
+                  ESLVal $434 = _v42.tail();
+                  
+                  switch($433.termName) {
+                  case "MessageType": {ESLVal $436 = $433.termRef(0);
+                    ESLVal $435 = $433.termRef(1);
+                    
+                    if($435.isCons())
+                    {ESLVal $437 = $435.head();
+                      ESLVal $438 = $435.tail();
+                      
+                      switch($437.termName) {
+                      case "TermType": {ESLVal $441 = $437.termRef(0);
+                        ESLVal $440 = $437.termRef(1);
+                        ESLVal $439 = $437.termRef(2);
+                        
+                        if($438.isCons())
+                        {ESLVal $442 = $438.head();
+                          ESLVal $443 = $438.tail();
+                          
+                          {ESLVal m = $433;
+                          
+                          {ESLVal _v490 = $434;
+                          
+                          return findHandler.apply(_v490);
+                        }
+                        }
+                        }
+                      else if($438.isNil())
+                        {ESLVal ml = $436;
+                          
+                          {ESLVal tl = $441;
+                          
+                          {ESLVal m = $440;
+                          
+                          {ESLVal ts = $439;
+                          
+                          {ESLVal rest = $434;
+                          
+                          if(m.eql(n).boolVal)
+                          return head.apply(_v489);
+                          else
+                            {ESLVal _v491 = $433;
+                              
+                              {ESLVal _v492 = $434;
+                              
+                              return findHandler.apply(_v492);
+                            }
+                            }
+                        }
+                        }
+                        }
+                        }
+                        }
+                      else {ESLVal m = $433;
+                          
+                          {ESLVal _v493 = $434;
+                          
+                          return findHandler.apply(_v493);
+                        }
+                        }
+                      }
+                      default: {ESLVal m = $433;
+                        
+                        {ESLVal _v494 = $434;
+                        
+                        return findHandler.apply(_v494);
+                      }
+                      }
+                    }
+                    }
+                  else if($435.isNil())
+                    {ESLVal m = $433;
+                      
+                      {ESLVal _v495 = $434;
+                      
+                      return findHandler.apply(_v495);
+                    }
+                    }
+                  else {ESLVal m = $433;
+                      
+                      {ESLVal _v496 = $434;
+                      
+                      return findHandler.apply(_v496);
+                    }
+                    }
+                  }
+                  default: {ESLVal m = $433;
+                    
+                    {ESLVal _v497 = $434;
+                    
+                    return findHandler.apply(_v497);
+                  }
+                  }
+                }
+                }
+              else if(_v42.isNil())
+                return error(new ESLVal("TypeError",l,new ESLVal("cannot find message handler named ").add(n)));
+              else return error(new ESLVal("case error at Pos(31507,31814)").add(ESLVal.list(_v42)));
+              }
+            }
+          });
+        
+        public ESLVal get(String name) {
+          switch(name) {
+            case "findHandler": return findHandler;
+            
+            default: throw new Error("cannot find letrec binding");
+          }
+          }
+        };
+      ESLVal findHandler = letrec.get("findHandler");
+      
+        {ESLVal _v43 = findHandler.apply(handlers);
+        
+        switch(_v43.termName) {
+        case "MessageType": {ESLVal $445 = _v43.termRef(0);
+          ESLVal $444 = _v43.termRef(1);
+          
+          if($444.isCons())
+          {ESLVal $446 = $444.head();
+            ESLVal $447 = $444.tail();
+            
+            switch($446.termName) {
+            case "TermType": {ESLVal $450 = $446.termRef(0);
+              ESLVal $449 = $446.termRef(1);
+              ESLVal $448 = $446.termRef(2);
+              
+              if($447.isCons())
+              {ESLVal $451 = $447.head();
+                ESLVal $452 = $447.tail();
+                
+                {ESLVal m = _v43;
+                
+                return error(new ESLVal("TypeError",l,new ESLVal("cannot find message handler named ").add(n.add(new ESLVal(" in ").add(handlers)))));
+              }
+              }
+            else if($447.isNil())
+              {ESLVal ml = $445;
+                
+                {ESLVal tl = $450;
+                
+                {ESLVal _v498 = $449;
+                
+                {ESLVal ts1 = $448;
+                
+                {ESLVal ts2 = expTypes(args,selfType,valueEnv,cnstrEnv,typeEnv);
+                
+                if(length.apply(ts1).eql(length.apply(ts2)).boolVal)
+                if(subTypes(ts2,ts1).boolVal)
+                  {expType(target,selfType,valueEnv,cnstrEnv,typeEnv);
+                  return theTypeVoid;}
+                  else
+                    return error(new ESLVal("TypeError",l,new ESLVal("message argument types ").add(ppTypes(ts2,typeEnv).add(new ESLVal(" do not match expected types ").add(ppTypes(ts1,typeEnv))))));
+                else
+                  return error(new ESLVal("TypeError",l,new ESLVal("expecting ").add(length.apply(ts1).add(new ESLVal(" args, but received ").add(length.apply(ts2))))));
+              }
+              }
+              }
+              }
+              }
+            else {ESLVal m = _v43;
+                
+                return error(new ESLVal("TypeError",l,new ESLVal("cannot find message handler named ").add(n.add(new ESLVal(" in ").add(handlers)))));
+              }
+            }
+            default: {ESLVal m = _v43;
+              
+              return error(new ESLVal("TypeError",l,new ESLVal("cannot find message handler named ").add(n.add(new ESLVal(" in ").add(handlers)))));
+            }
+          }
+          }
+        else if($444.isNil())
+          {ESLVal m = _v43;
+            
+            return error(new ESLVal("TypeError",l,new ESLVal("cannot find message handler named ").add(n.add(new ESLVal(" in ").add(handlers)))));
+          }
+        else {ESLVal m = _v43;
+            
+            return error(new ESLVal("TypeError",l,new ESLVal("cannot find message handler named ").add(n.add(new ESLVal(" in ").add(handlers)))));
+          }
+        }
+        default: {ESLVal m = _v43;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("cannot find message handler named ").add(n.add(new ESLVal(" in ").add(handlers)))));
+        }
+      }
+      }}
+      
+      }
+      }
+      }
+      }
+      default: {ESLVal t = _v41;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a behaviour type: ").add(typeNF(derefType(expType(target,selfType,valueEnv,cnstrEnv,typeEnv)),typeEnv))));
+      }
+    }
+    }
+  }
+  private static ESLVal sendType = new ESLVal(new Function(new ESLVal("sendType"),null) { public ESLVal apply(ESLVal... args) { return sendType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]); }});
+  private static ESLVal actType(ESLVal l,ESLVal n,ESLVal args,ESLVal parent,ESLVal exports,ESLVal bindings,ESLVal init,ESLVal arms,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    { LetRec letrec = new LetRec() {
+      ESLVal checkObservedMessage = new ESLVal(new Function(new ESLVal("checkObservedMessage"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            {ESLVal _v44 = bindings;
+              
+              return $ndCase.apply(_v44,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
+                public ESLVal apply(ESLVal... $args) {
+                  ESLVal $454 = $args[0];
+              ESLVal $455 = $args[1];
+              ESLVal $456 = $args[2];
+              ESLVal $453 = $args[3];
+              switch($455.termName) {
+                    case "FunBind": {ESLVal $463 = $455.termRef(0);
+                      ESLVal $462 = $455.termRef(1);
+                      ESLVal $461 = $455.termRef(2);
+                      ESLVal $460 = $455.termRef(3);
+                      ESLVal $459 = $455.termRef(4);
+                      ESLVal $458 = $455.termRef(5);
+                      ESLVal $457 = $455.termRef(6);
+                      
+                      switch($462.strVal) {
+                      case "observeMessage": {ESLVal bs1 = $454;
+                        
+                        {ESLVal _v481 = $463;
+                        
+                        {ESLVal ps = $461;
+                        
+                        {ESLVal t = $460;
+                        
+                        {ESLVal st = $459;
+                        
+                        {ESLVal g = $458;
+                        
+                        {ESLVal e = $457;
+                        
+                        {ESLVal bs2 = $456;
+                        
+                        {ESLVal _v45 = typeNF(t,typeEnv);
+                        
+                        switch(_v45.termName) {
+                        case "FunType": {ESLVal $466 = _v45.termRef(0);
+                          ESLVal $465 = _v45.termRef(1);
+                          ESLVal $464 = _v45.termRef(2);
+                          
+                          if($465.isCons())
+                          {ESLVal $467 = $465.head();
+                            ESLVal $468 = $465.tail();
+                            
+                            if($468.isCons())
+                            {ESLVal $469 = $468.head();
+                              ESLVal $470 = $468.tail();
+                              
+                              {ESLVal _v482 = _v45;
+                              
+                              return error(new ESLVal("TypeError",_v481,new ESLVal("expecting observeMessage to have a type signature (In) -> Maybe[Out]")));
+                            }
+                            }
+                          else if($468.isNil())
+                            {ESLVal fl = $466;
+                              
+                              {ESLVal d = $467;
+                              
+                              {ESLVal r = $464;
+                              
+                              return checkObserveMessageDeclaration.apply(_v481,d,r);
+                            }
+                            }
+                            }
+                          else {ESLVal _v483 = _v45;
+                              
+                              return error(new ESLVal("TypeError",_v481,new ESLVal("expecting observeMessage to have a type signature (In) -> Maybe[Out]")));
+                            }
+                          }
+                        else if($465.isNil())
+                          {ESLVal _v484 = _v45;
+                            
+                            return error(new ESLVal("TypeError",_v481,new ESLVal("expecting observeMessage to have a type signature (In) -> Maybe[Out]")));
+                          }
+                        else {ESLVal _v485 = _v45;
+                            
+                            return error(new ESLVal("TypeError",_v481,new ESLVal("expecting observeMessage to have a type signature (In) -> Maybe[Out]")));
+                          }
+                        }
+                        default: {ESLVal _v486 = _v45;
+                          
+                          return error(new ESLVal("TypeError",_v481,new ESLVal("expecting observeMessage to have a type signature (In) -> Maybe[Out]")));
+                        }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      }
+                      default: return $453.apply();
+                    }
+                    }
+                    default: return $453.apply();
+                  }
+                }
+              }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
+                public ESLVal apply(ESLVal... $args) {
+                  {ESLVal bs = _v44;
+                    
+                    return $null;
+                  }
+                }
+              }));
+            }
+          }
+        });
+      ESLVal isTime = new ESLVal(new Function(new ESLVal("isTime"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal t = $args[0];
+        {ESLVal _v46 = t;
+              
+              switch(_v46.termName) {
+              case "TermType": {ESLVal $473 = _v46.termRef(0);
+                ESLVal $472 = _v46.termRef(1);
+                ESLVal $471 = _v46.termRef(2);
+                
+                switch($472.strVal) {
+                case "Time": {ESLVal _v478 = $473;
+                  
+                  {ESLVal ts = $471;
+                  
+                  return $true;
+                }
+                }
+                default: {ESLVal _v479 = _v46;
+                  
+                  return $false;
+                }
+              }
+              }
+              default: {ESLVal _v480 = _v46;
+                
+                return $false;
+              }
+            }
+            }
+          }
+        });
+      ESLVal checkObserveMessageDeclaration = new ESLVal(new Function(new ESLVal("checkObserveMessageDeclaration"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v475 = $args[0];
+        ESLVal _v476 = $args[1];
+        ESLVal _v477 = $args[2];
+        if(typeEqual(_v476,new ESLVal("UnionType",_v475,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal $qualArg = $args[0];
+            {ESLVal _v47 = $qualArg;
+                  
+                  switch(_v47.termName) {
+                  case "MessageType": {ESLVal $475 = _v47.termRef(0);
+                    ESLVal $474 = _v47.termRef(1);
+                    
+                    if($474.isCons())
+                    {ESLVal $476 = $474.head();
+                      ESLVal $477 = $474.tail();
+                      
+                      if($477.isCons())
+                      {ESLVal $478 = $477.head();
+                        ESLVal $479 = $477.tail();
+                        
+                        {ESLVal _0 = _v47;
+                        
+                        return $nil;
+                      }
+                      }
+                    else if($477.isNil())
+                      {ESLVal ml = $475;
+                        
+                        {ESLVal t = $476;
+                        
+                        return ESLVal.list(new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+                          if(isTime.apply(t).not().boolVal)
+                            return ESLVal.list(t);
+                            else
+                              return $nil;
+                        }}.get());
+                      }
+                      }
+                    else {ESLVal _0 = _v47;
+                        
+                        return $nil;
+                      }
+                    }
+                  else if($474.isNil())
+                    {ESLVal _0 = _v47;
+                      
+                      return $nil;
+                    }
+                  else {ESLVal _0 = _v47;
+                      
+                      return $nil;
+                    }
+                  }
+                  default: {ESLVal _0 = _v47;
+                    
+                    return $nil;
+                  }
+                }
+                }
+              }
+            }).map(getMessageTypes.apply(arms)).flatten().flatten())).boolVal)
+              {ESLVal _v48 = typeNF(_v477,typeEnv);
+                
+                switch(_v48.termName) {
+                case "UnionType": {ESLVal $481 = _v48.termRef(0);
+                  ESLVal $480 = _v48.termRef(1);
+                  
+                  if($480.isCons())
+                  {ESLVal $482 = $480.head();
+                    ESLVal $483 = $480.tail();
+                    
+                    switch($482.termName) {
+                    case "TermType": {ESLVal $486 = $482.termRef(0);
+                      ESLVal $485 = $482.termRef(1);
+                      ESLVal $484 = $482.termRef(2);
+                      
+                      switch($485.strVal) {
+                      case "Something": if($484.isCons())
+                        {ESLVal $487 = $484.head();
+                          ESLVal $488 = $484.tail();
+                          
+                          if($488.isCons())
+                          {ESLVal $489 = $488.head();
+                            ESLVal $490 = $488.tail();
+                            
+                            {ESLVal ms = _v48;
+                            
+                            return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                          }
+                          }
+                        else if($488.isNil())
+                          if($483.isCons())
+                            {ESLVal $491 = $483.head();
+                              ESLVal $492 = $483.tail();
+                              
+                              switch($491.termName) {
+                              case "TermType": {ESLVal $495 = $491.termRef(0);
+                                ESLVal $494 = $491.termRef(1);
+                                ESLVal $493 = $491.termRef(2);
+                                
+                                switch($494.strVal) {
+                                case "Nothing": if($493.isCons())
+                                  {ESLVal $496 = $493.head();
+                                    ESLVal $497 = $493.tail();
+                                    
+                                    {ESLVal ms = _v48;
+                                    
+                                    return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                                  }
+                                  }
+                                else if($493.isNil())
+                                  if($492.isCons())
+                                    {ESLVal $498 = $492.head();
+                                      ESLVal $499 = $492.tail();
+                                      
+                                      {ESLVal ms = _v48;
+                                      
+                                      return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                                    }
+                                    }
+                                  else if($492.isNil())
+                                    {ESLVal ul = $481;
+                                      
+                                      {ESLVal l1 = $486;
+                                      
+                                      {ESLVal t = $487;
+                                      
+                                      {ESLVal l2 = $495;
+                                      
+                                      return $null;
+                                    }
+                                    }
+                                    }
+                                    }
+                                  else {ESLVal ms = _v48;
+                                      
+                                      return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                                    }
+                                else {ESLVal ms = _v48;
+                                    
+                                    return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                                  }
+                                default: {ESLVal ms = _v48;
+                                  
+                                  return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                                }
+                              }
+                              }
+                              default: {ESLVal ms = _v48;
+                                
+                                return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                              }
+                            }
+                            }
+                          else if($483.isNil())
+                            {ESLVal ms = _v48;
+                              
+                              return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                            }
+                          else {ESLVal ms = _v48;
+                              
+                              return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                            }
+                        else {ESLVal ms = _v48;
+                            
+                            return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                          }
+                        }
+                      else if($484.isNil())
+                        {ESLVal ms = _v48;
+                          
+                          return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                        }
+                      else {ESLVal ms = _v48;
+                          
+                          return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                        }
+                    case "Nothing": if($484.isCons())
+                        {ESLVal $500 = $484.head();
+                          ESLVal $501 = $484.tail();
+                          
+                          {ESLVal ms = _v48;
+                          
+                          return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                        }
+                        }
+                      else if($484.isNil())
+                        if($483.isCons())
+                          {ESLVal $502 = $483.head();
+                            ESLVal $503 = $483.tail();
+                            
+                            switch($502.termName) {
+                            case "TermType": {ESLVal $506 = $502.termRef(0);
+                              ESLVal $505 = $502.termRef(1);
+                              ESLVal $504 = $502.termRef(2);
+                              
+                              switch($505.strVal) {
+                              case "Something": if($504.isCons())
+                                {ESLVal $507 = $504.head();
+                                  ESLVal $508 = $504.tail();
+                                  
+                                  if($508.isCons())
+                                  {ESLVal $509 = $508.head();
+                                    ESLVal $510 = $508.tail();
+                                    
+                                    {ESLVal ms = _v48;
+                                    
+                                    return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                                  }
+                                  }
+                                else if($508.isNil())
+                                  if($503.isCons())
+                                    {ESLVal $511 = $503.head();
+                                      ESLVal $512 = $503.tail();
+                                      
+                                      {ESLVal ms = _v48;
+                                      
+                                      return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                                    }
+                                    }
+                                  else if($503.isNil())
+                                    {ESLVal ul = $481;
+                                      
+                                      {ESLVal l2 = $486;
+                                      
+                                      {ESLVal l1 = $506;
+                                      
+                                      {ESLVal t = $507;
+                                      
+                                      return $null;
+                                    }
+                                    }
+                                    }
+                                    }
+                                  else {ESLVal ms = _v48;
+                                      
+                                      return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                                    }
+                                else {ESLVal ms = _v48;
+                                    
+                                    return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                                  }
+                                }
+                              else if($504.isNil())
+                                {ESLVal ms = _v48;
+                                  
+                                  return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                                }
+                              else {ESLVal ms = _v48;
+                                  
+                                  return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                                }
+                              default: {ESLVal ms = _v48;
+                                
+                                return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                              }
+                            }
+                            }
+                            default: {ESLVal ms = _v48;
+                              
+                              return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                            }
+                          }
+                          }
+                        else if($483.isNil())
+                          {ESLVal ms = _v48;
+                            
+                            return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                          }
+                        else {ESLVal ms = _v48;
+                            
+                            return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                          }
+                      else {ESLVal ms = _v48;
+                          
+                          return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                        }
+                      default: {ESLVal ms = _v48;
+                        
+                        return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                      }
+                    }
+                    }
+                    default: {ESLVal ms = _v48;
+                      
+                      return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                    }
+                  }
+                  }
+                else if($480.isNil())
+                  {ESLVal ms = _v48;
+                    
+                    return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                  }
+                else {ESLVal ms = _v48;
+                    
+                    return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                  }
+                }
+                default: {ESLVal ms = _v48;
+                  
+                  return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must return a value of type Maybe: ").add(_v477)));
+                }
+              }
+              }
+              else
+                return error(new ESLVal("TypeError",_v475,new ESLVal("observeMessage must have an arg type that matches the message types of the behaviour type: ").add(ppType(_v476,typeEnv).add(new ESLVal(" <> ").add(ppType(new ESLVal("UnionType",_v475,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+                    public ESLVal apply(ESLVal... $args) {
+                      ESLVal $qualArg = $args[0];
+                  {ESLVal _v49 = $qualArg;
+                        
+                        switch(_v49.termName) {
+                        case "MessageType": {ESLVal $514 = _v49.termRef(0);
+                          ESLVal $513 = _v49.termRef(1);
+                          
+                          if($513.isCons())
+                          {ESLVal $515 = $513.head();
+                            ESLVal $516 = $513.tail();
+                            
+                            if($516.isCons())
+                            {ESLVal $517 = $516.head();
+                              ESLVal $518 = $516.tail();
+                              
+                              {ESLVal _0 = _v49;
+                              
+                              return $nil;
+                            }
+                            }
+                          else if($516.isNil())
+                            {ESLVal ml = $514;
+                              
+                              {ESLVal t = $515;
+                              
+                              return ESLVal.list(new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+                                if(isTime.apply(t).not().boolVal)
+                                  return ESLVal.list(t);
+                                  else
+                                    return $nil;
+                              }}.get());
+                            }
+                            }
+                          else {ESLVal _0 = _v49;
+                              
+                              return $nil;
+                            }
+                          }
+                        else if($513.isNil())
+                          {ESLVal _0 = _v49;
+                            
+                            return $nil;
+                          }
+                        else {ESLVal _0 = _v49;
+                            
+                            return $nil;
+                          }
+                        }
+                        default: {ESLVal _0 = _v49;
+                          
+                          return $nil;
+                        }
+                      }
+                      }
+                    }
+                  }).map(getMessageTypes.apply(arms)).flatten().flatten()),typeEnv))))));
+          }
+        });
+      ESLVal findLoc = new ESLVal(new Function(new ESLVal("findLoc"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v466 = $args[0];
+        ESLVal _v467 = $args[1];
+        {ESLVal _v50 = _v467;
+              
+              if(_v50.isCons())
+              {ESLVal $519 = _v50.head();
+                ESLVal $520 = _v50.tail();
+                
+                switch($519.termName) {
+                case "Binding": {ESLVal $532 = $519.termRef(0);
+                  ESLVal $531 = $519.termRef(1);
+                  ESLVal $530 = $519.termRef(2);
+                  ESLVal $529 = $519.termRef(3);
+                  ESLVal $528 = $519.termRef(4);
+                  
+                  {ESLVal _v471 = $532;
+                  
+                  {ESLVal m = $531;
+                  
+                  {ESLVal t = $530;
+                  
+                  {ESLVal st = $529;
+                  
+                  {ESLVal e = $528;
+                  
+                  {ESLVal _v472 = $520;
+                  
+                  if(m.eql(_v466).boolVal)
+                  return _v471;
+                  else
+                    {ESLVal b = $519;
+                      
+                      {ESLVal _v473 = $520;
+                      
+                      return findLoc.apply(_v466,_v473);
+                    }
+                    }
+                }
+                }
+                }
+                }
+                }
+                }
+                }
+              case "FunBind": {ESLVal $527 = $519.termRef(0);
+                  ESLVal $526 = $519.termRef(1);
+                  ESLVal $525 = $519.termRef(2);
+                  ESLVal $524 = $519.termRef(3);
+                  ESLVal $523 = $519.termRef(4);
+                  ESLVal $522 = $519.termRef(5);
+                  ESLVal $521 = $519.termRef(6);
+                  
+                  {ESLVal _v468 = $527;
+                  
+                  {ESLVal m = $526;
+                  
+                  {ESLVal ps = $525;
+                  
+                  {ESLVal t = $524;
+                  
+                  {ESLVal st = $523;
+                  
+                  {ESLVal g = $522;
+                  
+                  {ESLVal e = $521;
+                  
+                  {ESLVal _v469 = $520;
+                  
+                  if(m.eql(_v466).boolVal)
+                  return _v468;
+                  else
+                    {ESLVal b = $519;
+                      
+                      {ESLVal _v470 = $520;
+                      
+                      return findLoc.apply(_v466,_v470);
+                    }
+                    }
+                }
+                }
+                }
+                }
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal b = $519;
+                  
+                  {ESLVal _v474 = $520;
+                  
+                  return findLoc.apply(_v466,_v474);
+                }
+                }
+              }
+              }
+            else if(_v50.isNil())
+              return p0;
+            else return error(new ESLVal("case error at Pos(34603,34907)").add(ESLVal.list(_v50)));
+            }
+          }
+        });
+      ESLVal findType = new ESLVal(new Function(new ESLVal("findType"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v457 = $args[0];
+        ESLVal _v458 = $args[1];
+        {ESLVal _v51 = _v458;
+              
+              if(_v51.isCons())
+              {ESLVal $533 = _v51.head();
+                ESLVal $534 = _v51.tail();
+                
+                switch($533.termName) {
+                case "Binding": {ESLVal $546 = $533.termRef(0);
+                  ESLVal $545 = $533.termRef(1);
+                  ESLVal $544 = $533.termRef(2);
+                  ESLVal $543 = $533.termRef(3);
+                  ESLVal $542 = $533.termRef(4);
+                  
+                  {ESLVal _v462 = $546;
+                  
+                  {ESLVal m = $545;
+                  
+                  {ESLVal t = $544;
+                  
+                  {ESLVal st = $543;
+                  
+                  {ESLVal e = $542;
+                  
+                  {ESLVal _v463 = $534;
+                  
+                  if(m.eql(_v457).boolVal)
+                  return substTypeEnv(typeEnv,t);
+                  else
+                    {ESLVal b = $533;
+                      
+                      {ESLVal _v464 = $534;
+                      
+                      return findType.apply(_v457,_v464);
+                    }
+                    }
+                }
+                }
+                }
+                }
+                }
+                }
+                }
+              case "FunBind": {ESLVal $541 = $533.termRef(0);
+                  ESLVal $540 = $533.termRef(1);
+                  ESLVal $539 = $533.termRef(2);
+                  ESLVal $538 = $533.termRef(3);
+                  ESLVal $537 = $533.termRef(4);
+                  ESLVal $536 = $533.termRef(5);
+                  ESLVal $535 = $533.termRef(6);
+                  
+                  {ESLVal _v459 = $541;
+                  
+                  {ESLVal m = $540;
+                  
+                  {ESLVal ps = $539;
+                  
+                  {ESLVal t = $538;
+                  
+                  {ESLVal st = $537;
+                  
+                  {ESLVal g = $536;
+                  
+                  {ESLVal e = $535;
+                  
+                  {ESLVal _v460 = $534;
+                  
+                  if(m.eql(_v457).boolVal)
+                  return substTypeEnv(typeEnv,t);
+                  else
+                    {ESLVal b = $533;
+                      
+                      {ESLVal _v461 = $534;
+                      
+                      return findType.apply(_v457,_v461);
+                    }
+                    }
+                }
+                }
+                }
+                }
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal b = $533;
+                  
+                  {ESLVal _v465 = $534;
+                  
+                  return findType.apply(_v457,_v465);
+                }
+                }
+              }
+              }
+            else if(_v51.isNil())
+              return $null;
+            else return error(new ESLVal("case error at Pos(34961,35318)").add(ESLVal.list(_v51)));
+            }
+          }
+        });
+      ESLVal decs = new ESLVal(new Function(new ESLVal("decs"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v453 = $args[0];
+        {ESLVal _v52 = _v453;
+              
+              if(_v52.isCons())
+              {ESLVal $547 = _v52.head();
+                ESLVal $548 = _v52.tail();
+                
+                {ESLVal m = $547;
+                
+                {ESLVal _v454 = $548;
+                
+                {ESLVal _v455 = findType.apply(m,bindings);
+                ESLVal _v456 = findLoc.apply(m,bindings);
+                
+                if(_v455.eql($null).boolVal)
+                return error(new ESLVal("TypeError",_v456,new ESLVal("cannot find exported name ").add(m)));
+                else
+                  return decs.apply(_v454).cons(new ESLVal("Dec",_v456,m,_v455,_v455));
+              }
+              }
+              }
+              }
+            else if(_v52.isNil())
+              return $nil;
+            else return error(new ESLVal("case error at Pos(35361,35692)").add(ESLVal.list(_v52)));
+            }
+          }
+        });
+      ESLVal getMessageTypes = new ESLVal(new Function(new ESLVal("getMessageTypes"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v450 = $args[0];
+        {ESLVal _v53 = _v450;
+              
+              if(_v53.isCons())
+              {ESLVal $549 = _v53.head();
+                ESLVal $550 = _v53.tail();
+                
+                switch($549.termName) {
+                case "BArm": {ESLVal $554 = $549.termRef(0);
+                  ESLVal $553 = $549.termRef(1);
+                  ESLVal $552 = $549.termRef(2);
+                  ESLVal $551 = $549.termRef(3);
+                  
+                  {ESLVal _v451 = $554;
+                  
+                  {ESLVal ps = $553;
+                  
+                  {ESLVal g = $552;
+                  
+                  {ESLVal e = $551;
+                  
+                  {ESLVal _v452 = $550;
+                  
+                  return getMessageTypes.apply(_v452).cons(getMessageType.apply(ps));
+                }
+                }
+                }
+                }
+                }
+                }
+                default: return error(new ESLVal("case error at Pos(35743,35898)").add(ESLVal.list(_v53)));
+              }
+              }
+            else if(_v53.isNil())
+              return $nil;
+            else return error(new ESLVal("case error at Pos(35743,35898)").add(ESLVal.list(_v53)));
+            }
+          }
+        });
+      ESLVal getMessageType = new ESLVal(new Function(new ESLVal("getMessageType"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal ps = $args[0];
+        {ESLVal _v54 = ps;
+              
+              if(_v54.isCons())
+              {ESLVal $555 = _v54.head();
+                ESLVal $556 = _v54.tail();
+                
+                switch($555.termName) {
+                case "PTerm": {ESLVal $560 = $555.termRef(0);
+                  ESLVal $559 = $555.termRef(1);
+                  ESLVal $558 = $555.termRef(2);
+                  ESLVal $557 = $555.termRef(3);
+                  
+                  if($556.isCons())
+                  {ESLVal $561 = $556.head();
+                    ESLVal $562 = $556.tail();
+                    
+                    return error(new ESLVal("case error at Pos(35948,36219)").add(ESLVal.list(_v54)));
+                  }
+                else if($556.isNil())
+                  {ESLVal pl = $560;
+                    
+                    {ESLVal termName = $559;
+                    
+                    {ESLVal targs = $558;
+                    
+                    {ESLVal _v449 = $557;
+                    
+                    {ESLVal ts = map(new ESLVal(new Function(new ESLVal("fun182"),getSelf()) {
+                        public ESLVal apply(ESLVal... $args) {
+                          ESLVal p = $args[0];
+                      return getPatternType(l,p,selfType,valueEnv,cnstrEnv,typeEnv);
+                        }
+                      }),_v449);
+                    
+                    return new ESLVal("MessageType",pl,ESLVal.list(new ESLVal("TermType",pl,termName,ts)));
+                  }
+                  }
+                  }
+                  }
+                  }
+                else return error(new ESLVal("case error at Pos(35948,36219)").add(ESLVal.list(_v54)));
+                }
+                default: return error(new ESLVal("case error at Pos(35948,36219)").add(ESLVal.list(_v54)));
+              }
+              }
+            else if(_v54.isNil())
+              return error(new ESLVal("case error at Pos(35948,36219)").add(ESLVal.list(_v54)));
+            else return error(new ESLVal("case error at Pos(35948,36219)").add(ESLVal.list(_v54)));
+            }
+          }
+        });
+      ESLVal typeCheckArms = new ESLVal(new Function(new ESLVal("typeCheckArms"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v444 = $args[0];
+        ESLVal _v445 = $args[1];
+        ESLVal _v446 = $args[2];
+        {ESLVal _v55 = _v444;
+              
+              if(_v55.isCons())
+              {ESLVal $563 = _v55.head();
+                ESLVal $564 = _v55.tail();
+                
+                switch($563.termName) {
+                case "BArm": {ESLVal $568 = $563.termRef(0);
+                  ESLVal $567 = $563.termRef(1);
+                  ESLVal $566 = $563.termRef(2);
+                  ESLVal $565 = $563.termRef(3);
+                  
+                  {ESLVal _v447 = $568;
+                  
+                  {ESLVal ps = $567;
+                  
+                  {ESLVal g = $566;
+                  
+                  {ESLVal e = $565;
+                  
+                  {ESLVal _v448 = $564;
+                  
+                  {typeCheckArm.apply(_v447,ps,g,e,_v445,_v446);
+                return typeCheckArms.apply(_v448,_v445,_v446);}
+                }
+                }
+                }
+                }
+                }
+                }
+                default: return error(new ESLVal("case error at Pos(36295,36522)").add(ESLVal.list(_v55)));
+              }
+              }
+            else if(_v55.isNil())
+              return $null;
+            else return error(new ESLVal("case error at Pos(36295,36522)").add(ESLVal.list(_v55)));
+            }
+          }
+        });
+      ESLVal typeCheckArm = new ESLVal(new Function(new ESLVal("typeCheckArm"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v435 = $args[0];
+        ESLVal _v436 = $args[1];
+        ESLVal _v437 = $args[2];
+        ESLVal _v438 = $args[3];
+        ESLVal _v439 = $args[4];
+        ESLVal _v440 = $args[5];
+        {ESLVal _v56 = _v436;
+              
+              if(_v56.isCons())
+              {ESLVal $569 = _v56.head();
+                ESLVal $570 = _v56.tail();
+                
+                switch($569.termName) {
+                case "PTerm": {ESLVal $574 = $569.termRef(0);
+                  ESLVal $573 = $569.termRef(1);
+                  ESLVal $572 = $569.termRef(2);
+                  ESLVal $571 = $569.termRef(3);
+                  
+                  if($570.isCons())
+                  {ESLVal $575 = $570.head();
+                    ESLVal $576 = $570.tail();
+                    
+                    return error(new ESLVal("case error at Pos(36621,37070)").add(ESLVal.list(_v56)));
+                  }
+                else if($570.isNil())
+                  {ESLVal pl = $574;
+                    
+                    {ESLVal termName = $573;
+                    
+                    {ESLVal targs = $572;
+                    
+                    {ESLVal _v441 = $571;
+                    
+                    {ESLVal ts = map(new ESLVal(new Function(new ESLVal("fun183"),getSelf()) {
+                        public ESLVal apply(ESLVal... $args) {
+                          ESLVal p = $args[0];
+                      return getPatternType(_v435,p,_v439,_v440,cnstrEnv,typeEnv);
+                        }
+                      }),_v441);
+                    
+                    {patternTypes(_v435,_v441,ts,_v439,_v440,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun184"),getSelf()) {
+                    public ESLVal apply(ESLVal... $args) {
+                      ESLVal _v442 = $args[0];
+                  ESLVal _v443 = $args[1];
+                  return expType(_v438,_v439,_v443,cnstrEnv,typeEnv);
+                    }
+                  }));
+                  return $null;}
+                  }
+                  }
+                  }
+                  }
+                  }
+                else return error(new ESLVal("case error at Pos(36621,37070)").add(ESLVal.list(_v56)));
+                }
+                default: return error(new ESLVal("case error at Pos(36621,37070)").add(ESLVal.list(_v56)));
+              }
+              }
+            else if(_v56.isNil())
+              return error(new ESLVal("case error at Pos(36621,37070)").add(ESLVal.list(_v56)));
+            else return error(new ESLVal("case error at Pos(36621,37070)").add(ESLVal.list(_v56)));
+            }
+          }
+        });
+      
+      public ESLVal get(String name) {
+        switch(name) {
+          case "checkObservedMessage": return checkObservedMessage;
+          
+          case "isTime": return isTime;
+          
+          case "checkObserveMessageDeclaration": return checkObserveMessageDeclaration;
+          
+          case "findLoc": return findLoc;
+          
+          case "findType": return findType;
+          
+          case "decs": return decs;
+          
+          case "getMessageTypes": return getMessageTypes;
+          
+          case "getMessageType": return getMessageType;
+          
+          case "typeCheckArms": return typeCheckArms;
+          
+          case "typeCheckArm": return typeCheckArm;
+          
+          default: throw new Error("cannot find letrec binding");
+        }
+        }
+      };
+    ESLVal checkObservedMessage = letrec.get("checkObservedMessage");
+    
+    ESLVal isTime = letrec.get("isTime");
+    
+    ESLVal checkObserveMessageDeclaration = letrec.get("checkObserveMessageDeclaration");
+    
+    ESLVal findLoc = letrec.get("findLoc");
+    
+    ESLVal findType = letrec.get("findType");
+    
+    ESLVal decs = letrec.get("decs");
+    
+    ESLVal getMessageTypes = letrec.get("getMessageTypes");
+    
+    ESLVal getMessageType = letrec.get("getMessageType");
+    
+    ESLVal typeCheckArms = letrec.get("typeCheckArms");
+    
+    ESLVal typeCheckArm = letrec.get("typeCheckArm");
+    
+      {ESLVal parentType = new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+          if(parent.eql($null).boolVal)
+            return actType0;
+            else
+              return expType(parent,selfType,valueEnv,cnstrEnv,typeEnv);
+        }}.get();
+      ESLVal localEnv = parBind(bindings,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {ESLVal exportedDecs = decs.apply(exports);
+      
+      {ESLVal messageTypes = getMessageTypes.apply(arms);
+      
+      {ESLVal _v487 = new ESLVal("ExtendedAct",l,parentType,exportedDecs,messageTypes);
+      ESLVal _v488 = ESLVal.list(new ESLVal("Map",new ESLVal("$super"),parentType));
+      
+      {typeCheckExports(l,exportedDecs,bindings,_v487,localEnv.add(valueEnv),typeEnv,cnstrEnv);
+    typeCheckValues(valueDefs(bindings),_v487,_v488.add(localEnv.add(valueEnv)),typeEnv,cnstrEnv);
+    expType(init,_v487,_v488.add(localEnv.add(valueEnv)),cnstrEnv,typeEnv);
+    typeCheckArms.apply(arms,_v487,_v488.add(localEnv.add(valueEnv)));
+    checkObservedMessage.apply();
+    return _v487;}
+    }
+    }
+    }
+    }}
+    
+  }
+  private static ESLVal actType = new ESLVal(new Function(new ESLVal("actType"),null) { public ESLVal apply(ESLVal... args) { return actType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8],args[9],args[10],args[11]); }});
+  private static ESLVal typeCheckExports(ESLVal l,ESLVal exports,ESLVal defs,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {{
+      ESLVal _v57 = exports;
+      while(_v57.isCons()) {
+        ESLVal e = _v57.headVal;
+        if(exists.apply(new ESLVal(new Function(new ESLVal("fun185"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal b = $args[0];
+        return bindingName(b).eql(decName(e)).and(typeEqual(lookupType(decName(e),valueEnv),decType(e)));
+          }
+        }),defs).boolVal)
+          {}
+          else
+            error(new ESLVal("TypeError",l,new ESLVal(" cannot find export for ").add(decName(e))));
+        _v57 = _v57.tailVal;}
+    }
+    return $null;}
+  }
+  private static ESLVal typeCheckExports = new ESLVal(new Function(new ESLVal("typeCheckExports"),null) { public ESLVal apply(ESLVal... args) { return typeCheckExports(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal bTypeExports(ESLVal t) {
+    
+    {ESLVal _v58 = t;
+      
+      switch(_v58.termName) {
+      case "ExtendedAct": {ESLVal $587 = _v58.termRef(0);
+        ESLVal $586 = _v58.termRef(1);
+        ESLVal $585 = _v58.termRef(2);
+        ESLVal $584 = _v58.termRef(3);
+        
+        {ESLVal l = $587;
+        
+        {ESLVal parent = $586;
+        
+        {ESLVal exports = $585;
+        
+        {ESLVal message = $584;
+        
+        return bTypeExports(parent).add(exports);
+      }
+      }
+      }
+      }
+      }
+    case "ActType": {ESLVal $583 = _v58.termRef(0);
+        ESLVal $582 = _v58.termRef(1);
+        ESLVal $581 = _v58.termRef(2);
+        
+        {ESLVal l = $583;
+        
+        {ESLVal exports = $582;
+        
+        {ESLVal message = $581;
+        
+        return exports;
+      }
+      }
+      }
+      }
+    case "TypeClosure": {ESLVal $580 = _v58.termRef(0);
+        
+        {ESLVal f = $580;
+        
+        return bTypeExports(f.apply());
+      }
+      }
+    case "RecType": {ESLVal $579 = _v58.termRef(0);
+        ESLVal $578 = _v58.termRef(1);
+        ESLVal $577 = _v58.termRef(2);
+        
+        {ESLVal l = $579;
+        
+        {ESLVal n = $578;
+        
+        {ESLVal _v434 = $577;
+        
+        return bTypeExports(substType(new ESLVal("RecType",l,n,_v434),n,_v434));
+      }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(38496,38906)").add(ESLVal.list(_v58)));
+    }
+    }
+  }
+  private static ESLVal bTypeExports = new ESLVal(new Function(new ESLVal("bTypeExports"),null) { public ESLVal apply(ESLVal... args) { return bTypeExports(args[0]); }});
+  private static ESLVal cmpType(ESLVal l,ESLVal e,ESLVal qs,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v59 = qs;
+      
+      if(_v59.isCons())
+      {ESLVal $588 = _v59.head();
+        ESLVal $589 = _v59.tail();
+        
+        switch($588.termName) {
+        case "BQual": {ESLVal $594 = $588.termRef(0);
+          ESLVal $593 = $588.termRef(1);
+          ESLVal $592 = $588.termRef(2);
+          
+          {ESLVal _v429 = $594;
+          
+          {ESLVal p = $593;
+          
+          {ESLVal list = $592;
+          
+          {ESLVal _v430 = $589;
+          
+          {ESLVal lType = expType(list,selfType,valueEnv,cnstrEnv,typeEnv);
+          
+          {ESLVal _v60 = lType;
+          
+          switch(_v60.termName) {
+          case "ListType": {ESLVal $596 = _v60.termRef(0);
+            ESLVal $595 = _v60.termRef(1);
+            
+            {ESLVal ll = $596;
+            
+            {ESLVal t = $595;
+            
+            {ESLVal _v431 = _v430;
+            
+            return patternType(_v429,p,substTypeEnv(typeEnv,t),selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun186"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal _v432 = $args[0];
+            ESLVal _v433 = $args[1];
+            return cmpType(_v429,e,_v431,selfType,_v433,cnstrEnv,typeEnv);
+              }
+            }));
+          }
+          }
+          }
+          }
+          default: {ESLVal t = _v60;
+            
+            return error(new ESLVal("TypeError",_v429,new ESLVal("qualifier binding expects a list: ").add(ppType(t,typeEnv))));
+          }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+      case "PQual": {ESLVal $591 = $588.termRef(0);
+          ESLVal $590 = $588.termRef(1);
+          
+          {ESLVal _v427 = $591;
+          
+          {ESLVal b = $590;
+          
+          {ESLVal _v428 = $589;
+          
+          {ESLVal bType = expType(b,selfType,valueEnv,cnstrEnv,typeEnv);
+          
+          if(isBoolType(bType).boolVal)
+          return cmpType(_v427,e,_v428,selfType,valueEnv,cnstrEnv,typeEnv);
+          else
+            return error(new ESLVal("TypeError",_v427,new ESLVal("qualifier expects a boolean type: ").add(ppType(bType,typeEnv))));
+        }
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(39017,40003)").add(ESLVal.list(_v59)));
+      }
+      }
+    else if(_v59.isNil())
+      {ESLVal t = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+        
+        return new ESLVal("ListType",l,t);
+      }
+    else return error(new ESLVal("case error at Pos(39017,40003)").add(ESLVal.list(_v59)));
+    }
+  }
+  private static ESLVal cmpType = new ESLVal(new Function(new ESLVal("cmpType"),null) { public ESLVal apply(ESLVal... args) { return cmpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal updateType(ESLVal l,ESLVal n,ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t = lookupType(n,valueEnv);
+      
+      if(t.eql($null).boolVal)
+      return error(new ESLVal("TypeError",l,new ESLVal("unbound variable ").add(n)));
+      else
+        {ESLVal valueType = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+          
+          if(subType(valueType,t).boolVal)
+          return valueType;
+          else
+            return error(new ESLVal("TypeError",l,new ESLVal("type of variable ").add(n.add(new ESLVal("::").add(ppType(t,typeEnv).add(new ESLVal(" does not agree with value type ").add(ppType(valueType,typeEnv))))))));
+        }
+    }
+  }
+  private static ESLVal updateType = new ESLVal(new Function(new ESLVal("updateType"),null) { public ESLVal apply(ESLVal... args) { return updateType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal letType(ESLVal l,ESLVal bs,ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal env = parBind(bs,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {{
+      ESLVal _v61 = bs;
+      while(_v61.isCons()) {
+        ESLVal b = _v61.headVal;
+        typeCheckDef(b,selfType,valueEnv,env.add(valueEnv),cnstrEnv,typeEnv);
+        _v61 = _v61.tailVal;}
+    }
+    return expType(e,selfType,env.add(valueEnv),cnstrEnv,typeEnv);}
+    }
+  }
+  private static ESLVal letType = new ESLVal(new Function(new ESLVal("letType"),null) { public ESLVal apply(ESLVal... args) { return letType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal letrecType(ESLVal l,ESLVal bs,ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal env = recBind(bs,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {{
+      ESLVal _v62 = bs;
+      while(_v62.isCons()) {
+        ESLVal b = _v62.headVal;
+        typeCheckDef(b,selfType,env.add(valueEnv),env.add(valueEnv),cnstrEnv,typeEnv);
+        _v62 = _v62.tailVal;}
+    }
+    return expType(e,selfType,env.add(valueEnv),cnstrEnv,typeEnv);}
+    }
+  }
+  private static ESLVal letrecType = new ESLVal(new Function(new ESLVal("letrecType"),null) { public ESLVal apply(ESLVal... args) { return letrecType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal checkDupBindings(ESLVal bs) {
+    
+    {ESLVal _v63 = bs;
+      
+      if(_v63.isCons())
+      {ESLVal $597 = _v63.head();
+        ESLVal $598 = _v63.tail();
+        
+        {ESLVal b = $597;
+        
+        {ESLVal _v426 = $598;
+        
+        if(member.apply(bindingName(b),new SerializableFunction<ESLVal,ESLVal>() {
+        public ESLVal apply(ESLVal $l0) {
+          ESLVal $a = $nil;
+          java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+          while(!$l0.isNil()) { 
+            ESLVal b = $l0.head();
+            $l0 = $l0.tail();
+            $v.add(bindingName(b));
+          }
+          for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+          return $a;
+        }}.apply(_v426)).boolVal)
+        return error(new ESLVal("TypeError",bindingLoc(b),new ESLVal("duplicate definitions for ").add(bindingName(b))));
+        else
+          return checkDupBindings(_v426);
+      }
+      }
+      }
+    else if(_v63.isNil())
+      return $null;
+    else return error(new ESLVal("case error at Pos(41249,41514)").add(ESLVal.list(_v63)));
+    }
+  }
+  private static ESLVal checkDupBindings = new ESLVal(new Function(new ESLVal("checkDupBindings"),null) { public ESLVal apply(ESLVal... args) { return checkDupBindings(args[0]); }});
+  private static ESLVal parBind(ESLVal bs,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {checkDupBindings(bs);
+    return valueDefsToTEnv(valueDefs(bs),selfType,valueEnv,cnstrEnv,typeEnv);}
+  }
+  private static ESLVal parBind = new ESLVal(new Function(new ESLVal("parBind"),null) { public ESLVal apply(ESLVal... args) { return parBind(args[0],args[1],args[2],args[3],args[4]); }});
+  private static ESLVal recBind(ESLVal bs,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    return valueDefsToTEnv(valueDefs(bs),selfType,valueEnv,cnstrEnv,typeEnv);
+  }
+  private static ESLVal recBind = new ESLVal(new Function(new ESLVal("recBind"),null) { public ESLVal apply(ESLVal... args) { return recBind(args[0],args[1],args[2],args[3],args[4]); }});
+  private static ESLVal caseType(ESLVal l,ESLVal es,ESLVal arms,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal ts1 = expTypes(es,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {ESLVal ts2 = armTypes(arms,ts1,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {checkCase(l,ts1,arms);
+    if(allEqualTypes(head.apply(ts2),tail.apply(ts2)).boolVal)
+      return head.apply(ts2);
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("case arm types do not agree: ").add(ppTypes(ts1,typeEnv).add(new ESLVal(" ").add(ppTypes(ts2,typeEnv))))));}
+    }
+    }
+  }
+  private static ESLVal caseType = new ESLVal(new Function(new ESLVal("caseType"),null) { public ESLVal apply(ESLVal... args) { return caseType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal checkCase(ESLVal l,ESLVal valueTypes,ESLVal arms) {
+    
+    {ESLVal _v64 = valueTypes;
+      
+      if(_v64.isCons())
+      {ESLVal $599 = _v64.head();
+        ESLVal $600 = _v64.tail();
+        
+        switch($599.termName) {
+        case "UnionType": {ESLVal $602 = $599.termRef(0);
+          ESLVal $601 = $599.termRef(1);
+          
+          {ESLVal ul = $602;
+          
+          {ESLVal ts = $601;
+          
+          {ESLVal _v424 = $600;
+          
+          {checkUnionAgainstArms(l,ts,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal $qualArg = $args[0];
+        {ESLVal _v65 = $qualArg;
+              
+              switch(_v65.termName) {
+              case "BArm": {ESLVal $606 = _v65.termRef(0);
+                ESLVal $605 = _v65.termRef(1);
+                ESLVal $604 = _v65.termRef(2);
+                ESLVal $603 = _v65.termRef(3);
+                
+                {ESLVal bl = $606;
+                
+                {ESLVal patterns = $605;
+                
+                {ESLVal guard = $604;
+                
+                {ESLVal body = $603;
+                
+                return ESLVal.list(ESLVal.list(head.apply(patterns)));
+              }
+              }
+              }
+              }
+              }
+              default: {ESLVal _0 = _v65;
+                
+                return $nil;
+              }
+            }
+            }
+          }
+        }).map(arms).flatten().flatten());
+        return checkCase(l,_v424,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal $qualArg = $args[0];
+          {ESLVal _v66 = $qualArg;
+                
+                switch(_v66.termName) {
+                case "BArm": {ESLVal $610 = _v66.termRef(0);
+                  ESLVal $609 = _v66.termRef(1);
+                  ESLVal $608 = _v66.termRef(2);
+                  ESLVal $607 = _v66.termRef(3);
+                  
+                  {ESLVal bl = $610;
+                  
+                  {ESLVal patterns = $609;
+                  
+                  {ESLVal guard = $608;
+                  
+                  {ESLVal body = $607;
+                  
+                  return ESLVal.list(ESLVal.list(new ESLVal("BArm",bl,tail.apply(patterns),guard,body)));
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _0 = _v66;
+                  
+                  return $nil;
+                }
+              }
+              }
+            }
+          }).map(arms).flatten().flatten());}
+        }
+        }
+        }
+        }
+        default: {ESLVal t = $599;
+          
+          {ESLVal _v425 = $600;
+          
+          return checkCase(l,_v425,new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal $qualArg = $args[0];
+          {ESLVal _v67 = $qualArg;
+                
+                switch(_v67.termName) {
+                case "BArm": {ESLVal $614 = _v67.termRef(0);
+                  ESLVal $613 = _v67.termRef(1);
+                  ESLVal $612 = _v67.termRef(2);
+                  ESLVal $611 = _v67.termRef(3);
+                  
+                  {ESLVal bl = $614;
+                  
+                  {ESLVal patterns = $613;
+                  
+                  {ESLVal guard = $612;
+                  
+                  {ESLVal body = $611;
+                  
+                  return ESLVal.list(ESLVal.list(new ESLVal("BArm",bl,tail.apply(patterns),guard,body)));
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _0 = _v67;
+                  
+                  return $nil;
+                }
+              }
+              }
+            }
+          }).map(arms).flatten().flatten());
+        }
+        }
+      }
+      }
+    else if(_v64.isNil())
+      return $null;
+    else return error(new ESLVal("case error at Pos(42500,42938)").add(ESLVal.list(_v64)));
+    }
+  }
+  private static ESLVal checkCase = new ESLVal(new Function(new ESLVal("checkCase"),null) { public ESLVal apply(ESLVal... args) { return checkCase(args[0],args[1],args[2]); }});
+  private static ESLVal checkUnionAgainstArms(ESLVal l,ESLVal terms,ESLVal patterns) {
+    
+    {ESLVal isPVar = new ESLVal(new Function(new ESLVal("isPVar"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal p = $args[0];
+        {ESLVal _v68 = p;
+              
+              switch(_v68.termName) {
+              case "PVar": {ESLVal $617 = _v68.termRef(0);
+                ESLVal $616 = _v68.termRef(1);
+                ESLVal $615 = _v68.termRef(2);
+                
+                {ESLVal _v423 = $617;
+                
+                {ESLVal n = $616;
+                
+                {ESLVal t = $615;
+                
+                return $true;
+              }
+              }
+              }
+              }
+              default: {ESLVal x = _v68;
+                
+                return $false;
+              }
+            }
+            }
+          }
+        });
+      
+      if(exists.apply(isPVar,patterns).not().boolVal)
+      {ESLVal cnstrNames = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal $qualArg = $args[0];
+          {ESLVal _v69 = $qualArg;
+                
+                switch(_v69.termName) {
+                case "TermType": {ESLVal $620 = _v69.termRef(0);
+                  ESLVal $619 = _v69.termRef(1);
+                  ESLVal $618 = _v69.termRef(2);
+                  
+                  {ESLVal tl = $620;
+                  
+                  {ESLVal n = $619;
+                  
+                  {ESLVal ts = $618;
+                  
+                  return ESLVal.list(ESLVal.list(n));
+                }
+                }
+                }
+                }
+                default: {ESLVal _0 = _v69;
+                  
+                  return $nil;
+                }
+              }
+              }
+            }
+          }).map(terms).flatten().flatten();
+        ESLVal patternNames = new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal $qualArg = $args[0];
+          {ESLVal _v70 = $qualArg;
+                
+                switch(_v70.termName) {
+                case "PTerm": {ESLVal $624 = _v70.termRef(0);
+                  ESLVal $623 = _v70.termRef(1);
+                  ESLVal $622 = _v70.termRef(2);
+                  ESLVal $621 = _v70.termRef(3);
+                  
+                  {ESLVal tl = $624;
+                  
+                  {ESLVal n = $623;
+                  
+                  {ESLVal ts = $622;
+                  
+                  {ESLVal ps = $621;
+                  
+                  return ESLVal.list(ESLVal.list(n));
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _0 = _v70;
+                  
+                  return $nil;
+                }
+              }
+              }
+            }
+          }).map(patterns).flatten().flatten();
+        
+        if(forall.apply(new ESLVal(new Function(new ESLVal("fun187"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          ESLVal cnstrName = $args[0];
+      return member.apply(cnstrName,patternNames);
+        }
+      }),cnstrNames).boolVal)
+        return $null;
+        else
+          return addWarning(l,new ESLVal("case handles constructors ").add(joinBy(new ESLVal(44),patternNames).add(new ESLVal(" but is missing patterns matching constructors ").add(joinBy(new ESLVal(44),removeAll(patternNames,cnstrNames))))));
+      }
+      else
+        return $null;
+    }
+  }
+  private static ESLVal checkUnionAgainstArms = new ESLVal(new Function(new ESLVal("checkUnionAgainstArms"),null) { public ESLVal apply(ESLVal... args) { return checkUnionAgainstArms(args[0],args[1],args[2]); }});
+  private static ESLVal tryType(ESLVal l,ESLVal e,ESLVal arms,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal ts1 = expTypes(ESLVal.list(e),selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {ESLVal ts2 = armTypes(arms,ts1,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(allEqualTypes(head.apply(ts2),tail.apply(ts2)).boolVal)
+      return head.apply(ts2);
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("try arm types do not agree: ").add(ppTypes(ts1,typeEnv).add(new ESLVal(" ").add(ppTypes(ts2,typeEnv))))));
+    }
+    }
+  }
+  private static ESLVal tryType = new ESLVal(new Function(new ESLVal("tryType"),null) { public ESLVal apply(ESLVal... args) { return tryType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal armTypes(ESLVal arms,ESLVal ts,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v71 = arms;
+      
+      if(_v71.isCons())
+      {ESLVal $625 = _v71.head();
+        ESLVal $626 = _v71.tail();
+        
+        {ESLVal a = $625;
+        
+        {ESLVal _v422 = $626;
+        
+        return armTypes(_v422,ts,selfType,valueEnv,cnstrEnv,typeEnv).cons(armType(a,ts,selfType,valueEnv,cnstrEnv,typeEnv));
+      }
+      }
+      }
+    else if(_v71.isNil())
+      return $nil;
+    else return error(new ESLVal("case error at Pos(44173,44342)").add(ESLVal.list(_v71)));
+    }
+  }
+  private static ESLVal armTypes = new ESLVal(new Function(new ESLVal("armTypes"),null) { public ESLVal apply(ESLVal... args) { return armTypes(args[0],args[1],args[2],args[3],args[4],args[5]); }});
+  private static ESLVal armType(ESLVal arm,ESLVal ts,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v72 = arm;
+      
+      switch(_v72.termName) {
+      case "BArm": {ESLVal $630 = _v72.termRef(0);
+        ESLVal $629 = _v72.termRef(1);
+        ESLVal $628 = _v72.termRef(2);
+        ESLVal $627 = _v72.termRef(3);
+        
+        {ESLVal l = $630;
+        
+        {ESLVal ps = $629;
+        
+        {ESLVal guard = $628;
+        
+        {ESLVal exp = $627;
+        
+        {checkPatterns(l,ps);
+      if(length.apply(ps).eql(length.apply(ts)).boolVal)
+        return patternTypes(l,ps,ts,selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun188"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal _v419 = $args[0];
+          ESLVal _v420 = $args[1];
+          return guardedExpType(l,guard,exp,selfType,_v420,cnstrEnv,typeEnv);
+            }
+          }));
+        else
+          return error(new ESLVal("TypeError",l,new ESLVal("number of patterns ").add(length.apply(ps).add(new ESLVal(" does not match supplied values: ").add(length.apply(ts))))));}
+      }
+      }
+      }
+      }
+      }
+      default: {ESLVal _v421 = _v72;
+        
+        return error(new ESLVal("unexpected type of arm: ").add(_v421));
+      }
+    }
+    }
+  }
+  private static ESLVal armType = new ESLVal(new Function(new ESLVal("armType"),null) { public ESLVal apply(ESLVal... args) { return armType(args[0],args[1],args[2],args[3],args[4],args[5]); }});
+  private static ESLVal refType(ESLVal l,ESLVal e,ESLVal n,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    { LetRec letrec = new LetRec() {
+      ESLVal t = derefType(expType(e,selfType,valueEnv,cnstrEnv,typeEnv));
+      ESLVal findExport = new ESLVal(new Function(new ESLVal("findExport"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal decs = $args[0];
+        {ESLVal _v73 = decs;
+              
+              if(_v73.isCons())
+              {ESLVal $631 = _v73.head();
+                ESLVal $632 = _v73.tail();
+                
+                switch($631.termName) {
+                case "Dec": {ESLVal $636 = $631.termRef(0);
+                  ESLVal $635 = $631.termRef(1);
+                  ESLVal $634 = $631.termRef(2);
+                  ESLVal $633 = $631.termRef(3);
+                  
+                  {ESLVal _v390 = $636;
+                  
+                  {ESLVal m = $635;
+                  
+                  {ESLVal t = $634;
+                  
+                  {ESLVal st = $633;
+                  
+                  {ESLVal _v391 = $632;
+                  
+                  if(m.eql(n).boolVal)
+                  return t;
+                  else
+                    {ESLVal d = $631;
+                      
+                      {ESLVal _v392 = $632;
+                      
+                      return findExport.apply(_v392);
+                    }
+                    }
+                }
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal d = $631;
+                  
+                  {ESLVal _v393 = $632;
+                  
+                  return findExport.apply(_v393);
+                }
+                }
+              }
+              }
+            else if(_v73.isNil())
+              return $null;
+            else return error(new ESLVal("case error at Pos(45192,45365)").add(ESLVal.list(_v73)));
+            }
+          }
+        });
+      ESLVal findField = new ESLVal(new Function(new ESLVal("findField"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal fs = $args[0];
+        {ESLVal _v74 = fs;
+              
+              if(_v74.isCons())
+              {ESLVal $637 = _v74.head();
+                ESLVal $638 = _v74.tail();
+                
+                switch($637.termName) {
+                case "Dec": {ESLVal $642 = $637.termRef(0);
+                  ESLVal $641 = $637.termRef(1);
+                  ESLVal $640 = $637.termRef(2);
+                  ESLVal $639 = $637.termRef(3);
+                  
+                  {ESLVal _v385 = $642;
+                  
+                  {ESLVal m = $641;
+                  
+                  {ESLVal t = $640;
+                  
+                  {ESLVal ds = $639;
+                  
+                  {ESLVal _v386 = $638;
+                  
+                  if(m.eql(n).boolVal)
+                  return t;
+                  else
+                    {ESLVal _v387 = $637;
+                      
+                      {ESLVal _v388 = $638;
+                      
+                      return findField.apply(_v388);
+                    }
+                    }
+                }
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal t = $637;
+                  
+                  {ESLVal _v389 = $638;
+                  
+                  return findField.apply(_v389);
+                }
+                }
+              }
+              }
+            else if(_v74.isNil())
+              return error(new ESLVal("TypeError",l,new ESLVal("cannot find field name ").add(n)));
+            else return error(new ESLVal("case error at Pos(45406,45614)").add(ESLVal.list(_v74)));
+            }
+          }
+        });
+      ESLVal exportsObserve = new ESLVal(new Function(new ESLVal("exportsObserve"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal exports = $args[0];
+        {ESLVal _v75 = exports;
+              
+              if(_v75.isCons())
+              {ESLVal $643 = _v75.head();
+                ESLVal $644 = _v75.tail();
+                
+                switch($643.termName) {
+                case "Dec": {ESLVal $648 = $643.termRef(0);
+                  ESLVal $647 = $643.termRef(1);
+                  ESLVal $646 = $643.termRef(2);
+                  ESLVal $645 = $643.termRef(3);
+                  
+                  switch($647.strVal) {
+                  case "observeState": switch($646.termName) {
+                    case "FunType": {ESLVal $651 = $646.termRef(0);
+                      ESLVal $650 = $646.termRef(1);
+                      ESLVal $649 = $646.termRef(2);
+                      
+                      if($650.isCons())
+                      {ESLVal $652 = $650.head();
+                        ESLVal $653 = $650.tail();
+                        
+                        {ESLVal d = $643;
+                        
+                        {ESLVal _v380 = $644;
+                        
+                        return exportsObserve.apply(_v380);
+                      }
+                      }
+                      }
+                    else if($650.isNil())
+                      {ESLVal dl = $648;
+                        
+                        {ESLVal fl = $651;
+                        
+                        {ESLVal stateType = $649;
+                        
+                        {ESLVal dt = $645;
+                        
+                        {ESLVal x = $644;
+                        
+                        return $true;
+                      }
+                      }
+                      }
+                      }
+                      }
+                    else {ESLVal d = $643;
+                        
+                        {ESLVal _v381 = $644;
+                        
+                        return exportsObserve.apply(_v381);
+                      }
+                      }
+                    }
+                    default: {ESLVal d = $643;
+                      
+                      {ESLVal _v382 = $644;
+                      
+                      return exportsObserve.apply(_v382);
+                    }
+                    }
+                  }
+                  default: {ESLVal d = $643;
+                    
+                    {ESLVal _v383 = $644;
+                    
+                    return exportsObserve.apply(_v383);
+                  }
+                  }
+                }
+                }
+                default: {ESLVal d = $643;
+                  
+                  {ESLVal _v384 = $644;
+                  
+                  return exportsObserve.apply(_v384);
+                }
+                }
+              }
+              }
+            else if(_v75.isNil())
+              return $false;
+            else return error(new ESLVal("case error at Pos(45665,45824)").add(ESLVal.list(_v75)));
+            }
+          }
+        });
+      ESLVal getObserver = new ESLVal(new Function(new ESLVal("getObserver"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v369 = $args[0];
+        ESLVal _v370 = $args[1];
+        ESLVal _v371 = $args[2];
+        {ESLVal _v76 = _v370;
+              
+              return $ndCase.apply(_v76,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
+                public ESLVal apply(ESLVal... $args) {
+                  ESLVal $655 = $args[0];
+              ESLVal $656 = $args[1];
+              ESLVal $657 = $args[2];
+              ESLVal $654 = $args[3];
+              switch($656.termName) {
+                    case "Dec": {ESLVal $661 = $656.termRef(0);
+                      ESLVal $660 = $656.termRef(1);
+                      ESLVal $659 = $656.termRef(2);
+                      ESLVal $658 = $656.termRef(3);
+                      
+                      switch($660.strVal) {
+                      case "observeState": switch($659.termName) {
+                        case "FunType": {ESLVal $664 = $659.termRef(0);
+                          ESLVal $663 = $659.termRef(1);
+                          ESLVal $662 = $659.termRef(2);
+                          
+                          if($663.isCons())
+                          {ESLVal $665 = $663.head();
+                            ESLVal $666 = $663.tail();
+                            
+                            return $654.apply();
+                          }
+                        else if($663.isNil())
+                          {ESLVal e1 = $655;
+                            
+                            {ESLVal dl = $661;
+                            
+                            {ESLVal fl = $664;
+                            
+                            {ESLVal stateType = $662;
+                            
+                            {ESLVal dt = $658;
+                            
+                            {ESLVal e2 = $657;
+                            
+                            {ESLVal _v77 = _v370;
+                            
+                            return $ndCase.apply(_v77,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
+                              public ESLVal apply(ESLVal... $args) {
+                                ESLVal $668 = $args[0];
+                            ESLVal $669 = $args[1];
+                            ESLVal $670 = $args[2];
+                            ESLVal $667 = $args[3];
+                            switch($669.termName) {
+                                  case "Dec": {ESLVal $674 = $669.termRef(0);
+                                    ESLVal $673 = $669.termRef(1);
+                                    ESLVal $672 = $669.termRef(2);
+                                    ESLVal $671 = $669.termRef(3);
+                                    
+                                    switch($673.strVal) {
+                                    case "observeMessage": switch($672.termName) {
+                                      case "FunType": {ESLVal $677 = $672.termRef(0);
+                                        ESLVal $676 = $672.termRef(1);
+                                        ESLVal $675 = $672.termRef(2);
+                                        
+                                        if($676.isCons())
+                                        {ESLVal $678 = $676.head();
+                                          ESLVal $679 = $676.tail();
+                                          
+                                          if($679.isCons())
+                                          {ESLVal $680 = $679.head();
+                                            ESLVal $681 = $679.tail();
+                                            
+                                            return $667.apply();
+                                          }
+                                        else if($679.isNil())
+                                          {ESLVal _v372 = $668;
+                                            
+                                            {ESLVal _v373 = $674;
+                                            
+                                            {ESLVal _v374 = $677;
+                                            
+                                            {ESLVal t = $678;
+                                            
+                                            {ESLVal messageType = $675;
+                                            
+                                            {ESLVal _v375 = $671;
+                                            
+                                            {ESLVal _v376 = $670;
+                                            
+                                            {ESLVal _v78 = typeNF(messageType,typeEnv);
+                                            
+                                            switch(_v78.termName) {
+                                            case "UnionType": {ESLVal $683 = _v78.termRef(0);
+                                              ESLVal $682 = _v78.termRef(1);
+                                              
+                                              return $ndCase.apply($682,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
+                                                public ESLVal apply(ESLVal... $args) {
+                                                  ESLVal $685 = $args[0];
+                                              ESLVal $686 = $args[1];
+                                              ESLVal $687 = $args[2];
+                                              ESLVal $684 = $args[3];
+                                              switch($686.termName) {
+                                                    case "TermType": {ESLVal $690 = $686.termRef(0);
+                                                      ESLVal $689 = $686.termRef(1);
+                                                      ESLVal $688 = $686.termRef(2);
+                                                      
+                                                      switch($689.strVal) {
+                                                      case "Something": if($688.isCons())
+                                                        {ESLVal $691 = $688.head();
+                                                          ESLVal $692 = $688.tail();
+                                                          
+                                                          if($692.isCons())
+                                                          {ESLVal $693 = $692.head();
+                                                            ESLVal $694 = $692.tail();
+                                                            
+                                                            return $684.apply();
+                                                          }
+                                                        else if($692.isNil())
+                                                          {ESLVal ul = $683;
+                                                            
+                                                            {ESLVal ts1 = $685;
+                                                            
+                                                            {ESLVal tl = $690;
+                                                            
+                                                            {ESLVal _v377 = $691;
+                                                            
+                                                            {ESLVal ts2 = $687;
+                                                            
+                                                            return new ESLVal("ObserverType",_v369,stateType,_v377);
+                                                          }
+                                                          }
+                                                          }
+                                                          }
+                                                          }
+                                                        else return $684.apply();
+                                                        }
+                                                      else if($688.isNil())
+                                                        return $684.apply();
+                                                      else return $684.apply();
+                                                      default: return $684.apply();
+                                                    }
+                                                    }
+                                                    default: return $684.apply();
+                                                  }
+                                                }
+                                              }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
+                                                public ESLVal apply(ESLVal... $args) {
+                                                  {ESLVal _v378 = _v78;
+                                                    
+                                                    return error(new ESLVal("TypeError",_v369,new ESLVal("cannot find Something(t) for the message type: ").add(typeNF(messageType,typeEnv))));
+                                                  }
+                                                }
+                                              }));
+                                            }
+                                            default: {ESLVal _v379 = _v78;
+                                              
+                                              return error(new ESLVal("TypeError",_v369,new ESLVal("cannot find Something(t) for the message type: ").add(typeNF(messageType,typeEnv))));
+                                            }
+                                          }
+                                          }
+                                          }
+                                          }
+                                          }
+                                          }
+                                          }
+                                          }
+                                          }
+                                        else return $667.apply();
+                                        }
+                                      else if($676.isNil())
+                                        return $667.apply();
+                                      else return $667.apply();
+                                      }
+                                      default: return $667.apply();
+                                    }
+                                    default: return $667.apply();
+                                  }
+                                  }
+                                  default: return $667.apply();
+                                }
+                              }
+                            }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
+                              public ESLVal apply(ESLVal... $args) {
+                                return error(new ESLVal("case error at Pos(45998,46420)").add(ESLVal.list(_v77)));
+                              }
+                            }));
+                          }
+                          }
+                          }
+                          }
+                          }
+                          }
+                          }
+                        else return $654.apply();
+                        }
+                        default: return $654.apply();
+                      }
+                      default: return $654.apply();
+                    }
+                    }
+                    default: return $654.apply();
+                  }
+                }
+              }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
+                public ESLVal apply(ESLVal... $args) {
+                  {ESLVal es = _v76;
+                    
+                    return $null;
+                  }
+                }
+              }));
+            }
+          }
+        });
+      
+      public ESLVal get(String name) {
+        switch(name) {
+          case "t": return t;
+          
+          case "findExport": return findExport;
+          
+          case "findField": return findField;
+          
+          case "exportsObserve": return exportsObserve;
+          
+          case "getObserver": return getObserver;
+          
+          default: throw new Error("cannot find letrec binding");
+        }
+        }
+      };
+    ESLVal t = letrec.get("t");
+    
+    ESLVal findExport = letrec.get("findExport");
+    
+    ESLVal findField = letrec.get("findField");
+    
+    ESLVal exportsObserve = letrec.get("exportsObserve");
+    
+    ESLVal getObserver = letrec.get("getObserver");
+    
+      {ESLVal _v79 = typeNF(t,typeEnv);
+      
+      switch(_v79.termName) {
+      case "StrType": {ESLVal $708 = _v79.termRef(0);
+        
+        {ESLVal sl = $708;
+        
+        if(n.eql(new ESLVal("explode")).boolVal)
+        return new ESLVal("ListType",sl,new ESLVal("IntType",sl));
+        else
+          {ESLVal _v416 = $708;
+            
+            if(n.eql(new ESLVal("writeDate")).boolVal)
+            return theTypeFloat;
+            else
+              {ESLVal _v417 = _v79;
+                
+                return error(new ESLVal("TypeError",l,new ESLVal("expecting a record type, but received ").add(ppType(_v417,typeEnv))));
+              }
+          }
+      }
+      }
+    case "TableType": {ESLVal $707 = _v79.termRef(0);
+        ESLVal $706 = _v79.termRef(1);
+        ESLVal $705 = _v79.termRef(2);
+        
+        {ESLVal _v399 = $707;
+        
+        {ESLVal k = $706;
+        
+        {ESLVal v = $705;
+        
+        if(n.eql(new ESLVal("get")).boolVal)
+        return new ESLVal("FunType",_v399,ESLVal.list(k),v);
+        else
+          {ESLVal _v400 = $707;
+            
+            {ESLVal _v401 = $706;
+            
+            {ESLVal _v402 = $705;
+            
+            if(n.eql(new ESLVal("put")).boolVal)
+            return new ESLVal("FunType",_v400,ESLVal.list(_v401,_v402),t);
+            else
+              {ESLVal _v403 = $707;
+                
+                {ESLVal _v404 = $706;
+                
+                {ESLVal _v405 = $705;
+                
+                if(n.eql(new ESLVal("keys")).boolVal)
+                return new ESLVal("ListType",_v403,_v404);
+                else
+                  {ESLVal _v406 = $707;
+                    
+                    {ESLVal _v407 = $706;
+                    
+                    {ESLVal _v408 = $705;
+                    
+                    if(n.eql(new ESLVal("vals")).boolVal)
+                    return new ESLVal("ListType",_v406,_v408);
+                    else
+                      {ESLVal _v409 = $707;
+                        
+                        {ESLVal _v410 = $706;
+                        
+                        {ESLVal _v411 = $705;
+                        
+                        if(n.eql(new ESLVal("hasKey")).boolVal)
+                        return new ESLVal("FunType",_v409,ESLVal.list(_v410),theTypeBool);
+                        else
+                          {ESLVal _v412 = $707;
+                            
+                            {ESLVal _v413 = $706;
+                            
+                            {ESLVal _v414 = $705;
+                            
+                            if(n.eql(new ESLVal("clear")).boolVal)
+                            return new ESLVal("FunType",_v412,$nil,theTypeVoid);
+                            else
+                              {ESLVal _v415 = _v79;
+                                
+                                return error(new ESLVal("TypeError",_v412,new ESLVal("expecting a record type, but received ").add(ppType(_v415,typeEnv))));
+                              }
+                          }
+                          }
+                          }
+                      }
+                      }
+                      }
+                  }
+                  }
+                  }
+              }
+              }
+              }
+          }
+          }
+          }
+      }
+      }
+      }
+      }
+    case "ListType": {ESLVal $704 = _v79.termRef(0);
+        ESLVal $703 = _v79.termRef(1);
+        
+        {ESLVal ll = $704;
+        
+        {ESLVal _v397 = $703;
+        
+        if(n.eql(new ESLVal("implode")).boolVal)
+        return theTypeStr;
+        else
+          {ESLVal _v398 = _v79;
+            
+            return error(new ESLVal("TypeError",l,new ESLVal("expecting a record type, but received ").add(ppType(_v398,typeEnv))));
+          }
+      }
+      }
+      }
+    case "RecordType": {ESLVal $702 = _v79.termRef(0);
+        ESLVal $701 = _v79.termRef(1);
+        
+        {ESLVal rl = $702;
+        
+        {ESLVal fs = $701;
+        
+        return findField.apply(fs);
+      }
+      }
+      }
+    case "ObservedType": {ESLVal $700 = _v79.termRef(0);
+        ESLVal $699 = _v79.termRef(1);
+        ESLVal $698 = _v79.termRef(2);
+        
+        {ESLVal _v395 = $700;
+        
+        {ESLVal s = $699;
+        
+        {ESLVal m = $698;
+        
+        if(n.eql(new ESLVal("addObserver")).boolVal)
+        return new ESLVal("FunType",_v395,ESLVal.list(new ESLVal("ObserverType",_v395,s,m)),theTypeVoid);
+        else
+          {ESLVal _v396 = _v79;
+            
+            return error(new ESLVal("TypeError",_v395,new ESLVal("expecting a record type, but received ").add(ppType(_v396,typeEnv))));
+          }
+      }
+      }
+      }
+      }
+    case "ActType": {ESLVal $697 = _v79.termRef(0);
+        ESLVal $696 = _v79.termRef(1);
+        ESLVal $695 = _v79.termRef(2);
+        
+        {ESLVal al = $697;
+        
+        {ESLVal exports = $696;
+        
+        {ESLVal handlers = $695;
+        
+        if(n.eql(new ESLVal("addObserver")).and(exportsObserve.apply(exports)).boolVal)
+        return new ESLVal("FunType",l,ESLVal.list(getObserver.apply(al,exports,handlers)),theTypeVoid);
+        else
+          {ESLVal _v394 = findExport.apply(exports);
+            
+            if(_v394.eql($null).boolVal)
+            return error(new ESLVal("TypeError",l,new ESLVal("behaviour type does not export ").add(n)));
+            else
+              return substTypeEnv(typeEnv,_v394);
+          }
+      }
+      }
+      }
+      }
+      default: {ESLVal _v418 = _v79;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a record type, but received ").add(ppType(_v418,typeEnv))));
+      }
+    }
+    }}
+    
+  }
+  private static ESLVal refType = new ESLVal(new Function(new ESLVal("refType"),null) { public ESLVal apply(ESLVal... args) { return refType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal derefType(ESLVal t) {
+    
+    {ESLVal _v80 = t;
+      
+      switch(_v80.termName) {
+      case "TypeClosure": {ESLVal $709 = _v80.termRef(0);
+        
+        {ESLVal f = $709;
+        
+        return derefType(f.apply());
+      }
+      }
+      default: {ESLVal _v368 = _v80;
+        
+        return _v368;
+      }
+    }
+    }
+  }
+  private static ESLVal derefType = new ESLVal(new Function(new ESLVal("derefType"),null) { public ESLVal apply(ESLVal... args) { return derefType(args[0]); }});
+  private static ESLVal recordType(ESLVal l,ESLVal fields,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    { LetRec letrec = new LetRec() {
+      ESLVal fieldTypes = new ESLVal(new Function(new ESLVal("fieldTypes"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v362 = $args[0];
+        {ESLVal _v81 = _v362;
+              
+              if(_v81.isCons())
+              {ESLVal $710 = _v81.head();
+                ESLVal $711 = _v81.tail();
+                
+                switch($710.termName) {
+                case "Binding": {ESLVal $716 = $710.termRef(0);
+                  ESLVal $715 = $710.termRef(1);
+                  ESLVal $714 = $710.termRef(2);
+                  ESLVal $713 = $710.termRef(3);
+                  ESLVal $712 = $710.termRef(4);
+                  
+                  {ESLVal _v363 = $716;
+                  
+                  {ESLVal n = $715;
+                  
+                  {ESLVal t = $714;
+                  
+                  {ESLVal st = $713;
+                  
+                  {ESLVal e = $712;
+                  
+                  {ESLVal _v364 = $711;
+                  
+                  {ESLVal _v365 = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+                  
+                  return fieldTypes.apply(_v364).cons(new ESLVal("Dec",_v363,n,_v365,_v365));
+                }
+                }
+                }
+                }
+                }
+                }
+                }
+                }
+                default: {ESLVal _v366 = _v81;
+                  
+                  return error(new ESLVal("TypeError",l,new ESLVal("unknown field representation: ").add(_v366)));
+                }
+              }
+              }
+            else if(_v81.isNil())
+              return $nil;
+            else {ESLVal _v367 = _v81;
+                
+                return error(new ESLVal("TypeError",l,new ESLVal("unknown field representation: ").add(_v367)));
+              }
+            }
+          }
+        });
+      
+      public ESLVal get(String name) {
+        switch(name) {
+          case "fieldTypes": return fieldTypes;
+          
+          default: throw new Error("cannot find letrec binding");
+        }
+        }
+      };
+    ESLVal fieldTypes = letrec.get("fieldTypes");
+    
+      return new ESLVal("RecordType",l,fieldTypes.apply(fields));}
+    
+  }
+  private static ESLVal recordType = new ESLVal(new Function(new ESLVal("recordType"),null) { public ESLVal apply(ESLVal... args) { return recordType(args[0],args[1],args[2],args[3],args[4],args[5]); }});
+  private static ESLVal forType(ESLVal l,ESLVal p,ESLVal list,ESLVal body,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal listType = expType(list,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {ESLVal _v82 = listType;
+      
+      switch(_v82.termName) {
+      case "ListType": {ESLVal $718 = _v82.termRef(0);
+        ESLVal $717 = _v82.termRef(1);
+        
+        {ESLVal _v359 = $718;
+        
+        {ESLVal t = $717;
+        
+        return patternType(_v359,p,t,selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun189"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v360 = $args[0];
+        ESLVal _v361 = $args[1];
+        return expType(body,selfType,_v361,cnstrEnv,typeEnv);
+          }
+        }));
+      }
+      }
+      }
+      default: {ESLVal t = _v82;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("for type expects a list: ").add(list)));
+      }
+    }
+    }
+    }
+  }
+  private static ESLVal forType = new ESLVal(new Function(new ESLVal("forType"),null) { public ESLVal apply(ESLVal... args) { return forType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]); }});
+  private static ESLVal patternTypes(ESLVal l,ESLVal ps,ESLVal ts,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv,ESLVal f) {
+    
+    {ESLVal _v83 = ps;
+      ESLVal _v84 = ts;
+      
+      if(_v83.isCons())
+      {ESLVal $719 = _v83.head();
+        ESLVal $720 = _v83.tail();
+        
+        if(_v84.isCons())
+        {ESLVal $721 = _v84.head();
+          ESLVal $722 = _v84.tail();
+          
+          {ESLVal p = $719;
+          
+          {ESLVal _v341 = $720;
+          
+          {ESLVal t = $721;
+          
+          {ESLVal _v342 = $722;
+          
+          {ESLVal _v343 = _v341;
+          ESLVal _v344 = _v342;
+          
+          return patternType(l,p,t,selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun190"),getSelf()) {
+            public ESLVal apply(ESLVal... $args) {
+              ESLVal _v345 = $args[0];
+          ESLVal _v346 = $args[1];
+          return patternTypes(l,_v343,_v344,selfType,_v346,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun191"),getSelf()) {
+                  public ESLVal apply(ESLVal... $args) {
+                    ESLVal _v347 = $args[0];
+                ESLVal _v348 = $args[1];
+                return f.apply(_v347.cons(_v345),_v348);
+                  }
+                }));
+            }
+          }));
+        }
+        }
+        }
+        }
+        }
+        }
+      else if(_v84.isNil())
+        {ESLVal _v349 = _v83;
+          
+          {ESLVal _v350 = _v84;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("somthing wrong with ").add(_v349.add(new ESLVal(" ").add(_v350)))));
+        }
+        }
+      else {ESLVal _v351 = _v83;
+          
+          {ESLVal _v352 = _v84;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("somthing wrong with ").add(_v351.add(new ESLVal(" ").add(_v352)))));
+        }
+        }
+      }
+    else if(_v83.isNil())
+      if(_v84.isCons())
+        {ESLVal $723 = _v84.head();
+          ESLVal $724 = _v84.tail();
+          
+          {ESLVal _v353 = _v83;
+          
+          {ESLVal _v354 = _v84;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("somthing wrong with ").add(_v353.add(new ESLVal(" ").add(_v354)))));
+        }
+        }
+        }
+      else if(_v84.isNil())
+        return f.apply($nil,valueEnv);
+      else {ESLVal _v355 = _v83;
+          
+          {ESLVal _v356 = _v84;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("somthing wrong with ").add(_v355.add(new ESLVal(" ").add(_v356)))));
+        }
+        }
+    else {ESLVal _v357 = _v83;
+        
+        {ESLVal _v358 = _v84;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("somthing wrong with ").add(_v357.add(new ESLVal(" ").add(_v358)))));
+      }
+      }
+    }
+  }
+  private static ESLVal patternTypes = new ESLVal(new Function(new ESLVal("patternTypes"),null) { public ESLVal apply(ESLVal... args) { return patternTypes(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]); }});
+  private static ESLVal getPatternType(ESLVal l,ESLVal p,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v85 = p;
+      
+      switch(_v85.termName) {
+      case "PApplyType": {ESLVal $753 = _v85.termRef(0);
+        ESLVal $752 = _v85.termRef(1);
+        ESLVal $751 = _v85.termRef(2);
+        
+        {ESLVal _v338 = $753;
+        
+        {ESLVal _v339 = $752;
+        
+        {ESLVal args = $751;
+        
+        return getApplyPatternType(_v338,_v339,args,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "PBool": {ESLVal $750 = _v85.termRef(0);
+        ESLVal $749 = _v85.termRef(1);
+        
+        {ESLVal _v337 = $750;
+        
+        {ESLVal b = $749;
+        
+        return theTypeBool;
+      }
+      }
+      }
+    case "PCons": {ESLVal $748 = _v85.termRef(0);
+        ESLVal $747 = _v85.termRef(1);
+        ESLVal $746 = _v85.termRef(2);
+        
+        {ESLVal _v336 = $748;
+        
+        {ESLVal hd = $747;
+        
+        {ESLVal tl = $746;
+        
+        return getPatternType(_v336,tl,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "PBagCons": {ESLVal $745 = _v85.termRef(0);
+        ESLVal $744 = _v85.termRef(1);
+        ESLVal $743 = _v85.termRef(2);
+        
+        {ESLVal _v335 = $745;
+        
+        {ESLVal hd = $744;
+        
+        {ESLVal tl = $743;
+        
+        return getPatternType(_v335,tl,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "PSetCons": {ESLVal $742 = _v85.termRef(0);
+        ESLVal $741 = _v85.termRef(1);
+        ESLVal $740 = _v85.termRef(2);
+        
+        {ESLVal _v334 = $742;
+        
+        {ESLVal hd = $741;
+        
+        {ESLVal tl = $740;
+        
+        return getPatternType(_v334,tl,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "PNil": {ESLVal $739 = _v85.termRef(0);
+        
+        {ESLVal _v333 = $739;
+        
+        return new ESLVal("ForallType",_v333,ESLVal.list(new ESLVal("T")),new ESLVal("ListType",_v333,new ESLVal("VarType",_v333,new ESLVal("T"))));
+      }
+      }
+    case "PNull": {ESLVal $738 = _v85.termRef(0);
+        
+        {ESLVal _v332 = $738;
+        
+        return new ESLVal("ForallType",_v332,ESLVal.list(new ESLVal("T")),new ESLVal("VarType",_v332,new ESLVal("T")));
+      }
+      }
+    case "PEmptyBag": {ESLVal $737 = _v85.termRef(0);
+        
+        {ESLVal _v331 = $737;
+        
+        return new ESLVal("ForallType",_v331,ESLVal.list(new ESLVal("T")),new ESLVal("BagType",_v331,new ESLVal("VarType",_v331,new ESLVal("T"))));
+      }
+      }
+    case "PEmptySet": {ESLVal $736 = _v85.termRef(0);
+        
+        {ESLVal _v330 = $736;
+        
+        return new ESLVal("ForallType",_v330,ESLVal.list(new ESLVal("T")),new ESLVal("SetType",_v330,new ESLVal("VarType",_v330,new ESLVal("T"))));
+      }
+      }
+    case "PInt": {ESLVal $735 = _v85.termRef(0);
+        ESLVal $734 = _v85.termRef(1);
+        
+        {ESLVal _v329 = $735;
+        
+        {ESLVal n = $734;
+        
+        return theTypeInt;
+      }
+      }
+      }
+    case "PVar": {ESLVal $733 = _v85.termRef(0);
+        ESLVal $732 = _v85.termRef(1);
+        ESLVal $731 = _v85.termRef(2);
+        
+        {ESLVal _v328 = $733;
+        
+        {ESLVal n = $732;
+        
+        {ESLVal pt = $731;
+        
+        return substTypeEnv(typeEnv,pt);
+      }
+      }
+      }
+      }
+    case "PStr": {ESLVal $730 = _v85.termRef(0);
+        ESLVal $729 = _v85.termRef(1);
+        
+        {ESLVal _v327 = $730;
+        
+        {ESLVal s = $729;
+        
+        return theTypeStr;
+      }
+      }
+      }
+    case "PTerm": {ESLVal $728 = _v85.termRef(0);
+        ESLVal $727 = _v85.termRef(1);
+        ESLVal $726 = _v85.termRef(2);
+        ESLVal $725 = _v85.termRef(3);
+        
+        {ESLVal _v326 = $728;
+        
+        {ESLVal n = $727;
+        
+        {ESLVal ts = $726;
+        
+        {ESLVal ps = $725;
+        
+        return lookupType(n,cnstrEnv);
+      }
+      }
+      }
+      }
+      }
+      default: {ESLVal _v340 = _v85;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("unknown type of pattern: ").add(_v340)));
+      }
+    }
+    }
+  }
+  private static ESLVal getPatternType = new ESLVal(new Function(new ESLVal("getPatternType"),null) { public ESLVal apply(ESLVal... args) { return getPatternType(args[0],args[1],args[2],args[3],args[4],args[5]); }});
+  private static ESLVal getApplyPatternType(ESLVal l,ESLVal pApplyType,ESLVal args,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v86 = getPatternType(l,pApplyType,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      switch(_v86.termName) {
+      case "ForallType": {ESLVal $756 = _v86.termRef(0);
+        ESLVal $755 = _v86.termRef(1);
+        ESLVal $754 = _v86.termRef(2);
+        
+        {ESLVal l2 = $756;
+        
+        {ESLVal names = $755;
+        
+        {ESLVal typeExp = $754;
+        
+        return typeNF(typeExp,zipTypeEnv(names,args).add(typeEnv));
+      }
+      }
+      }
+      }
+      default: {ESLVal t = _v86;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a universal type: ").add(ppType(t,typeEnv))));
+      }
+    }
+    }
+  }
+  private static ESLVal getApplyPatternType = new ESLVal(new Function(new ESLVal("getApplyPatternType"),null) { public ESLVal apply(ESLVal... args) { return getApplyPatternType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal patternType(ESLVal l,ESLVal p,ESLVal t,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv,ESLVal f) {
+    
+    {ESLVal _v87 = p;
+      
+      switch(_v87.termName) {
+      case "PAdd": {ESLVal $788 = _v87.termRef(0);
+        ESLVal $787 = _v87.termRef(1);
+        ESLVal $786 = _v87.termRef(2);
+        
+        {ESLVal _v324 = $788;
+        
+        {ESLVal p1 = $787;
+        
+        {ESLVal p2 = $786;
+        
+        return addPatternType(_v324,p1,p2,t,selfType,valueEnv,cnstrEnv,typeEnv,f);
+      }
+      }
+      }
+      }
+    case "PApplyType": {ESLVal $785 = _v87.termRef(0);
+        ESLVal $784 = _v87.termRef(1);
+        ESLVal $783 = _v87.termRef(2);
+        
+        {ESLVal _v322 = $785;
+        
+        {ESLVal _v323 = $784;
+        
+        {ESLVal args = $783;
+        
+        return applyTypePatternType(_v322,_v323,substTypesEnv(typeEnv,args),t,selfType,valueEnv,cnstrEnv,typeEnv,f);
+      }
+      }
+      }
+      }
+    case "PBool": {ESLVal $782 = _v87.termRef(0);
+        ESLVal $781 = _v87.termRef(1);
+        
+        {ESLVal _v321 = $782;
+        
+        {ESLVal b = $781;
+        
+        if(isBoolType(typeNF(t,typeEnv)).boolVal)
+        return f.apply(theTypeBool,valueEnv);
+        else
+          return error(new ESLVal("TypeError",_v321,new ESLVal("type mismatch: Bool and ").add(ppType(t,typeEnv))));
+      }
+      }
+      }
+    case "PBagCons": {ESLVal $780 = _v87.termRef(0);
+        ESLVal $779 = _v87.termRef(1);
+        ESLVal $778 = _v87.termRef(2);
+        
+        {ESLVal _v318 = $780;
+        
+        {ESLVal hd = $779;
+        
+        {ESLVal tl = $778;
+        
+        return bagConsPatternType(_v318,hd,tl,t,selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun192"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v319 = $args[0];
+        ESLVal _v320 = $args[1];
+        return f.apply(new ESLVal("ListType",_v318,_v319),_v320);
+          }
+        }));
+      }
+      }
+      }
+      }
+    case "PSetCons": {ESLVal $777 = _v87.termRef(0);
+        ESLVal $776 = _v87.termRef(1);
+        ESLVal $775 = _v87.termRef(2);
+        
+        {ESLVal _v315 = $777;
+        
+        {ESLVal hd = $776;
+        
+        {ESLVal tl = $775;
+        
+        return setConsPatternType(_v315,hd,tl,t,selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun193"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v316 = $args[0];
+        ESLVal _v317 = $args[1];
+        return f.apply(new ESLVal("ListType",_v315,_v316),_v317);
+          }
+        }));
+      }
+      }
+      }
+      }
+    case "PCons": {ESLVal $774 = _v87.termRef(0);
+        ESLVal $773 = _v87.termRef(1);
+        ESLVal $772 = _v87.termRef(2);
+        
+        {ESLVal _v312 = $774;
+        
+        {ESLVal hd = $773;
+        
+        {ESLVal tl = $772;
+        
+        return consPatternType(_v312,hd,tl,t,selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun194"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v313 = $args[0];
+        ESLVal _v314 = $args[1];
+        return f.apply(new ESLVal("ListType",_v312,_v313),_v314);
+          }
+        }));
+      }
+      }
+      }
+      }
+    case "PNil": {ESLVal $771 = _v87.termRef(0);
+        
+        {ESLVal _v311 = $771;
+        
+        return nilType(_v311,t,selfType,valueEnv,cnstrEnv,typeEnv,f);
+      }
+      }
+    case "PNull": {ESLVal $770 = _v87.termRef(0);
+        
+        {ESLVal _v310 = $770;
+        
+        return f.apply(t,valueEnv);
+      }
+      }
+    case "PEmptyBag": {ESLVal $769 = _v87.termRef(0);
+        
+        {ESLVal _v309 = $769;
+        
+        return emptyBagType(_v309,typeNF(t,typeEnv),selfType,valueEnv,cnstrEnv,typeEnv,f);
+      }
+      }
+    case "PEmptySet": {ESLVal $768 = _v87.termRef(0);
+        
+        {ESLVal _v308 = $768;
+        
+        return emptySetType(_v308,typeNF(t,typeEnv),selfType,valueEnv,cnstrEnv,typeEnv,f);
+      }
+      }
+    case "PInt": {ESLVal $767 = _v87.termRef(0);
+        ESLVal $766 = _v87.termRef(1);
+        
+        {ESLVal _v307 = $767;
+        
+        {ESLVal n = $766;
+        
+        if(isIntType(typeNF(t,typeEnv)).boolVal)
+        return f.apply(theTypeInt,valueEnv);
+        else
+          return error(new ESLVal("TypeError",_v307,new ESLVal("type mismatch: Int and ").add(ppType(t,typeEnv))));
+      }
+      }
+      }
+    case "PVar": {ESLVal $765 = _v87.termRef(0);
+        ESLVal $764 = _v87.termRef(1);
+        ESLVal $763 = _v87.termRef(2);
+        
+        {ESLVal _v306 = $765;
+        
+        {ESLVal n = $764;
+        
+        {ESLVal pt = $763;
+        
+        return f.apply(t,ESLVal.list(new ESLVal("Map",n,t)).add(valueEnv));
+      }
+      }
+      }
+      }
+    case "PStr": {ESLVal $762 = _v87.termRef(0);
+        ESLVal $761 = _v87.termRef(1);
+        
+        {ESLVal _v305 = $762;
+        
+        {ESLVal s = $761;
+        
+        if(isStrType(typeNF(t,typeEnv)).boolVal)
+        return f.apply(theTypeStr,valueEnv);
+        else
+          return error(new ESLVal("TypeError",_v305,new ESLVal("type mismatch: Str and ").add(ppType(t,typeEnv))));
+      }
+      }
+      }
+    case "PTerm": {ESLVal $760 = _v87.termRef(0);
+        ESLVal $759 = _v87.termRef(1);
+        ESLVal $758 = _v87.termRef(2);
+        ESLVal $757 = _v87.termRef(3);
+        
+        {ESLVal _v304 = $760;
+        
+        {ESLVal n = $759;
+        
+        {ESLVal ts = $758;
+        
+        {ESLVal ps = $757;
+        
+        return termPatternType(_v304,n,substTypesEnv(typeEnv,ts),ps,t,selfType,valueEnv,cnstrEnv,typeEnv,f);
+      }
+      }
+      }
+      }
+      }
+      default: {ESLVal _v325 = _v87;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("unknown type of pattern: ").add(_v325)));
+      }
+    }
+    }
+  }
+  private static ESLVal patternType = new ESLVal(new Function(new ESLVal("patternType"),null) { public ESLVal apply(ESLVal... args) { return patternType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]); }});
+  private static ESLVal addPatternType(ESLVal l,ESLVal p1,ESLVal p2,ESLVal valueType,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv,ESLVal f) {
+    
+    return patternType(l,p1,valueType,selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun195"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          ESLVal _v275 = $args[0];
+      ESLVal _v276 = $args[1];
+      return patternType(l,p2,valueType,selfType,_v276,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun196"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal _v277 = $args[0];
+            ESLVal _v278 = $args[1];
+            {ESLVal _v88 = valueType;
+                  
+                  switch(_v88.termName) {
+                  case "ListType": {ESLVal $791 = _v88.termRef(0);
+                    ESLVal $790 = _v88.termRef(1);
+                    
+                    {ESLVal tl = $791;
+                    
+                    {ESLVal t = $790;
+                    
+                    {ESLVal _v89 = p1;
+                    ESLVal _v90 = p2;
+                    
+                    switch(_v89.termName) {
+                    case "PCons": {ESLVal $824 = _v89.termRef(0);
+                      ESLVal $823 = _v89.termRef(1);
+                      ESLVal $822 = _v89.termRef(2);
+                      
+                      switch($822.termName) {
+                      case "PNil": {ESLVal $825 = $822.termRef(0);
+                        
+                        switch(_v90.termName) {
+                        case "PVar": {ESLVal $828 = _v90.termRef(0);
+                          ESLVal $827 = _v90.termRef(1);
+                          ESLVal $826 = _v90.termRef(2);
+                          
+                          {ESLVal l1 = $824;
+                          
+                          {ESLVal p = $823;
+                          
+                          {ESLVal l3 = $825;
+                          
+                          {ESLVal l4 = $828;
+                          
+                          {ESLVal n2 = $827;
+                          
+                          {ESLVal t2 = $826;
+                          
+                          return f.apply(valueType,_v278);
+                        }
+                        }
+                        }
+                        }
+                        }
+                        }
+                        }
+                        default: {ESLVal _v298 = _v89;
+                          
+                          {ESLVal _v299 = _v90;
+                          
+                          return error(new ESLVal("TypeError",l,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
+                        }
+                        }
+                      }
+                      }
+                      default: {ESLVal _v300 = _v89;
+                        
+                        {ESLVal _v301 = _v90;
+                        
+                        return error(new ESLVal("TypeError",l,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
+                      }
+                      }
+                    }
+                    }
+                  case "PVar": {ESLVal $807 = _v89.termRef(0);
+                      ESLVal $806 = _v89.termRef(1);
+                      ESLVal $805 = _v89.termRef(2);
+                      
+                      switch(_v90.termName) {
+                      case "PCons": {ESLVal $820 = _v90.termRef(0);
+                        ESLVal $819 = _v90.termRef(1);
+                        ESLVal $818 = _v90.termRef(2);
+                        
+                        switch($818.termName) {
+                        case "PNil": {ESLVal $821 = $818.termRef(0);
+                          
+                          {ESLVal l1 = $807;
+                          
+                          {ESLVal n = $806;
+                          
+                          {ESLVal _v293 = $805;
+                          
+                          {ESLVal l2 = $820;
+                          
+                          {ESLVal p = $819;
+                          
+                          {ESLVal l3 = $821;
+                          
+                          return f.apply(valueType,_v278);
+                        }
+                        }
+                        }
+                        }
+                        }
+                        }
+                        }
+                        default: {ESLVal _v294 = _v89;
+                          
+                          {ESLVal _v295 = _v90;
+                          
+                          return error(new ESLVal("TypeError",l,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
+                        }
+                        }
+                      }
+                      }
+                    case "PAdd": {ESLVal $810 = _v90.termRef(0);
+                        ESLVal $809 = _v90.termRef(1);
+                        ESLVal $808 = _v90.termRef(2);
+                        
+                        switch($809.termName) {
+                        case "PCons": {ESLVal $813 = $809.termRef(0);
+                          ESLVal $812 = $809.termRef(1);
+                          ESLVal $811 = $809.termRef(2);
+                          
+                          switch($811.termName) {
+                          case "PNil": {ESLVal $814 = $811.termRef(0);
+                            
+                            switch($808.termName) {
+                            case "PVar": {ESLVal $817 = $808.termRef(0);
+                              ESLVal $816 = $808.termRef(1);
+                              ESLVal $815 = $808.termRef(2);
+                              
+                              {ESLVal l1 = $807;
+                              
+                              {ESLVal n1 = $806;
+                              
+                              {ESLVal t1 = $805;
+                              
+                              {ESLVal l2 = $810;
+                              
+                              {ESLVal l3 = $813;
+                              
+                              {ESLVal p = $812;
+                              
+                              {ESLVal l5 = $814;
+                              
+                              {ESLVal l6 = $817;
+                              
+                              {ESLVal n3 = $816;
+                              
+                              {ESLVal t3 = $815;
+                              
+                              return f.apply(valueType,_v278);
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            default: {ESLVal _v287 = _v89;
+                              
+                              {ESLVal _v288 = _v90;
+                              
+                              return error(new ESLVal("TypeError",l,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
+                            }
+                            }
+                          }
+                          }
+                          default: {ESLVal _v289 = _v89;
+                            
+                            {ESLVal _v290 = _v90;
+                            
+                            return error(new ESLVal("TypeError",l,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
+                          }
+                          }
+                        }
+                        }
+                        default: {ESLVal _v291 = _v89;
+                          
+                          {ESLVal _v292 = _v90;
+                          
+                          return error(new ESLVal("TypeError",l,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
+                        }
+                        }
+                      }
+                      }
+                      default: {ESLVal _v296 = _v89;
+                        
+                        {ESLVal _v297 = _v90;
+                        
+                        return error(new ESLVal("TypeError",l,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
+                      }
+                      }
+                    }
+                    }
+                  case "PAdd": {ESLVal $794 = _v89.termRef(0);
+                      ESLVal $793 = _v89.termRef(1);
+                      ESLVal $792 = _v89.termRef(2);
+                      
+                      switch($793.termName) {
+                      case "PVar": {ESLVal $797 = $793.termRef(0);
+                        ESLVal $796 = $793.termRef(1);
+                        ESLVal $795 = $793.termRef(2);
+                        
+                        switch($792.termName) {
+                        case "PCons": {ESLVal $800 = $792.termRef(0);
+                          ESLVal $799 = $792.termRef(1);
+                          ESLVal $798 = $792.termRef(2);
+                          
+                          switch($798.termName) {
+                          case "PNil": {ESLVal $801 = $798.termRef(0);
+                            
+                            switch(_v90.termName) {
+                            case "PVar": {ESLVal $804 = _v90.termRef(0);
+                              ESLVal $803 = _v90.termRef(1);
+                              ESLVal $802 = _v90.termRef(2);
+                              
+                              {ESLVal l1 = $794;
+                              
+                              {ESLVal l2 = $797;
+                              
+                              {ESLVal n1 = $796;
+                              
+                              {ESLVal t1 = $795;
+                              
+                              {ESLVal l3 = $800;
+                              
+                              {ESLVal p = $799;
+                              
+                              {ESLVal l5 = $801;
+                              
+                              {ESLVal l6 = $804;
+                              
+                              {ESLVal n3 = $803;
+                              
+                              {ESLVal t3 = $802;
+                              
+                              return f.apply(valueType,_v278);
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            }
+                            default: {ESLVal _v279 = _v89;
+                              
+                              {ESLVal _v280 = _v90;
+                              
+                              return error(new ESLVal("TypeError",l,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
+                            }
+                            }
+                          }
+                          }
+                          default: {ESLVal _v281 = _v89;
+                            
+                            {ESLVal _v282 = _v90;
+                            
+                            return error(new ESLVal("TypeError",l,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
+                          }
+                          }
+                        }
+                        }
+                        default: {ESLVal _v283 = _v89;
+                          
+                          {ESLVal _v284 = _v90;
+                          
+                          return error(new ESLVal("TypeError",l,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
+                        }
+                        }
+                      }
+                      }
+                      default: {ESLVal _v285 = _v89;
+                        
+                        {ESLVal _v286 = _v90;
+                        
+                        return error(new ESLVal("TypeError",l,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
+                      }
+                      }
+                    }
+                    }
+                    default: {ESLVal _v302 = _v89;
+                      
+                      {ESLVal _v303 = _v90;
+                      
+                      return error(new ESLVal("TypeError",l,new ESLVal("patterns must be [p] + p, p + [p] + p, or p + [p]")));
+                    }
+                    }
+                  }
+                  }
+                  }
+                  }
+                  }
+                case "TypeClosure": {ESLVal $789 = _v88.termRef(0);
+                    
+                    {ESLVal g = $789;
+                    
+                    return addPatternType(l,p1,p2,g.apply(),selfType,_v278,cnstrEnv,typeEnv,f);
+                  }
+                  }
+                  default: {ESLVal t = _v88;
+                    
+                    return error(new ESLVal("TypeError",l,new ESLVal("+ expects lists: ").add(ppType(valueType,typeEnv))));
+                  }
+                }
+                }
+              }
+            }));
+        }
+      }));
+  }
+  private static ESLVal addPatternType = new ESLVal(new Function(new ESLVal("addPatternType"),null) { public ESLVal apply(ESLVal... args) { return addPatternType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8]); }});
+  private static ESLVal applyTypePatternType(ESLVal l,ESLVal p,ESLVal args,ESLVal valueType,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv,ESLVal f) {
+    
+    return patternType(l,p,valueType,selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun197"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          ESLVal _v271 = $args[0];
+      ESLVal _v272 = $args[1];
+      {ESLVal _v91 = typeNF(_v271,typeEnv);
+            
+            switch(_v91.termName) {
+            case "TypeFun": {ESLVal $834 = _v91.termRef(0);
+              ESLVal $833 = _v91.termRef(1);
+              ESLVal $832 = _v91.termRef(2);
+              
+              {ESLVal fl = $834;
+              
+              {ESLVal ns = $833;
+              
+              {ESLVal t = $832;
+              
+              if(length.apply(args).eql(length.apply(ns)).boolVal)
+              {ESLVal _v274 = substTypeEnv(zipTypeEnv(ns,args).add(typeEnv),t);
+                
+                if(typeEqual(_v274,valueType).boolVal)
+                return f.apply(_v274,_v272);
+                else
+                  return error(new ESLVal("TypeError",l,new ESLVal("value type ").add(ppType(valueType,typeEnv).add(new ESLVal(" does not match pattern type ").add(ppType(_v274,typeEnv).add(new ESLVal(" ").add(ppTypeEnv(typeEnv))))))));
+              }
+              else
+                return error(new ESLVal("TypeError",l,new ESLVal("expecting ").add(length.apply(ns).add(new ESLVal(" args, but suplied with ").add(length.apply(args))))));
+            }
+            }
+            }
+            }
+          case "ForallType": {ESLVal $831 = _v91.termRef(0);
+              ESLVal $830 = _v91.termRef(1);
+              ESLVal $829 = _v91.termRef(2);
+              
+              {ESLVal fl = $831;
+              
+              {ESLVal ns = $830;
+              
+              {ESLVal t = $829;
+              
+              if(length.apply(args).eql(length.apply(ns)).boolVal)
+              {ESLVal _v273 = substTypeEnv(zipTypeEnv(ns,args).add(typeEnv),t);
+                
+                if(typeEqual(_v273,valueType).boolVal)
+                return f.apply(_v273,_v272);
+                else
+                  return error(new ESLVal("TypeError",l,new ESLVal("value type ").add(ppType(valueType,typeEnv).add(new ESLVal(" does not match pattern type ").add(ppType(_v273,typeEnv).add(new ESLVal(" ").add(ppTypeEnv(typeEnv))))))));
+              }
+              else
+                return error(new ESLVal("TypeError",l,new ESLVal("expecting ").add(length.apply(ns).add(new ESLVal(" args, but suplied with ").add(length.apply(args))))));
+            }
+            }
+            }
+            }
+            default: {ESLVal t = _v91;
+              
+              return f.apply(t,_v272);
+            }
+          }
+          }
+        }
+      }));
+  }
+  private static ESLVal applyTypePatternType = new ESLVal(new Function(new ESLVal("applyTypePatternType"),null) { public ESLVal apply(ESLVal... args) { return applyTypePatternType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8]); }});
+  private static ESLVal termPatternType(ESLVal l,ESLVal n,ESLVal genericArgs,ESLVal ps,ESLVal valueType,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv,ESLVal f) {
+    
+    {ESLVal patternType = getTermPatternType(l,n,genericArgs,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(typeEqual(patternType,valueType).boolVal)
+      {ESLVal _v92 = typeNF(valueType,typeEnv);
+        
+        switch(_v92.termName) {
+        case "UnionType": {ESLVal $836 = _v92.termRef(0);
+          ESLVal $835 = _v92.termRef(1);
+          
+          {ESLVal ul = $836;
+          
+          {ESLVal cs = $835;
+          
+          { LetRec letrec = new LetRec() {
+          ESLVal getCnstrArgs = new ESLVal(new Function(new ESLVal("getCnstrArgs"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal _v265 = $args[0];
+            {ESLVal _v93 = _v265;
+                  
+                  if(_v93.isCons())
+                  {ESLVal $837 = _v93.head();
+                    ESLVal $838 = _v93.tail();
+                    
+                    switch($837.termName) {
+                    case "TermType": {ESLVal $841 = $837.termRef(0);
+                      ESLVal $840 = $837.termRef(1);
+                      ESLVal $839 = $837.termRef(2);
+                      
+                      {ESLVal tl = $841;
+                      
+                      {ESLVal m = $840;
+                      
+                      {ESLVal args = $839;
+                      
+                      {ESLVal _v266 = $838;
+                      
+                      if(m.eql(n).boolVal)
+                      return args;
+                      else
+                        {ESLVal t = $837;
+                          
+                          {ESLVal _v267 = $838;
+                          
+                          return getCnstrArgs.apply(_v267);
+                        }
+                        }
+                    }
+                    }
+                    }
+                    }
+                    }
+                    default: {ESLVal t = $837;
+                      
+                      {ESLVal _v268 = $838;
+                      
+                      return getCnstrArgs.apply(_v268);
+                    }
+                    }
+                  }
+                  }
+                else if(_v93.isNil())
+                  return error(new ESLVal("TypeError",l,new ESLVal("cannot find constructor for ").add(n)));
+                else return error(new ESLVal("case error at Pos(56644,56903)").add(ESLVal.list(_v93)));
+                }
+              }
+            });
+          
+          public ESLVal get(String name) {
+            switch(name) {
+              case "getCnstrArgs": return getCnstrArgs;
+              
+              default: throw new Error("cannot find letrec binding");
+            }
+            }
+          };
+        ESLVal getCnstrArgs = letrec.get("getCnstrArgs");
+        
+          {ESLVal argTypes = getCnstrArgs.apply(cs);
+          
+          if(length.apply(ps).eql(length.apply(argTypes)).boolVal)
+          return patternTypes(l,ps,argTypes,selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun198"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal _v269 = $args[0];
+            ESLVal _v270 = $args[1];
+            return f.apply(typeNF(valueType,typeEnv),_v270);
+              }
+            }));
+          else
+            return error(new ESLVal("TypeError",l,new ESLVal("arity mismatch.")));
+        }}
+        
+        }
+        }
+        }
+        default: {ESLVal t = _v92;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("expecting a data type: ").add(valueType)));
+        }
+      }
+      }
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("term pattern type ").add(ppType(patternType,typeEnv).add(new ESLVal(" does not match supplied value type ").add(ppType(valueType,typeEnv))))));
+    }
+  }
+  private static ESLVal termPatternType = new ESLVal(new Function(new ESLVal("termPatternType"),null) { public ESLVal apply(ESLVal... args) { return termPatternType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8],args[9]); }});
+  private static ESLVal typeNF(ESLVal t,ESLVal typeEnv) {
+    
+    {ESLVal _v94 = substTypeEnv(typeEnv,t);
+      
+      switch(_v94.termName) {
+      case "ApplyTypeFun": {ESLVal $852 = _v94.termRef(0);
+        ESLVal $851 = _v94.termRef(1);
+        ESLVal $850 = _v94.termRef(2);
+        
+        {ESLVal l = $852;
+        
+        {ESLVal op = $851;
+        
+        {ESLVal args = $850;
+        
+        {ESLVal _v96 = typeNF(op,typeEnv);
+        
+        switch(_v96.termName) {
+        case "TypeFun": {ESLVal $858 = _v96.termRef(0);
+          ESLVal $857 = _v96.termRef(1);
+          ESLVal $856 = _v96.termRef(2);
+          
+          {ESLVal _v261 = $858;
+          
+          {ESLVal ns = $857;
+          
+          {ESLVal _v262 = $856;
+          
+          if(length.apply(args).eql(length.apply(ns)).boolVal)
+          return typeNF(substTypeEnv(zipTypeEnv(ns,args),_v262),typeEnv);
+          else
+            return error(new ESLVal("TypeError",_v261,new ESLVal("function arity error")));
+        }
+        }
+        }
+        }
+        default: {ESLVal _v263 = _v96;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("expecting a type function: ").add(ppType(typeNF(op,typeEnv),typeEnv))));
+        }
+      }
+      }
+      }
+      }
+      }
+      }
+    case "TypeClosure": {ESLVal $849 = _v94.termRef(0);
+        
+        {ESLVal f = $849;
+        
+        return typeNF(f.apply(),typeEnv);
+      }
+      }
+    case "RecType": {ESLVal $848 = _v94.termRef(0);
+        ESLVal $847 = _v94.termRef(1);
+        ESLVal $846 = _v94.termRef(2);
+        
+        {ESLVal l = $848;
+        
+        {ESLVal n = $847;
+        
+        {ESLVal _v260 = $846;
+        
+        return typeNF(substType(new ESLVal("RecType",l,n,_v260),n,_v260),typeEnv);
+      }
+      }
+      }
+      }
+    case "ExtendedAct": {ESLVal $845 = _v94.termRef(0);
+        ESLVal $844 = _v94.termRef(1);
+        ESLVal $843 = _v94.termRef(2);
+        ESLVal $842 = _v94.termRef(3);
+        
+        {ESLVal l1 = $845;
+        
+        {ESLVal parent = $844;
+        
+        {ESLVal decs1 = $843;
+        
+        {ESLVal ms1 = $842;
+        
+        {ESLVal _v95 = typeNF(parent,typeEnv);
+        
+        switch(_v95.termName) {
+        case "ActType": {ESLVal $855 = _v95.termRef(0);
+          ESLVal $854 = _v95.termRef(1);
+          ESLVal $853 = _v95.termRef(2);
+          
+          {ESLVal l2 = $855;
+          
+          {ESLVal decs2 = $854;
+          
+          {ESLVal ms2 = $853;
+          
+          return new ESLVal("ActType",l1,decs2.add(decs1),ms2.add(ms1));
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(58214,58349)").add(ESLVal.list(_v95)));
+      }
+      }
+      }
+      }
+      }
+      }
+      }
+      default: {ESLVal _v264 = _v94;
+        
+        return _v264;
+      }
+    }
+    }
+  }
+  private static ESLVal typeNF = new ESLVal(new Function(new ESLVal("typeNF"),null) { public ESLVal apply(ESLVal... args) { return typeNF(args[0],args[1]); }});
+  private static ESLVal getTermPatternType(ESLVal l,ESLVal n,ESLVal genericArgs,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t = lookupType(n,cnstrEnv);
+      
+      if(t.eql($null).boolVal)
+      return error(new ESLVal("TypeError",l,new ESLVal("unknown constructor ").add(n)));
+      else
+        if(length.apply(genericArgs).gre($zero).boolVal)
+          return getGenericTermPatternType(l,t,genericArgs,selfType,valueEnv,cnstrEnv,typeEnv);
+          else
+            return t;
+    }
+  }
+  private static ESLVal getTermPatternType = new ESLVal(new Function(new ESLVal("getTermPatternType"),null) { public ESLVal apply(ESLVal... args) { return getTermPatternType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal getGenericTermPatternType(ESLVal l,ESLVal t,ESLVal genericArgs,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v97 = t;
+      
+      switch(_v97.termName) {
+      case "RecType": {ESLVal $864 = _v97.termRef(0);
+        ESLVal $863 = _v97.termRef(1);
+        ESLVal $862 = _v97.termRef(2);
+        
+        {ESLVal rl = $864;
+        
+        {ESLVal rn = $863;
+        
+        {ESLVal rt = $862;
+        
+        return getGenericTermPatternType(l,substType(new ESLVal("RecType",rl,rn,rt),rn,rt),genericArgs,selfType,valueEnv,cnstrEnv,typeEnv);
+      }
+      }
+      }
+      }
+    case "TypeFun": {ESLVal $861 = _v97.termRef(0);
+        ESLVal $860 = _v97.termRef(1);
+        ESLVal $859 = _v97.termRef(2);
+        
+        {ESLVal al = $861;
+        
+        {ESLVal ns = $860;
+        
+        {ESLVal _v258 = $859;
+        
+        if(length.apply(ns).eql(length.apply(genericArgs)).boolVal)
+        {ESLVal e = zipTypeEnv(ns,genericArgs);
+          
+          return substTypeEnv(e.add(typeEnv),_v258);
+        }
+        else
+          return error(new ESLVal("TypeError",l,new ESLVal("generic constructor mismatch")));
+      }
+      }
+      }
+      }
+      default: {ESLVal _v259 = _v97;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a generic type: ").add(ppType(_v259,typeEnv))));
+      }
+    }
+    }
+  }
+  private static ESLVal getGenericTermPatternType = new ESLVal(new Function(new ESLVal("getGenericTermPatternType"),null) { public ESLVal apply(ESLVal... args) { return getGenericTermPatternType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal nilType(ESLVal l,ESLVal listType,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv,ESLVal f) {
+    
+    {ESLVal _v98 = typeNF(listType,typeEnv);
+      
+      switch(_v98.termName) {
+      case "ListType": {ESLVal $867 = _v98.termRef(0);
+        ESLVal $866 = _v98.termRef(1);
+        
+        {ESLVal ltl = $867;
+        
+        {ESLVal et = $866;
+        
+        return f.apply(new ESLVal("ForallType",l,ESLVal.list(new ESLVal("T")),new ESLVal("ListType",l,new ESLVal("VarType",l,new ESLVal("T")))),valueEnv);
+      }
+      }
+      }
+    case "TypeClosure": {ESLVal $865 = _v98.termRef(0);
+        
+        {ESLVal g = $865;
+        
+        return nilType(l,g.apply(),selfType,valueEnv,cnstrEnv,typeEnv,f);
+      }
+      }
+      default: {ESLVal _v257 = _v98;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a list type: ").add(ppType(_v257,typeEnv))));
+      }
+    }
+    }
+  }
+  private static ESLVal nilType = new ESLVal(new Function(new ESLVal("nilType"),null) { public ESLVal apply(ESLVal... args) { return nilType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal emptyBagType(ESLVal l,ESLVal bagType,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv,ESLVal f) {
+    
+    {ESLVal _v99 = bagType;
+      
+      switch(_v99.termName) {
+      case "BagType": {ESLVal $869 = _v99.termRef(0);
+        ESLVal $868 = _v99.termRef(1);
+        
+        {ESLVal ltl = $869;
+        
+        {ESLVal et = $868;
+        
+        return f.apply(new ESLVal("ForallType",l,ESLVal.list(new ESLVal("T")),new ESLVal("BagType",l,new ESLVal("VarType",l,new ESLVal("T")))),valueEnv);
+      }
+      }
+      }
+      default: {ESLVal _v256 = _v99;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a bag type: ").add(ppType(_v256,typeEnv))));
+      }
+    }
+    }
+  }
+  private static ESLVal emptyBagType = new ESLVal(new Function(new ESLVal("emptyBagType"),null) { public ESLVal apply(ESLVal... args) { return emptyBagType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal emptySetType(ESLVal l,ESLVal setType,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv,ESLVal f) {
+    
+    {ESLVal _v100 = setType;
+      
+      switch(_v100.termName) {
+      case "SetType": {ESLVal $871 = _v100.termRef(0);
+        ESLVal $870 = _v100.termRef(1);
+        
+        {ESLVal ltl = $871;
+        
+        {ESLVal et = $870;
+        
+        return f.apply(new ESLVal("ForallType",l,ESLVal.list(new ESLVal("T")),new ESLVal("SetType",l,new ESLVal("VarType",l,new ESLVal("T")))),valueEnv);
+      }
+      }
+      }
+      default: {ESLVal _v255 = _v100;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a set type: ").add(ppType(_v255,typeEnv))));
+      }
+    }
+    }
+  }
+  private static ESLVal emptySetType = new ESLVal(new Function(new ESLVal("emptySetType"),null) { public ESLVal apply(ESLVal... args) { return emptySetType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal consPatternType(ESLVal l,ESLVal h,ESLVal t,ESLVal listType,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv,ESLVal f) {
+    
+    {ESLVal _v101 = typeNF(listType,typeEnv);
+      
+      switch(_v101.termName) {
+      case "ListType": {ESLVal $874 = _v101.termRef(0);
+        ESLVal $873 = _v101.termRef(1);
+        
+        {ESLVal ltl = $874;
+        
+        {ESLVal et = $873;
+        
+        return patternType(l,h,substTypeEnv(typeEnv,et),selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun199"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v250 = $args[0];
+        ESLVal _v251 = $args[1];
+        return patternType(l,t,listType,selfType,_v251,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun200"),getSelf()) {
+                public ESLVal apply(ESLVal... $args) {
+                  ESLVal _v252 = $args[0];
+              ESLVal _v253 = $args[1];
+              return f.apply(_v250,_v253);
+                }
+              }));
+          }
+        }));
+      }
+      }
+      }
+    case "TypeClosure": {ESLVal $872 = _v101.termRef(0);
+        
+        {ESLVal g = $872;
+        
+        return consPatternType(l,h,t,g.apply(),selfType,valueEnv,cnstrEnv,typeEnv,f);
+      }
+      }
+      default: {ESLVal _v254 = _v101;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a list type: ").add(ppType(_v254,typeEnv))));
+      }
+    }
+    }
+  }
+  private static ESLVal consPatternType = new ESLVal(new Function(new ESLVal("consPatternType"),null) { public ESLVal apply(ESLVal... args) { return consPatternType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8]); }});
+  private static ESLVal bagConsPatternType(ESLVal l,ESLVal h,ESLVal t,ESLVal bagType,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv,ESLVal f) {
+    
+    {ESLVal _v102 = bagType;
+      
+      switch(_v102.termName) {
+      case "BagType": {ESLVal $876 = _v102.termRef(0);
+        ESLVal $875 = _v102.termRef(1);
+        
+        {ESLVal ltl = $876;
+        
+        {ESLVal et = $875;
+        
+        return patternType(l,h,substTypeEnv(typeEnv,et),selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun201"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v245 = $args[0];
+        ESLVal _v246 = $args[1];
+        return patternType(l,t,bagType,selfType,_v246,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun202"),getSelf()) {
+                public ESLVal apply(ESLVal... $args) {
+                  ESLVal _v247 = $args[0];
+              ESLVal _v248 = $args[1];
+              return f.apply(_v245,_v248);
+                }
+              }));
+          }
+        }));
+      }
+      }
+      }
+      default: {ESLVal _v249 = _v102;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a bag type: ").add(ppType(_v249,typeEnv))));
+      }
+    }
+    }
+  }
+  private static ESLVal bagConsPatternType = new ESLVal(new Function(new ESLVal("bagConsPatternType"),null) { public ESLVal apply(ESLVal... args) { return bagConsPatternType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8]); }});
+  private static ESLVal setConsPatternType(ESLVal l,ESLVal h,ESLVal t,ESLVal setType,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv,ESLVal f) {
+    
+    {ESLVal _v103 = setType;
+      
+      switch(_v103.termName) {
+      case "SetType": {ESLVal $878 = _v103.termRef(0);
+        ESLVal $877 = _v103.termRef(1);
+        
+        {ESLVal ltl = $878;
+        
+        {ESLVal et = $877;
+        
+        return patternType(l,h,substTypeEnv(typeEnv,et),selfType,valueEnv,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun203"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v240 = $args[0];
+        ESLVal _v241 = $args[1];
+        return patternType(l,t,setType,selfType,_v241,cnstrEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun204"),getSelf()) {
+                public ESLVal apply(ESLVal... $args) {
+                  ESLVal _v242 = $args[0];
+              ESLVal _v243 = $args[1];
+              return f.apply(_v240,_v243);
+                }
+              }));
+          }
+        }));
+      }
+      }
+      }
+      default: {ESLVal _v244 = _v103;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a set type: ").add(ppType(_v244,typeEnv))));
+      }
+    }
+    }
+  }
+  private static ESLVal setConsPatternType = new ESLVal(new Function(new ESLVal("setConsPatternType"),null) { public ESLVal apply(ESLVal... args) { return setConsPatternType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8]); }});
+  private static ESLVal binExpType(ESLVal l,ESLVal e1,ESLVal op,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v104 = op;
+      
+      switch(_v104.strVal) {
+      case "+": return plusExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "-": return subExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "*": return mulExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "/": return divExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case ":": return consExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "=": return eqlExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "<>": return neqlExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "and": return andExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "andalso": return andExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "or": return orExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "orelse": return orExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case ">": return compareExpType(l,e1,new ESLVal(">"),e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case ">=": return compareExpType(l,e1,new ESLVal(">="),e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "<": return compareExpType(l,e1,new ESLVal("<"),e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "<=": return compareExpType(l,e1,new ESLVal("<="),e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "..": return dotDotExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "%": return percentExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+    case "@": return atExpType(l,e1,e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      default: {ESLVal _v239 = _v104;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("unknown operator: ").add(_v239)));
+      }
+    }
+    }
+  }
+  private static ESLVal binExpType = new ESLVal(new Function(new ESLVal("binExpType"),null) { public ESLVal apply(ESLVal... args) { return binExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]); }});
+  private static ESLVal andExpType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal t2 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(isBoolType(t1).and(isBoolType(t2)).boolVal)
+      return t1;
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("and expects boolean arguments: ").add(ppType(t1,typeEnv).add(new ESLVal(" ").add(ppType(t2,typeEnv))))));
+    }
+  }
+  private static ESLVal andExpType = new ESLVal(new Function(new ESLVal("andExpType"),null) { public ESLVal apply(ESLVal... args) { return andExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal atExpType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal t2 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(typeEqual(t1,t2).boolVal)
+      return t1;
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("@ expects arguments to be same type: ").add(ppType(t1,typeEnv).add(new ESLVal(" ").add(ppType(t2,typeEnv))))));
+    }
+  }
+  private static ESLVal atExpType = new ESLVal(new Function(new ESLVal("atExpType"),null) { public ESLVal apply(ESLVal... args) { return atExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal dotDotExpType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal t2 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(isIntType(t1).and(isIntType(t2)).boolVal)
+      return new ESLVal("ListType",l,theTypeInt);
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal(".. expects integer arguments: ").add(ppType(t1,typeEnv).add(new ESLVal(" ").add(ppType(t2,typeEnv))))));
+    }
+  }
+  private static ESLVal dotDotExpType = new ESLVal(new Function(new ESLVal("dotDotExpType"),null) { public ESLVal apply(ESLVal... args) { return dotDotExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal percentExpType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal t2 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(isIntType(t1).and(isIntType(t2)).boolVal)
+      return theTypeInt;
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("% expects integer arguments: ").add(ppType(t1,typeEnv).add(new ESLVal(" ").add(ppType(t2,typeEnv))))));
+    }
+  }
+  private static ESLVal percentExpType = new ESLVal(new Function(new ESLVal("percentExpType"),null) { public ESLVal apply(ESLVal... args) { return percentExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal compareExpType(ESLVal l,ESLVal e1,ESLVal op,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal t2 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(isNumType(t1).and(isNumType(t2)).boolVal)
+      return new ESLVal("BoolType",l);
+      else
+        return error(new ESLVal("TypeError",l,op.add(new ESLVal(" expects numeric arguments: ").add(ppType(t1,typeEnv).add(new ESLVal(" ").add(ppType(t2,typeEnv)))))));
+    }
+  }
+  private static ESLVal compareExpType = new ESLVal(new Function(new ESLVal("compareExpType"),null) { public ESLVal apply(ESLVal... args) { return compareExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]); }});
+  private static ESLVal orExpType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal t2 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(isBoolType(t1).and(isBoolType(t2)).boolVal)
+      return t1;
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("or expects boolean arguments: ").add(ppType(t1,typeEnv).add(new ESLVal(" ").add(ppType(t2,typeEnv))))));
+    }
+  }
+  private static ESLVal orExpType = new ESLVal(new Function(new ESLVal("orExpType"),null) { public ESLVal apply(ESLVal... args) { return orExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal eqlExpType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal t2 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(typeEqual(t1,t2).boolVal)
+      return theTypeBool;
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("= expects types to agree: ").add(ppType(t1,typeEnv).add(new ESLVal(" <> ").add(ppType(t2,typeEnv))))));
+    }
+  }
+  private static ESLVal eqlExpType = new ESLVal(new Function(new ESLVal("eqlExpType"),null) { public ESLVal apply(ESLVal... args) { return eqlExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal neqlExpType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal t2 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(typeEqual(t1,t2).boolVal)
+      return theTypeBool;
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("<> expects types to agree: ").add(ppType(t1,typeEnv).add(new ESLVal(" <> ").add(ppType(t2,typeEnv))))));
+    }
+  }
+  private static ESLVal neqlExpType = new ESLVal(new Function(new ESLVal("neqlExpType"),null) { public ESLVal apply(ESLVal... args) { return neqlExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal consExpType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = typeNF(expType(e1,selfType,valueEnv,cnstrEnv,typeEnv),typeEnv);
+      ESLVal t2 = typeNF(expType(e2,selfType,valueEnv,cnstrEnv,typeEnv),typeEnv);
+      
+      {ESLVal _v105 = t2;
+      ESLVal _v106 = t1;
+      
+      switch(_v105.termName) {
+      case "ListType": {ESLVal $880 = _v105.termRef(0);
+        ESLVal $879 = _v105.termRef(1);
+        
+        {ESLVal _v238 = $880;
+        
+        {ESLVal elementType = $879;
+        
+        {ESLVal headType = _v106;
+        
+        if(subType(headType,elementType).boolVal)
+        return t2;
+        else
+          return error(new ESLVal("TypeError",_v238,new ESLVal(": expects head type ").add(ppType(headType,typeEnv).add(new ESLVal(" and element type ").add(ppType(elementType,typeEnv).add(new ESLVal(" to agree")))))));
+      }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(67404,67685)").add(ESLVal.list(_v105,_v106)));
+    }
+    }
+    }
+  }
+  private static ESLVal consExpType = new ESLVal(new Function(new ESLVal("consExpType"),null) { public ESLVal apply(ESLVal... args) { return consExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal divExpType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal t2 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {ESLVal _v107 = t1;
+      ESLVal _v108 = t2;
+      
+      switch(_v107.termName) {
+      case "IntType": {ESLVal $883 = _v107.termRef(0);
+        
+        switch(_v108.termName) {
+        case "IntType": {ESLVal $884 = _v108.termRef(0);
+          
+          {ESLVal l1 = $883;
+          
+          {ESLVal l2 = $884;
+          
+          return t1;
+        }
+        }
+        }
+        default: {ESLVal _v234 = _v107;
+          
+          {ESLVal _v235 = _v108;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for /: ").add(ppType(_v234,typeEnv).add(new ESLVal(" and ").add(ppType(_v235,typeEnv))))));
+        }
+        }
+      }
+      }
+    case "FloatType": {ESLVal $881 = _v107.termRef(0);
+        
+        switch(_v108.termName) {
+        case "FloatType": {ESLVal $882 = _v108.termRef(0);
+          
+          {ESLVal l1 = $881;
+          
+          {ESLVal l2 = $882;
+          
+          return t1;
+        }
+        }
+        }
+        default: {ESLVal _v232 = _v107;
+          
+          {ESLVal _v233 = _v108;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for /: ").add(ppType(_v232,typeEnv).add(new ESLVal(" and ").add(ppType(_v233,typeEnv))))));
+        }
+        }
+      }
+      }
+      default: {ESLVal _v236 = _v107;
+        
+        {ESLVal _v237 = _v108;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for /: ").add(ppType(_v236,typeEnv).add(new ESLVal(" and ").add(ppType(_v237,typeEnv))))));
+      }
+      }
+    }
+    }
+    }
+  }
+  private static ESLVal divExpType = new ESLVal(new Function(new ESLVal("divExpType"),null) { public ESLVal apply(ESLVal... args) { return divExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal mulExpType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal t2 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {ESLVal _v109 = t1;
+      ESLVal _v110 = t2;
+      
+      switch(_v109.termName) {
+      case "IntType": {ESLVal $888 = _v109.termRef(0);
+        
+        switch(_v110.termName) {
+        case "IntType": {ESLVal $890 = _v110.termRef(0);
+          
+          {ESLVal l1 = $888;
+          
+          {ESLVal l2 = $890;
+          
+          return t1;
+        }
+        }
+        }
+      case "FloatType": {ESLVal $889 = _v110.termRef(0);
+          
+          {ESLVal l1 = $888;
+          
+          {ESLVal l2 = $889;
+          
+          return t2;
+        }
+        }
+        }
+        default: {ESLVal _v228 = _v109;
+          
+          {ESLVal _v229 = _v110;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for *: ").add(ppType(_v228,typeEnv).add(new ESLVal(" and ").add(ppType(_v229,typeEnv))))));
+        }
+        }
+      }
+      }
+    case "FloatType": {ESLVal $885 = _v109.termRef(0);
+        
+        switch(_v110.termName) {
+        case "FloatType": {ESLVal $887 = _v110.termRef(0);
+          
+          {ESLVal l1 = $885;
+          
+          {ESLVal l2 = $887;
+          
+          return t1;
+        }
+        }
+        }
+      case "IntType": {ESLVal $886 = _v110.termRef(0);
+          
+          {ESLVal l1 = $885;
+          
+          {ESLVal l2 = $886;
+          
+          return t1;
+        }
+        }
+        }
+        default: {ESLVal _v226 = _v109;
+          
+          {ESLVal _v227 = _v110;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for *: ").add(ppType(_v226,typeEnv).add(new ESLVal(" and ").add(ppType(_v227,typeEnv))))));
+        }
+        }
+      }
+      }
+      default: {ESLVal _v230 = _v109;
+        
+        {ESLVal _v231 = _v110;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for *: ").add(ppType(_v230,typeEnv).add(new ESLVal(" and ").add(ppType(_v231,typeEnv))))));
+      }
+      }
+    }
+    }
+    }
+  }
+  private static ESLVal mulExpType = new ESLVal(new Function(new ESLVal("mulExpType"),null) { public ESLVal apply(ESLVal... args) { return mulExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal subExpType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal t2 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {ESLVal _v111 = t1;
+      ESLVal _v112 = t2;
+      
+      switch(_v111.termName) {
+      case "IntType": {ESLVal $894 = _v111.termRef(0);
+        
+        switch(_v112.termName) {
+        case "IntType": {ESLVal $896 = _v112.termRef(0);
+          
+          {ESLVal l1 = $894;
+          
+          {ESLVal l2 = $896;
+          
+          return t1;
+        }
+        }
+        }
+      case "FloatType": {ESLVal $895 = _v112.termRef(0);
+          
+          {ESLVal l1 = $894;
+          
+          {ESLVal l2 = $895;
+          
+          return t2;
+        }
+        }
+        }
+        default: {ESLVal _v222 = _v111;
+          
+          {ESLVal _v223 = _v112;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for -: ").add(ppType(_v222,typeEnv).add(new ESLVal(" and ").add(ppType(_v223,typeEnv))))));
+        }
+        }
+      }
+      }
+    case "FloatType": {ESLVal $891 = _v111.termRef(0);
+        
+        switch(_v112.termName) {
+        case "FloatType": {ESLVal $893 = _v112.termRef(0);
+          
+          {ESLVal l1 = $891;
+          
+          {ESLVal l2 = $893;
+          
+          return t1;
+        }
+        }
+        }
+      case "IntType": {ESLVal $892 = _v112.termRef(0);
+          
+          {ESLVal l1 = $891;
+          
+          {ESLVal l2 = $892;
+          
+          return t1;
+        }
+        }
+        }
+        default: {ESLVal _v220 = _v111;
+          
+          {ESLVal _v221 = _v112;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for -: ").add(ppType(_v220,typeEnv).add(new ESLVal(" and ").add(ppType(_v221,typeEnv))))));
+        }
+        }
+      }
+      }
+      default: {ESLVal _v224 = _v111;
+        
+        {ESLVal _v225 = _v112;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for -: ").add(ppType(_v224,typeEnv).add(new ESLVal(" and ").add(ppType(_v225,typeEnv))))));
+      }
+      }
+    }
+    }
+    }
+  }
+  private static ESLVal subExpType = new ESLVal(new Function(new ESLVal("subExpType"),null) { public ESLVal apply(ESLVal... args) { return subExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal plusExpType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t1 = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      ESLVal t2 = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {ESLVal _v113 = t1;
+      ESLVal _v114 = t2;
+      
+      switch(_v113.termName) {
+      case "StrType": {ESLVal $910 = _v113.termRef(0);
+        
+        {ESLVal _v214 = $910;
+        
+        {ESLVal _v215 = _v114;
+        
+        return t1;
+      }
+      }
+      }
+    case "IntType": {ESLVal $908 = _v113.termRef(0);
+        
+        switch(_v114.termName) {
+        case "IntType": {ESLVal $909 = _v114.termRef(0);
+          
+          {ESLVal l1 = $908;
+          
+          {ESLVal l2 = $909;
+          
+          return t1;
+        }
+        }
+        }
+        default: switch(_v114.termName) {
+          case "StrType": {ESLVal $897 = _v114.termRef(0);
+            
+            {ESLVal _v210 = _v113;
+            
+            {ESLVal _v211 = $897;
+            
+            return t2;
+          }
+          }
+          }
+          default: {ESLVal _v212 = _v113;
+            
+            {ESLVal _v213 = _v114;
+            
+            return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for +: ").add(ppType(_v212,typeEnv).add(new ESLVal(" and ").add(ppType(_v213,typeEnv))))));
+          }
+          }
+        }
+      }
+      }
+    case "FloatType": {ESLVal $906 = _v113.termRef(0);
+        
+        switch(_v114.termName) {
+        case "FloatType": {ESLVal $907 = _v114.termRef(0);
+          
+          {ESLVal l1 = $906;
+          
+          {ESLVal l2 = $907;
+          
+          return t1;
+        }
+        }
+        }
+        default: switch(_v114.termName) {
+          case "StrType": {ESLVal $897 = _v114.termRef(0);
+            
+            {ESLVal _v206 = _v113;
+            
+            {ESLVal _v207 = $897;
+            
+            return t2;
+          }
+          }
+          }
+          default: {ESLVal _v208 = _v113;
+            
+            {ESLVal _v209 = _v114;
+            
+            return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for +: ").add(ppType(_v208,typeEnv).add(new ESLVal(" and ").add(ppType(_v209,typeEnv))))));
+          }
+          }
+        }
+      }
+      }
+    case "ListType": {ESLVal $903 = _v113.termRef(0);
+        ESLVal $902 = _v113.termRef(1);
+        
+        switch(_v114.termName) {
+        case "ListType": {ESLVal $905 = _v114.termRef(0);
+          ESLVal $904 = _v114.termRef(1);
+          
+          {ESLVal l1 = $903;
+          
+          {ESLVal _v196 = $902;
+          
+          {ESLVal l2 = $905;
+          
+          {ESLVal _v197 = $904;
+          
+          if(typeEqual(_v196,_v197).boolVal)
+          return new ESLVal("ListType",l1,_v196);
+          else
+            switch(_v114.termName) {
+              case "StrType": {ESLVal $897 = _v114.termRef(0);
+                
+                {ESLVal _v198 = _v113;
+                
+                {ESLVal _v199 = $897;
+                
+                return _v197;
+              }
+              }
+              }
+              default: {ESLVal _v200 = _v113;
+                
+                {ESLVal _v201 = _v114;
+                
+                return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for +: ").add(ppType(_v200,typeEnv).add(new ESLVal(" and ").add(ppType(_v201,typeEnv))))));
+              }
+              }
+            }
+        }
+        }
+        }
+        }
+        }
+        default: switch(_v114.termName) {
+          case "StrType": {ESLVal $897 = _v114.termRef(0);
+            
+            {ESLVal _v202 = _v113;
+            
+            {ESLVal _v203 = $897;
+            
+            return t2;
+          }
+          }
+          }
+          default: {ESLVal _v204 = _v113;
+            
+            {ESLVal _v205 = _v114;
+            
+            return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for +: ").add(ppType(_v204,typeEnv).add(new ESLVal(" and ").add(ppType(_v205,typeEnv))))));
+          }
+          }
+        }
+      }
+      }
+    case "SetType": {ESLVal $899 = _v113.termRef(0);
+        ESLVal $898 = _v113.termRef(1);
+        
+        switch(_v114.termName) {
+        case "SetType": {ESLVal $901 = _v114.termRef(0);
+          ESLVal $900 = _v114.termRef(1);
+          
+          {ESLVal l1 = $899;
+          
+          {ESLVal _v186 = $898;
+          
+          {ESLVal l2 = $901;
+          
+          {ESLVal _v187 = $900;
+          
+          if(typeEqual(_v186,_v187).boolVal)
+          return new ESLVal("SetType",l1,_v186);
+          else
+            switch(_v114.termName) {
+              case "StrType": {ESLVal $897 = _v114.termRef(0);
+                
+                {ESLVal _v188 = _v113;
+                
+                {ESLVal _v189 = $897;
+                
+                return _v187;
+              }
+              }
+              }
+              default: {ESLVal _v190 = _v113;
+                
+                {ESLVal _v191 = _v114;
+                
+                return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for +: ").add(ppType(_v190,typeEnv).add(new ESLVal(" and ").add(ppType(_v191,typeEnv))))));
+              }
+              }
+            }
+        }
+        }
+        }
+        }
+        }
+        default: switch(_v114.termName) {
+          case "StrType": {ESLVal $897 = _v114.termRef(0);
+            
+            {ESLVal _v192 = _v113;
+            
+            {ESLVal _v193 = $897;
+            
+            return t2;
+          }
+          }
+          }
+          default: {ESLVal _v194 = _v113;
+            
+            {ESLVal _v195 = _v114;
+            
+            return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for +: ").add(ppType(_v194,typeEnv).add(new ESLVal(" and ").add(ppType(_v195,typeEnv))))));
+          }
+          }
+        }
+      }
+      }
+      default: switch(_v114.termName) {
+        case "StrType": {ESLVal $897 = _v114.termRef(0);
+          
+          {ESLVal _v216 = _v113;
+          
+          {ESLVal _v217 = $897;
+          
+          return t2;
+        }
+        }
+        }
+        default: {ESLVal _v218 = _v113;
+          
+          {ESLVal _v219 = _v114;
+          
+          return error(new ESLVal("TypeError",l,new ESLVal("incomptible types for +: ").add(ppType(_v218,typeEnv).add(new ESLVal(" and ").add(ppType(_v219,typeEnv))))));
+        }
+        }
+      }
+    }
+    }
+    }
+  }
+  private static ESLVal plusExpType = new ESLVal(new Function(new ESLVal("plusExpType"),null) { public ESLVal apply(ESLVal... args) { return plusExpType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal applyTypeExp(ESLVal l,ESLVal e,ESLVal ts,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v182 = substTypesEnv(typeEnv,ts);
+      ESLVal _v183 = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      {ESLVal _v115 = _v183;
+      
+      switch(_v115.termName) {
+      case "ForallType": {ESLVal $913 = _v115.termRef(0);
+        ESLVal $912 = _v115.termRef(1);
+        ESLVal $911 = _v115.termRef(2);
+        
+        {ESLVal l1 = $913;
+        
+        {ESLVal ns = $912;
+        
+        {ESLVal _v184 = $911;
+        
+        if(length.apply(ns).eql(length.apply(_v182)).boolVal)
+        {ESLVal env = zipTypeEnv(ns,_v182);
+          
+          return substTypeEnv(env.add(valueEnv),_v184);
+        }
+        else
+          return error(new ESLVal("TypeError",l,new ESLVal("universal type expects ").add(length.apply(ns).add(new ESLVal(" types, but supplied with ").add(length.apply(_v182))))));
+      }
+      }
+      }
+      }
+      default: {ESLVal _v185 = _v115;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a universal type: ").add(_v185)));
+      }
+    }
+    }
+    }
+  }
+  private static ESLVal applyTypeExp = new ESLVal(new Function(new ESLVal("applyTypeExp"),null) { public ESLVal apply(ESLVal... args) { return applyTypeExp(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal expTypes(ESLVal es,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    return map(new ESLVal(new Function(new ESLVal("fun205"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          ESLVal e = $args[0];
+      return expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+        }
+      }),es);
+  }
+  private static ESLVal expTypes = new ESLVal(new Function(new ESLVal("expTypes"),null) { public ESLVal apply(ESLVal... args) { return expTypes(args[0],args[1],args[2],args[3],args[4]); }});
+  private static ESLVal applyType(ESLVal l,ESLVal op,ESLVal args,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v116 = typeNF(expType(op,selfType,valueEnv,cnstrEnv,typeEnv),typeEnv);
+      
+      switch(_v116.termName) {
+      case "FunType": {ESLVal $916 = _v116.termRef(0);
+        ESLVal $915 = _v116.termRef(1);
+        ESLVal $914 = _v116.termRef(2);
+        
+        {ESLVal l1 = $916;
+        
+        {ESLVal domain = $915;
+        
+        {ESLVal range = $914;
+        
+        {ESLVal supplied = expTypes(args,selfType,valueEnv,cnstrEnv,typeEnv);
+        
+        if(length.apply(domain).eql(length.apply(supplied)).boolVal)
+        if(subTypes(supplied,domain).boolVal)
+          return range;
+          else
+            return error(new ESLVal("TypeError",l,new ESLVal("supplied argument types ").add(ppTypes(supplied,typeEnv).add(new ESLVal(" do not match function domain ").add(ppTypes(domain,typeEnv))))));
+        else
+          return error(new ESLVal("TypeError",l,new ESLVal("expecting ").add(length.apply(domain).add(new ESLVal(" args, but supplied with ").add(length.apply(supplied))))));
+      }
+      }
+      }
+      }
+      }
+      default: {ESLVal t = _v116;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("unknown type for apply: ").add(ppType(t,typeEnv))));
+      }
+    }
+    }
+  }
+  private static ESLVal applyType = new ESLVal(new Function(new ESLVal("applyType"),null) { public ESLVal apply(ESLVal... args) { return applyType(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal ifType(ESLVal l,ESLVal e1,ESLVal e2,ESLVal e3,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal testType = expType(e1,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(isBoolType(testType).boolVal)
+      {ESLVal conseqType = expType(e2,selfType,valueEnv,cnstrEnv,typeEnv);
+        ESLVal altType = expType(e3,selfType,valueEnv,cnstrEnv,typeEnv);
+        
+        if(typeEqual(conseqType,altType).boolVal)
+        return conseqType;
+        else
+          return error(new ESLVal("TypeError",l,new ESLVal("conseq and alt types do not agree: ").add(ppType(conseqType,typeEnv).add(new ESLVal(" ").add(ppType(altType,typeEnv))))));
+      }
+      else
+        return error(new ESLVal("if expects a bool ").add(ppType(testType,typeEnv)));
+    }
+  }
+  private static ESLVal ifType = new ESLVal(new Function(new ESLVal("ifType"),null) { public ESLVal apply(ESLVal... args) { return ifType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]); }});
+  private static ESLVal checkDecs(ESLVal ds) {
+    
+    {ESLVal _v117 = ds;
+      
+      if(_v117.isCons())
+      {ESLVal $917 = _v117.head();
+        ESLVal $918 = _v117.tail();
+        
+        {ESLVal d = $917;
+        
+        {ESLVal _v181 = $918;
+        
+        if(member.apply(decName(d),new SerializableFunction<ESLVal,ESLVal>() {
+        public ESLVal apply(ESLVal $l0) {
+          ESLVal $a = $nil;
+          java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+          while(!$l0.isNil()) { 
+            ESLVal d = $l0.head();
+            $l0 = $l0.tail();
+            $v.add(decName(d));
+          }
+          for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+          return $a;
+        }}.apply(_v181)).boolVal)
+        return error(new ESLVal("TypeError",decLoc(d),new ESLVal(" duplicate argument ").add(decName(d))));
+        else
+          return checkDecs(_v181);
+      }
+      }
+      }
+    else if(_v117.isNil())
+      return $null;
+    else return error(new ESLVal("case error at Pos(72551,72784)").add(ESLVal.list(_v117)));
+    }
+  }
+  private static ESLVal checkDecs = new ESLVal(new Function(new ESLVal("checkDecs"),null) { public ESLVal apply(ESLVal... args) { return checkDecs(args[0]); }});
+  private static ESLVal funType(ESLVal l,ESLVal n,ESLVal args,ESLVal t,ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {checkDecs(args);
+    {ESLVal nType = expType(n,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      if(isStrType(nType).boolVal)
+      {ESLVal declaredType = substTypeEnv(typeEnv,t);
+        
+        return decTypes(args,valueEnv,typeEnv,new ESLVal(new Function(new ESLVal("fun206"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v179 = $args[0];
+        ESLVal _v180 = $args[1];
+        {ESLVal actualRange = expType(e,selfType,_v180,cnstrEnv,typeEnv);
+              
+              if(subType(new ESLVal("FunType",l,_v179,actualRange),declaredType).boolVal)
+              return new ESLVal("FunType",l,_v179,actualRange);
+              else
+                return error(new ESLVal("TypeError",l,new ESLVal("function declared type ").add(ppType(declaredType,typeEnv).add(new ESLVal(" but is ").add(ppType(new ESLVal("FunType",l,_v179,actualRange),typeEnv))))));
+            }
+          }
+        }));
+      }
+      else
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a string for a function name: ").add(n)));
+    }}
+  }
+  private static ESLVal funType = new ESLVal(new Function(new ESLVal("funType"),null) { public ESLVal apply(ESLVal... args) { return funType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8]); }});
+  private static ESLVal decTypes(ESLVal decs,ESLVal valueEnv,ESLVal typeEnv,ESLVal consumer) {
+    
+    { LetRec letrec = new LetRec() {
+      ESLVal processDecs = new ESLVal(new Function(new ESLVal("processDecs"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v176 = $args[0];
+        ESLVal _v177 = $args[1];
+        {ESLVal _v118 = _v176;
+              
+              if(_v118.isCons())
+              {ESLVal $919 = _v118.head();
+                ESLVal $920 = _v118.tail();
+                
+                switch($919.termName) {
+                case "Dec": {ESLVal $924 = $919.termRef(0);
+                  ESLVal $923 = $919.termRef(1);
+                  ESLVal $922 = $919.termRef(2);
+                  ESLVal $921 = $919.termRef(3);
+                  
+                  {ESLVal l = $924;
+                  
+                  {ESLVal n = $923;
+                  
+                  {ESLVal t = $922;
+                  
+                  {ESLVal st = $921;
+                  
+                  {ESLVal _v178 = $920;
+                  
+                  return processDecs.apply(_v178,_v177.cons(new ESLVal("Map",n,substTypeEnv(typeEnv,t))));
+                }
+                }
+                }
+                }
+                }
+                }
+                default: return error(new ESLVal("case error at Pos(73977,74202)").add(ESLVal.list(_v118)));
+              }
+              }
+            else if(_v118.isNil())
+              return consumer.apply(reverse(typeEnvRan(_v177)),_v177.add(valueEnv));
+            else return error(new ESLVal("case error at Pos(73977,74202)").add(ESLVal.list(_v118)));
+            }
+          }
+        });
+      
+      public ESLVal get(String name) {
+        switch(name) {
+          case "processDecs": return processDecs;
+          
+          default: throw new Error("cannot find letrec binding");
+        }
+        }
+      };
+    ESLVal processDecs = letrec.get("processDecs");
+    
+      return processDecs.apply(decs,$nil);}
+    
+  }
+  private static ESLVal decTypes = new ESLVal(new Function(new ESLVal("decTypes"),null) { public ESLVal apply(ESLVal... args) { return decTypes(args[0],args[1],args[2],args[3]); }});
+  private static ESLVal termType(ESLVal l,ESLVal n,ESLVal ts,ESLVal es,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal t0 = lookupType(n,cnstrEnv);
+      
+      if(t0.eql($null).boolVal)
+      return error(new ESLVal("TypeError",l,new ESLVal("cannot find cnstr ").add(n)));
+      else
+        {ESLVal t = unfoldIf(t0);
+          
+          return termTypeCheckUnion(t,l,n,ts,es,selfType,valueEnv,cnstrEnv,typeEnv);
+        }
+    }
+  }
+  private static ESLVal termType = new ESLVal(new Function(new ESLVal("termType"),null) { public ESLVal apply(ESLVal... args) { return termType(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]); }});
+  private static ESLVal termTypeCheckUnion(ESLVal t,ESLVal l,ESLVal n,ESLVal ts,ESLVal es,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    if(t.eql($null).boolVal)
+      return error(new ESLVal("TypeError",l,new ESLVal("cannot find constructor ").add(n)));
+      else
+        {ESLVal _v119 = t;
+          
+          switch(_v119.termName) {
+          case "TypeFun": {ESLVal $929 = _v119.termRef(0);
+            ESLVal $928 = _v119.termRef(1);
+            ESLVal $927 = _v119.termRef(2);
+            
+            {ESLVal lf = $929;
+            
+            {ESLVal ns = $928;
+            
+            {ESLVal body = $927;
+            
+            if(length.apply(ns).eql(length.apply(ts)).boolVal)
+            {ESLVal args = map(new ESLVal(new Function(new ESLVal("fun207"),getSelf()) {
+                  public ESLVal apply(ESLVal... $args) {
+                    ESLVal _v174 = $args[0];
+                return substTypeEnv(typeEnv,_v174);
+                  }
+                }),ts);
+              
+              {ESLVal _v120 = substTypeEnv(zipTypeEnv(ns,args),body);
+              
+              switch(_v120.termName) {
+              case "UnionType": {ESLVal $931 = _v120.termRef(0);
+                ESLVal $930 = _v120.termRef(1);
+                
+                {ESLVal l1 = $931;
+                
+                {ESLVal terms = $930;
+                
+                {ESLVal ts2 = findTermArgTypes(n,terms);
+                
+                if(length.apply(es).eql(length.apply(ts2)).boolVal)
+                {checkTermArgTypes(l,es,ts2,selfType,valueEnv,cnstrEnv,typeEnv);
+                return new ESLVal("UnionType",l1,terms);}
+                else
+                  return error(new ESLVal("TypeError",l,n.add(new ESLVal(" expects ").add(length.apply(ts2).add(new ESLVal(" args, but you supplied ").add(length.apply(es)))))));
+              }
+              }
+              }
+              }
+              default: return error(new ESLVal("case error at Pos(75075,75637)").add(ESLVal.list(_v120)));
+            }
+            }
+            }
+            else
+              return error(new ESLVal("TypeError",l,new ESLVal("generic constructor ").add(n.add(new ESLVal(" expects ").add(length.apply(ns).add(new ESLVal(" type arguments, but received ").add(length.apply(ts))))))));
+          }
+          }
+          }
+          }
+        case "UnionType": {ESLVal $926 = _v119.termRef(0);
+            ESLVal $925 = _v119.termRef(1);
+            
+            {ESLVal l1 = $926;
+            
+            {ESLVal terms = $925;
+            
+            {ESLVal ts2 = findTermArgTypes(n,terms);
+            
+            if(length.apply(ts).neql($zero).boolVal)
+            return error(new ESLVal("TypeError",l,new ESLVal("generic application of non-generic constructior: ").add(n)));
+            else
+              if(length.apply(es).eql(length.apply(ts2)).boolVal)
+                {checkTermArgTypes(l,es,ts2,selfType,valueEnv,cnstrEnv,typeEnv);
+                return t;}
+                else
+                  return error(new ESLVal("TypeError",l,n.add(new ESLVal(" expects ").add(length.apply(ts2).add(new ESLVal(" args, but you supplied ").add(length.apply(es)))))));
+          }
+          }
+          }
+          }
+          default: {ESLVal _v175 = _v119;
+            
+            return error(new ESLVal("TypeError",l,new ESLVal("expecting a union type for ").add(n.add(new ESLVal(" but got ").add(ppType(_v175,typeEnv))))));
+          }
+        }
+        }
+  }
+  private static ESLVal termTypeCheckUnion = new ESLVal(new Function(new ESLVal("termTypeCheckUnion"),null) { public ESLVal apply(ESLVal... args) { return termTypeCheckUnion(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8]); }});
+  private static ESLVal unfoldIf(ESLVal t) {
+    
+    {ESLVal _v121 = t;
+      
+      switch(_v121.termName) {
+      case "RecType": {ESLVal $934 = _v121.termRef(0);
+        ESLVal $933 = _v121.termRef(1);
+        ESLVal $932 = _v121.termRef(2);
+        
+        {ESLVal l = $934;
+        
+        {ESLVal n = $933;
+        
+        {ESLVal _v172 = $932;
+        
+        return unfoldIf(unfoldType(l,n,_v172));
+      }
+      }
+      }
+      }
+      default: {ESLVal _v173 = _v121;
+        
+        return _v173;
+      }
+    }
+    }
+  }
+  private static ESLVal unfoldIf = new ESLVal(new Function(new ESLVal("unfoldIf"),null) { public ESLVal apply(ESLVal... args) { return unfoldIf(args[0]); }});
+  private static ESLVal findTermArgTypes(ESLVal n,ESLVal terms) {
+    
+    {ESLVal _v122 = terms;
+      
+      if(_v122.isCons())
+      {ESLVal $935 = _v122.head();
+        ESLVal $936 = _v122.tail();
+        
+        switch($935.termName) {
+        case "TermType": {ESLVal $939 = $935.termRef(0);
+          ESLVal $938 = $935.termRef(1);
+          ESLVal $937 = $935.termRef(2);
+          
+          {ESLVal l = $939;
+          
+          {ESLVal nn = $938;
+          
+          {ESLVal ts = $937;
+          
+          {ESLVal _v170 = $936;
+          
+          if(nn.eql(n).boolVal)
+          return ts;
+          else
+            {ESLVal t = $935;
+              
+              {ESLVal _v171 = $936;
+              
+              return findTermArgTypes(n,_v171);
+            }
+            }
+        }
+        }
+        }
+        }
+        }
+        default: {ESLVal t = $935;
+          
+          {ESLVal ts = $936;
+          
+          return findTermArgTypes(n,ts);
+        }
+        }
+      }
+      }
+    else if(_v122.isNil())
+      return error(new ESLVal("cannot find constructor ").add(n));
+    else return error(new ESLVal("case error at Pos(76645,76845)").add(ESLVal.list(_v122)));
+    }
+  }
+  private static ESLVal findTermArgTypes = new ESLVal(new Function(new ESLVal("findTermArgTypes"),null) { public ESLVal apply(ESLVal... args) { return findTermArgTypes(args[0],args[1]); }});
+  private static ESLVal checkTermArgTypes(ESLVal l,ESLVal es,ESLVal ts,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v123 = es;
+      ESLVal _v124 = ts;
+      
+      if(_v123.isCons())
+      {ESLVal $940 = _v123.head();
+        ESLVal $941 = _v123.tail();
+        
+        if(_v124.isCons())
+        {ESLVal $942 = _v124.head();
+          ESLVal $943 = _v124.tail();
+          
+          {ESLVal e = $940;
+          
+          {ESLVal _v168 = $941;
+          
+          {ESLVal t = $942;
+          
+          {ESLVal _v169 = $943;
+          
+          {ESLVal tt = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+          
+          if(typeEqual(t,tt).boolVal)
+          return checkTermArgTypes(l,_v168,_v169,selfType,valueEnv,cnstrEnv,typeEnv);
+          else
+            return error(new ESLVal("TypeError",l,new ESLVal("expected constructor arg type ").add(ppType(t,typeEnv).add(new ESLVal(" but supplied ").add(ppType(tt,typeEnv))))));
+        }
+        }
+        }
+        }
+        }
+        }
+      else if(_v124.isNil())
+        return error(new ESLVal("case error at Pos(76963,77385)").add(ESLVal.list(_v123,_v124)));
+      else return error(new ESLVal("case error at Pos(76963,77385)").add(ESLVal.list(_v123,_v124)));
+      }
+    else if(_v123.isNil())
+      if(_v124.isCons())
+        {ESLVal $944 = _v124.head();
+          ESLVal $945 = _v124.tail();
+          
+          return error(new ESLVal("case error at Pos(76963,77385)").add(ESLVal.list(_v123,_v124)));
+        }
+      else if(_v124.isNil())
+        return $null;
+      else return error(new ESLVal("case error at Pos(76963,77385)").add(ESLVal.list(_v123,_v124)));
+    else return error(new ESLVal("case error at Pos(76963,77385)").add(ESLVal.list(_v123,_v124)));
+    }
+  }
+  private static ESLVal checkTermArgTypes = new ESLVal(new Function(new ESLVal("checkTermArgTypes"),null) { public ESLVal apply(ESLVal... args) { return checkTermArgTypes(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal notType(ESLVal l,ESLVal e,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal _v125 = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+      
+      switch(_v125.termName) {
+      case "BoolType": {ESLVal $946 = _v125.termRef(0);
+        
+        {ESLVal _v167 = $946;
+        
+        return theTypeBool;
+      }
+      }
+      default: {ESLVal t = _v125;
+        
+        return error(new ESLVal("TypeError",l,new ESLVal("expecting a boolean: ").add(ppType(t,typeEnv))));
+      }
+    }
+    }
+  }
+  private static ESLVal notType = new ESLVal(new Function(new ESLVal("notType"),null) { public ESLVal apply(ESLVal... args) { return notType(args[0],args[1],args[2],args[3],args[4],args[5]); }});
+  private static ESLVal varType(ESLVal l,ESLVal n,ESLVal valueEnv,ESLVal typeEnv) {
+    
+    {ESLVal t = lookupType(n,valueEnv);
+      
+      if(t.eql($null).boolVal)
+      return error(new ESLVal("TypeError",l,new ESLVal("unbound variable ").add(n)));
+      else
+        {ESLVal _v126 = t;
+          
+          switch(_v126.termName) {
+          case "TypeClosure": {ESLVal $947 = _v126.termRef(0);
+            
+            {ESLVal f = $947;
+            
+            return f.apply();
+          }
+          }
+          default: {ESLVal _v166 = _v126;
+            
+            return _v166;
+          }
+        }
+        }
+    }
+  }
+  private static ESLVal varType = new ESLVal(new Function(new ESLVal("varType"),null) { public ESLVal apply(ESLVal... args) { return varType(args[0],args[1],args[2],args[3]); }});
+  private static ESLVal blockType(ESLVal l,ESLVal es,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    {ESLVal[] t = new ESLVal[]{theTypeVoid};
+      
+      {{
+      ESLVal _v127 = es;
+      while(_v127.isCons()) {
+        ESLVal e = _v127.headVal;
+        t[0] = expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+        _v127 = _v127.tailVal;}
+    }
+    return t[0];}
+    }
+  }
+  private static ESLVal blockType = new ESLVal(new Function(new ESLVal("blockType"),null) { public ESLVal apply(ESLVal... args) { return blockType(args[0],args[1],args[2],args[3],args[4],args[5]); }});
+  private static ESLVal listType(ESLVal l,ESLVal es,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    if(es.eql($nil).boolVal)
+      return new ESLVal("ForallType",l,ESLVal.list(new ESLVal("T")),new ESLVal("ListType",l,new ESLVal("VarType",l,new ESLVal("T"))));
+      else
+        {ESLVal ts = map(new ESLVal(new Function(new ESLVal("fun208"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal e = $args[0];
+            return expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+              }
+            }),es);
+          
+          if(allEqualTypes(head.apply(ts),tail.apply(ts)).boolVal)
+          return new ESLVal("ListType",l,head.apply(ts));
+          else
+            return error(new ESLVal("TypeError",l,new ESLVal("lists should have elements of the same type: ").add(es)));
+        }
+  }
+  private static ESLVal listType = new ESLVal(new Function(new ESLVal("listType"),null) { public ESLVal apply(ESLVal... args) { return listType(args[0],args[1],args[2],args[3],args[4],args[5]); }});
+  private static ESLVal setType(ESLVal l,ESLVal es,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    if(es.eql($nil).boolVal)
+      return new ESLVal("ForallType",l,ESLVal.list(new ESLVal("T")),new ESLVal("SetType",l,new ESLVal("VarType",l,new ESLVal("T"))));
+      else
+        {ESLVal ts = map(new ESLVal(new Function(new ESLVal("fun209"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal e = $args[0];
+            return expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+              }
+            }),es);
+          
+          if(allEqualTypes(head.apply(ts),tail.apply(ts)).boolVal)
+          return new ESLVal("SetType",l,head.apply(ts));
+          else
+            return error(new ESLVal("TypeError",l,new ESLVal("sets should have elements of the same type: ").add(es)));
+        }
+  }
+  private static ESLVal setType = new ESLVal(new Function(new ESLVal("setType"),null) { public ESLVal apply(ESLVal... args) { return setType(args[0],args[1],args[2],args[3],args[4],args[5]); }});
+  private static ESLVal bagType(ESLVal l,ESLVal es,ESLVal selfType,ESLVal valueEnv,ESLVal cnstrEnv,ESLVal typeEnv) {
+    
+    if(es.eql($nil).boolVal)
+      return new ESLVal("ForallType",l,ESLVal.list(new ESLVal("T")),new ESLVal("BagType",l,new ESLVal("VarType",l,new ESLVal("T"))));
+      else
+        {ESLVal ts = map(new ESLVal(new Function(new ESLVal("fun210"),getSelf()) {
+              public ESLVal apply(ESLVal... $args) {
+                ESLVal e = $args[0];
+            return expType(e,selfType,valueEnv,cnstrEnv,typeEnv);
+              }
+            }),es);
+          
+          if(allEqualTypes(head.apply(ts),tail.apply(ts)).boolVal)
+          return new ESLVal("BagType",l,head.apply(ts));
+          else
+            return error(new ESLVal("TypeError",l,new ESLVal("bags should have elements of the same type: ").add(es)));
+        }
+  }
+  private static ESLVal bagType = new ESLVal(new Function(new ESLVal("bagType"),null) { public ESLVal apply(ESLVal... args) { return bagType(args[0],args[1],args[2],args[3],args[4],args[5]); }});
+  private static ESLVal recTypes(ESLVal env) {
+    
+    { LetRec letrec = new LetRec() {
+      ESLVal fixEnv = new ESLVal(new Function(new ESLVal("fixEnv"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v165 = $args[0];
+        {ESLVal[] e = new ESLVal[]{$null};
+              
+              {ESLVal fenv = new SerializableFunction<ESLVal,ESLVal>() {
+                  public ESLVal apply(ESLVal $l0) {
+                    ESLVal $a = $nil;
+                    java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                    while(!$l0.isNil()) { 
+                      ESLVal t = $l0.head();
+                      $l0 = $l0.tail();
+                      ESLVal $l1 = typeFV(t);
+                while(!$l1.isNil()) {
+                  ESLVal n = $l1.head();
+                  $l1 = $l1.tail();
+                  $v.add(new ESLVal("Map",n,new ESLVal("TypeClosure",new ESLVal(new Function(new ESLVal("lookup: ").add(n),getSelf()) {
+                    public ESLVal apply(ESLVal... $args) {
+                      return lookupType(n,e[0]);
+                    }
+                  }))));
+                }
+                    }
+                    for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                    return $a;
+                  }}.apply(typeEnvRan(_v165));
+              
+              {ESLVal env1 = substOnce.apply(_v165,fenv);
+              
+              {e[0] = env1;
+            return env1;}
+            }
+            }
+            }
+          }
+        });
+      ESLVal introduceRecTypes = new ESLVal(new Function(new ESLVal("introduceRecTypes"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v164 = $args[0];
+        {ESLVal _v128 = _v164;
+              
+              if(_v128.isCons())
+              {ESLVal $948 = _v128.head();
+                ESLVal $949 = _v128.tail();
+                
+                switch($948.termName) {
+                case "Map": {ESLVal $951 = $948.termRef(0);
+                  ESLVal $950 = $948.termRef(1);
+                  
+                  switch($950.termName) {
+                  case "RecordType": {ESLVal $953 = $950.termRef(0);
+                    ESLVal $952 = $950.termRef(1);
+                    
+                    {ESLVal n = $951;
+                    
+                    {ESLVal l = $953;
+                    
+                    {ESLVal fs = $952;
+                    
+                    {ESLVal e = $949;
+                    
+                    return introduceRecTypes.apply(e).cons(new ESLVal("Map",n,new ESLVal("RecordType",l,fs)));
+                  }
+                  }
+                  }
+                  }
+                  }
+                  default: {ESLVal n = $951;
+                    
+                    {ESLVal t = $950;
+                    
+                    {ESLVal e = $949;
+                    
+                    if(member.apply(n,typeFV(t)).boolVal)
+                    return introduceRecTypes.apply(e).cons(new ESLVal("Map",n,new ESLVal("RecType",p0,n,t)));
+                    else
+                      return introduceRecTypes.apply(e).cons(new ESLVal("Map",n,t));
+                  }
+                  }
+                  }
+                }
+                }
+                default: return error(new ESLVal("case error at Pos(79948,80262)").add(ESLVal.list(_v128)));
+              }
+              }
+            else if(_v128.isNil())
+              return _v164;
+            else return error(new ESLVal("case error at Pos(79948,80262)").add(ESLVal.list(_v128)));
+            }
+          }
+        });
+      ESLVal substOnce = new ESLVal(new Function(new ESLVal("substOnce"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v162 = $args[0];
+        ESLVal _v163 = $args[1];
+        {ESLVal map1 = new ESLVal(new Function(new ESLVal("map1"),getSelf()) {
+                  public ESLVal apply(ESLVal... $args) {
+                    ESLVal m = $args[0];
+                {ESLVal _v129 = m;
+                      
+                      switch(_v129.termName) {
+                      case "Map": {ESLVal $955 = _v129.termRef(0);
+                        ESLVal $954 = _v129.termRef(1);
+                        
+                        {ESLVal n = $955;
+                        
+                        {ESLVal t = $954;
+                        
+                        return new ESLVal("Map",n,substTypeEnv(new SerializableFunction<ESLVal,ESLVal>() {
+                          public ESLVal apply(ESLVal $l0) {
+                            ESLVal $a = $nil;
+                            java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+                            while(!$l0.isNil()) { 
+                              ESLVal n = $l0.head();
+                              $l0 = $l0.tail();
+                              $v.add(new ESLVal("Map",n,lookupType(n,_v163)));
+                            }
+                            for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+                            return $a;
+                          }}.apply(typeFV(t)),t));
+                      }
+                      }
+                      }
+                      default: return error(new ESLVal("case error at Pos(80372,80503)").add(ESLVal.list(_v129)));
+                    }
+                    }
+                  }
+                });
+              
+              return map(map1,_v162);
+            }
+          }
+        });
+      
+      public ESLVal get(String name) {
+        switch(name) {
+          case "fixEnv": return fixEnv;
+          
+          case "introduceRecTypes": return introduceRecTypes;
+          
+          case "substOnce": return substOnce;
+          
+          default: throw new Error("cannot find letrec binding");
+        }
+        }
+      };
+    ESLVal fixEnv = letrec.get("fixEnv");
+    
+    ESLVal introduceRecTypes = letrec.get("introduceRecTypes");
+    
+    ESLVal substOnce = letrec.get("substOnce");
+    
+      return fixEnv.apply(introduceRecTypes.apply(env));}
+    
+  }
+  private static ESLVal recTypes = new ESLVal(new Function(new ESLVal("recTypes"),null) { public ESLVal apply(ESLVal... args) { return recTypes(args[0]); }});
+  private static ESLVal typeFV(ESLVal t) {
+    
+    return removeDups(varTypeNames(typeFV1(t,$nil)));
+  }
+  private static ESLVal typeFV = new ESLVal(new Function(new ESLVal("typeFV"),null) { public ESLVal apply(ESLVal... args) { return typeFV(args[0]); }});
+  private static ESLVal varTypeNames(ESLVal vs) {
+    
+    return map(varTypeName,vs);
+  }
+  private static ESLVal varTypeNames = new ESLVal(new Function(new ESLVal("varTypeNames"),null) { public ESLVal apply(ESLVal... args) { return varTypeNames(args[0]); }});
+  private static ESLVal varTypeName(ESLVal t) {
+    
+    {ESLVal _v130 = t;
+      
+      switch(_v130.termName) {
+      case "VarType": {ESLVal $957 = _v130.termRef(0);
+        ESLVal $956 = _v130.termRef(1);
+        
+        {ESLVal l = $957;
+        
+        {ESLVal n = $956;
+        
+        return n;
+      }
+      }
+      }
+      default: {ESLVal x = _v130;
+        
+        return new ESLVal("<var>");
+      }
+    }
+    }
+  }
+  private static ESLVal varTypeName = new ESLVal(new Function(new ESLVal("varTypeName"),null) { public ESLVal apply(ESLVal... args) { return varTypeName(args[0]); }});
+  private static ESLVal tdecsFV1(ESLVal decs,ESLVal fv) {
+    
+    {ESLVal _v131 = decs;
+      
+      if(_v131.isCons())
+      {ESLVal $958 = _v131.head();
+        ESLVal $959 = _v131.tail();
+        
+        {ESLVal d = $958;
+        
+        {ESLVal ds = $959;
+        
+        return tdecFV1(d,tdecsFV1(ds,fv));
+      }
+      }
+      }
+    else if(_v131.isNil())
+      return fv;
+    else return error(new ESLVal("case error at Pos(80889,80978)").add(ESLVal.list(_v131)));
+    }
+  }
+  private static ESLVal tdecsFV1 = new ESLVal(new Function(new ESLVal("tdecsFV1"),null) { public ESLVal apply(ESLVal... args) { return tdecsFV1(args[0],args[1]); }});
+  private static ESLVal tdecFV1(ESLVal d,ESLVal fv) {
+    
+    {ESLVal _v132 = d;
+      
+      switch(_v132.termName) {
+      case "Dec": {ESLVal $963 = _v132.termRef(0);
+        ESLVal $962 = _v132.termRef(1);
+        ESLVal $961 = _v132.termRef(2);
+        ESLVal $960 = _v132.termRef(3);
+        
+        {ESLVal l = $963;
+        
+        {ESLVal n = $962;
+        
+        {ESLVal t = $961;
+        
+        {ESLVal st = $960;
+        
+        return typeFV1(t,fv);
+      }
+      }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(81022,81101)").add(ESLVal.list(_v132)));
+    }
+    }
+  }
+  private static ESLVal tdecFV1 = new ESLVal(new Function(new ESLVal("tdecFV1"),null) { public ESLVal apply(ESLVal... args) { return tdecFV1(args[0],args[1]); }});
+  private static ESLVal handlersFV1(ESLVal handlers,ESLVal fv) {
+    
+    {ESLVal _v133 = handlers;
+      
+      if(_v133.isCons())
+      {ESLVal $964 = _v133.head();
+        ESLVal $965 = _v133.tail();
+        
+        {ESLVal m = $964;
+        
+        {ESLVal hs = $965;
+        
+        return handlerFV1(m,handlersFV1(hs,fv));
+      }
+      }
+      }
+    else if(_v133.isNil())
+      return fv;
+    else return error(new ESLVal("case error at Pos(81159,81261)").add(ESLVal.list(_v133)));
+    }
+  }
+  private static ESLVal handlersFV1 = new ESLVal(new Function(new ESLVal("handlersFV1"),null) { public ESLVal apply(ESLVal... args) { return handlersFV1(args[0],args[1]); }});
+  private static ESLVal handlerFV1(ESLVal m,ESLVal fv) {
+    
+    {ESLVal _v134 = m;
+      
+      switch(_v134.termName) {
+      case "MessageType": {ESLVal $967 = _v134.termRef(0);
+        ESLVal $966 = _v134.termRef(1);
+        
+        {ESLVal l = $967;
+        
+        {ESLVal ts = $966;
+        
+        return typesFV1(ts,fv);
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(81309,81385)").add(ESLVal.list(_v134)));
+    }
+    }
+  }
+  private static ESLVal handlerFV1 = new ESLVal(new Function(new ESLVal("handlerFV1"),null) { public ESLVal apply(ESLVal... args) { return handlerFV1(args[0],args[1]); }});
+  private static ESLVal typesFV1(ESLVal ts,ESLVal fv) {
+    
+    {ESLVal _v135 = ts;
+      
+      if(_v135.isCons())
+      {ESLVal $968 = _v135.head();
+        ESLVal $969 = _v135.tail();
+        
+        {ESLVal t = $968;
+        
+        {ESLVal _v161 = $969;
+        
+        return typeFV1(t,typesFV1(_v161,fv));
+      }
+      }
+      }
+    else if(_v135.isNil())
+      return fv;
+    else return error(new ESLVal("case error at Pos(81434,81521)").add(ESLVal.list(_v135)));
+    }
+  }
+  private static ESLVal typesFV1 = new ESLVal(new Function(new ESLVal("typesFV1"),null) { public ESLVal apply(ESLVal... args) { return typesFV1(args[0],args[1]); }});
+  private static ESLVal typeFV1(ESLVal t,ESLVal fv) {
+    
+    {ESLVal _v136 = t;
+      
+      switch(_v136.termName) {
+      case "ArrayType": {ESLVal $1035 = _v136.termRef(0);
+        ESLVal $1034 = _v136.termRef(1);
+        
+        {ESLVal l = $1035;
+        
+        {ESLVal _v160 = $1034;
+        
+        return typeFV1(_v160,fv);
+      }
+      }
+      }
+    case "ActType": {ESLVal $1033 = _v136.termRef(0);
+        ESLVal $1032 = _v136.termRef(1);
+        ESLVal $1031 = _v136.termRef(2);
+        
+        {ESLVal l = $1033;
+        
+        {ESLVal decs = $1032;
+        
+        {ESLVal handlers = $1031;
+        
+        return tdecsFV1(decs,handlersFV1(handlers,fv));
+      }
+      }
+      }
+      }
+    case "ExtendedAct": {ESLVal $1030 = _v136.termRef(0);
+        ESLVal $1029 = _v136.termRef(1);
+        ESLVal $1028 = _v136.termRef(2);
+        ESLVal $1027 = _v136.termRef(3);
+        
+        {ESLVal l = $1030;
+        
+        {ESLVal parent = $1029;
+        
+        {ESLVal decs = $1028;
+        
+        {ESLVal handlers = $1027;
+        
+        return tdecsFV1(decs,handlersFV1(handlers,typeFV1(parent,fv)));
+      }
+      }
+      }
+      }
+      }
+    case "ApplyType": {ESLVal $1026 = _v136.termRef(0);
+        ESLVal $1025 = _v136.termRef(1);
+        ESLVal $1024 = _v136.termRef(2);
+        
+        {ESLVal l = $1026;
+        
+        {ESLVal n = $1025;
+        
+        {ESLVal types = $1024;
+        
+        return typesFV1(types,fv.cons(new ESLVal("VarType",l,n)));
+      }
+      }
+      }
+      }
+    case "ApplyTypeFun": {ESLVal $1023 = _v136.termRef(0);
+        ESLVal $1022 = _v136.termRef(1);
+        ESLVal $1021 = _v136.termRef(2);
+        
+        {ESLVal l = $1023;
+        
+        {ESLVal op = $1022;
+        
+        {ESLVal args = $1021;
+        
+        return typesFV1(args,typeFV1(op,fv));
+      }
+      }
+      }
+      }
+    case "BoolType": {ESLVal $1020 = _v136.termRef(0);
+        
+        {ESLVal l = $1020;
+        
+        return fv;
+      }
+      }
+    case "FieldType": {ESLVal $1019 = _v136.termRef(0);
+        ESLVal $1018 = _v136.termRef(1);
+        ESLVal $1017 = _v136.termRef(2);
+        
+        {ESLVal l = $1019;
+        
+        {ESLVal n = $1018;
+        
+        {ESLVal _v159 = $1017;
+        
+        return typeFV1(_v159,fv);
+      }
+      }
+      }
+      }
+    case "FloatType": {ESLVal $1016 = _v136.termRef(0);
+        
+        {ESLVal l = $1016;
+        
+        return fv;
+      }
+      }
+    case "ForallType": {ESLVal $1015 = _v136.termRef(0);
+        ESLVal $1014 = _v136.termRef(1);
+        ESLVal $1013 = _v136.termRef(2);
+        
+        {ESLVal l = $1015;
+        
+        {ESLVal ns = $1014;
+        
+        {ESLVal _v156 = $1013;
+        
+        return filter(new ESLVal(new Function(new ESLVal("fun211"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v157 = $args[0];
+        {ESLVal _v140 = _v157;
+              
+              switch(_v140.termName) {
+              case "VarType": {ESLVal $1045 = _v140.termRef(0);
+                ESLVal $1044 = _v140.termRef(1);
+                
+                {ESLVal _v158 = $1045;
+                
+                {ESLVal n = $1044;
+                
+                return member.apply(n,ns).not();
+              }
+              }
+              }
+              default: return error(new ESLVal("case error at Pos(82360,82420)").add(ESLVal.list(_v140)));
+            }
+            }
+          }
+        }),typeFV1(_v156,$nil)).add(fv);
+      }
+      }
+      }
+      }
+    case "FunType": {ESLVal $1012 = _v136.termRef(0);
+        ESLVal $1011 = _v136.termRef(1);
+        ESLVal $1010 = _v136.termRef(2);
+        
+        {ESLVal l = $1012;
+        
+        {ESLVal d = $1011;
+        
+        {ESLVal r = $1010;
+        
+        return typesFV1(d,typeFV1(r,fv));
+      }
+      }
+      }
+      }
+    case "IntType": {ESLVal $1009 = _v136.termRef(0);
+        
+        {ESLVal l = $1009;
+        
+        return fv;
+      }
+      }
+    case "ListType": {ESLVal $1008 = _v136.termRef(0);
+        ESLVal $1007 = _v136.termRef(1);
+        
+        {ESLVal l = $1008;
+        
+        {ESLVal _v155 = $1007;
+        
+        return typeFV1(_v155,fv);
+      }
+      }
+      }
+    case "BagType": {ESLVal $1006 = _v136.termRef(0);
+        ESLVal $1005 = _v136.termRef(1);
+        
+        {ESLVal l = $1006;
+        
+        {ESLVal _v154 = $1005;
+        
+        return typeFV1(_v154,fv);
+      }
+      }
+      }
+    case "SetType": {ESLVal $1004 = _v136.termRef(0);
+        ESLVal $1003 = _v136.termRef(1);
+        
+        {ESLVal l = $1004;
+        
+        {ESLVal _v153 = $1003;
+        
+        return typeFV1(_v153,fv);
+      }
+      }
+      }
+    case "NullType": {ESLVal $1002 = _v136.termRef(0);
+        
+        {ESLVal l = $1002;
+        
+        return fv;
+      }
+      }
+    case "ObserverType": {ESLVal $1001 = _v136.termRef(0);
+        ESLVal $1000 = _v136.termRef(1);
+        ESLVal $999 = _v136.termRef(2);
+        
+        {ESLVal l = $1001;
+        
+        {ESLVal s = $1000;
+        
+        {ESLVal m = $999;
+        
+        return typeFV1(s,typeFV1(m,fv));
+      }
+      }
+      }
+      }
+    case "ObservedType": {ESLVal $998 = _v136.termRef(0);
+        ESLVal $997 = _v136.termRef(1);
+        ESLVal $996 = _v136.termRef(2);
+        
+        {ESLVal l = $998;
+        
+        {ESLVal s = $997;
+        
+        {ESLVal m = $996;
+        
+        return typeFV1(s,typeFV1(m,fv));
+      }
+      }
+      }
+      }
+    case "RecordType": {ESLVal $995 = _v136.termRef(0);
+        ESLVal $994 = _v136.termRef(1);
+        
+        {ESLVal l = $995;
+        
+        {ESLVal fs = $994;
+        
+        return typesFV1(new ESLVal(new Function(new ESLVal("qual"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal $qualArg = $args[0];
+        {ESLVal _v139 = $qualArg;
+              
+              switch(_v139.termName) {
+              case "Dec": {ESLVal $1043 = _v139.termRef(0);
+                ESLVal $1042 = _v139.termRef(1);
+                ESLVal $1041 = _v139.termRef(2);
+                ESLVal $1040 = _v139.termRef(3);
+                
+                {ESLVal _v151 = $1043;
+                
+                {ESLVal n = $1042;
+                
+                {ESLVal _v152 = $1041;
+                
+                {ESLVal dt = $1040;
+                
+                return ESLVal.list(ESLVal.list(_v152));
+              }
+              }
+              }
+              }
+              }
+              default: {ESLVal _0 = _v139;
+                
+                return $nil;
+              }
+            }
+            }
+          }
+        }).map(fs).flatten().flatten(),fv);
+      }
+      }
+      }
+    case "RecType": {ESLVal $993 = _v136.termRef(0);
+        ESLVal $992 = _v136.termRef(1);
+        ESLVal $991 = _v136.termRef(2);
+        
+        {ESLVal l = $993;
+        
+        {ESLVal a = $992;
+        
+        {ESLVal _v148 = $991;
+        
+        return filter(new ESLVal(new Function(new ESLVal("fun212"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v149 = $args[0];
+        {ESLVal _v138 = _v149;
+              
+              switch(_v138.termName) {
+              case "VarType": {ESLVal $1039 = _v138.termRef(0);
+                ESLVal $1038 = _v138.termRef(1);
+                
+                {ESLVal _v150 = $1039;
+                
+                {ESLVal n = $1038;
+                
+                return n.eql(a).not();
+              }
+              }
+              }
+              default: return error(new ESLVal("case error at Pos(83001,83049)").add(ESLVal.list(_v138)));
+            }
+            }
+          }
+        }),typeFV1(_v148,$nil)).add(fv);
+      }
+      }
+      }
+      }
+    case "StrType": {ESLVal $990 = _v136.termRef(0);
+        
+        {ESLVal l = $990;
+        
+        return fv;
+      }
+      }
+    case "TableType": {ESLVal $989 = _v136.termRef(0);
+        ESLVal $988 = _v136.termRef(1);
+        ESLVal $987 = _v136.termRef(2);
+        
+        {ESLVal l = $989;
+        
+        {ESLVal k = $988;
+        
+        {ESLVal v = $987;
+        
+        return typeFV1(k,typeFV1(v,fv));
+      }
+      }
+      }
+      }
+    case "TypeClosure": {ESLVal $986 = _v136.termRef(0);
+        
+        {ESLVal f = $986;
+        
+        return $nil;
+      }
+      }
+    case "TermType": {ESLVal $985 = _v136.termRef(0);
+        ESLVal $984 = _v136.termRef(1);
+        ESLVal $983 = _v136.termRef(2);
+        
+        {ESLVal l = $985;
+        
+        {ESLVal n = $984;
+        
+        {ESLVal ts = $983;
+        
+        return typesFV1(ts,fv);
+      }
+      }
+      }
+      }
+    case "TypeFun": {ESLVal $982 = _v136.termRef(0);
+        ESLVal $981 = _v136.termRef(1);
+        ESLVal $980 = _v136.termRef(2);
+        
+        {ESLVal l = $982;
+        
+        {ESLVal ns = $981;
+        
+        {ESLVal _v145 = $980;
+        
+        return filter(new ESLVal(new Function(new ESLVal("fun213"),getSelf()) {
+          public ESLVal apply(ESLVal... $args) {
+            ESLVal _v146 = $args[0];
+        {ESLVal _v137 = _v146;
+              
+              switch(_v137.termName) {
+              case "VarType": {ESLVal $1037 = _v137.termRef(0);
+                ESLVal $1036 = _v137.termRef(1);
+                
+                {ESLVal _v147 = $1037;
+                
+                {ESLVal n = $1036;
+                
+                return member.apply(n,ns).not();
+              }
+              }
+              }
+              default: return error(new ESLVal("case error at Pos(83345,83405)").add(ESLVal.list(_v137)));
+            }
+            }
+          }
+        }),typeFV1(_v145,$nil)).add(fv);
+      }
+      }
+      }
+      }
+    case "UnfoldType": {ESLVal $979 = _v136.termRef(0);
+        ESLVal $978 = _v136.termRef(1);
+        
+        {ESLVal l = $979;
+        
+        {ESLVal _v144 = $978;
+        
+        return typeFV1(_v144,fv);
+      }
+      }
+      }
+    case "UnionType": {ESLVal $977 = _v136.termRef(0);
+        ESLVal $976 = _v136.termRef(1);
+        
+        {ESLVal l = $977;
+        
+        {ESLVal ts = $976;
+        
+        return typesFV1(ts,fv);
+      }
+      }
+      }
+    case "VarType": {ESLVal $975 = _v136.termRef(0);
+        ESLVal $974 = _v136.termRef(1);
+        
+        {ESLVal l = $975;
+        
+        {ESLVal n = $974;
+        
+        return fv.cons(t);
+      }
+      }
+      }
+    case "VoidType": {ESLVal $973 = _v136.termRef(0);
+        
+        {ESLVal l = $973;
+        
+        return fv;
+      }
+      }
+    case "UnionRef": {ESLVal $972 = _v136.termRef(0);
+        ESLVal $971 = _v136.termRef(1);
+        ESLVal $970 = _v136.termRef(2);
+        
+        {ESLVal l = $972;
+        
+        {ESLVal _v143 = $971;
+        
+        {ESLVal n = $970;
+        
+        return typeFV1(_v143,fv);
+      }
+      }
+      }
+      }
+      default: {ESLVal x = _v136;
+        
+        return error(x);
+      }
+    }
+    }
+  }
+  private static ESLVal typeFV1 = new ESLVal(new Function(new ESLVal("typeFV1"),null) { public ESLVal apply(ESLVal... args) { return typeFV1(args[0],args[1]); }});
 public static void main(String[] args) {
     newActor(main,new ESLVal(new Actor())); 
   }

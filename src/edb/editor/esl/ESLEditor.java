@@ -26,23 +26,14 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang3.StringUtils;
-import org.fife.ui.autocomplete.AutoCompletion;
-import org.fife.ui.autocomplete.BasicCompletion;
-import org.fife.ui.autocomplete.CompletionProvider;
-import org.fife.ui.autocomplete.DefaultCompletionProvider;
-import org.fife.ui.autocomplete.ShorthandCompletion;
 import org.fife.ui.rsyntaxtextarea.parser.AbstractParser;
 
 import ast.actors.Act;
-import ast.actors.New;
-import ast.actors.Self;
 import ast.binding.Binding;
 import ast.binding.FunBind;
 import ast.binding.Var;
 import ast.binding.declarations.DeclaringLocation;
-import ast.control.Block;
-import ast.data.Ref;
-import ast.general.AST;
+import ast.binding.declarations.ReferencingLocation;
 import ast.modules.Module;
 import ast.patterns.Pattern;
 import ast.tests.BArm;
@@ -52,8 +43,6 @@ import ast.types.Type;
 import ast.types.TypeError;
 import ast.types.TypePatternError;
 import ast.types.Union;
-import compiler.DynamicVar;
-import compiler.FrameVar;
 import edb.editor.basic.EditorTextArea;
 import edb.editor.basic.FileEditor;
 import edb.editor.basic.ParserListener;
@@ -62,15 +51,7 @@ import edb.frame.SystemClipboard;
 import edb.tool.EDB;
 import esl.lib.ESLVal;
 import esl.lib.Lib;
-import instrs.apply.Return;
-import list.Nil;
-import runtime.ESL;
-import runtime.actors.Actor;
-import runtime.actors.Behaviour;
 import runtime.actors.Builtins;
-import runtime.data.Key;
-import runtime.functions.Closure;
-import runtime.functions.CodeBox;
 import values.Located;
 
 public class ESLEditor extends FileEditor implements ParserListener {
@@ -174,16 +155,6 @@ public class ESLEditor extends FileEditor implements ParserListener {
 			Collections.sort(names);
 			SystemClipboard.copy(String.join(",", names));
 		});
-	}
-
-	private JMenu getCopyMenu(JPopupMenu menu) {
-		for (Component c : menu.getComponents()) {
-			if (c instanceof JMenu) {
-				JMenu m = (JMenu) c;
-				if (m.getText().equals("Copy to Clipboard")) return m;
-			}
-		}
-		return new JMenu("Copy To Clipboard");
 	}
 
 	private void addData(JPopupMenu menu, Module module) {
@@ -369,12 +340,84 @@ public class ESLEditor extends FileEditor implements ParserListener {
 		insertString(s, start);
 	}
 
+	private void compile() {
+		try {
+			if (getModule(false) != null) {
+				Module module = getModule(false);
+				String path = new File(module.getPath()).getAbsolutePath();
+				String edb = new File(".").getCanonicalPath();
+				Path pathAbsolute = Paths.get(path);
+				Path pathBase = Paths.get(edb);
+				Path pathRelative = pathBase.relativize(pathAbsolute);
+				ClassLoader parentClassLoader = Lib.class.getClassLoader();
+				DynamicClassLoader classLoader = new DynamicClassLoader(parentClassLoader);
+				Class<?> compiler = classLoader.loadClass("esl.compiler.Compiler");
+				Field compileFile = compiler.getField("compileFile");
+				ESLVal compileFileFunction = (ESLVal) compileFile.get(null);
+				compileFileFunction.funVal.apply(new ESLVal(EDB.isWindows() ? pathRelative.toString().replace("\\", "/") : pathRelative.toString()));
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void runFile() {
+		try {
+			if (getModule(false) != null) {
+				Module module = getModule(false);
+				String path = new File(module.getPath()).getAbsolutePath();
+				String edb = new File(".").getCanonicalPath();
+				Path pathAbsolute = Paths.get(path);
+				Path pathBase = Paths.get(edb);
+				Path pathRelative = pathBase.relativize(pathAbsolute);
+				ClassLoader parentClassLoader = Lib.class.getClassLoader();
+				DynamicClassLoader classLoader = new DynamicClassLoader(parentClassLoader);
+				Class<?> compiler = classLoader.loadClass("esl.compiler.Compiler");
+				Field compileFile = compiler.getField("runFile");
+				ESLVal compileFileFunction = (ESLVal) compileFile.get(null);
+				compileFileFunction.funVal.apply(new ESLVal(EDB.isWindows() ? pathRelative.toString().replace("\\", "/") : pathRelative.toString()));
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private Type foldData(String name, Type type) {
 		if (type instanceof Rec) {
 			Rec rec = (Rec) type;
 			return rec.type.substType(new ast.types.Var(-1, -1, name, null), rec.name);
 		} else
 			return type;
+	}
+
+	private JMenu getCopyMenu(JPopupMenu menu) {
+		for (Component c : menu.getComponents()) {
+			if (c instanceof JMenu) {
+				JMenu m = (JMenu) c;
+				if (m.getText().equals("Copy to Clipboard")) return m;
+			}
+		}
+		return new JMenu("Copy To Clipboard");
 	}
 
 	public JPopupMenu getMenu(JPopupMenu menu) {
@@ -463,9 +506,10 @@ public class ESLEditor extends FileEditor implements ParserListener {
 		if (module != null) {
 			int charIndex = a.viewToModel(new Point(x, y));
 			Located over = module.getLocated(charIndex);
-			if (over instanceof Var) {
-				Var var = (Var) over;
-				DeclaringLocation declaration = var.getDeclaringLocation();
+			if (over instanceof ReferencingLocation) {
+				ReferencingLocation l = (ReferencingLocation) over;
+				DeclaringLocation declaration = l.getDeclaringLocation();
+				getEditorPanel().getBackLocations().add(a.getCaretPosition());
 				if (declaration != null) {
 					a.setCaretPosition(declaration.getLineStart());
 				}
@@ -499,40 +543,7 @@ public class ESLEditor extends FileEditor implements ParserListener {
 	}
 
 	public void run(File file, String configName, Vector<FunBind> tracedFuns, Vector<BArm> tracedArms, Vector<Act> tracedActs) {
-		compile();
-	}
-	
-
-
-	private void compile() {
-		try {
-			if (getModule(false) != null) {
-				Module module = getModule(false);
-				String path = new File(module.getPath()).getAbsolutePath();
-				String edb = new File(".").getCanonicalPath();
-				Path pathAbsolute = Paths.get(path);
-				Path pathBase = Paths.get(edb);
-				Path pathRelative = pathBase.relativize(pathAbsolute);
-				ClassLoader parentClassLoader = Lib.class.getClassLoader();
-				DynamicClassLoader classLoader = new DynamicClassLoader(parentClassLoader);
-				Class<?> compiler = classLoader.loadClass("esl.compiler.Compiler");
-				Field compileFile = compiler.getField("compileFile");
-				ESLVal compileFileFunction = (ESLVal) compileFile.get(null);
-				compileFileFunction.funVal.apply(new ESLVal(EDB.isWindows() ? pathRelative.toString().replace("\\","/") : pathRelative.toString())); 
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		runFile();
 	}
 
 	private void trace(FunBind fun) {

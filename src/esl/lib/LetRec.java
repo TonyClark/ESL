@@ -1,5 +1,7 @@
 package esl.lib;
 
-public interface LetRec {
+import java.io.Serializable;
+
+public interface LetRec extends Serializable {
 	public ESLVal get(String name);
 }

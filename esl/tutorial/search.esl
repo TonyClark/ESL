@@ -1,6 +1,6 @@
 export main;
 
-Act Main       {                   }
+Act Main       {                   } 
 Act Searcher   { Time(Int);        }   // Hunting for the *
 Act Controller { Time(Int); Found; }   // Informed when * is found.
 

@@ -265,6 +265,13 @@ public class Binding extends Dec {
 		this.value = value;
 	}
 
+	private ast.types.Fun asFunType(Type type) {
+		if (type instanceof Forall) {
+			return asFunType(((Forall) type).type);
+		} else
+			return (ast.types.Fun) type;
+	}
+
 	public Binding desugar() {
 		return this;
 	}
@@ -275,6 +282,17 @@ public class Binding extends Dec {
 
 	public void FV(HashSet<String> vars) {
 		value.FV(vars);
+	}
+
+	public ast.types.Act getAct() {
+		Fun fun = (Fun) getValue();
+		ast.types.Fun funType = asFunType(fun.getType());
+		Type range = funType.getRange();
+		if(range instanceof ast.types.Apply) {
+			ast.types.Apply apply = (ast.types.Apply)range;
+			range = apply.getType();
+		}
+		return (ast.types.Act) range;
 	}
 
 	private Dec[] getActBindingArgs() {
@@ -300,6 +318,12 @@ public class Binding extends Dec {
 		Fun fun = (Fun) getValue();
 		Act act = (Act) fun.getBody();
 		return act.getBindings();
+	}
+
+	public Act getBehaviour() {
+		Fun fun = (Fun) getValue();
+		Act act = (Act) fun.getBody();
+		return act;
 	}
 
 	public String getLabel() {
@@ -385,30 +409,6 @@ public class Binding extends Dec {
 			return getType();
 		} else
 			throw new TypeError(declaredType.getLineStart(), declaredType.getLineEnd(), name + " is declared to be of type " + declaredType + " but its value is of type " + actualType);
-	}
-
-	public ast.types.Act getAct() {
-		Fun fun = (Fun) getValue();
-		ast.types.Fun funType = asFunType(fun.getType());
-		Type range = funType.getRange();
-		if(range instanceof ast.types.Apply) {
-			ast.types.Apply apply = (ast.types.Apply)range;
-			range = apply.getType();
-		}
-		return (ast.types.Act) range;
-	}
-
-	private ast.types.Fun asFunType(Type type) {
-		if (type instanceof Forall) {
-			return asFunType(((Forall) type).type);
-		} else
-			return (ast.types.Fun) type;
-	}
-
-	public Act getBehaviour() {
-		Fun fun = (Fun) getValue();
-		Act act = (Act) fun.getBody();
-		return act;
 	}
 
 }

@@ -13,10 +13,10 @@ Act Main {
 act main::Main {
   // Defines a behaviour that conforms to a behaviour
   // type. May contain local state, local functions and
-  // message handlers...
+  // message handlers... 
   Time(n::Int) when n > 1000 -> stopAll();
-  Time(n::Int) -> {
-    print[Str]('time = ' + n); 
+  Time(n::Int) -> { 
+    print[Str]('time = ' + n);
     wait(1);
   }
 }

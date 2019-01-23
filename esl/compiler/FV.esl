@@ -1,0 +1,90 @@
+export freeVars, bindingFV;
+
+import 'esl/compiler/types.esl', 'esl/lists.esl';
+
+remStr(s::Str,ss::[Str])::[Str] = remove[Str](s,ss);
+remStrs(ss1::[Str],ss2::[Str])::[Str] = removeAll[Str](ss1,ss2);
+
+bindingFV(b::TBind)::[Str] =
+  case b {
+    TypeBind(v0::Loc,v1::Str,v2::Type,v3::AST)                               -> [];
+    CnstrBind(v0::Loc,v1::Str,v2::Type,v3::AST)                              -> [];
+    FunBind(v0,v1::Str,v2::[Pattern],v3::Type,v4::Type,body::AST,guard::AST) -> remStrs([ n | p <- v2, n <- patternNames(p) ],freeVars(body));
+    FunBinds(n,FunCase(l,args,t,g,e):cases)                                  -> [];
+    Binding(v0::Loc,v1::Str,v2::Type,v3::Type,v4::AST)                       -> freeVars(v4);
+    DataBind(v0::Loc,v1::Str,v2::Type,v3::AST)                               -> [];
+  }
+
+armFV(a::Arm)::[Str] =
+  case a {
+    BArm(l,ps,g,e) -> 
+      let bound::[Str] = [ n | p <- ps, n <- patternNames(p) ];
+      in remStrs(bound, freeVars(g) + freeVars(e));
+  }
+  
+freeVars(e::AST)::[Str] =
+  case e {
+    ActExp(l::Loc,name::AST,args::[TDec],exports::[Str],parent::AST,bindings::[TBind],init::AST,handlers::[Arm]) -> 
+      let outerBoundVars::[Str] = [ n | Dec(l,n,t,dt) <- args ];
+          innerBoundVars::[Str] = [ bindingName(b) | b <- bindings ];
+          bindingFV::[Str] = [ n | b <- bindings, n <- bindingFV(b) ];
+          handlerFV::[Str] = [ n | a <- handlers, n <- armFV(a) ];
+          parentFV::[Str] = if parent = null[AST] then []; else freeVars(parent);
+      in remStrs(outerBoundVars,freeVars(name) + parentFV + freeVars(init)) + 
+         remStrs(outerBoundVars+innerBoundVars,bindingFV+handlerFV);
+         
+    Apply(v0::Loc,v1::AST,v2::[AST])                 -> freeVars(v1) + [ n | e <- v2, n <- freeVars(e) ];
+    ApplyTypeExp(v0::Loc,v1::AST,v2::[Type])         -> freeVars(v1); 
+    ArrayRef(v0::Loc,v1::AST,v2::AST)                -> freeVars(v1) + freeVars(v2);
+    ArrayUpdate(v0::Loc,v1::AST,v2::AST,v3::AST)     -> freeVars(v1) + freeVars(v2) + freeVars(v3);
+    BagExp(v0::Loc,v1::[AST])                        -> [ n | e <- v1, n <- freeVars(e) ];
+    Become(v0::Loc,v1::AST)                          -> freeVars(v1);
+    BinExp(v0::Loc,v1::AST,v2::Str,v3::AST)          -> freeVars(v1) + freeVars(v3);
+    Block(v0::Loc,v1::[AST])                         -> [ n | e <- v1, n <- freeVars(e) ];
+    BoolExp(v0::Loc,v1::Bool)                        -> [];
+    Case(v0::Loc,v1::[TDec],v2::[AST],v3::[Arm])     -> [ n | e <- v2, n <- freeVars(e) ] + [ n | a <- v3, n <- armFV(a) ];
+    Cmp(l,e,[])                                      -> freeVars(e);
+    Cmp(l,e,BQual(ql,qp,qe):qs)                      -> freeVars(qe) + remStrs(patternNames(qp),freeVars(Cmp(l,e,qs)));
+    Cmp(l,e,PQual(ql,qe):qs)                         -> freeVars(qe) + freeVars(Cmp(l,e,qs));
+    Cons(v0::AST,v1::AST)                            -> freeVars(v0) + freeVars(v1);
+    For(v0::Loc,v1::Pattern,v2::AST,v3::AST)         -> freeVars(v2) + remStrs(patternNames(v1),freeVars(v3));
+    FunExp(v0,v1::AST,v2::[TDec],v3::Type,v4::AST)   -> remStrs([n | Dec(l,n,t,dt) <- v2],freeVars(v1)+freeVars(v4));
+    Grab(v0::Loc,v1::[DRef],v2::AST)                 -> [n | VarDynamicRef(l,e) <- v1, n <- freeVars(e)] + freeVars(v2);
+    If(v0::Loc,v1::AST,v2::AST,v3::AST)              -> freeVars(v1) + freeVars(v2) + freeVars(v3);
+    IntExp(v0::Loc,v1::Int)                          -> [];
+    FloatExp(v0::Loc,v1::Float)                      -> [];
+    Fold(v0::Loc,v1::Type,v2::AST)                   -> freeVars(v2);
+    Head(v0::AST)                                    -> freeVars(v0);
+    Let(v0::Loc,v1::[TBind],v2::AST)                 -> [ n | b <- v1, n <- bindingFV(b) ] + remStrs([bindingName(b) | b <- v1],freeVars(v2));
+    Letrec(v0::Loc,v1::[TBind],v2::AST)              -> remStrs([bindingName(b) | b <- v1],[ n | b <- v1, n <- bindingFV(b) ] + freeVars(v2));
+    List(v0::Loc,v1::[AST])                          -> [ n | e <- v1, n <- freeVars(e) ];
+    Module(v0,v1::Str,v2,v3,v4,v5,v6::[TBind])       -> remStrs([bindingName(b) | b <- v6],[ n | b <- v6, n <- bindingFV(b) ]);
+    New(v0::Loc,v1::AST,v2::[AST])                   -> freeVars(v1) + [ n | e <- v2, n <- freeVars(e) ];
+    NewArray(v0::Loc,v1::Type,v2::AST)               -> freeVars(v2);
+    NewJava(v0::Loc,v1::Str,v2::Type,v3::[AST])      -> [ n | e <- v3, n <- freeVars(e) ];
+    NewTable(v0::Loc,v1::Type,v2::Type)              -> [];
+    Not(v0::Loc,v1::AST)                             -> freeVars(v1);
+    Now(v0::Loc)                                     -> [];
+    NullExp(v0::Loc)                                 -> [];
+    PLet(v0::Loc,v1::[TBind],v2::AST)                -> [ n | b <- v1, n <- bindingFV(b) ] + remStrs([bindingName(b) | b <- v1],freeVars(v2));
+    Probably(v0,v1::AST,v2::Type,v3::AST,v4::AST)    -> freeVars(v1) + freeVars(v3) + freeVars(v4);
+    Record(v0::Loc,v1::[TBind])                      -> [ n | b <- v1, n <- bindingFV(b) ];
+    RefSuper(v0::Loc,v1::Str)                        -> [];
+    Ref(v0::Loc,v1::AST,v2::Str)                     -> freeVars(v1);
+    Self(v0::Loc)                                    -> [];
+    Send(v0::Loc,v1::AST,v2::AST)                    -> freeVars(v1) + freeVars(v2);
+    SendSuper(v0::Loc,v1::AST)                       -> freeVars(v1);
+    SendTimeSuper(v0::Loc)                           -> [];
+    SetExp(v0::Loc,v1::[AST])                        -> [ n | e <- v1, n <- freeVars(e) ]; 
+    StrExp(v0::Loc,v1::Str)                          -> [];
+    Tail(v0::AST)                                    -> freeVars(v0);
+    Term(v0::Loc,v1::Str,v2::[Type],v3::[AST])       -> [ n | e <- v3, n <- freeVars(e) ];
+    TermRef(v0::AST,v1::Int)                         -> freeVars(v0);
+    Throw(v0::Loc,v1::Type,v2::AST)                  -> freeVars(v2);
+    Try(v0::Loc,v1::AST,v2::[Arm])                   -> freeVars(v1) + [ n | a <- v2, n <- armFV(a) ];
+    Update(v0::Loc,v1::Str,v2::AST)                  -> [v1] + freeVars(v2);
+    Unfold(v0::Loc,v1::Type,v2::AST)                 -> freeVars(v2);
+    Var(v0::Loc,v1::Str)                             -> [v1];
+  }
+
+

@@ -1,0 +1,170 @@
+/********************************************************************************************************************************
+ *                                                                                                                              *
+ *                                              Introduce Method Transforms                                                     *
+ *                                              ===========================                                                     *
+ *                                                                                                                              *
+ *                                                                                                                              *
+ *                                                                                                                              *
+ ********************************************************************************************************************************/
+ 
+export addMethodCalls;
+
+import   
+  'esl/lists.esl', 
+  'esl/compiler/types.esl',
+  'esl/compiler/info.esl';
+
+addMethodCalls(module::JMod)::JMod = 
+  case module {
+    JModule(name,exports,imports,methods,fields) -> {
+      let importedMethodNames::[Str] = [ n | path <- imports, n <- getCachedModuleExportedMethodNames(path) ];
+          methodNames::[Str] = [ n | JMethod(n,args,body) <- methods ]; in
+      let newMethods::[JMethodDef] = [ walkJMethodDef(m,methodNames+importedMethodNames) | m <- methods ];
+          newFields::[JFieldDef] = [ JField(n,t,walkJExp(e,methodNames+importedMethodNames)) | JField(n,t,e) <- fields ];
+      in JModule(name,exports,imports,newMethods,newFields);
+    }
+  }
+
+walkJMethodDef(method::JMethodDef,methodNames::[Str])::JMethodDef =
+  case method {
+    JMethod(n,args,body) ->
+      let argNames::[Str] = [ n | JDec(n,t) <- args ]; in
+      let methodNames::[Str] = removeAll[Str](argNames,methodNames);
+      in JMethod(n,args,walkJCommand(body,methodNames));
+  }
+
+walkJExp(x::JExp,methodNames::[Str])::JExp = {
+  case x {
+    JApply(JVar(n,t),args) when member[Str](n,methodNames) -> JMethodCall(n,[ walkJExp(e,methodNames) | e <- args ]); 
+    JApply(op,args) -> JApply(walkJExp(op,methodNames),[ walkJExp(e,methodNames) | e <- args ]);
+    JArrayRef(array,index) -> JArrayRef(walkJExp(array,methodNames),walkJExp(index,methodNames));
+    JArrayUpdate(array,index,value) -> JArrayUpdate(walkJExp(array,methodNames),walkJExp(index,methodNames),walkJExp(value,methodNames));
+    JBag(t,values) -> JBag(t,[ walkJExp(v,methodNames) | v <- values ]);
+    JBecome(behaviour,args) -> JBecome(walkJExp(behaviour,methodNames),[ walkJExp(arg,methodNames) | arg <- args ]);
+    JBehaviour(exports,fields,methods,parent,init,handler) -> 
+      let fieldNames::[Str] = [ n | JField(n,t,v) <- fields ]; in
+      let methodNames::[Str] = removeAll[Str](fieldNames,methodNames) + [ n | JMethod(n,args,body) <- methods ];
+      in JBehaviour(exports,[ walkJFieldDef(f,methodNames) | f <- fields ],[ walkJMethodDef(m,methodNames) | m <- methods ],walkJExp(parent,methodNames),walkJExp(init,methodNames),walkJCommand(handler,methodNames));
+    JBinExp(e1,op,e2) -> JBinExp(walkJExp(e1,methodNames),op,walkJExp(e2,methodNames));
+    JCmpExp(cmp) -> JCmpExp(walkJCmp(cmp,methodNames));
+    JCommandExp(c,t) -> JCommandExp(walkJCommand(c,methodNames),t);
+    JConstExp(c) -> JConstExp(c);
+    JError(e) -> JError(walkJExp(e,methodNames));
+    JExtendedBehaviour(exports,parent,fields,methods,init,handler,time) -> 
+      let fieldNames::[Str] = [ n | JField(n,t,v) <- fields ]; in
+      let methodNames::[Str] = removeAll[Str](fieldNames,methodNames) + [ n | JMethod(n,args,body) <- methods ];
+      in JExtendedBehaviour(exports,walkJExp(parent,methodNames),[ walkJFieldDef(f,methodNames) | f <- fields ],[ walkJMethodDef(m,methodNames) | m <- methods ],walkJExp(init,methodNames),walkJExp(handler,methodNames),walkJCommand(time,methodNames));
+    JFlatten(e) -> JFlatten(walkJExp(e,methodNames));
+    JFun(name,args,t,body) -> 
+      let argNames::[Str] = [ n | JDec(n,t) <- args ]; in
+      let methodNames::[Str] = removeAll[Str](argNames,methodNames);
+      in JFun(walkJExp(name,methodNames),args,t,walkJCommand(body,methodNames));
+    JGrab(es,body) -> JGrab([ walkJExp(e,methodNames) | e <- es ],walkJExp(body,methodNames));
+    JHead(e) -> JHead(walkJExp(e,methodNames));
+    JIfExp(e1,e2,e3) -> JIfExp(walkJExp(e1,methodNames),walkJExp(e2,methodNames),walkJExp(e3,methodNames));
+    JList(t,es) -> JList(t,[ walkJExp(e,methodNames) | e <- es ]);
+    JMapFun(f,e) -> JMapFun(walkJExp(f,methodNames),walkJExp(e,methodNames));
+    JNew(b,args) -> JNew(walkJExp(b,methodNames),[ walkJExp(arg,methodNames) | arg <- args ]);
+    JNewArray(e) -> JNewArray(walkJExp(e,methodNames));
+    JNewJava(path,args) -> JNewJava(path,[ walkJExp(e,methodNames) | e <- args ]);
+    JNewTable -> JNewTable;
+    JNil(t) -> JNil(t);
+    JNot(e) -> JNot(walkJExp(e,methodNames));
+    JNow -> JNow;
+    JNull -> JNull;
+    JProbably(e1,e2,e3) -> JProbably(walkJExp(e1,methodNames),walkJExp(e2,methodNames),walkJExp(e3,methodNames));
+    JRecord(fields) -> JRecord([ walkJFieldDef(f,methodNames) | f <- fields ]);
+    JRef(e,name) -> JRef(walkJExp(e,methodNames),name);
+    JRefSuper(name) -> JRefSuper(name);
+    JSelf -> JSelf;
+    JSend(e,name,args) -> JSend(walkJExp(e,methodNames),name,[ walkJExp(e,methodNames) | e <- args ]);
+    JSendSuper(e) -> JSendSuper(walkJExp(e,methodNames));
+    JSendTimeSuper -> JSendTimeSuper;
+    JSet(t,values) -> JSet(t,[ walkJExp(e,methodNames) | e <- values ]);
+    JTail(e) -> JTail(walkJExp(e,methodNames));
+    JTerm(name,values) -> JTerm(name,[ walkJExp(e,methodNames) | e <- values ]);
+    JTermRef(e,i) -> JTermRef(walkJExp(e,methodNames),i);
+    JTry(e,n,c) -> JTry(walkJExp(e,methodNames),n,walkJCommand(c,methodNames));
+    JVar(name,t) -> JVar(name,t);
+  }
+}
+
+walkJFieldDef(x::JFieldDef,methodNames::[Str])::JFieldDef = {
+  case x {
+    JField(name,t,value) -> JField(name,t,walkJExp(value,methodNames));
+  }
+}
+
+walkJCommand(x::JCommand,methodNames::[Str])::JCommand = {
+  case x {
+    JBlock(commands) -> JBlock([ walkJCommand(c,methodNames) | c <- commands ]);
+    JCaseBool(e,boolArms,alt) -> JCaseBool(walkJExp(e,methodNames),[ walkJBoolArm(a,methodNames) | a <- boolArms ],walkJCommand(alt,methodNames));
+    JCaseInt(e,intArms,alt) -> JCaseInt(walkJExp(e,methodNames),[ walkJIntArm(a,methodNames) | a <- intArms ],walkJCommand(alt,methodNames));
+    JCaseList(e,head,tail,alt) -> JCaseList(walkJExp(e,methodNames),walkJCommand(head,methodNames),walkJCommand(tail,methodNames),walkJCommand(alt,methodNames));
+    JCaseStr(e,strArms,alt) -> JCaseStr(walkJExp(e,methodNames),[ walkJStrArm(a,methodNames) | a <- strArms ],walkJCommand(alt,methodNames));
+    JCaseTerm(e,termArms,alt) -> JCaseTerm(walkJExp(e,methodNames),[ walkJTermArm(a,methodNames) | a <- termArms ],walkJCommand(alt,methodNames));
+    JFor(n1,n2,e,c) -> JFor(n1,n2,walkJExp(e,methodNames),walkJCommand(c,methodNames));
+    JIfCommand(e,c1,c2) -> JIfCommand(walkJExp(e,methodNames),walkJCommand(c1,methodNames),walkJCommand(c2,methodNames));
+    JLet(fields,body) -> 
+      let fieldNames::[Str] = [ n | JField(n,t,v) <- fields ]; in
+      let methodNames2::[Str] = removeAll[Str](fieldNames,methodNames);
+      in JLet([ walkJFieldDef(f,methodNames) | f <- fields ],walkJCommand(body,methodNames2));
+    JLetRec(fields,body) -> 
+      let fieldNames::[Str] = [ n | JField(n,t,v) <- fields ]; in
+      let methodNames::[Str] = removeAll[Str](fieldNames,methodNames);
+      in JLetRec([ walkJFieldDef(f,methodNames) | f <- fields ],walkJCommand(body,methodNames));
+    JPLet(fields,body) -> 
+      let fieldNames::[Str] = [ n | JField(n,t,v) <- fields ]; in
+      let methodNames2::[Str] = removeAll[Str](fieldNames,methodNames);
+      in JPLet([ walkJFieldDef(f,methodNames) | f <- fields ],walkJCommand(body,methodNames2));
+    JReturn(e) -> JReturn(walkJExp(e,methodNames));
+    JStatement(e) -> JStatement(walkJExp(e,methodNames));
+    JSwitch(e,cases,command) -> JSwitch(walkJExp(e,methodNames),[ walkJCase(c,methodNames) | c <- cases ],walkJCommand(command,methodNames));
+    JSwitchList(e,c1,c2,c3) -> JSwitchList(walkJExp(e,methodNames),walkJCommand(c1,methodNames),walkJCommand(c2,methodNames),walkJCommand(c3,methodNames));
+    JUpdate(n,e) -> JUpdate(n,walkJExp(e,methodNames));
+  }
+}
+
+walkJBoolArm(x::JBoolArm,methodNames::[Str])::JBoolArm = {
+  case x {
+    JBArm(b,command) -> JBArm(b,walkJCommand(command,methodNames));
+  }
+}
+
+walkJIntArm(x::JIntArm,methodNames::[Str])::JIntArm = {
+  case x {
+    JIArm(i,command) -> JIArm(i,walkJCommand(command,methodNames));
+  }
+}
+
+walkJStrArm(x::JStrArm,methodNames::[Str])::JStrArm = {
+  case x {
+    JSArm(s,command) -> JSArm(s,walkJCommand(command,methodNames));
+  }
+}
+
+walkJTermArm(x::JTermArm,methodNames::[Str])::JTermArm = {
+  case x {
+    JTArm(name,index,command) -> JTArm(name,index,walkJCommand(command,methodNames));
+  }
+}
+
+walkJCase(x::JCase,methodNames::[Str])::JCase = {
+  case x {
+    JCaseOf(k,command) -> JCaseOf(k,walkJCommand(command,methodNames));
+  }
+}
+
+walkJCmp(x::JCmp,methodNames::[Str])::JCmp = {
+  case x {
+    JCmpList(e) -> JCmpList(walkJExp(e,methodNames));
+    JCmpOuter(n,e,c) -> JCmpOuter(n,walkJExp(e,remove[Str](n,methodNames)),walkJCmp(c,remove[Str](n,methodNames)));
+    JCmpIf(e,c) -> JCmpIf(walkJExp(e,methodNames),walkJCmp(c,methodNames));
+    JCmpBind(n,e,c) -> JCmpBind(n,walkJExp(e,remove[Str](n,methodNames)),walkJCmp(c,remove[Str](n,methodNames)));
+  }
+}
+
+
+
+
+

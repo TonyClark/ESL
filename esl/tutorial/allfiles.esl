@@ -1,0 +1,22 @@
+// Imports all the tutorial files so that they can be recompiles in one step.
+
+import 
+  'esl/tutorial/bikes.esl',
+  'esl/tutorial/collisions.esl',
+  'esl/tutorial/colourGraph.esl',
+  'esl/tutorial/example.esl',
+  'esl/tutorial/fact.esl',
+  'esl/tutorial/main.esl',
+  'esl/tutorial/mapReduce.esl',
+  'esl/tutorial/pac.esl',
+  'esl/tutorial/philosophers.esl',
+  'esl/tutorial/predator.esl',
+  'esl/tutorial/qsort.esl',
+  'esl/tutorial/search.esl',
+  'esl/tutorial/segregation.esl',
+  'esl/tutorial/services.esl',
+  'esl/tutorial/shop.esl',
+  'esl/tutorial/supply.esl',
+  'esl/tutorial/termites.esl',
+  'esl/tutorial/traffic.esl',
+  'esl/tutorial/uber.esl';

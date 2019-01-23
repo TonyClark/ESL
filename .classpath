@@ -60,7 +60,7 @@
 	<classpathentry kind="lib" path="lib/commons-collections4-4.2/commons-collections4-4.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.8.jar"/>
 	<classpathentry kind="lib" path="lib/javaGeom-0.11.2.jar"/>
+	<classpathentry kind="lib" path="lib/xpl.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/xpl"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

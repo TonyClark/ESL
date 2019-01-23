@@ -340,6 +340,8 @@ public abstract class AST implements Located, Typed, TreeNode {
 				if (value instanceof ast.types.Union) name = "UnionType";
 				if (value instanceof ast.types.Term) name = "TermType";
 				if (value instanceof ast.types.Table) name = "TableType";
+				if (value instanceof ast.types.Observer) name = "ObserverType";
+				if (value instanceof ast.types.Observed) name = "ObservedType";
 				if (value instanceof ast.types.Var) name = "VarType";
 				if (value instanceof ast.types.Rec) name = "RecType";
 				if (value instanceof ast.types.List) name = "ListType";

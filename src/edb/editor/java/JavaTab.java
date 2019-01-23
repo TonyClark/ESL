@@ -93,7 +93,6 @@ public class JavaTab extends JavaEditor implements EDBMenuProvider {
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
-		// String path = getFile().getAbsolutePath();
 		String path = getFile().getPath();
 		String[] names = (EDB.isWindows()) ? path.replace("\\", "/").split("/") : path.split("/");
 		String name = names[names.length - 1].replace(".java", "");
@@ -112,7 +111,7 @@ public class JavaTab extends JavaEditor implements EDBMenuProvider {
 		}
 	}
 
-	public String separateWith(String[] vals, String sep) {
+	public static String separateWith(String[] vals, String sep) {
 		String s = "";
 		for (int i = 0; i < vals.length; i++) {
 			s = s + vals[i].toString();

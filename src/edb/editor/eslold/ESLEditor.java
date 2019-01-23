@@ -219,7 +219,7 @@ public class ESLEditor extends FileEditor {
       // Something went wrong, so no load action.
     } else {
       // Check for parameter configurations...
-      Parameters params = module.getParams();
+      Parameters params = null;
       Configuration[] configs = params.getConfigs();
       if (configs.length == 0) {
         JMenuItem load = new JMenuItem("Load");

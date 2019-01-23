@@ -1,6 +1,6 @@
 export main;
 
-import 'esl/lists.esl', 'esl/displays.esl';
+import 'esl/lists.esl', 'esl/displays.esl';  
 
 edb::EDB = null[EDB];
 
@@ -27,7 +27,7 @@ type Customer = Act {
   TimeOut;
 } 
 
-type Assistant = Act {
+type Assistant = Act { 
 
   CompletedHelp;
   CompletedTill;

@@ -10,12 +10,12 @@ select1[T](l::[T],d::T,p::(T)->Bool)::T =
     [][T] -> d;
     h::T:t::[T] when p(h) -> h;
     h::T:t::[T] -> select1[T](t,d,p);
-  }
+  } 
 
 map[M,N](f::(M)->N,l::[M])::[N] =
   case l {
     [][M] -> [][N];
-    m:ms -> (f(m)):map[M,N](f,ms); 
+    m:ms -> (f(m)):map[M,N](f,ms);
   }
   
 remove::Forall[T](T,[T])->[T] = builtin[Forall[T] (T,[T])->[T]]('runtime.actors.Builtins','remove',2);

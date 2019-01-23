@@ -63,8 +63,9 @@
          stringstyle=\color{strings},
          commentstyle=\color{comments}, % style of comments
          keywordstyle=[1]{\ttfamily\color{keywords}}, 
-         keywords=[1]{grab,or,case,for,null,data,if,else,new,type,probably,fun,set,bag,do,
-                       fold,unfold,find,in,when,then,let,not,letrec,act,self,become,export,and,extends},
+         keywords=[1]{grab,or,case,for,null,data,if,else,new,type,probably,fun,set,bag,do,now,
+                      true,false,try,plet,super,fold,unfold,find,in,when,then,let,not,letrec,act,self,
+                      become,export,and,extends,throw},
          keywordstyle=[2]{\ttfamily\color{types}}, 
          keywords=[2]{Act,Int,Bool,Str,Float,Array,Hash,Void,Fun,rec,Set,Bag,Forall,union},
          numbers=left,
@@ -103,7 +104,7 @@
 \address{Aston University, Birmingham, UK}
 
 \begin{abstract}
-ESL is an actor-based functional language that aims to provide abstractions over applications that require a high degree of concurrency. ESL is statically typed which means that programs can be verified for type safety before they run. ESL provides extensions over the standard Actor Model, including shared state and access to the underlying Java platform, for practical application development. ESL compiles to pure Java and runs against a small Java library. The ESL compiler is written in ESL. ESL is supported by a development environment called EDB that includes libraries for data visualisation in terms of HTML, SVG and GraphViz. This report provides a reference for ESL and EDB using examples.
+ESL is an actor-based functional language that aims to provide abstractions over applications that require a high degree of concurrency. ESL is statically typed which means that programs can be verified for type safety before they run. ESL provides extensions over the standard Actor Model, including shared state and access to the underlying Java platform, for practical application development. ESL compiles to pure Java and runs against a small Java library. The ESL compiler is written in ESL. ESL is supported by a development environment called EDB that includes libraries for data storage using Excel, and data visualisation in terms of HTML, SVG and GraphViz. This report provides a reference for ESL and EDB using examples.
 \end{abstract}
 
 \end{frontmatter}
@@ -1457,6 +1458,102 @@ act pop::Population {
 \end{ESL}
 A \code{pop} actor receives a message \code{Move(a)}. Since the receiver is singly threaded, this provides \code{a} with exclusive access to the arrays \code{population} and \code{vacancies}. If each agent shared access to these resources, it is likely that movements could interleave and the state could become inconsistent. Once the move has occurred, the \code{pop} actor sends itself a \code{Move(a)} message which is queued with all other move requests. Since messages are delivered fairly, no agent is starved of movement.
 
+\subsection{Services}
+
+\label{sec:services}
+
+In a free-market economy commercial services can be traded freely without restrictions. This might lead to a conclusion that, starting in a situation where wealth is evenly distributed, freely trading services will not change the distribution. However, as shown in {\it the MSc Thesis by Roohi Bharti: HIVE - An Agent Based Modeling Framework}, free trade over time leads to a situation where wealth moves to a very small number of individuals.
+
+Suppose that the we have 100 traders each with \pounds100. The following display shows the traders where their wealth is represented by the size of the dot:
+\begin{center}
+\includegraphics[width=0.75\columnwidth]{start_services}
+\end{center}
+Trading involves a service being passed between a requester and a provider. Traders can be both service requesters and providers. Both the requester and the provider must not be involved in another transaction. The requester initiates the transaction, which may be refused by the selected trader. When the request is accepted then the transaction takes place and costs \pounds3 which is immediately transferred from the requester to the provider. After the transaction, both traders are free to perform other transactions. Even though providers are selected at random, after a short while some traders get an advantage:
+\begin{center}
+\includegraphics[width=0.75\columnwidth]{mid_services}
+\end{center}
+When the simulation is run for a long time, many traders are forced out of business. Random selection means that some traders are successful consumers more often than they are providers which places them at a disadvantage:
+\begin{center}
+\includegraphics[width=0.75\columnwidth]{end_services}
+\end{center}
+
+\begin{figure*}
+\begin{ESL}
+Act Main { Time(Int); }
+
+Act Customer  { 
+  export picture::()->Display; 
+  Inc; Dec;
+}
+
+Act Facilitator {  PairUp(Trader); }
+
+act facilitator::Facilitator {
+  
+  pending::[Trader]                = [];
+  count::Int                       = 0;
+  root::Int                        = round(isqrt(noOfTraders));
+  rowTraders(n::Int)::[Trader]      = take[Trader](drop[Trader](traders,n*root),root);
+  row(n::Int)::Row                  = Row([], [ Data([],c.picture()) | c <- rowTraders(n) ]);
+  table()::Display                 = Table([],[ row(n) | n <- 0..root ]);
+  chooseTrader()::Trader           = nth[Trader](pending,random(length[Trader](pending)));
+  
+  PairUp(c::Trader) when pending = [] -> pending := c:pending;
+  PairUp(c1::Trader) -> {
+    let c2::Trader = chooseTrader();
+    in {
+      c1 <- Inc;
+      c2 <- Dec;
+      pending := remove[Trader](c2,pending);
+      count := count + 1;
+      if count % (20 * noOfTraders) = 0 
+      then edb <- Show('Services', table());
+      else {}
+    }
+  }
+}
+
+theFacilitator::Facilitator = new facilitator;
+
+act trader(money::Int)::Trader {
+  export picture;
+  wealth::Int = money;
+  picture()::Display = Picture(60,60,[Circle(30,30,round(((wealth*20.0)/(1.0*totalMoney)) * 30.0),'')]);
+  -> theFacilitator <- PairUp(self);
+  Inc -> {
+    wealth := wealth + 3;
+    theFacilitator <- PairUp(self);
+  }
+  Dec when wealth > 3 -> {
+    wealth := wealth - 3;
+    theFacilitator <- PairUp(self);
+  }
+  Dec -> become emptyTrader;
+}
+
+act emptyTrader::Trader {
+  export picture;
+  picture()::Display = Picture(60,60,[]);
+  Inc -> {}
+  Dec -> {}
+}
+
+limit::Int            = 300000;
+noOfTraders::Int      = 100;
+initialFunds::Int     = 100;
+totalMoney::Int       = noOfTraders * initialFunds;
+traders::[Trader]     = [ new trader(initialFunds) | i <- 0..noOfTraders ];
+
+act main::Main {
+  Time(n::Int) when n < limit -> {}
+  Time(n::Int) -> stopAll();
+}
+\end{ESL}
+\caption{Services}
+\label{fig:services}
+\end{figure*}
+The implementation of services is shown in figure \ref{fig:services}. A display is generated as a square table  base don the square root of the number of traders. The size of the circle shown for each trader is scaled based on the total amount of money available in the system. Since the simulation runs for a long time, the display is not updated every cycle to prevent flickering.
+
 \section{Polymorphism}
 
 \label{sec:polymorphism}
@@ -2014,6 +2111,351 @@ An alternative implementation of the player provides a machine implemented behav
 \end{center} 
 When the Pacman creates a plan, those plans whose locations stray into danger zones are discarded. The implementation is shown in figure \ref{fig:auto_pacman}.
 
+\section{Observers}
+
+\label{sec:observers}
+
+\begin{figure}
+\includegraphics[width=0.9\columnwidth]{observer}
+\caption{Observers}
+\label{fig:observers}
+\end{figure}
+
+An ESL application contains a collection of autonomous actors. Unlike traditional applications where there is often a central controller, an actor-based application encourages control to be distributed. This raises the question: how can shared information be used influence the autonomous actors? In ESL, this can be achieved through the use of {\it observers} which is the ESL implementation of the observer pattern.
+
+Any ESL actor can be observed by one or more actors. Observation occurs by viewing the behaviour of an actor as a state machine. An actor starts in an initial state. Transitions between states occur each time a message is handled by the actor. In most cases, an actor's behaviour involves implementation detail that includes data and messages that are required for housekeeping. Therefore, we distinguish between an internal implementation-specific version of behaviour and an external logical view of behaviour. The logical view, represented as a state machine, is published by any actor that is observable. 
+
+Any actor can act as an observer by subscribing to the behaviour that is published by an observable actor. The observer is informed when the observed actors state changes. A single observed actor together with two subscribing observing actors is shown in figure \ref{fig:observers}. 
+
+In order to be observed, an actor's behaviour type must extend the following:
+\begin{ESL}
+data Maybe[T] = 
+  Something(T) 
+| Nothing;
+
+type Observed[State,Message] = Act {  
+  export 
+    observeState::() -> State;
+    observeMessage::(union { }) -> Maybe[Message];
+}
+\end{ESL}
+The behaviour type \code{Observed} has two parameters: \code{State} and \code{Message}. The first parameter is the type used to represent the logical states of the observed actor. The second parameter is the type used top represent the logical transitions of the observed actor. An observed actor must define and export two functions: \code{observeState} that maps implementation states to logical states, and \code{observeMessage} that maps messages received by the actor to logical transitions.
+
+The type \code{Maybe} is used to allow some implementation-specific messages received by an observed actor, to remain hidden. The operation \code{observeMessage} is supplied with an implementation-specific message and must decide whether to return \code{Nothing} or a value \code{Something(m)} where \code{m} is a logical representation of the message. 
+
+Note that the domain of \code{observeMessage} is \code{union \{\}} in the definition of \code{Observed}. This will be replaced with a sub-type of \code{union \{\}} in any particular observed behaviour type which must agree with the message interface. The following is a simple example:
+\begin{ESL}
+data IntMessage = M1 | M2;
+data ExtMessage = X1;
+data ExtState = S(Int);
+
+Act ObservedExample {
+  export 
+    observeState::() -> ExtState;
+    observeMessage::(IntMessage) -> Maybe[ExtMessage];
+  M1;
+  M2;
+}
+\end{ESL}
+Note that the messages defined by \code{ObservedExample} (\code{M1} and \code{M2}) agree with the  data type \code{IntMessage} that is the domain type of \code{observeMessage}.
+
+The following is an example behaviour that implements the observed type defined above:
+\begin{ESL}
+act oBehaviour::ObservedExample {
+  export observeState,observeMessage;
+  count::Int = 0;
+  observeState()::ExtState = S(count);
+  observeMessage(m::IntMessage)::ExtMessage =
+    case m {
+      M1 -> Something[ExtMessage](X1);
+      M2 -> Nothing[ExtMessage];
+    }
+  M1 -> count := count + 1;
+  M2 -> Count := count - 1;
+}
+\end{ESL}
+Note that the definition of \code{observeMessage} hides occurrences of \code{M2}.
+
+An observer for a given observed behaviour type must define message handlers for \code{Start} and \code{Transition}:
+\begin{ESL}
+type Observer[State,Message] = Act {
+  Start(Observed[State,Message],Int,State);
+  Transition(Observed[State,Message],Int,Message,State);
+}
+\end{ESL}
+An actor \code{o2} whose behaviour implements the type \code{Observer[State,Message]} can be registered as an observer with an actor \code{o1} whose behaviour implements \code{Observed[State,Message]} as follows:
+\begin{ESL}
+o1.addObserver(o2)
+\end{ESL}
+Immediately on being added, the observer will receive a message \code{Start(o1,t,s)} where \code{t} is the current time and \code{s} is the logical state of \code{o1}. Each time a message is processed by \code{o1}, its operation \code{observeMessage} will map to \code{Maybe[Message]} and if the result is \code{Something(m)} then the observer receives a message \code{Transition(o1,t,m,s)} where \code{s} is the value produced by \code{o1.observeState()} after the message has been handled.
+
+\subsection{A Taxi Service}
+
+\label{sec:taxis}
+
+The behaviour of a taxi can be described using the following state machine:
+\begin{center}
+\includegraphics[width=0.8\columnwidth]{taxi}
+\end{center}
+such that the taxi management service can observe the behaviour in order to display its current position and to provide new jobs as soon as the current customer has been dropped-off at their destination. The implementation details of a taxi actor deals with managing the route to the customer and to the customer drop-off. To start, define the type \code{Cab} as an observable behaviour type:
+\begin{ESL}
+data Loc = Loc(Int,Int);
+
+data Direction = North | East | South | West;
+
+data CabState =
+  Empty(Loc,Direction)
+| Full(Loc,Direction);
+
+data CabMessage = 
+  ChangeDir(Direction)
+| MoveDir(Direction)
+| Move
+| Pickup
+| DropOff
+| Customer(Int,Int,Int,Int);
+
+Act Cab {
+  export 
+    observeState::()->CabState; 
+    observeMessage::(CabMessage) -> Maybe[CabMessage];
+  Move;
+  Customer(Int,Int,Int,Int);
+}
+\end{ESL}
+Note that the type \code{CabMessage} is used as both the implementation interface and the logical interface of \code{Cab}, however the function \code{observeMessage} may not return all of the messages in the interface. In fact, it hidex the \code{Move} and \code{Customer} messages:
+\begin{ESL}
+act cab(x0::Int,y0::Int)::Cab {
+  export observeState,observeMessage;
+  x::Int               = x0;
+  y::Int               = y0;
+  dir::Direction       = North;
+  plan::[Loc]          = [];
+  isEmpty::Bool        = true;
+  observeState()::CabState = 
+    if isEmpty 
+    then Empty(Loc(x,y),dir); 
+    else Full(Loc(x,y),dir);
+  observeMessage(m::CabMessage)::Maybe[CabMessage] = 
+    case m {
+      ChangeDir(d) -> Something[CabMessage](m);
+      MoveDir(d)   -> Something[CabMessage](m);
+      Pickup       -> Something[CabMessage](m);
+      DropOff      -> Something[CabMessage](m);
+      m            -> Nothing[CabMessage];
+    }
+  Customer(xStart::Int,yStart::Int,xEnd::Int,yEnd::Int) -> { 
+    plan := [Loc(xStart,yStart),Loc(xEnd,yEnd)];
+    self <- Move;
+  }
+  Pickup  -> isEmpty := false;
+  DropOff -> isEmpty := true;
+  Move -> 
+    case plan {
+      [] -> {}
+      Loc(tx,ty):p when tx=x and ty=y and isEmpty -> {
+        plan := tail[Loc](plan);
+        self <- Pickup;
+        self <- Move;
+      }
+      Loc(tx,ty):p when tx=x and ty=y and not(isEmpty) -> {
+        plan := tail[Loc](plan);
+        self <- DropOff;
+        self <- Move;
+      }
+      Loc(tx,ty):locs when x>tx -> self <- MoveDir(West);
+      Loc(tx,ty):locs when x<tx -> self <- MoveDir(East);
+      Loc(tx,ty):locs when y>ty -> self <- MoveDir(North);
+      Loc(tx,ty):locs when y<ty -> self <- MoveDir(South);
+    }
+  MoveDir(North) when dir=North -> { y:=y-1; self<-Move; }
+  MoveDir(South) when dir=South -> { y:=y+1; self<-Move; }
+  MoveDir(East) when dir=East   -> { x:=x+1; self<-Move; }
+  MoveDir(West) when dir=West   -> { x:=x-1; self<-Move; }
+  MoveDir(d::Direction) -> {
+    self <- ChangeDir(d);
+    self <- MoveDir(d);
+  }
+  ChangeDir(d::Direction) -> dir := d;
+}
+\end{ESL}
+The type \code{Uber} is an observer for a cab. It keeps track of the cabs using a table that maps cab actors to a term of type \code{CabDisplay}:
+\begin{ESL}
+Act Uber {
+  Start(Cab,Int,CabState);
+  Transition(Cab,Int,CabMessage,CabState);
+  NewJob;
+}
+data CabDisplay = CabDisplay(Int,Int,Direction,Bool);
+\end{ESL}
+The taxi cab service contains a screen (defined later) that is used to show the current set of taxis and jobs. The \code{Transtion} handler monitors the taxis and works out whether they should be allocated a new job. Note that the screen is updated only when a given taxi is updated more than once. This allows all taxis to move before the screen is updated and prevents flicker.
+\begin{ESL}
+act uberBehaviour(width::Int,height::Int)::Uber {
+  maxJobs::Int                  = 8;
+  pending::[Cab]                = [];
+  jobs::[Job]                   = [];
+  customers::[Loc]              = [];
+  targets::[Loc]                = [];
+  screen::Screen = new screenBehaviour(width,height);
+  display::Hash[Cab,CabDisplay] = new Hash[Cab,CabDisplay];
+  movedCabs::[Cab]              = [];
+  checkJobs()::Void = {
+    if pending <> [] and jobs <> []
+    then allocateJob();
+    else {}
+  }
+  allocateJob()::Void = {
+    case head[Job](jobs) {
+      Job(xStart,yStart,xEnd,yEnd) -> {
+        head[Cab](pending) 
+          <- Customer(xStart,yStart,xEnd,yEnd);
+        pending := tail[Cab](pending);
+        jobs := tail[Job](jobs);
+      }
+    }
+  }
+  Start(c::Cab,t::Int,s::CabState) -> {
+    case s {
+      Empty(Loc(x,y),d) -> 
+        display.put(c,CabDisplay(x,y,d,false));
+    }
+    screen <- Show(display.vals,customers,targets);
+    pending := pending + [c];
+    checkJobs();
+  }
+  Transition(c::Cab,t::Int,m::CabMessage,s::CabState) -> { 
+    case s {
+      Empty(Loc(x,y),d) -> 
+        display.put(c,CabDisplay(x,y,d,false));
+      Full(Loc(x,y),d)  -> 
+        display.put(c,CabDisplay(x,y,d,true));
+    }
+    case m {
+      Pickup -> {
+        case s {
+          Full(Loc(x,y),d) -> 
+            customers := remove[Loc](Loc(x,y),customers);
+        }
+      }
+      DropOff -> {
+        case s {
+          Empty(Loc(x,y),d) -> targets := 
+            remove[Loc](Loc(x,y),targets);
+        }
+        pending := pending + [c];
+        checkJobs();
+      }
+      ChangeDir(d) -> {}
+      m -> {
+        if member[Cab](c,movedCabs)
+        then {
+          movedCabs := [];
+          screen <- Show(display.vals,customers,targets);
+        } else movedCabs := c:movedCabs;
+      }
+    }
+  }
+  NewJob when length[Loc](jobs) < maxJobs -> {
+    let xStart::Int = random(width);
+        yStart::Int = random(height);
+        xEnd::Int   = random(width);
+        yEnd::Int   = random(height);
+    in {
+      customers := customers + [Loc(xStart,yStart)]; 
+      targets   := targets + [Loc(xEnd,yEnd)]; 
+      jobs      := jobs + [Job(xStart,yStart,xEnd,yEnd)];
+      checkJobs();
+    }
+  }
+  NewJob -> {}
+}
+\end{ESL}
+The screen translates taxi, customer and drop-off targets to an HTML table. The message \code{Show(d,j,t)} contains the current states of the cabs, the waiting customers and their target drop-off locations. The table is created by iterating through positions \code{(x,y)} generating cell entries based on the information supplied in the message:
+\begin{ESL}
+Act Screen {
+  Show([CabDisplay],[Loc],[Loc]);
+}
+
+act screenBehaviour(width::Int,height::Int)::Screen {
+  scale::Int             = 38;
+  scaleText::Str         = 'font-size:scale'+scaleText+'px;'
+  cellScale::Str         = (scale + 10) + 'px';
+  frontTaxi::Display     = HTML('&#128662;'); 
+  sideTaxi::Display      = HTML('&#128661;'); 
+  customer::Display      = HTML('&#128587;'); 
+  target::Display        = HTML('&#127919;'); 
+  space::Display         = HTML('&nbsp;');
+  tableProps::[Property] = [Prop('border','1'),
+                           Prop('cellpadding','0')];
+  rowProps::[Property]   = [Prop('align','center'),
+                           Prop('style',scaleText),
+                           Prop('width',cellScale),
+                           Prop('height',cellScale)];
+  Show(display::[CabDisplay],jobs::[Loc],targets::[Loc]) -> { 
+    let
+      getDisplay(x::Int,y::Int)::Display = 
+        let at(d::CabDisplay)::Bool = 
+              case d { 
+                CabDisplay(dx,dy,d,f) -> dx = x and dy = y; 
+                d -> false; 
+              } in
+        let d::CabDisplay = 
+          select1[CabDisplay](display,null[CabDisplay],at);
+        in if d = null[CabDisplay]
+           then 
+             if member[Loc](Loc(x,y),jobs) 
+             then customer;
+             else 
+               if member[Loc](Loc(x,y),targets) 
+               then target;
+               else space;
+           else 
+             case d {
+               CabDisplay(x,y,North,b) -> frontTaxi;
+               CabDisplay(x,y,East,b)  -> sideTaxi;
+               CabDisplay(x,y,West,b)  -> sideTaxi;
+               CabDisplay(x,y,South,b) -> frontTaxi;
+             }
+     in edb <- Show('Uber',
+         Table(tableProps,
+           [ Row([], 
+               [ Data(rowProps, getDisplay(col,row)) 
+               | col <- 0..width ]) 
+           | row <- 0..height ]));
+  }
+}
+\end{ESL}
+The following screen is generated by the associated \code{main} behaviour:
+\begin{center}
+\includegraphics[width=0.9\columnwidth]{taxi_screen}
+\end{center}
+\begin{ESL}
+act main::Main {
+
+  noOfCabs::Int = 2;
+  width::Int    = 10;
+  height::Int   = 10;
+  uber::Uber    = new uberBehaviour(width,height);
+  cabs::[Cab]   = [ new cab(random(width),random(height)) 
+                  | n <- 0..noOfCabs ];
+  limit::Int    = 40000;
+
+  -> {
+    for c in cabs do {
+      c.addObserver(uber);
+    }
+  }
+
+  Time(n::Int) when n < limit -> 
+    probably(5) {
+      uber <- NewJob;
+    }
+
+  Time(n::Int) -> stopAll();
+  
+}
+
+\end{ESL}
 
 \section{EDB}
 
@@ -3243,6 +3685,99 @@ The resulting list of displays is then presented as a filmstrip. The following s
 \includegraphics[width=\columnwidth]{pred4}
 \end{center}
 
+\section{Excel Interface}
+
+\label{sec:excel}
+
+ESL applications that are based on large data sets can read and write to Excel spreadsheets. The spreadsheet is read into an ESL data representation, can then be used as data in an ESL application, and if appropriate the data can be modified and written back out to a spreadsheet. The data representation for an spreadsheet is:
+\begin{ESL}
+data ExcelCell = 
+  XStr(Str) 
+| XFloat(Float) 
+| XBool(Bool) 
+| XDate(Str) 
+| XFormula(Str) 
+| XBlank 
+| XUnknown;
+
+type ExcelColumn = [ExcelCell];
+data ExcelRow    = XRow([ExcelCell]);
+data ExcelSheet  = XSheet(Str,[ExcelRow]);
+data Excel       = 
+  XWorkbook([ExcelSheet]) 
+| ExcelError(Str);
+\end{ESL}
+A workbook is a list of named data sheets. Each sheet is a list of rows containing lists of cells. A cell is a value tagged with its type. The Excel interface supports strings, numbers, booleans, dates and formulas. Note that all numbers will be translated to floats. The format of a date is that produced by the following Java date format:
+\begin{ESL}
+"dd/mm/yyyy"
+\end{ESL}
+A workbook is read from the file system using the following function defined in \code{esl/excel.esl}:
+\begin{ESL}
+readWorkbook::(Str) -> Excel
+\end{ESL}
+and is written to the filesystem using:
+\begin{ESL}
+writeWorkbook::(Str,Excel) -> Excel
+\end{ESL}
+Consider the following simple spreadsheet:
+\begin{center}
+\includegraphics[width=\columnwidth]{pre_bikes}
+\end{center}
+Suppose that we want to calculate the total sales. This is done by the following function:
+\begin{ESL}
+totalSales()::Float =
+  try {
+    let book::Excel = readWorkbook('esl/data/bikes.xlsx'); 
+        id(f::Float)::Float = f;        
+        add(x::Float,y::Float)::Float = x + y; in
+    let s0::ExcelSheet = getSheet(book,0);
+    let sales::ExcelColumn = getColumnNamed(s0,'Sales');in
+    let numbers = [ n | XFloat(n) <- sales ];
+    in foldr[Float,Float](id,add,0.0,numbers);
+  } catch {
+    e -> {
+      print[Str]('Error: ' + e);
+      0.0;
+    }
+  }
+\end{ESL}
+Running \code{totalSales} produces:
+\begin{ESL}
+total sales = 477.0
+\end{ESL}
+Suppose that we want to add a new entry into the spreadsheet. The following code adds a new row:
+\begin{ESL}
+addBike(model::Str,price::Float,sales::Float,current::Bool,date::Str)::Void =
+  try {
+    let book::Excel = readWorkbook('esl/data/bikes.xlsx'); 
+        newRow::ExcelRow = XRow([XStr(model),
+                                 XFloat(price),
+                                 XFloat(sales),
+                                 XBool(current),
+                                 XDate(date)]); in
+    let newBook::Excel = 
+          case book { 
+            XWorkbook([XSheet(name,rows)]) -> 
+              XWorkbook([XSheet(name,rows + [newRow])]); }
+    in {
+      writeWorkbook('esl/data/bikes.xlsx',newBook);
+    } 
+  } catch {
+    e -> {
+      print[Str]('Error: ' + e);
+      0.0;
+    }
+  }
+\end{ESL}
+So that:
+\begin{ESL}
+addBike('Electric',3000.0,20.0,false,'06/01/2019');
+\end{ESL}
+produces the following spreadsheet:
+\begin{center}
+\includegraphics[width=\columnwidth]{post_bikes}
+\end{center}
+
 \section{Java Interface}
 
 \label{sec:java_interface}
@@ -3288,7 +3823,17 @@ This section will describe the compilation process and the Java constructs produ
 
 This section will describe the Java libraries that support ESL.
 
-\bibliography{bibv4}
+\section{Bibliography}
+
+\label{sec:bib}
+
+The design of ESL was originally motivated by a need for a language to create simulation models for enterprises in order to support {\it what-if} analysis. The hypothesis for that work was that enterprises are complex and contain incomplete and unpredictable behaviour, therefore a bottom-up emergent approach such as that supported by actors and multi-agent systems is required. The design for a supporting technology was motivated by both existing actor languages, event-driven architecture and languages for enterprise architecture. A very early version of ESL was called LEAP which went through a number of iterations including a UML-like language supported by a modelling toolset. 
+
+Many of the ideas formulated to model enterprises are also applicable to modelling general complex hierarchical systems. By restricting the domain of interest to {\it mechanistic} systems we found that there was no lack of interesting research challenges, but that the problem of how to model human behaviour (intrinsic to enterprises) could be removed. Creating digital twins for complex mechanistic systems of systems requires language technology that supports emergent behaviour together with sense-making and adaptation arising from advanced approaches such as machine learning. This is the motivation for the current version of ESL described in this document. The bibliography given below documents many of the publications by the research team associated with ESL and serves to document the motivation for the current version.
+
+\nocite{*}
+
+\bibliography{bib}
 
 \clearpage
 
@@ -3296,100 +3841,143 @@ This section will describe the Java libraries that support ESL.
 
 \renewcommand*{\thesection}{\Alph{section}}
 
-\section{Syntax and Type Checking}
+\section{ESL Syntax}
 
 \label{sec:syntax}
 
-\begin{comment}
-
 \begin{figure*}
-\begin{tabular}{l|l}
-\hline
-\begin{minipage}{.275\textwidth}
-\footnotesize
-{\it Syntax}:\\
-\begin{tabular}{llr}
-t ::= & & {\it terms}\\
-& {\tt x} & {\it variable}\\
-& {\tt {\bf new}(t)}& {\it creation}\\
-& $\lambda$(\={d}) t&{\it function}\\
-& {\tt {\bf act} \{ \={d} \={h} \}}&{\it behaviour}\\
-& n & {\it number}\\
-& s & {\it string} \\
-& b & {\it boolean}\\
-& {\bf grab}(x) t & {\it lock}\\
-& {\bf if} t {\bf then} t {\bf else} t& {\it conditional}\\
-& t $\leftarrow$ t&{\it send}\\
-& {\bf case} t \{ \={h} \}&{\it projection}\\
-& [\={t}]&{\it list}\\
-& t(\={t}) & {\it application}\\
-& t[\={T}]& {\it type application}\\
-& C(\={t}) & {\it injection}\\
-i ::= & d=t& {\it initialisation}\\
-d ::= & x[\={X}]::T& {\it declarations}\\
-h ::= & C(\={x}) $\rightarrow$ t&{\it handlers}\\
-T ::= & & {\it types}\\
-& {\bf Int} & {\it integer type}\\
-& {\bf Bool} & {\it boolean type}\\
-& {\bf Str} & {\it string type}\\
-& $\forall$ \={X} . T & {\it universal}\\
-& X & {\it variable}\\
-& {\bf Union} \{ \={m} \}&{\it union}\\
-& {\bf Act} \{ \={d} \={m} \} & {\it behaviour}\\
-& (\={T}) $\rightarrow$ T & {\it function type}\\
-m ::= & C(\={T}) & {\it message type}\\
-\end{tabular}
-\end{minipage}
-&
-\begin{minipage}{0.7\textwidth}
-\footnotesize
-{\it Type Checking}:\\
-\[\begin{array}{cc}
-\begin{array}{cr}
-\inference{{\tt x::T}\in\Gamma}{\Gamma\vdash{\tt x::T}}&\text{T-VAR}\\\\
-\inference{\Gamma\vdash{\tt t}::\text{\tt {\bf Act} \{ \={d} \={m} \}}}{\Gamma\vdash{\tt {\bf new}(t)} :: \text{\tt {\bf Act} \{ \={d} \={m} \}}}&\text{T-NEW}\\\\
-\inference{\Gamma,\text{\={x}::\={T}}\vdash\text{t::T}}{\Gamma\vdash\text{$\lambda$(\={d}) t::(\={T})$\rightarrow$T}}&\text{T-FUN}\\\\
-%
-\Gamma\vdash\text{\tt {\bf act} \{ \={d} \={m} \}::{\bf Act} \{ \={d} \={m} \}}&\text{T-ACT}\\\\
-\inference{\Gamma\vdash\text{t\textsubscript{1}::{\bf Act} \{ \={d} \={m} \}}\\\Gamma\vdash\text{t\textsubscript{2}::{\bf Union} \{ \={m} \}}}{\Gamma\vdash\text{t\textsubscript{1}$\leftarrow$ t\textsubscript{2}::{\bf Union} \{ \={m} \}}}&\text{T-SEND}\\\\
-%
-\Gamma\vdash\text{\tt n::{\bf Int}}&\text{T-INT}\\\\
-\Gamma\vdash\text{\tt s::{\bf Str}}&\text{T-STR}\\\\
-\Gamma\vdash\text{\tt b::{\bf Int}}&\text{T-BOOL}\\\\
-\inference{\Gamma\vdash\text{\tt t::T}}{\Gamma\vdash\text{\tt{\bf grab}(x) t :: T}}&\text{T-LOCK}\\\\
-\inference{\Gamma\vdash\text{\tt t\textsubscript{1}::Bool}\\\Gamma\vdash\text{\tt t\textsubscript{2},t\textsubscript{3}::T}}{\Gamma\vdash\text{\tt{\bf if} t\textsubscript{1} {\bf then} t\textsubscript{2} {\bf else} t\textsubscript{3} :: T}}&\text{T-IF}
-\end{array}
-&
-\begin{array}{cr}
-\inference{
-\Gamma\vdash{\tt {\bf case}\ t\ \{ \text{\={m}}\textsubscript{1} \} :: T}\\
-\Gamma\vdash{\tt {\bf case}\ t\ \{ \text{\={m}}\textsubscript{2} \} :: T}}
-{
-\Gamma\vdash{\tt {\bf case}\ t\ \{ \text{\={m}}\textsubscript{1},\text{\={m}}\textsubscript{2} \} :: T}}&\text{T-CASE1}\\\\
-\inference{
-\Gamma\vdash{\tt t\textsubscript{1} :: {\bf Union} \{ \text{\={m}},C(\text{\={T}}) \}}\\
-\Gamma,{\tt\text{\={x}}::\text{\={T}}\vdash t\textsubscript{2}::T}}{
-\Gamma\vdash{\tt {\bf case}\ t\textsubscript{1}\ \{ C(\text{\={x}}) \rightarrow t\textsubscript{2} \} :: T}}&\text{T-CASE2}\\\\
-\Gamma\vdash{\tt [] :: \forall X. [X]}&\text{T-NIL}\\\\
-\inference{\Gamma\vdash{\tt [\text{\={t}}\textsubscript{1}] :: [T]}\\\Gamma\vdash{\tt [\text{\={t}}\textsubscript{2}] :: [T]}}{
-\Gamma\vdash\text{[\={t}\textsubscript{1},\={t}\textsubscript{2}] :: [T]}}&\text{T-LIST1}\\\\
-\inference{\Gamma\vdash{\tt t::T}}{\Gamma\vdash{\tt[t]::[T]}}&\text{T-LIST2}\\\\
-\inference{\Gamma\vdash{\tt \text{\={t}}::\text{\={T}}}\\\Gamma\vdash{\tt t::(\text{\={T}})\rightarrow T}}{
-\Gamma\vdash{\tt t(\text{\={t}})::T}}&\text{T-APP}\\\\
-\inference{\Gamma\vdash{\tt t::\forall\text{\={X}}.T}}{\Gamma\vdash{\tt t[\text{\={T}}]::T[\text{\={T}}/\text{\={X}}]}}&\text{T-TAPP}\\\\
-\inference{\Gamma,{\tt C(\text{\={T}})}\mapsto{\tt {\bf Union} \{ \text{\={m}} \}}\\
-\Gamma\vdash{\tt \text{\={t}}::\text{\={T}}}}{\Gamma\vdash{\tt C(\text{\={t}})::{\bf Union} \{ \text{\={m}} \}}}&\text{\tt T-INJ}\\\\
-\end{array}
-\end{array}\]
-\end{minipage}
-\\
-\hline
-\end{tabular}
-\caption{ESL Syntax and Type Checking}
-\label{fig:ESL_type_checking}
+\begin{ESL}
+module  ::= exports imports binding*                             (*\rmfamily\it A module is a unit of compilation. It can export any of the names it defines *)
+                                                                (*\rmfamily\it in its bindings. The exported names of each imported module are available. *)
+                                                                 
+exports ::= export (name | Name) (, (name | Name))* ;            (*\rmfamily\it Names of types, constructors, bindings can be exported. *)
+imports ::= import str (, str)* ;                                (*\rmfamily\it Reference a module as a path to the file. *)
+binding ::= behBind | actBind | valBind | typBind | datBind;
+behBind ::= act name [gens] [args] typDec [extend] {behBody}     (*\rmfamily\it A behaviour may have generic type arguments, and may have initialisation  *)
+                                                                (*\rmfamily\it  arguments. The parent should be a behaviour. *)
+behBody ::= exports binding* [-> exp] arm*
+actBind ::= Act Name [extends typExp] {expDecs (messTyp ;)*}     (*\rmfamily\it A behaviour type may extend another behaviour type. The exported  *)
+                                                                (*\rmfamily\it  declarations and message handlers will be implemented by any behaviour *)
+                                                                (*\rmfamily\it  with the type. *)
+expDecs ::= [ export dec (; dec)* ;]
+valBind ::= name [gens] [args] typDec = command                  (*\rmfamily\it A value binding may be generic. If the binding includes arguments *)
+                                                                (*\rmfamily\it then the value is a function. *)
+                                                                 
+command ::= exp [;]                                              (*\rmfamily\it A command is an expression that is performed for its side-effect. A command *)
+                                                                (*\rmfamily\it  that does not syntactically terminate with a '\}' must be terminated by a ';'. *)
+                                                                 
+typBind ::= type Name [gens] = typExp [;]                        (*\rmfamily\it A type definition may be generic and is terminated with a ';' when *)
+                                                                (*\rmfamily\it the expression is not terminated by a '\}'. *)
+                                                                 
+datBind ::= data Name [gens] = termTyp ('|' termTyp)* ;          (*\rmfamily\it Note: Generic data types produce generic data constructors. *)
+gens    ::= '[' Name (, Name)* ']'
+args    ::= '(' [ dec (, dec)* ] ')'
+dec     ::= name typDec
+typExp  ::= Int                                                  (*\rmfamily\it Integers. *)
+        |  Float                                                (*\rmfamily\it Floats of the form Int '.' Int. *)
+        |  Str                                                  (*\rmfamily\it Strings delimited by ' and '. *)
+        |  Bool                                                 (*\rmfamily\it true or false. *)
+        |  Void                                                 (*\rmfamily\it The type of a command - value is ignored. *)
+        |  [typExp]                                             (*\rmfamily\it Lists whose elements are of a given type. *)
+        |  ([typExp (, typExp)*) -> typExp                      (*\rmfamily\it Functions. *)
+        |  Bag{typExp}                                          (*\rmfamily\it Bags whose elements are of a given type. *)
+        |  Set{typExp}                                          (*\rmfamily\it Sets whose elements are of a given type. *)
+        |  Array[typExp]                                        (*\rmfamily\it Arrays whose elements are of a given type. *)
+        |  Hash[typExp,typExp]                                  (*\rmfamily\it Hash tables mapping keys to values. *)
+        |  Act { expDecs (messTyp ;)* }                         (*\rmfamily\it A behaviour type. *)
+        |  union { [ termTyp (, termTyp)* } ] }                 (*\rmfamily\it A data type. *)
+        |  rec Name . typExp                                    (*\rmfamily\it A recursive type. *)
+        |  { dec (; dec)* }                                     (*\rmfamily\it A record type. *)
+        |  Forall [ Name (, Name)* ] typExp                     (*\rmfamily\it A universal polymorphic type. *)
+        |  Name [typArgs]                                       (*\rmfamily\it Applying types to a generically defined type. *)
+typArgs ::= '[' typExp (, typExp)* ']'
+termTyp ::= Name [ '(' typExp (, typExp)* ')' ]
+typDec  ::= :: typExp
+extend  ::= extends exp
+arm     ::= pat (, pattern)* [when exp] -> command               (*\rmfamily\it Matches supplied values against patterns, checks the optional guard, *)
+                                                                (*\rmfamily\it performs the command when the patterns match and the guard is satisfied. *)
+                                                                
+pattern ::= atomPat [ : pat | + pat ]                            (*\rmfamily\it Patterns with optional ':' (cons) and '+' (append). *)
+atomPat ::= name                                                 (*\rmfamily\it Variable. *)
+        |  int                                                  (*\rmfamily\it Integer constant pattern. *)
+        |  Name [typArgs] [patArgs]                             (*\rmfamily\it Term pattern (with optional generic types). *)
+        |  '[' [ exp (, exp)* ] ']'                             (*\rmfamily\it List pattern. *)
+        |  str                                                  (*\rmfamily\it String constant pattern. *)
+        |  true                                                 (*\rmfamily\it Constant boolean pattern. *)
+        |  false                                                (*\rmfamily\it Constant boolean pattern. *)
+        |  bag{pattern | pattern}                               (*\rmfamily\it Non-empty bag pattern. *)
+        |  bag{}                                                (*\rmfamily\it Empty bag pattern. *)
+        |  set{pattern | pattern}                               (*\rmfamily\it Non-empty set pattern. *)
+        |  set{}                                                (*\rmfamily\it Empty set pattern. *)
+        |  '(' pattern ')'
+patArgs ::= '(' pattern (, pattern)* ')' 
+\end{ESL}
+\caption{ESL Syntax (1 of 2)}
+\label{fig:ESL_syntax_1}
 \end{figure*}
 
-\end{comment}
+\begin{figure*}
+\begin{ESL}
+exps    ::= [ exp (, exp)* ]
+exp     ::= if exp then exp else exp                            (*\rmfamily\it Conditional expression. Type of then-exp and else-exp should agree. *)
+        |  fun[exp](args)dec exp                               (*\rmfamily\it The optional expression is used as the name of the function. *)
+        |  grab(exps) exp                                      (*\rmfamily\it The locks are acquired simultaneously. *)
+        |  probably '(' exp ')' exp [ else exp ]               (*\rmfamily\it Probability based on a value out of 100. *)
+        |  let binding* in exp                                 (*\rmfamily\it No names can reference each other. *)
+        |  plet binding* in exp                                (*\rmfamily\it Parallel binding, waits until all value expressions have completed. *)
+        |  letrec binding* in exp                              (*\rmfamily\it Mutually recursive binding for functions. Values established in sequence. *)
+        |  case exps '{' arm* '}'                              (*\rmfamily\it Number of values must agree with number of patterns in arms. *)
+        |  for pattern in exp do exp                           (*\rmfamily\it If a value does not match pattern then it is ignored. *)
+        |  find pattern in exp do exp else exp                 (*\rmfamily\it Selection from a list. *)
+        |  try exp catch '{' arm* '}'                          (*\rmfamily\it Each arm should have a single pattern that matches a thrown value. *)
+        |  throw '[' typExp ']' exp                            (*\rmfamily\it Throw to the most recently established try. The type is required for the checker. *)
+        |  bag '{' exps [ '|' exp ] '}'                        (*\rmfamily\it Add elements to an existing bag, or the empty bag *)
+        |  set '{' exps [ '|' exp ] '}'                        (*\rmfamily\it Add elements to an existing set, or the empty set. *)
+        |  '{' name = exp (; name = exp)* '}'                  (*\rmfamily\it A record. *)
+        |  '{' command* '}'                                    (*\rmfamily\it Perform commands in sequence. Return value of final command. *)
+        |  new str '[' typExp ']' [ '(' exps ')' ]             (*\rmfamily\it Create an instance of a Java class that implements {\tt AlienActor}. *)
+        |  new Array '[' typExp ']' '(' exp ')'                (*\rmfamily\it Create an array of given type and length. *)
+        |  new Hash '[' typExp , typExp ']'                    (*\rmfamily\it Create a hash table with supplied key types and value types. *)
+        |  new exp [ '(' exps ')' ]                            (*\rmfamily\it Create an actor with the given behaviour. *)
+        |  become exp [ '(' exps ')' ]                         (*\rmfamily\it Change behaviour (the new behaviour must be of the same type as {\tt self}). *)
+        |  exp op exp                                          (*\rmfamily\it Binary expression. *)
+        |  not exp                                             (*\rmfamily\it Boolean negation. *)
+        |  exp <- Name [ '(' exps ')' ]                        (*\rmfamily\it Send a message. *)
+        |  exp [ typArgs ] '(' exps ')'                        (*\rmfamily\it Apply a (possibly generic) function. *)
+        |  exp '[' exp ']'                                     (*\rmfamily\it Reference an array element by index. *)
+        |  exp . name                                          (*\rmfamily\it Reference a record field or an exported name of an actor. *)
+        |  - exp                                               (*\rmfamily\it Negation. *)
+        |  int                                                 (*\rmfamily\it Integer constant. *)
+        |  float                                               (*\rmfamily\it Float constant. *)
+        |  str                                                 (*\rmfamily\it String constant. *)
+        |  char                                                (*\rmfamily\it Character constant (actually an integer). *)
+        |  true                                                (*\rmfamily\it Boolean constant. *)
+        |  false                                               (*\rmfamily\it Boolean constant. *)
+        |  self                                                (*\rmfamily\it The currently executing actor (constant)or {\tt null} if no actor. *)
+        |  super                                               (*\rmfamily\it The parent actor. *)
+        |  now                                                 (*\rmfamily\it Current time in milliseconds since application started to run. *)
+        |  null                                                (*\rmfamily\it Null is polymorphically an instance of all types. *)
+        |  name                                                (*\rmfamily\it A program identifier starting with a lower case letter. *)
+        |  '[' exps ']'                                        (*\rmfamily\it A list. *)
+        |  '[' exp '|' qual (, qual) ']'                       (*\rmfamily\it A list comprehension. *)
+        |  Name [ typArgs ] [ '(' exps ')' ]                   (*\rmfamily\it A term. Type args required if the corresponding data definition was generic. *)
+        |  '(' exp ')' 
+qual    ::= pattern <- exp                                      (*\rmfamily\it Iteration through a list. Elements are ignored if they do not match the pattern. *)
+        |  ? exp                                               (*\rmfamily\it A guard expression in a comprehension. *)
+op      ::= @                                                   (*\rmfamily\it Concurrent binary operator. Returns whichever operand completes first. *)
+        | or | and                                             (*\rmfamily\it Boolean operators. *)
+        | = | <> | < | <= | > | >=                             (*\rmfamily\it Comparison operators. *)
+        | * | / | + | - | %                                    (*\rmfamily\it Arithmetic operators. *)
+char    ::= #c                                                  (*\rmfamily\it Character {\tt c} represented as ASCII code. *)
+        |   #\space                                            (*\rmfamily\it ASCII code for space character. *)
+        |   #\newline                                          (*\rmfamily\it ASCII code for newline character. *)
+        |   #\backslash                                        (*\rmfamily\it ASCII code for backslash character. *)
+\end{ESL}
+\caption{ESL Syntax (2 of 2)}
+\label{fig:ESL_syntax_2}
+\end{figure*}
+
+Figures \ref{fig:ESL_syntax_1} and \ref{fig:ESL_syntax_2} define the syntax of ESL.
 
 \section{Displays}
 
@@ -3708,7 +4296,6 @@ removeAll[T](removables::[T],l::[T])::[T] =
     t:r -> removeAll[T](r,remove[T](t,l));
   }
 \end{FigESL}
-
 
 \end{document}
 

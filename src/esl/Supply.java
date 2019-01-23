@@ -10,24 +10,24 @@ public class Supply {
   private static ESLVal jobCurrentTime = new ESLVal(new Function(new ESLVal("jobCurrentTime"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal j = $args[0];
-  {ESLVal _v22 = j;
+  {ESLVal _v1 = j;
         
-        switch(_v22.termName) {
-        case "Job": {ESLVal $114 = _v22.termRef(0);
-          ESLVal $113 = _v22.termRef(1);
-          ESLVal $112 = _v22.termRef(2);
-          ESLVal $111 = _v22.termRef(3);
-          ESLVal $110 = _v22.termRef(4);
+        switch(_v1.termName) {
+        case "Job": {ESLVal $5 = _v1.termRef(0);
+          ESLVal $4 = _v1.termRef(1);
+          ESLVal $3 = _v1.termRef(2);
+          ESLVal $2 = _v1.termRef(3);
+          ESLVal $1 = _v1.termRef(4);
           
-          {ESLVal id = $114;
+          {ESLVal id = $5;
           
-          {ESLVal current = $113;
+          {ESLVal current = $4;
           
-          {ESLVal shortest = $112;
+          {ESLVal shortest = $3;
           
-          {ESLVal actual = $111;
+          {ESLVal actual = $2;
           
-          {ESLVal pending = $110;
+          {ESLVal pending = $1;
           
           return current;
         }
@@ -36,7 +36,7 @@ public class Supply {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(769,831)").add(ESLVal.list(_v22)));
+        default: return error(new ESLVal("case error at Pos(769,831)").add(ESLVal.list(_v1)));
       }
       }
     }
@@ -45,24 +45,24 @@ public class Supply {
     public ESLVal apply(ESLVal... $args) {
       ESLVal j = $args[0];
   ESLVal current = $args[1];
-  {ESLVal _v21 = j;
+  {ESLVal _v2 = j;
         
-        switch(_v21.termName) {
-        case "Job": {ESLVal $109 = _v21.termRef(0);
-          ESLVal $108 = _v21.termRef(1);
-          ESLVal $107 = _v21.termRef(2);
-          ESLVal $106 = _v21.termRef(3);
-          ESLVal $105 = _v21.termRef(4);
+        switch(_v2.termName) {
+        case "Job": {ESLVal $10 = _v2.termRef(0);
+          ESLVal $9 = _v2.termRef(1);
+          ESLVal $8 = _v2.termRef(2);
+          ESLVal $7 = _v2.termRef(3);
+          ESLVal $6 = _v2.termRef(4);
           
-          {ESLVal id = $109;
+          {ESLVal id = $10;
           
-          {ESLVal n = $108;
+          {ESLVal n = $9;
           
-          {ESLVal shortest = $107;
+          {ESLVal shortest = $8;
           
-          {ESLVal actual = $106;
+          {ESLVal actual = $7;
           
-          {ESLVal pending = $105;
+          {ESLVal pending = $6;
           
           return new ESLVal("Job",id,current,shortest,actual,pending);
         }
@@ -71,7 +71,7 @@ public class Supply {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(885,979)").add(ESLVal.list(_v21)));
+        default: return error(new ESLVal("case error at Pos(885,979)").add(ESLVal.list(_v2)));
       }
       }
     }
@@ -80,24 +80,24 @@ public class Supply {
     public ESLVal apply(ESLVal... $args) {
       ESLVal j = $args[0];
   ESLVal shortest = $args[1];
-  {ESLVal _v20 = j;
+  {ESLVal _v3 = j;
         
-        switch(_v20.termName) {
-        case "Job": {ESLVal $104 = _v20.termRef(0);
-          ESLVal $103 = _v20.termRef(1);
-          ESLVal $102 = _v20.termRef(2);
-          ESLVal $101 = _v20.termRef(3);
-          ESLVal $100 = _v20.termRef(4);
+        switch(_v3.termName) {
+        case "Job": {ESLVal $15 = _v3.termRef(0);
+          ESLVal $14 = _v3.termRef(1);
+          ESLVal $13 = _v3.termRef(2);
+          ESLVal $12 = _v3.termRef(3);
+          ESLVal $11 = _v3.termRef(4);
           
-          {ESLVal id = $104;
+          {ESLVal id = $15;
           
-          {ESLVal n = $103;
+          {ESLVal n = $14;
           
-          {ESLVal t = $102;
+          {ESLVal t = $13;
           
-          {ESLVal actual = $101;
+          {ESLVal actual = $12;
           
-          {ESLVal pending = $100;
+          {ESLVal pending = $11;
           
           return new ESLVal("Job",id,n,shortest.add(t),actual,pending);
         }
@@ -106,7 +106,7 @@ public class Supply {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(1034,1124)").add(ESLVal.list(_v20)));
+        default: return error(new ESLVal("case error at Pos(1034,1124)").add(ESLVal.list(_v3)));
       }
       }
     }
@@ -114,24 +114,24 @@ public class Supply {
   private static ESLVal addJobColours = new ESLVal(new Function(new ESLVal("addJobColours"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal j = $args[0];
-  {ESLVal _v19 = j;
+  {ESLVal _v4 = j;
         
-        switch(_v19.termName) {
-        case "Job": {ESLVal $99 = _v19.termRef(0);
-          ESLVal $98 = _v19.termRef(1);
-          ESLVal $97 = _v19.termRef(2);
-          ESLVal $96 = _v19.termRef(3);
-          ESLVal $95 = _v19.termRef(4);
+        switch(_v4.termName) {
+        case "Job": {ESLVal $20 = _v4.termRef(0);
+          ESLVal $19 = _v4.termRef(1);
+          ESLVal $18 = _v4.termRef(2);
+          ESLVal $17 = _v4.termRef(3);
+          ESLVal $16 = _v4.termRef(4);
           
-          {ESLVal id = $99;
+          {ESLVal id = $20;
           
-          {ESLVal n = $98;
+          {ESLVal n = $19;
           
-          {ESLVal shortest = $97;
+          {ESLVal shortest = $18;
           
-          {ESLVal actual = $96;
+          {ESLVal actual = $17;
           
-          {ESLVal pending = $95;
+          {ESLVal pending = $16;
           
           return new ESLVal("Job",id,n,shortest,actual,pending.cons(colours));
         }
@@ -140,7 +140,7 @@ public class Supply {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(1179,1275)").add(ESLVal.list(_v19)));
+        default: return error(new ESLVal("case error at Pos(1179,1275)").add(ESLVal.list(_v4)));
       }
       }
     }
@@ -148,24 +148,24 @@ public class Supply {
   private static ESLVal jobWaits = new ESLVal(new Function(new ESLVal("jobWaits"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal j = $args[0];
-  {ESLVal _v18 = j;
+  {ESLVal _v5 = j;
         
-        switch(_v18.termName) {
-        case "Job": {ESLVal $94 = _v18.termRef(0);
-          ESLVal $93 = _v18.termRef(1);
-          ESLVal $92 = _v18.termRef(2);
-          ESLVal $91 = _v18.termRef(3);
-          ESLVal $90 = _v18.termRef(4);
+        switch(_v5.termName) {
+        case "Job": {ESLVal $25 = _v5.termRef(0);
+          ESLVal $24 = _v5.termRef(1);
+          ESLVal $23 = _v5.termRef(2);
+          ESLVal $22 = _v5.termRef(3);
+          ESLVal $21 = _v5.termRef(4);
           
-          {ESLVal id = $94;
+          {ESLVal id = $25;
           
-          {ESLVal n = $93;
+          {ESLVal n = $24;
           
-          {ESLVal shortest = $92;
+          {ESLVal shortest = $23;
           
-          {ESLVal actual = $91;
+          {ESLVal actual = $22;
           
-          {ESLVal pending = $90;
+          {ESLVal pending = $21;
           
           return new ESLVal("Job",id,n,shortest,actual.add($one),pending);
         }
@@ -174,7 +174,7 @@ public class Supply {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(1330,1420)").add(ESLVal.list(_v18)));
+        default: return error(new ESLVal("case error at Pos(1330,1420)").add(ESLVal.list(_v5)));
       }
       }
     }
@@ -182,24 +182,24 @@ public class Supply {
   private static ESLVal jobId = new ESLVal(new Function(new ESLVal("jobId"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal j = $args[0];
-  {ESLVal _v17 = j;
+  {ESLVal _v6 = j;
         
-        switch(_v17.termName) {
-        case "Job": {ESLVal $89 = _v17.termRef(0);
-          ESLVal $88 = _v17.termRef(1);
-          ESLVal $87 = _v17.termRef(2);
-          ESLVal $86 = _v17.termRef(3);
-          ESLVal $85 = _v17.termRef(4);
+        switch(_v6.termName) {
+        case "Job": {ESLVal $30 = _v6.termRef(0);
+          ESLVal $29 = _v6.termRef(1);
+          ESLVal $28 = _v6.termRef(2);
+          ESLVal $27 = _v6.termRef(3);
+          ESLVal $26 = _v6.termRef(4);
           
-          {ESLVal id = $89;
+          {ESLVal id = $30;
           
-          {ESLVal n = $88;
+          {ESLVal n = $29;
           
-          {ESLVal shortest = $87;
+          {ESLVal shortest = $28;
           
-          {ESLVal actual = $86;
+          {ESLVal actual = $27;
           
-          {ESLVal pending = $85;
+          {ESLVal pending = $26;
           
           return id;
         }
@@ -208,7 +208,7 @@ public class Supply {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(1475,1532)").add(ESLVal.list(_v17)));
+        default: return error(new ESLVal("case error at Pos(1475,1532)").add(ESLVal.list(_v6)));
       }
       }
     }
@@ -216,24 +216,24 @@ public class Supply {
   private static ESLVal jobDelay = new ESLVal(new Function(new ESLVal("jobDelay"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       ESLVal j = $args[0];
-  {ESLVal _v16 = j;
+  {ESLVal _v7 = j;
         
-        switch(_v16.termName) {
-        case "Job": {ESLVal $84 = _v16.termRef(0);
-          ESLVal $83 = _v16.termRef(1);
-          ESLVal $82 = _v16.termRef(2);
-          ESLVal $81 = _v16.termRef(3);
-          ESLVal $80 = _v16.termRef(4);
+        switch(_v7.termName) {
+        case "Job": {ESLVal $35 = _v7.termRef(0);
+          ESLVal $34 = _v7.termRef(1);
+          ESLVal $33 = _v7.termRef(2);
+          ESLVal $32 = _v7.termRef(3);
+          ESLVal $31 = _v7.termRef(4);
           
-          {ESLVal id = $84;
+          {ESLVal id = $35;
           
-          {ESLVal n = $83;
+          {ESLVal n = $34;
           
-          {ESLVal shortest = $82;
+          {ESLVal shortest = $33;
           
-          {ESLVal actual = $81;
+          {ESLVal actual = $32;
           
-          {ESLVal pending = $80;
+          {ESLVal pending = $31;
           
           return actual.sub(shortest);
         }
@@ -242,7 +242,7 @@ public class Supply {
         }
         }
         }
-        default: return error(new ESLVal("case error at Pos(1587,1657)").add(ESLVal.list(_v16)));
+        default: return error(new ESLVal("case error at Pos(1587,1657)").add(ESLVal.list(_v7)));
       }
       }
     }
@@ -252,23 +252,23 @@ public class Supply {
       ESLVal nodes = $args[0];
   return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("monitor")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v14 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v8 = $m;
             
-            switch(_v14.termName) {
-            case "Handles": {ESLVal $79 = _v14.termRef(0);
-              ESLVal $78 = _v14.termRef(1);
+            switch(_v8.termName) {
+            case "Handles": {ESLVal $37 = _v8.termRef(0);
+              ESLVal $36 = _v8.termRef(1);
               
-              {ESLVal c = $79;
+              {ESLVal c = $37;
               
-              {ESLVal n = $78;
+              {ESLVal n = $36;
               
               if(isMonitoring.boolVal)
               {{
-                ESLVal _v15 = nodes;
-                while(_v15.isCons()) {
-                  ESLVal node = _v15.headVal;
+                ESLVal _v9 = nodes;
+                while(_v9.isCons()) {
+                  ESLVal node = _v9.headVal;
                   Lib.send(node,"SetProxy",c,n);
-                  _v15 = _v15.tailVal;}
+                  _v9 = _v9.tailVal;}
               }
               return $null;}
               else
@@ -276,7 +276,7 @@ public class Supply {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v14)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v8)));
           }
           }}
           public ESLVal get(String name) {
@@ -329,30 +329,30 @@ public class Supply {
           ESLVal process = new ESLVal(new Function(new ESLVal("process"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal jobs = $args[0];
-            {ESLVal _v12 = jobs;
+            {ESLVal _v11 = jobs;
                   
-                  if(_v12.isCons())
-                  {ESLVal $56 = _v12.head();
-                    ESLVal $57 = _v12.tail();
+                  if(_v11.isCons())
+                  {ESLVal $38 = _v11.head();
+                    ESLVal $39 = _v11.tail();
                     
-                    switch($56.termName) {
-                    case "Job": {ESLVal $62 = $56.termRef(0);
-                      ESLVal $61 = $56.termRef(1);
-                      ESLVal $60 = $56.termRef(2);
-                      ESLVal $59 = $56.termRef(3);
-                      ESLVal $58 = $56.termRef(4);
+                    switch($38.termName) {
+                    case "Job": {ESLVal $44 = $38.termRef(0);
+                      ESLVal $43 = $38.termRef(1);
+                      ESLVal $42 = $38.termRef(2);
+                      ESLVal $41 = $38.termRef(3);
+                      ESLVal $40 = $38.termRef(4);
                       
-                      {ESLVal _v42 = $62;
+                      {ESLVal _v42 = $44;
                       
-                      {ESLVal current = $61;
+                      {ESLVal current = $43;
                       
-                      {ESLVal shortest = $60;
+                      {ESLVal shortest = $42;
                       
-                      {ESLVal actual = $59;
+                      {ESLVal actual = $41;
                       
-                      {ESLVal pending = $58;
+                      {ESLVal pending = $40;
                       
-                      {ESLVal _v43 = $57;
+                      {ESLVal _v43 = $39;
                       
                       return process.apply(_v43).cons(new ESLVal("Job",_v42,current.sub($one),shortest,actual.add($one),pending));
                     }
@@ -362,12 +362,12 @@ public class Supply {
                     }
                     }
                     }
-                    default: return error(new ESLVal("case error at Pos(2573,2719)").add(ESLVal.list(_v12)));
+                    default: return error(new ESLVal("case error at Pos(2573,2719)").add(ESLVal.list(_v11)));
                   }
                   }
-                else if(_v12.isNil())
+                else if(_v11.isNil())
                   return ESLVal.list();
-                else return error(new ESLVal("case error at Pos(2573,2719)").add(ESLVal.list(_v12)));
+                else return error(new ESLVal("case error at Pos(2573,2719)").add(ESLVal.list(_v11)));
                 }
               }
             });
@@ -384,65 +384,65 @@ public class Supply {
               }
             });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v13 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v12 = $m;
             
-            switch(_v13.termName) {
+            switch(_v12.termName) {
             case "Flush": {
               return proxies.ref("clear").apply();
             }
-          case "Process": {ESLVal $68 = _v13.termRef(0);
+          case "Process": {ESLVal $50 = _v12.termRef(0);
               
-              switch($68.termName) {
-              case "Job": {ESLVal $73 = $68.termRef(0);
-                ESLVal $72 = $68.termRef(1);
-                ESLVal $71 = $68.termRef(2);
-                ESLVal $70 = $68.termRef(3);
-                ESLVal $69 = $68.termRef(4);
+              switch($50.termName) {
+              case "Job": {ESLVal $55 = $50.termRef(0);
+                ESLVal $54 = $50.termRef(1);
+                ESLVal $53 = $50.termRef(2);
+                ESLVal $52 = $50.termRef(3);
+                ESLVal $51 = $50.termRef(4);
                 
-                if($69.isCons())
-                {ESLVal $74 = $69.head();
-                  ESLVal $75 = $69.tail();
+                if($51.isCons())
+                {ESLVal $56 = $51.head();
+                  ESLVal $57 = $51.tail();
                   
-                  if($74.isCons())
-                  {ESLVal $76 = $74.head();
-                    ESLVal $77 = $74.tail();
+                  if($56.isCons())
+                  {ESLVal $58 = $56.head();
+                    ESLVal $59 = $56.tail();
                     
-                    {ESLVal _v44 = $73;
+                    {ESLVal _v44 = $55;
                     
-                    {ESLVal current = $72;
+                    {ESLVal current = $54;
                     
-                    {ESLVal shortest = $71;
+                    {ESLVal shortest = $53;
                     
-                    {ESLVal actual = $70;
+                    {ESLVal actual = $52;
                     
-                    {ESLVal c = $76;
+                    {ESLVal c = $58;
                     
-                    {ESLVal cs = $77;
+                    {ESLVal cs = $59;
                     
-                    {ESLVal pending = $75;
+                    {ESLVal pending = $57;
                     
                     if(c.eql(colour).boolVal)
                     {queue = queue.add(ESLVal.list(new ESLVal("Job",_v44,pTime,shortest.add(pTime),actual,pending.cons(cs))));
                     return $null;}
                     else
-                      {ESLVal _v45 = $73;
+                      {ESLVal _v45 = $55;
                         
-                        {ESLVal _v46 = $72;
+                        {ESLVal _v46 = $54;
                         
-                        {ESLVal _v47 = $71;
+                        {ESLVal _v47 = $53;
                         
-                        {ESLVal _v48 = $70;
+                        {ESLVal _v48 = $52;
                         
-                        {ESLVal _v49 = $76;
+                        {ESLVal _v49 = $58;
                         
-                        {ESLVal _v50 = $77;
+                        {ESLVal _v50 = $59;
                         
-                        {ESLVal _v51 = $75;
+                        {ESLVal _v51 = $57;
                         
                         if(proxies.ref("hasKey").apply(_v49).boolVal)
                         return Lib.send(proxies.ref("get").apply(_v49),"Process",new ESLVal("Job",_v45,_v46,_v47,_v48,_v51.cons(_v50.cons(_v49))));
                         else
-                          {ESLVal j = $68;
+                          {ESLVal j = $50;
                             
                             return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
                           }
@@ -461,59 +461,59 @@ public class Supply {
                   }
                   }
                   }
-                else if($74.isNil())
-                  {ESLVal j = $68;
+                else if($56.isNil())
+                  {ESLVal j = $50;
                     
                     return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
                   }
-                else {ESLVal j = $68;
+                else {ESLVal j = $50;
                     
                     return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
                   }
                 }
-              else if($69.isNil())
-                {ESLVal j = $68;
+              else if($51.isNil())
+                {ESLVal j = $50;
                   
                   return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
                 }
-              else {ESLVal j = $68;
+              else {ESLVal j = $50;
                   
                   return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
                 }
               }
-              default: {ESLVal j = $68;
+              default: {ESLVal j = $50;
                 
                 return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
               }
             }
             }
-          case "ChildCompleted": {ESLVal $67 = _v13.termRef(0);
-              ESLVal $66 = _v13.termRef(1);
-              ESLVal $65 = _v13.termRef(2);
+          case "ChildCompleted": {ESLVal $49 = _v12.termRef(0);
+              ESLVal $48 = _v12.termRef(1);
+              ESLVal $47 = _v12.termRef(2);
               
-              {ESLVal c = $67;
+              {ESLVal c = $49;
               
-              {ESLVal n = $66;
+              {ESLVal n = $48;
               
-              {ESLVal j = $65;
+              {ESLVal j = $47;
               
               return $null;
             }
             }
             }
             }
-          case "SetProxy": {ESLVal $64 = _v13.termRef(0);
-              ESLVal $63 = _v13.termRef(1);
+          case "SetProxy": {ESLVal $46 = _v12.termRef(0);
+              ESLVal $45 = _v12.termRef(1);
               
-              {ESLVal c = $64;
+              {ESLVal c = $46;
               
-              {ESLVal n = $63;
+              {ESLVal n = $45;
               
               return proxies.ref("put").apply(c,n);
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v13)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v12)));
           }
           }}
           public ESLVal get(String name) {
@@ -546,11 +546,11 @@ public class Supply {
                 return $a;
               }}.apply(unprocessed));
             {
-              ESLVal _v11 = completed;
-              while(_v11.isCons()) {
-                ESLVal j = _v11.headVal;
+              ESLVal _v10 = completed;
+              while(_v10.isCons()) {
+                ESLVal j = _v10.headVal;
                 Lib.send(parent,"ChildCompleted",colour,getSelf(),j);
-                _v11 = _v11.tailVal;}
+                _v10 = _v10.tailVal;}
             }}
             }
             }
@@ -587,36 +587,36 @@ public class Supply {
           ESLVal process = new ESLVal(new Function(new ESLVal("process"),getSelf()) {
               public ESLVal apply(ESLVal... $args) {
                 ESLVal j = $args[0];
-            {ESLVal _v8 = j;
+            {ESLVal _v13 = j;
                   
-                  switch(_v8.termName) {
-                  case "Job": {ESLVal $35 = _v8.termRef(0);
-                    ESLVal $34 = _v8.termRef(1);
-                    ESLVal $33 = _v8.termRef(2);
-                    ESLVal $32 = _v8.termRef(3);
-                    ESLVal $31 = _v8.termRef(4);
+                  switch(_v13.termName) {
+                  case "Job": {ESLVal $64 = _v13.termRef(0);
+                    ESLVal $63 = _v13.termRef(1);
+                    ESLVal $62 = _v13.termRef(2);
+                    ESLVal $61 = _v13.termRef(3);
+                    ESLVal $60 = _v13.termRef(4);
                     
-                    if($31.isCons())
-                    {ESLVal $36 = $31.head();
-                      ESLVal $37 = $31.tail();
+                    if($60.isCons())
+                    {ESLVal $65 = $60.head();
+                      ESLVal $66 = $60.tail();
                       
-                      if($36.isCons())
-                      {ESLVal $38 = $36.head();
-                        ESLVal $39 = $36.tail();
+                      if($65.isCons())
+                      {ESLVal $67 = $65.head();
+                        ESLVal $68 = $65.tail();
                         
-                        {ESLVal _v33 = $35;
+                        {ESLVal _v33 = $64;
                         
-                        {ESLVal n = $34;
+                        {ESLVal n = $63;
                         
-                        {ESLVal t0 = $33;
+                        {ESLVal t0 = $62;
                         
-                        {ESLVal t1 = $32;
+                        {ESLVal t1 = $61;
                         
-                        {ESLVal c = $38;
+                        {ESLVal c = $67;
                         
-                        {ESLVal cs = $39;
+                        {ESLVal cs = $68;
                         
-                        {ESLVal pending = $37;
+                        {ESLVal pending = $66;
                         
                         return Lib.send(nth.apply(children,random.apply(length.apply(children))),"Process",j);
                       }
@@ -627,16 +627,16 @@ public class Supply {
                       }
                       }
                       }
-                    else if($36.isNil())
-                      {ESLVal jid = $35;
+                    else if($65.isNil())
+                      {ESLVal jid = $64;
                         
-                        {ESLVal n = $34;
+                        {ESLVal n = $63;
                         
-                        {ESLVal shortest = $33;
+                        {ESLVal shortest = $62;
                         
-                        {ESLVal actual = $32;
+                        {ESLVal actual = $61;
                         
-                        {ESLVal pending = $37;
+                        {ESLVal pending = $66;
                         
                         return Lib.send(parent,"ChildCompleted",colour,getSelf(),new ESLVal("Job",jid,n,shortest,actual,pending));
                       }
@@ -644,52 +644,52 @@ public class Supply {
                       }
                       }
                       }
-                    else return error(new ESLVal("case error at Pos(4082,4360)").add(ESLVal.list(_v8)));
+                    else return error(new ESLVal("case error at Pos(4082,4360)").add(ESLVal.list(_v13)));
                     }
-                  else if($31.isNil())
-                    return error(new ESLVal("case error at Pos(4082,4360)").add(ESLVal.list(_v8)));
-                  else return error(new ESLVal("case error at Pos(4082,4360)").add(ESLVal.list(_v8)));
+                  else if($60.isNil())
+                    return error(new ESLVal("case error at Pos(4082,4360)").add(ESLVal.list(_v13)));
+                  else return error(new ESLVal("case error at Pos(4082,4360)").add(ESLVal.list(_v13)));
                   }
-                  default: return error(new ESLVal("case error at Pos(4082,4360)").add(ESLVal.list(_v8)));
+                  default: return error(new ESLVal("case error at Pos(4082,4360)").add(ESLVal.list(_v13)));
                 }
                 }
               }
             });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v9 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v14 = $m;
             
-            switch(_v9.termName) {
+            switch(_v14.termName) {
             case "Flush": {
               {proxies.ref("clear").apply();
             {{
-              ESLVal _v10 = children;
-              while(_v10.isCons()) {
-                ESLVal n = _v10.headVal;
+              ESLVal _v15 = children;
+              while(_v15.isCons()) {
+                ESLVal n = _v15.headVal;
                 Lib.send(n,"Flush");
-                _v10 = _v10.tailVal;}
+                _v15 = _v15.tailVal;}
             }
             return $null;}}
             }
-          case "SetProxy": {ESLVal $55 = _v9.termRef(0);
-              ESLVal $54 = _v9.termRef(1);
+          case "SetProxy": {ESLVal $84 = _v14.termRef(0);
+              ESLVal $83 = _v14.termRef(1);
               
-              {ESLVal c = $55;
+              {ESLVal c = $84;
               
-              {ESLVal n = $54;
+              {ESLVal n = $83;
               
               return proxies.ref("put").apply(c,n);
             }
             }
             }
-          case "ChildCompleted": {ESLVal $53 = _v9.termRef(0);
-              ESLVal $52 = _v9.termRef(1);
-              ESLVal $51 = _v9.termRef(2);
+          case "ChildCompleted": {ESLVal $82 = _v14.termRef(0);
+              ESLVal $81 = _v14.termRef(1);
+              ESLVal $80 = _v14.termRef(2);
               
-              {ESLVal c = $53;
+              {ESLVal c = $82;
               
-              {ESLVal n = $52;
+              {ESLVal n = $81;
               
-              {ESLVal j = $51;
+              {ESLVal j = $80;
               
               {Lib.send(m,"Handles",c,n);
             return process.apply(j);}
@@ -697,65 +697,65 @@ public class Supply {
             }
             }
             }
-          case "ProcessFailed": {ESLVal $50 = _v9.termRef(0);
+          case "ProcessFailed": {ESLVal $79 = _v14.termRef(0);
               
-              {ESLVal j = $50;
+              {ESLVal j = $79;
               
               return process.apply(j);
             }
             }
-          case "Process": {ESLVal $40 = _v9.termRef(0);
+          case "Process": {ESLVal $69 = _v14.termRef(0);
               
-              switch($40.termName) {
-              case "Job": {ESLVal $45 = $40.termRef(0);
-                ESLVal $44 = $40.termRef(1);
-                ESLVal $43 = $40.termRef(2);
-                ESLVal $42 = $40.termRef(3);
-                ESLVal $41 = $40.termRef(4);
+              switch($69.termName) {
+              case "Job": {ESLVal $74 = $69.termRef(0);
+                ESLVal $73 = $69.termRef(1);
+                ESLVal $72 = $69.termRef(2);
+                ESLVal $71 = $69.termRef(3);
+                ESLVal $70 = $69.termRef(4);
                 
-                if($41.isCons())
-                {ESLVal $46 = $41.head();
-                  ESLVal $47 = $41.tail();
+                if($70.isCons())
+                {ESLVal $75 = $70.head();
+                  ESLVal $76 = $70.tail();
                   
-                  if($46.isCons())
-                  {ESLVal $48 = $46.head();
-                    ESLVal $49 = $46.tail();
+                  if($75.isCons())
+                  {ESLVal $77 = $75.head();
+                    ESLVal $78 = $75.tail();
                     
-                    {ESLVal _v34 = $45;
+                    {ESLVal _v34 = $74;
                     
-                    {ESLVal current = $44;
+                    {ESLVal current = $73;
                     
-                    {ESLVal shortest = $43;
+                    {ESLVal shortest = $72;
                     
-                    {ESLVal actual = $42;
+                    {ESLVal actual = $71;
                     
-                    {ESLVal c = $48;
+                    {ESLVal c = $77;
                     
-                    {ESLVal cs = $49;
+                    {ESLVal cs = $78;
                     
-                    {ESLVal pending = $47;
+                    {ESLVal pending = $76;
                     
                     if(c.eql(colour).boolVal)
                     return process.apply(new ESLVal("Job",_v34,current,shortest,actual,pending.cons(cs).cons(colours)));
                     else
-                      {ESLVal _v35 = $45;
+                      {ESLVal _v35 = $74;
                         
-                        {ESLVal _v36 = $44;
+                        {ESLVal _v36 = $73;
                         
-                        {ESLVal _v37 = $43;
+                        {ESLVal _v37 = $72;
                         
-                        {ESLVal _v38 = $42;
+                        {ESLVal _v38 = $71;
                         
-                        {ESLVal _v39 = $48;
+                        {ESLVal _v39 = $77;
                         
-                        {ESLVal _v40 = $49;
+                        {ESLVal _v40 = $78;
                         
-                        {ESLVal _v41 = $47;
+                        {ESLVal _v41 = $76;
                         
                         if(proxies.ref("hasKey").apply(_v39).boolVal)
                         return Lib.send(proxies.ref("get").apply(_v39),"Process",new ESLVal("Job",_v35,_v36,_v37,_v38,_v41.cons(_v40.cons(_v39))));
                         else
-                          {ESLVal j = $40;
+                          {ESLVal j = $69;
                             
                             return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
                           }
@@ -774,33 +774,33 @@ public class Supply {
                   }
                   }
                   }
-                else if($46.isNil())
-                  {ESLVal j = $40;
+                else if($75.isNil())
+                  {ESLVal j = $69;
                     
                     return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
                   }
-                else {ESLVal j = $40;
+                else {ESLVal j = $69;
                     
                     return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
                   }
                 }
-              else if($41.isNil())
-                {ESLVal j = $40;
+              else if($70.isNil())
+                {ESLVal j = $69;
                   
                   return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
                 }
-              else {ESLVal j = $40;
+              else {ESLVal j = $69;
                   
                   return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
                 }
               }
-              default: {ESLVal j = $40;
+              default: {ESLVal j = $69;
                 
                 return Lib.send(parent,"ProcessFailed",jobWaits.apply(j));
               }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v9)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v14)));
           }
           }}
           public ESLVal get(String name) {
@@ -881,37 +881,37 @@ public class Supply {
     public ESLVal apply(ESLVal... $args) {
       ESLVal jobs = $args[0];
   ESLVal min = $args[1];
-  {ESLVal _v7 = jobs;
+  {ESLVal _v16 = jobs;
         
-        if(_v7.isCons())
-        {ESLVal $24 = _v7.head();
-          ESLVal $25 = _v7.tail();
+        if(_v16.isCons())
+        {ESLVal $85 = _v16.head();
+          ESLVal $86 = _v16.tail();
           
-          switch($24.termName) {
-          case "Job": {ESLVal $30 = $24.termRef(0);
-            ESLVal $29 = $24.termRef(1);
-            ESLVal $28 = $24.termRef(2);
-            ESLVal $27 = $24.termRef(3);
-            ESLVal $26 = $24.termRef(4);
+          switch($85.termName) {
+          case "Job": {ESLVal $91 = $85.termRef(0);
+            ESLVal $90 = $85.termRef(1);
+            ESLVal $89 = $85.termRef(2);
+            ESLVal $88 = $85.termRef(3);
+            ESLVal $87 = $85.termRef(4);
             
-            {ESLVal id = $30;
+            {ESLVal id = $91;
             
-            {ESLVal t = $29;
+            {ESLVal t = $90;
             
-            {ESLVal possible = $28;
+            {ESLVal possible = $89;
             
-            {ESLVal actual = $27;
+            {ESLVal actual = $88;
             
-            {ESLVal cs = $26;
+            {ESLVal cs = $87;
             
-            {ESLVal _v30 = $25;
+            {ESLVal _v30 = $86;
             
             if(actual.sub(possible).less(min).boolVal)
             return minDelay.apply(_v30,actual.sub(possible));
             else
-              {ESLVal j = $24;
+              {ESLVal j = $85;
                 
-                {ESLVal _v31 = $25;
+                {ESLVal _v31 = $86;
                 
                 return minDelay.apply(_v31,min);
               }
@@ -923,18 +923,18 @@ public class Supply {
           }
           }
           }
-          default: {ESLVal j = $24;
+          default: {ESLVal j = $85;
             
-            {ESLVal _v32 = $25;
+            {ESLVal _v32 = $86;
             
             return minDelay.apply(_v32,min);
           }
           }
         }
         }
-      else if(_v7.isNil())
+      else if(_v16.isNil())
         return min;
-      else return error(new ESLVal("case error at Pos(5488,5656)").add(ESLVal.list(_v7)));
+      else return error(new ESLVal("case error at Pos(5488,5656)").add(ESLVal.list(_v16)));
       }
     }
   });
@@ -942,37 +942,37 @@ public class Supply {
     public ESLVal apply(ESLVal... $args) {
       ESLVal jobs = $args[0];
   ESLVal max = $args[1];
-  {ESLVal _v6 = jobs;
+  {ESLVal _v17 = jobs;
         
-        if(_v6.isCons())
-        {ESLVal $17 = _v6.head();
-          ESLVal $18 = _v6.tail();
+        if(_v17.isCons())
+        {ESLVal $92 = _v17.head();
+          ESLVal $93 = _v17.tail();
           
-          switch($17.termName) {
-          case "Job": {ESLVal $23 = $17.termRef(0);
-            ESLVal $22 = $17.termRef(1);
-            ESLVal $21 = $17.termRef(2);
-            ESLVal $20 = $17.termRef(3);
-            ESLVal $19 = $17.termRef(4);
+          switch($92.termName) {
+          case "Job": {ESLVal $98 = $92.termRef(0);
+            ESLVal $97 = $92.termRef(1);
+            ESLVal $96 = $92.termRef(2);
+            ESLVal $95 = $92.termRef(3);
+            ESLVal $94 = $92.termRef(4);
             
-            {ESLVal id = $23;
+            {ESLVal id = $98;
             
-            {ESLVal t = $22;
+            {ESLVal t = $97;
             
-            {ESLVal possible = $21;
+            {ESLVal possible = $96;
             
-            {ESLVal actual = $20;
+            {ESLVal actual = $95;
             
-            {ESLVal cs = $19;
+            {ESLVal cs = $94;
             
-            {ESLVal _v27 = $18;
+            {ESLVal _v27 = $93;
             
             if(actual.sub(possible).gre(max).boolVal)
             return maxDelay.apply(_v27,actual.sub(possible));
             else
-              {ESLVal j = $17;
+              {ESLVal j = $92;
                 
-                {ESLVal _v28 = $18;
+                {ESLVal _v28 = $93;
                 
                 return maxDelay.apply(_v28,max);
               }
@@ -984,18 +984,18 @@ public class Supply {
           }
           }
           }
-          default: {ESLVal j = $17;
+          default: {ESLVal j = $92;
             
-            {ESLVal _v29 = $18;
+            {ESLVal _v29 = $93;
             
             return maxDelay.apply(_v29,max);
           }
           }
         }
         }
-      else if(_v6.isNil())
+      else if(_v17.isNil())
         return max;
-      else return error(new ESLVal("case error at Pos(5697,5865)").add(ESLVal.list(_v6)));
+      else return error(new ESLVal("case error at Pos(5697,5865)").add(ESLVal.list(_v17)));
       }
     }
   });
@@ -1003,37 +1003,37 @@ public class Supply {
     public ESLVal apply(ESLVal... $args) {
       ESLVal jobs = $args[0];
   ESLVal delay = $args[1];
-  {ESLVal _v5 = jobs;
+  {ESLVal _v18 = jobs;
         
-        if(_v5.isCons())
-        {ESLVal $10 = _v5.head();
-          ESLVal $11 = _v5.tail();
+        if(_v18.isCons())
+        {ESLVal $99 = _v18.head();
+          ESLVal $100 = _v18.tail();
           
-          switch($10.termName) {
-          case "Job": {ESLVal $16 = $10.termRef(0);
-            ESLVal $15 = $10.termRef(1);
-            ESLVal $14 = $10.termRef(2);
-            ESLVal $13 = $10.termRef(3);
-            ESLVal $12 = $10.termRef(4);
+          switch($99.termName) {
+          case "Job": {ESLVal $105 = $99.termRef(0);
+            ESLVal $104 = $99.termRef(1);
+            ESLVal $103 = $99.termRef(2);
+            ESLVal $102 = $99.termRef(3);
+            ESLVal $101 = $99.termRef(4);
             
-            {ESLVal id = $16;
+            {ESLVal id = $105;
             
-            {ESLVal t = $15;
+            {ESLVal t = $104;
             
-            {ESLVal possible = $14;
+            {ESLVal possible = $103;
             
-            {ESLVal actual = $13;
+            {ESLVal actual = $102;
             
-            {ESLVal cs = $12;
+            {ESLVal cs = $101;
             
-            {ESLVal _v24 = $11;
+            {ESLVal _v24 = $100;
             
             if(actual.sub(possible).greql(delay).boolVal)
             return $one.add(delayedBy.apply(_v24,delay));
             else
-              {ESLVal j = $10;
+              {ESLVal j = $99;
                 
-                {ESLVal _v25 = $11;
+                {ESLVal _v25 = $100;
                 
                 return delayedBy.apply(_v25,delay);
               }
@@ -1045,18 +1045,18 @@ public class Supply {
           }
           }
           }
-          default: {ESLVal j = $10;
+          default: {ESLVal j = $99;
             
-            {ESLVal _v26 = $11;
+            {ESLVal _v26 = $100;
             
             return delayedBy.apply(_v26,delay);
           }
           }
         }
         }
-      else if(_v5.isNil())
+      else if(_v18.isNil())
         return $zero;
-      else return error(new ESLVal("case error at Pos(5909,6076)").add(ESLVal.list(_v5)));
+      else return error(new ESLVal("case error at Pos(5909,6076)").add(ESLVal.list(_v18)));
       }
     }
   });
@@ -1085,9 +1085,9 @@ public class Supply {
               {ESLVal table = newTable();
                 
                 {{
-                ESLVal _v3 = $zero.to(limit);
-                while(_v3.isCons()) {
-                  ESLVal i = _v3.headVal;
+                ESLVal _v20 = $zero.to(limit);
+                while(_v20.isCons()) {
+                  ESLVal i = _v20.headVal;
                   {table.ref("put").apply(i,new java.util.function.Function<ESLVal,ESLVal>() {
                     public ESLVal apply(ESLVal $l0) {
                       ESLVal $a = $nil;
@@ -1101,24 +1101,24 @@ public class Supply {
                       return $a;
                     }}.apply($zero.to(random.apply(nodes).add($one))));
                   jobs = jobs.add(length.apply(table.ref("get").apply(i)));}
-                  _v3 = _v3.tailVal;}
+                  _v20 = _v20.tailVal;}
               }
               return table;}
               }
             }).get();
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v4 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v21 = $m;
             
-            switch(_v4.termName) {
-            case "ChildCompleted": {ESLVal $9 = _v4.termRef(0);
-              ESLVal $8 = _v4.termRef(1);
-              ESLVal $7 = _v4.termRef(2);
+            switch(_v21.termName) {
+            case "ChildCompleted": {ESLVal $114 = _v21.termRef(0);
+              ESLVal $113 = _v21.termRef(1);
+              ESLVal $112 = _v21.termRef(2);
               
-              {ESLVal c = $9;
+              {ESLVal c = $114;
               
-              {ESLVal n = $8;
+              {ESLVal n = $113;
               
-              {ESLVal j = $7;
+              {ESLVal j = $112;
               
               {completed = tail.apply(completed).cons(head.apply(completed).cons(j));
             print.apply(length.apply(head.apply(completed)).add(new ESLVal(" of ").add(jobs)));
@@ -1187,46 +1187,46 @@ public class Supply {
           case "Flush": {
               return Lib.send(child,"Flush");
             }
-          case "SetProxy": {ESLVal $6 = _v4.termRef(0);
-              ESLVal $5 = _v4.termRef(1);
+          case "SetProxy": {ESLVal $111 = _v21.termRef(0);
+              ESLVal $110 = _v21.termRef(1);
               
-              {ESLVal c = $6;
+              {ESLVal c = $111;
               
-              {ESLVal n = $5;
+              {ESLVal n = $110;
               
               return $null;
             }
             }
             }
-          case "ProcessFailed": {ESLVal $4 = _v4.termRef(0);
+          case "ProcessFailed": {ESLVal $109 = _v21.termRef(0);
               
-              {ESLVal j = $4;
+              {ESLVal j = $109;
               
               return Lib.send(child,"Process",j);
             }
             }
-          case "Process": {ESLVal $3 = _v4.termRef(0);
+          case "Process": {ESLVal $108 = _v21.termRef(0);
               
-              {ESLVal j = $3;
+              {ESLVal j = $108;
               
               return Lib.send(child,"Process",j);
             }
             }
-          case "Deprioritize": {ESLVal $2 = _v4.termRef(0);
+          case "Deprioritize": {ESLVal $107 = _v21.termRef(0);
               
-              {ESLVal id = $2;
-              
-              return $null;
-            }
-            }
-          case "Prioritize": {ESLVal $1 = _v4.termRef(0);
-              
-              {ESLVal id = $1;
+              {ESLVal id = $107;
               
               return $null;
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v4)));
+          case "Prioritize": {ESLVal $106 = _v21.termRef(0);
+              
+              {ESLVal id = $106;
+              
+              return $null;
+            }
+            }
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v21)));
           }
           }}
           public ESLVal get(String name) {
@@ -1241,11 +1241,11 @@ public class Supply {
             
             if(counter.less(limit).boolVal)
             {{
-              ESLVal _v2 = pending.ref("get").apply(counter);
-              while(_v2.isCons()) {
-                ESLVal j = _v2.headVal;
+              ESLVal _v19 = pending.ref("get").apply(counter);
+              while(_v19.isCons()) {
+                ESLVal j = _v19.headVal;
                 Lib.send(getSelf(),"Process",j);
-                _v2 = _v2.tailVal;}
+                _v19 = _v19.tailVal;}
             }
             counter = counter.add($one);}
             else
@@ -1269,9 +1269,9 @@ public class Supply {
       return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("main")) {
           ESLVal rootNode = newActor(root,new ESLVal(new Actor()),new ESLVal(2),new ESLVal(200),new ESLVal(25));
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v22 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v22)));
           }}
           public ESLVal get(String name) {
             switch(name) {

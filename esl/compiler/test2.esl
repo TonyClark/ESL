@@ -1,206 +1,27 @@
 export main; 
 
-import 'esl/sets.esl','esl/lists.esl', 'esl/displays.esl';
+Act Main { }
 
-edb::EDB = null[EDB];
+//act unit(x::Int)::Main {}
 
-Act Main {  } 
+data Test = One | Two;
 
-data Cell = Cell(Int);
- 
-data Tree[T] =
-  Branch(Tree[T],Tree[T]) 
-| Leaf(T); 
+dec f(Int,Int)::Int;
 
-treeTrans[T1,T2](map::(T1) -> T2,t::Tree[T1])::Tree[T2] =
-  case t {
-    Branch[T1](l,r) -> Branch[T2](treeTrans[T1,T2](map,l),treeTrans[T1,T2](map,r));
-    Leaf[T1](v)     -> Leaf[T2](map(v));
-  }
-
-t1::Tree[Int] = Branch[Int](Leaf[Int](100),Leaf[Int](200));
-
-t2::Tree[Bool] = treeTrans[Int,Bool](fun(i::Int)::Bool i > 100,t1);
-
-type Point2D = {getX::()->Int;getY::()->Int;setX::(Int)->Point2D;setY::(Int)->Point2D};
-
-type ListOf[T] = [T];
-
-f(l::ListOf[Int])::ListOf[Int] = l;
-k(l::ListOf[Bool])::ListOf[Bool] = l;
- 
-
-
-mkPoint(x::Int,y::Int)::Point2D = {
-  getX -> fun()::Int x;
-  getY -> fun()::Int y;
-  setX -> fun(x::Int)::Point2D mkPoint(x,y); 
-  setY -> fun(y::Int)::Point2D mkPoint(x,y) 
-};
-
-//size(Leaf(s))::Int = 0;
-//size(Branch(l,r))::Int =size(l) + size(r); 
-
-//x(10)::Int = 10;
-//x(20)::Int = 20;  
-//x(l::Int)::Int = 20;
-
-len([])::Int = 0;
-len(h:t)::Int = 1 + len(t); 
-
-//y(true:b)::Int = 0; 
-//y(false:[true])::Int = x([1,2,3,4]);  
-//y(false:true:[])::Int = x([true,false]); 
-//y(false:true:[])::Int = x([x,false]); 
-
- 
-
-select(s::Set{Set{Int}})::[Int] = 
-  case s {
-    set{set{x | rest1},set{y | rest2} | rest3} when x + y = 100 -> [x,y]; 
-    set{set{x | set{x2 | rest1}},set{y | set{y2 | rest2}} | rest3} when x + y = 20 and x2= y2 -> [x,y,x2,y2];
-  }
-
-
-f(t::T)::Int =
-  case t {
-    Branch(Branch(Leaf(set{x1|s1}),Leaf(set{x2|s2})),Leaf(set{x3|s3})) when x1 = x2 and x2 = x3 -> x1;
-    t -> 0;
-  }
-  
-duplicate(s1::Set{Int},s2::Set{Int},notFound::Int)::Int =
-  case s1,s2 {
-    set{x | p}, set{y | q} when x = y -> x;
-    s1,s2                             -> notFound;
-  }
-
-listMem(l::[Int],n::Int)::Bool =
-  case l {
-    [x] + l when x = n -> true;
-    l1 + [x] + l2 when x = n -> true; 
-    l + [x] when x = n -> true;
-    l -> false;
-  }
-
-g()::Void = {}
-
-t::Hash[Str,Int] = new Hash[Str,Int];
-
-graph::Display = Graph([],[
-  Node([],0,HTML('0')),
-  Node([],1,HTML('1')),
-  Node([],2,HTML('2')),
-  Node([],3,HTML('3'))],[
-  Edge([],0,1,HTML('e1')),
-  Edge([],0,2,HTML('e2')),
-  Edge([],1,3,HTML('e3')),
-  Edge([],2,3,HTML('e4'))]);
-
-tableProps::Props = [Prop('style','border: 1px solid black;')];
-
-table::Display = 
-  Table(tableProps,
-    [ Row([],
-       [ Data(tableProps,HTML('<a href="edb:' + j + '">' + j + '</a>')) 
-       | j <- (i*10)..(i*10)+10 
-       ]) 
-    | i <- 0..10
-    ]);
-
-pie::Display = Pie([],'Annual Car Sales',400,400,[
-  Slice([],'VW',20),
-  Slice([],'Vauxhall',10),
-  Slice([],'Audi',20),
-  Slice([],'Ford',10),
-  Slice([],'Bentley',3),
-  Slice([],'Volvo',40)]);
-  
-lgraph::Display = LineGraph([],'Sales','Month','Volume',700,500,[
-  GLine([],'Product' + i,[LPoint([],month,random(500)) | month <- 0..12 ]) | i <- 0..3 ]);
-
-data Sale = Sale(Int,Int);
-
-salesFigures::[Sale] = [
-  Sale(1,100),
-  Sale(2,110),
-  Sale(3,150),
-  Sale(4,120),
-  Sale(5,200),
-  Sale(6,230),
-  Sale(7,250),
-  Sale(8,300),
-  Sale(9,350),
-  Sale(10,400),
-  Sale(11,340),
-  Sale(12,460)];
-  
-  
-lgraphs::[Display] = [ LineGraph([],'Sales','Month','Volume',400,200,[
-  GLine([],'Product',[LPoint([],m,s) | Sale(m,s) <- take[Sale](salesFigures,month)])]) | month <- 0..13 ];
-
-picture::Display = Picture(500,500,[
-  Rectangle(100,100,300,300,'fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)'),
-  Circle(250,250,100,'fill:rgb(0,255,0);stroke-width:3;stroke:rgb(0,0,0)'),
-  Line(200,250,300,250,'stroke-width:3;stroke:rgb(255,0,0)'),
-  Image(110,110,50,50,'https://img.icons8.com/ios/1600/clock.png'),
-  Text(110,380,'My Picture','stroke:rgb(255,255,255)')
-]);
-  
-act tableListener::BrowserListener {
-  BrowserEvent('50') -> stopAll();
-  BrowserEvent(s::Str) -> print[Str]('you pressed: ' + s);
-}
-
-tableCounter::Int = 0;
-
-tree::Display = Tree(500,500,
-  VBox([],[
-    HBox([],[
-      TreeNode(Image(0,0,10,10,'https://img.icons8.com/ios/1600/clock.png'))
-    | column <- 0..10 ])
-  | row <- 0..5]));
+f(One,One)::Int = 1;
+f(One,Two)::Int = 2;
 
 act main::Main { 
-  -> {
-    //edb.setProperty[Display]('graph',graph);
-    //edb <- Show('mytable',table);
-    //edb <- Show('mylines',lgraph);
-    //edb <- Show('seq',Sequence([Actor(1,0,200,'x')],[]));
-    //edb <- Show('mypicture',picture);
-    // edb <- Filmstrip('sales',lgraphs);
-    edb <- Show('grid',tree);
+
+  g(x::Test,y::Test)::Int = 1; when x = y
+  g(x::Test,y::Test)::Int = 2; when x <> y
+  
+  Time(n::Int) -> {
+    print[Str]('result f = ' + [ f(x,y) | x <- [One,Two], y <- [One,Two]]); 
+    print[Str]('result g = ' + [ g(x,y) | x <- [One,Two], y <- [One,Two]]); 
     stopAll();
-    //edb <- AddBrowserListener(new tableListener);
-    print[Str]('g = ' + edb.getProperty[Display]('graph'));
-    t.put('one',1);
-    t.put('two',2);
-    t.put('one',3);
-    /*
-    print[Str]('keys ' + t.keys);
-    print[Str]('values ' + t.vals);
-    print[Str]('table ' + t);
-    print[P](mkPoint(100,20));
-    print[Int](mkPoint(100,20).y);
-    print[[Int]](select(set{set{1,2},set{3,4,5},set{3,2,1},set{2,3,4,13,5,60}}));
-    print[Int](setSize[Set{Int}](power[Int](set{1,2,3}))); 
-    print[Bool](setContains[Set{Int}](power[Int](set{1,2,3,4}),set{2,4,4,1,4,2,1,1,1}));
-    print[Bool](subset[Int](set{1,2,3},set{3,2,1,4}));
-    print[Int](f(Branch(Branch(Leaf(set{1,2,3,4}),Leaf(set{2,3,4,5})),Leaf(set{5,6}))));
-    print[Int](duplicate(set{1,2,3,4,5,6,7,8},set{0,0,0,0,0,1},0));
-    print[Int](setSize[Int](set{0,0,0,0,0,1})); */
-    let p::Point2D = mkPoint(100,200);
-    in {
-      print[Int](p.getX());
-      print[Int](p.setX(p.getX()+1).getX());
-      print[Int](len([1,2,3,4,5,6,7,8]));
-      print[Tree[Int]](t1);
-      print[Tree[Bool]](t2);
-      //print[Int](last[Int]((1..1000) @ (2..200)));
-      //plet x::Int = len(0..10000000); y::Int = len(0..10000000); in print[Str]('length = ' + x+y);
-      //let x::Int = len(0..10000000); y::Int = len(0..10000000); in print[Str]('length = ' + x+y);
-      //print[[[Int]]]([ [x, y] | x <- 0..100,  y <- 0..100]); 
-      //print[[Int]]([ x | Cell(x) <- [Cell(1),Cell(2),Cell(3)]]);
-      //print[[Int]]([ x | x <- [1,2,3]]); 
-    } 
-  } 
+  }
 }
+
+f(Two,One)::Int = 3;
+f(Two,Two)::Int = 4;

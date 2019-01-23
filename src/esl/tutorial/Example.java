@@ -2,16 +2,16 @@ package esl.tutorial;
 import esl.lib.*;
 import static esl.lib.Lib.*;
 
-import java.util.function.Supplier;
 public class Example {
   public static ESLVal getSelf() { return $null; }
   public static ESLVal main = new ESLVal(new Function(new ESLVal("main"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
+
+          public ESLVal handle(ESLVal $m) {{ESLVal _v115 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v115)));
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -25,13 +25,13 @@ public class Example {
             if(n.gre(new ESLVal(10000)).boolVal)
             stopAll.apply();
             else
-              {ESLVal _v2 = $t;
+              {ESLVal _v116 = $t;
                 
-                if(_v2.mod(new ESLVal(100)).eql($zero).boolVal)
-                {print.apply(new ESLVal("time = ").add(_v2));
+                if(_v116.mod(new ESLVal(100)).eql($zero).boolVal)
+                {print.apply(new ESLVal("time = ").add(_v116));
                 wait.apply(new ESLVal(10));}
                 else
-                  {ESLVal _v3 = $t;
+                  {ESLVal _v117 = $t;
                     
                     if($true.boolVal)
                     {}
@@ -47,6 +47,7 @@ public class Example {
         });
     }
   });
+
 public static void main(String[] args) {
     newActor(main,new ESLVal(new Actor())); 
   }

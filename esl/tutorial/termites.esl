@@ -3,12 +3,12 @@ export main;
 Act Main { Time(Int); }
 Act Grid { SetColour(Int,Int,Str); TermiteAt(Int,Int,Int); }
 
-size::Int                    = 120;
-limit::Int                   = 40000;
-numOfTermites::Int           = 600;
+size::Int                    = 350;
+limit::Int                   = 120000;
+numOfTermites::Int           = 10000;
 twig::Str                    = 'black';
 background::Str              = 'white';
-grid::Grid                   = new 'esl.grid.Grid'[Grid](size,size,6); 
+grid::Grid                   = new 'esl.grid.Grid'[Grid](size,size,2); 
 isLegal(x::Int,y::Int)::Bool = (x = 0 or (x > 0 and x < size)) and (y = 0 or (y > 0 and y < size));
 
 Act Termite { 

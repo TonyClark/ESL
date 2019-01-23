@@ -1,6 +1,6 @@
 export main;
 
-import 'esl/displays.esl', 'esl/lists.esl';
+import 'esl/displays.esl', 'esl/lists.esl'; 
 
 // This file implements two variants of the Dining Philosophers where a number of philosopher actors
 // must co-ordinate in order to share chopsticks that are required to eat. The chopsticks represent
@@ -12,7 +12,7 @@ import 'esl/displays.esl', 'esl/lists.esl';
 // The simulation is controlled by the following variables...
 
 timeLimit::Int            = 5000;    // The length of time to run the simulation.
-canDeadlock::Bool         = true;   // Select the strategy for co-ordination.
+canDeadlock::Bool         = false;   // Select the strategy for co-ordination.
 numberOfPhilosophers::Int = 10;      // The number of philosophers (and therefore chopsticks).
 eatTime::Int              = 50;      // Limit on random delay for eating.     
 thinkTime::Int            = 50;      // Limit on random delay for thinking.     
@@ -120,7 +120,7 @@ toPhils(i::Int,holds::[Hold])::[PictureElement] =
   // Create an icon for the ith philosopher. This will depend on whether the philosopher is eating
   // or thinking. They are eating if they are currently holding two chopsticks. Also add in 
   // lines for each chopstick they are holding. The end position of each chopstick-line must be
-  // calculated. The end-points of the lines are adjusted appropriately so that they do not
+  // calculated. The end-points of the lines are adjusted appropriately so that they do not 
   // overlap with the philosopher icon.
   
   if i = numberOfPhilosophers
@@ -176,7 +176,7 @@ filmstrip(history::[Action])::[Snap] =
   // chopstick-holdings at successive system states.
   case history {
     [] -> [Snapshot([][Hold],chopsticks)];
-    Grab(p::Int,c::Chopstick):h::[Action] -> extendFilmstrip(p,c,filmstrip(h));
+    Grab(p::Int,c::Chopstick):h::[Action] -> extendFilmstrip(p,c,filmstrip(h)); 
     Release(c::Chopstick):h::[Action] -> reduceFilmstrip(c,filmstrip(h));
    }
    

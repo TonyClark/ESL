@@ -3,127 +3,48 @@ import esl.lib.*;
 import static esl.lib.Lib.*;
 // import static esl.Lists.*;
 import static esl.Displays.*;
-import java.util.function.Supplier;
 public class Fact {
   public static ESLVal getSelf() { return $null; }
-  private static ESLVal actors = ESLVal.list();
-  private static ESLVal messages = ESLVal.list();
-  private static ESLVal addActor = new ESLVal(new Function(new ESLVal("addActor"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal behaviour = $args[0];
-  return lock(new Function(new ESLVal("grab"),getSelf()) {
-          public ESLVal apply(ESLVal ...args) { 
-            return ((Supplier<ESLVal>)() -> { 
-          {ESLVal id = length.apply(actors);
-            
-            {actors = actors.add(ESLVal.list(new ESLVal("Actor",id,$zero,timeOut,behaviour)));
-          return id;}
-          }
-        }).get();
-          }},actors);
-    }
-  });
-  private static ESLVal addGet = new ESLVal(new Function(new ESLVal("addGet"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal threadId = $args[0];
-  ESLVal time = $args[1];
-  ESLVal n = $args[2];
-  ESLVal source = $args[3];
-  ESLVal target = $args[4];
-  ESLVal sourceCustomer = $args[5];
-  ESLVal targetCustomer = $args[6];
-  return lock(new Function(new ESLVal("grab"),getSelf()) {
-          public ESLVal apply(ESLVal ...args) { 
-            return ((Supplier<ESLVal>)() -> { 
-          {messages = messages.add(ESLVal.list(new ESLVal("GetValue",n,threadId,time,source,target,sourceCustomer,targetCustomer)));
-          return $null;}
-        }).get();
-          }},messages);
-    }
-  });
-  private static ESLVal addReturn = new ESLVal(new Function(new ESLVal("addReturn"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal threadId = $args[0];
-  ESLVal time = $args[1];
-  ESLVal v = $args[2];
-  ESLVal customer = $args[3];
-  ESLVal proxy = $args[4];
-  return lock(new Function(new ESLVal("grab"),getSelf()) {
-          public ESLVal apply(ESLVal ...args) { 
-            return ((Supplier<ESLVal>)() -> { 
-          {messages = messages.add(ESLVal.list(new ESLVal("ReturnValue",v,threadId,time,customer,proxy)));
-          return $null;}
-        }).get();
-          }},messages);
-    }
-  });
-  private static ESLVal addZero = new ESLVal(new Function(new ESLVal("addZero"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal threadId = $args[0];
-  ESLVal time = $args[1];
-  ESLVal f = $args[2];
-  ESLVal c = $args[3];
-  return lock(new Function(new ESLVal("grab"),getSelf()) {
-          public ESLVal apply(ESLVal ...args) { 
-            return ((Supplier<ESLVal>)() -> { 
-          {messages = messages.add(ESLVal.list(new ESLVal("Zero",threadId,time,f,c)));
-          return $null;}
-        }).get();
-          }},messages);
-    }
-  });
-  private static ESLVal addStart = new ESLVal(new Function(new ESLVal("addStart"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal n = $args[0];
-  ESLVal threadId = $args[1];
-  ESLVal c = $args[2];
-  ESLVal f = $args[3];
-  return lock(new Function(new ESLVal("grab"),getSelf()) {
-          public ESLVal apply(ESLVal ...args) { 
-            return ((Supplier<ESLVal>)() -> { 
-          {messages = messages.add(ESLVal.list(new ESLVal("Start",n,threadId,c,f)));
-          return $null;}
-        }).get();
-          }},messages);
-    }
-  });
+  private static ESLVal actors = $nil;
+  private static ESLVal messages = $nil;
   private static ESLVal timeOut = new ESLVal(1000);
   private static ESLVal fact = new ESLVal(new Function(new ESLVal("fact"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("fact")) {
-          ESLVal id = $zero;
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v8 = $m;
+ESLVal id = $zero;
+          
+          public ESLVal handle(ESLVal $m) {{ESLVal _v121 = $m;
             
-            switch(_v8.termName) {
-            case "Get": {ESLVal $46 = _v8.termRef(0);
-              ESLVal $45 = _v8.termRef(1);
-              ESLVal $44 = _v8.termRef(2);
-              ESLVal $43 = _v8.termRef(3);
+            switch(_v121.termName) {
+            case "Get": {ESLVal $187 = _v121.termRef(0);
+              ESLVal $186 = _v121.termRef(1);
+              ESLVal $185 = _v121.termRef(2);
+              ESLVal $184 = _v121.termRef(3);
               
-              switch($46.intVal) {
-              case 0: {ESLVal threadId = $45;
+              switch($187.intVal) {
+              case 0: {ESLVal threadId = $186;
                 
-                {ESLVal time = $44;
+                {ESLVal time = $185;
                 
-                {ESLVal c = $43;
+                {ESLVal c = $184;
                 
-                {addZero.apply(threadId,time,getSelf(),c);
+                {addZero(threadId,time,getSelf(),c);
               return Lib.send(c,"Value",threadId,time.add($one),$one);}
               }
               }
               }
-              default: {ESLVal n = $46;
+              default: {ESLVal n = $187;
                 
-                {ESLVal threadId = $45;
+                {ESLVal threadId = $186;
                 
-                {ESLVal time = $44;
+                {ESLVal time = $185;
                 
-                {ESLVal c = $43;
+                {ESLVal c = $184;
                 
                 {ESLVal cc = newActor(cust,new ESLVal(new Actor()),n,c);
                 
-                {addGet.apply(threadId,time,n.sub($one),getSelf(),getSelf(),c,cc);
+                {addGet(threadId,time,n.sub($one),getSelf(),getSelf(),c,cc);
               return Lib.send(getSelf(),"Get",n.sub($one),threadId,time.add($one),cc);}
               }
               }
@@ -132,7 +53,7 @@ public class Fact {
               }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v8)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v121)));
           }
           }}
           public ESLVal get(String name) {
@@ -151,10 +72,10 @@ public class Fact {
           }
         }
         public ESLVal init() {
-            return ((Supplier<ESLVal>)() -> { 
-                {id = addActor.apply(new ESLVal("fact"));
+            return new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+                {id = addActor(new ESLVal("fact"));
                 return $null;}
-              }).get();
+              }}.get();
           }
         });
     }
@@ -164,29 +85,30 @@ public class Fact {
       ESLVal n = $args[0];
   ESLVal c = $args[1];
   return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("cust")) {
-          ESLVal id = $zero;
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v7 = $m;
+ESLVal id = $zero;
+          
+          public ESLVal handle(ESLVal $m) {{ESLVal _v122 = $m;
             
-            switch(_v7.termName) {
-            case "Value": {ESLVal $42 = _v7.termRef(0);
-              ESLVal $41 = _v7.termRef(1);
-              ESLVal $40 = _v7.termRef(2);
+            switch(_v122.termName) {
+            case "Value": {ESLVal $190 = _v122.termRef(0);
+              ESLVal $189 = _v122.termRef(1);
+              ESLVal $188 = _v122.termRef(2);
               
-              {ESLVal threadId = $42;
+              {ESLVal threadId = $190;
               
-              {ESLVal time = $41;
+              {ESLVal time = $189;
               
-              {ESLVal m = $40;
+              {ESLVal m = $188;
               
-              {addReturn.apply(threadId,time,n.mul(m),getSelf(),c);
-            setDeath.apply(id,time);
+              {addReturn(threadId,time,n.mul(m),getSelf(),c);
+            setDeath(id,time);
             return Lib.send(c,"Value",threadId,time.add($one),n.mul(m));}
             }
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v7)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v122)));
           }
           }}
           public ESLVal get(String name) {
@@ -205,335 +127,101 @@ public class Fact {
           }
         }
         public ESLVal init() {
-            return ((Supplier<ESLVal>)() -> { 
-                {id = addActor.apply(new ESLVal("cust"));
+            return new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+                {id = addActor(new ESLVal("cust"));
                 return $null;}
-              }).get();
+              }}.get();
           }
         });
-    }
-  });
-  private static ESLVal translate = new ESLVal(new Function(new ESLVal("translate"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal msIn = $args[0];
-  {ESLVal _v6 = msIn;
-        
-        if(_v6.isCons())
-        {ESLVal $18 = _v6.head();
-          ESLVal $19 = _v6.tail();
-          
-          switch($18.termName) {
-          case "Start": {ESLVal $39 = $18.termRef(0);
-            ESLVal $38 = $18.termRef(1);
-            ESLVal $37 = $18.termRef(2);
-            ESLVal $36 = $18.termRef(3);
-            
-            {ESLVal n = $39;
-            
-            {ESLVal threadId = $38;
-            
-            {ESLVal c = $37;
-            
-            {ESLVal f = $36;
-            
-            {ESLVal rest = $19;
-            
-            return translate.apply(rest).cons(new ESLVal("Message",$one,c.ref("id"),f.ref("id"),new ESLVal("[").add(threadId.add(new ESLVal("]Start(").add(n.add(new ESLVal(")")))))));
-          }
-          }
-          }
-          }
-          }
-          }
-        case "GetValue": {ESLVal $35 = $18.termRef(0);
-            ESLVal $34 = $18.termRef(1);
-            ESLVal $33 = $18.termRef(2);
-            ESLVal $32 = $18.termRef(3);
-            ESLVal $31 = $18.termRef(4);
-            ESLVal $30 = $18.termRef(5);
-            ESLVal $29 = $18.termRef(6);
-            
-            {ESLVal n = $35;
-            
-            {ESLVal threadId = $34;
-            
-            {ESLVal time = $33;
-            
-            {ESLVal source = $32;
-            
-            {ESLVal target = $31;
-            
-            {ESLVal sourceCustomer = $30;
-            
-            {ESLVal targetCustomer = $29;
-            
-            {ESLVal rest = $19;
-            
-            return translate.apply(rest).cons(new ESLVal("Message",time,source.ref("id"),target.ref("id"),new ESLVal("[").add(threadId.add(new ESLVal("]Get(").add(n.add(new ESLVal(",").add(sourceCustomer.ref("id").add(new ESLVal(",").add(targetCustomer.ref("id").add(new ESLVal(")")))))))))));
-          }
-          }
-          }
-          }
-          }
-          }
-          }
-          }
-          }
-        case "ReturnValue": {ESLVal $28 = $18.termRef(0);
-            ESLVal $27 = $18.termRef(1);
-            ESLVal $26 = $18.termRef(2);
-            ESLVal $25 = $18.termRef(3);
-            ESLVal $24 = $18.termRef(4);
-            
-            {ESLVal n = $28;
-            
-            {ESLVal threadId = $27;
-            
-            {ESLVal time = $26;
-            
-            {ESLVal source = $25;
-            
-            {ESLVal target = $24;
-            
-            {ESLVal rest = $19;
-            
-            return translate.apply(rest).cons(new ESLVal("Message",time,source.ref("id"),target.ref("id"),new ESLVal("[").add(threadId.add(new ESLVal("]Return(").add(n.add(new ESLVal(")")))))));
-          }
-          }
-          }
-          }
-          }
-          }
-          }
-        case "Zero": {ESLVal $23 = $18.termRef(0);
-            ESLVal $22 = $18.termRef(1);
-            ESLVal $21 = $18.termRef(2);
-            ESLVal $20 = $18.termRef(3);
-            
-            {ESLVal threadId = $23;
-            
-            {ESLVal time = $22;
-            
-            {ESLVal f = $21;
-            
-            {ESLVal c = $20;
-            
-            {ESLVal rest = $19;
-            
-            return translate.apply(rest).cons(new ESLVal("Message",time,f.ref("id"),c.ref("id"),new ESLVal("[").add(threadId.add(new ESLVal("]One")))));
-          }
-          }
-          }
-          }
-          }
-          }
-          default: return error(new ESLVal("case error at Pos(2253,2880)").add(ESLVal.list(_v6)));
-        }
-        }
-      else if(_v6.isNil())
-        return ESLVal.list();
-      else return error(new ESLVal("case error at Pos(2253,2880)").add(ESLVal.list(_v6)));
-      }
-    }
-  });
-  private static ESLVal getActor = new ESLVal(new Function(new ESLVal("getActor"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal id = $args[0];
-  ESLVal as = $args[1];
-  {ESLVal _v5 = as;
-        
-        if(_v5.isCons())
-        {ESLVal $12 = _v5.head();
-          ESLVal $13 = _v5.tail();
-          
-          switch($12.termName) {
-          case "Actor": {ESLVal $17 = $12.termRef(0);
-            ESLVal $16 = $12.termRef(1);
-            ESLVal $15 = $12.termRef(2);
-            ESLVal $14 = $12.termRef(3);
-            
-            {ESLVal i = $17;
-            
-            {ESLVal time = $16;
-            
-            {ESLVal death = $15;
-            
-            {ESLVal b = $14;
-            
-            {ESLVal l = $13;
-            
-            if(i.eql(id).boolVal)
-            return new ESLVal("Actor",i,time,death,b);
-            else
-              {ESLVal a = $12;
-                
-                {ESLVal _v9 = $13;
-                
-                return getActor.apply(id,_v9);
-              }
-              }
-          }
-          }
-          }
-          }
-          }
-          }
-          default: {ESLVal a = $12;
-            
-            {ESLVal l = $13;
-            
-            return getActor.apply(id,l);
-          }
-          }
-        }
-        }
-      else if(_v5.isNil())
-        return error(new ESLVal("case error at Pos(2925,3031)").add(ESLVal.list(_v5)));
-      else return error(new ESLVal("case error at Pos(2925,3031)").add(ESLVal.list(_v5)));
-      }
-    }
-  });
-  private static ESLVal changeDeath = new ESLVal(new Function(new ESLVal("changeDeath"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal a = $args[0];
-  ESLVal t = $args[1];
-  {ESLVal _v4 = a;
-        
-        switch(_v4.termName) {
-        case "Actor": {ESLVal $11 = _v4.termRef(0);
-          ESLVal $10 = _v4.termRef(1);
-          ESLVal $9 = _v4.termRef(2);
-          ESLVal $8 = _v4.termRef(3);
-          
-          {ESLVal i = $11;
-          
-          {ESLVal birth = $10;
-          
-          {ESLVal death = $9;
-          
-          {ESLVal b = $8;
-          
-          return new ESLVal("Actor",i,birth,t,b);
-        }
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(3075,3138)").add(ESLVal.list(_v4)));
-      }
-      }
-    }
-  });
-  private static ESLVal setDeath = new ESLVal(new Function(new ESLVal("setDeath"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal id = $args[0];
-  ESLVal time = $args[1];
-  {ESLVal oldActor = getActor.apply(id,actors);
-        
-        {ESLVal newActor = changeDeath.apply(oldActor,time);
-        
-        return lock(new Function(new ESLVal("grab"),getSelf()) {
-          public ESLVal apply(ESLVal ...args) { 
-            return ((Supplier<ESLVal>)() -> { 
-          {actors = subst.apply(newActor,oldActor,actors);
-          return $null;}
-        }).get();
-          }},actors);
-      }
-      }
     }
   });
   public static ESLVal main = new ESLVal(new Function(new ESLVal("main"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(false,getSelf(),new ESLVal("main")) {
-          ESLVal id = $zero;
+          ESLVal computeFact(ESLVal n) {
+    
+    {addStart(n,counter,getSelf(),f);
+    counter = counter.add($one);
+    return Lib.send(f,"Get",n,counter.sub($one),$one,getSelf());}
+  }
+  ESLVal computeFact = new ESLVal(new Function(new ESLVal("computeFact"),null) { public ESLVal apply(ESLVal... args) { return computeFact(args[0]); }});
+  ESLVal messageTime(ESLVal m) {
+    
+    {ESLVal _v123 = m;
+      
+      switch(_v123.termName) {
+      case "Message": {ESLVal $194 = _v123.termRef(0);
+        ESLVal $193 = _v123.termRef(1);
+        ESLVal $192 = _v123.termRef(2);
+        ESLVal $191 = _v123.termRef(3);
+        
+        {ESLVal t = $194;
+        
+        {ESLVal s = $193;
+        
+        {ESLVal tt = $192;
+        
+        {ESLVal l = $191;
+        
+        return t;
+      }
+      }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(3656,3691)").add(ESLVal.list(_v123)));
+    }
+    }
+  }
+  ESLVal messageTime = new ESLVal(new Function(new ESLVal("messageTime"),null) { public ESLVal apply(ESLVal... args) { return messageTime(args[0]); }});
+  ESLVal messageBefore(ESLVal time) {
+    
+    return new ESLVal(new Function(new ESLVal("fun60"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          ESLVal m = $args[0];
+      return messageTime(m).less(time);
+        }
+      });
+  }
+  ESLVal messageBefore = new ESLVal(new Function(new ESLVal("messageBefore"),null) { public ESLVal apply(ESLVal... args) { return messageBefore(args[0]); }});
+  ESLVal createFilmstrip(ESLVal ms) {
+    
+    return new SerializableFunction<ESLVal,ESLVal>() {
+        public ESLVal apply(ESLVal $l0) {
+          ESLVal $a = $nil;
+          java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
+          while(!$l0.isNil()) { 
+            ESLVal t = $l0.head();
+            $l0 = $l0.tail();
+            $v.add(new ESLVal("Sequence",actors,select(messageBefore(t),ms)));
+          }
+          for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
+          return $a;
+        }}.apply($one.to(numberOfFacts));
+  }
+  ESLVal createFilmstrip = new ESLVal(new Function(new ESLVal("createFilmstrip"),null) { public ESLVal apply(ESLVal... args) { return createFilmstrip(args[0]); }});
+ESLVal id = $zero;
           ESLVal counter = $zero;
           ESLVal count = $one;
           ESLVal f = newActor(fact,new ESLVal(new Actor()));
           ESLVal numberOfFacts = new ESLVal(20);
-          ESLVal computeFact = new ESLVal(new Function(new ESLVal("computeFact"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal n = $args[0];
-            {addStart.apply(n,counter,getSelf(),f);
-                counter = counter.add($one);
-                return Lib.send(f,"Get",n,counter.sub($one),$one,getSelf());}
-              }
-            });
-          ESLVal messageTime = new ESLVal(new Function(new ESLVal("messageTime"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal m = $args[0];
-            {ESLVal _v1 = m;
-                  
-                  switch(_v1.termName) {
-                  case "Message": {ESLVal $4 = _v1.termRef(0);
-                    ESLVal $3 = _v1.termRef(1);
-                    ESLVal $2 = _v1.termRef(2);
-                    ESLVal $1 = _v1.termRef(3);
-                    
-                    {ESLVal t = $4;
-                    
-                    {ESLVal s = $3;
-                    
-                    {ESLVal tt = $2;
-                    
-                    {ESLVal l = $1;
-                    
-                    return t;
-                  }
-                  }
-                  }
-                  }
-                  }
-                  default: return error(new ESLVal("case error at Pos(3655,3690)").add(ESLVal.list(_v1)));
-                }
-                }
-              }
-            });
-          ESLVal messageBefore = new ESLVal(new Function(new ESLVal("messageBefore"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal time = $args[0];
-            return new ESLVal(new Function(new ESLVal("fun56"),getSelf()) {
-                    public ESLVal apply(ESLVal... $args) {
-                      ESLVal m = $args[0];
-                  return messageTime.apply(m).less(time);
-                    }
-                  });
-              }
-            });
-          ESLVal createFilmstrip = new ESLVal(new Function(new ESLVal("createFilmstrip"),getSelf()) {
-              public ESLVal apply(ESLVal... $args) {
-                ESLVal ms = $args[0];
-            return new java.util.function.Function<ESLVal,ESLVal>() {
-                    public ESLVal apply(ESLVal $l0) {
-                      ESLVal $a = $nil;
-                      java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();
-                      while(!$l0.isNil()) { 
-                        ESLVal t = $l0.head();
-                        $l0 = $l0.tail();
-                        $v.add(new ESLVal("Sequence",actors,select.apply(messageBefore.apply(t),ms)));
-                      }
-                      for(int i = $v.size()-1; i >= 0; i--) $a = new ESLVal($v.get(i),$a);
-                      return $a;
-                    }}.apply($one.to(numberOfFacts));
-              }
-            });
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v3 = $m;
+          public ESLVal handle(ESLVal $m) {{ESLVal _v125 = $m;
             
-            switch(_v3.termName) {
-            case "Value": {ESLVal $7 = _v3.termRef(0);
-              ESLVal $6 = _v3.termRef(1);
-              ESLVal $5 = _v3.termRef(2);
+            switch(_v125.termName) {
+            case "Value": {ESLVal $197 = _v125.termRef(0);
+              ESLVal $196 = _v125.termRef(1);
+              ESLVal $195 = _v125.termRef(2);
               
-              {ESLVal threadId = $7;
+              {ESLVal threadId = $197;
               
-              {ESLVal time = $6;
+              {ESLVal time = $196;
               
-              {ESLVal n = $5;
+              {ESLVal n = $195;
               
-              {setDeath.apply(id,time);
+              {setDeath(id,time);
             if(count.eql(numberOfFacts).boolVal)
-              {Lib.send(edb,"Show",new ESLVal("Factorial"),new ESLVal("Sequence",actors,translate.apply(messages)));
+              {Lib.send(edb,"Show",new ESLVal("Factorial"),new ESLVal("Sequence",actors,translate(messages)));
               return stopAll.apply();}
               else
                 {count = count.add($one);
@@ -542,7 +230,7 @@ public class Fact {
             }
             }
             }
-            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v3)));
+            default: return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v125)));
           }
           }}
           public ESLVal get(String name) {
@@ -555,21 +243,302 @@ public class Fact {
           {}
         }
         public ESLVal init() {
-            return ((Supplier<ESLVal>)() -> { 
-                {id = addActor.apply(new ESLVal("Main"));
+            return new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+                {id = addActor(new ESLVal("Main"));
                 {{
-                  ESLVal _v2 = $zero.to(new ESLVal(20));
-                  while(_v2.isCons()) {
-                    ESLVal i = _v2.headVal;
-                    computeFact.apply(i);
-                    _v2 = _v2.tailVal;}
+                  ESLVal _v124 = $zero.to(new ESLVal(20));
+                  while(_v124.isCons()) {
+                    ESLVal i = _v124.headVal;
+                    computeFact(i);
+                    _v124 = _v124.tailVal;}
                 }
                 return $null;}}
-              }).get();
+              }}.get();
           }
         });
     }
   });
+private static ESLVal addActor(ESLVal behaviour) {
+    
+    return lock(new Function(new ESLVal("grab"),getSelf()) {
+        public ESLVal apply(ESLVal ...args) { 
+          return new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+        {ESLVal id = length.apply(actors);
+          
+          {actors = actors.add(ESLVal.list(new ESLVal("Actor",id,$zero,timeOut,behaviour)));
+        return id;}
+        }
+      }}.get();
+        }},actors);
+  }
+  private static ESLVal addActor = new ESLVal(new Function(new ESLVal("addActor"),null) { public ESLVal apply(ESLVal... args) { return addActor(args[0]); }});
+  private static ESLVal addGet(ESLVal threadId,ESLVal time,ESLVal n,ESLVal source,ESLVal target,ESLVal sourceCustomer,ESLVal targetCustomer) {
+    
+    return lock(new Function(new ESLVal("grab"),getSelf()) {
+        public ESLVal apply(ESLVal ...args) { 
+          return new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+        {messages = messages.add(ESLVal.list(new ESLVal("GetValue",n,threadId,time,source,target,sourceCustomer,targetCustomer)));
+        return $null;}
+      }}.get();
+        }},messages);
+  }
+  private static ESLVal addGet = new ESLVal(new Function(new ESLVal("addGet"),null) { public ESLVal apply(ESLVal... args) { return addGet(args[0],args[1],args[2],args[3],args[4],args[5],args[6]); }});
+  private static ESLVal addReturn(ESLVal threadId,ESLVal time,ESLVal v,ESLVal customer,ESLVal proxy) {
+    
+    return lock(new Function(new ESLVal("grab"),getSelf()) {
+        public ESLVal apply(ESLVal ...args) { 
+          return new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+        {messages = messages.add(ESLVal.list(new ESLVal("ReturnValue",v,threadId,time,customer,proxy)));
+        return $null;}
+      }}.get();
+        }},messages);
+  }
+  private static ESLVal addReturn = new ESLVal(new Function(new ESLVal("addReturn"),null) { public ESLVal apply(ESLVal... args) { return addReturn(args[0],args[1],args[2],args[3],args[4]); }});
+  private static ESLVal addZero(ESLVal threadId,ESLVal time,ESLVal f,ESLVal c) {
+    
+    return lock(new Function(new ESLVal("grab"),getSelf()) {
+        public ESLVal apply(ESLVal ...args) { 
+          return new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+        {messages = messages.add(ESLVal.list(new ESLVal("Zero",threadId,time,f,c)));
+        return $null;}
+      }}.get();
+        }},messages);
+  }
+  private static ESLVal addZero = new ESLVal(new Function(new ESLVal("addZero"),null) { public ESLVal apply(ESLVal... args) { return addZero(args[0],args[1],args[2],args[3]); }});
+  private static ESLVal addStart(ESLVal n,ESLVal threadId,ESLVal c,ESLVal f) {
+    
+    return lock(new Function(new ESLVal("grab"),getSelf()) {
+        public ESLVal apply(ESLVal ...args) { 
+          return new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+        {messages = messages.add(ESLVal.list(new ESLVal("Start",n,threadId,c,f)));
+        return $null;}
+      }}.get();
+        }},messages);
+  }
+  private static ESLVal addStart = new ESLVal(new Function(new ESLVal("addStart"),null) { public ESLVal apply(ESLVal... args) { return addStart(args[0],args[1],args[2],args[3]); }});
+  private static ESLVal translate(ESLVal msIn) {
+    
+    {ESLVal _v118 = msIn;
+      
+      if(_v118.isCons())
+      {ESLVal $152 = _v118.head();
+        ESLVal $153 = _v118.tail();
+        
+        switch($152.termName) {
+        case "Start": {ESLVal $173 = $152.termRef(0);
+          ESLVal $172 = $152.termRef(1);
+          ESLVal $171 = $152.termRef(2);
+          ESLVal $170 = $152.termRef(3);
+          
+          {ESLVal n = $173;
+          
+          {ESLVal threadId = $172;
+          
+          {ESLVal c = $171;
+          
+          {ESLVal f = $170;
+          
+          {ESLVal rest = $153;
+          
+          return translate(rest).cons(new ESLVal("Message",$one,c.ref("id"),f.ref("id"),new ESLVal("[").add(threadId.add(new ESLVal("]Start(").add(n.add(new ESLVal(")")))))));
+        }
+        }
+        }
+        }
+        }
+        }
+      case "GetValue": {ESLVal $169 = $152.termRef(0);
+          ESLVal $168 = $152.termRef(1);
+          ESLVal $167 = $152.termRef(2);
+          ESLVal $166 = $152.termRef(3);
+          ESLVal $165 = $152.termRef(4);
+          ESLVal $164 = $152.termRef(5);
+          ESLVal $163 = $152.termRef(6);
+          
+          {ESLVal n = $169;
+          
+          {ESLVal threadId = $168;
+          
+          {ESLVal time = $167;
+          
+          {ESLVal source = $166;
+          
+          {ESLVal target = $165;
+          
+          {ESLVal sourceCustomer = $164;
+          
+          {ESLVal targetCustomer = $163;
+          
+          {ESLVal rest = $153;
+          
+          return translate(rest).cons(new ESLVal("Message",time,source.ref("id"),target.ref("id"),new ESLVal("[").add(threadId.add(new ESLVal("]Get(").add(n.add(new ESLVal(",").add(sourceCustomer.ref("id").add(new ESLVal(",").add(targetCustomer.ref("id").add(new ESLVal(")")))))))))));
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+      case "ReturnValue": {ESLVal $162 = $152.termRef(0);
+          ESLVal $161 = $152.termRef(1);
+          ESLVal $160 = $152.termRef(2);
+          ESLVal $159 = $152.termRef(3);
+          ESLVal $158 = $152.termRef(4);
+          
+          {ESLVal n = $162;
+          
+          {ESLVal threadId = $161;
+          
+          {ESLVal time = $160;
+          
+          {ESLVal source = $159;
+          
+          {ESLVal target = $158;
+          
+          {ESLVal rest = $153;
+          
+          return translate(rest).cons(new ESLVal("Message",time,source.ref("id"),target.ref("id"),new ESLVal("[").add(threadId.add(new ESLVal("]Return(").add(n.add(new ESLVal(")")))))));
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+      case "Zero": {ESLVal $157 = $152.termRef(0);
+          ESLVal $156 = $152.termRef(1);
+          ESLVal $155 = $152.termRef(2);
+          ESLVal $154 = $152.termRef(3);
+          
+          {ESLVal threadId = $157;
+          
+          {ESLVal time = $156;
+          
+          {ESLVal f = $155;
+          
+          {ESLVal c = $154;
+          
+          {ESLVal rest = $153;
+          
+          return translate(rest).cons(new ESLVal("Message",time,f.ref("id"),c.ref("id"),new ESLVal("[").add(threadId.add(new ESLVal("]One")))));
+        }
+        }
+        }
+        }
+        }
+        }
+        default: return error(new ESLVal("case error at Pos(2254,2881)").add(ESLVal.list(_v118)));
+      }
+      }
+    else if(_v118.isNil())
+      return $nil;
+    else return error(new ESLVal("case error at Pos(2254,2881)").add(ESLVal.list(_v118)));
+    }
+  }
+  private static ESLVal translate = new ESLVal(new Function(new ESLVal("translate"),null) { public ESLVal apply(ESLVal... args) { return translate(args[0]); }});
+  private static ESLVal getActor(ESLVal id,ESLVal as) {
+    
+    {ESLVal _v119 = as;
+      
+      if(_v119.isCons())
+      {ESLVal $174 = _v119.head();
+        ESLVal $175 = _v119.tail();
+        
+        switch($174.termName) {
+        case "Actor": {ESLVal $179 = $174.termRef(0);
+          ESLVal $178 = $174.termRef(1);
+          ESLVal $177 = $174.termRef(2);
+          ESLVal $176 = $174.termRef(3);
+          
+          {ESLVal i = $179;
+          
+          {ESLVal time = $178;
+          
+          {ESLVal death = $177;
+          
+          {ESLVal b = $176;
+          
+          {ESLVal l = $175;
+          
+          if(i.eql(id).boolVal)
+          return new ESLVal("Actor",i,time,death,b);
+          else
+            {ESLVal a = $174;
+              
+              {ESLVal _v126 = $175;
+              
+              return getActor(id,_v126);
+            }
+            }
+        }
+        }
+        }
+        }
+        }
+        }
+        default: {ESLVal a = $174;
+          
+          {ESLVal l = $175;
+          
+          return getActor(id,l);
+        }
+        }
+      }
+      }
+    else if(_v119.isNil())
+      return error(new ESLVal("case error at Pos(2926,3032)").add(ESLVal.list(_v119)));
+    else return error(new ESLVal("case error at Pos(2926,3032)").add(ESLVal.list(_v119)));
+    }
+  }
+  private static ESLVal getActor = new ESLVal(new Function(new ESLVal("getActor"),null) { public ESLVal apply(ESLVal... args) { return getActor(args[0],args[1]); }});
+  private static ESLVal changeDeath(ESLVal a,ESLVal t) {
+    
+    {ESLVal _v120 = a;
+      
+      switch(_v120.termName) {
+      case "Actor": {ESLVal $183 = _v120.termRef(0);
+        ESLVal $182 = _v120.termRef(1);
+        ESLVal $181 = _v120.termRef(2);
+        ESLVal $180 = _v120.termRef(3);
+        
+        {ESLVal i = $183;
+        
+        {ESLVal birth = $182;
+        
+        {ESLVal death = $181;
+        
+        {ESLVal b = $180;
+        
+        return new ESLVal("Actor",i,birth,t,b);
+      }
+      }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(3076,3139)").add(ESLVal.list(_v120)));
+    }
+    }
+  }
+  private static ESLVal changeDeath = new ESLVal(new Function(new ESLVal("changeDeath"),null) { public ESLVal apply(ESLVal... args) { return changeDeath(args[0],args[1]); }});
+  private static ESLVal setDeath(ESLVal id,ESLVal time) {
+    
+    {ESLVal oldActor = getActor(id,actors);
+      
+      {ESLVal newActor = changeDeath(oldActor,time);
+      
+      return lock(new Function(new ESLVal("grab"),getSelf()) {
+        public ESLVal apply(ESLVal ...args) { 
+          return new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+        {actors = subst(newActor,oldActor,actors);
+        return $null;}
+      }}.get();
+        }},actors);
+    }
+    }
+  }
+  private static ESLVal setDeath = new ESLVal(new Function(new ESLVal("setDeath"),null) { public ESLVal apply(ESLVal... args) { return setDeath(args[0],args[1]); }});
 public static void main(String[] args) {
     newActor(main,new ESLVal(new Actor())); 
   }

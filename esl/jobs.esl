@@ -1,0 +1,324 @@
+export main;
+
+import 'esl/lists.esl', 'esl/displays.esl';
+
+Act Main {
+  Time(Int);
+}
+
+type ShortestTime  = Int; 
+type ActualTime    = Int;
+type ProcessTime   = Int;
+type CurrentTime   = Int; 
+type QueueLength   = Int;
+type ProcessCycles = Int;
+type Id            = Int;
+
+data Job = Job(Id,CurrentTime,ShortestTime,ActualTime,ProcessCycles,Coordinator);
+type Jobs = [Job];
+
+data Maybe[T] = 
+  // A data type that allows data to be optional...
+  Something(T) 
+| Nothing;
+
+Act Processor {
+
+  export observeState::() -> ProcessorState; observeMessage::(ProcessorMessage)->Maybe[Int];
+
+  Process(Job);
+  Time(Int);
+  Break;
+  
+}
+
+data ProcessorState = Queue(Int) | Broken;
+data ProcessorMessage = Process(Job) | Break;
+
+act processorBehaviour(process::ProcessTime)::Processor {
+
+  export observeState,observeMessage; 
+
+  current::Job = null[Job];
+  pending::[Job] = [];
+  message::Maybe[Int] = Something[Int](0);
+  broken::Bool = false;
+
+  observeState()::ProcessorState = if broken then Broken; else Queue(length[Job](pending));
+  observeMessage(m::ProcessorMessage):: Maybe[Int] = message;
+
+  jobCompleted()::Void = {
+    if pending = []
+    then current := null[Job];
+    else {
+      let next::Job = head[Job](pending); 
+      in {
+        pending := tail[Job](pending);
+        case next { 
+          Job(id,tc,ts,ta,pc,c) -> current := Job(id,process,ts+process,ta,pc,c);
+        }
+      }
+    }
+  }
+
+  processCurrentJob()::Void = { 
+    if current <> null[Job]
+    then {
+      case current {
+        Job(id,0,ts,ta,pc,c)  -> {
+          c <- JobCompleted(current);
+          jobCompleted();
+        }
+        Job(id,tc,ts,ta,pc,c) -> current := Job(id,tc - 1,ts,ta+1,pc,c);
+      }
+    } else {}
+  }
+
+  processPendingJobs()::Void = {
+    pending := [ Job(id,tc,ts,ta+1,pc,c) | Job(id,tc,ts,ta,pc,c) <- pending ];
+  }
+
+  reprocess(j::Job)::Void = {
+    case j {
+      Job(id,tc,ts,ta,pc,c) -> {
+        c <- Process(Job(id,tc,ts,ta,pc+1,c));
+      }
+    }
+  }
+
+  Process(j::Job) when broken -> reprocess(j);
+  Process(j::Job) when current = null[Job] -> { pending := pending + [j]; jobCompleted(); }
+  Process(j::Job)                          -> pending := pending + [j];
+
+  Break -> {
+    broken := true;
+    for j in pending do {
+      reprocess(j);
+    }
+    pending := [];
+    if current <> null[Job] 
+    then {
+      reprocess(current);
+      current := null[Job];
+    } else {}
+  }
+
+  Time(n::Int) when broken -> {  }
+
+  Time(n::Int) -> { 
+    processPendingJobs();
+    processCurrentJob();
+  }
+}
+
+Act Coordinator {
+  JobCompleted(Job);
+  Process(Job);
+  Reprocess(Job);
+  Transition(Processor,Int,Int,ProcessorState);
+  Start(Processor,Int,ProcessorState);
+}
+
+data PState = PState(Processor,Int);
+
+act coordinatorBehaviour(adapting::Bool,processors::[Processor])::Coordinator { 
+
+  states::[PState] = [ PState(p,0) | p <- processors ];
+
+  reduceCycle(Job(id,tc,ts,ta,pc,c))::Job = Job(id,tc,ts,ta,pc-1,c);
+
+  increaseCycle(Job(id,tc,ts,ta,pc,c))::Job = Job(id,tc,ts,ta,pc+1,c);
+
+  isFullyProcessed(Job(id,tc,ts,ta,0,c))::Bool  = true;
+  isFullyProcessed(Job(id,tc,ts,ta,pc,c))::Bool = false;
+
+  addProcessorState(p::Processor,delay::Int,states::[PState])::[PState] =
+    case states {
+      [] -> [PState(p,delay)];
+      PState(pp,ss):states when pp = p -> PState(p,delay):states;
+      ps:states -> ps:addProcessorState(p,delay,states);
+    }
+
+  shortestQueue(states::[PState],min::Int,p::PState)::PState =
+    case states {
+      [] -> p;
+      PState(pp,s):states when s < min -> shortestQueue(states,s,PState(pp,s));
+      ps:states -> shortestQueue(states,min,p);
+    }
+
+  cycleProcessor(j::Job)::Void = {
+    let p::Processor = head[Processor](processors);
+    in {
+      p <- Process(reduceCycle(j));
+      processors := tail[Processor](processors) + [p];
+    }
+  }
+
+  -> {
+    for p in processors do {
+      p.addObserver(self);
+    }
+  }
+
+  Process(j::Job) -> {
+    if adapting 
+    then 
+      let state::PState = shortestQueue(states,9999999,null[PState]);
+      in if state = null[PState]
+         then cycleProcessor(j);
+         else 
+           case state {
+             PState(p,delay) -> {
+               p <- Process(reduceCycle(j));
+               states := addProcessorState(p,delay+1,states);
+           }
+         }
+    else cycleProcessor(j);
+  }
+
+  Reprocess(j::Job) -> {
+    increaseCycle(j);
+    self <- Process(j);
+  }
+
+  JobCompleted(j::Job) -> {
+    if isFullyProcessed(j)
+    then {
+      jobCompleted(j);
+    } else self <- Process(j);
+  }
+
+  Transition(p::Processor,time::Int,transition::Int,state::ProcessorState) when adapting -> {
+    case state {
+      Queue(delay) -> states := addProcessorState(p,delay,states);
+      Broken -> states := [ PState(pp,qd) | PState(pp,qd) <- states, ?(pp <> p) ];
+    }
+  }
+
+  Transition(p::Processor,time::Int,transition::Int,state::ProcessorState) -> {}
+
+  Start(p::Processor,time::Int,state::ProcessorState) -> {}
+}
+
+completedJobs::[[Job]] = [];
+
+jobCompleted(j::Job)::Void = {
+  grab(completedJobs) {
+    completedJobs := (j:head[[Job]](completedJobs)):tail[[Job]](completedJobs);
+    print[Str]('job completed ' + (id - length[Job](head[Jobs](completedJobs))) + ' jobs left.');
+  }
+}
+
+minDelay([][Job],min::Int)::Int                          = min;
+minDelay(Job(id,tc,ts,ta,cs,c):jobs::Jobs,min::Int)::Int = minDelay(jobs,ta-ts); when (ta - ts) < min
+minDelay(j::Job:jobs::Jobs,min::Int)::Int                = minDelay(jobs,min);
+
+maxDelay([][Job],max::Int)::Int                          = max;
+maxDelay(Job(id,tc,ts,ta,cs,c):jobs::Jobs,max::Int)::Int = maxDelay(jobs,ta-ts); when (ta - ts) > max
+maxDelay(j::Job:jobs::Jobs,max::Int)::Int                = maxDelay(jobs,max);
+
+delayedBy([][Job],delay::Int)::Int                          = 0;
+delayedBy(Job(id,tc,ts,ta,cs,c):jobs::Jobs,delay::Int)::Int = 1 + delayedBy(jobs,delay); when (ta - ts) >= delay
+delayedBy(j::Job:jobs::Jobs,delay::Int)::Int                = delayedBy(jobs,delay);
+
+Act Run {
+  export completed::Bool;
+  Time(Int);
+}
+
+id::Int = 0;
+
+act runBehaviour(noOfProcessors::Int,noOfCoordinators::Int,jobLimit::Int,jobFrequency::Int,jobsPerCycle::Int,cycles::Int,adapting::Bool)::Run {
+
+  export completed;
+  
+  time::Int = now;
+  processors::[Processor] = [ new processorBehaviour(random(1500)+200) | n <- 0..noOfProcessors ];
+  coordinators::[Coordinator] = [ new coordinatorBehaviour(adapting,processors) | n <- 0..noOfCoordinators ];
+  completed::Bool = false;
+  broken::Int = 10;
+
+  -> {
+    completedJobs := []:completedJobs;
+    jobLimit := now + jobLimit;
+  }
+  
+  Time(n::Int) when n < jobLimit and (now - time) > jobFrequency -> {
+    time := now;
+    for coordinator in coordinators do {
+      for x in 0..jobsPerCycle do {
+        coordinator <- Process(Job(id,0,0,0,cycles,coordinator));
+        id := id + 1;
+      }
+    }
+    for processor in processors do {
+      if random(1000) > 900 and broken > 0
+      then {
+        processor <- Break; 
+        broken := broken - 1;
+      } else {}
+    }
+  }
+  Time(n::Int) when not(completed) and n > jobLimit and length[Job](head[[Job]](completedJobs)) = id -> {
+    completed := true;
+    id := 0;
+    for p in processors do kill[Void](p);
+    for p in coordinators do kill[Void](p);
+    kill[Void](self);
+  }
+  Time(n::Int) -> {}
+    
+}
+
+data Configuration = Config(Int,Int,Int,Int,Int,Int,Bool);
+
+act main::Main {
+
+  configs::[Configuration] = [
+
+  
+    Config(50,5,1000,200,50,4,false), 
+    Config(50,5,1000,200,70,4,false)/*, 
+    Config(50,6,1000,200,70,4,false),
+    Config(50,7,1000,200,100,4,false),
+    Config(50,7,1000,200,120,4,false),
+    
+    Config(50,5,1000,200,50,4,true),
+    Config(50,5,1000,200,70,4,true),
+    Config(50,6,1000,200,70,4,true),
+    Config(50,7,1000,200,100,4,true),
+    Config(50,7,1000,200,120,4,true) */
+  ];
+
+  run::Run = null[Run];
+  
+  next()::Void = { print[Str]('runs left: ' + length[Configuration](configs));
+    case head[Configuration](configs) {
+      Config(noOfProcessors,noOfCoordinators,jobLimit,jobFrequency,jobsPerCycle,cycles,adapting) -> {
+        configs := tail[Configuration](configs);
+        run := new runBehaviour(noOfProcessors,noOfCoordinators,jobLimit,jobFrequency,jobsPerCycle,cycles,adapting);
+      } 
+    }
+  }
+
+  -> next();
+
+  Time(n::Int) when run.completed and configs <> [] -> next(); 
+  
+  Time(n::Int) when run.completed -> {
+    let time::Int = now/1000; in
+    let graph(completed::[Jobs])::Display = 
+        LineGraph([],'Processing ' + sum([ length[Job](js) | js <- completedJobs ]) + ' jobs over ' + length[[Job]](completedJobs) + ' runs in ' + time + ' seconds','Delay/10000','Number of Jobs Delayed by at Least/1',1500,500,[
+          GLine([],'Run-' + indexOf[Jobs](jobs,reverse[Jobs](completedJobs)) + '(' + length[Job](jobs) + ' jobs)',[LPoint([],delay/10000,delayedBy(jobs,delay)/1) | 
+              delay <- minDelay(jobs,9999)..maxDelay(jobs,0)+1, 
+              ?(delay <> 0),
+              ?(delayedBy(jobs,delay) <> 0) ]) | jobs <- completed ]);
+      in {
+        edb <- Show('Supply Chain Results',graph(reverse[Jobs](completedJobs))); 
+        print[Str]('Done.');
+        stopAll();
+      }
+  }
+
+  Time(n::Int) -> {}
+}

@@ -1,0 +1,14 @@
+export Info,Warning,Warnings,addWarning,getWarnings,resetWarnings,setWarnings;
+
+import 
+  'esl/compiler/types.esl',
+  'esl/displays.esl';
+
+data Info = Warning(Loc,Str);                                 // A warning added to the edb property $WARNINGS
+
+type Warnings = [Info]; 
+
+resetWarnings()::Void                 = setWarnings([]);
+getWarnings()::Warnings               = edb.getProperty[Warnings]('$WARNINGS');
+setWarnings(warnings::Warnings)::Void = edb.setProperty[Warnings]('$WARNINGS',warnings);
+addWarning(l::Loc,message::Str)::Void = setWarnings(Warning(l,message):getWarnings());

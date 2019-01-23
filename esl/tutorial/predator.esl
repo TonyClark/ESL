@@ -1,6 +1,6 @@
 export main;
 
-import 'esl/lists.esl','esl/displays.esl';
+import 'esl/lists.esl','esl/displays.esl'; 
 
 // This file contains the definition of a simple predator-prey situation where each of the 
 // predators and the prey are represented as actors. The implementation also provides an
@@ -11,7 +11,7 @@ Act Main { Time(Int); }
 Act Predator { export getX::()->Int; getY::()->Int; at::(Int,Int)->Bool; getId::()->Int; Move; }
 Act Prey { export getX::()->Int; getY::()->Int; at::(Int,Int)->Bool; Move; }
 data Message = 
-  MovePredator(Int,Int,Int) 
+  MovePredator(Int,Int,Int)
 | MovePrey(Int,Int);
 data Location = 
   EmptyLoc 
@@ -30,7 +30,7 @@ board::[[Location]] = []; // The semantic structure.
 
 messages::[Message] = []; // The history trace.
 
-abs(n::Int)::Int = if n < 0 then (0-n); else n;
+abs(n::Int)::Int = if n < 0 then (0-n); else n;  
 
 stop::Bool = false;
 

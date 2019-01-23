@@ -11,6 +11,7 @@ import org.fife.ui.rsyntaxtextarea.SelectRegionLinkGeneratorResult;
 import ast.actors.Import;
 import ast.binding.Var;
 import ast.binding.declarations.DeclaringLocation;
+import ast.binding.declarations.ReferencingLocation;
 import ast.data.Str;
 import ast.modules.Module;
 import edb.editor.basic.EDBLinker;
@@ -35,6 +36,7 @@ public class ESLLinker extends EDBLinker {
 			if (over != null && over instanceof Import) { return generateImport((Import) over, textArea, charIndex); }
 			if (over != null && over instanceof Str) { return generateStr((Str) over, textArea, charIndex); }
 			if (over != null && over instanceof Var) { return generateVar(module, (Var) over, textArea, charIndex); }
+			if (over != null && over instanceof ReferencingLocation) { return generateReferencingLocation(module, (ReferencingLocation) over, textArea, charIndex); }
 		}
 		return null;
 	}
@@ -84,20 +86,35 @@ public class ESLLinker extends EDBLinker {
 		} else {
 			for (String name : module.getImported().keySet()) {
 				Module importedModule = module.getImported().get(name);
-				if (importedModule.isExported(var.getName())) {
-					return new SelectRegionLinkGeneratorResult(textArea, var.getLineStart(), var.getLineStart(), var.getLineEnd()) {
-						public HyperlinkEvent execute() {
-							EDBFrame.FRAME.load(new File(importedModule.getPath()));
-							return new HyperlinkEvent(this, HyperlinkEvent.EventType.ACTIVATED, null);
-						}
+				if (importedModule.isExported(var.getName())) { return new SelectRegionLinkGeneratorResult(textArea, var.getLineStart(), var.getLineStart(), var.getLineEnd()) {
+					public HyperlinkEvent execute() {
+						EDBFrame.FRAME.load(new File(importedModule.getPath()));
+						return new HyperlinkEvent(this, HyperlinkEvent.EventType.ACTIVATED, null);
+					}
 
-						public int getSourceOffset() {
-							return var.getLineStart();
-						}
-					};
-				}
+					public int getSourceOffset() {
+						return var.getLineStart();
+					}
+				}; }
 			}
 			return null;
 		}
+	}
+
+	private LinkGeneratorResult generateReferencingLocation(Module module, ReferencingLocation l, RSyntaxTextArea textArea, int charIndex) {
+		DeclaringLocation declaration = l.getDeclaringLocation();
+		if (declaration != null) {
+			return new SelectRegionLinkGeneratorResult(textArea, l.getLineStart(), l.getLineStart(), l.getLineEnd()) {
+				public HyperlinkEvent execute() {
+					// The action is handled by a mouse event at the moment...
+					return new HyperlinkEvent(this, HyperlinkEvent.EventType.EXITED, null);
+				}
+
+				public int getSourceOffset() {
+					return l.getLineStart();
+				}
+			};
+		} else
+			return null;
 	}
 }

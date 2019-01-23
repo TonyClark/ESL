@@ -256,7 +256,7 @@ act root(depth::Int,limit::Int,nodes::Int)::RootContainer {
       in { 
         if length[Jobs](completed) = runs
         then {
-          edb <- Show('Supply Chain Results',graph(completed));
+          edb <- Show('Supply Chain Results',graph(completed)); 
           stopAll();
         } else {
           if length[Jobs](completed) >= runs/2 then isMonitoring := true; else {}

@@ -6,128 +6,20 @@ import static esl.compiler.PpExp.*;
 import static esl.compiler.Types.*;
 import static esl.compiler.TypeCheck.*;
 import static esl.compiler.ToJava.*;
-import static esl.compiler.DynamicVars.*;
+import static esl.Displays.*;
 import static esl.compiler.Strings.*;
-import java.util.function.Supplier;
+import static esl.compiler.Warnings.*;
+import static esl.compiler.MethodTransform.*;
 public class Compiler {
   public static ESLVal getSelf() { return $null; }
-  // static ESLVal edb = null;
-  private static ESLVal moduleImports = new ESLVal(new Function(new ESLVal("moduleImports"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal m = $args[0];
-  {ESLVal _v1 = m;
-        
-        switch(_v1.termName) {
-        case "Module": {ESLVal $7 = _v1.termRef(0);
-          ESLVal $6 = _v1.termRef(1);
-          ESLVal $5 = _v1.termRef(2);
-          ESLVal $4 = _v1.termRef(3);
-          ESLVal $3 = _v1.termRef(4);
-          ESLVal $2 = _v1.termRef(5);
-          ESLVal $1 = _v1.termRef(6);
-          
-          {ESLVal path = $7;
-          
-          {ESLVal name = $6;
-          
-          {ESLVal exports = $5;
-          
-          {ESLVal imports = $4;
-          
-          {ESLVal x = $3;
-          
-          {ESLVal y = $2;
-          
-          {ESLVal defs = $1;
-          
-          return imports;
-        }
-        }
-        }
-        }
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(2437,2561)").add(ESLVal.list(_v1)));
-      }
-      }
-    }
-  });
-  public static ESLVal compileFile = new ESLVal(new Function(new ESLVal("compileFile"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal sourceFile = $args[0];
-  {ESLVal path = toPath.apply(sourceFile);
-        
-        {ESLVal className = pathToJavaClassName.apply(path);
-        
-        {ESLVal sourcePath = new ESLVal("src/").add(joinBy.apply(new ESLVal(47),butlast.apply(path)).add(new ESLVal("/").add(className.add(new ESLVal(".java")))));
-        
-        {ESLVal package1 = pathToJavaPackage.apply(path);
-        
-        if(sourcePath.ref("writeDate").less(sourceFile.ref("writeDate")).boolVal)
-        return compileModule.apply(sourcePath,package1,className,sourceFile);
-        else
-          return print.apply(new ESLVal("[ ").add(sourceFile.add(new ESLVal(" is up to date. ]"))));
-      }
-      }
-      }
-      }
-    }
-  });
-  public static ESLVal compileModule = new ESLVal(new Function(new ESLVal("compileModule"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal sourcePath = $args[0];
-  ESLVal package1 = $args[1];
-  ESLVal name = $args[2];
-  ESLVal path = $args[3];
-  {print.apply(new ESLVal("[ compile ").add(sourcePath.add(new ESLVal("]"))));
-      return new Function(new ESLVal("try"),getSelf()) {
-          public ESLVal apply(ESLVal... args) { 
-            try { 
-              return ((Supplier<ESLVal>)() -> { 
-              {ESLVal module = parse.apply(path);
-                
-                {ESLVal imports = moduleImports.apply(module);
-                
-                {typeCheckModule.apply(path);
-              {ESLVal untypedJModule = moduleToJava.apply(module);
-                
-                {dynamicVarsJModule.apply(untypedJModule);
-              Lib.send(edb,"Edit",new ESLVal("JavaSource",sourcePath,name,ppJModule.apply(name,package1,untypedJModule)));
-              {{
-                ESLVal _v2 = imports;
-                while(_v2.isCons()) {
-                  ESLVal i = _v2.headVal;
-                  compileFile.apply(i);
-                  _v2 = _v2.tailVal;}
-              }
-              return $null;}}
-              }}
-              }
-              }
-            }).get();
-            } catch(ESLError $exception) {
-              ESLVal $x = $exception.value;
-              {ESLVal _v3 = $x;
-          
-          {ESLVal message = _v3;
-          
-          return print.apply(new ESLVal("Type Error: ").add(message));
-        }
-        }
-            }
-          }
-        }.apply();}
-    }
-  });
   public static ESLVal main = new ESLVal(new Function(new ESLVal("main"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v4 = $m;
+
+          public ESLVal handle(ESLVal $m) {{ESLVal _v6 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v4)));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v6)));
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -139,26 +31,7 @@ public class Compiler {
           {ESLVal t = $t;
             
             if($true.boolVal)
-            {print.apply(new ESLVal("Start of system"));
-            compileFile.apply(new ESLVal("esl/lists.esl"));
-            compileFile.apply(new ESLVal("esl/tables.esl"));
-            compileFile.apply(new ESLVal("esl/compiler/strings.esl"));
-            compileFile.apply(new ESLVal("esl/compiler/compiler.esl"));
-            compileFile.apply(new ESLVal("esl/compiler/ppExp.esl"));
-            compileFile.apply(new ESLVal("esl/compiler/typeCheck.esl"));
-            compileFile.apply(new ESLVal("esl/compiler/toJava.esl"));
-            compileFile.apply(new ESLVal("esl/compiler/dynamicVars.esl"));
-            compileFile.apply(new ESLVal("esl/compiler/cases.esl"));
-            compileFile.apply(new ESLVal("esl/tutorial/search.esl"));
-            compileFile.apply(new ESLVal("esl/tutorial/main.esl"));
-            compileFile.apply(new ESLVal("esl/tutorial/qsort.esl"));
-            compileFile.apply(new ESLVal("esl/tutorial/mapReduce.esl"));
-            compileFile.apply(new ESLVal("esl/tutorial/termites.esl"));
-            compileFile.apply(new ESLVal("esl/tutorial/philosophers.esl"));
-            compileFile.apply(new ESLVal("esl/tutorial/segregation.esl"));
-            compileFile.apply(new ESLVal("esl/tutorial/shop.esl"));
-            print.apply(new ESLVal("DONE"));
-            stopAll.apply();}
+            stopAll.apply();
             else
               {}
           }
@@ -169,6 +42,168 @@ public class Compiler {
         });
     }
   });
+private static ESLVal moduleImports(ESLVal m) {
+    
+    {ESLVal _v1 = m;
+      
+      switch(_v1.termName) {
+      case "Module": {ESLVal $7 = _v1.termRef(0);
+        ESLVal $6 = _v1.termRef(1);
+        ESLVal $5 = _v1.termRef(2);
+        ESLVal $4 = _v1.termRef(3);
+        ESLVal $3 = _v1.termRef(4);
+        ESLVal $2 = _v1.termRef(5);
+        ESLVal $1 = _v1.termRef(6);
+        
+        {ESLVal path = $7;
+        
+        {ESLVal name = $6;
+        
+        {ESLVal exports = $5;
+        
+        {ESLVal imports = $4;
+        
+        {ESLVal decs = $3;
+        
+        {ESLVal y = $2;
+        
+        {ESLVal defs = $1;
+        
+        return imports;
+      }
+      }
+      }
+      }
+      }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(2338,2467)").add(ESLVal.list(_v1)));
+    }
+    }
+  }
+  private static ESLVal moduleImports = new ESLVal(new Function(new ESLVal("moduleImports"),null) { public ESLVal apply(ESLVal... args) { return moduleImports(args[0]); }});
+  public static ESLVal compileFile(ESLVal sourceFile) {
+    
+    {ESLVal path = toPath(sourceFile);
+      
+      {ESLVal className = pathToJavaClassName(path);
+      
+      {ESLVal sourcePath = new ESLVal("src/").add(joinBy(new ESLVal(47),butlast.apply(path)).add(new ESLVal("/").add(className.add(new ESLVal(".java")))));
+      
+      {ESLVal package1 = pathToJavaPackage(path);
+      
+      if(sourcePath.ref("writeDate").less(sourceFile.ref("writeDate")).boolVal)
+      return compileModule(sourcePath,package1,className,sourceFile);
+      else
+        return print.apply(new ESLVal("[ ").add(sourceFile.add(new ESLVal(" is up to date. ]"))));
+    }
+    }
+    }
+    }
+  }
+  public static ESLVal compileFile = new ESLVal(new Function(new ESLVal("compileFile"),null) { public ESLVal apply(ESLVal... args) { return compileFile(args[0]); }});
+  public static ESLVal runFile(ESLVal sourceFile) {
+    
+    {ESLVal path = toPath(sourceFile);
+      
+      {ESLVal className = pathToJavaClassName(path);
+      
+      {ESLVal sourcePath = new ESLVal("src/").add(joinBy(new ESLVal(47),butlast.apply(path)).add(new ESLVal("/").add(className.add(new ESLVal(".java")))));
+      
+      {ESLVal package1 = pathToJavaPackage(path);
+      
+      return runModule(sourcePath,package1,className,sourceFile);
+    }
+    }
+    }
+    }
+  }
+  public static ESLVal runFile = new ESLVal(new Function(new ESLVal("runFile"),null) { public ESLVal apply(ESLVal... args) { return runFile(args[0]); }});
+  public static ESLVal compileModule(ESLVal sourcePath,ESLVal package1,ESLVal name,ESLVal path) {
+    
+    {print.apply(new ESLVal("[ compile ").add(sourcePath.add(new ESLVal("]"))));
+    return new Function(new ESLVal("try"),getSelf()) {
+        public ESLVal apply(ESLVal... args) { 
+          try { 
+            return new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+            {ESLVal module = parse.apply(path);
+              
+              {ESLVal imports = moduleImports(module);
+              
+              {resetWarnings();
+            typeCheckModule(path);
+            {ESLVal untypedJModule = addMethodCalls(moduleToJava(module));
+              
+              {Lib.send(edb,"Edit",new ESLVal("JavaSource",sourcePath,name,ppJModule(name,package1,untypedJModule)));
+            {{
+              ESLVal _v2 = imports;
+              while(_v2.isCons()) {
+                ESLVal i = _v2.headVal;
+                compileFile(i);
+                _v2 = _v2.tailVal;}
+            }
+            return $null;}}
+            }}
+            }
+            }
+          }}.get();
+          } catch(ESLError $exception) {
+            ESLVal $x = $exception.value;
+            {ESLVal _v3 = $x;
+        
+        {ESLVal message = _v3;
+        
+        return print.apply(new ESLVal("Type Error: ").add(message));
+      }
+      }
+          }
+        }
+      }.apply();}
+  }
+  public static ESLVal compileModule = new ESLVal(new Function(new ESLVal("compileModule"),null) { public ESLVal apply(ESLVal... args) { return compileModule(args[0],args[1],args[2],args[3]); }});
+  private static ESLVal runModule(ESLVal sourcePath,ESLVal package1,ESLVal name,ESLVal path) {
+    
+    {print.apply(new ESLVal("[ compile ").add(sourcePath.add(new ESLVal("]"))));
+    return new Function(new ESLVal("try"),getSelf()) {
+        public ESLVal apply(ESLVal... args) { 
+          try { 
+            return new SerializableSupplier<ESLVal>() { public ESLVal get() { 
+            {ESLVal module = parse.apply(path);
+              
+              {ESLVal imports = moduleImports(module);
+              
+              {resetWarnings();
+            typeCheckModule(path);
+            {ESLVal untypedJModule = addMethodCalls(moduleToJava(module));
+              
+              {Lib.send(edb,"RunJava",sourcePath,name,ppJModule(name,package1,untypedJModule));
+            {{
+              ESLVal _v4 = imports;
+              while(_v4.isCons()) {
+                ESLVal i = _v4.headVal;
+                compileFile(i);
+                _v4 = _v4.tailVal;}
+            }
+            return $null;}}
+            }}
+            }
+            }
+          }}.get();
+          } catch(ESLError $exception) {
+            ESLVal $x = $exception.value;
+            {ESLVal _v5 = $x;
+        
+        {ESLVal message = _v5;
+        
+        return print.apply(new ESLVal("Type Error: ").add(message));
+      }
+      }
+          }
+        }
+      }.apply();}
+  }
+  private static ESLVal runModule = new ESLVal(new Function(new ESLVal("runModule"),null) { public ESLVal apply(ESLVal... args) { return runModule(args[0],args[1],args[2],args[3]); }});
 public static void main(String[] args) {
     newActor(main,new ESLVal(new Actor())); 
   }

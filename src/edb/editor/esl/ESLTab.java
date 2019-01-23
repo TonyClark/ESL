@@ -36,6 +36,10 @@ public class ESLTab extends ESLEditor implements EDBMenuProvider {
 		this.edbFrame = owner;
 	}
 
+	public void addButton(String label, JButton button) {
+
+	}
+
 	public void addMenu(JMenuBar bar) {
 		super.addMenu(bar);
 		JButton save = MenuProvider.getImageButton("icons/save.png", "save " + getFile().getName(), KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_MASK), () -> {
@@ -69,6 +73,21 @@ public class ESLTab extends ESLEditor implements EDBMenuProvider {
 			compile();
 		});
 		bar.add(compile);
+		JButton backward = MenuProvider.getImageButton("icons/blue_arrow_left.png", "back", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.META_MASK), () -> {
+			backward();
+		});
+		bar.add(backward);
+		JButton forward = MenuProvider.getImageButton("icons/blue_arrow_right.png", "forward", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.META_MASK), () -> {
+			forward();
+		});
+		bar.add(forward);
+	}
+
+	private void backward() {
+		if (!getEditorPanel().getBackLocations().isEmpty()) {
+			getEditorPanel().getForwardLocations().push(getEditorPanel().getBackLocations().peek());
+			getEditorPanel().getTextArea().setCaretPosition(getEditorPanel().getBackLocations().pop());
+		}
 	}
 
 	private void compile() {
@@ -85,7 +104,7 @@ public class ESLTab extends ESLEditor implements EDBMenuProvider {
 				Class<?> compiler = classLoader.loadClass("esl.compiler.Compiler");
 				Field compileFile = compiler.getField("compileFile");
 				ESLVal compileFileFunction = (ESLVal) compileFile.get(null);
-				compileFileFunction.funVal.apply(new ESLVal(EDB.isWindows() ? pathRelative.toString().replace("\\","/") : pathRelative.toString())); 
+				compileFileFunction.funVal.apply(new ESLVal(EDB.isWindows() ? pathRelative.toString().replace("\\", "/") : pathRelative.toString()));
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -99,6 +118,58 @@ public class ESLTab extends ESLEditor implements EDBMenuProvider {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void dependencies() {
+		if (getModule(false) != null) {
+			String key = "Package(" + getFile().getAbsolutePath() + ")";
+			String label = "Package(" + getFile().getName() + ")";
+			edbFrame.showDependencies(key, label, getDependencySaveFile(), getModule(false));
+		}
+	}
+
+	private void diagram() {
+		if (getModule(false) != null) {
+			String key = "Diagram(" + getFile().getAbsolutePath() + ")";
+			String label = "Diagram(" + getFile().getName() + ")";
+			edbFrame.showDiagram(key, label, getDiagramSaveFile(), getModule(false));
+		}
+	}
+
+	private void forward() {
+		if (!getEditorPanel().getForwardLocations().isEmpty()) {
+			getEditorPanel().getBackLocations().push(getEditorPanel().getForwardLocations().peek());
+			getEditorPanel().getTextArea().setCaretPosition(getEditorPanel().getForwardLocations().pop());
+		}
+	}
+
+	private File getDependencySaveFile() {
+		File file = getFile();
+		String name = file.getName();
+		name = name.replace(".esl", "_dependencies.xml");
+		return new File(EDBFrame.FRAME.getEdbDir() + "/" + name);
+	}
+
+	private File getDiagramSaveFile() {
+		File file = getFile();
+		String name = file.getName();
+		name = name.replace(".esl", "_diagram.xml");
+		return new File(EDBFrame.FRAME.getEdbDir() + "/" + name);
+	}
+
+	public void parseCompleted(AbstractParser p) {
+		ESLParser parser = (ESLParser) p;
+		edbFrame.setErrors(getFile().getAbsolutePath(), parser.hasErrors());
+	}
+
+	public void saveAs() {
+		File currentFile = getFile();
+		File newFile = edbFrame.saveFile();
+		if (newFile != null) {
+			edbFrame.changeTab(currentFile, newFile);
+			setFile(newFile);
+			save(false);
 		}
 	}
 
@@ -123,41 +194,6 @@ public class ESLTab extends ESLEditor implements EDBMenuProvider {
 		}
 	}
 
-	private void dependencies() {
-		if (getModule(false) != null) {
-			String key = "Package(" + getFile().getAbsolutePath() + ")";
-			String label = "Package(" + getFile().getName() + ")";
-			edbFrame.showDependencies(key, label, getDependencySaveFile(), getModule(false));
-		}
-	}
-
-	private void diagram() {
-		if (getModule(false) != null) {
-			String key = "Diagram(" + getFile().getAbsolutePath() + ")";
-			String label = "Diagram(" + getFile().getName() + ")";
-			edbFrame.showDiagram(key, label, getDiagramSaveFile(), getModule(false));
-		}
-	}
-
-	private File getDiagramSaveFile() {
-		File file = getFile();
-		String name = file.getName();
-		name = name.replace(".esl", "_diagram.xml");
-		return new File(EDBFrame.FRAME.getEdbDir() + "/" + name);
-	}
-
-	private File getDependencySaveFile() {
-		File file = getFile();
-		String name = file.getName();
-		name = name.replace(".esl", "_dependencies.xml");
-		return new File(EDBFrame.FRAME.getEdbDir() + "/" + name);
-	}
-
-	public void parseCompleted(AbstractParser p) {
-		ESLParser parser = (ESLParser) p;
-		edbFrame.setErrors(getFile().getAbsolutePath(), parser.hasErrors());
-	}
-
 	private void translate() {
 		if (isDirty())
 			System.out.println("Save " + getFile() + " before loading.");
@@ -176,20 +212,6 @@ public class ESLTab extends ESLEditor implements EDBMenuProvider {
 			} catch (ParseError e) {
 				e.printStackTrace();
 			}
-	}
-
-	public void saveAs() {
-		File currentFile = getFile();
-		File newFile = edbFrame.saveFile();
-		if (newFile != null) {
-			edbFrame.changeTab(currentFile, newFile);
-			setFile(newFile);
-			save(false);
-		}
-	}
-
-	public void addButton(String label, JButton button) {
-
 	}
 
 }

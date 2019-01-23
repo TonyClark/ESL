@@ -2,16 +2,16 @@ package esl.tutorial;
 import esl.lib.*;
 import static esl.lib.Lib.*;
 
-import java.util.function.Supplier;
 public class Main {
   public static ESLVal getSelf() { return $null; }
   public static ESLVal main = new ESLVal(new Function(new ESLVal("main"),getSelf()) {
     public ESLVal apply(ESLVal... $args) {
       return new ESLVal(new BehaviourAdapter(true,getSelf(),new ESLVal("main")) {
           
-          public ESLVal handle(ESLVal $m) {{ESLVal _v1 = $m;
+
+          public ESLVal handle(ESLVal $m) {{ESLVal _v127 = $m;
             
-            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v1)));
+            return error(new ESLVal("case error at Pos(0,0)").add(ESLVal.list(_v127)));
           }}
           public ESLVal get(String name) {
             switch(name) {
@@ -25,10 +25,10 @@ public class Main {
             if(n.gre(new ESLVal(1000)).boolVal)
             stopAll.apply();
             else
-              {ESLVal _v2 = $t;
+              {ESLVal _v128 = $t;
                 
                 if($true.boolVal)
-                {print.apply(new ESLVal("time = ").add(_v2));
+                {print.apply(new ESLVal("time = ").add(_v128));
                 wait.apply($one);}
                 else
                   {}
@@ -41,6 +41,7 @@ public class Main {
         });
     }
   });
+
 public static void main(String[] args) {
     newActor(main,new ESLVal(new Actor())); 
   }

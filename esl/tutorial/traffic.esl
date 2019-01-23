@@ -1,6 +1,6 @@
 export main;
 
-import 'esl/lists.esl', 'esl/displays.esl';
+import 'esl/lists.esl', 'esl/displays.esl'; 
 
 // This example is taken from the paper Monitoring Norm Violations in Multi-Agent Systems by Nils Bulling, Mehdi Dastani
 // and Max Knobbout. The paper describes an example of a road with a bottleneck that is only wide enough for a single
@@ -157,7 +157,7 @@ Act TrafficLights { export left::TrafficLight; right::TrafficLight; }
 
 Act TrafficLight { export colour::Str; change::()->Void; }
 
-Act Approach { export getQueue::()->Int; prioritise::()->Bool; move::()->Void; Time(Int); }
+Act Approach { export getQueueLength::()->Int; prioritise::()->Bool; move::()->Void; Time(Int); }
 
 Act Monitor { Time(Int); }
 
@@ -205,11 +205,11 @@ act approach(id::Str,light::TrafficLight,probOfNewCar::Int)::Approach {
   // The approach to the bottleneck. Cars are generated using the supplied
   // probability and can only move when the traffic light is green.
 
-  export getQueue,move,prioritise;
+  export getQueueLength,move,prioritise;
 
   queue::[Int] = [0];   // A historical record of the cars at the approach.
   
-  getQueue()::Int =
+  getQueueLength()::Int =
     grab(queue) {
       head[Int](queue);
     }
@@ -250,7 +250,7 @@ act approach(id::Str,light::TrafficLight,probOfNewCar::Int)::Approach {
 
 act mon(left::Approach,right::Approach,lights::TrafficLights)::Monitor {
 
-  queueRight()::Bool = right.getQueue() > 0;
+  queueRight()::Bool = right.getQueueLength() > 0; 
   
   allowRight()::Void = 
     if lights.right.colour = 'RED' 

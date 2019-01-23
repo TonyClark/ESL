@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Hashtable;
 import java.util.Vector;
 import java.util.function.BiConsumer;
 
@@ -20,19 +20,18 @@ import org.fife.ui.rsyntaxtextarea.parser.ParseResult;
 import ast.binding.Binding;
 import ast.general.AST;
 import ast.modules.Module;
-import ast.patterns.Pattern;
 import ast.types.Cnstr;
 import ast.types.Field;
 import ast.types.Record;
 import ast.types.Term;
 import ast.types.Type;
 import ast.types.TypeError;
-import ast.types.TypePatternError;
 import ast.types.Union;
 import context.ParseError;
 import edb.editor.basic.EDBParser;
 import edb.editor.basic.ParserListener;
 import edb.files.DynamicClassLoader;
+import edb.frame.EDBFrame;
 import env.Empty;
 import env.Env;
 import esl.lib.ESLError;
@@ -42,7 +41,6 @@ import parser.ESL;
 import parser.ParseException;
 import parser.Token;
 import parser.TokenMgrError;
-import runtime.actors.Builtins;
 
 public class ESLParser extends EDBParser {
 
@@ -150,7 +148,7 @@ public class ESLParser extends EDBParser {
 			setHasErrors(true);
 			Token token = parser.token;
 			int offset = parser.getCharStart(token);
-			parseResult.add(this, new Exception(e), token.beginLine, offset, e.getMessage(), token.image.length());
+			parseResult.addError(this, new Exception(e), token.beginLine, offset, e.getMessage(), token.image.length());
 			parseError(text);
 			typeCheckModule(text);
 		} catch (ParseException e) {
@@ -158,7 +156,7 @@ public class ESLParser extends EDBParser {
 			Token token = e.currentToken.next;
 			int line = token.beginLine;
 			int offset = parser.getCharStart(token);
-			parseResult.add(this, e, line, offset, e.getMessage(), token.image.length());
+			parseResult.addError(this, e, line, offset, e.getMessage(), token.image.length());
 			parseError(text);
 			typeCheckModule(text);
 		} catch (ParseError e) {
@@ -169,7 +167,7 @@ public class ESLParser extends EDBParser {
 			int end = e.getLineEnd();
 			int length = end - start;
 			e.printStackTrace();
-			parseResult.add(this, new Exception(e), getLine(text, start), start, e.getMessage(), length);
+			parseResult.addError(this, new Exception(e), getLine(text, start), start, e.getMessage(), length);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -187,37 +185,7 @@ public class ESLParser extends EDBParser {
 		} catch (TokenMgrError e) {
 			Token token = parser.token;
 			int offset = parser.getCharStart(token);
-			parseResult.add(this, new Exception(e), token.beginLine, offset, e.getMessage(), token.image.length());
-		}
-	}
-
-	public void typeCheckModuleOriginal(String text) {
-		if (module != null) {
-			setHasErrors(false);
-			module.setDefs();
-			try {
-				module.type(Builtins.builtinTypes());
-			} catch (ParseError e) {
-				setHasErrors(true);
-				e.printStackTrace();
-			} catch (TypeError e) {
-				setHasErrors(true);
-				int start = e.getLineStart();
-				int end = e.getLineEnd();
-				int length = end - start;
-				e.printStackTrace();
-				parseResult.add(this, new Exception(e), getLine(text, start), start, e.getMessage(), length);
-			} catch (TypePatternError e) {
-				setHasErrors(true);
-				Pattern p = e.getPattern();
-				int start = p.getLineStart();
-				int end = p.getLineEnd();
-				int length = end - start;
-				e.printStackTrace();
-				parseResult.add(this, new Exception(e), getLine(text, start), start, e.getMessage(), length);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
+			parseResult.addError(this, new Exception(e), token.beginLine, offset, e.getMessage(), token.image.length());
 		}
 	}
 
@@ -242,6 +210,9 @@ public class ESLParser extends EDBParser {
 				module.setDefs();
 				ESLVal term = Lib.asESLVal(AST.asESLValue(module));
 				checkFunction.funVal.apply(term);
+				addWarnings(text);
+				addInfo(text);
+				addHovver(text);
 			} catch (ESLError e) {
 				setHasErrors(true);
 				ESLVal value = e.value;
@@ -253,24 +224,88 @@ public class ESLParser extends EDBParser {
 						int start = loc.termRef(0).intVal;
 						int end = loc.termRef(1).intVal;
 						int length = end - start;
-						parseResult.add(this, new Exception(e), getLine(text, start), start, message, length);
+						parseResult.addError(this, new Exception(e), getLine(text, start), start, message, length);
 						break;
 					}
 				default:
-					parseResult.add(this, new Exception(e), 0, 0, value.toString(), 10);
+					parseResult.addError(this, new Exception(e), 0, 0, value.toString(), 10);
 				}
 			} catch (TypeError e) {
 				setHasErrors(true);
 				int start = e.getLineStart();
 				int end = e.getLineEnd();
 				int length = end - start;
-				parseResult.add(this, new Exception(e), getLine(text, start), start, e.getMessage(), length);
+				parseResult.addError(this, new Exception(e), getLine(text, start), start, e.getMessage(), length);
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private void addHovver(String text) {
+		ESLVal hovver = getHovver();
+		while (!hovver.isNil()) {
+			ESLVal h = hovver.head();
+			hovver = hovver.tail();
+			switch (h.termName) {
+			case "HovverOver":
+				ESLVal loc = h.termRef(0);
+				boolean drawLine = h.termRef(1).boolVal;
+				String message = h.termRef(2).strVal;
+				int start = loc.termRef(0).intVal;
+				int end = loc.termRef(1).intVal;
+				parseResult.addInfo(this, new Exception(), getLine(text, start), start, message, end - start);
+			}
+		}
+	}
+
+	private void addWarnings(String text) {
+		ESLVal warnings = getWarnings();
+		while (!warnings.isNil()) {
+			ESLVal warning = warnings.head();
+			warnings = warnings.tail();
+			switch (warning.termName) {
+			case "Warning":
+				ESLVal loc = warning.termRef(0);
+				int start = loc.termRef(0).intVal;
+				int end = loc.termRef(1).intVal;
+				String message = warning.termRef(1).strVal;
+				parseResult.addWarning(this, new Exception(), getLine(text, start), start, "Warning: " + message, end - start);
+				break;
+			default:
+			}
+		}
+	}
+
+	private void addInfo(String text) {
+		Hashtable<String, ESLVal> properties = EDBFrame.FRAME.getProperties();
+		if (properties.containsKey("$INFO")) {
+			Hashtable<ESLVal, ESLVal> info = properties.get("$INFO").table;
+			for (ESLVal loc : info.keySet()) {
+				int start = loc.termRef(0).intVal;
+				int end = loc.termRef(1).intVal;
+				String message = info.get(loc).strVal;
+				parseResult.addInfo(this, new Exception(), getLine(text, start), start, message, end - start);
+			}
+		}
+	}
+
+	private ESLVal getWarnings() {
+		ESLVal warnings = EDBFrame.FRAME.getProperties().get("$WARNINGS");
+		if (warnings == null) {
+			return Lib.$nil;
+		} else
+			return warnings;
+	}
+
+	private ESLVal getHovver() {
+		ESLVal hovver = EDBFrame.FRAME.getProperties().get("$HOVVER");
+		if (hovver == null) {
+			return Lib.$nil;
+		} else
+			return hovver;
 	}
 
 	public Module getModule() {

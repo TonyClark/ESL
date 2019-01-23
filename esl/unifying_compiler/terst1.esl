@@ -1,3 +1,0 @@
-export a;
-
-a::Int = 10;

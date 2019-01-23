@@ -1,0 +1,183 @@
+/********************************************************************************************************************************
+ *                                                                                                                              *
+ *                                                    Observers                                                                 *
+ *                                                 ================                                                             *
+ *                                                                                                                              *
+ *   An ESL observer is an actor whose behaviour is a sub-type of Observer[State,Message] where State is the type of the        *
+ *   observed state and Message is the type of the observed messages. An observed actor has a behaviour type that is a          *                                                                                                                          *
+ *   sub-type of Observed[State,Message] and where the associated behavour defines how to map the actor's state to a value      *
+ *   of type State and its messages to a value of type Maybe[Message]. The idea is that the observed actor controls the         *
+ *   external view of its internal state and controls which messages are observable and the external view of those messages.    *
+ *   The mechanism is implemented by a pair of operations in the observable behaviour called observeState and observeMessage.   *
+ *   The operations are called each time an observed actor processes a message to record the state after the message is         *
+ *   processed and the message itself. If the observeMessage returns Nothing for a message m, then m is private and therefore   *
+ *   not observable. Otherwise each observer o1 that has been added to the observed o2 using o2.addObserver(o1)                 *
+ *   is send a message Transition(o2,time,observeMessage(m),observeState()). Note that the type constructors Observer and       *
+ *   Observed are not needed when defining observers and observed actor behaviour types. The structure of the types is          *
+ *   sufficient. Any type that defines the two functions observeState and observeMessage will generate code for managing        *
+ *   observation.                                                                                                               *
+ *                                                                                                                              *
+ ********************************************************************************************************************************/
+ 
+export main;
+
+data Maybe[T] = 
+  // A data type that allows data to be optional...
+  Something(T) 
+| Nothing;
+
+type Observer[State,Message] = Act {
+  // Any behaviour that will act as an observer must provide a handler for
+  // the messages Start and Transtion. The first argument is the observed actor, the
+  // second is the time at which the observed message was received by the
+  // observed actor. Note that normally, the type of the first argument
+  // will be some sub-type of Observed[State,Message] to allow the handler 
+  // to use the observed actor is some way.
+  Transition(Observed[State,Message],Int,Message,State);
+  Start(Observed[State,Message],Int,State);
+}
+
+type Observed[State,Message] = Act {
+  // Any behaviour that will acr as observed must provide two exported
+  // functions that define the external view of the actor's state and the
+  // external view of a sub-set of the messages in the observed actor's
+  // interface. Note that the domain of the function observeMessage MUST
+  // agree with the message interface of the behaviour type. If an actor
+  // does not implement the two functions that observation will not be
+  // possible. An observer is added to an observed actor using the implicitly
+  // exported function addObserver.
+  export 
+    observeState::() -> State;
+    observeMessage::(union { }) -> Maybe[Message];
+}
+
+// Here is a simple example of an observer-and-observed actor combination.
+// An observed actor will implement the messages M and N that will be
+
+data XMessage = 
+  // A data type that represents observed messages...
+  ExternallyObservedMessage(Str);
+
+data XState = 
+  // The external view of the internal state...
+  ExternallyObservedState(Int);
+
+Act Main { Time(Int); }
+
+data OMessage =
+  // A data type that matches the interface of O.
+  // This is used as the domain of the observeMessage function. 
+  Message1 
+| Message2;
+
+Act O {
+  // This will be the basis of our observed actors...
+  export 
+    // In order to be observed, you must export TWO functions:
+    // (1) observedState is called to produce a state representation.
+    // (2) observedMessage maps a data type based on the message interface 
+    //     to a data type that an observer receives. The return value MUST
+    //     be wrapped with Maybe. This allows private messages to return
+    //     Nothing.
+    observeState::()->XState;                        
+    observeMessage::(OMessage) -> Maybe[XMessage]; 
+  Message1;
+  Message2;
+}
+
+act observed::O { 
+  // An observed behaviour. Note that the implementation of the
+  // observeState and observeMessage functions will be used by
+  // any observer of an actor with this type...
+  export observeState, observeMessage; 
+  count::Int = 0;
+  observeState()::XState = ExternallyObservedState(count);
+  observeMessage(m::OMessage)::Maybe[XMessage] = 
+    // Only Message1 is observed and is translated to the XMessage data type.
+    // The message Message2 is hidden from obervers...
+    case m {
+      Message1 -> Something[XMessage](ExternallyObservedMessage('message1'));
+      Message2 -> Nothing[XMessage];
+    }
+  Message1 -> count := count + 1;
+  Message2 -> count := count + 10;
+}
+
+Act V {
+  Transition(O,Int,XMessage,XState);
+  Start(O,Int,XState);
+  K;
+}
+
+act observer::V { 
+  // An observer must implement a message handler with the
+  // name Observe. It is supplied with the observed actor, the
+  // current time when the observation took place, the state
+  // before the message was handled, the message (after mapping)
+  // and the state after the message completed...
+  Start(o::O,n::Int,s::XState) -> 
+    print[Str]('Start 1 ' + s);
+  Transition(o::O,n::Int,m::XMessage,s::XState) -> {
+    print[Str]('YOU OBSERVED 1 ' + n + ' ' + m + ' ' + s);
+    o <- Message1;
+    o <- Message2;
+    self <- K;
+  } 
+  K -> print[Str]('got K');
+}
+
+data SMessage =
+  Me
+| Transition(SelfObserver,Int,XMessage,XState)
+| Start(SelfObserver,Int,XState);
+
+Act SelfObserver {
+  // This is an example of a behaviour type that can observe itself. 
+  // Therefore, it defines the observation functions and an Observe
+  // message handler...
+  export 
+    observeState::() -> XState;
+    observeMessage::(union { }) -> Maybe[XMessage]; 
+  Transition(SelfObserver,Int,XMessage,XState);
+  Start(SelfObserver,Int,XState);
+  Me;
+}
+
+act selfObserver::SelfObserver {
+  export observeState, observeMessage; 
+  count::Int = 0;
+  observeState()::XState = ExternallyObservedState(count);
+  observeMessage(m::SMessage)::Maybe[XMessage] = 
+    case m {
+      Me -> Something[XMessage](ExternallyObservedMessage(''+m));
+      m -> Nothing[XMessage];
+    }
+  Transition(o::SelfObserver,n::Int,m::XMessage,s::XState) -> {
+    print[Str]('YOU SELF OBSERVED ' + n + ' ' +  m + ' ' + s);
+  } 
+  Start(o::SelfObserver,n::Int,s::XState) -> print[Str]('SELF START ' + s);
+  Me -> {
+    count := count - 1;
+  }
+}
+
+setObserver[State,Messages](observed::Observed[State,Messages],observer::Observer[State,Messages])::Void =
+  // This is an example of a pomorphic use of observers...
+  observed.addObserver(observer); 
+
+act main::Main {
+  // Create and initialise the ovserved and observers in various ways...
+  o1::O = new observed;
+  o2::Observer[XState,XMessage] = new observer; 
+  o3::SelfObserver = new selfObserver;
+  -> {
+    setObserver[XState,XMessage](o1,o2);
+    o3.addObserver(o3);
+  }
+  Time(n::Int) when n > 2000 -> stopAll();
+  Time(n::Int) -> {
+    print[Str]('time = ' + n);
+    o1 <- Message1;
+    o3 <- Me;
+  }
+}

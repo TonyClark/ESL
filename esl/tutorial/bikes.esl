@@ -1,0 +1,47 @@
+export main;
+
+import 'esl/excel.esl', 'esl/lists.esl'; 
+
+totalSales()::Float =
+  try {
+    let book::Excel = readWorkbook('esl/data/bikes.xlsx'); in
+    let sales::ExcelColumn = getColumnNamed(getSheet(book,0),'Sales'); 
+    in { print[Str]('book pre = ' + book);
+      foldr[Float,Float](id[Float],fun(x::Float,y::Float)::Float x + y,0.0,[ n | XFloat(n) <- sales ]);
+    }
+  } catch {
+    e -> {
+      print[Str]('Error: ' + e);
+      0.0;
+    }
+  }
+
+addBike(model::Str,price::Float,sales::Float,current::Bool,date::Str)::Void =
+  try {
+    let book::Excel = readWorkbook('esl/data/bikes.xlsx'); 
+        newRow::ExcelRow = XRow([XStr(model),XFloat(price),XFloat(sales),XBool(current),XDate(date)]); in
+    let newBook::Excel = case book { XWorkbook([XSheet(name,rows)]) -> XWorkbook([XSheet(name,rows + [newRow])]); }
+    in { print[Str]('book = ' + book);
+      writeWorkbook('esl/data/bikes.xlsx',newBook);
+    } 
+  } catch {
+    e -> {
+      print[Str]('Error: ' + e);
+      0.0;
+    }
+  }
+    
+  
+act main::Main {
+
+  Time(n::Int) -> {
+   try {
+      print[Str]('total sales before update = ' + totalSales());
+      addBike('Electric',3000.0,20.0,false,'06/01/2019');
+      print[Str]('total sales after update = ' + totalSales());
+      stopAll();
+    } catch {
+      x::Str -> print[Str](x); 
+    }
+  }
+}

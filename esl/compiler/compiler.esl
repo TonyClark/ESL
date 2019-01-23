@@ -14,39 +14,29 @@
  *                                                                                                                              *
  ********************************************************************************************************************************/
 
-export main, compileFile, compileModule; 
+export main, compileFile, runFile, compileModule;
 
-import 
+import
   'esl/compiler/ppExp.esl', 
-  'esl/lists.esl',
-  'esl/compiler/types.esl',
+  'esl/lists.esl', 
+  'esl/compiler/types.esl', 
   'esl/compiler/typeCheck.esl', 
   'esl/compiler/toJava.esl',
-  //'esl/displays.esl',
-  'esl/compiler/dynamicVars.esl',
-  'esl/compiler/strings.esl';
+  'esl/displays.esl',
+  'esl/compiler/strings.esl',
+  'esl/compiler/warnings.esl',
+  'esl/compiler/methodTransform.esl';
 
 type Main = Act { Time(Int); }
 
-data EditType =
-  ESLSource(Str,Str)
-| JavaSource(Str,Str,Str)
-| RawText(Str);
-
-type EDB = Act {
-  Edit(EditType);
-}
-
-edb::EDB = null[EDB];
-
 moduleImports(m::AST)::[Str] = 
   case m {
-    Module(path::Str,name::Str,exports::[Str],imports::[Str],x::Void,y::Void,defs::[TBind]) ->  
+    Module(path::Str,name::Str,exports::[Str],imports::[Str],decs::[TDec],y::Void,defs::[TBind]) ->  
       imports;
   }
 
 compileFile(sourceFile::Str)::Void =
-  let path::[Str] = toPath(sourceFile); in
+  let path::[Str] = toPath(sourceFile); in 
   let className::Str = pathToJavaClassName(path); in
   let sourcePath::Str = 'src/' + joinBy(#/,butlast[Str](path)) + '/' + className + '.java'; in
   let package1::Str = pathToJavaPackage(path);
@@ -56,17 +46,45 @@ compileFile(sourceFile::Str)::Void =
     else print[Str]('[ ' + sourceFile + ' is up to date. ]');
   }
 
+runFile(sourceFile::Str)::Void =
+  let path::[Str] = toPath(sourceFile); in
+  let className::Str = pathToJavaClassName(path); in
+  let sourcePath::Str = 'src/' + joinBy(#/,butlast[Str](path)) + '/' + className + '.java'; in
+  let package1::Str = pathToJavaPackage(path);
+  in runModule(sourcePath,package1,className,sourceFile);
+
 compileModule(sourcePath::Str,package1::Str,name::Str,path::Str)::Void = {
   print[Str]('[ compile ' + sourcePath + ']');
   try {
     let module::AST = parse[AST](path); in
     let imports::[Str] = moduleImports(module);
-    in { 
+    in {
+      resetWarnings();
       typeCheckModule(path);
-      let untypedJModule::JMod = moduleToJava(module); 
+      let untypedJModule::JMod = addMethodCalls(moduleToJava(module)); 
       in { 
-        dynamicVarsJModule(untypedJModule);
         edb <- Edit(JavaSource(sourcePath,name,ppJModule(name,package1,untypedJModule)));  
+        for i::Str in imports do {
+          compileFile(i); 
+        }
+      }
+    }
+  } catch {
+      message::Str ->  print[Str]('Type Error: ' + message); 
+  }
+}
+
+runModule(sourcePath::Str,package1::Str,name::Str,path::Str)::Void = { 
+  print[Str]('[ compile ' + sourcePath + ']');
+  try {
+    let module::AST = parse[AST](path); in
+    let imports::[Str] = moduleImports(module);
+    in {
+      resetWarnings();
+      typeCheckModule(path);
+      let untypedJModule::JMod = addMethodCalls(moduleToJava(module)); 
+      in { 
+        edb <- RunJava(sourcePath,name,ppJModule(name,package1,untypedJModule));  
         for i::Str in imports do {
           compileFile(i); 
         }
@@ -79,34 +97,6 @@ compileModule(sourcePath::Str,package1::Str,name::Str,path::Str)::Void = {
   
 act main::Main { 
   Time(t::Int) -> {
-    print[Str]('Start of system');
-    //compileFile('esl/compiler/test1.esl');  
-    //compileFile('esl/compiler/shop.esl');  
-    compileFile('esl/lists.esl');      
-    compileFile('esl/tables.esl');   
-    compileFile('esl/compiler/strings.esl');  
-    compileFile('esl/compiler/compiler.esl'); 
-    compileFile('esl/compiler/ppExp.esl');
-    compileFile('esl/compiler/typeCheck.esl'); 
-    compileFile('esl/compiler/toJava.esl');  
-    compileFile('esl/compiler/dynamicVars.esl');
-    compileFile('esl/compiler/cases.esl'); 
-    //compileFile('esl/compiler/test2.esl'); 
-    //compileFile('esl/compiler/collisions.esl');
-    //compileFile('esl/compiler/philosophers.esl'); 
-    //compileFile('esl/compiler/segregation.esl');
-    //compileFile('esl/compiler/boids.esl');
-    //compileFile('esl/compiler/predator.esl');
-    //compileFile('esl/compiler/strings.esl');
-    compileFile('esl/tutorial/search.esl');
-    compileFile('esl/tutorial/main.esl');
-    compileFile('esl/tutorial/qsort.esl');
-    compileFile('esl/tutorial/mapReduce.esl');
-    compileFile('esl/tutorial/termites.esl');
-    compileFile('esl/tutorial/philosophers.esl');
-    compileFile('esl/tutorial/segregation.esl');
-    compileFile('esl/tutorial/shop.esl');
-    print[Str]('DONE');
     stopAll();
   }
 }

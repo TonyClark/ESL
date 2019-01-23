@@ -1,0 +1,100 @@
+export main;
+
+import 'esl/lists.esl', 'esl/displays.esl';
+
+// This example is taken from HIVE - An Agent Based Modeling Framework an MSc Thesis by Roohi Bharti.
+// The idea is that customers both consume and provide services. A facilitator F manages a collection
+// of customers that freely interact through F to provide and consume services. Each interaction 
+// benefits the provider by 3 units and costs the consumer 3 units. When a customer loses their
+// wealth, they die. As observed in the thesis, the free simulation of customers results in the wealth
+// being located in a very small number of individuals where the rest of the customers die off.
+
+Act Main { Time(Int); }
+
+Act Customer  { 
+  export picture::()->Display;  
+  Inc; 
+  Dec;
+}
+
+Act Facilitator { 
+  PairUp(Customer); 
+}
+
+act facilitator::Facilitator {
+  
+  pending::[Customer]              = []; 
+  count::Int                       = 0;
+  root::Int                        = round(isqrt(noOfCustomers));
+  rowCustomers(n::Int)::[Customer] = take[Customer](drop[Customer](customers,n*root),root);
+  row(n::Int)::Row                 = Row([], [ Data([],c.picture()) | c <- rowCustomers(n) ]);
+  table()::Display                 = Table([],[ row(n) | n <- 0..root ]);
+  chooseCustomer()::Customer       = nth[Customer](pending,random(length[Customer](pending)));
+  
+  PairUp(c::Customer) when pending = [] -> pending := c:pending;
+  PairUp(c1::Customer) -> {
+    let c2::Customer = chooseCustomer();
+    in {
+      c1 <- Inc;
+      c2 <- Dec;
+      pending := remove[Customer](c2,pending);
+      count := count + 1;
+      if count % (20 * noOfCustomers) = 0 
+      then edb <- Show('Services', table());
+      else {}
+    }
+  }
+}
+
+
+
+act customer(money::Int)::Customer {
+  export picture;
+  wealth::Int = money;
+  picture()::Display = Picture(60,60,[Circle(30,30,round(((wealth*20.0)/(1.0*totalMoney)) * 30.0),'')]);
+  -> theFacilitator <- PairUp(self);
+  Inc -> {
+    wealth := wealth + 3;
+    theFacilitator <- PairUp(self);
+  }
+  Dec when wealth > 3 -> {
+    wealth := wealth - 3;
+    theFacilitator <- PairUp(self);
+  }
+  Dec -> become emptyCustomer;
+}
+
+act emptyCustomer::Customer {
+  export picture;
+  picture()::Display = Picture(60,60,[]);
+  Inc -> {}
+  Dec -> {}
+}
+
+limit::Int            = 20000;
+noOfCustomers::Int    = 100;
+initialFunds::Int     = 100;
+totalMoney::Int       = noOfCustomers * initialFunds;
+customers::[Customer] = [ new customer(initialFunds) | i <- 0..noOfCustomers ];
+theFacilitator::Facilitator = new facilitator;
+
+act main::Main {
+  Time(n::Int) when n < limit -> {}
+  Time(n::Int) -> stopAll();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

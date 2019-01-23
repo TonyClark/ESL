@@ -1,6 +1,8 @@
-export main;
+export getSheet,getSheetNamed,getColumnNamed,Excel,ExcelCell,ExcelColumn,ExcelError,ExcelRow,ExcelSheet,Main,XBlank,XBool,XDate,XFloat,XFormula,XRow,XSheet,XStr,XUnknown,XWorkbook,readWorkbook,writeWorkbook;
 
-import 'esl/displays.esl','esl/lists.esl';
+import 
+  'esl/displays.esl',
+  'esl/lists.esl';
 
 type Main = Act { Time(Int); }
 
@@ -14,441 +16,47 @@ data ExcelCell =
 | XBlank 
 | XUnknown;
 
-data ExcelRow   = XRow([ExcelCell]);
-data ExcelSheet = XSheet(Str,[ExcelRow]);
-data Excel      = 
+type ExcelColumn = [ExcelCell];
+data ExcelRow    = XRow([ExcelCell]);
+data ExcelSheet  = XSheet(Str,[ExcelRow]);
+data Excel       = 
   // The type of a single Excel workbook...
   XWorkbook([ExcelSheet]) 
 | ExcelError(Str);
 
-round::(Float)->Int = builtin[(Float)->Int]('runtime.actors.Builtins','round',1); // Utility to round floats.
-hasSuffix::(Str,Str)->Bool = builtin[(Str,Str)->Bool]('runtime.actors.Builtins','hasSuffix',2); // Utility to check strings.
-trim::(Str)->Str = builtin[(Str)->Str]('runtime.actors.Builtins','trim',1); // Utility to trim strings.
-downcase::(Str)->Str = builtin[(Str)->Str]('runtime.actors.Builtins','downcase',1); // Utility to transform strings.
-
-cols::Int = 4;
-width::Int = 350;
-height::Int = 550;
-
-rowData(row::ExcelRow)::[ExcelCell] =
+rowCells(row::ExcelRow)::ExcelColumn =
   case row {
-    XRow(cells::[ExcelCell]) -> cells;
+    XRow(cells) -> cells;
   }
 
-floatValue(c::ExcelCell)::Float =
-  case c {
-    XFloat(f::Float) -> f;
-    XBlank -> 0.0;
+getSheet(b::Excel,n::Int)::ExcelSheet =
+  case b {
+    XWorkbook(sheets) -> nth[ExcelSheet](sheets,n);
   }
 
-// readWorkbook is a builtin operation that takes an Excel file and returns a value of type Excel...
-readWorkbook::(Str) -> Excel = builtin[(Str) -> Excel]('test.ExcelReader','readWorkbook',1); 
-
-workbookRows(w::Excel)::[ExcelRow] =
-  case w {
-    XWorkbook(XSheet(n::Str,rows::[ExcelRow]):sheets::[ExcelSheet]) -> rows;
-  }
-
-downcaseWorkbook(w::Excel)::Excel = { 
-  case w { 
-    XWorkbook(sheets::[ExcelSheet]) -> XWorkbook(map[ExcelSheet,ExcelSheet](fun(s::ExcelSheet) ::ExcelSheet
-      case s {
-        XSheet(name::Str,rows::[ExcelRow]) ->
-          XSheet(name,map[ExcelRow,ExcelRow](fun(r::ExcelRow)::ExcelRow 
-            case r {
-              XRow(cells::[ExcelCell]) -> XRow(map[ExcelCell,ExcelCell](fun(c::ExcelCell)::ExcelCell
-                case c {
-                  XStr(t::Str) -> XStr(downcase(t));
-                  c::ExcelCell -> c;
-                },cells));
-            }, rows));
-      },sheets));
-  }
-}
-
-data NSSYearAndFile = File(Int,Str);
-data NSSYearAndData = NSSData(Int,[ExcelRow]);
-data JACSData = JACS(Int,Str,[[Str]]);
-
-readFile(file::NSSYearAndFile)::NSSYearAndData =
-  case file { 
-     File(year::Int,path::Str) -> 
-       NSSData(year,workbookRows(downcaseWorkbook(readWorkbook(path))));
-  }
-
-readFiles(files::[NSSYearAndFile])::[NSSYearAndData] = map[NSSYearAndFile,NSSYearAndData](readFile,files);
-
-programmeFiles::[NSSYearAndFile] = [
-  File(2014,'/Users/clarkt1/Dropbox/Aston_Files/Metrics/NSS/Aston Histories/NSS_programmes_2014.xlsx'),
-  File(2015,'/Users/clarkt1/Dropbox/Aston_Files/Metrics/NSS/Aston Histories/NSS_programmes_2015.xlsx'),
-  File(2016,'/Users/clarkt1/Dropbox/Aston_Files/Metrics/NSS/Aston Histories/NSS_programmes_2016.xlsx'),
-  File(2017,'/Users/clarkt1/Dropbox/Aston_Files/Metrics/NSS/Aston Histories/NSS_programmes_2017.xlsx'),
-  File(2018,'/Users/clarkt1/Dropbox/Aston_Files/Metrics/NSS/Aston Histories/NSS_programmes_2018.xlsx')
-];
-
-jacsFiles::[NSSYearAndFile] = [
-  File(2014,'/Users/clarkt1/Dropbox/Aston_Files/Metrics/NSS/Aston Histories/NSS_jacs_2014.xlsx'),
-  File(2015,'/Users/clarkt1/Dropbox/Aston_Files/Metrics/NSS/Aston Histories/NSS_jacs_2015.xlsx'),
-  File(2016,'/Users/clarkt1/Dropbox/Aston_Files/Metrics/NSS/Aston Histories/NSS_jacs_2016.xlsx'),
-  File(2017,'/Users/clarkt1/Dropbox/Aston_Files/Metrics/NSS/Aston Histories/NSS_jacs_2017.xlsx'),
-  File(2018,'/Users/clarkt1/Dropbox/Aston_Files/Metrics/NSS/Aston Histories/NSS_jacs_2018.xlsx')
-];
-
-dlheFile::Str = '/Users/clarkt1/Dropbox/Aston_Files/Metrics/DLHE/EAS_DLHE_2013_2017.xlsx';
-
-nextYear::Int = 2019;
-nextYearSchoolTarget::Int = 85;
-nextYearAstonTarget::Int = 90;
-aston::Str = 'Aston University (10007759)';
-population::Str = 'population (headcount)';
-respondents::Str = 'number of respondents (headcount)';
- 
-programmeData::[NSSYearAndData] = readFiles(programmeFiles);
-jacsData::[NSSYearAndData] = readFiles(jacsFiles);
-dlheData::[ExcelRow] = workbookRows(downcaseWorkbook(readWorkbook(dlheFile)));
-
-downcaseJACS(j::JACSData)::JACSData =
-  case j {
-    JACS(code::Int,name::Str,programmes::[[Str]]) ->
-      JACS(code,downcase(name),[ [ downcase(n) | n::Str <- ns ] | ns::[Str] <- programmes ]);
-  }
-
-schoolTarget::LGLine = GLine([][Property],'EAS Target',map[NSSYearAndFile,LinePoint](fun(d::NSSYearAndFile)::LinePoint 
-  case d {
-    File(year::Int,s::Str) -> LPoint([][Property],year,82);
-  },jacsFiles) + [LPoint([][Property],nextYear,nextYearSchoolTarget)]);
-
-astonTarget::LGLine = GLine([][Property],'Aston Target',map[NSSYearAndFile,LinePoint](fun(d::NSSYearAndFile)::LinePoint
-  case d {
-    File(year::Int,s::Str) -> LPoint([][Property],year,90);
-  },jacsFiles) + [LPoint([][Property],nextYear,nextYearAstonTarget)]);
-  
-
-programmesByJACSCode::[JACSData] = map[JACSData,JACSData](downcaseJACS,[
-  JACS(25,'Chemistry',[['BSc Chemistry'],['BSc Applied Chemistry']]),
-  JACS(26,'Physics & Astronomy',[['BSc Applied Physics']]),
-  JACS(32,'Mathematics & Statistics',[
-    ['BSc Business and Mathematics'],
-    ['BSc Mathematics with Computing'],
-    ['BSc Mathematics'],
-    ['Mathematics Major WITH Economics Minor']]),
-  JACS(35,'Computer Science',[
-    ['BEng Electronic Engineering and Computer Science'],
-    ['BSc Computing for Business'],
-    ['BSc Computing Science and Mathematics'],
-    ['BSc Mathematics with Computing'],
-    ['BSc Multimedia Computing'],
-    ['MEng Software Engineering'],
-    ['BSc Digital and Technology Solutions (Business Analyst) - Capgemini'],
-    ['BSc Digital and Technology Solutions (Software Engineer) - Capgemini'],
-    ['MEng Electronic Engineering and Computer Science (Fast-track)'],
-    ['BSc Computing Science']]),
-  JACS(36,'General Engineering',[['BEng Design Engineering']]),
-  JACS(37,'Mechanical Production & Manufacturing Engineering',[
-    ['BEng Electromechanical Engineering'],
-    ['BEng Professional Engineering (Power Systems)'],
-    ['BSc Product Design and Management'],
-    ['MEng Mechanical Engineering'],
-    ['BSc Transport Product Design'],
-    ['BSc Industrial Product Design'],
-    ['BEng Mechanical Engineering']]),
-  JACS(40,'Electronic & Electrical Engineering',[
-    ['BEng Communications Engineering'],
-    ['BEng Electrical & Electronic Engineering'],
-    ['BEng Electronic Engineering and Computer Science'],
-    ['BEng in Biomedical Engineering'],
-    ['MEng in Biomedical Engineering'],
-    ['MEng Electrical and Electronic Engineering (Fast-Track)'],
-    ['MEng Electronic Engineering and Computer Science (Fast-track)'],
-    ['BEng Electrical & Electronic Engineering']]),
-  JACS(42,'Chemical Process & Energy Engineering',[
-    ['BEng Chemical Engineering'],
-    ['MEng Chemical Engineering']]),
-  JACS(46,'Others in Technology',[
-    ['BSc Logistics and Operations Management'],
-    ['BSc Logistics with Supply Chain Management'],
-    ['BSc Logistics with Transport Management'],
-    ['BSc Logistics with Purchasing Management']]),
-  JACS(48,'Building',[
-    ['BSc Construction Project Management']])
-]); 
-
-programmeByJACSTable::EDBDisplay = fold[EDBDisplay]Table([Prop('border','1px solid-black')],[ 
-            Row[EDBDisplay]([][Property],[
-              Data[EDBDisplay]([][Property],HTML(code+'')), 
-              Data[EDBDisplay]([][Property],HTML(name)),
-              Data[EDBDisplay]([][Property],HTML(flatten[Str](ps)+''))]) | JACS(code::Int,name::Str,ps::[[Str]]) <- programmesByJACSCode ]);
-
-instructions::Str = 
-  '<center> <h1> NSS Results for EAS </center> </h1>' +
-  '<br>' +
-    'The following tables show the NSS results for the School of Engineering and Applied Sciences ' +
-    'grouped by JACS code. An individual programme must meet the NSS threshold of 10 students or 50% ' +
-    'return to report in the NSS. The same applies to the groupings by JACS code. The data shows the ' +
-    'results for the previous 5 years where this is known. The results for each grouping are organised ' +
-    'as a chart showing the overall satisfaction for programmes and JACS code, and then the results ' +
-    'for each NSS question. Note that the questions changed in 2017 and the titles of each graph shows '+
-    'the pre-2017 question and the post-2017 question. The labels attached to the nodes ' +
-    'are population:returned where the population is the total number of students that could possibly ' +
-    'return, and returned is the number that actually completed the NSS.' +
-  '<br>';
-
-dlheInstructions::Str =
-  '<center> <h1> DLHE Results for EAS </center> </h1>' +
-  '<br>' +
-    'The following tables show the DLHE results for the School of Engineering and Applied Sciences ' +
-    'grouped by JACS code. In each case the table shows the % of graduates in both graduate-level employment ' +
-    'any form of employment or further study.' + 
-  '<br>';
-
-questions::[[Str]] = [
-['Overall Satisfaction','Overall satisfaction'],
-['1. Staff are good at explaining things.'],
-['2. Staff have made the subject interesting.'],
-['4. The course is intellectually stimulating.','3. The course is intellectually stimulating.'],
-['5. The criteria used in marking have been clear in advance.', '8. The criteria used in marking have been clear in advance.'],
-['6. Assessment arrangements and marking have been fair.','9. Marking and assessment has been fair.'],
-['7. Feedback on my work has been prompt.','10. Feedback on my work has been timely.\n'],
-['8. I have received detailed comments on my work.','11. I have received helpful comments on my work.'],
-['10. I have received sufficient advice and support with my studies.','13. I have received sufficient advice and guidance in relation to my course.'],
-['11. I have been able to contact staff when I needed to.','12. I have been able to contact staff when I needed to.'],
-['12. Good advice was available when I needed to make study choices.','14. Good advice was available when I needed to make study choices on my course.'],
-['13. The timetable works efficiently as far as my activities are concerned.','16. The timetable works efficiently for me.'],
-['14. Any changes in the course or teaching have been communicated effectively.','17. Any changes in the course or teaching have been communicated effectively.'],
-['15. The course is well organised and is running smoothly.','15. The course is well organised and running smoothly.'],
-['16. The library resources and services are good enough for my needs.','19. The library resources (e.g. books, online services and learning spaces) have supported my learning well.'],
-['17. I have been able to access general IT resources when I needed to.','18. The IT resources and facilities provided have supported my learning well.'],
-['18. I have been able to access specialised equipment, facilities or rooms when I needed to.','20. I have been able to access course-specific resources (e.g. equipment, facilities, software, collections) when I needed to.']
-];
-
-getLine(name::[Str],question::[Str],results::[NSSYearAndData])::LGLine = {
-  let points::[LinePoint] = [ LPoint([][Property],year,score(year,name,question,rows)) | NSSData(year::Int,rows::[ExcelRow]) <- results];
-  in GLine([][Property],''+name,[ LPoint([Prop('label',lineLabel(name,x,results))],x,y) | LPoint(ps::Props,x::Int,y::Int) <- points, ?(y > 0)]);
-}
-
-lineLabel(name::[Str],year::Int,results::[NSSYearAndData])::Str =
-  case results {
-    NSSData(y::Int,rows::[ExcelRow]):results::[NSSYearAndData] when y = year -> pop(name,rows) + ':' + responds(name,rows);
-    d::NSSYearAndData:results::[NSSYearAndData] -> lineLabel(name,year,results);
-  }
-
-
-score(year::Int,name::[Str],question::[Str],rows::[ExcelRow])::Int = { 
-  let nameCell::[ExcelCell] = map[Str,ExcelCell](fun(s::Str)::ExcelCell XStr(downcase(s)),name); in
-  let questionCell::[ExcelCell] = map[Str,ExcelCell](fun(s::Str)::ExcelCell XStr(downcase(s)),question); in
-  let namedScores::[ExcelRow] = select[ExcelRow](fun(r::ExcelRow)::Bool exists[ExcelCell](fun(c::ExcelCell)::Bool member[ExcelCell](c,nameCell),rowData(r)),rows); 
-      
-  in if namedScores = [][ExcelRow]
-     then 0; // no programme with the given name this year...
-     else {
-       let agreeScores::[ExcelRow] = select[ExcelRow](fun(r::ExcelRow)::Bool exists[ExcelCell](fun(c::ExcelCell)::Bool c = XStr('% agree'),rowData(r)),namedScores); 
-       in if agreeScores = [][ExcelRow]
-          then 0;
-          else {
-            let i::Int = indexOfColumn(questionCell,rows);
-            in {
-              case nth[ExcelCell](rowData(head[ExcelRow](agreeScores)),i) {
-                XFloat(f::Float) -> round(f);
-                x::ExcelCell -> 0;
-              }
-            }
-          }
-     }
-}
-
-pop(name::[Str],rows::[ExcelRow])::Str = { 
-  let nameCell::[ExcelCell] = map[Str,ExcelCell](fun(s::Str)::ExcelCell XStr(downcase(s)),name); in
-  let popRows::[ExcelRow] = rowsContaining(XStr(population),rowsContainingAny(nameCell,rows));
-  in if popRows = []
-     then throw[Str]('no population row: ' + rowsContainingAny(nameCell,rows));
-     else case nth[ExcelCell](rowData(head[ExcelRow](popRows)),4) {
-      XFloat(n::Float) -> round(n)+'';
-      c::ExcelCell -> throw[Str]('no float for population');
-     }
-}
-
-responds(name::[Str],rows::[ExcelRow])::Str = { 
-  let nameCell::[ExcelCell] = map[Str,ExcelCell](fun(s::Str)::ExcelCell XStr(downcase(s)),name); in
-  let popRows::[ExcelRow] = rowsContaining(XStr(respondents),rowsContainingAny(nameCell,rows));
-  in if popRows = []
-     then throw[Str]('no respondents row');
-     else case nth[ExcelCell](rowData(head[ExcelRow](popRows)),4) {
-      XFloat(n::Float) -> round(n)+'';
-      c::ExcelCell -> throw[Str]('no responds row');
-     }
-}
-
-rowsContaining(cell::ExcelCell,rows::[ExcelRow])::[ExcelRow] = 
-  select[ExcelRow](fun(r::ExcelRow)::Bool
-    exists[ExcelCell](fun(c::ExcelCell)::Bool c = cell,rowData(r)),rows);
-
-
-rowsContainingAny(cells::[ExcelCell],rows::[ExcelRow])::[ExcelRow] = 
-  select[ExcelRow](fun(r::ExcelRow)::Bool
-    exists[ExcelCell](fun(c::ExcelCell)::Bool member[ExcelCell](c,cells),rowData(r)),rows);
-
-indexOfColumn(questions::[ExcelCell],rows::[ExcelRow])::Int = {
-  let questionRows::[ExcelRow] = select[ExcelRow](fun(r::ExcelRow)::Bool exists[ExcelCell](fun(c::ExcelCell)::Bool { member[ExcelCell](c,questions); },rowData(r)),rows); 
+getSheetNamed(s::Excel,name::Str)::ExcelSheet =
+  let sheetNamed(s::ExcelSheet)::Bool = case s { XSheet(n,rows) when n = name -> true; s -> false; }
   in {
-    let question::[ExcelCell] = select[ExcelCell](fun(c::ExcelCell)::Bool exists[ExcelRow](fun(r::ExcelRow)::Bool member[ExcelCell](c,rowData(r)),questionRows),questions);
-    in {
-      if question = [][ExcelCell]
-      then throw[Int]('cannot find question ' + questions + 'in ' + rows);
-      else indexOf[ExcelCell](head[ExcelCell](question),rowData(head[ExcelRow](questionRows)));
+    case s {
+      XWorkbook(sheets) -> select1[ExcelSheet](sheets,null[ExcelSheet],sheetNamed);
     }
   }
-}
+
+getColumn(s::ExcelSheet,n::Int)::ExcelColumn =
+  case s {
+    XSheet(name,rows) -> [ nth[ExcelCell](cells,n) | XRow(cells) <- rows ];
+  }
+
+getColumnNamed(s::ExcelSheet,n::Str)::ExcelColumn =
+  case s {
+    XSheet(name,rows) -> 
+      let i::Int = indexOf[ExcelCell](XStr(n),rowCells(head[ExcelRow](rows)));
+      in tail[ExcelCell](getColumn(s,i));
+  }
   
-//rowsContaining(cell::ExcelCell,rows::[ExcelRow])::[ExcelRow] =
-//  select[ExcelRow](fun(row::ExcelRow)::Bool member[ExcelCell](cell,rowData(row)),rows);
 
-isPercentAgree(r::ExcelRow)::Bool =
-  case r {
-    XRow(x::ExcelCell:XStr('% agree'):rest::[ExcelCell]) -> true;
-    r::ExcelRow -> false;
-  }
+// readWorkbook is a builtin operation that takes an Excel file and returns a value of type Excel.
+readWorkbook::(Str) -> Excel = builtin[(Str) -> Excel]('','readWorkbook',1);    
+// writeWorkbook creates an Excel spreadsheet and populated it from the supplied term.
+writeWorkbook::(Str,Excel) -> Excel = builtin[(Str,Excel) -> Excel]('','writeWorkbook',1);  
 
-nameMatch(name::Str,names::[[Str]])::Bool =
-  exists[[Str]](fun(names::[Str])::Bool member[Str](name,names),names);
- 
-
-graphs(questions::[[Str]],jacsName::Str,programmes::[[Str]])::[EDBDisplay] =
-  case questions {
-    [][[Str]] -> [][EDBDisplay];
-    q::[Str]:questions::[[Str]] -> graph(q,jacsName,programmes):graphs(questions,jacsName,programmes);
-  }
-
-graph(question::[Str],jacsName::Str,programmes::[[Str]])::EDBDisplay = 
-  let lines::[LGLine] = map[[Str],LGLine](fun(names::[Str])::LGLine getLine(names,question,programmeData), programmes);
-      jacsLine::LGLine= getLine([jacsName],question,jacsData);
-      astonLine::LGLine = getLine([aston],question,jacsData);
-  in {
-    print[Str]('jacs line ' + jacsName + ' = ' + jacsLine);
-    fold[EDBDisplay]LineGraph([],''+question,'Year','Score',700,700,astonLine:jacsLine:lines);
-  }
-
-transformTable(table::EDBDisplay)::EDBDisplay =
-  case table {
-    Table(tps::[Property],Row[EDBDisplay](rps::[Property],[Data[EDBDisplay](dps::[Property],LineGraph(gps::Props,title::Str,x::Str,y::Str,w::Int,h::Int,lines::[GLine(Props,Str,[LinePoint])]))]):rows::[Row([Property],[Data([Property],EDBDisplay)])]) ->
-      Table(tps,Row[EDBDisplay](rps,[Data[EDBDisplay]([Prop('colspan',''+cols)],LineGraph(gps,title,x,y,cols*width,height,schoolTarget:astonTarget:lines))]):doubleUpRows(rows,cols));
-  }
-
-doubleUpRows(rows::[TRow[EDBDisplay]],cols::Int)::[TRow[EDBDisplay]] =
-  if length[TRow[EDBDisplay]](rows) > cols
-  then mergeRows(take[TRow[EDBDisplay]](rows,cols)):doubleUpRows(drop[TRow[EDBDisplay]](rows,cols),cols);
-  else mergeRows(rows):[ Row[EDBDisplay]([][Property],[Data[EDBDisplay]([][Property],fold[EDBDisplay]HTML('')) | i::Int <- length[TRow[EDBDisplay]](rows)..cols ]) ];
- 
-
-mergeRows(rows::[TRow[EDBDisplay]])::TRow[EDBDisplay] =
-  Row[EDBDisplay]([][Property],[ Data[EDBDisplay]([][Property],setLineGraphTitleSize(setLineGraphSize(dataValue(head[TData[EDBDisplay]](tableRowData(r))),width,height),8)) | r::TRow[EDBDisplay] <- rows]);
-
-setLineGraphSize(g::EDBDisplay,w::Int,h::Int)::EDBDisplay =
-  case g {
-    LineGraph(ps::Props,title::Str,x::Str,y::Str,ow::Int,oh::Int,lines::[LGLine]) ->
-      LineGraph(ps,title,x,y,w,h,lines);
-  }
-setLineGraphTitleSize(g::EDBDisplay,size::Int)::EDBDisplay =
-  case g {
-    LineGraph(ps::Props,title::Str,x::Str,y::Str,w::Int,h::Int,lines::[LGLine]) ->
-      LineGraph(Prop('titleSize',size+''):ps,title,x,y,w,h,lines);
-  }
-
-dataValue(d::TData[EDBDisplay])::EDBDisplay =
-  case d {
-    Data[EDBDisplay](ps::Props,e::EDBDisplay) -> e;
-  }
-
-tableRowData(r::TRow[EDBDisplay])::[TData[EDBDisplay]] =
-  case r {
-    Row[EDBDisplay](ps::Props,ds::[TData[EDBDisplay]]) -> ds;
-  }
-
-dlheTable()::EDBDisplay = Table([][Property],
-   [ Row[EDBDisplay]([][Property],[Data[EDBDisplay]([Prop('colspan',''+cols)],HTML(dlheInstructions))]) ] +
-   doubleUpRows([ Row[EDBDisplay]([][Property],[Data[EDBDisplay]([][Property],c)]) | c::EDBDisplay <- dlheCharts() ],cols));
-
-dlheCharts()::[EDBDisplay] =
-  reject[EDBDisplay](fun(g::EDBDisplay)::Bool
-    case g {
-      LineGraph(ps::Props,name::Str,x::Str,y::Str,w::Int,h::Int,[]) -> true;
-      g::EDBDisplay -> false;
-    },
-      map[JACSData,EDBDisplay](fun(j::JACSData)::EDBDisplay 
-    case j {
-      JACS(code::Int,name::Str,programmes::[[Str]]) ->
-        fold[EDBDisplay]LineGraph([][Property],name,'year','%',width,height,dlheLines(programmes,dlheData));
-    },programmesByJACSCode));
-
-dlheLines(programmes::[[Str]],d::[ExcelRow])::[LGLine] =
-  flatten[LGLine](
-    map[[Str],[LGLine]](fun(pnames::[Str])::[LGLine]
-      let names::[ExcelCell] = [ XStr(n) | n::Str <- pnames ]; in
-      let rows::[ExcelRow] = rowsContainingAny(names,d); 
-          removeAll0(points::[LinePoint])::[LinePoint] =
-            reject[LinePoint](fun(l::LinePoint)::Bool case l { LPoint(ps::Props,x::Int,y::Int) -> y = 0; },points);
-      in if rows = []
-         then []
-         else {
-           let values::[ExcelCell] = rowData(head[ExcelRow](rows)); 
-           // Expect rows to be in format:
-           //              2016-2017                2015-2016                 2014-2015                  2013-2014                      2012-2013
-           // Graduate% Unemployed% Base Graduate% Unemployed% Base Graduate% Unemployed% Base Graduate% Unemployed% Base   Graduate% Unemployed% Base
-           in [
-             GLine([][Property],'Graduate Level Employment '+pnames+'',removeAll0([
-               LPoint([][Property],2013,round(100.0*floatValue(nth[ExcelCell](values,13)))),
-               LPoint([][Property],2014,round(100.0*floatValue(nth[ExcelCell](values,10)))),
-               LPoint([][Property],2015,round(100.0*floatValue(nth[ExcelCell](values,7)))),
-               LPoint([][Property],2016,round(100.0*floatValue(nth[ExcelCell](values,4)))),
-               LPoint([][Property],2017,round(100.0*floatValue(nth[ExcelCell](values,1))))
-             ])),
-             GLine([][Property],'In Employment of Further Study '+pnames+'',removeAll0([
-               LPoint([][Property],2013,100-round(100.0*floatValue(nth[ExcelCell](values,14)))),
-               LPoint([][Property],2014,100-round(100.0*floatValue(nth[ExcelCell](values,11)))),
-               LPoint([][Property],2015,100-round(100.0*floatValue(nth[ExcelCell](values,8)))),
-               LPoint([][Property],2016,100-round(100.0*floatValue(nth[ExcelCell](values,5)))),
-               LPoint([][Property],2017,100-round(100.0*floatValue(nth[ExcelCell](values,2))))
-            ]))
-          ];
-         },programmes));
-
-mergeTables(t1::EDBDisplay,t2::EDBDisplay)::EDBDisplay = 
-  case t1,t2 {
-    Table(ps1::Props,rows1::[Row(Props,[Data(Props,EDBDisplay)])]),Table(ps2::Props,rows2::[Row(Props,[Data(Props,EDBDisplay)])]) ->
-      Table(ps1,rows1+rows2);
-  }
-
-  
-Act EDB { 
-  Show(Str,EDBDisplay);
-}
-
-edb::EDB = null[EDB];
-    
-  
-act main::Main {
-
-  Time(n::Int) -> {
-    try {
-      let tables::[EDBDisplay] = map[JACSData,EDBDisplay](fun(j::JACSData)::EDBDisplay 
-            case j {
-              JACS(code::Int,title::Str,programmes::[[Str]]) -> {
-                print[Str](title);
-                fold[EDBDisplay]Table([][Property],[ Row[EDBDisplay]([][Property],[Data[EDBDisplay]([][Property],graph)]) | graph::EDBDisplay <- graphs(questions,title,programmes) ]);
-              }
-            },programmesByJACSCode); in
-      let tables::[EDBDisplay] = [ transformTable(table) | table::EDBDisplay <- tables ]; in
-      let nsstable::EDBDisplay = fold[EDBDisplay]Table([][Property],[ Row[EDBDisplay]([][Property],[Data[EDBDisplay]([][Property],t)]) | t::EDBDisplay <- tables ]);
-      in 
-        edb <-Show('results',mergeTables(
-          Table([][Property],[
-            Row[EDBDisplay]([][Property],[Data[EDBDisplay]([Prop('colspan',''+cols)],HTML(instructions))]),
-            Row[EDBDisplay]([][Property],[Data[EDBDisplay]([Prop('colspan',''+cols)],programmeByJACSTable)]),
-            Row[EDBDisplay]([][Property],[Data[EDBDisplay]([Prop('colspan',''+cols)],nsstable)])
-          ]),
-          dlheTable()));
-      stopAll();
-    } catch {
-      x::Str -> print[Str](x);
-    }
-}
-}

@@ -1,7 +1,7 @@
-export dynamicVarsJExp, dynamicVarsJCommand, dynamicVarsJModule;
+export dynamicVarsJExp, dynamicVarsJCommand;
 
 import 
-  'esl/compiler/types.esl',
+  'esl/compiler/types.esl', 
   'esl/lists.esl';
 
 decName(d::JDeclaration)::Str =
@@ -11,23 +11,12 @@ decName(d::JDeclaration)::Str =
 
 fieldName(d::JFieldDef)::Str =
   case d {
-    JField(n::Str,t::JType,e::JExp) -> n;
+    JField(n::Str,t::JType,e::JExp) -> n; 
   }
 
 fieldJExp(d::JFieldDef)::JExp =
   case d {
     JField(n::Str,t::JType,e::JExp) -> e;
-  }
-
-dynamicVarsJModule(m::JMod)::Void =
-  case m {
-    JModule(n::Str,exports::[Str],imports::[Str],fs::[JFieldDef]) ->
-      for f::JFieldDef in fs do {
-        case f {
-          JField(name::Str,t::JType,e::JExp) ->
-            dynamicVarsJExp(e);
-        }
-      }
   }
 
 dynamicVarsJExp(x::JExp)::[Str] = { //print[Str]('dynamic exp = ' + x);
@@ -58,19 +47,22 @@ dynamicVarsJExp(x::JExp)::[Str] = { //print[Str]('dynamic exp = ' + x);
     JMapFun(v0::JExp,v1::JExp) -> dynamicVarsJExp(v0) + dynamicVarsJExp(v1);
     JFlatten(v0::JExp) -> dynamicVarsJExp(v0);
     JNot(v0::JExp) -> dynamicVarsJExp(v0);
-    JBehaviour(v0::[Str],v1::[JFieldDef],v2::JExp,v3::JExp,v4::JCommand) -> {
+    JBehaviour(v0::[Str],v1::[JFieldDef],methods,v2::JExp,v3::JExp,v4::JCommand) -> {
       flatten[Str](map[JFieldDef,[Str]](fun(d::JFieldDef)::[Str] dynamicVarsJFieldDef(d),v1)) +
+      flatten[Str](map[JMethodDef,[Str]](fun(d::JMethodDef)::[Str] dynamicVarsJMethodDef(d),methods)) +
       dynamicVarsJExp(v2) +
       dynamicVarsJExp(v3) +
       dynamicVarsJCommand(v4);
     }
-    JExtendedBehaviour(v0::[Str],parent::JExp,v1::[JFieldDef],v2::JExp,v3::JExp,v4::JCommand) -> {
+    JExtendedBehaviour(v0::[Str],parent::JExp,v1::[JFieldDef],methods,v2::JExp,v3::JExp,v4::JCommand) -> {
       dynamicVarsJExp(parent) +
       flatten[Str](map[JFieldDef,[Str]](fun(d::JFieldDef)::[Str] dynamicVarsJFieldDef(d),v1)) +
+      flatten[Str](map[JMethodDef,[Str]](fun(d::JMethodDef)::[Str] dynamicVarsJMethodDef(d),methods)) +
       dynamicVarsJExp(v2) +
       dynamicVarsJExp(v3) +
       dynamicVarsJCommand(v4);
     }
+    JMethodCall(name,args) -> flatten[Str](map[JExp,[Str]](fun(e::JExp)::[Str] dynamicVarsJExp(e),args));
     JNew(v0::JExp,v1::[JExp]) -> dynamicVarsJExp(v0) + flatten[Str](map[JExp,[Str]](fun(e::JExp)::[Str] dynamicVarsJExp(e),v1));
     JNewArray(v0::JExp) -> dynamicVarsJExp(v0);
     JNewJava(v0::Str,v1::[JExp]) -> flatten[Str](map[JExp,[Str]](fun(e::JExp)::[Str] dynamicVarsJExp(e),v1));
@@ -91,6 +83,11 @@ dynamicVarsJExp(x::JExp)::[Str] = { //print[Str]('dynamic exp = ' + x);
 dynamicVarsJFieldDef(d::JFieldDef)::[Str] =
   case d {
     JField(n::Str,t::JType,e::JExp) -> dynamicVarsJExp(e);
+  }
+
+dynamicVarsJMethodDef(m::JMethodDef)::[Str] =
+  case m {
+    JMethod(n,args,body) -> reject[Str](fun(n::Str)::Bool member[Str](n,map[JDeclaration,Str](decName,args)),dynamicVarsJCommand(body));
   }
 
 dynamicVarsJTermArm(t::JTermArm)::[Str] = 

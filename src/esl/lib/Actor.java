@@ -1,6 +1,7 @@
 package esl.lib;
 
 import java.io.Serializable;
+import static esl.lib.Lib.*;
 
 public class Actor implements Serializable {
 
@@ -11,8 +12,9 @@ public class Actor implements Serializable {
 	Actor								next;
 	Actor								previous;
 	boolean							isZombie	= false;
-	
-	public Actor() { }
+
+	public Actor() {
+	}
 
 	public ESLVal get(String name) {
 		return behaviour.get(name);
@@ -87,7 +89,7 @@ public class Actor implements Serializable {
 		return behaviour.start(this);
 	}
 
-	public void stop() { 
+	public void stop() {
 		behaviour.stop();
 	}
 
@@ -98,11 +100,11 @@ public class Actor implements Serializable {
 	public String toString() {
 		Actor p = getPrevious();
 		Actor n = getNext();
-		String s1 = (p== null) ? "null" : p.id+"";
-		String s2 = (n== null) ? "null" : n.id+"";
+		String s1 = (p == null) ? "null" : p.id + "";
+		String s2 = (n == null) ? "null" : n.id + "";
 		return "<actor " + getId() + "::" + getBehaviour().getName() + " previous = " + s1 + " next = " + s2 + ">";
 	}
-	
+
 	public Actor unlink() {
 		getPrevious().setNext(getNext());
 		getNext().setPrevious(getPrevious());

@@ -55,8 +55,20 @@ public class ESLParseResult implements ParseResult {
 		return parser;
 	}
 
-	public void add(ESLParser parser, Exception exception, int line, int offset, String message, int length) {
-		add(new ESLParserNotice(parser, line, offset, message, length));
+	public void addError(ESLParser parser, Exception exception, int line, int offset, String message, int length) {
+		add(new ESLParserNotice(parser, line, offset, message, length,ParserNotice.Level.ERROR));
+		this.exception = exception;
+		this.parser = parser;
+	}
+
+	public void addWarning(ESLParser parser, Exception exception, int line, int offset, String message, int length) {
+		add(new ESLParserNotice(parser, line, offset, message, length,ParserNotice.Level.WARNING));
+		this.exception = exception;
+		this.parser = parser;
+	}
+
+	public void addInfo(ESLParser parser, Exception exception, int line, int offset, String message, int length) {
+		add(new ESLParserNotice(parser, line, offset, message, length,ParserNotice.Level.INFO));
 		this.exception = exception;
 		this.parser = parser;
 	}

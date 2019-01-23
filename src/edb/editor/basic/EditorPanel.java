@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Stack;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
@@ -161,13 +162,15 @@ public class EditorPanel extends JPanel implements SearchListener, DocumentListe
 	private String									tokenizer;
 	private FindDialog							findDialog;
 	private ReplaceDialog						replaceDialog;
-	private FindToolBar							findToolBar			= new FindToolBar(this);
-	private ReplaceToolBar					replaceToolBar	= new ReplaceToolBar(this);
-	private OutputToolBar						outputToolBar		= new OutputToolBar(this);
-	private JMenu										searchMenu			= new JMenu("Search");
+	private FindToolBar							findToolBar				= new FindToolBar(this);
+	private ReplaceToolBar					replaceToolBar		= new ReplaceToolBar(this);
+	private JMenu										searchMenu				= new JMenu("Search");
 	private MenuProvider						menuProvider;
-	private RTextScrollPane					scrollPane			= null;
-	private boolean									changed					= false;
+	private RTextScrollPane					scrollPane				= null;
+	private boolean									changed						= false;
+	private OutputToolBar						outputToolBar			= new OutputToolBar(this);
+	private Stack<Integer>					backLocations			= new Stack<Integer>();
+	private Stack<Integer>					forwardLocations	= new Stack<Integer>();
 
 	public EditorPanel(Frame owner, MenuProvider menuProvider, int rows, int cols, String language, String tokenizer, Parser parser, FoldParser foldParser, LinkGenerator links) {
 		super(new BorderLayout());
@@ -229,6 +232,8 @@ public class EditorPanel extends JPanel implements SearchListener, DocumentListe
 
 	public void changedUpdate(DocumentEvent e) {
 		setDirty(true);
+		forwardLocations.clear();
+		backLocations.clear();
 	}
 
 	public RTextScrollPane getScrollPane() {
@@ -241,6 +246,14 @@ public class EditorPanel extends JPanel implements SearchListener, DocumentListe
 
 	public Document getDocument() {
 		return textArea.getDocument();
+	}
+
+	public Stack<Integer> getBackLocations() {
+		return backLocations;
+	}
+
+	public Stack<Integer> getForwardLocations() {
+		return forwardLocations;
 	}
 
 	public JPopupMenu getMenu(JPopupMenu menu) {
@@ -268,6 +281,10 @@ public class EditorPanel extends JPanel implements SearchListener, DocumentListe
 		statusBar.handleMessage(message);
 	}
 
+	public String getMessage() {
+		return statusBar.getMessage();
+	}
+
 	private void initTokens() {
 		AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance();
 		atmf.putMapping(language, tokenizer);
@@ -289,7 +306,6 @@ public class EditorPanel extends JPanel implements SearchListener, DocumentListe
 		scrollPane.getGutter().removeAllTrackingIcons();
 	}
 
-	@Override
 	public void searchEvent(SearchEvent e) {
 
 		SearchEvent.Type type = e.getType();

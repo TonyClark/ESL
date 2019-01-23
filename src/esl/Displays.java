@@ -2,346 +2,329 @@ package esl;
 import esl.lib.*;
 import static esl.lib.Lib.*;
 
-import java.util.function.Supplier;
 public class Displays {
   public static ESLVal getSelf() { return $null; }
   // static ESLVal edb = null;
-  public static ESLVal propValue = new ESLVal(new Function(new ESLVal("propValue"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal props = $args[0];
-  ESLVal n = $args[1];
-  {ESLVal _v87 = props;
-        
-        return $ndCase.apply(_v87,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            ESLVal $85 = $args[0];
-        ESLVal $86 = $args[1];
-        ESLVal $87 = $args[2];
-        ESLVal $84 = $args[3];
-        switch($86.termName) {
-              case "Prop": {ESLVal $89 = $86.termRef(0);
-                ESLVal $88 = $86.termRef(1);
-                
-                {ESLVal ps1 = $85;
-                
-                {ESLVal m = $89;
-                
-                {ESLVal v = $88;
-                
-                {ESLVal ps2 = $87;
-                
-                if(m.eql(n).boolVal)
-                return v;
-                else
-                  return $84.apply();
-              }
-              }
-              }
-              }
-              }
-              default: return $84.apply();
-            }
-          }
-        }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            return error(new ESLVal("case error at Pos(2206,2261)").add(ESLVal.list(_v87)));
-          }
-        }));
-      }
-    }
-  });
-  public static ESLVal hasProp = new ESLVal(new Function(new ESLVal("hasProp"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal props = $args[0];
-  ESLVal n = $args[1];
-  {ESLVal _v88 = props;
-        
-        return $ndCase.apply(_v88,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            ESLVal $91 = $args[0];
-        ESLVal $92 = $args[1];
-        ESLVal $93 = $args[2];
-        ESLVal $90 = $args[3];
-        switch($92.termName) {
-              case "Prop": {ESLVal $95 = $92.termRef(0);
-                ESLVal $94 = $92.termRef(1);
-                
-                {ESLVal ps1 = $91;
-                
-                {ESLVal m = $95;
-                
-                {ESLVal v = $94;
-                
-                {ESLVal ps2 = $93;
-                
-                if(m.eql(n).boolVal)
-                return $true;
-                else
-                  return $90.apply();
-              }
-              }
-              }
-              }
-              }
-              default: return $90.apply();
-            }
-          }
-        }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            {ESLVal _v97 = _v88;
+public static ESLVal propValue(ESLVal props,ESLVal n) {
+    
+    {ESLVal _v1649 = props;
+      
+      return $ndCase.apply(_v1649,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          ESLVal $2569 = $args[0];
+      ESLVal $2570 = $args[1];
+      ESLVal $2571 = $args[2];
+      ESLVal $2568 = $args[3];
+      switch($2570.termName) {
+            case "Prop": {ESLVal $2573 = $2570.termRef(0);
+              ESLVal $2572 = $2570.termRef(1);
               
-              return $false;
+              {ESLVal ps1 = $2569;
+              
+              {ESLVal m = $2573;
+              
+              {ESLVal v = $2572;
+              
+              {ESLVal ps2 = $2571;
+              
+              if(m.eql(n).boolVal)
+              return v;
+              else
+                return $2568.apply();
             }
-          }
-        }));
-      }
-    }
-  });
-  public static ESLVal setProp = new ESLVal(new Function(new ESLVal("setProp"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal props = $args[0];
-  ESLVal n = $args[1];
-  ESLVal v = $args[2];
-  {ESLVal _v89 = props;
-        
-        return $ndCase.apply(_v89,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            ESLVal $97 = $args[0];
-        ESLVal $98 = $args[1];
-        ESLVal $99 = $args[2];
-        ESLVal $96 = $args[3];
-        switch($98.termName) {
-              case "Prop": {ESLVal $101 = $98.termRef(0);
-                ESLVal $100 = $98.termRef(1);
-                
-                {ESLVal ps1 = $97;
-                
-                {ESLVal m = $101;
-                
-                {ESLVal v0 = $100;
-                
-                {ESLVal ps2 = $99;
-                
-                if(m.eql(n).boolVal)
-                return ps1.add(ESLVal.list(new ESLVal("Prop",n,v)).add(ps2));
-                else
-                  return $96.apply();
-              }
-              }
-              }
-              }
-              }
-              default: return $96.apply();
             }
+            }
+            }
+            }
+            default: return $2568.apply();
           }
-        }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
-          public ESLVal apply(ESLVal... $args) {
-            return error(new ESLVal("case error at Pos(2419,2497)").add(ESLVal.list(_v89)));
+        }
+      }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          return error(new ESLVal("case error at Pos(2272,2327)").add(ESLVal.list(_v1649)));
+        }
+      }));
+    }
+  }
+  public static ESLVal propValue = new ESLVal(new Function(new ESLVal("propValue"),null) { public ESLVal apply(ESLVal... args) { return propValue(args[0],args[1]); }});
+  public static ESLVal hasProp(ESLVal props,ESLVal n) {
+    
+    {ESLVal _v1650 = props;
+      
+      return $ndCase.apply(_v1650,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          ESLVal $2575 = $args[0];
+      ESLVal $2576 = $args[1];
+      ESLVal $2577 = $args[2];
+      ESLVal $2574 = $args[3];
+      switch($2576.termName) {
+            case "Prop": {ESLVal $2579 = $2576.termRef(0);
+              ESLVal $2578 = $2576.termRef(1);
+              
+              {ESLVal ps1 = $2575;
+              
+              {ESLVal m = $2579;
+              
+              {ESLVal v = $2578;
+              
+              {ESLVal ps2 = $2577;
+              
+              if(m.eql(n).boolVal)
+              return $true;
+              else
+                return $2574.apply();
+            }
+            }
+            }
+            }
+            }
+            default: return $2574.apply();
           }
-        }));
-      }
+        }
+      }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          {ESLVal _v1659 = _v1650;
+            
+            return $false;
+          }
+        }
+      }));
     }
-  });
-  public static ESLVal edgeSource = new ESLVal(new Function(new ESLVal("edgeSource"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal e = $args[0];
-  {ESLVal _v90 = e;
+  }
+  public static ESLVal hasProp = new ESLVal(new Function(new ESLVal("hasProp"),null) { public ESLVal apply(ESLVal... args) { return hasProp(args[0],args[1]); }});
+  public static ESLVal setProp(ESLVal props,ESLVal n,ESLVal v) {
+    
+    {ESLVal _v1651 = props;
+      
+      return $ndCase.apply(_v1651,ESLVal.list(new ESLVal("$selectMid",new ESLVal(new Function(new ESLVal("add"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          ESLVal $2581 = $args[0];
+      ESLVal $2582 = $args[1];
+      ESLVal $2583 = $args[2];
+      ESLVal $2580 = $args[3];
+      switch($2582.termName) {
+            case "Prop": {ESLVal $2585 = $2582.termRef(0);
+              ESLVal $2584 = $2582.termRef(1);
+              
+              {ESLVal ps1 = $2581;
+              
+              {ESLVal m = $2585;
+              
+              {ESLVal v0 = $2584;
+              
+              {ESLVal ps2 = $2583;
+              
+              if(m.eql(n).boolVal)
+              return ps1.add(ESLVal.list(new ESLVal("Prop",n,v)).add(ps2));
+              else
+                return $2580.apply();
+            }
+            }
+            }
+            }
+            }
+            default: return $2580.apply();
+          }
+        }
+      }))),new ESLVal(new Function(new ESLVal("listFail"),getSelf()) {
+        public ESLVal apply(ESLVal... $args) {
+          return error(new ESLVal("case error at Pos(2485,2563)").add(ESLVal.list(_v1651)));
+        }
+      }));
+    }
+  }
+  public static ESLVal setProp = new ESLVal(new Function(new ESLVal("setProp"),null) { public ESLVal apply(ESLVal... args) { return setProp(args[0],args[1],args[2]); }});
+  public static ESLVal edgeSource(ESLVal e) {
+    
+    {ESLVal _v1652 = e;
+      
+      switch(_v1652.termName) {
+      case "Edge": {ESLVal $2589 = _v1652.termRef(0);
+        ESLVal $2588 = _v1652.termRef(1);
+        ESLVal $2587 = _v1652.termRef(2);
+        ESLVal $2586 = _v1652.termRef(3);
         
-        switch(_v90.termName) {
-        case "Edge": {ESLVal $105 = _v90.termRef(0);
-          ESLVal $104 = _v90.termRef(1);
-          ESLVal $103 = _v90.termRef(2);
-          ESLVal $102 = _v90.termRef(3);
-          
-          {ESLVal props = $105;
-          
-          {ESLVal source = $104;
-          
-          {ESLVal target = $103;
-          
-          {ESLVal display = $102;
-          
-          return source;
-        }
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(3349,3404)").add(ESLVal.list(_v90)));
-      }
-      }
-    }
-  });
-  public static ESLVal edgeTarget = new ESLVal(new Function(new ESLVal("edgeTarget"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal e = $args[0];
-  {ESLVal _v91 = e;
+        {ESLVal props = $2589;
         
-        switch(_v91.termName) {
-        case "Edge": {ESLVal $109 = _v91.termRef(0);
-          ESLVal $108 = _v91.termRef(1);
-          ESLVal $107 = _v91.termRef(2);
-          ESLVal $106 = _v91.termRef(3);
-          
-          {ESLVal props = $109;
-          
-          {ESLVal source = $108;
-          
-          {ESLVal target = $107;
-          
-          {ESLVal display = $106;
-          
-          return target;
-        }
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(3448,3503)").add(ESLVal.list(_v91)));
-      }
-      }
-    }
-  });
-  public static ESLVal nodeId = new ESLVal(new Function(new ESLVal("nodeId"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal n = $args[0];
-  {ESLVal _v92 = n;
+        {ESLVal source = $2588;
         
-        switch(_v92.termName) {
-        case "Node": {ESLVal $112 = _v92.termRef(0);
-          ESLVal $111 = _v92.termRef(1);
-          ESLVal $110 = _v92.termRef(2);
-          
-          {ESLVal props = $112;
-          
-          {ESLVal id = $111;
-          
-          {ESLVal display = $110;
-          
-          return id;
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(3547,3587)").add(ESLVal.list(_v92)));
-      }
-      }
-    }
-  });
-  public static ESLVal nodeProps = new ESLVal(new Function(new ESLVal("nodeProps"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal n = $args[0];
-  {ESLVal _v93 = n;
+        {ESLVal target = $2587;
         
-        switch(_v93.termName) {
-        case "Node": {ESLVal $115 = _v93.termRef(0);
-          ESLVal $114 = _v93.termRef(1);
-          ESLVal $113 = _v93.termRef(2);
-          
-          {ESLVal props = $115;
-          
-          {ESLVal id = $114;
-          
-          {ESLVal display = $113;
-          
-          return props;
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(3631,3674)").add(ESLVal.list(_v93)));
-      }
-      }
-    }
-  });
-  public static ESLVal setNodeProps = new ESLVal(new Function(new ESLVal("setNodeProps"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal n = $args[0];
-  ESLVal props = $args[1];
-  {ESLVal _v94 = n;
+        {ESLVal display = $2586;
         
-        switch(_v94.termName) {
-        case "Node": {ESLVal $118 = _v94.termRef(0);
-          ESLVal $117 = _v94.termRef(1);
-          ESLVal $116 = _v94.termRef(2);
-          
-          {ESLVal props0 = $118;
-          
-          {ESLVal id = $117;
-          
-          {ESLVal display = $116;
-          
-          return new ESLVal("Node",props,id,display);
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(3718,3779)").add(ESLVal.list(_v94)));
+        return source;
       }
       }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(3415,3470)").add(ESLVal.list(_v1652)));
     }
-  });
-  public static ESLVal edgeProps = new ESLVal(new Function(new ESLVal("edgeProps"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal e = $args[0];
-  {ESLVal _v95 = e;
+    }
+  }
+  public static ESLVal edgeSource = new ESLVal(new Function(new ESLVal("edgeSource"),null) { public ESLVal apply(ESLVal... args) { return edgeSource(args[0]); }});
+  public static ESLVal edgeTarget(ESLVal e) {
+    
+    {ESLVal _v1653 = e;
+      
+      switch(_v1653.termName) {
+      case "Edge": {ESLVal $2593 = _v1653.termRef(0);
+        ESLVal $2592 = _v1653.termRef(1);
+        ESLVal $2591 = _v1653.termRef(2);
+        ESLVal $2590 = _v1653.termRef(3);
         
-        switch(_v95.termName) {
-        case "Edge": {ESLVal $122 = _v95.termRef(0);
-          ESLVal $121 = _v95.termRef(1);
-          ESLVal $120 = _v95.termRef(2);
-          ESLVal $119 = _v95.termRef(3);
-          
-          {ESLVal props = $122;
-          
-          {ESLVal source = $121;
-          
-          {ESLVal target = $120;
-          
-          {ESLVal display = $119;
-          
-          return props;
-        }
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(3823,3877)").add(ESLVal.list(_v95)));
-      }
-      }
-    }
-  });
-  public static ESLVal setEdgeProps = new ESLVal(new Function(new ESLVal("setEdgeProps"),getSelf()) {
-    public ESLVal apply(ESLVal... $args) {
-      ESLVal e = $args[0];
-  ESLVal props = $args[1];
-  {ESLVal _v96 = e;
+        {ESLVal props = $2593;
         
-        switch(_v96.termName) {
-        case "Edge": {ESLVal $126 = _v96.termRef(0);
-          ESLVal $125 = _v96.termRef(1);
-          ESLVal $124 = _v96.termRef(2);
-          ESLVal $123 = _v96.termRef(3);
-          
-          {ESLVal props0 = $126;
-          
-          {ESLVal source = $125;
-          
-          {ESLVal target = $124;
-          
-          {ESLVal display = $123;
-          
-          return new ESLVal("Edge",props,source,target,display);
-        }
-        }
-        }
-        }
-        }
-        default: return error(new ESLVal("case error at Pos(3921,4004)").add(ESLVal.list(_v96)));
+        {ESLVal source = $2592;
+        
+        {ESLVal target = $2591;
+        
+        {ESLVal display = $2590;
+        
+        return target;
       }
       }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(3514,3569)").add(ESLVal.list(_v1653)));
     }
-  });
+    }
+  }
+  public static ESLVal edgeTarget = new ESLVal(new Function(new ESLVal("edgeTarget"),null) { public ESLVal apply(ESLVal... args) { return edgeTarget(args[0]); }});
+  public static ESLVal nodeId(ESLVal n) {
+    
+    {ESLVal _v1654 = n;
+      
+      switch(_v1654.termName) {
+      case "Node": {ESLVal $2596 = _v1654.termRef(0);
+        ESLVal $2595 = _v1654.termRef(1);
+        ESLVal $2594 = _v1654.termRef(2);
+        
+        {ESLVal props = $2596;
+        
+        {ESLVal id = $2595;
+        
+        {ESLVal display = $2594;
+        
+        return id;
+      }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(3613,3653)").add(ESLVal.list(_v1654)));
+    }
+    }
+  }
+  public static ESLVal nodeId = new ESLVal(new Function(new ESLVal("nodeId"),null) { public ESLVal apply(ESLVal... args) { return nodeId(args[0]); }});
+  public static ESLVal nodeProps(ESLVal n) {
+    
+    {ESLVal _v1655 = n;
+      
+      switch(_v1655.termName) {
+      case "Node": {ESLVal $2599 = _v1655.termRef(0);
+        ESLVal $2598 = _v1655.termRef(1);
+        ESLVal $2597 = _v1655.termRef(2);
+        
+        {ESLVal props = $2599;
+        
+        {ESLVal id = $2598;
+        
+        {ESLVal display = $2597;
+        
+        return props;
+      }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(3697,3740)").add(ESLVal.list(_v1655)));
+    }
+    }
+  }
+  public static ESLVal nodeProps = new ESLVal(new Function(new ESLVal("nodeProps"),null) { public ESLVal apply(ESLVal... args) { return nodeProps(args[0]); }});
+  public static ESLVal setNodeProps(ESLVal n,ESLVal props) {
+    
+    {ESLVal _v1656 = n;
+      
+      switch(_v1656.termName) {
+      case "Node": {ESLVal $2602 = _v1656.termRef(0);
+        ESLVal $2601 = _v1656.termRef(1);
+        ESLVal $2600 = _v1656.termRef(2);
+        
+        {ESLVal props0 = $2602;
+        
+        {ESLVal id = $2601;
+        
+        {ESLVal display = $2600;
+        
+        return new ESLVal("Node",props,id,display);
+      }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(3784,3845)").add(ESLVal.list(_v1656)));
+    }
+    }
+  }
+  public static ESLVal setNodeProps = new ESLVal(new Function(new ESLVal("setNodeProps"),null) { public ESLVal apply(ESLVal... args) { return setNodeProps(args[0],args[1]); }});
+  public static ESLVal edgeProps(ESLVal e) {
+    
+    {ESLVal _v1657 = e;
+      
+      switch(_v1657.termName) {
+      case "Edge": {ESLVal $2606 = _v1657.termRef(0);
+        ESLVal $2605 = _v1657.termRef(1);
+        ESLVal $2604 = _v1657.termRef(2);
+        ESLVal $2603 = _v1657.termRef(3);
+        
+        {ESLVal props = $2606;
+        
+        {ESLVal source = $2605;
+        
+        {ESLVal target = $2604;
+        
+        {ESLVal display = $2603;
+        
+        return props;
+      }
+      }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(3889,3943)").add(ESLVal.list(_v1657)));
+    }
+    }
+  }
+  public static ESLVal edgeProps = new ESLVal(new Function(new ESLVal("edgeProps"),null) { public ESLVal apply(ESLVal... args) { return edgeProps(args[0]); }});
+  public static ESLVal setEdgeProps(ESLVal e,ESLVal props) {
+    
+    {ESLVal _v1658 = e;
+      
+      switch(_v1658.termName) {
+      case "Edge": {ESLVal $2610 = _v1658.termRef(0);
+        ESLVal $2609 = _v1658.termRef(1);
+        ESLVal $2608 = _v1658.termRef(2);
+        ESLVal $2607 = _v1658.termRef(3);
+        
+        {ESLVal props0 = $2610;
+        
+        {ESLVal source = $2609;
+        
+        {ESLVal target = $2608;
+        
+        {ESLVal display = $2607;
+        
+        return new ESLVal("Edge",props,source,target,display);
+      }
+      }
+      }
+      }
+      }
+      default: return error(new ESLVal("case error at Pos(3987,4070)").add(ESLVal.list(_v1658)));
+    }
+    }
+  }
+  public static ESLVal setEdgeProps = new ESLVal(new Function(new ESLVal("setEdgeProps"),null) { public ESLVal apply(ESLVal... args) { return setEdgeProps(args[0],args[1]); }});
 public static void main(String[] args) {
   }
 }

@@ -1,3 +1,13 @@
+/********************************************************************************************************************************
+ *                                                                                                                              *
+ *                                                 Code Generation                                                              *
+ *                                                 ================                                                             *
+ *                                                                                                                              *
+ *   A Java module is translated to a source code string which can then be written out into a file and compiled using the Java  *
+ *   compiler. String translators for ESL syntax are defined for diagnosics where necessary.                                    *
+ *                                                                                                                              *
+ ********************************************************************************************************************************/
+ 
 export main, ppExp, ppExps, ppArm, ppArms, ppJModule, ppType, ppTypes, ppTypeEnv;
  
 import 
@@ -7,8 +17,6 @@ import
   'esl/compiler/strings.esl';
 
 type Main = Act { Time(Int); } 
-
-p0::Loc = Pos(0,0);
 
 indentStr(indent::Int)::Str =
   if indent = 0
@@ -50,6 +58,7 @@ ppType(t::Type)::Str =
     IntType(l::Loc) -> 'Int';
     ListType(l::Loc,t::Type) -> '[' + ppType(t) + ']';
     NullType(l::Loc) -> 'Null';
+    ObserverType(l::Loc,s::Type,m::Type) -> 'Observer[' + ppType(s) + ',' + ppType(m) + ']';
     RecType(l::Loc,n::Str,t::Type) -> 'rec ' + n + '.' + ppType(t);
     RecordType(l::Loc,fs::[TDec])  -> '{' + fs + '}';
     StrType(l::Loc) -> 'Str';
@@ -304,15 +313,15 @@ getImport(sourceFile::Str)::Str =
 
 ppJModule(name::Str,p::Str,m::JMod)::Str =
   case m {
-    JModule(n::Str,exports::[Str],imports::[Str],fields::[JFieldDef]) ->
+    JModule(n::Str,exports::[Str],imports::[Str],methods::[JMethodDef],fields::[JFieldDef]) ->
       'package ' + p + ';' + nl(0) +
       'import esl.lib.*;' + nl(0) + 
       'import static esl.lib.Lib.*;' + nl(0) +
       ppJoin(0,[  getImport(i)  | i::Str <- imports ]) + nl(0) + 
-      'import java.util.function.Supplier;' + nl(0) + 
       'public class ' + name + ' {' + nl(2) +
         'public static ESLVal getSelf() { return $null; }' + nl(2) +
          ppJoin(2,map[JFieldDef,Str](fun(f::JFieldDef)::Str ppJModuleField(2,exports,f),fields)) + nl(0) +
+         ppJoin(2,map[JMethodDef,Str](fun(m::JMethodDef)::Str ppJModuleMethod(2,exports,[ n | JField(n,t,e) <- fields ],m),methods)) + nl(0) +
          'public static void main(String[] args) {' + nl(2) +  
             (if member[Str]('main',exports) then '  newActor(main,new ESLVal(new Actor())); ' + nl(2) else '') + 
          '}' + nl(0) + 
@@ -325,6 +334,49 @@ ppJModuleField(indent::Int,exports::[Str], f::JFieldDef)::Str =
     JField(n::Str,t::JType,e::JExp) ->
       (if member[Str](n,exports) then 'public ' else 'private ') +
       'static ESLVal ' + n + ' = ' + ppJExp(indent,[],e) + ';';
+  }
+
+ppJModuleMethod(indent::Int,exports::[Str],fieldNames::[Str],method::JMethodDef)::Str =
+  case method {
+    JMethod(name,args,body) ->
+      // Generate both a method and a field. Careful to generate arrays for the free dynamics.
+      // Note that fields don't need to be arrays, locals that are updated must be arrays...
+      let freeDynamics::[Str] = removeAll[Str](fieldNames,dynamicVarsJCommand(body)); in
+      let argDecs::Str = joinBy(#,,[ if member[Str](n,freeDynamics) then pJDec(indent,JDec('$raw_' + n,t)) else pJDec(indent,JDec(n,t)) | JDec(n,t) <- args ]);
+          freeNames::[Str] = [ n | JDec(n,t) <- args, ? member[Str](n,freeDynamics) ]; in
+      let freeDecs::Str = joinBy(#\space,[ 'ESLVal[] ' + n + ' = new ESLVal[]{$raw_' + n + '};' | n <- freeNames ]);
+      in {
+        (if member[Str](name,exports) then 'public ' else 'private ') + 'static ESLVal ' + name + '(' + argDecs + ') {' + nl(indent+2) + freeDecs + nl(indent+2) + 
+          ppJCommand(indent+2,freeDynamics,body) + nl(indent) +
+        '}' + nl(indent) +
+        (if member[Str](name,exports) then 'public ' else 'private ') +
+            'static ESLVal ' + name + ' = new ESLVal(new Function(' + ppJExp(indent,[],JConstExp(JConstStr(name))) + ',null) { ' + 
+             'public ESLVal apply(ESLVal... args) { ' +
+                'return ' + name + '(' + joinBy(#,,[ 'args[' + i + ']' | i <- 0.. length[JDeclaration](args) ]) + '); }});';
+      }
+  }
+  
+ppJBehaviourMethod(indent::Int,dynamics::[Str],method::JMethodDef)::Str =
+  case method {
+    JMethod(name,args,body) ->
+      // Generate both a method and a field. Careful to generate arrays for the free dynamics...
+      let freeDynamics::[Str] = dynamicVarsJCommand(body);
+          argNames::[Str] = [ n | JDec(n::Str,t::JType) <- args ]; in
+      let boundDynamics::[Str] = [ d | d::Str <- argNames, ?(member[Str](d,freeDynamics)) ]; in
+      let dynamics::[Str] = [ n | n <- dynamics, ?(not(member[Str](n,removeAll[Str](boundDynamics,argNames)))) ]; in
+      let argDecs::Str = joinBy(#,,[ if member[Str](n,boundDynamics) then pJDec(indent,JDec('$raw_' + n,t)) else pJDec(indent,JDec(n,t)) | JDec(n,t) <- args ]);
+          freeNames::[Str] = [ n | n <- argNames, ? member[Str](n,boundDynamics) ]; in
+      let freeDecs::Str = joinBy(#\space,[ 'ESLVal[] ' + n + ' = new ESLVal[]{$raw_' + n + '};' | n <- freeNames ]);
+      in { 
+        'ESLVal ' + name + '(' + argDecs + ') {' +
+          //'System.err.println("call ' + name + '");' + 
+          nl(indent+2) + freeDecs + nl(indent+2) + 
+          ppJCommand(indent+2,boundDynamics+dynamics,body) + nl(indent) +
+        '}' + nl(indent) +
+        'ESLVal ' + name + ' = new ESLVal(new Function(' + ppJExp(indent,[],JConstExp(JConstStr(name))) + ',null) { ' + 
+             'public ESLVal apply(ESLVal... args) { ' +
+                'return ' + name + '(' + joinBy(#,,[ 'args[' + i + ']' | i <- 0.. length[JDeclaration](args) ]) + '); }});';
+      }
   }
 
 ppJExps(indent::Int,dynamics::[Str],exps::[JExp],sep::Str)::Str =
@@ -348,19 +400,20 @@ pJDec(indent::Int,d::JDeclaration)::Str =
 
 ppJExp(indent::Int,dynamics::[Str],e::JExp)::Str = { //print[Str]('ppJExp ' + e);
   case e {
-    JArrayRef(a::JExp,i::JExp) -> ppJExp(indent,dynamics,a) + '.array[' + ppJExp(indent,dynamics,i) + '.intVal]';
-    JArrayUpdate(a::JExp,i::JExp,v::JExp) -> ppJExp(indent,dynamics,a) + '.array[' + ppJExp(indent,dynamics,i) + '.intVal] = ' + ppJExp(indent,dynamics,v);
-    JBecome(e::JExp,[][JExp]) -> 'become(' + ppJExp(indent+2,dynamics,e) + ',getSelf())';
-    JBecome(e::JExp,es::[JExp]) -> 'become(' + ppJExp(indent+2,dynamics,e) + ',getSelf(),' +  ppJExps(indent,dynamics,es,',') + ')';
-    JConstExp(JConstInt(0)) -> '$zero';
-    JConstExp(JConstInt(1)) -> '$one';
-    JConstExp(JConstInt(n::Int)) -> 'new ESLVal('+n+')';
-    JConstExp(JConstBool(true)) -> '$true';
-    JConstExp(JConstBool(false)) -> '$false';
-    JConstExp(JConstStr(s::Str)) -> 'new ESLVal("'+ javaString(s) + '")';
-    JConstExp(JConstDouble(d::Float)) -> 'new ESLVal('+d+')';
-    JNot(e::JExp) -> ppJExp(indent,dynamics,e) + '.not()';
-    JNil(t::JType) -> '$nil';
+    JArrayRef(a,i)                                    -> ppJExp(indent,dynamics,a) + '.array[' + ppJExp(indent,dynamics,i) + '.intVal]';
+    JArrayUpdate(a,i,v)                               -> ppJExp(indent,dynamics,a) + '.array[' + ppJExp(indent,dynamics,i) + '.intVal] = ' + ppJExp(indent,dynamics,v);
+    JBecome(e,[])                                     -> 'become(' + ppJExp(indent+2,dynamics,e) + ',getSelf())';
+    JBecome(e,es)                                     -> 'become(' + ppJExp(indent+2,dynamics,e) + ',getSelf(),' +  ppJExps(indent,dynamics,es,',') + ')';
+    JConstExp(JConstInt(0))                           -> '$zero';
+    JConstExp(JConstInt(1))                           -> '$one';
+    JConstExp(JConstInt(n))                           -> 'new ESLVal('+n+')';
+    JConstExp(JConstBool(true))                       -> '$true';
+    JConstExp(JConstBool(false))                      -> '$false';
+    JConstExp(JConstStr(s::Str))                      -> 'new ESLVal("'+ javaString(s) + '")';
+    JConstExp(JConstDouble(d::Float))                 -> 'new ESLVal('+d+')';
+    JNot(e)                                           -> ppJExp(indent,dynamics,e) + '.not()';
+    JNil(t)                                           -> '$nil';
+    JList(t,[])                                       -> '$nil';
     JList(t::JType,es::[JExp]) -> ppJListExp(indent,dynamics,t,es);
     JSet(t::JType,es::[JExp]) -> ppJSetExp(indent,dynamics,t,es);
     JBag(t::JType,es::[JExp]) -> ppJBagExp(indent,dynamics,t,es);
@@ -372,23 +425,25 @@ ppJExp(indent::Int,dynamics::[Str],e::JExp)::Str = { //print[Str]('ppJExp ' + e)
     JBinExp(e1::JExp,'cons',e2::JExp) -> ppJExp(indent,dynamics,e2) + '.cons(' + ppJExp(indent,dynamics,e1) + ')';
     JBinExp(e1::JExp,op::Str,e2::JExp) -> ppJExp(indent,dynamics,e1) + '.' + op + '(' + ppJExp(indent,dynamics,e2) + ')';
     JCmpExp(c) -> ppJCmp(indent,dynamics,c);
+    JMethodCall(name,args) -> name + '(' + ppJExps(indent,dynamics,args,',') + ')';
     JNull -> '$null';
     JNow -> 'now()';
     JVar(n::Str,t::JType) when member[Str](n,dynamics) -> n + '[0]'; 
     JVar(n::Str,t::JType) -> n; 
     JError(e::JExp) -> 'error(' + ppJExp(indent,dynamics,e) + ')';
     JApply(e::JExp,es::[JExp]) -> ppJExp(indent,dynamics,e) + '.apply(' + ppJExps(indent,dynamics,es,',') + ')';
-    JCommandExp(c::JCommand,t::JType) -> '((Supplier<ESLVal>)() -> { ' + nl(indent+2) + 
+    JCommandExp(c::JCommand,t::JType) -> 'new SerializableSupplier<ESLVal>() { public ESLVal get() { ' + nl(indent+2) + 
       ppJCommand(indent+2,dynamics,c) + nl(indent) +  
-    '}).get()';
+    '}}.get()';
     JIfExp(e::JExp,e1::JExp,e2::JExp) -> '(' + ppJExp(indent,dynamics,e) + '.boolVal) ? (' + ppJExp(indent,dynamics,e1) + ') : (' + ppJExp(indent,dynamics,e2) + ')';
     JHead(e::JExp) -> ppJExp(indent,dynamics,e) + '.head()';
     JTail(e::JExp) -> ppJExp(indent,dynamics,e) + '.tail()';
     JTermRef(e::JExp,n::Int) -> ppJExp(indent,dynamics,e) + '.termRef(' + n + ')';
     JMapFun(f::JExp,l::JExp) -> ppJExp(indent,dynamics,f) + '.map(' + ppJExp(indent,dynamics,l) + ')';
     JFlatten(ls::JExp) -> ppJExp(indent,dynamics,ls) + '.flatten()';
-    JBehaviour(es::[Str],fs::[JFieldDef],init::JExp,JFun(n::JExp,args::[JDeclaration],t::JType,body::JCommand),time::JCommand) ->
+    JBehaviour(es::[Str],fs::[JFieldDef],methods,init::JExp,JFun(n::JExp,args::[JDeclaration],t::JType,body::JCommand),time::JCommand) ->
       'new ESLVal(new BehaviourAdapter(' + (if time = JBlock([]) then 'false' else 'true') + ',getSelf(),' + ppJExp(indent,dynamics,n) + ') {' + nl(indent+2) +
+        ppJoin(2,map[JMethodDef,Str](fun(m::JMethodDef)::Str ppJBehaviourMethod(2,dynamics,m),methods)) + nl(0) +
         ppJFields(indent+2,dynamics,fs) + nl(indent+2) + 
         'public ESLVal handle(ESLVal $m) {' + ppJCommand(indent+2,dynamics,body) + '}' + nl(indent+2) +
         'public ESLVal get(String name) {' + nl(indent+4) +
@@ -404,8 +459,9 @@ ppJExp(indent::Int,dynamics::[Str],e::JExp)::Str = { //print[Str]('ppJExp ' + e)
           'return ' + ppJExp(indent+6,dynamics,init) + ';' + nl(indent+2) +
         '}' + nl(indent) +
       '})';
-    JExtendedBehaviour(es::[Str],parent::JExp,fs::[JFieldDef],init::JExp,JFun(n::JExp,args::[JDeclaration],t::JType,body::JCommand),time::JCommand) ->
+    JExtendedBehaviour(es::[Str],parent::JExp,fs::[JFieldDef],methods,init::JExp,JFun(n::JExp,args::[JDeclaration],t::JType,body::JCommand),time::JCommand) ->
       'new ESLVal(new BehaviourAdapter(' + ppBehaviourParent(indent,dynamics,parent) + ',' + (if time = JBlock([]) then 'false' else 'true') + ',getSelf(),' + ppJExp(indent,dynamics,n) + ') {' + nl(indent+2) +
+        ppJoin(2,map[JMethodDef,Str](fun(m::JMethodDef)::Str ppJBehaviourMethod(2,dynamics,m),methods)) + nl(0) +
         ppJFields(indent+2,dynamics,fs) + nl(indent+2) + 
         'public ESLVal handle(ESLVal $m) {' + 
           ppJCommand(indent+2,dynamics,body) + 
@@ -474,7 +530,7 @@ ppJCmp(indent::Int,dynamics::[Str],c::JCmp)::Str =
           '}';
       }
   in case c {
-    JCmpOuter(n,e,c) -> 'new java.util.function.Function<ESLVal,ESLVal>() {' + nl(indent+2) +
+    JCmpOuter(n,e,c) -> 'new SerializableFunction<ESLVal,ESLVal>() {' + nl(indent+2) +
       'public ESLVal apply(ESLVal $l0) {' + nl(indent+4) +
         'ESLVal $a = $nil;' + nl(indent+4) + 
         'java.util.Vector<ESLVal> $v = new java.util.Vector<ESLVal>();' + nl(indent+4) +
@@ -500,14 +556,12 @@ probFun(e::JExp)::JExp = JFun(JConstExp(JConstStr('probFun')),[],null[JType],JRe
 ppJFun(indent::Int,dynamics::[Str],n::JExp,args::[JDeclaration],t::JType,body::JCommand)::Str = {
   let freeDynamics::[Str] = dynamicVarsJCommand(body);
       argNames::[Str] = [ n | JDec(n::Str,t::JType) <- args ]; in
-  let boundDynamics::[Str] = [ d | d::Str <- argNames, ?(member[Str](d,freeDynamics)) ]; in
-  let dom::[JType] = [ t | JDec(n::Str,t::JType) <- args ];
-      ran::JType = t; 
+  let boundDynamics::[Str] = [ d | d::Str <- argNames, ?(member[Str](d,freeDynamics)) ]; 
   in  {
     'new ESLVal(new Function(' + ppJExp(indent,dynamics,n) + ',getSelf()) {' + nl(indent+2) +
         'public ESLVal apply(ESLVal... $args) {' + nl(indent+4) + 
            ppFunArgs(indent,0,args,boundDynamics) + 
-           ppJCommand(indent+4,boundDynamics + [ d | d::Str <- dynamics, ?(not(member[Str](d,argNames))) ],body) + nl(indent+2) + 
+           ppJCommand(indent+4,boundDynamics + [n | n <- dynamics, ?not(member[Str](n,removeAll[Str](boundDynamics,argNames))) ],body) + nl(indent+2) + 
          '}' + nl(indent) +
       '})';
   }
@@ -603,8 +657,8 @@ ppJParFields(indent::Int,dynamics::[Str],bs::[JFieldDef])::Str =
     doVals(vals::[JExp])::Str =
       case vals {
         [] -> '';
-        [v] -> '() -> ' + ppJExp(indent,dynamics,v);
-        v:vs -> '() -> ' + ppJExp(indent,dynamics,v) + ',' + doVals(vs);
+        [v] -> 'new SerializableSupplier<ESLVal>() { public ESLVal get() { return ' + ppJExp(indent,dynamics,v) + '; }}';
+        v:vs -> 'new SerializableSupplier<ESLVal>() { public ESLVal get() { return ' + ppJExp(indent,dynamics,v) + '; }},' + doVals(vs);
       }
     bindNames(ns::[Str],i::Int)::Str =
       case ns {
@@ -612,7 +666,7 @@ ppJParFields(indent::Int,dynamics::[Str],bs::[JFieldDef])::Str =
         n:ns when member[Str](n,dynamics) -> 'ESLVal[] ' + n + '= new ESLVal[]{$p[' + i + ']};' + nl(indent) + bindNames(ns,i+1);
         n:ns -> 'ESLVal ' + n + '= $p[' + i + '];' + nl(indent) + bindNames(ns,i+1);
       }
-  in 'ESLVal[] $p = plet(new Supplier[]{' + doVals(vals) + '});' + nl(indent) + bindNames(names,0);
+  in 'ESLVal[] $p = plet(new SerializableSupplier[]{' + doVals(vals) + '});' + nl(indent) + bindNames(names,0);
   
 ppJFields(indent::Int,dynamics::[Str],bs::[JFieldDef])::Str = 
   case bs {
@@ -620,17 +674,12 @@ ppJFields(indent::Int,dynamics::[Str],bs::[JFieldDef])::Str =
     f::JFieldDef:bs::[JFieldDef] -> ppFieldDef(indent,dynamics,f) + nl(indent) + ppJFields(indent,dynamics,bs);
   }
 
-ppFieldDef(indent::Int,dynamics::[Str],f::JFieldDef)::Str =
+ppFieldDef(indent::Int,dynamics::[Str],f::JFieldDef)::Str = { 
   case f {
     JField(n::Str,t::JType,e::JExp) when member[Str](n,dynamics) ->  'ESLVal[] ' + n + ' = new ESLVal[]{' + ppJExp(indent+2,dynamics,e) + '};';
     JField(n::Str,t::JType,e::JExp) -> 'ESLVal ' + n + ' = ' + ppJExp(indent+2,dynamics,e) + ';';
   }
-  
-ppJTerm(indent::Int,dynamics::[Str],n::Str,es::[JExp])::Str =
-  case es {
-    [][JExp] ->  'new Term("' + n + '")';
-    es::[JExp] -> 'new Term("' + n + '",' + ppJExps(indent,dynamics,es,',') + ')';
-  }
+}
 
 ppJListExp(indent::Int,dynamics::[Str],t::JType,es::[JExp])::Str =
   'ESLVal.list(' + ppJExps(indent,dynamics,es,',') + ')';

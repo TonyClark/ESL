@@ -19,10 +19,12 @@ Act EDB {
     button::(Str,Str,Str,Str,()->Void)->Void; 
     getProperty::Forall[T] (Str) -> T;
     setProperty::Forall[T] (Str,T) -> T;
+    hasProperty::Forall[T] (Str) -> Bool;
   Show(Str,Display);
   Filmstrip(Str,[Display]);
   AddBrowserListener(BrowserListener);
   Edit(EditType);
+  RunJava(Str,Str,Str);
 }
 
 edb::EDB = null[EDB];

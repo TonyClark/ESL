@@ -51,7 +51,7 @@ import values.Located;
 import values.LocationContainer;
 import xpl.Interpreter;
 
-@BoaConstructor(fields = { "path", "name", "exports", "imports", "params", "state", "defs" })
+@BoaConstructor(fields = { "path", "name", "exports", "imports", "decs", "state", "defs" })
 
 public class Module implements TreeNode, LocationContainer, DecContainer {
 
@@ -127,7 +127,7 @@ public class Module implements TreeNode, LocationContainer, DecContainer {
 		shell.imports = module.imports;
 		shell.exports = module.exports;
 		shell.defs = module.defs;
-		shell.params = module.params;
+		shell.decs = module.decs;
 		shell.state = module.state;
 		shell.configName = module.configName;
 		shell.resolve();
@@ -145,7 +145,7 @@ public class Module implements TreeNode, LocationContainer, DecContainer {
 	public String												name;
 	public Imports											imports			= new Imports();
 	public Export												exports			= new Export();
-	public Parameters										params			= new Parameters();
+	public Dec[]												decs				= new Dec[0];
 	public State												state				= new State();
 	public Binding[]										defs				= new Binding[0];
 	private String											configName;
@@ -227,15 +227,7 @@ public class Module implements TreeNode, LocationContainer, DecContainer {
 
 	public void configure(String name) {
 
-		// Allow the empty name which means that e use the default configuration
-		// or else we don;t care because there are no parameters...
-
-		if (name.equals(""))
-			configName = "";
-		else if (params.hasConfiguration(name))
-			configName = name;
-		else
-			throw new Error("no configuration named: " + name);
+		
 	}
 
 	private Type deStar(Type type) {
@@ -326,7 +318,7 @@ public class Module implements TreeNode, LocationContainer, DecContainer {
 		// defined by the parameters. Use the named configuration or the first if the
 		// named is "" ...
 
-		Binding[] paramDefs = params.getDefs(configName);
+		Binding[] paramDefs = new Binding[0];
 		Binding[] allDefs = new Binding[defs.length + paramDefs.length];
 
 		for (int i = 0; i < paramDefs.length; i++)
@@ -352,7 +344,7 @@ public class Module implements TreeNode, LocationContainer, DecContainer {
 			if (!binding.isTypeBinding()) {
 				if (binding == null) throw new Error("cannot find exported definition: " + name);
 				Type type = binding.getDeclaredType();
-				fields[fieldIndex++] = new Binding(-1, -1, path, name, type,  binding.getSourceType(), new Var(-1, -1, exports.getNames()[i].getName(), null, null));
+				fields[fieldIndex++] = new Binding(-1, -1, path, name, type, binding.getSourceType(), new Var(-1, -1, exports.getNames()[i].getName(), null, null));
 			}
 		}
 		return new Record(-1, -1, fields);
@@ -427,10 +419,6 @@ public class Module implements TreeNode, LocationContainer, DecContainer {
 
 	public String getName() {
 		return name;
-	}
-
-	public Parameters getParams() {
-		return params;
 	}
 
 	public String getPath() {
@@ -705,7 +693,8 @@ public class Module implements TreeNode, LocationContainer, DecContainer {
 			Env<String, Type> e = env;
 			resolve();
 			for (ExportedName n : exports.getNames()) {
-				if (getBinding(n.getName()) == null) throw new TypeError(exports.getLineStart(), exports.getLineEnd(), "cannot find binding for exported name: " + n.getName() + " in " + getPath());
+				if (getBinding(n.getName()) == null)
+				  throw new TypeError(exports.getLineStart(), exports.getLineEnd(), "cannot find binding for exported name: " + n.getName() + " in " + getPath());
 			}
 			for (String name : imported.keySet()) {
 				imported.get(name).type(e);
@@ -717,8 +706,6 @@ public class Module implements TreeNode, LocationContainer, DecContainer {
 						env = env.bind(exported, binding.getType());
 				}
 			}
-			params.check();
-			params.type(env, typeBindings());
 			Binding.typeBindingsRec(getDefs(), env);
 			isTyped = true;
 		}

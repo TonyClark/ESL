@@ -1,0 +1,51 @@
+export TRecord,Typed,Undefined,getCache,getCachedModuleExportedMethodNames,getTypeInfo,hasTypeInfo,isCachedModule,resetInfo,resetTypeInfo,setCache,setInfo,setTypeInfo,updateCache;
+
+import 
+  'esl/compiler/types.esl',
+  'esl/lists.esl',
+  'esl/displays.esl',
+  'esl/tables.esl';
+
+resetInfo()::Void = edb.setProperty[Hash[Loc,Str]]('$INFO',new Hash[Loc,Str]);
+
+setInfo(l::Loc,s::Str)::Void = edb.getProperty[Hash[Loc,Str]]('$INFO').put(l,s);
+
+resetTypeInfo()::Void = edb.setProperty[Hash[AST,TypeInfo]]('$TYPEINFO',new Hash[AST,TypeInfo]);
+
+setTypeInfo(e::AST,t::TypeInfo)::Void = edb.getProperty[Hash[AST,TypeInfo]]('$TYPEINFO').put(e,t);
+
+hasTypeInfo(e::AST)::Bool = edb.getProperty[Hash[AST,TypeInfo]]('$TYPEINFO').hasKey(e);
+
+getTypeInfo(e::AST)::TypeInfo = edb.getProperty[Hash[AST,TypeInfo]]('$TYPEINFO').get(e); 
+
+// TRecords are used to save the type environment for a module between runs of the type
+// checker. The cache is a table mapping the source path of the module to the TRecords.
+
+data TRecord = 
+  Typed([Str],TEnv,TEnv,TEnv)
+| Undefined;
+
+getCache()::Table[Str,TRecord] =
+  let cache::Table[Str,TRecord] = edb.getProperty[Table[Str,TRecord]]('typeCheckCache');
+  in if cache = null[Table[Str,TRecord]]
+     then emptyTable[Str,TRecord];
+     else cache;
+
+setCache(cache::Table[Str,TRecord])::Void =
+  edb.setProperty[Table[Str,TRecord]]('typeCheckCache',cache);
+
+updateCache(path::Str,record::TRecord,cache::Table[Str,TRecord])::Table[Str,TRecord] = {
+  let cache::Table[Str,TRecord] = addEntry[Str,TRecord](path,record,cache);
+  in {
+    setCache(cache);
+    cache;
+  }
+}
+
+isCachedModule(path::Str)::Bool = hasEntry[Str,TRecord](path,getCache());
+
+getCachedModuleExportedMethodNames(path::Str)::[Str] = 
+  case lookup[Str,TRecord](path,getCache()) {
+    Typed(names,valueEnv,cnstrEnv,typeEnv) -> names;
+    Undefined -> [];
+  }

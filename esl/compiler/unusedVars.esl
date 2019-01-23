@@ -1,0 +1,327 @@
+/********************************************************************************************************************************
+ *                                                                                                                              *
+ *                                              Unused Variable Detection                                                       *
+ *                                              =========================                                                       *
+ *                                                                                                                              *
+ *   Call checkUnusedVars to walk an expression and register warnings about unused variables. The warnings are held as a        *
+ *   property of EDB that can be accessed by the underlying editor platform.                                                    *
+ *                                                                                                                              *
+ ********************************************************************************************************************************/
+ 
+export checkUnusedVars;
+
+import   
+  'esl/lists.esl', 
+  'esl/compiler/types.esl', 
+  'esl/compiler/warnings.esl',
+  'esl/displays.esl', 
+  'esl/compiler/FV.esl';
+
+checkUnusedVars(module::AST)::Void = {
+  walkAST(module);
+}
+
+walkArm(x::Arm)::Void = {
+  case x {
+    BArm(v0::Loc,v1::[Pattern],v2::AST,v3::AST) -> {
+      for p in v1 do walkPattern(p);
+      walkAST(v2);
+      walkAST(v3);
+    }
+    LArm(v0::Loc,v1::[Pattern],v2::[[TBind]],v3::AST,v4::AST) -> {}
+  }
+}
+
+walkPattern(x::Pattern)::Pattern = { 
+  case x {
+    PAdd(v0::Loc,v1::Pattern,v2::Pattern) -> {
+      walkPattern(v1);
+      walkPattern(v2);
+    }
+    PApplyType(v0::Loc,v1::Pattern,v2::[Type]) -> {
+      walkPattern(v1);
+    }
+    PBagCons(v0::Loc,v1::Pattern,v2::Pattern) -> {
+      walkPattern(v1);
+      walkPattern(v2);
+    }
+    PBool(v0::Loc,v1::Bool) -> {}
+    PCons(v0::Loc,v1::Pattern,v2::Pattern) -> {
+      walkPattern(v1);
+      walkPattern(v2);
+    }
+    PEmptyBag(v0::Loc) -> {}
+    PEmptySet(v0::Loc) -> {}
+    PInt(v0::Loc,v1::Int) -> {}
+    PNil(v0::Loc) -> {}
+    PNull(v0::Loc) -> {}
+    PSetCons(v0::Loc,v1::Pattern,v2::Pattern) -> {
+      walkPattern(v1);
+      walkPattern(v2);
+    }
+    PStr(v0::Loc,v1::Str) -> {}
+    PTerm(v0::Loc,v1::Str,v2::[Type],v3::[Pattern]) -> {
+      for p in v3 do walkPattern(p);
+    }
+    PVar(v0::Loc,v1::Str,v2::Type) -> {}
+  }
+}
+
+walkTDec(d::TDec)::Void =
+  case d {
+    Dec(v0::Loc,v1::Str,v2::Type,v3::Type) -> {
+    }
+  }
+
+walkTBind(b::TBind)::Void = { 
+  case b {
+    TypeBind(v0::Loc,v1::Str,v2::Type,v3::AST) -> { }
+    CnstrBind(v0::Loc,v1::Str,v2::Type,v3::AST) -> { }
+    FunBind(l::Loc,name::Str,args::[Pattern],t::Type,dt::Type,body::AST,guard::AST) -> {
+      let usedNames::[Str] = freeVars(body) + freeVars(guard);
+      in {
+        for arg in args do {
+          for n in patternNames(arg) do {
+            if not(member[Str](n,usedNames))
+            then addWarning(patternLoc(arg),n + ' is not used in the function body.');
+            else {}
+          }
+        }
+      }
+      walkAST(body);
+      walkAST(guard);
+    }
+    FunBinds(v0::Str,v1::[FunCase]) -> { }
+    Binding(v0::Loc,v1::Str,v2::Type,v3::Type,v4::AST) -> {
+      walkAST(v4);
+    }
+    DataBind(v0::Loc,v1::Str,v2::Type,v3::AST) -> { }
+  }
+}
+
+walkQualifier(x::Qualifier)::Qualifier = {
+  case x {
+    BQual(v0::Loc,v1::Pattern,v2::AST) -> {
+      walkPattern(v1);
+      walkAST(v2);
+    }
+    PQual(v0::Loc,v1::AST) -> {
+      walkAST(v1);
+    }
+  }
+}
+
+walkDRef(x::DRef)::DRef = {
+  case x {
+    VarDynamicRef(v0::Loc,v1::AST) -> walkAST(v1);
+    ActorDynamicRef(v0::Loc,v1::AST,v2::Str) -> walkAST(v1);
+  }
+}
+
+walkAST(x::AST)::Void = { 
+  case x {
+    ActExp(l,name,args,exports,parent,bindings,init,handlers) -> {
+      // An ActExp should not exist by itself. The parser creates a function with a nested act expression
+      // inside it in order to ensure the 'new' mechanism with arguments works correctly.
+    }
+    Apply(v0::Loc,v1::AST,v2::[AST]) -> {
+      walkAST(v1);
+      for e in v2 do walkAST(e);
+    }
+    ApplyTypeExp(v0::Loc,v1::AST,v2::[Type]) -> {
+      walkAST(v1);
+    }
+    ArrayRef(v0::Loc,v1::AST,v2::AST) -> {
+      walkAST(v1);
+      walkAST(v2);
+    }
+    ArrayUpdate(v0::Loc,v1::AST,v2::AST,v3::AST) -> {
+      walkAST(v1);
+      walkAST(v2);
+      walkAST(v3);
+    }
+    BagExp(v0::Loc,v1::[AST]) -> {
+      for e in v1 do walkAST(e);
+    }
+    Become(v0::Loc,v1::AST) -> {
+      walkAST(v1);
+    }
+    BinExp(v0::Loc,v1::AST,v2::Str,v3::AST) -> {
+      walkAST(v1);
+      walkAST(v3);
+    }
+    Block(v0::Loc,v1::[AST]) -> {
+      for e in v1 do walkAST(e);
+    }
+    BoolExp(v0::Loc,v1::Bool) -> { }
+    Case(v0::Loc,v1::[TDec],v2::[AST],v3::[Arm]) -> {
+      for d in v1 do walkTDec(d);
+      for e in v2 do walkAST(e);
+      for a in v3 do walkArm(a);
+    }
+    Cmp(v0::Loc,v1::AST,v2::[Qualifier]) -> {
+      walkAST(v1);
+      for q in v2 do walkQualifier(q);
+    }
+    Cons(v0::AST,v1::AST) -> {
+      walkAST(v0);
+      walkAST(v1);
+    }
+    For(v0::Loc,v1::Pattern,v2::AST,v3::AST) -> {
+      walkPattern(v1);
+      walkAST(v2);
+      walkAST(v3);
+    }
+    FunExp(fl,fname,fargs,t,ActExp(l,name,args,exports,parent,bindings,init,handlers)) when parent = null[AST]-> {
+      // The parser creates a nested act in a function to ensure the 'new' mechanism gets 'self' correctly.
+      // Add in sneaky references to the exported names...
+      walkAST(FunExp(l,name,args,t,Letrec(l,bindings,Case(l,[],[ Var(l,n) | n <- exports ] + [init],handlers))));
+    }
+    FunExp(fl,fname,fargs,t,ActExp(l,name,args,exports,parent,bindings,init,handlers)) -> {
+      // The parser creates a nested act in a function to ensure the 'new' mechanism gets 'self' correctly.
+      // Add in sneaky references to the exported names...
+      walkAST(FunExp(l,name,args,t,Letrec(l,bindings,Case(l,[],[ Var(l,n) | n <- exports ] + [parent,init],handlers))));
+    }
+    FunExp(l::Loc,name::AST,args::[TDec],t::Type,body::AST) -> {
+      let usedNames::[Str] = freeVars(body);
+      in {
+        for d in args do {
+          if not(member[Str](decName(d),usedNames))
+          then addWarning(decLoc(d),decName(d) + ' is not used in the function body.');
+          else {}
+          walkTDec(d);
+        }
+        walkAST(name);
+        walkAST(body);
+      }
+    }
+    Grab(v0::Loc,v1::[DRef],v2::AST) -> {
+      for d in v1 do walkDRef(d);
+      walkAST(v2);
+    }
+    If(v0::Loc,v1::AST,v2::AST,v3::AST) -> {
+      walkAST(v1);
+      walkAST(v2);
+      walkAST(v3);
+    }
+    IntExp(v0::Loc,v1::Int) -> { }
+    FloatExp(v0::Loc,v1::Float) -> { }
+    Fold(v0::Loc,v1::Type,v2::AST) -> {
+      walkAST(v2);
+    }
+    Head(v0::AST) -> {
+      walkAST(v0);
+    }
+    Let(l::Loc,bindings::[TBind],body::AST) -> {
+      let usedNames::[Str] = freeVars(body);
+      in {
+        for b in bindings do {
+          if not(member[Str](bindingName(b),usedNames))
+          then addWarning(bindingLoc(b),bindingName(b) + ' is not used in the let body.');
+          else {}
+          walkTBind(b);
+        }
+        walkAST(body);
+      }
+    }
+    Letrec(l::Loc,bindings::[TBind],body::AST) -> {
+      let usedNames::[Str] = freeVars(body) + [ n |  b <- bindings, n <- bindingFV(b) ];
+      in {
+        for b in bindings do {
+          if not(member[Str](bindingName(b),usedNames))
+          then addWarning(bindingLoc(b),bindingName(b) + ' is not used in the letrec body.');
+          else {}
+          walkTBind(b);
+        }
+        walkAST(body);
+      }
+    }
+    List(v0::Loc,v1::[AST]) -> {
+      for e in v1 do walkAST(e);
+    }
+    Module(path::Str,name::Str,exports::[Str],imports::[Str],v4::Null,v5::Null,defs::[TBind]) -> {
+      // Check that all the defined names are used...
+      let usedNames::[Str] = [ n | b <- defs, n <- bindingFV(b) ] + exports; 
+      in { 
+        for b in defs do { 
+          if isBinding(b) or isFunBind(b)
+          then 
+            if not(member[Str](bindingName(b),usedNames))
+            then addWarning(bindingLoc(b),bindingName(b) + ' is not used or exported.');
+            else {}
+          else {}
+        }
+        for b in defs do walkTBind(b);
+      }
+    }
+    New(v0::Loc,v1::AST,v2::[AST]) -> {
+      walkAST(v1);
+      for e in v2 do walkAST(e);
+    }
+    NewArray(v0::Loc,v1::Type,v2::AST) -> {
+      walkAST(v2);
+    }
+    NewJava(v0::Loc,v1::Str,v2::Type,v3::[AST]) -> {
+      for e in v3 do walkAST(e);
+    }
+    NewTable(v0::Loc,v1::Type,v2::Type) -> { }
+    Not(v0::Loc,v1::AST) -> {
+      walkAST(v1);
+    }
+    Now(v0::Loc) -> { }
+    NullExp(v0::Loc) -> { }
+    PLet(v0::Loc,v1::[TBind],v2::AST) -> {
+      for b in v1 do walkTBind(b);
+      walkAST(v2);
+    }
+    Probably(v0::Loc,v1::AST,v2::Type,v3::AST,v4::AST) -> {
+      walkAST(v1);
+      walkAST(v3);
+      walkAST(v4);
+    }
+    Record(v0::Loc,v1::[TBind]) -> {
+      for b in v1 do walkTBind(b);
+    }
+    RefSuper(v0::Loc,v1::Str) -> { }
+    Ref(v0::Loc,v1::AST,v2::Str) -> {
+      walkAST(v1);
+    }
+    Self(v0::Loc) -> { }
+    Send(v0::Loc,v1::AST,v2::AST) -> {
+      walkAST(v1);
+      walkAST(v2);
+    }
+    SendSuper(v0::Loc,v1::AST) -> {
+      walkAST(v1);
+    }
+    SendTimeSuper(v0::Loc) -> { }
+    SetExp(v0::Loc,v1::[AST]) -> {
+      for e in v1 do walkAST(e);
+    }
+    StrExp(v0::Loc,v1::Str) -> { }
+    Tail(v0::AST) -> {
+      walkAST(v0);
+    }
+    Term(v0::Loc,v1::Str,v2::[Type],v3::[AST]) -> {
+      for termArg in v3 do walkAST(termArg);
+    }
+    TermRef(v0::AST,v1::Int) -> {
+      walkAST(v0);
+    }
+    Throw(v0::Loc,v1::Type,v2::AST) -> {
+      walkAST(v2);
+    }
+    Try(v0::Loc,v1::AST,v2::[Arm]) -> {
+      walkAST(v1);
+      for a in v2 do walkArm(a);
+    }
+    Update(v0::Loc,v1::Str,v2::AST) -> {
+      walkAST(v2);
+    }
+    Unfold(v0::Loc,v1::Type,v2::AST) -> {
+      walkAST(v2);
+    }
+    Var(v0::Loc,v1::Str) -> { }
+    x -> print[Str]('unknown expression: ' + x);
+  }
+}

@@ -1,15 +1,15 @@
 export main;
 
-import 'esl/lists.esl', 'esl/displays.esl';
+import 'esl/lists.esl', 'esl/displays.esl'; 
 
 nodeColour(n::Node)::Str = propValue(nodeProps(n),'fillcolor'); 
 setNodeColour(n::Node,c::Str)::Node = setNodeProps(n,setProp(nodeProps(n),'fillcolor',c));
 edgeBetween(e::Edge,n1::Node,n2::Node)::Bool = edgeTo(e,n1,n2) or edgeTo(e,n2,n1);
-edgeTo(e::Edge,n1::Node,n2::Node)::Bool = edgeSource(e) = nodeId(n1) and edgeTarget(e) = nodeId(n2); 
+edgeTo(e::Edge,n1::Node,n2::Node)::Bool = edgeSource(e) = nodeId(n1) and edgeTarget(e) = nodeId(n2);
 
 kempe(graph::Display,colours::[Str])::Display =
   // Simple algorithm to colour a planar graph.
-  // This is taken from http://www.cs.princeton.edu/~appel/Color.pdf
+  // This is taken from http://www.cs.princeton.edu/~appel/Color.pdf 
   // graph must be planar and has no more than 3v - 6 edges.
   case graph {
     Graph(props,[],edges) -> graph;
@@ -37,7 +37,7 @@ mkPlanar(v::Int)::Display = Graph([],
 
 act main::Act {} {
   -> {
-    edb <- Show('graph',kempe(mkPlanar(200),['red','green','blue','gold','deeppink']));
+    edb <- Show('graph',kempe(mkPlanar(500),['red','green','blue','gold','deeppink']));
     stopAll();
   }
 }
